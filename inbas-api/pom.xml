@@ -4,9 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>INBAS mobile</name>
+    <parent>
+        <relativePath>../inbas-parent</relativePath>
+        <groupId>cz.cvut.inbas</groupId>
+        <artifactId>inbas-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <name>INBAS API</name>
     <groupId>cz.cvut.inbas</groupId>
-    <artifactId>inbas-mobile</artifactId>
+    <artifactId>inbas-api</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
   
@@ -26,16 +33,10 @@
             <version>6.0</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>cz.cvut.kbss</groupId>
-            <artifactId>autocomplete-tree</artifactId>
-            <version>1.1-SNAPSHOT</version>
-            <type>war</type>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
+
     <build>
+        <sourceDirectory>src/main/java-generated</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
