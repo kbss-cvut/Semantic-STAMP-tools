@@ -20,6 +20,9 @@
     "installed_plugins": {
         "org.apache.cordova.camera": {
             "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "org.apache.cordova.file": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
         }
     },
     "dependent_plugins": {}
