@@ -1,0 +1,38 @@
+{
+  "name": "inbas-audit-tool",
+  "version": "1.0.0",
+  "description": "Auditing tool for the INBAS project.",
+  "main": "js/app.js",
+  "dependencies": {
+    "react": "^0.13.3",
+    "keymirror": "~0.1.0",
+    "object-assign": "^2.0.0",
+    "superagent": "^1.2.0",
+    "react-router": "^0.13.3",
+    "react-bootstrap": "~0.22.5",
+    "react-router-bootstrap": "~0.14.0",
+    "body-parser": "^1.4.3",
+    "express": "^4.4.5",
+    "reflux": "^0.2.7"
+  },
+  "devDependencies": {
+    "browserify": "^6.2.0",
+    "envify": "^3.0.0",
+    "jest-cli": "^0.4.3",
+    "reactify": "^0.15.2",
+    "uglify-js": "~2.4.15",
+    "watchify": "^2.1.1"
+  },
+  "scripts": {
+    "start": "watchify -o js/bundle.js -v -d js/app.js",
+    "build": "browserify . -t [envify --NODE_ENV production] | uglifyjs -cm > ../../../profiles/production/js/bundle.min.js",
+    "test": "jest"
+  },
+  "browserify": {
+    "transform": [
+      "reactify",
+      "envify"
+    ]
+  },
+  "author": "Martin Ledvinka"
+}
