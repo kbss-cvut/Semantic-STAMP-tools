@@ -15,7 +15,7 @@ public interface GenericDao<T> {
      * @param uri  Identifier
      * @return Entity instance or {@code null} if no such instance exists
      */
-    public T find(Class<T> type, URI uri);
+    public T findByUri(Class<T> type, URI uri);
 
     /**
      * Finds all instances of the specified class.

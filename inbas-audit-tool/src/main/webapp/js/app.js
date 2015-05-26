@@ -10,6 +10,7 @@ var Nav = require('react-bootstrap').Nav;
 var NavItemLink = require('react-router-bootstrap').NavItemLink;
 
 var HelloWorld = require('./components/HelloWorld');
+var ReportsController = require('./components/ReportsController');
 
 var DefaultRoute = Router.DefaultRoute;
 var Route = Router.Route;
@@ -23,6 +24,7 @@ var MainView = React.createClass({
                     <Navbar brand="INBAS Audit Tool">
                         <Nav>
                             <NavItemLink to="helloworld">Hello World!</NavItemLink>
+                            <NavItemLink to="reports">Reports</NavItemLink>
                         </Nav>
                     </Navbar>
                 </header>
@@ -37,6 +39,7 @@ var MainView = React.createClass({
 var routes = (
     <Route handler={MainView} path="/">
         <Route name="helloworld" path="helloworld" handler={HelloWorld}/>
+        <Route name="reports" path="reports" handler={ReportsController}/>
         <DefaultRoute handler={HelloWorld}/>
     </Route>
 );

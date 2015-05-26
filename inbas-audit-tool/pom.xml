@@ -20,6 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <cz.cvut.kbss.jopa.version>0.4-SNAPSHOT</cz.cvut.kbss.jopa.version>
         <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
+        <com.fasterxml.jackson.version>2.3.3</com.fasterxml.jackson.version>
         <junit.version>4.12</junit.version>
         <ch.qos.logback.version>1.1.2</ch.qos.logback.version>
     </properties>
@@ -64,6 +65,13 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${org.springframework.version}</version>
+        </dependency>
+
+        <!-- Jackson for JSON serialization -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${com.fasterxml.jackson.version}</version>
         </dependency>
 
         <!-- Servlet-API -->

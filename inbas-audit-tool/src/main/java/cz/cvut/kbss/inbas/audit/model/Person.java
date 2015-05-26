@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.audit.model;
 
+import cz.cvut.kbss.inbas.audit.util.Constants;
+import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
@@ -10,19 +12,22 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by ledvima1 on 20.3.15.
+ * @author ledvima1
  */
-@OWLClass(iri = "http://xmlns.com/foaf/0.1/Person")
+@OWLClass(iri = Vocabulary.Person)
 public class Person {
 
     @Id
     private URI uri;
 
-    @OWLDataProperty(iri = "http://xmlns.com/foaf/0.1/firstName")
+    @OWLDataProperty(iri = Vocabulary.p_firstName)
     private String firstName;
 
-    @OWLDataProperty(iri = "http://xmlns.com/foaf/0.1/lastName")
+    @OWLDataProperty(iri = Vocabulary.p_lastName)
     private String lastName;
+
+    @OWLDataProperty(iri = Vocabulary.p_username)
+    private String username;
 
     @Properties
     private Map<String, Set<String>> properties;
@@ -51,6 +56,14 @@ public class Person {
         this.lastName = lastName;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public Map<String, Set<String>> getProperties() {
         return properties;
     }
@@ -61,9 +74,19 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" +
-                "uri=" + uri +
-                ", firstName='" + firstName + '\'' +
-                '}';
+        return firstName + " " + lastName + " <" + uri + ">";
+    }
+
+    /**
+     * Generates URI using {@link Constants#BASE_URI} and the person's first and last name.
+     */
+    public void generateUri() {
+        if (firstName == null || firstName.isEmpty()) {
+            throw new IllegalStateException("Missing first name.");
+        }
+        if (lastName == null || lastName.isEmpty()) {
+            throw new IllegalStateException("Missing last name.");
+        }
+        this.uri = URI.create(Constants.BASE_URI + firstName + "+" + lastName);
     }
 }

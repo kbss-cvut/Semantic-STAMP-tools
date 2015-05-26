@@ -1,31 +1,17 @@
 package cz.cvut.kbss.inbas.audit.services;
 
 import cz.cvut.kbss.inbas.audit.model.Person;
-import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.net.URI;
-import java.util.List;
 
 /**
- * Created by ledvima1 on 7.4.15.
+ * @author ledvima1
  */
-@Service
-public class PersonService {
+public interface PersonService extends BaseService<Person> {
 
-    @Autowired
-    private GenericDao<Person> dao;
-
-    public void persist(Person person) {
-        dao.persist(person);
-    }
-
-    public Person find(URI uri) {
-        return dao.find(Person.class, uri);
-    }
-
-    public List<Person> findAll() {
-        return dao.findAll(Person.class);
-    }
+    /**
+     * Finds person by his/her username.
+     *
+     * @param username Person's username
+     * @return Person or {@code null} in none matches the username
+     */
+    Person findByUsername(String username);
 }

@@ -12,7 +12,7 @@ var HelloWorld = React.createClass({
         };
     },
     componentDidMount: function () {
-        request('rest/helloworld').set('Accept', 'text/plain').end(function (err, resp) {
+        request('rest/helloworld').end(function (err, resp) {
             if (err) {
                 console.log(err, resp.status, resp.text);
             }

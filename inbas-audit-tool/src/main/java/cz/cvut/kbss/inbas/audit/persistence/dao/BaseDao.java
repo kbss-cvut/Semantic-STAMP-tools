@@ -2,6 +2,8 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.audit.util.ErrorUtils;
+import cz.cvut.kbss.inbas.audit.util.Vocabulary;
+import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
@@ -18,7 +20,7 @@ import java.util.Objects;
  * Base implementation of the generic DAO.
  */
 @Repository
-public class BaseDao<T> implements GenericDao<T> {
+public class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     protected static final Logger LOG = LoggerFactory.getLogger(BaseDao.class);
 
@@ -29,9 +31,30 @@ public class BaseDao<T> implements GenericDao<T> {
     private EntityManagerFactory emf;
 
     @Override
-    public T find(Class<T> type, URI uri) {
+    public T findByUri(Class<T> type, URI uri) {
+        Objects.requireNonNull(type, ErrorUtils.createNPXMessage("type"));
         Objects.requireNonNull(uri, ErrorUtils.createNPXMessage("uri"));
-        return entityManager().find(type, uri);
+        final EntityManager em = entityManager();
+        try {
+            return em.find(type, uri);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public T findByKey(Class<T> type, String key) {
+        Objects.requireNonNull(type, ErrorUtils.createNPXMessage("type"));
+        Objects.requireNonNull(key, ErrorUtils.createNPXMessage("key"));
+        final EntityManager em = entityManager();
+        try {
+            return em.createNativeQuery("SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> \"" + key + "\". }",
+                    type).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
     }
 
     @Override
@@ -44,8 +67,7 @@ public class BaseDao<T> implements GenericDao<T> {
         }
         final EntityManager em = entityManager();
         try {
-            final List<T> res = em.createNativeQuery(query.replace("$type$", owlClass.iri()), cls).getResultList();
-            return res;
+            return em.createNativeQuery(query.replace("$type$", owlClass.iri()), cls).getResultList();
         } finally {
             em.close();
         }
@@ -60,7 +82,7 @@ public class BaseDao<T> implements GenericDao<T> {
             em.persist(entity);
             em.getTransaction().commit();
         } catch (Exception e) {
-          LOG.error("Error when persisting entity.", e);
+            LOG.error("Error when persisting entity.", e);
             throw new PersistenceException(e);
         } finally {
             em.close();
