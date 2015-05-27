@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
+import cz.cvut.kbss.inbas.audit.model.HasOwlKey;
 import cz.cvut.kbss.inbas.audit.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.audit.util.ErrorUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
@@ -80,6 +81,9 @@ public class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         try {
             em.getTransaction().begin();
             em.persist(entity);
+            if (entity instanceof HasOwlKey) {
+                ((HasOwlKey) entity).generateKey();
+            }
             em.getTransaction().commit();
         } catch (Exception e) {
             LOG.error("Error when persisting entity.", e);

@@ -1,12 +1,13 @@
 package cz.cvut.kbss.inbas.audit.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import javax.xml.bind.annotation.XmlTransient;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public class EventReport implements HasOwlKey {
     private String key;
 
     @OWLDataProperty(iri = Vocabulary.p_date)
-    private Date eventTime;
+    private Long eventTime;
 
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
@@ -51,11 +52,11 @@ public class EventReport implements HasOwlKey {
         this.uri = uri;
     }
 
-    public Date getEventTime() {
+    public Long getEventTime() {
         return eventTime;
     }
 
-    public void setEventTime(Date eventTime) {
+    public void setEventTime(Long eventTime) {
         this.eventTime = eventTime;
     }
 
@@ -107,6 +108,7 @@ public class EventReport implements HasOwlKey {
         this.typeAssessments = typeAssessments;
     }
 
+    @JsonIgnore
     public Collection<ReportingStatement> getStatements() {
         final Set<ReportingStatement> statements = new HashSet<>(severityAssessments);
         statements.addAll(correctiveMeasures);

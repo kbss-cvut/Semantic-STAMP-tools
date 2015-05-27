@@ -6,7 +6,7 @@ import java.util.Collection;
 /**
  * @author ledvima1
  */
-public interface BaseService<T> {
+public interface InbasService<T> {
 
     /**
      * Returns all instances of the class.

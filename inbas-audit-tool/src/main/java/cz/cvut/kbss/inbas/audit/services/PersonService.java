@@ -5,7 +5,7 @@ import cz.cvut.kbss.inbas.audit.model.Person;
 /**
  * @author ledvima1
  */
-public interface PersonService extends BaseService<Person> {
+public interface PersonService extends InbasService<Person> {
 
     /**
      * Finds person by his/her username.

@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.services.impl;
 
 import cz.cvut.kbss.inbas.audit.model.EventReport;
-import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.SupportsOwlKey;
 import cz.cvut.kbss.inbas.audit.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,11 @@ import java.util.Collection;
 public class ReportServiceImpl implements ReportService {
 
     @Autowired
-    private GenericDao<EventReport> reportDao;
+    private SupportsOwlKey<EventReport> reportDao;
 
     @Override
     public EventReport findByKey(String key) {
-        return null;
+        return reportDao.findByKey(EventReport.class, key);
     }
 
     @Override
@@ -30,12 +30,12 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public EventReport find(URI uri) {
-        return null;
+        return reportDao.findByUri(EventReport.class, uri);
     }
 
     @Override
     public void persist(EventReport instance) {
-
+        reportDao.persist(instance);
     }
 
     @Override

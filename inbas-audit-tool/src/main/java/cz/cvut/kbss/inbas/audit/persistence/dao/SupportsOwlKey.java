@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 /**
  * @author ledvima1
  */
-public interface SupportsOwlKey<T> {
+public interface SupportsOwlKey<T> extends GenericDao<T> {
 
     /**
      * Finds entity instance by its unique key.

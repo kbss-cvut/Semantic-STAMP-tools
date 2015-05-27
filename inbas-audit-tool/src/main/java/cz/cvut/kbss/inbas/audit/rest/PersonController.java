@@ -31,13 +31,19 @@ public class PersonController {
         return people;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{username}")
-    public Person getByUri(@PathVariable("username") String username) {
+    @RequestMapping(method = RequestMethod.GET, value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Person getByUsername(@PathVariable("username") String username) {
         final Person p = personService.findByUsername(username);
         if (p == null) {
             throw NotFoundException.create("Person", username);
         }
         return p;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Person getCurrent() {
+        // TODO security context to retrieve currently logged-in user
+        return getByUsername("halsey@unsc.org");
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
