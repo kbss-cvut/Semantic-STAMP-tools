@@ -5,6 +5,8 @@
 var Reflux = require('reflux');
 var request = require('superagent');
 
+var Actions = require('../actions/Actions');
+
 var currentUser = null;
 
 function loadCurrentUser() {
@@ -18,8 +20,11 @@ function loadCurrentUser() {
 }
 
 var UserStore = Reflux.createStore({
-    init: function () {
-        loadCurrentUser();
+    listenables: [Actions],
+    onLoadUser: function () {
+        if (currentUser === null) {
+            loadCurrentUser();
+        }
     },
     userLoaded: function (user) {
         currentUser = user;

@@ -17,7 +17,7 @@ var ReportsTable = React.createClass({
                 <Table striped bordered condensed hover>
                     <thead>
                     <tr>
-                        <th>Created Date</th>
+                        <th>Event date</th>
                         <th>Author</th>
                         <th>Description</th>
                     </tr>

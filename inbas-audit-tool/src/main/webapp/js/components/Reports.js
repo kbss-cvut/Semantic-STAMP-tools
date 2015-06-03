@@ -10,19 +10,9 @@ var ReportsTable = require('./ReportsTable');
 var ReportEdit = require('./ReportEdit');
 
 var Reports = React.createClass({
-    getInitialState: function () {
-        return {
-            creating: false
-        };
-    },
-    createReport: function () {
-        this.setState({
-            creating: true
-        });
-    },
     render: function () {
         var edit = null;
-        if (this.state.creating) {
+        if (this.props.edit.editing) {
             edit = <ReportEdit user={this.props.user}/>
         }
         var reports = this.props.reports;
@@ -33,15 +23,18 @@ var Reports = React.createClass({
                         <h2>INBAS Reporting</h2>
 
                         <p>There are no reports, yet.</p>
-                        <Button bsStyle="primary" onClick={this.createReport}>Create Report</Button>
+                        <Button bsStyle="primary" onClick={this.props.edit.callback}>Create Report</Button>
                     </Jumbotron>
                     {edit}
                 </div>
             );
         } else {
+            var table = <ReportsTable reports={reports}/>;
+            var create = edit !== null ? null : <Button bsStyle="primary" onClick={this.props.edit.callback}>Create Report</Button>;
             return (
                 <div>
-                    <ReportsTable reports={reports}/>
+                    {table}
+                    {create}
                     {edit}
                 </div>
             );

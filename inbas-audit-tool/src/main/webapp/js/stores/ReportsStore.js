@@ -23,9 +23,6 @@ function loadReports() {
 
 var ReportsStore = Reflux.createStore({
     listenables: [Actions],
-    init: function () {
-        loadReports();
-    },
     getCurrentState: function () {
         return {
             reports: reports
@@ -33,6 +30,9 @@ var ReportsStore = Reflux.createStore({
     },
     getReports: function () {
         return reports;
+    },
+    onLoadReports: function() {
+        loadReports();
     },
     onReportsLoaded: function (data) {
         reports = data;
