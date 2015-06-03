@@ -31,16 +31,20 @@ var ReportsController = React.createClass({
         this.onChange(newState);
     },
     onChange: function (newState) {
-        console.log(newState);
         this.setState(assign({}, this.state, newState));
     },
     onEditReport: function () {
         this.setState(assign({}, this.state, {editing: true}))
     },
+    onEditCancel: function() {
+        this.setState(assign({}, this.state, {editing: false}))
+    },
     render: function () {
         var edit = {
             editing: this.state.editing,
-            callback: this.onEditReport
+            startEdit: this.onEditReport,
+            cancelEdit: this.onEditCancel
+
         };
         return (
             <Reports reports={this.state.reports} user={this.state.user} edit={edit}/>

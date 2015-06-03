@@ -13,7 +13,7 @@ var Reports = React.createClass({
     render: function () {
         var edit = null;
         if (this.props.edit.editing) {
-            edit = <ReportEdit user={this.props.user}/>
+            edit = <ReportEdit user={this.props.user} cancelEdit={this.props.edit.cancelEdit}/>
         }
         var reports = this.props.reports;
         if (reports.length === 0) {
@@ -23,14 +23,14 @@ var Reports = React.createClass({
                         <h2>INBAS Reporting</h2>
 
                         <p>There are no reports, yet.</p>
-                        <Button bsStyle="primary" onClick={this.props.edit.callback}>Create Report</Button>
+                        <Button bsStyle="primary" onClick={this.props.edit.startEdit}>Create Report</Button>
                     </Jumbotron>
                     {edit}
                 </div>
             );
         } else {
             var table = <ReportsTable reports={reports}/>;
-            var create = edit !== null ? null : <Button bsStyle="primary" onClick={this.props.edit.callback}>Create Report</Button>;
+            var create = edit !== null ? null : <Button bsStyle="primary" onClick={this.props.edit.startEdit}>Create Report</Button>;
             return (
                 <div>
                     {table}
