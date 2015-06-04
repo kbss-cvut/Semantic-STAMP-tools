@@ -20,6 +20,7 @@ var ReportsTable = React.createClass({
                         <th>Event date</th>
                         <th>Author</th>
                         <th>Description</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -33,7 +34,7 @@ var ReportsTable = React.createClass({
         var result = [];
         var len = this.props.reports.length;
         for (var i = 0; i < len; i++) {
-            result.push(<ReportRow report={this.props.reports[i]} key={this.props.reports[i].uri} />);
+            result.push(<ReportRow report={this.props.reports[i]} key={this.props.reports[i].uri} edit={this.props.edit} />);
         }
         return result;
     }

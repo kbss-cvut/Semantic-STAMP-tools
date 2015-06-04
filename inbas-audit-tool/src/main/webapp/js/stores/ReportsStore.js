@@ -46,6 +46,15 @@ var ReportsStore = Reflux.createStore({
                 loadReports();
             }
         })
+    },
+    onUpdateReport: function(report) {
+        request.put('rest/reports/' + report.key).send(report).type('json').end(function(err, res) {
+            if (err) {
+                console.log(err.status, err.response);
+            } else {
+                loadReports();
+            }
+        })
     }
 });
 

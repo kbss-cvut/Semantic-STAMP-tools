@@ -23,3 +23,14 @@ body {
 .picker-container {
     position: relative;
 }
+
+.unselectable {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+.actions {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}

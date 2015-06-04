@@ -24,9 +24,12 @@ public class Vocabulary {
     public static final String p_username = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#username";
     public static final String p_hasEventType = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasEventType";
     public static final String p_hasEvent = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasEvent";
-    public static final String p_date = "http://purl.org/dc/terms/date";
+    public static final String p_date = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#eventTime";
+    public static final String p_dateCreated = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#dateCreated";
+    public static final String p_dateLastEdited = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#dateLastEdited";
     public static final String p_description = "http://purl.org/dc/terms/description";
     public static final String p_hasAuthor = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasAuthor";
+    public static final String p_lastEditedBy = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#lastEditedBy";
     public static final String p_hasSeverityAssessment = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasSeverityAssessment";
     public static final String p_hasCorrectiveMeasure = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasCorrectiveMeasure";
     public static final String p_hasEventTypeAssessment = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasEventTypeAssessment";

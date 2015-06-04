@@ -26,11 +26,20 @@ public class EventReport implements HasOwlKey {
     @OWLDataProperty(iri = Vocabulary.p_date)
     private Date eventTime;
 
+    @OWLDataProperty(iri = Vocabulary.p_dateCreated)
+    private Date created;
+
+    @OWLDataProperty(iri = Vocabulary.p_dateLastEdited)
+    private Date lastEdited;
+
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER)
     private Person author;
+
+    @OWLObjectProperty(iri = Vocabulary.p_lastEditedBy)
+    private Person lastEditedBy;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
     private Resource resource;
@@ -60,6 +69,22 @@ public class EventReport implements HasOwlKey {
         this.eventTime = eventTime;
     }
 
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getLastEdited() {
+        return lastEdited;
+    }
+
+    public void setLastEdited(Date lastEdited) {
+        this.lastEdited = lastEdited;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -74,6 +99,14 @@ public class EventReport implements HasOwlKey {
 
     public void setAuthor(Person author) {
         this.author = author;
+    }
+
+    public Person getLastEditedBy() {
+        return lastEditedBy;
+    }
+
+    public void setLastEditedBy(Person lastEditedBy) {
+        this.lastEditedBy = lastEditedBy;
     }
 
     public Resource getResource() {

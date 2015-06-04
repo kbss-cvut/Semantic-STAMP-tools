@@ -19,6 +19,7 @@ var ReportsController = React.createClass({
         return {
             user: UserStore.getCurrentUser().user,
             reports: ReportsStore.getReports(),
+            editedReport: null,
             editing: false
         };
     },
@@ -33,18 +34,28 @@ var ReportsController = React.createClass({
     onChange: function (newState) {
         this.setState(assign({}, this.state, newState));
     },
-    onEditReport: function () {
+    onCreateReport: function () {
         this.setState(assign({}, this.state, {editing: true}))
     },
+    onEditReport: function(report) {
+        this.setState(assign({}, this.state, {
+            editing: true,
+            editedReport: report
+        }));
+    },
     onEditCancel: function() {
-        this.setState(assign({}, this.state, {editing: false}))
+        this.setState(assign({}, this.state, {
+            editing: false,
+            editedReport: null
+        }));
     },
     render: function () {
         var edit = {
             editing: this.state.editing,
+            editedReport: this.state.editedReport,
+            createReport: this.onCreateReport,
             startEdit: this.onEditReport,
             cancelEdit: this.onEditCancel
-
         };
         return (
             <Reports reports={this.state.reports} user={this.state.user} edit={edit}/>

@@ -11,33 +11,31 @@ var ReportEdit = require('./ReportEdit');
 
 var Reports = React.createClass({
     render: function () {
-        var edit = null;
         if (this.props.edit.editing) {
-            edit = <ReportEdit user={this.props.user} cancelEdit={this.props.edit.cancelEdit}/>
-        }
-        var reports = this.props.reports;
-        if (reports.length === 0) {
             return (
-                <div>
-                    <Jumbotron>
-                        <h2>INBAS Reporting</h2>
-
-                        <p>There are no reports, yet.</p>
-                        <Button bsStyle="primary" onClick={this.props.edit.startEdit}>Create Report</Button>
-                    </Jumbotron>
-                    {edit}
-                </div>
-            );
+                <ReportEdit user={this.props.user} cancelEdit={this.props.edit.cancelEdit}
+                            report={this.props.edit.editedReport}/>);
         } else {
-            var table = <ReportsTable reports={reports}/>;
-            var create = edit !== null ? null : <Button bsStyle="primary" onClick={this.props.edit.startEdit}>Create Report</Button>;
-            return (
-                <div>
-                    {table}
-                    {create}
-                    {edit}
-                </div>
-            );
+            var reports = this.props.reports;
+            if (reports.length === 0) {
+                return (
+                    <div>
+                        <Jumbotron>
+                            <h2>INBAS Reporting</h2>
+
+                            <p>There are no reports, yet.</p>
+                            <Button bsStyle="primary" onClick={this.props.edit.createReport}>Create Report</Button>
+                        </Jumbotron>
+                    </div>
+                );
+            } else {
+                return (
+                    <div>
+                        <ReportsTable reports={reports} edit={this.props.edit.startEdit}/>
+                        <Button bsStyle="primary" onClick={this.props.edit.createReport}>Create Report</Button>
+                    </div>
+                );
+            }
         }
 
 
