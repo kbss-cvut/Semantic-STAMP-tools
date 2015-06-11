@@ -12,11 +12,11 @@ var Wizard = require('./Wizard');
 
 var WizardWindow = React.createClass({
     render: function () {
-        var properties = assign({}, this.props, {onCancel: this.props.onRequestHide});
+        var properties = assign({}, this.props, {onClose: this.props.onRequestHide});
         return (
-            <Modal {...this.props} bsSize="large" title={this.props.title} animation={false}>
-                <div className="modal-body">
-                    <Wizard {...this.props}/>
+            <Modal {...this.props} bsSize="large" title={this.props.title} animation={false} dialogClassName="large-modal">
+                <div className="modal-body" style={{overflow: 'hidden'}}>
+                    <Wizard {...properties}/>
                 </div>
             </Modal>
         );

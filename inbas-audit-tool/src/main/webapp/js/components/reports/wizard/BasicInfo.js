@@ -1,5 +1,5 @@
 /**
- * Created by ledvima1 on 27.5.15.
+ * Created by ledvima1 on 11.6.15.
  */
 
 'use strict';
@@ -8,41 +8,22 @@ var React = require('react');
 var Button = require('react-bootstrap').Button;
 var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
-var Alert = require('react-bootstrap').Alert;
 var assign = require('object-assign');
 var DateTimePicker = require('react-bootstrap-datetimepicker');
 
-var Actions = require('../../actions/Actions');
-var Utils = require('../../utils/Utils');
+var Actions = require('../../../actions/Actions');
+var Utils = require('../../../utils/Utils');
 
-var ReportEdit = React.createClass({
+var BasicInfo = React.createClass({
     getInitialState: function () {
-        if (!this.isReportNew()) {
             return {
-                report: this.initReport(this.props.report),
+                report: this.props.data.report,
                 submitting: false,
                 error: null
             };
-        }
-        return {
-            report: this.initReport(null),
-            submitting: false,
-            error: null
-        };
-    },
-    initReport: function (report) {
-        if (report !== null) {
-            return assign({}, report);
-        } else {
-            return {
-                eventTime: Date.now(),
-                description: '',
-                author: this.props.user
-            }
-        }
     },
     isReportNew: function () {
-        return this.props.report == null;
+        return !this.props.data.report.uri;
     },
     onChange: function (e) {
         var change;
@@ -56,33 +37,14 @@ var ReportEdit = React.createClass({
     onDateChange: function (value) {
         this.setState(assign(this.state.report, {eventTime: new Date(Number(value))}));
     },
-    onSubmit: function (e) {
-        e.preventDefault();
-        this.setState(assign(this.state, {submitting: true}));
-        this.state.report.lastEditedBy = this.props.user;
-        if (this.isReportNew()) {
-            Actions.createReport(this.state.report, this.onSubmitError);
-        }
-        else {
-            Actions.updateReport(this.state.report, this.onSubmitError);
-        }
-    },
-    onSubmitError: function (error) {
-        this.setState(assign({}, this.state, {
-            error: error,
-            submitting: false
-        }));
-    },
     handleAlertDismiss: function () {
         this.setState(assign({}, this.state, {error: null}));
     },
     render: function () {
         var author = this.state.report.author.firstName + " " + this.state.report.author.lastName;
-        var loading = this.state.submitting;
-        var alert = this.renderError();
         var lastEdited = this.renderLastEdited();
         return (
-            <Panel header="Edit Event Report">
+            <Panel header="Basic Event Information">
                 <form>
                     <div className="form-group report-detail">
                         <Input type="text" name="name" value={this.state.report.name} onChange={this.onChange}
@@ -98,16 +60,9 @@ var ReportEdit = React.createClass({
                     </div>
                     {lastEdited}
                     <div className="form-group">
-                        <Input type="textarea" label="Description" name="description" placeholder="Event description"
+                        <Input type="textarea" rows="8" label="Description" name="description" placeholder="Event description"
                                value={this.state.report.description} onChange={this.onChange} title="Event description"/>
                     </div>
-                    <div className="form-group">
-                        <Button bsStyle="success" disabled={loading || this.state.report.description === ''}
-                                ref="submit"
-                                onClick={this.onSubmit}>{loading ? 'Submitting...' : 'Submit'}</Button>
-                        <Button bsStyle="link" onClick={this.props.cancelEdit}>Cancel</Button>
-                    </div>
-                    {alert}
                 </form>
             </Panel>
         );
@@ -140,4 +95,4 @@ var ReportEdit = React.createClass({
     }
 });
 
-module.exports = ReportEdit;
+module.exports = BasicInfo;

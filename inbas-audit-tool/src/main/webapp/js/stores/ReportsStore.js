@@ -46,32 +46,41 @@ var ReportsStore = Reflux.createStore({
         var error = JSON.parse(err.response.text);
         console.log(err.status, error.message, error.requestUri);
     },
-    onCreateReport: function (report, errorCallback) {
+    onCreateReport: function (report, onSuccess, onError) {
         request.post('rest/reports').send(report).type('json').end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
-                errorCallback ? errorCallback(error) : this.handleError(err);
+                onError ? onError(error) : this.handleError(err);
             } else {
+                if (onSuccess) {
+                    onSuccess();
+                }
                 loadReports();
             }
         }.bind(this));
     },
-    onUpdateReport: function (report, errorCallback) {
+    onUpdateReport: function (report, onSuccess, onError) {
         request.put('rest/reports/' + report.key).send(report).type('json').end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
-                errorCallback ? errorCallback(error) : this.handleError(err);
+                onError ? onError(error) : this.handleError(err);
             } else {
+                if (onSuccess) {
+                    onSuccess();
+                }
                 loadReports();
             }
         }.bind(this));
     },
-    onDeleteReport: function (report, errorCallback) {
+    onDeleteReport: function (report, onSuccess, onError) {
         request.del('rest/reports/' + report.key).end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
-                errorCallback ? errorCallback(error) : this.handleError(err);
+                onError ? onError(error) : this.handleError(err);
             } else {
+                if (onSuccess) {
+                    onSuccess();
+                }
                 loadReports();
             }
         }.bind(this));

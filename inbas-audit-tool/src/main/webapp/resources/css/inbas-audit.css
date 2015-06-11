@@ -38,3 +38,11 @@ body {
 .report-detail {
     width: 20em;
 }
+
+.large-modal {
+    width: 80%;
+}
+
+.wizard-step {
+    min-height: 650px;
+}

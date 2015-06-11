@@ -51,7 +51,7 @@ var Wizard = React.createClass({
                         {navMenu}
                     </ListGroup>
                 </div>
-                <div className="wizard-content col-xs-4">
+                <div className="wizard-content col-xs-10">
                     {component}
                 </div>
             </div>
@@ -59,13 +59,13 @@ var Wizard = React.createClass({
     },
     initNavMenu: function () {
         return this.props.steps.map(function (step, index) {
-            return (<ListGroupItem key={'nav' + index} onClick={this.navigate}
+            return (<ListGroupItem key={'nav' + index} onClick={this.navigate} id={'wizard-nav-' + index}
                                    active={index === this.state.currentStep ? 'active' : ''}>{step.name}</ListGroupItem>);
         }.bind(this));
     },
     navigate: function(e) {
         var item = e.target;
-        var index = Number(item.key.substring('nav'.length + 1));
+        var index = Number(item.id.substring('wizard-nav-'.length + 1));
 
         if (index === this.state.currentStep || index >= this.props.steps.length) {
             return;
@@ -82,6 +82,8 @@ var Wizard = React.createClass({
         var step = this.props.steps[this.state.currentStep];
         var component = React.createElement(WizardStep, {
             key: 'step' + this.state.currentStep,
+            onClose: this.props.onClose,
+            onFinish: this.state.data.onFinish,
             onAdvance: this.onAdvance,
             onRetreat: this.onRetreat,
             onNext: step.onNext,

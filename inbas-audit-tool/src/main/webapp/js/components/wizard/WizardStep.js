@@ -41,6 +41,13 @@ var WizardStep = React.createClass({
             this.props.onRetreat();
         }
     },
+    onFinish: function() {
+        if (this.props.onFinish) {
+            this.props.onFinish.apply(this, [this.props.data, this.props.onClose, this.onAdvance]);
+        } else {
+            this.props.onClose();
+        }
+    },
 
     render: function () {
         var previousButton;
@@ -48,22 +55,26 @@ var WizardStep = React.createClass({
             previousButton = (<Button onClick={this.onPrevious} disabled={this.state.retreatDisabled} bsStyle="primary">Previous</Button>);
         }
         var nextButton;
+        var finishButton;
         if (!this.props.isLastStep) {
             nextButton = (
                 <Button onClick={this.onNext} disabled={this.state.advanceDisabled} bsStyle="primary">Next</Button>);
+        } else {
+            finishButton = (<Button onClick={this.onFinish} bsStyle="primary">Finish</Button>);
         }
-        var cancelButton = (<Button onClick={this.props.onCancel} bsStyle="primary">Cancel</Button>);
+        var cancelButton = (<Button onClick={this.props.onClose} bsStyle="primary">Cancel</Button>);
         var error;
         if (this.state.currentError) {
             error = (<Alert bsStyle="danger"><p>{this.state.currentError.message}</p></Alert>);
         }
         var Component = this.props.component;
         return (
-            <div className="step">
+            <div className="wizard-step">
                 <Component data={this.props.data}/>
                 <ButtonToolbar>
                     {previousButton}
                     {nextButton}
+                    {finishButton}
                     {cancelButton}
                 </ButtonToolbar>
                 {error}
