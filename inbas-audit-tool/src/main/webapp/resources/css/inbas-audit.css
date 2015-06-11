@@ -34,3 +34,7 @@ body {
     padding-left: 0.5em;
     padding-right: 0.5em;
 }
+
+.report-detail {
+    width: 20em;
+}

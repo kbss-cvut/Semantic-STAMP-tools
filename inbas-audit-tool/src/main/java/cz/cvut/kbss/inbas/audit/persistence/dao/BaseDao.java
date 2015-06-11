@@ -49,7 +49,8 @@ public class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         Objects.requireNonNull(key, ErrorUtils.createNPXMessage("key"));
         final EntityManager em = entityManager();
         try {
-            return em.createNativeQuery("SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> \"" + key + "\". }",
+            return em.createNativeQuery(
+                    "SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> \"" + key + "\"@en . }",
                     type).getSingleResult();
         } catch (NoResultException e) {
             return null;
@@ -80,10 +81,10 @@ public class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
-            em.persist(entity);
             if (entity instanceof HasOwlKey) {
                 ((HasOwlKey) entity).generateKey();
             }
+            em.persist(entity);
             em.getTransaction().commit();
         } catch (Exception e) {
             LOG.error("Error when persisting entity.", e);
@@ -111,7 +112,20 @@ public class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     @Override
     public void remove(T entity) {
-
+        Objects.requireNonNull(entity, ErrorUtils.createNPXMessage("entity"));
+        final EntityManager em = entityManager();
+        try {
+            em.getTransaction().begin();
+            final T toRemove = em.merge(entity);
+            assert toRemove != null;
+            em.remove(toRemove);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            LOG.error("Error when removing entity.", e);
+            throw new PersistenceException(e);
+        } finally {
+            em.close();
+        }
     }
 
     protected EntityManager entityManager() {

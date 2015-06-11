@@ -60,7 +60,7 @@ public class SeverityAssessment implements ReportingStatement, HasOwlKey {
         if (key != null) {
             return;
         }
-        this.key = IdentificationUtils.generateKey(uri);
+        this.key = IdentificationUtils.generateKey();
     }
 
     @Override

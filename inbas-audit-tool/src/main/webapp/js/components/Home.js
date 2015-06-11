@@ -2,6 +2,8 @@
  * @author ledvima1
  */
 
+'use strict';
+
 var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 

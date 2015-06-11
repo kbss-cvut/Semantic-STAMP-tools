@@ -21,6 +21,6 @@ public class NotFoundException extends RuntimeException {
     }
 
     public static NotFoundException create(String resourceName, Object identifier) {
-        return new NotFoundException(resourceName + " with id " + identifier + " not found.");
+        return new NotFoundException(resourceName + " identified by " + identifier + " not found.");
     }
 }

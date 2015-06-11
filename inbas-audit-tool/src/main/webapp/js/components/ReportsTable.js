@@ -2,6 +2,8 @@
  * Created by ledvima1 on 27.5.15.
  */
 
+'use strict';
+
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
@@ -17,10 +19,10 @@ var ReportsTable = React.createClass({
                 <Table striped bordered condensed hover>
                     <thead>
                     <tr>
-                        <th>Event date</th>
-                        <th>Author</th>
+                        <th style={{width: '15em', minWidth: '15em'}}>Event date</th>
+                        <th style={{width: '12em', minWidth: '12em'}}>Author</th>
                         <th>Description</th>
-                        <th>Actions</th>
+                        <th style={{width: '10em', minWidth: '10em'}}>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -34,7 +36,8 @@ var ReportsTable = React.createClass({
         var result = [];
         var len = this.props.reports.length;
         for (var i = 0; i < len; i++) {
-            result.push(<ReportRow report={this.props.reports[i]} key={this.props.reports[i].uri} edit={this.props.edit} />);
+            result.push(<ReportRow report={this.props.reports[i]} key={this.props.reports[i].uri}
+                                   edit={this.props.edit}/>);
         }
         return result;
     }

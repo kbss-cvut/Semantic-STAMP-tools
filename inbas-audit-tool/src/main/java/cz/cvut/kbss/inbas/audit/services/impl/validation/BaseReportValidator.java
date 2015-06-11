@@ -24,7 +24,7 @@ public class BaseReportValidator implements ReportValidator {
         }
         final Date now = new Date();
         if (now.compareTo(report.getEventTime()) < 0) {
-            throw new InvalidReportException("Event time cannot be in the future in report " + report);
+            throw new InvalidReportException("Event time cannot be in the future.");
         }
     }
 }

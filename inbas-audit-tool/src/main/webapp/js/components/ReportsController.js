@@ -2,6 +2,8 @@
  * Created by ledvima1 on 26.5.15.
  */
 
+'use strict';
+
 var React = require('react');
 var Reflux = require('reflux');
 var assign = require('object-assign');
@@ -29,6 +31,7 @@ var ReportsController = React.createClass({
     },
     onReportsChange: function (newState) {
         newState.editing = false;
+        newState.editedReport = null;
         this.onChange(newState);
     },
     onChange: function (newState) {
@@ -37,13 +40,13 @@ var ReportsController = React.createClass({
     onCreateReport: function () {
         this.setState(assign({}, this.state, {editing: true}))
     },
-    onEditReport: function(report) {
+    onEditReport: function (report) {
         this.setState(assign({}, this.state, {
             editing: true,
             editedReport: report
         }));
     },
-    onEditCancel: function() {
+    onEditCancel: function () {
         this.setState(assign({}, this.state, {
             editing: false,
             editedReport: null

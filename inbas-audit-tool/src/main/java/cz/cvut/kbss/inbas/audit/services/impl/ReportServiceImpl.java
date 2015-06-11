@@ -58,6 +58,6 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void remove(EventReport report) {
-
+        reportDao.remove(report);
     }
 }

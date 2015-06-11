@@ -2,6 +2,8 @@
  Main entry point for the ReactJS frontend
  */
 
+'use strict';
+
 var React = require('react');
 var Router = require('react-router');
 

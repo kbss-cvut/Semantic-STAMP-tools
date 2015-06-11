@@ -2,17 +2,21 @@
  * Created by ledvima1 on 26.5.15.
  */
 
+'use strict';
+
 var Reflux = require('reflux');
 var Actions = require('../actions/Actions');
 var request = require('superagent');
 
 
-var reports = [];
+var reports = null;
 
 function loadReports() {
     request.get('rest/reports').accept('json').end(function (err, resp) {
         if (err) {
-            if (err.status !== 404) {
+            if (err.status === 404) {
+                ReportsStore.onReportsLoaded([]);
+            } else {
                 console.log(err.status, err.response);
             }
             return;
@@ -31,30 +35,46 @@ var ReportsStore = Reflux.createStore({
     getReports: function () {
         return reports;
     },
-    onLoadReports: function() {
+    onLoadReports: function () {
         loadReports();
     },
     onReportsLoaded: function (data) {
         reports = data;
         this.trigger(this.getCurrentState());
     },
-    onCreateReport: function(report) {
-        request.post('rest/reports').send(report).type('json').end(function(err, res) {
-            if (err) {
-                console.log(err.status, err.response);
-            } else {
-                loadReports();
-            }
-        })
+    handleError: function (err) {
+        var error = JSON.parse(err.response.text);
+        console.log(err.status, error.message, error.requestUri);
     },
-    onUpdateReport: function(report) {
-        request.put('rest/reports/' + report.key).send(report).type('json').end(function(err, res) {
+    onCreateReport: function (report, errorCallback) {
+        request.post('rest/reports').send(report).type('json').end(function (err, res) {
             if (err) {
-                console.log(err.status, err.response);
+                var error = JSON.parse(err.response.text);
+                errorCallback ? errorCallback(error) : this.handleError(err);
             } else {
                 loadReports();
             }
-        })
+        }.bind(this));
+    },
+    onUpdateReport: function (report, errorCallback) {
+        request.put('rest/reports/' + report.key).send(report).type('json').end(function (err, res) {
+            if (err) {
+                var error = JSON.parse(err.response.text);
+                errorCallback ? errorCallback(error) : this.handleError(err);
+            } else {
+                loadReports();
+            }
+        }.bind(this));
+    },
+    onDeleteReport: function (report, errorCallback) {
+        request.del('rest/reports/' + report.key).end(function (err, res) {
+            if (err) {
+                var error = JSON.parse(err.response.text);
+                errorCallback ? errorCallback(error) : this.handleError(err);
+            } else {
+                loadReports();
+            }
+        }.bind(this));
     }
 });
 

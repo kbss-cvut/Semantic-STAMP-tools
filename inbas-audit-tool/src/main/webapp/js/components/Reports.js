@@ -2,9 +2,12 @@
  * Created by ledvima1 on 26.5.15.
  */
 
+'use strict';
+
 var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 var Button = require('react-bootstrap').Button;
+var ProgressBar = require('react-bootstrap').ProgressBar;
 
 var ReportsTable = require('./ReportsTable');
 var ReportEdit = require('./ReportEdit');
@@ -17,6 +20,11 @@ var Reports = React.createClass({
                             report={this.props.edit.editedReport}/>);
         } else {
             var reports = this.props.reports;
+            if (reports === null) {
+                return (
+                    <ProgressBar active now={50}/>
+                )
+            }
             if (reports.length === 0) {
                 return (
                     <div>

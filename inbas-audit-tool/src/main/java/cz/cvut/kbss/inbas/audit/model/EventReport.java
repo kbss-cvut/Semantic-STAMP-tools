@@ -32,13 +32,16 @@ public class EventReport implements HasOwlKey {
     @OWLDataProperty(iri = Vocabulary.p_dateLastEdited)
     private Date lastEdited;
 
+    @OWLDataProperty(iri = Vocabulary.p_label)
+    private String name;    // Simple name of the event being reported
+
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER)
     private Person author;
 
-    @OWLObjectProperty(iri = Vocabulary.p_lastEditedBy)
+    @OWLObjectProperty(iri = Vocabulary.p_lastEditedBy, fetch = FetchType.EAGER)
     private Person lastEditedBy;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
@@ -91,6 +94,14 @@ public class EventReport implements HasOwlKey {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Person getAuthor() {
@@ -159,15 +170,16 @@ public class EventReport implements HasOwlKey {
         if (key != null) {
             return;
         }
-        this.key = IdentificationUtils.generateKey(uri);
+        // Note: this either has to be called before persist or a setter has to be called to make JOPA notice the change
+        this.key = IdentificationUtils.generateKey();
     }
 
     @Override
     public String toString() {
         return "EventReport{" +
                 "uri=" + uri +
-                ", eventTime=" + eventTime +
-                ", description='" + description + '\'' +
+                ", name=" + name +
+                ", key=" + key +
                 ", author=" + author +
                 '}';
     }
