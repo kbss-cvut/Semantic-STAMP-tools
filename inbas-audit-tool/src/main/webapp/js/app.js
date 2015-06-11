@@ -12,7 +12,7 @@ var Nav = require('react-bootstrap').Nav;
 var NavItemLink = require('react-router-bootstrap').NavItemLink;
 
 var Home = require('./components/Home');
-var ReportsController = require('./components/ReportsController');
+var ReportsController = require('./components/reports/ReportsController');
 var Actions = require('./actions/Actions');
 
 var DefaultRoute = Router.DefaultRoute;

@@ -8,9 +8,11 @@ var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 var Button = require('react-bootstrap').Button;
 var ProgressBar = require('react-bootstrap').ProgressBar;
+var ModalTrigger = require('react-bootstrap').ModalTrigger;
 
 var ReportsTable = require('./ReportsTable');
 var ReportEdit = require('./ReportEdit');
+var WizardWindow = require('../wizard/WizardWindow');
 
 var Reports = React.createClass({
     render: function () {
@@ -25,6 +27,7 @@ var Reports = React.createClass({
                     <ProgressBar active now={50}/>
                 )
             }
+            var wizard = this.openWizardWindow();
             if (reports.length === 0) {
                 return (
                     <div>
@@ -41,12 +44,26 @@ var Reports = React.createClass({
                     <div>
                         <ReportsTable reports={reports} edit={this.props.edit.startEdit}/>
                         <Button bsStyle="primary" onClick={this.props.edit.createReport}>Create Report</Button>
+
+                        {wizard}
                     </div>
                 );
             }
         }
 
 
+    },
+
+    openWizardWindow: function () {
+        var reportWizard = (<WizardWindow title="Event Report Wizard"/>);
+        //return (
+        //    <div>
+        //        <ModalTrigger modal={reportWizard}>
+        //            <Button>Wizard</Button>
+        //        </ModalTrigger>
+        //    </div>
+        //);
+        return null;
     }
 });
 

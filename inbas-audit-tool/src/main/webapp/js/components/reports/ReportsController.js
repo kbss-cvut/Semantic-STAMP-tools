@@ -8,10 +8,10 @@ var React = require('react');
 var Reflux = require('reflux');
 var assign = require('object-assign');
 
-var ReportsStore = require('../stores/ReportsStore');
-var UserStore = require('../stores/UserStore');
+var ReportsStore = require('../../stores/ReportsStore');
+var UserStore = require('../../stores/UserStore');
 var Reports = require('./Reports');
-var Actions = require('../actions/Actions');
+var Actions = require('../../actions/Actions');
 
 var ReportsController = React.createClass({
     mixins: [

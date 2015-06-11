@@ -12,8 +12,8 @@ var Alert = require('react-bootstrap').Alert;
 var assign = require('object-assign');
 var DateTimePicker = require('react-bootstrap-datetimepicker');
 
-var Actions = require('../actions/Actions');
-var Utils = require('../utils/Utils');
+var Actions = require('../../actions/Actions');
+var Utils = require('../../utils/Utils');
 
 var ReportEdit = React.createClass({
     getInitialState: function () {
