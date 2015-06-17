@@ -10,10 +10,9 @@ var Jumbotron = require('react-bootstrap').Jumbotron;
 var Button = require('react-bootstrap').Button;
 var ProgressBar = require('react-bootstrap').ProgressBar;
 var ModalTrigger = require('react-bootstrap').ModalTrigger;
-var OverlayMixin = require('react-bootstrap').OverlayMixin;
 
 var ReportsTable = require('./ReportsTable');
-var ReportEdit = require('./ReportEdit');
+var ReportDetail = require('./ReportDetail');
 var WizardWindow = require('../wizard/WizardWindow');
 var Actions = require('../../actions/Actions');
 
@@ -21,35 +20,16 @@ var Actions = require('../../actions/Actions');
 var WizardSteps = require('./wizard/Steps');
 
 var Reports = React.createClass({
-    mixins: [OverlayMixin],
-    submitReport: function (data, onSuccess, onError) {
-        var report = data.report;
-        report.lastEditedBy = this.props.user;
-        if (report.uri) {
-            Actions.updateReport(report, onSuccess, onError);
-        }
-        else {
-            Actions.createReport(report, onSuccess, onError);
-        }
-    },
-    renderOverlay: function () {
-        if (this.props.edit.editing) {
-            return (<WizardWindow steps={WizardSteps} title="Event Report Wizard" user={this.props.user}
-                                  onFinish={this.submitReport}
-                                  report={this.initReport(this.props.edit.editedReport)}
-                                  onRequestHide={this.props.edit.cancelEdit}/>);
-        } else {
-            return <span/>
-        }
-    },
     render: function () {
+        if (this.props.edit.editing) {
+            return (<ReportDetail user={this.props.user} report={this.props.edit.editedReport} onCancelEdit={this.props.edit.onCancelEdit}/>);
+        }
         var reports = this.props.reports;
         if (reports === null) {
             return (
                 <ProgressBar active now={50}/>
             )
         }
-        var wizard = this.openWizardWindow();
         if (reports.length === 0) {
             return (
                 <div>
@@ -57,44 +37,20 @@ var Reports = React.createClass({
                         <h2>INBAS Reporting</h2>
 
                         <p>There are no reports, yet.</p>
+                        <Button bsStyle="primary" onClick={this.props.edit.onCreateReport}>Create Report</Button>
                     </Jumbotron>
                 </div>
             );
         } else {
             return (
                 <div>
-                    <ReportsTable reports={reports} edit={this.props.edit.startEdit}/>
+                    <ReportsTable reports={reports} onEditReport={this.props.edit.onEditReport}/>
 
-                    {wizard}
+                    <Button bsStyle="primary" onClick={this.props.edit.onCreateReport}>Create Report</Button>
                 </div>
             );
         }
 
-    },
-
-    openWizardWindow: function () {
-        var reportWizard = (<WizardWindow steps={WizardSteps} title="Event Report Wizard" user={this.props.user}
-                                          onFinish={this.submitReport}
-                                          report={this.initReport(this.props.edit.editedReport)}/>);
-        return (
-            <div>
-                <ModalTrigger modal={reportWizard}>
-                    <Button bsStyle="primary">Create Report</Button>
-                </ModalTrigger>
-            </div>
-        );
-        //return null;
-    },
-    initReport: function (report) {
-        if (report !== null) {
-            return assign({}, report);
-        } else {
-            return {
-                eventTime: Date.now(),
-                description: '',
-                author: this.props.user
-            }
-        }
     }
 });
 

@@ -37,7 +37,7 @@ var ReportsTable = React.createClass({
         var len = this.props.reports.length;
         for (var i = 0; i < len; i++) {
             result.push(<ReportRow report={this.props.reports[i]} key={this.props.reports[i].uri}
-                                   edit={this.props.edit}/>);
+                                   onEditReport={this.props.onEditReport}/>);
         }
         return result;
     }

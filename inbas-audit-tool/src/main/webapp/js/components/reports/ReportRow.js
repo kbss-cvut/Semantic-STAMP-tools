@@ -25,7 +25,7 @@ var ReportRow = React.createClass({
         this.onEditClick();
     },
     onEditClick: function () {
-        this.props.edit(this.props.report);
+        this.props.onEditReport(this.props.report);
     },
     onDeleteClick: function () {
         this.setState({modalOpen: true});

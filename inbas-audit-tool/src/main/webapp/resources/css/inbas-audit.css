@@ -46,3 +46,7 @@ body {
 .wizard-step {
     min-height: 650px;
 }
+
+.wizard-step-content {
+    min-height: 600px;
+}

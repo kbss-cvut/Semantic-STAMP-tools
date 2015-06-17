@@ -47,13 +47,13 @@ public class EventReport implements HasOwlKey {
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
     private Resource resource;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasSeverityAssessment)
-    private Set<SeverityAssessment> severityAssessments;
+    @OWLObjectProperty(iri = Vocabulary.p_hasSeverityAssessment, cascade = CascadeType.ALL)
+    private SeverityAssessment severityAssessment;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure)
+    @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL)
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment)
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.ALL)
     private Set<EventTypeAssessment> typeAssessments;
 
     public URI getUri() {
@@ -128,12 +128,12 @@ public class EventReport implements HasOwlKey {
         this.resource = resource;
     }
 
-    public Set<SeverityAssessment> getSeverityAssessments() {
-        return severityAssessments;
+    public SeverityAssessment getSeverityAssessment() {
+        return severityAssessment;
     }
 
-    public void setSeverityAssessments(Set<SeverityAssessment> severityAssessments) {
-        this.severityAssessments = severityAssessments;
+    public void setSeverityAssessment(SeverityAssessment severityAssessment) {
+        this.severityAssessment = severityAssessment;
     }
 
     public Set<CorrectiveMeasure> getCorrectiveMeasures() {
@@ -154,9 +154,9 @@ public class EventReport implements HasOwlKey {
 
     @JsonIgnore
     public Collection<ReportingStatement> getStatements() {
-        final Set<ReportingStatement> statements = new HashSet<>(severityAssessments);
-        statements.addAll(correctiveMeasures);
+        final Set<ReportingStatement> statements = new HashSet<>(correctiveMeasures);
         statements.addAll(typeAssessments);
+        statements.add(severityAssessment);
         return statements;
     }
 

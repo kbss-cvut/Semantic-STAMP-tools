@@ -56,9 +56,9 @@ var ReportsController = React.createClass({
         var edit = {
             editing: this.state.editing,
             editedReport: this.state.editedReport,
-            createReport: this.onCreateReport,
-            startEdit: this.onEditReport,
-            cancelEdit: this.onEditCancel
+            onCreateReport: this.onCreateReport,
+            onEditReport: this.onEditReport,
+            onCancelEdit: this.onEditCancel
         };
         return (
             <Reports reports={this.state.reports} user={this.state.user} edit={edit}/>

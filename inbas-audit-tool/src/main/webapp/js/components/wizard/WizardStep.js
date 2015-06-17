@@ -32,7 +32,11 @@ var WizardStep = React.createClass({
             advanceDisabled: true,
             retreatDisabled: true
         });
-        this.props.onNext.apply(this, [this.onAdvance]);
+        if (this.props.onNext) {
+            this.props.onNext.apply(this, [this.onAdvance]);
+        } else {
+            this.props.onAdvance();
+        }
     },
     onPrevious: function () {
         if (this.props.onPrevious) {
@@ -41,7 +45,7 @@ var WizardStep = React.createClass({
             this.props.onRetreat();
         }
     },
-    onFinish: function() {
+    onFinish: function () {
         if (this.props.onFinish) {
             this.props.onFinish.apply(this, [this.props.data, this.props.onClose, this.onAdvance]);
         } else {
@@ -70,7 +74,9 @@ var WizardStep = React.createClass({
         var Component = this.props.component;
         return (
             <div className="wizard-step">
-                <Component data={this.props.data}/>
+                <div className="wizard-step-content">
+                    <Component data={this.props.data}/>
+                </div>
                 <ButtonToolbar>
                     {previousButton}
                     {nextButton}
@@ -79,7 +85,7 @@ var WizardStep = React.createClass({
                 </ButtonToolbar>
                 {error}
             </div>
-        )
+        );
     }
 });
 
