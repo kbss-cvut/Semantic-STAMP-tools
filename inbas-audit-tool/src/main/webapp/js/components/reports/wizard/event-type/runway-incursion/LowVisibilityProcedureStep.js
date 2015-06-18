@@ -9,7 +9,7 @@ var assign = require('object-assign');
 var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
-var LowVisibilityProcedure = React.createClass({
+var LowVisibilityProcedureStep = React.createClass({
     getInitialState: function () {
         return {
             statement: this.props.data.statement
@@ -31,4 +31,4 @@ var LowVisibilityProcedure = React.createClass({
     }
 });
 
-module.exports = LowVisibilityProcedure;
+module.exports = LowVisibilityProcedureStep;

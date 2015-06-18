@@ -65,7 +65,7 @@ var Wizard = React.createClass({
     },
     navigate: function(e) {
         var item = e.target;
-        var index = Number(item.id.substring('wizard-nav-'.length + 1));
+        var index = Number(item.id.substring('wizard-nav-'.length));
 
         if (index === this.state.currentStep || index >= this.props.steps.length) {
             return;

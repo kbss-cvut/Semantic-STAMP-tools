@@ -4,16 +4,21 @@
 
 'use strict';
 
-var LowVisibilityProcedure = require('./LowVisibilityProcedure');
-var AircraftCleared = require('./AircraftCleared');
+var LowVisibilityProcedureStep = require('./LowVisibilityProcedureStep');
+var AircraftClearedStep = require('./AircraftClearedStep');
+var RunwayIntruderStep = require('./RunwayIntruderStep');
 
 module.exports = [
     {
         name: 'Low Visibility Procedure',
-        component: LowVisibilityProcedure
+        component: LowVisibilityProcedureStep
     },
     {
         name: 'Aircraft Cleared to Use Runway',
-        component: AircraftCleared
+        component: AircraftClearedStep
+    },
+    {
+        name: 'Runway Intruding Object',
+        component: RunwayIntruderStep
     }
 ];

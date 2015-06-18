@@ -9,7 +9,7 @@ var assign = require('object-assign');
 var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
-var AircraftCleared = React.createClass({
+var AircraftClearedStep = React.createClass({
     getInitialState: function () {
         return {
             statement: this.props.data.statement
@@ -53,4 +53,4 @@ var AircraftCleared = React.createClass({
     }
 });
 
-module.exports = AircraftCleared;
+module.exports = AircraftClearedStep;

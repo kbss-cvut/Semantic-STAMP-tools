@@ -48,7 +48,7 @@ var ReportStatements = React.createClass({
         }
         var typeWizard = (
             <WizardWindow steps={RunwayIncursionSteps} title="Event Type Assessment Wizard"
-                          onFinish={this.addEventTypeAssessment} statement={{}} />
+                          onFinish={this.addEventTypeAssessment} statement={{}} enableForwardSkip="true" />
         );
         return (
             <div>
@@ -61,9 +61,11 @@ var ReportStatements = React.createClass({
             </div>
         );
     },
-    addEventTypeAssessment: function (statement, closeCallback) {
-        // TODO
-        this.props.report.typeAssessments.push(statement);
+    addEventTypeAssessment: function (data, closeCallback) {
+        var statement = data.statement;
+        var eventTypes = this.props.report.typeAssessments != null ? this.props.report.typeAssessments : [];
+        eventTypes.push(statement);
+        this.props.onUpdateReport({typeAssessments: eventTypes});
         closeCallback();
     },
 
