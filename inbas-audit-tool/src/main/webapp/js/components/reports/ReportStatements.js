@@ -48,7 +48,7 @@ var ReportStatements = React.createClass({
         }
         var typeWizard = (
             <WizardWindow steps={RunwayIncursionSteps} title="Event Type Assessment Wizard"
-                          onFinish={this.addEventTypeAssessment} statement={{}} enableForwardSkip="true" />
+                          onFinish={this.addEventTypeAssessment} statement={{}} />
         );
         return (
             <div>

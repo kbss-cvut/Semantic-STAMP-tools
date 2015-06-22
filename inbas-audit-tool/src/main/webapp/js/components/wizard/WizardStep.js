@@ -77,7 +77,7 @@ var WizardStep = React.createClass({
                 <div className="wizard-step-content">
                     <Component data={this.props.data}/>
                 </div>
-                <ButtonToolbar>
+                <ButtonToolbar style={{float: 'right'}}>
                     {previousButton}
                     {nextButton}
                     {finishButton}

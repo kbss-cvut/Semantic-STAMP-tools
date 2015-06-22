@@ -36,7 +36,22 @@ body {
 }
 
 .report-detail {
-    width: 20em;
+    width: 47%;
+}
+
+.report-detail-float {
+    float: left;
+    width: 47%;
+}
+
+.report-detail-float-right {
+    float: left;
+    width: 47%;
+    margin-left: 6%
+}
+
+.float-container {
+    overflow: hidden;
 }
 
 .large-modal {

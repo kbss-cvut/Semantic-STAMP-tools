@@ -19,8 +19,8 @@ var ReportsTable = React.createClass({
                 <Table striped bordered condensed hover>
                     <thead>
                     <tr>
-                        <th style={{width: '15em', minWidth: '15em'}}>Event date</th>
-                        <th style={{width: '12em', minWidth: '12em'}}>Author</th>
+                        <th style={{width: '15em', minWidth: '15em'}}>Event name</th>
+                        <th style={{width: '13em', minWidth: '13em'}}>Event date</th>
                         <th>Description</th>
                         <th style={{width: '10em', minWidth: '10em'}}>Actions</th>
                     </tr>

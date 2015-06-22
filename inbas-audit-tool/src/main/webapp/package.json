@@ -14,7 +14,8 @@
     "body-parser": "^1.4.3",
     "express": "^4.4.5",
     "reflux": "^0.2.7",
-    "react-bootstrap-datetimepicker": "^0.0.17"
+    "react-bootstrap-datetimepicker": "^0.0.17",
+    "classnames": "^2.1.2"
   },
   "devDependencies": {
     "browserify": "^6.2.0",

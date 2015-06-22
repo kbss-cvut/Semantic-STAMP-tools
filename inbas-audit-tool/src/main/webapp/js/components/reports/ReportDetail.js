@@ -146,11 +146,11 @@ var ReportEdit = React.createClass({
         var lastEditor = this.state.report.lastEditedBy.firstName + ' ' + this.state.report.lastEditedBy.lastName;
         return (
             <div style={{overflow: 'hidden'}}>
-                <div className="report-detail" style={{float: 'left'}}>
+                <div className="report-detail-float">
                     <Input type="text" label="Last Edited" value={formattedDate}
                            title="Date of last editing of this report" disabled/>
                 </div>
-                <div className="report-detail" style={{float: 'left', margin: '0em 0em 0em 3em'}}>
+                <div className="report-detail-float-right">
                     <Input type="text" label="By" value={lastEditor} title="The user who edited this report last"
                            disabled/>
                 </div>

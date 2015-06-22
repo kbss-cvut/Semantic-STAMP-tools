@@ -9,6 +9,9 @@ var assign = require('object-assign');
 var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
+var AircraftRegistration = require('../../AircraftRegistration');
+var AircraftIntruder = require('./AircraftIntruder');
+
 var RunwayIntruderStep = React.createClass({
     getInitialState: function () {
         var statement = this.props.data.statement;
@@ -27,12 +30,14 @@ var RunwayIntruderStep = React.createClass({
             <Panel header={title}>
                 <div>
                     <Input type='radio' label='Aircraft' value='aircraft'
-                           checked={this.state.intruderType === 'aircraft'} onChange={this.onIntruderTypeSelect}/>
+                           checked={this.state.intruderType === 'aircraft'} onChange={this.onIntruderTypeSelect}
+                           wrapperClassName='col-xs-2'/>
                     <Input type='radio' label='Vehicle' value='vehicle' checked={this.state.intruderType === 'vehicle'}
-                           onChange={this.onIntruderTypeSelect}/>
+                           onChange={this.onIntruderTypeSelect} wrapperClassName='col-xs-2'/>
                     <Input type='radio' label='Person' value='person' checked={this.state.intruderType === 'person'}
-                           onChange={this.onIntruderTypeSelect}/>
+                           onChange={this.onIntruderTypeSelect} wrapperClassName='col-xs-2'/>
                 </div>
+                <div style={{clear: 'both'}}/>
                 {pane}
             </Panel>
         );
@@ -40,39 +45,17 @@ var RunwayIntruderStep = React.createClass({
     renderPane: function () {
         switch (this.state.intruderType) {
             case 'aircraft':
-                return this.renderAircraftPane();
+                return (<AircraftIntruder statement={this.state.statement} onChange={this.onChange}/>);
             default:
                 return null;
         }
     },
-    renderAircraftPane: function() {
-        var statement = this.state.statement;
-        return (
-            <div>
-            <div className='form-group'>
-                <Input type='text' label='Aircraft Registration' name='aircraftRegistration' value={statement.intruder.aicraftRegistration} onChange={this.onChange}/>
-                <Input type='text' label='State of Registration' name='registrationState' value={statement.intruder.registrationState} onChange={this.onChange}/>
-                </div>
-                <Panel header='Aircraft Event'>
-                    <Input type='text' label='Call Sign' name='callSign' value={statement.intruder.callSign} onChange={this.onChange}/>
-                    <Input type='text' label='Operator' name='operator' value={statement.intruder.operator} onChange={this.onChange}/>
-                    <div>
-                        <Input type='radio' label='Flight' value='flight' checked={this.state.aircraftEventType === 'flight'} onChange={this.onAircraftEventTypeSelect}/>
-                        <Input type='radio' label='Non Flight' value='nonflight' checked={this.state.aircraftEventType === 'nonflight'} onChange={this.onAircraftEventTypeSelect}/>
-                        </div>
-                    </Panel>
-
-            </div>
-        )
-    },
-    onChange: function(e) {
+    onChange: function (e) {
         var value = e.target.value;
         var attributeName = e.target.name;
-        // TODO The assignment throws errors because the value is often null (the attribute hasn't been defined yet on intruder)
+        // TODO The assignment throws errors because the value is often null (the attribute hasn't been defined yet on
+        // intruder)
         this.setState(assign(this.state.statement.intruder[attributeName], value));
-    },
-    onAircraftEventTypeSelect: function(e) {
-        this.setState(assign(this.state, {aircraftEventType: e.target.value}));
     },
     onIntruderTypeSelect: function (e) {
         this.setState(assign(this.state, {intruderType: e.target.value}));

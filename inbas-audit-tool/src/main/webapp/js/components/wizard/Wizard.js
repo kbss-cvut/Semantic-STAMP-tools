@@ -28,6 +28,7 @@ var Wizard = React.createClass({
         if (this.state.currentStep === this.props.steps.length - 1) {
             return;
         }
+        this.props.steps[this.state.currentStep + 1].visited = true;
         this.setState({
             currentStep: this.state.currentStep + 1
         });
@@ -71,7 +72,7 @@ var Wizard = React.createClass({
             return;
         }
         // Can we jump forward?
-        if (index > this.state.currentStep && !this.props.enableForwardSkip) {
+        if (index > this.state.currentStep && !this.props.steps[index].visited && !this.props.enableForwardSkip) {
             return;
         }
         this.setState({

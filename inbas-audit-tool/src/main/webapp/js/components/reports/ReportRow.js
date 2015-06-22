@@ -12,6 +12,8 @@ var OverlayMixin = require('react-bootstrap').OverlayMixin;
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils.js');
 
+var DESCRIPTION_LENGTH_THRESHOLD = 100;
+
 var ReportRow = React.createClass({
     mixins: [OverlayMixin],
 
@@ -41,12 +43,13 @@ var ReportRow = React.createClass({
         var report = this.props.report;
         var date = new Date(report.eventTime);
         var formattedDate = Utils.formatDate(date);
-        var authorName = report.author.firstName + " " + report.author.lastName;
+        var description = report.description.length > DESCRIPTION_LENGTH_THRESHOLD ?
+            (report.description.substring(0, DESCRIPTION_LENGTH_THRESHOLD) + '...') : report.description;
         return (
             <tr onDoubleClick={this.onDoubleClick}>
+                <td>{report.name}</td>
                 <td>{formattedDate}</td>
-                <td>{authorName}</td>
-                <td>{report.description}</td>
+                <td title={report.description}>{description}</td>
                 <td>
                     <span className="actions">
                         <Button bsStyle="primary" bsSize="small" onClick={this.onEditClick}>Edit</Button>
