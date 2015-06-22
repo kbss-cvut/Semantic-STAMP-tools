@@ -9,8 +9,9 @@ var assign = require('object-assign');
 var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
-var AircraftRegistration = require('../../AircraftRegistration');
 var AircraftIntruder = require('./AircraftIntruder');
+var PersonIntruder = require('./PersonIntruder');
+var VehicleIntruder = require('./VehicleIntruder');
 
 var RunwayIntruderStep = React.createClass({
     getInitialState: function () {
@@ -46,6 +47,10 @@ var RunwayIntruderStep = React.createClass({
         switch (this.state.intruderType) {
             case 'aircraft':
                 return (<AircraftIntruder statement={this.state.statement} onChange={this.onChange}/>);
+            case 'vehicle':
+                return (<VehicleIntruder statement={this.state.statement} onChange={this.onChange}/>);
+            case 'person':
+                return (<PersonIntruder statement={this.state.statement} onChange={this.onChange}/>);
             default:
                 return null;
         }
@@ -55,6 +60,10 @@ var RunwayIntruderStep = React.createClass({
         var attributeName = e.target.name;
         // TODO The assignment throws errors because the value is often null (the attribute hasn't been defined yet on
         // intruder)
+        // Just prevent undefined errors by assigning something into the attribute
+        if (!this.state.statement.intruder[attributeName]) {
+            this.state.statement.intruder[attributeName] = null;
+        }
         this.setState(assign(this.state.statement.intruder[attributeName], value));
     },
     onIntruderTypeSelect: function (e) {
