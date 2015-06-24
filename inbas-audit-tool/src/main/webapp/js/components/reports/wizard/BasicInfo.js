@@ -16,11 +16,11 @@ var Utils = require('../../../utils/Utils');
 
 var BasicInfo = React.createClass({
     getInitialState: function () {
-            return {
-                report: this.props.data.report,
-                submitting: false,
-                error: null
-            };
+        return {
+            report: this.props.data.report,
+            submitting: false,
+            error: null
+        };
     },
     isReportNew: function () {
         return !this.props.data.report.uri;
@@ -40,28 +40,32 @@ var BasicInfo = React.createClass({
     handleAlertDismiss: function () {
         this.setState(assign({}, this.state, {error: null}));
     },
+
+
     render: function () {
-        var author = this.state.report.author.firstName + " " + this.state.report.author.lastName;
+        var author = this.state.report.author.firstName + ' ' + this.state.report.author.lastName;
         var lastEdited = this.renderLastEdited();
         return (
-            <Panel header="Basic Event Information">
+            <Panel header='Basic Event Information'>
                 <form>
-                    <div className="form-group report-detail">
-                        <Input type="text" name="name" value={this.state.report.name} onChange={this.onChange}
-                               label="Report Name" title="Short descriptive name for this report"/>
+                    <div className='form-group report-detail'>
+                        <Input type='text' name='name' value={this.state.report.name} onChange={this.onChange}
+                               label='Report Name' title='Short descriptive name for this report'/>
                     </div>
-                    <div className="form-group report-detail">
-                        <Input type="text" value={author} label="Author" title="Report author" disabled/>
+                    <div className='form-group report-detail'>
+                        <Input type='text' value={author} label='Author' title='Report author' disabled/>
                     </div>
-                    <div className="picker-container form-group report-detail">
-                        <label className="control-label">Event Time</label>
-                        <DateTimePicker inputFormat="DD-MM-YY hh:mm A" dateTime={this.state.report.eventTime.toString()}
+                    <div className='picker-container form-group report-detail'>
+                        <label className='control-label'>Event Time</label>
+                        <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={this.state.report.eventTime.toString()}
                                         onChange={this.onDateChange}/>
                     </div>
                     {lastEdited}
-                    <div className="form-group">
-                        <Input type="textarea" rows="8" label="Description" name="description" placeholder="Event description"
-                               value={this.state.report.description} onChange={this.onChange} title="Event description"/>
+                    <div className='form-group'>
+                        <Input type='textarea' rows='8' label='Description' name='description'
+                               placeholder='Event description'
+                               value={this.state.report.description} onChange={this.onChange}
+                               title='Event description'/>
                     </div>
                 </form>
             </Panel>
@@ -69,8 +73,8 @@ var BasicInfo = React.createClass({
     },
     renderError: function () {
         return this.state.error ? (
-            <div className="form-group">
-                <Alert bsStyle="danger" onDismiss={this.handleAlertDismiss} dismissAfter={10000}>
+            <div className='form-group'>
+                <Alert bsStyle='danger' onDismiss={this.handleAlertDismiss} dismissAfter={10000}>
                     <p>Unable to submit report. Server responded with message: {this.state.error.message}</p>
                 </Alert>
             </div>
@@ -84,14 +88,16 @@ var BasicInfo = React.createClass({
         var lastEditor = this.state.report.lastEditedBy.firstName + ' ' + this.state.report.lastEditedBy.lastName;
         return (
             <div style={{overflow: 'hidden'}}>
-                <div className="report-detail" style={{float: 'left'}}>
-                    <Input type="text" label="Last Edited" value={formattedDate} title="Date of last editing of this report" disabled/>
+                <div className='report-detail' style={{float: 'left'}}>
+                    <Input type='text' label='Last Edited' value={formattedDate}
+                           title='Date of last editing of this report' disabled/>
                 </div>
-                <div className="report-detail" style={{float: 'left', margin: '0em 0em 0em 3em'}}>
-                    <Input type="text" label="By" value={lastEditor} title="The user who edited this report last" disabled/>
+                <div className='report-detail' style={{float: 'left', margin: '0em 0em 0em 3em'}}>
+                    <Input type='text' label='By' value={lastEditor} title='The user who edited this report last'
+                           disabled/>
                 </div>
             </div>
-        )
+        );
     }
 });
 

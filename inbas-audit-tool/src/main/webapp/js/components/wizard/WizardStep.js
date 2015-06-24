@@ -53,6 +53,10 @@ var WizardStep = React.createClass({
         }
     },
 
+    updateNextButtonState: function(enabled) {
+        this.setState({advanceDisabled: !enabled})
+    },
+
     render: function () {
         var previousButton;
         if (!this.props.isFirstStep) {
@@ -75,7 +79,7 @@ var WizardStep = React.createClass({
         return (
             <div className="wizard-step">
                 <div className="wizard-step-content">
-                    <Component data={this.props.data}/>
+                    <Component data={this.props.data} updateNextButtonState={this.updateNextButtonState}/>
                 </div>
                 <ButtonToolbar style={{float: 'right'}}>
                     {previousButton}

@@ -11,66 +11,76 @@ var Panel = require('react-bootstrap').Panel;
 
 var AircraftRegistration = require('../../AircraftRegistration');
 var FlightInfo = require('../../FlightInfo');
+var FlightOperationType = require('../../FlightOperationType');
 
 var AircraftIntruder = React.createClass({
     getInitialState: function () {
         return {
-            statement: this.props.statement,
-            aircraftEventType: null
+            statement: this.props.statement
         };
     },
+    onAircraftEventTypeSelect: function (e) {
+        var change = {
+            aircraftEventType: e.target.value
+        };
+        if (change.aircraftEventType === 'nonflight') {
+            change.phase = 'taxiing';
+            this.eraseFlightAttributes();
+        }
+        assign(this.state.statement.intruder, change);
+        this.setState({statement: this.state.statement});
+    },
+    onPhaseChange: function(e) {
+        this.setState(assign(this.state.statement.intruder, {phase: e.target.value}));
+    },
+    eraseFlightAttributes: function() {
+        var intruder = this.state.statement.intruder;
+        delete intruder.flightNumber;
+        delete intruder.operationType;
+        delete intruder.lastDeparturePoint;
+        delete intruder.plannedDestination;
+    },
+
 
     render: function () {
-        var statement = this.state.statement;
-        var registrationData = {
-            registration: statement.intruder.aircraftRegistration,
-            registryState: statement.intruder.aircraftRegistryState
-        };
+        var intruder = this.state.statement.intruder;
         return (
             <div>
                 <div className='form-group'>
-                    <AircraftRegistration data={registrationData} onChange={this.onRegistrationChange}/>
+                    <AircraftRegistration aircraftRegistration={intruder.aircraftRegistration}
+                                          aircraftRegistryState={intruder.aircraftRegistryState}
+                                          onChange={this.props.onChange}/>
                 </div>
                 <Panel header='Aircraft Event'>
                     <div className='float-container'>
                         <div className='report-detail-float'>
-                            <Input type='text' label='Call Sign' name='callSign' value={statement.intruder.callSign}
+                            <Input type='text' label='Call Sign' name='callSign' value={intruder.callSign}
                                    onChange={this.props.onChange}/>
                         </div>
                         <div className='report-detail-float-right'>
-                            <Input type='text' label='Operator' name='operator' value={statement.intruder.operator}
+                            <Input type='text' label='Operator' name='operator' value={intruder.operator}
                                    onChange={this.props.onChange}/>
                         </div>
                     </div>
                     <div>
                         <Input type='radio' label='Flight' value='flight'
-                               checked={this.state.aircraftEventType === 'flight'}
+                               checked={intruder.aircraftEventType === 'flight'}
                                onChange={this.onAircraftEventTypeSelect} wrapperClassName='col-xs-2'/>
                         <Input type='radio' label='Non Flight' value='nonflight'
-                               checked={this.state.aircraftEventType === 'nonflight'}
+                               checked={intruder.aircraftEventType === 'nonflight'}
                                onChange={this.onAircraftEventTypeSelect} wrapperClassName='col-xs-2'/>
 
                         <div style={{clear: 'both'}}/>
                     </div>
-                    {this.renderAircraftEventPane()}
+                    {this.renderAircraftEventPane(intruder.aircraftEventType)}
                 </Panel>
 
             </div>
         );
     },
 
-    onRegistrationChange: function (data) {
-        this.setState(assign(this.state.statement.intruder, {
-            aircraftRegistration: data.registration, aircraftRegistryState: data.registryState
-        }));
-    },
-
-    onAircraftEventTypeSelect: function (e) {
-        this.setState(assign(this.state, {aircraftEventType: e.target.value}));
-    },
-
-    renderAircraftEventPane: function () {
-        switch (this.state.aircraftEventType) {
+    renderAircraftEventPane: function (aircraftEventType) {
+        switch (aircraftEventType) {
             case 'flight':
                 return this.renderFlightEventPane();
             case 'nonflight':
@@ -81,16 +91,16 @@ var AircraftIntruder = React.createClass({
     },
 
     renderFlightEventPane: function () {
-        var statement = this.state.statement;
+        var intruder = this.state.statement.intruder;
         return (
             <Panel header='Aviation Operation'>
                 <div className='report-detail'>
                     <Input type='text' label='Flight Number' name='flightNumber'
-                           value={statement.intruder.flightNumber} onChange={this.props.onChange}/>
+                           value={intruder.flightNumber} onChange={this.props.onChange}/>
                 </div>
                 <div className='float-container'>
                     <div className='report-detail-float'>
-                        <Input type='select' label='Phase' value={statement.intruder.phase}
+                        <Input type='select' label='Phase' value={intruder.phase} onChange={this.onPhaseChange}
                                title='What was the aircraft doing?'>
                             <option value='taxi_to_runway'
                                     title='Commences when the aircraft begins to move under its own
@@ -113,23 +123,12 @@ var AircraftIntruder = React.createClass({
                         </Input>
                     </div>
                     <div className='report-detail-float-right'>
-                        <Input type='select' label='Operation type'
-                               value={statement.intruder.operationType}>
-                            <option value='passenger'
-                                    title='A flight carrying one or more revenue passengers. This includes flights which
-                                     carry, in addition to passengers, mail or cargo.'>
-                                Passenger flight
-                            </option>
-                            <option value='cargo'
-                                    title='This is to be used for all-freight services only. Cargo includes freight,
-                                    unaccompanied baggage and mail.'>
-                                Cargo flight
-                            </option>
-                        </Input>
+                        <FlightOperationType operationType={intruder.operationType}
+                                             onChange={this.props.onChange}/>
                     </div>
                 </div>
-                <FlightInfo lastDeparturePoint={statement.intruder.lastDeparturePoint}
-                            plannedDestination={statement.intruder.plannedDestination} onChange={this.onChange}/>
+                <FlightInfo lastDeparturePoint={intruder.lastDeparturePoint}
+                            plannedDestination={intruder.plannedDestination} onChange={this.props.onChange}/>
             </Panel>
         );
     },

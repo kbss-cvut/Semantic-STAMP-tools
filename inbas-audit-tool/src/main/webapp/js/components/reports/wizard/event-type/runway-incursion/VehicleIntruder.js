@@ -9,12 +9,13 @@ var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
 var VehicleIntruder = React.createClass({
+    // TODO Checkbox onChange
     render: function () {
         var statement = this.props.statement;
         return (
             <Panel header='Vehicle Event' style={{margin: '15px 0px 0px 0px'}}>
                 <div className='form-group report-detail'>
-                    <Input type='text' label='Vehicle type' name='vehicleType' value={statement.intruder.vehicleType}
+                    <Input type='text' label='Vehicle Type' name='vehicleType' value={statement.intruder.vehicleType}
                            onChange={this.props.onChange} title='Type of aerodrome vehicle that intruded'/>
                 </div>
                 <div className='form-group float-container'>

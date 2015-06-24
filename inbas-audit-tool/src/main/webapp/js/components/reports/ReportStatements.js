@@ -77,14 +77,14 @@ var ReportStatements = React.createClass({
         } else {
             component = this.renderTable(data, ['description'], (<th>Description</th>), "corrective");
         }
-        var typeWizard = (
+        var correctionWizard = (
             <WizardWindow steps={CorrectiveMeasureWizardSteps} title="Corrective Measure Wizard"
                           onFinish={this.addCorrectiveMeasure}/>
         );
         return (
             <div>
                 {component}
-                <ModalTrigger modal={typeWizard}>
+                <ModalTrigger modal={correctionWizard}>
                     <Button bsStyle="primary" title="Add new Corrective Measure">
                         <Glyphicon glyph='plus'/>
                     </Button>
@@ -110,14 +110,14 @@ var ReportStatements = React.createClass({
         } else {
             component = this.renderTable(data, ['level'], (<th>Level</th>), 'severity');
         }
-        var typeWizard = (
+        var severityWizard = (
             <WizardWindow steps={SeverityAssessmentWizardSteps} title="Severity Assessment Wizard"
                           onFinish={this.addSeverityAssessment}/>
         );
         return (
             <div>
                 {component}
-                <ModalTrigger modal={typeWizard}>
+                <ModalTrigger modal={severityWizard}>
                     <Button bsStyle="primary" title="Add new Severity Assessment">
                         <Glyphicon glyph='plus'/>
                     </Button>

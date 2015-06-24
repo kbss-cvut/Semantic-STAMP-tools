@@ -16,26 +16,39 @@ var VehicleIntruder = require('./VehicleIntruder');
 var RunwayIntruderStep = React.createClass({
     getInitialState: function () {
         var statement = this.props.data.statement;
-        if (statement.intruder == null) {
+        if (!statement.intruder) {
             statement.intruder = {};
         }
         return {
-            intruderType: null,
             statement: statement
         };
     },
+    onChange: function (e) {
+        var value = e.target.value;
+        var attributeName = e.target.name;
+        this.state.statement.intruder[attributeName] = value;
+        this.setState({statement: this.state.statement});
+    },
+    onIntruderTypeSelect: function (e) {
+        // Delete old values if present
+        assign(this.state.statement, {intruder: {}});
+        this.setState(assign(this.state.statement.intruder, {intruderType: e.target.value}));
+    },
+
+
     render: function () {
-        var pane = this.renderPane();
+        var intruderType = this.state.statement.intruder.intruderType;
+        var pane = this.renderPane(intruderType);
         var title = (<h3>Runway Intruding Object</h3>);
         return (
             <Panel header={title}>
                 <div>
                     <Input type='radio' label='Aircraft' value='aircraft'
-                           checked={this.state.intruderType === 'aircraft'} onChange={this.onIntruderTypeSelect}
+                           checked={intruderType === 'aircraft'} onChange={this.onIntruderTypeSelect}
                            wrapperClassName='col-xs-2'/>
-                    <Input type='radio' label='Vehicle' value='vehicle' checked={this.state.intruderType === 'vehicle'}
+                    <Input type='radio' label='Vehicle' value='vehicle' checked={intruderType === 'vehicle'}
                            onChange={this.onIntruderTypeSelect} wrapperClassName='col-xs-2'/>
-                    <Input type='radio' label='Person' value='person' checked={this.state.intruderType === 'person'}
+                    <Input type='radio' label='Person' value='person' checked={intruderType === 'person'}
                            onChange={this.onIntruderTypeSelect} wrapperClassName='col-xs-2'/>
                 </div>
                 <div style={{clear: 'both'}}/>
@@ -43,8 +56,8 @@ var RunwayIntruderStep = React.createClass({
             </Panel>
         );
     },
-    renderPane: function () {
-        switch (this.state.intruderType) {
+    renderPane: function (intruderType) {
+        switch (intruderType) {
             case 'aircraft':
                 return (<AircraftIntruder statement={this.state.statement} onChange={this.onChange}/>);
             case 'vehicle':
@@ -54,20 +67,6 @@ var RunwayIntruderStep = React.createClass({
             default:
                 return null;
         }
-    },
-    onChange: function (e) {
-        var value = e.target.value;
-        var attributeName = e.target.name;
-        // TODO The assignment throws errors because the value is often null (the attribute hasn't been defined yet on
-        // intruder)
-        // Just prevent undefined errors by assigning something into the attribute
-        if (!this.state.statement.intruder[attributeName]) {
-            this.state.statement.intruder[attributeName] = null;
-        }
-        this.setState(assign(this.state.statement.intruder[attributeName], value));
-    },
-    onIntruderTypeSelect: function (e) {
-        this.setState(assign(this.state, {intruderType: e.target.value}));
     }
 });
 

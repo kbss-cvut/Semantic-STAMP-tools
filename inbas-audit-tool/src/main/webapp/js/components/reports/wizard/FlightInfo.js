@@ -12,12 +12,12 @@ var FlightInfo = React.createClass({
         return (
             <div className='float-container'>
                 <div className='report-detail-float'>
-                    <Input type="text" label="Last Departure Point" name="lastDeparturePoint"
+                    <Input type='text' label='Last Departure Point' name='lastDeparturePoint'
                            onChange={this.props.onChange}
                            value={this.props.lastDeparturePoint}/>
                 </div>
                 <div className='report-detail-float-right'>
-                    <Input type="text" label="Planned Destination" name="plannedDestination"
+                    <Input type='text' label='Planned Destination' name='plannedDestination'
                            onChange={this.props.onChange}
                            value={this.props.plannedDestination}/>
                 </div>
