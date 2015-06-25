@@ -51,11 +51,19 @@ public class Vocabulary {
     public static final String p_callSign = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#callSign";
     public static final String p_hasOperator = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasOperator";
     public static final String p_lowVisibilityProcedure = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#lowVisibilityProcedure";
+    public static final String p_vehicleType = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#vehicleType";
+    public static final String p_controlledByAts = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#isControlledByAts";
+    public static final String p_radio = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasRadio";
+    public static final String p_activityDescription = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#activityDescription";
+    public static final String p_memberOf = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#memberOf";
+    public static final String p_personCategory = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#personCategory";
 
     public static final String p_hasIncursion = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasRunwayIncursion";
     public static final String p_hasClearedAircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasClearedAircraft";
     public static final String p_hasIntruder = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasIntruder";
     public static final String p_hasAircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasAircraft";
+    public static final String p_hasVehicle = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasVehicle";
+    public static final String p_hasPersonIntruder = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasPersonIntruder";
 
     public static final String p_hasKey = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasKey";
 }

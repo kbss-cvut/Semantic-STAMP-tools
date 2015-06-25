@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author ledvima1
+ * TODO Tohle je strasna prasarna, predelat!!!
  */
 @Service
 public class DtoFactoryImpl implements DtoFactory {
@@ -50,24 +51,53 @@ public class DtoFactoryImpl implements DtoFactory {
         ri.setClearedAircraft(dto.getClearedAircraft());
         final Intruder intruder = new Intruder();
         ri.setIntruder(intruder);
-        if (dto.getIntruder().getIntruderType().equals("aircraft")) {
-            final Aircraft aircraftIntruder = new Aircraft();
-            aircraftIntruder.setCallSign(dto.getIntruder().getCallSign());
-            aircraftIntruder.setFlightNumber(dto.getIntruder().getFlightNumber());
-            aircraftIntruder.setFlightPhase(dto.getIntruder().getFlightPhase());
-            aircraftIntruder.setLastDeparturePoint(dto.getIntruder().getLastDeparturePoint());
-            aircraftIntruder.setPlannedDestination(dto.getIntruder().getPlannedDestination());
-            aircraftIntruder.setOperationType(dto.getIntruder().getOperationType());
-            if (dto.getIntruder().getOrganization() != null) {
-                final Organization org = new Organization();
-                org.setName(dto.getIntruder().getOrganization());
-                aircraftIntruder.setOperator(org);
-            }
-            aircraftIntruder.setRegistration(dto.getIntruder().getRegistration());
-            aircraftIntruder.setStateOfRegistry(dto.getIntruder().getStateOfRegistry());
-            intruder.setAircraft(aircraftIntruder);
+        switch (dto.getIntruder().getIntruderType()) {
+            case "aircraft":
+                intruder.setAircraft(getAircraft(dto.getIntruder()));
+                break;
+            case "vehicle":
+                intruder.setVehicle(getVehicle(dto.getIntruder()));
+            case "person":
+                intruder.setPerson(getPersonIntruder(dto.getIntruder()));
         }
         return typeAssessment;
+    }
+
+    private Aircraft getAircraft(IntruderDto intruder) {
+        final Aircraft aircraftIntruder = new Aircraft();
+        aircraftIntruder.setCallSign(intruder.getCallSign());
+        aircraftIntruder.setFlightNumber(intruder.getFlightNumber());
+        aircraftIntruder.setFlightPhase(intruder.getFlightPhase());
+        aircraftIntruder.setLastDeparturePoint(intruder.getLastDeparturePoint());
+        aircraftIntruder.setPlannedDestination(intruder.getPlannedDestination());
+        aircraftIntruder.setOperationType(intruder.getOperationType());
+        if (intruder.getOrganization() != null) {
+            final Organization org = new Organization();
+            org.setName(intruder.getOrganization());
+            aircraftIntruder.setOperator(org);
+        }
+        aircraftIntruder.setRegistration(intruder.getRegistration());
+        aircraftIntruder.setStateOfRegistry(intruder.getStateOfRegistry());
+        return aircraftIntruder;
+    }
+
+    private Vehicle getVehicle(IntruderDto intruder) {
+        final Vehicle vehicleIntruder = new Vehicle();
+        vehicleIntruder.setVehicleType(intruder.getType());
+        vehicleIntruder.setCallSign(intruder.getCallSign());
+        vehicleIntruder.setIsAtsUnit(intruder.getIsAtsUnit());
+        vehicleIntruder.setHasRadio(intruder.getHasRadio());
+        vehicleIntruder.setWhatWasDoing(intruder.getWasDoing());
+        vehicleIntruder.setOrganization(new Organization(intruder.getOrganization()));
+        return vehicleIntruder;
+    }
+
+    private PersonIntruder getPersonIntruder(IntruderDto intruder) {
+        final PersonIntruder personIntruder = new PersonIntruder();
+        personIntruder.setCategory(intruder.getPersonCategory());
+        personIntruder.setOrganization(new Organization(intruder.getOrganization()));
+        personIntruder.setWhatWasDoing(intruder.getWasDoing());
+        return personIntruder;
     }
 
     @Override
@@ -84,6 +114,7 @@ public class DtoFactoryImpl implements DtoFactory {
         dto.setDescription(report.getDescription());
         dto.setFactors(report.getFactors());
         dto.setResource(report.getResource());
+        dto.setCorrectiveMeasures(report.getCorrectiveMeasures());
         dto.setSeverityAssessment(report.getSeverityAssessment());
         if (report.getTypeAssessments() != null) {
             dto.setTypeAssessments(new HashSet<>());
@@ -116,6 +147,22 @@ public class DtoFactoryImpl implements DtoFactory {
             dto.setOperationType(aircraft.getOperationType());
             dto.setLastDeparturePoint(aircraft.getLastDeparturePoint());
             dto.setPlannedDestination(aircraft.getPlannedDestination());
+            dto.setIntruderType(Aircraft.INTRUDER_TYPE);
+        } else if (intruder.getVehicle() != null) {
+            dto.setType(intruder.getVehicle().getVehicleType());
+            dto.setCallSign(intruder.getVehicle().getCallSign());
+            dto.setIsAtsUnit(intruder.getVehicle().getIsAtsUnit());
+            dto.setHasRadio(intruder.getVehicle().getHasRadio());
+            dto.setOrganization(
+                    intruder.getVehicle().getOrganization() != null ? intruder.getVehicle().getOrganization()
+                                                                              .getName() : null);
+            dto.setIntruderType(Vehicle.INTRUDER_TYPE);
+        } else if (intruder.getPerson() != null) {
+            dto.setPersonCategory(intruder.getPerson().getCategory());
+            dto.setOrganization(intruder.getPerson().getOrganization() != null ? intruder.getPerson().getOrganization()
+                                                                                         .getName() : null);
+            dto.setWasDoing(intruder.getPerson().getWhatWasDoing());
+            dto.setIntruderType(PersonIntruder.INTRUDER_TYPE);
         }
         return dto;
     }

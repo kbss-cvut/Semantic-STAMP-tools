@@ -1,5 +1,7 @@
-Save runway incursion with vehicle and person intruder
+When the application is reloaded, it no longer returns the statements for a report (perhaps before reload they're returned
+    from cache after they were persisted?)
 Revise the DTOs - how does inheritance work in JAXB (JSON)
+Revise the domain classes and relationships, especially the persist cascading (e.g. for organizations it makes no sense)
 Rewrite the DTO factory
 Revise the wizards according to the updated requirements
 Add a way to recover from report submit

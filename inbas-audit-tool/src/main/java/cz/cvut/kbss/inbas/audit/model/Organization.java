@@ -19,6 +19,13 @@ public class Organization {
     @OWLDataProperty(iri = Vocabulary.p_label)
     private String name;
 
+    public Organization() {
+    }
+
+    public Organization(String name) {
+        this.name = name;
+    }
+
     public URI getUri() {
         return uri;
     }

@@ -17,6 +17,12 @@ public class Intruder {
     @OWLObjectProperty(iri = Vocabulary.p_hasAircraft, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Aircraft aircraft;
 
+    @OWLObjectProperty(iri = Vocabulary.p_hasVehicle, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private Vehicle vehicle;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasPersonIntruder, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private PersonIntruder person;
+
     public URI getUri() {
         return uri;
     }
@@ -31,5 +37,21 @@ public class Intruder {
 
     public void setAircraft(Aircraft aircraft) {
         this.aircraft = aircraft;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public PersonIntruder getPerson() {
+        return person;
+    }
+
+    public void setPerson(PersonIntruder person) {
+        this.person = person;
     }
 }

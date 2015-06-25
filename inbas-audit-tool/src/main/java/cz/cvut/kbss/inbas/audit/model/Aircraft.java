@@ -10,13 +10,12 @@ import java.net.URI;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.Aircraft)
-public class Aircraft implements HasOwlKey {
+public class Aircraft {
+
+    public static final String INTRUDER_TYPE = "aircraft";
 
     @Id(generated = true)
     private URI uri;
-
-    @OWLDataProperty(iri = Vocabulary.p_hasKey)
-    private String key;
 
     @OWLDataProperty(iri = Vocabulary.p_registration)
     private String registration;
@@ -51,17 +50,6 @@ public class Aircraft implements HasOwlKey {
 
     public void setUri(URI uri) {
         this.uri = uri;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    @Override
-    public void generateKey() {
-        if (key == null) {
-            this.key = IdentificationUtils.generateKey();
-        }
     }
 
     public String getRegistration() {
