@@ -47,13 +47,10 @@ var ReportEdit = React.createClass({
         return this.props.report == null;
     },
     onChange: function (e) {
-        var change;
-        if (e.target.name === 'description') {
-            change = {description: e.target.value};
-        } else {
-            change = {name: e.target.value};
-        }
-        this.setState(assign(this.state.report, change));
+        var value = e.target.value;
+        var attributeName = e.target.name;
+        this.state.report[attributeName] = value;
+        this.setState(assign(this.state, {report: this.state.report}));
     },
     onDateChange: function (value) {
         this.setState(assign(this.state.report, {eventTime: new Date(Number(value))}));
@@ -107,6 +104,11 @@ var ReportEdit = React.createClass({
                     </div>
 
                     {lastEdited}
+
+                    <div className='form-group'>
+                        <Input type='textarea' rows='3' label='Factors' name='factors' placeholder='Factors'
+                               value={this.state.report.factors} onChange={this.onChange} title='Event factors'/>
+                    </div>
 
                     <div className="form-group">
                         <Input type="textarea" rows="8" label="Description" name="description"

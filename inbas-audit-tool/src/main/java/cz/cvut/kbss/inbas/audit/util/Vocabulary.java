@@ -29,6 +29,7 @@ public class Vocabulary {
     public static final String p_dateCreated = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#dateCreated";
     public static final String p_dateLastEdited = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#dateLastEdited";
     public static final String p_description = "http://purl.org/dc/terms/description";
+    public static final String p_factors = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasFactors";
     public static final String p_hasAuthor = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasAuthor";
     public static final String p_lastEditedBy = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#lastEditedBy";
     public static final String p_hasSeverityAssessment = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasSeverityAssessment";

@@ -1,0 +1,8 @@
+Save the report including event assessment statements
+Revise the wizards according to the updated requirements
+Add a way to recover from report submit
+Create wizard for severity assessment
+Create tests for the app
+Validation of fields in wizards
+Show validation errors on the corresponding fields
+Add possibility to disable Next button in wizard for invalid step values

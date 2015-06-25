@@ -10,10 +10,10 @@ var Button = require('react-bootstrap').Button;
 var ReportStatementRow = React.createClass({
     render: function () {
         var cells = [];
-        var len = this.props.attributes.length;
-        for (var i = 0; i < len; i++) {
-            var attName = this.props.attributes[i];
-            cells.push(<td key={attName}>{this.props.statement[attName]}</td>);
+        var len = this.props.data.length;
+        for (var att in this.props.data) {
+            var value = this.props.data[att];
+            cells.push(<td key={att}>{value}</td>);
         }
         return (
             <tr>

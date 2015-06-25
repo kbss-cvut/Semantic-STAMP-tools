@@ -38,6 +38,9 @@ public class EventReport implements HasOwlKey {
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
 
+    @OWLDataProperty(iri = Vocabulary.p_factors)
+    private String factors;
+
     @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER)
     private Person author;
 
@@ -94,6 +97,14 @@ public class EventReport implements HasOwlKey {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getFactors() {
+        return factors;
+    }
+
+    public void setFactors(String factors) {
+        this.factors = factors;
     }
 
     public String getName() {

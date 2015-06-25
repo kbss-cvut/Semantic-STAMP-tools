@@ -48,7 +48,7 @@ var ReportStatements = React.createClass({
                     title: 'Runway Incursion Wizard',
                     onFinish: this.addEventTypeAssessment,
                     statement: {
-                        eventType: 'runwayIncursion'
+                        eventType: 'runway_incursion'
                     }
                 };
                 break;
@@ -119,7 +119,16 @@ var ReportStatements = React.createClass({
         if (data == null || data.length === 0) {
             component = null;
         } else {
-            component = this.renderTable(data, ['eventType'], (<th>Event Type</th>), 'eventType');
+            var toShow = [];
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].eventType === 'runway_incursion') {
+                    toShow.push(this.getRunwayIncursionData(data[i]));
+                }
+            }
+            component = this.renderTable(toShow, ['eventType', 'summary'], (<tr>
+                <th>Event Type</th>
+                <th>Summary</th>
+            </tr>), 'eventType');
         }
         var typeWizard = (<EventTypeDialog onChange={this.onEventTypeSelect}/>);
         return (
@@ -133,6 +142,27 @@ var ReportStatements = React.createClass({
             </div>
         );
     },
+    getRunwayIncursionData: function (incursion) {
+        var intruder = '';
+        switch (incursion.intruder.intruderType) {
+            case 'aircraft':
+                intruder = 'an aircraft (call sign ' + incursion.intruder.callSign + ')';
+                break;
+            case 'vehicle':
+                intruder = 'a vehicle (call sign ' + incursion.intruder.callSign + ')';
+                break;
+            case 'person':
+                intruder = 'a person (organization ' + incursion.intruder.personOrganization + ')';
+                break;
+            default:
+                break;
+        }
+        return {
+            eventType: 'Runway Incursion',
+            summary: 'Flight ' + incursion.cleared.flightNumber + ' was cleared to use runway, but ' + intruder +
+            ' intruded on the runway.'
+        }
+    },
 
     renderCorrectiveMeasures: function () {
         var data = this.props.report.correctiveMeasures;
@@ -140,7 +170,9 @@ var ReportStatements = React.createClass({
         if (data == null || data.length === 0) {
             component = null;
         } else {
-            component = this.renderTable(data, ['description'], (<th>Description</th>), 'corrective');
+            component = this.renderTable(data, ['description'], (<tr>
+                <th>Description</th>
+            </tr>), 'corrective');
         }
         return (
             <div>
@@ -158,7 +190,9 @@ var ReportStatements = React.createClass({
         if (data == null || data.length === 0) {
             component = null;
         } else {
-            component = this.renderTable(data, ['level'], (<th>Level</th>), 'severity');
+            component = this.renderTable(data, ['level'], (<tr>
+                <th>Level</th>
+            </tr>), 'severity');
         }
         return (
             <div>
@@ -175,14 +209,17 @@ var ReportStatements = React.createClass({
         var len = data.length;
         var rows = [];
         for (var i = 0; i < len; i++) {
-            rows.push(<ReportStatementRow key={type + i} statement={data[i]} attributes={attributes}/>);
+            var toShow = {};
+            var attLen = attributes.length;
+            for (var j = 0; j < attLen; j++) {
+                toShow[attributes[j]] = data[i][attributes[j]];
+            }
+            rows.push(<ReportStatementRow key={type + i} data={toShow}/>);
         }
         return (
             <Table striped bordered condensed hover>
                 <thead>
-                <tr>
-                    {header}
-                </tr>
+                {header}
                 </thead>
                 <tbody>
                 {rows}
