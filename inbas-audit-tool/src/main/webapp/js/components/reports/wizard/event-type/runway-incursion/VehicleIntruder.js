@@ -8,10 +8,16 @@ var React = require('react');
 var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
+var Select = require('../../../../Select');
+
 var VehicleIntruder = React.createClass({
-    // TODO Checkbox onChange
     render: function () {
         var statement = this.props.statement;
+        var yesNoUnknownOptions = [
+            {value: 'true', label: 'Yes'},
+            {value: 'false', label: 'No'},
+            {value: 'unknown', label: 'Unknown'}
+        ];
         return (
             <Panel header='Vehicle Event' style={{margin: '15px 0px 0px 0px'}}>
                 <div className='form-group report-detail'>
@@ -34,15 +40,14 @@ var VehicleIntruder = React.createClass({
                 </div>
                 <div className='form-group float-container'>
                     <div className='report-detail-float'>
-                        <Input type='checkbox' name='isAtsUnit' label='Is vehicle controlled by ATS unit?'
-                               checked={statement.intruder.isAtsUnit} onChange={this.props.onChange}
-                               title='Is the vehicle controlled by an ATS unit'/>
+                        <Select label='Is Vehicle Controlled By ATS Unit?' name='isAtsUnit'
+                                value={statement.intruder.isAtsUnit} onChange={this.props.onChange}
+                                options={yesNoUnknownOptions}/>
                     </div>
                     <div className='report-detail-float-right'>
-                        <Input type='checkbox' name='hasRadio' label='Has vehicle radio installed/operational?'
-                               checked={statement.intruder.hasRadio}
-                               onChange={this.props.onChange}
-                               title='Has the vehicle radio installed and operational?'/>
+                        <Select label='Has Vehicle Radio Installed/Operational?' name='hasRadio'
+                                value={statement.intruder.hasRadio} onChange={this.props.onChange}
+                                options={yesNoUnknownOptions}/>
                     </div>
                 </div>
                 <div className='form-group'>

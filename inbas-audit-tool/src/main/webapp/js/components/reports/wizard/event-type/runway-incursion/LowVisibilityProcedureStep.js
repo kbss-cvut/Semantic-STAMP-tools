@@ -6,15 +6,13 @@
 
 var React = require('react');
 var assign = require('object-assign');
-var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
+
+var Select = require('../../../../Select');
 
 var LowVisibilityProcedureStep = React.createClass({
     getInitialState: function () {
         var statement = this.props.data.statement;
-        if (statement.lvp == null) {
-            statement.lvp = 'none';
-        }
         return {
             statement: statement
         };
@@ -26,18 +24,18 @@ var LowVisibilityProcedureStep = React.createClass({
 
     render: function () {
         var title = (<h3>Low Visibility Procedure</h3>);
-        // TODO Perhaps it would be better to load the visibility procedure options from the server, as part of the
-        // taxonomy
+        // TODO It would be better to load the visibility procedure options from the server, as part of the taxonomy
+        var options = [
+            {value: 'none', label: 'None'},
+            {value: 'cati', label: 'Cat I'},
+            {value: 'catii', label: 'Cat II'},
+            {value: 'catiii', label: 'Cat III'}
+        ];
         return (
             <Panel header={title}>
                 <div className='form-group'>
-                    <Input type='select' label='Low Visibility Procedure' onChange={this.onLvpChange}
-                           value={this.state.statement.lvp}>
-                        <option value='none'>None</option>
-                        <option value='cati'>CAT I</option>
-                        <option value='catii'>CAT II</option>
-                        <option value='catiii'>CAT III</option>
-                    </Input>
+                    <Select label='Low Visibility Procedure' onChange={this.onLvpChange}
+                            value={this.state.statement.lvp} options={options}/>
                 </div>
             </Panel>
         );

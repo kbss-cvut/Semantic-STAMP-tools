@@ -58,7 +58,7 @@ var ReportEdit = React.createClass({
     onDateChange: function (value) {
         this.setState(assign(this.state.report, {eventTime: new Date(Number(value))}));
     },
-    onUpdateReport: function(value) {
+    onUpdateReport: function (value) {
         this.setState(assign(this.state.report, value));
     },
     onSubmit: function (e) {
@@ -82,10 +82,13 @@ var ReportEdit = React.createClass({
         this.setState(assign({}, this.state, {error: null}));
     },
     render: function () {
-        var author = this.state.report.author.firstName + " " + this.state.report.author.lastName;
+        var authorName = this.state.report.author.firstName + " " + this.state.report.author.lastName;
         var loading = this.state.submitting;
         var alert = this.renderError();
         var lastEdited = this.renderLastEdited();
+        var author = this.isReportNew() ? null : (<div className="form-group report-detail">
+            <Input type="text" value={authorName} label="Author" title="Report author" disabled/>
+        </div>);
         return (
             <Panel header="Edit Event Report">
                 <form>
@@ -93,9 +96,9 @@ var ReportEdit = React.createClass({
                         <Input type="text" name="name" value={this.state.report.name} onChange={this.onChange}
                                label="Report Name" title="Short descriptive name for this report"/>
                     </div>
-                    <div className="form-group report-detail">
-                        <Input type="text" value={author} label="Author" title="Report author" disabled/>
-                    </div>
+
+                    {author}
+
                     <div className="picker-container form-group report-detail">
                         <label className="control-label">Event Time</label>
                         <DateTimePicker inputFormat="DD-MM-YY hh:mm A" dateTime={this.state.report.eventTime.toString()}
@@ -113,8 +116,8 @@ var ReportEdit = React.createClass({
                     </div>
 
                     <div className="form-group">
-                        <ReportStatements report={this.state.report} onUpdateReport={this.onUpdateReport} />
-                        </div>
+                        <ReportStatements report={this.state.report} onUpdateReport={this.onUpdateReport}/>
+                    </div>
 
                     <div className="form-group">
                         <Button bsStyle="success" disabled={loading || this.state.report.description === ''}

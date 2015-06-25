@@ -11,6 +11,7 @@ var Panel = require('react-bootstrap').Panel;
 var AircraftRegistration = require('../../AircraftRegistration');
 var FlightInfo = require('../../FlightInfo');
 var FlightOperationType = require('../../FlightOperationType');
+var Select = require('../../../../Select');
 
 var AircraftClearedStep = React.createClass({
     getInitialState: function () {
@@ -33,6 +34,11 @@ var AircraftClearedStep = React.createClass({
     render: function () {
         var title = (<h3>Aircraft Cleared to Use Runway</h3>);
         var statement = this.state.statement;
+        var phaseOptions = [
+            {value: 'takeoff', label: 'Take-off', title: 'Plane taking off'},
+            {value: 'approach', label: 'Approach', title: 'Plane approaching the runway'},
+            {value: 'landing', label: 'Landing', title: 'Plane landing'}
+        ];
         return (
             <Panel header={title}>
                 <AircraftRegistration aircraftRegistration={statement.cleared.aircraftRegistration}
@@ -45,12 +51,8 @@ var AircraftClearedStep = React.createClass({
                     </div>
                     <div style={{overflow: 'hidden'}}>
                         <div className='report-detail-float'>
-                            <Input type='select' label='Phase' name='phase' value={statement.cleared.phase}
-                                   onChange={this.onChange} title='What is the aircraft doing?'>
-                                <option value='takeoff'>Take-off</option>
-                                <option value='approach'>Approach</option>
-                                <option value='landing'>Landing</option>
-                            </Input>
+                            <Select label='Phase' name='phase' value={statement.cleared.phase} onChange={this.onChange}
+                                    title='What was the aircraft doing?' options={phaseOptions}/>
                         </div>
                         <div className='report-detail-float-right'>
                             <FlightOperationType operationType={statement.cleared.operationType}

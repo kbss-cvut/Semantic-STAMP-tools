@@ -12,6 +12,7 @@ var Panel = require('react-bootstrap').Panel;
 var AircraftRegistration = require('../../AircraftRegistration');
 var FlightInfo = require('../../FlightInfo');
 var FlightOperationType = require('../../FlightOperationType');
+var Select = require('../../../../Select');
 
 var AircraftIntruder = React.createClass({
     getInitialState: function () {
@@ -30,10 +31,10 @@ var AircraftIntruder = React.createClass({
         assign(this.state.statement.intruder, change);
         this.setState({statement: this.state.statement});
     },
-    onPhaseChange: function(e) {
+    onPhaseChange: function (e) {
         this.setState(assign(this.state.statement.intruder, {phase: e.target.value}));
     },
-    eraseFlightAttributes: function() {
+    eraseFlightAttributes: function () {
         var intruder = this.state.statement.intruder;
         delete intruder.flightNumber;
         delete intruder.operationType;
@@ -92,6 +93,26 @@ var AircraftIntruder = React.createClass({
 
     renderFlightEventPane: function () {
         var intruder = this.state.statement.intruder;
+        var phaseOptions = [
+            {
+                value: 'taxi_to_runway',
+                label: 'Taxi to Runway',
+                title: 'Commences when the aircraft begins to move under its own power leaving the gate, ramp and ' +
+                'terminates upon reaching the runway'
+            },
+            {
+                value: 'taxi_takeoff',
+                label: 'Taxi to Take-off Position',
+                title: 'From entering the runway until reaching the take-off position'
+            },
+            {
+                value: 'taxi_from_runway',
+                label: 'Taxi from Runway',
+                title: 'Begins upon exiting the landing runway and terminates upon arrival at the gate, ramp, apron, ' +
+                'or parking area, when the aircraft ceases to move under its own power'
+            },
+            {value: 'maintain_position', label: 'Maintaining Position', title: 'Maintaining position at holding point'}
+        ];
         return (
             <Panel header='Aviation Operation'>
                 <div className='report-detail'>
@@ -100,27 +121,8 @@ var AircraftIntruder = React.createClass({
                 </div>
                 <div className='float-container'>
                     <div className='report-detail-float'>
-                        <Input type='select' label='Phase' value={intruder.phase} onChange={this.onPhaseChange}
-                               title='What was the aircraft doing?'>
-                            <option value='taxi_to_runway'
-                                    title='Commences when the aircraft begins to move under its own
-                                power leaving the gate, ramp and terminates upon reaching the runway'>
-                                Taxi to runway
-                            </option>
-                            <option value='taxi_takeoff'
-                                    title='From entering the runway until reaching the take-off position.'>Taxi to
-                                take-off
-                                position
-                            </option>
-                            <option value='taxi_from_runway'
-                                    title='Begins upon exiting the landing runway and terminates upon arrival at the gate,
-                                ramp, apron, or parking area, when the aircraft ceases to move under its own power.'>
-                                Taxi from runway
-                            </option>
-                            <option value='maintain_position' title='Maintaining position at holding point.'>Maintaining
-                                position
-                            </option>
-                        </Input>
+                        <Select label='Phase' value={intruder.phase} onChange={this.onPhaseChange}
+                                title='What was the aircraft doing?' options={phaseOptions}/>
                     </div>
                     <div className='report-detail-float-right'>
                         <FlightOperationType operationType={intruder.operationType}
