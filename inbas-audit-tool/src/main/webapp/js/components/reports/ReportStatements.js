@@ -159,7 +159,7 @@ var ReportStatements = React.createClass({
         }
         return {
             eventType: 'Runway Incursion',
-            summary: 'Flight ' + incursion.cleared.flightNumber + ' was cleared to use runway, but ' + intruder +
+            summary: 'Flight ' + incursion.clearedAircraft.flightNumber + ' was cleared to use runway, but ' + intruder +
             ' intruded on the runway.'
         }
     },

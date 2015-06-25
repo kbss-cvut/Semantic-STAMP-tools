@@ -1,4 +1,6 @@
-Save the report including event assessment statements
+Save runway incursion with vehicle and person intruder
+Revise the DTOs - how does inheritance work in JAXB (JSON)
+Rewrite the DTO factory
 Revise the wizards according to the updated requirements
 Add a way to recover from report submit
 Create wizard for severity assessment

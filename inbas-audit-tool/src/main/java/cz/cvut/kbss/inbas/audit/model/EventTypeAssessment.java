@@ -19,11 +19,14 @@ public class EventTypeAssessment implements ReportingStatement, HasOwlKey {
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private EventType eventType;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEvent, fetch = FetchType.EAGER)
     private EventReport eventReport;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasIncursion, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    private RunwayIncursion runwayIncursion;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
     private Set<Resource> resources;
@@ -50,6 +53,14 @@ public class EventTypeAssessment implements ReportingStatement, HasOwlKey {
 
     public void setEventReport(EventReport eventReport) {
         this.eventReport = eventReport;
+    }
+
+    public RunwayIncursion getRunwayIncursion() {
+        return runwayIncursion;
+    }
+
+    public void setRunwayIncursion(RunwayIncursion runwayIncursion) {
+        this.runwayIncursion = runwayIncursion;
     }
 
     @Override

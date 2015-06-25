@@ -1,6 +1,8 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.model.EventReport;
+import cz.cvut.kbss.inbas.audit.rest.dto.factory.DtoFactory;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.EventReportDto;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.ConflictException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.services.ReportService;
@@ -12,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * @author ledvima1
@@ -25,18 +28,21 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private DtoFactory dtoFactory;
+
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<EventReport> getAllReports() {
+    public Collection<EventReportDto> getAllReports() {
         final Collection<EventReport> reports = reportService.findAll();
         if (reports.isEmpty()) {
             throw new NotFoundException("No reports found.");
         }
-        return reports;
+        return reports.stream().map(dtoFactory::toDto).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public EventReport getReport(@PathVariable("key") String key) {
-        return getEventReport(key);
+    public EventReportDto getReport(@PathVariable("key") String key) {
+        return dtoFactory.toDto(getEventReport(key));
     }
 
     private EventReport getEventReport(String key) {
@@ -49,8 +55,10 @@ public class ReportController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createReport(@RequestBody EventReport report) {
-        reportService.persist(report);
+    public void createReport(@RequestBody EventReportDto report) {
+        final EventReport eventReport = dtoFactory.toDomainModel(report);
+        assert eventReport != null;
+        reportService.persist(eventReport);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Created report from data {}", report);
         }

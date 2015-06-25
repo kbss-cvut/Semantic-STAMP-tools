@@ -16,6 +16,12 @@ public class Vocabulary {
     public static final String Person = "http://xmlns.com/foaf/0.1/Person";
     public static final String Resource = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Resource";
     public static final String SeverityAssessment = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#severityLevel";
+    public static final String Aircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Aircraft";
+    public static final String Intruder = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Intruder";
+    public static final String Vehicle = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Vehicle";
+    public static final String PersonIntruder = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#PersonIntruder";
+    public static final String Organization = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Organization";
+    public static final String RunwayIncursion = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#RunwayIncursion";
 
     public static final String p_hasResource = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasResource";
     public static final String p_severityLevel = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#severityLevel";
@@ -35,6 +41,21 @@ public class Vocabulary {
     public static final String p_hasSeverityAssessment = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasSeverityAssessment";
     public static final String p_hasCorrectiveMeasure = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasCorrectiveMeasure";
     public static final String p_hasEventTypeAssessment = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasEventTypeAssessment";
+    public static final String p_registration = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#registration";
+    public static final String p_stateOfRegistry = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#stateOfRegistry";
+    public static final String p_flightNumber = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#FlightNumber";
+    public static final String p_flightPhase = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#flightPhase";
+    public static final String p_operationType = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#operationType";
+    public static final String p_lastDeparturePoint = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#lastDeparturePoint";
+    public static final String p_plannedDestination = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#plannedDestination";
+    public static final String p_callSign = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#callSign";
+    public static final String p_hasOperator = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasOperator";
+    public static final String p_lowVisibilityProcedure = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#lowVisibilityProcedure";
+
+    public static final String p_hasIncursion = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasRunwayIncursion";
+    public static final String p_hasClearedAircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasClearedAircraft";
+    public static final String p_hasIntruder = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasIntruder";
+    public static final String p_hasAircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasAircraft";
 
     public static final String p_hasKey = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasKey";
 }

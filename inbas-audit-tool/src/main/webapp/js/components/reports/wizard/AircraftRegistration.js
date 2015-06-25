@@ -36,13 +36,13 @@ var AircraftRegistration = React.createClass({
                 <Panel ref='panel' className={classNames(styles)}>
                     <div style={{overflow: 'hidden'}}>
                         <div className='report-detail-float'>
-                            <Input type='text' label='Aircraft Registration' name='aircraftRegistration'
-                                   value={this.props.aircraftRegistration} onChange={this.props.onChange}
+                            <Input type='text' label='Aircraft Registration' name='registration'
+                                   value={this.props.registration} onChange={this.props.onChange}
                                    title='Aircraft registration'/>
                         </div>
                         <div className='report-detail-float-right'>
-                            <Input type='text' label='State of Registry' name='aircraftRegistryState'
-                                   value={this.props.aircraftRegistryState} onChange={this.props.onChange}
+                            <Input type='text' label='State of Registry' name='stateOfRegistry'
+                                   value={this.props.stateOfRegistry} onChange={this.props.onChange}
                                    title='Aircraft state of registry'/>
                         </div>
                     </div>

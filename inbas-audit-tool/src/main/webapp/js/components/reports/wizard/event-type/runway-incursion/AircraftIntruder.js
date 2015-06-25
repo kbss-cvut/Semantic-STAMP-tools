@@ -16,8 +16,12 @@ var Select = require('../../../../Select');
 
 var AircraftIntruder = React.createClass({
     getInitialState: function () {
+        var statement = this.props.statement;
+        if (!statement.intruder.aircraftEventType) {
+            statement.intruder.aircraftEventType = statement.intruder.flightPhase === 'taxiing' ? 'nonflight' : 'flight';
+        }
         return {
-            statement: this.props.statement
+            statement: statement
         };
     },
     onAircraftEventTypeSelect: function (e) {
@@ -25,14 +29,14 @@ var AircraftIntruder = React.createClass({
             aircraftEventType: e.target.value
         };
         if (change.aircraftEventType === 'nonflight') {
-            change.phase = 'taxiing';
+            change.flightPhase = 'taxiing';
             this.eraseFlightAttributes();
         }
         assign(this.state.statement.intruder, change);
         this.setState({statement: this.state.statement});
     },
     onPhaseChange: function (e) {
-        this.setState(assign(this.state.statement.intruder, {phase: e.target.value}));
+        this.setState(assign(this.state.statement.intruder, {flightPhase: e.target.value}));
     },
     eraseFlightAttributes: function () {
         var intruder = this.state.statement.intruder;
@@ -48,8 +52,8 @@ var AircraftIntruder = React.createClass({
         return (
             <div>
                 <div className='form-group'>
-                    <AircraftRegistration aircraftRegistration={intruder.aircraftRegistration}
-                                          aircraftRegistryState={intruder.aircraftRegistryState}
+                    <AircraftRegistration registration={intruder.registration}
+                                          stateOfRegistry={intruder.stateOfRegistry}
                                           onChange={this.props.onChange}/>
                 </div>
                 <Panel header='Aircraft Event'>
@@ -121,7 +125,7 @@ var AircraftIntruder = React.createClass({
                 </div>
                 <div className='float-container'>
                     <div className='report-detail-float'>
-                        <Select label='Phase' value={intruder.phase} onChange={this.onPhaseChange}
+                        <Select label='Phase' value={intruder.flightPhase} onChange={this.onPhaseChange}
                                 title='What was the aircraft doing?' options={phaseOptions}/>
                     </div>
                     <div className='report-detail-float-right'>
@@ -138,7 +142,7 @@ var AircraftIntruder = React.createClass({
         return (
             <Panel header='Other Aircraft Event'>
                 <div className='report-detail'>
-                    <Input type='select' value={this.state.statement.intruder.phase} disabled>
+                    <Input type='select' label='Phase' value={this.state.statement.intruder.flightPhase} disabled>
                         <option value='taxiing'>Taxiing: other</option>
                     </Input>
                 </div>

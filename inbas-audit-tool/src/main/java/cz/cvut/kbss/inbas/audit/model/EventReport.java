@@ -178,11 +178,10 @@ public class EventReport implements HasOwlKey {
 
     @Override
     public void generateKey() {
-        if (key != null) {
-            return;
+        if (key == null) {
+            // Note: this either has to be called before persist or a setter has to be called to make JOPA notice the change
+            this.key = IdentificationUtils.generateKey();
         }
-        // Note: this either has to be called before persist or a setter has to be called to make JOPA notice the change
-        this.key = IdentificationUtils.generateKey();
     }
 
     @Override
