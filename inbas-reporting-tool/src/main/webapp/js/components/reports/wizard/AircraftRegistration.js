@@ -14,10 +14,10 @@ var classNames = require('classnames');
 var AircraftRegistration = React.createClass({
     mixins: [CollapsibleMixin],
 
-    getCollapsibleDOMNode(){
+    getCollapsibleDOMNode: function () {
         return React.findDOMNode(this.refs.panel);
     },
-    getCollapsibleDimensionValue(){
+    getCollapsibleDimensionValue: function () {
         return React.findDOMNode(this.refs.panel).scrollHeight;
     },
     onToggleCollapsible: function (e) {

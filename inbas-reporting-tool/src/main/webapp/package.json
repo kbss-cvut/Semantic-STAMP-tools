@@ -27,6 +27,7 @@
   },
   "scripts": {
     "start": "watchify -o js/bundle.js -v -d js/app.js",
+    "browserify": "browserify . -t [envify --NODE_ENV production] -o js/bundle.js",
     "build": "browserify . -t [envify --NODE_ENV production] | uglifyjs -cm > ../../../profiles/production/js/bundle.min.js",
     "test": "jest"
   },

@@ -127,6 +127,7 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>1.9.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -177,6 +178,7 @@
                         <artifactId>maven-war-plugin</artifactId>
                         <version>2.4</version>
                         <configuration>
+
                             <failOnMissingWebXml>false</failOnMissingWebXml>
                             <webResources>
                                 <resource>
@@ -184,8 +186,8 @@
                                 </resource>
                             </webResources>
                             <packagingExcludes>
-                                **/js/actions/,**/js/components/,**/js/constants/,**/js/stores/,**/js/app.js,
-                                **/node_modules/,package.json
+                                **/js/actions/,**/js/components/,**/js/constants/,**/js/stores/,**/js/utils/,**/js/app.js,**/js/bundle.js,
+                                **/node_modules/,package.json,TODO.txt
                             </packagingExcludes>
                         </configuration>
                     </plugin>

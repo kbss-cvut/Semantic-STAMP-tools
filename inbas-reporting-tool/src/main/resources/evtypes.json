@@ -1,0 +1,1366 @@
+
+[{ "id": "http://onto.fel.cvut.cz/ontologies/2014/12/04/lkpr-eccairs",
+"nodes": [
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_",
+"name": "ADREP / ANS CR",
+"description": null,
+"childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2000000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3000000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4000000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7000000" ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2000000",
+"name": "Operation of the aircraft related event",
+"description": null,
+"childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200000" ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020000",
+"name": "Flight crew interaction with air navigation service related event",
+"description": null,
+"childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020500","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020700","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020800","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010037" ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020300",
+"name": "Communications between flight crew and ANS related event",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020500",
+"name": "Deviation from an air traffic control clearance",
+"description": null,
+"childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020501","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020502","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020503","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020504","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020505","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020506","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020508","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020509","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020510","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020511","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020512","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020513","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020514","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020515","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020516","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020517","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020518","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020519","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020520","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020521","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020522","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020523","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020524" ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020501",
+"name": "Clearance deviation: startup",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020502",
+"name": "Clearance deviation: push-back",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020503",
+"name": "Clearance deviation: taxi",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020504",
+"name": "Clearance deviation: line-up",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020505",
+"name": "Clearance deviation: take-off",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020506",
+"name": "Clearance deviation: enroute",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020508",
+"name": "Clearance deviation: approach",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020509",
+"name": "Clearance deviation: holding",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020510",
+"name": "Clearance deviation: landing",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020511",
+"name": "Clearance deviation: runway crossing",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020512",
+"name": "Clearance deviation: clearance limit",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020513",
+"name": "Clearance deviation: special procedure",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020514",
+"name": "Clearance deviation: missed approach",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020515",
+"name": "Clearance deviation: low approach",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020516",
+"name": "Clearance deviation: touch and go",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020517",
+"name": "Clearance deviation: assigned flight level/altitude, also known as altitude bust or level bust",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020518",
+"name": "Clearance deviation: assigned route/track/heading",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020519",
+"name": "Clearance deviation: assigned or specified speed",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020520",
+"name": "Clearance deviation: time restriction or constraint",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020521",
+"name": "Clearance deviation: rate of climb/descent restrictions",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020522",
+"name": "Clearance deviation: climb/descend conditional clearance",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020523",
+"name": "Deviation-hold short",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020524",
+"name": "Deviation-noise abatement procedure",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020700",
+"name": "Deviation from ATM Regulation",
+"description": null,
+"childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020702","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020703" ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020702",
+"name": "Deviations from ATM mandatory carriage of aircraft equipment",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020703",
+"name": "Other",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020800",
+"name": "Flight crew deviation from applicable ATM procedures",
+"description": null,
+"childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020801","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020802","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020803","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020804","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020805","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020806","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020400" ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020801",
+"name": "Deviation from minimum safe altitude en-route (MSA)",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020802",
+"name": "Deviation from landing minima",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020803",
+"name": "Deviation from standard instrument departure",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020804",
+"name": "Deviation from Standard Terminal Arrival Route",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020805",
+"name": "Deviation from approach procedure",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020806",
+"name": "Deviation from speed restriction",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2020400",
+"name": "Controlled/restricted airspace infringement",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010037",
+"name": "Flight Plan",
+"description": null,
+"childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010031","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010036" ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010031",
+"name": "Incorrect flight plan",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010036",
+"name": "Flight plan discrepancy",
+"description": null,
+"childrenIRIs": [ ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050000",
+"name": "Collision of an aircraft with an obstacle, terrain or another aircraft",
+"description": null,
+"childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050400" ]
+},
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050100",
+"name": "Aircraft collision - moving aircraft",
+"description": null,
+"childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050101","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050102","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050103","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050104","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050105","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050106" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050101",
+"name": "Aircraft collision with another aircraft, both airborne",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050102",
+"name": "Aircraft collision with another aircraft, one airborne the other moving on the ground",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050103",
+"name": "Collision between two aircraft both moving on the ground",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050104",
+"name": "Aircraft collision with balloon",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050105",
+"name": "Collision between aircraft one of which was a microlight",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050106",
+"name": "Collision between an aircraft and a dirigible",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050200",
+"name": "An aircraft collision with terrain",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050201","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050202" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050201",
+"name": "Aircraft collision with level terrain/water",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050202",
+"name": "Aircraft collision with high terrain, a hill or a mountain",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050300",
+"name": "Aircraft collision with airborne object other than another aircraft, balloon or dirigible",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050301","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050302","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050303","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050304" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050301",
+"name": "Aircraft collision with bird/bird strike",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050302",
+"name": "Aircraft collision with model aircraft",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050303",
+"name": "Aircraft collision an airborne object other than those listed above",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050304",
+"name": "Aircraft collision with parachutist in the air",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050400",
+"name": "Aircraft collision with object/obstacle on ground ",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050401","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050402","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050403","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050404","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050405","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050406","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050407","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050408","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050410","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050411","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050412","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050413","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050414","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050415","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050416" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050401",
+"name": "Aircraft collision with aerodrome structure including navigation and approach aids",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050402",
+"name": "Aircraft collision with an animal",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050403",
+"name": "Aircraft collision with approach/runway/taxiway lights",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050404",
+"name": "Aircraft collision with building",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050405",
+"name": "Aircraft collision with deadhead/semi-submerged log",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050406",
+"name": "Aircraft collision with an embankment or shore",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050407",
+"name": "Aircraft collision with other object on ground",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050408",
+"name": "Aircraft collision with parked aircraft",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050410",
+"name": "Aircraft collision with a person",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050411",
+"name": "Aircraft collision with power line conductor, cable or wire",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050412",
+"name": "Aircraft collision with a snow bank",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050413",
+"name": "Aircraft collision with tall structure, e.g. chimney, mast, post or pole",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050414",
+"name": "Aircraft collision with tree/tall vegetation",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050415",
+"name": "Aircraft collision with a vehicle",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2050416",
+"name": "Aircraft collision with a wave",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070000",
+"name": "The aircraft departed from the intended movement area",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070400" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070100",
+"name": "Runway excursion to the side",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070200",
+"name": "Taxiway excursion",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070300",
+"name": "Apron excursion",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2070400",
+"name": "The aircraft ran off the end of the runway",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080000",
+"name": "Deviation from intended flight path/attitude by a fixed wing aircraft",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080400","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080500","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080600","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080700","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080800","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080900" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080100",
+"name": "Aeroplane - deviation from intended flight path – altitude",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080200",
+"name": "Aeroplane - deviation from intended flight path – heading",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080300",
+"name": "Aeroplane - mush/stall",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080400",
+"name": "Aeroplane – spin",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080500",
+"name": "Aeroplane - spiral dive",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080600",
+"name": "Aeroplane - deviation from intended pitch attitude",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080700",
+"name": "Aeroplane - deviation from intended roll attitude",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080800",
+"name": "Aeroplane - porpoising: loss of pitch attitude control",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2080900",
+"name": "Deviation from intended flight path/attitude – other",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090000",
+"name": "Deviation from intended flight path/attitude by a helicopter",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090400","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090500" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090100",
+"name": "Helicopter deviation from intended altitude",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090200",
+"name": "Helicopter deviation from intended heading",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090300",
+"name": "Helicopter deviation from intended pitch altitude",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090400",
+"name": "Helicopter deviation from intended roll altitude",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2090500",
+"name": "Helicopter dynamic roll-over",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180000",
+"name": "Near collisions with objects/ground or loss of separation between aircraft",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180400" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180100",
+"name": "Near collisions - loss of separation between aircraft",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180101","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180102","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180103","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180104","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180105","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180106","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180107" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180101",
+"name": "Loss of separation with aircraft - both airborne",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180102",
+"name": "Loss of separation with aircraft - one airborne",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180103",
+"name": "Loss of separation with aircraft - both on ground",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180104",
+"name": "Loss of separation with potential for collision",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180105",
+"name": "Loss of separation with no risk of collision",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180106",
+"name": "Loss of separation - risk of collision not determined",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180107",
+"name": "Separation minima infringement",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180200",
+"name": "Near collision with terrain generally",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180201","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180202" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180201",
+"name": "Near collision with terrain",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180202",
+"name": "Near collision with high terrain/hill/mountain",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180300",
+"name": "Near collision with airborne object",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180301","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180302","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180303","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180304" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180301",
+"name": "Near collision with a bird",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180302",
+"name": "Near collision with an other airborne object",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180303",
+"name": "Near collision with an unknown airborne object",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180304",
+"name": "Near collision with parachutist",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180400",
+"name": "Near collision with an object on the ground",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180401","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180402","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180403","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180404","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180405","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180406" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180401",
+"name": "Near collision with a parked aircraft",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180402",
+"name": "Near collision with tall structure/object",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180403",
+"name": "Near collision with person",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180404",
+"name": "Near collision with parachutist on the ground",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180405",
+"name": "Near collision with vehicle",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2180406",
+"name": "Near collision with object on the ground",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200000",
+"name": "Incursions generally",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200300" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200100",
+"name": "Runway incursions",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200101","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200102","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200103","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200104" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200101",
+"name": "Runway incursion by an aircraft",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200102",
+"name": "Runway incursion by a vehicle/equipment",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200103",
+"name": "Runway incursion by a person",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200104",
+"name": "Runway incursion by an animal",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200200",
+"name": "Taxiway incursion",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200201","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200202","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200203","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200204" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200201",
+"name": "Taxiway incursion by an aircraft",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200202",
+"name": "Taxiway incursion by a vehicle/equipment",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200203",
+"name": "Taxiway incursion by a person",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200204",
+"name": "Taxiway incursion by an animal",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200300",
+"name": "Apron/ramp incursion",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200301","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200302","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200303","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200304" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200301",
+"name": "Apron incursion by an aircraft",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200302",
+"name": "Apron incursion by a vehicle/equipment",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200303",
+"name": "Apron incursion by a person",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200304",
+"name": "Apron incursion by a person",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3000000",
+"name": "Consequential events",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3020000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3030000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3040000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3050000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3060000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3080000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3090000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3100000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3110000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3140000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3150000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3170000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3190000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3200000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3270000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3280000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010032" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3020000",
+"name": "Declared emergency",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3020100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3020200" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3020100",
+"name": "Declared emergency - Distress (Mayday)",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3020200",
+"name": "Declared emergency - Urgency (PAN call)",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3030000",
+"name": "Rejected take-off",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3030100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3030200" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3030100",
+"name": "High speed rejected take-off (at and above V1)",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3030200",
+"name": "Low speed rejected take-off (below V1)",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3040000",
+"name": "Rejected landing",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3050000",
+"name": "Missed approach",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3060000",
+"name": "Emergency descent",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3080000",
+"name": "Forced landing ",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3090000",
+"name": "An approach below minima",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3100000",
+"name": "Fuel dumping",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3110000",
+"name": "Evacuation",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3140000",
+"name": "Aircraft return",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3150000",
+"name": "Overweight landing",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3170000",
+"name": "Cargo dumped",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3190000",
+"name": "Flight cancellation",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3200000",
+"name": "Flight delay",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250000",
+"name": "Diversion of an aircraft from the intended destination",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250400" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250100",
+"name": "Diversion due to weather conditions",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250200",
+"name": "Diversion due to technical reasons",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250300",
+"name": "Diversion due to operational decision",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3250400",
+"name": "Diversion - due to other reasons",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3270000",
+"name": "Emergency autorotation (helicopter)",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3280000",
+"name": "Engine shutdown/flameout",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3280100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3280200" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3280100",
+"name": "Engine shutdown - precautionary (soft)",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3280200",
+"name": "Engine shutdown (hard)",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010032",
+"name": "Clearance cancelled",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4000000",
+"name": "Air Navigation Services related event",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4030000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4040000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010048" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010000",
+"name": "Air Navigation Services operational issues",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010400","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010500","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010600","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010700" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010100",
+"name": "ANS operational communications related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010200",
+"name": "ANS operational information provision related event",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010201","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010202","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010203","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010204" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010201",
+"name": "Provision of ANS flight information",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010202",
+"name": "Provision of ANS geographical information",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010203",
+"name": "Provision of ANS weather information",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010204",
+"name": "Provision of ANS traffic information",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010300",
+"name": "ANS separation provision related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010400",
+"name": "ANS conflict detection and resolution related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010500",
+"name": "ANS handling of accidents/incidents/emergencies related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010600",
+"name": "ANS handing over/taking over procedure related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010700",
+"name": "An event related to an ATC clearance itself",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010701","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010702","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010703","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010704","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010092" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010701",
+"name": "Clearance -  wrong altitude",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010702",
+"name": "Clearance - wrong heading",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010703",
+"name": "Clearance - wrong speed",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4010704",
+"name": "Clearance - wrong aircraft",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010092",
+"name": "Clearance - not suitable for aircraft",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020000",
+"name": "Aeronautical Information Service related event",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020400" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020100",
+"name": "AIS out of date information provided",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020200",
+"name": "AIS up to date but users have different data",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020300",
+"name": "AIS erroneous data",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4020400",
+"name": "Flight crew and Air Traffic Management using different data",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4030000",
+"name": "Air Traffic Flow Management related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4040000",
+"name": "Airspace management related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050000",
+"name": "Air Traffic Management/Communication, Navigation and Surveillance serviceability related event",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050400","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050500","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050600","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050700" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050100",
+"name": "Inability to provide air traffic management",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050101","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050102","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050103" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050101",
+"name": "Inability to provide ATS",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050102",
+"name": "Inability to provide AirSpace Management services",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050103",
+"name": "Inability to provide ATFM services",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050200",
+"name": "ATM/CNS failure of communication",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050300",
+"name": "Failure of surveillance",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050400",
+"name": "Failure of data processing",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050500",
+"name": "Failure of support information",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050600",
+"name": "Failure to provide navigation",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4050700",
+"name": "Failure of the power supply",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060000",
+"name": "Air Traffic Management emergency/security situation",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060400","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060500","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060600" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060100",
+"name": "Fire in an ATM facility ",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060200",
+"name": "Unlawful interference with an ATMfacility ",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060300",
+"name": "Bomb threat to an ATM facility",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060400",
+"name": "Smoke in an ATM facility",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060500",
+"name": "Sabotage of an ATMfacility",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4060600",
+"name": "Other emergency or security event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070000",
+"name": "Events affecting Air Traffic Management operations",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070400" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070100",
+"name": "Closure of a FIR",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070200",
+"name": "Closure of an aerodrome",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070300",
+"name": "Closure of runway",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_4070400",
+"name": "Air space capacity reduction",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_99010048",
+"name": "Coordination (Coordination)",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010000",
+"name": "Ground aids related event",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010100" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010100",
+"name": "Aerodrome approach systems related event ",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010101","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010102","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010103","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010104","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010105","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010106","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010107","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010108","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010109","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010110" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010101",
+"name": "Instrument landing system related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010102",
+"name": "Global positioning system related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010103",
+"name": "Marker beacon related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010104",
+"name": "Non-directional beacon related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010105",
+"name": "Distance measuring equipment related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010106",
+"name": "VHF Omni-directional radio Range related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010107",
+"name": "Precision approach path indicator related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010108",
+"name": "Microwave landing systems related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010109",
+"name": "Precision approach radar related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_5010110",
+"name": "Visual approach slope indicator related event",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7000000",
+"name": "Events related to the non-compliance with regulations",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7030000","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050000" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7030000",
+"name": "Staffing related event",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7030100","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7030200" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7030100",
+"name": "Staffing/crewing less than required",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7030200",
+"name": "Crew/staff not licensed for activity",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050000",
+"name": "Aircraft related regulatory event/issue",
+  "description": null,
+  "childrenIRIs": [ "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050200","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050300","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050400","http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050700" ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050200",
+"name": "Aircraft was not equipped for the type of operation undertaken ",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050300",
+"name": "Aircraft not RVSM equipped while being operated in  RVSM airspace ",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050400",
+"name": "The aircraft was not equipped or certified for the type of approach flown",
+  "description": null,
+  "childrenIRIs": [  ]
+},
+   
+{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_7050700",
+"name": "Invalid / no permit to fly: a permit to fly was required for the flight undertaken but it was not  obtained or not valid ",
+  "description": null,
+  "childrenIRIs": [  ]
+}
+
+]}]
+  

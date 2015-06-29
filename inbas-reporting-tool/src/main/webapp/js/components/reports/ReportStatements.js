@@ -39,7 +39,7 @@ var ReportStatements = React.createClass({
         this.setState({isWizardOpen: false});
     },
 
-    onEventTypeSelect(e) {
+    onEventTypeSelect: function (e) {
         var wizardProperties;
         switch (e.target.value) {
             case 'runway_incursion':
@@ -198,7 +198,7 @@ var ReportStatements = React.createClass({
             <div>
                 {component}
                 <Button bsStyle='primary' title='Add new Severity Assessment'
-                        onClick={this.openSeverityAssessmentWizard}>
+                        onClick={this.openSeverityAssessmentWizard} disabled>
                     <Glyphicon glyph='plus'/>
                 </Button>
             </div>
