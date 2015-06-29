@@ -50,13 +50,13 @@ public class EventReport implements HasOwlKey {
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
     private Resource resource;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasSeverityAssessment, cascade = CascadeType.ALL)
+    @OWLObjectProperty(iri = Vocabulary.p_hasSeverityAssessment, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private SeverityAssessment severityAssessment;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL)
+    @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.ALL)
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<EventTypeAssessment> typeAssessments;
 
     public URI getUri() {

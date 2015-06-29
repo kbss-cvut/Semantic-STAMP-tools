@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
  * @author ledvima1
  */
 @RestController
-@RequestMapping("/eventType")
+@RequestMapping("/eventTypes")
 
 public class EventTypeController {
 

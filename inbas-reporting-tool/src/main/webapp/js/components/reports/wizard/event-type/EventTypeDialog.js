@@ -7,6 +7,8 @@
 var React = require('react');
 var Modal = require('react-bootstrap').Modal;
 var Panel = require('react-bootstrap').Panel;
+var TypeAhead = require('react-typeahead').Typeahead;
+
 
 var Select = require('../../../Select');
 
