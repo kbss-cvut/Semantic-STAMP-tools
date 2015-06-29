@@ -1,10 +1,11 @@
-When the application is reloaded, it no longer returns the statements for a report (perhaps before reload they're returned
-    from cache after they were persisted?)
+Use the TypeAhead component to show event types when adding event type assessment
 Revise the DTOs - how does inheritance work in JAXB (JSON)
+    http://stackoverflow.com/questions/16429717/jaxb-and-inheritance
+    http://blog.bdoughan.com/2010/11/jaxb-and-inheritance-using-substitution.html
 Revise the domain classes and relationships, especially the persist cascading (e.g. for organizations it makes no sense)
 Rewrite the DTO factory
 Revise the wizards according to the updated requirements
-Add a way to recover from report submit
+Add a way to recover from report submit error
 Create wizard for severity assessment
 Create tests for the app
 Validation of fields in wizards
