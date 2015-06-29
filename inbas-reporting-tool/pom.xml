@@ -11,8 +11,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <name>INBAS Audit Tool</name>
-    <artifactId>inbas-audit-tool</artifactId>
+    <name>INBAS Reporting Tool</name>
+    <artifactId>inbas-reporting-tool</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 

@@ -24,7 +24,7 @@ var MainView = React.createClass({
         return (
             <div>
                 <header>
-                    <Navbar brand="INBAS Audit Tool">
+                    <Navbar brand="INBAS Reporting Tool">
                         <Nav>
                             <NavItemLink to="home">Home</NavItemLink>
                             <NavItemLink to="reports">Reports</NavItemLink>
