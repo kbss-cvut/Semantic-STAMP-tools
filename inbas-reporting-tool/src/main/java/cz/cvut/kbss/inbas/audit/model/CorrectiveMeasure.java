@@ -56,6 +56,11 @@ public class CorrectiveMeasure implements ReportingStatement, HasOwlKey {
     }
 
     @Override
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    @Override
     public void generateKey() {
         if (key != null) {
             return;

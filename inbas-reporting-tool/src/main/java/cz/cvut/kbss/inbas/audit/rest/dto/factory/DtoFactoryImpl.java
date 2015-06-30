@@ -20,6 +20,8 @@ public class DtoFactoryImpl implements DtoFactory {
     @Override
     public EventReport toDomainModel(EventReportDto dto) {
         final EventReport report = new EventReport();
+        report.setUri(dto.getUri());
+        report.setKey(dto.getKey());
         report.setLastEdited(dto.getLastEdited());
         report.setLastEditedBy(dto.getLastEditedBy());
         report.setCreated(dto.getCreated());
@@ -42,7 +44,6 @@ public class DtoFactoryImpl implements DtoFactory {
     @Override
     public EventTypeAssessment toDomainModel(RunwayIncursionDto dto) {
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
-        final EventType et = new EventType();
         typeAssessment.setEventType(dto.getEventType());
         final RunwayIncursion ri = new RunwayIncursion();
         typeAssessment.setRunwayIncursion(ri);

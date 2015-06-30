@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
+import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.model.EventReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.factory.DtoFactory;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventReportDto;
@@ -66,10 +67,11 @@ public class ReportController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{key}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateReport(@PathVariable("key") String key, @RequestBody EventReport report) {
+    public void updateReport(@PathVariable("key") String key, @RequestBody EventReportDto report) {
         final EventReport original = getEventReport(key);
-        validateReportForUpdate(original, report);
-        reportService.update(report);
+        final EventReport update = dtoFactory.toDomainModel(report);
+        validateReportForUpdate(original, update);
+        reportService.update(update);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Updated event report {}", report);
         }
@@ -77,10 +79,14 @@ public class ReportController {
 
     private void validateReportForUpdate(EventReport original, EventReport update) {
         if (!original.getUri().equals(update.getUri())) {
-            throw new ConflictException("The updated report has a different URI that the original!");
+            throw new InvalidReportException(
+                    "The updated report URI " + update.getUri() + " is different from the original URI " + original
+                            .getUri() + "!");
         }
         if (!original.getKey().equals(update.getKey())) {
-            throw new ConflictException("The updated report has a different key than the original");
+            throw new InvalidReportException(
+                    "The updated report key " + update.getKey() + " is different from the original key " + original
+                            .getKey());
         }
     }
 
