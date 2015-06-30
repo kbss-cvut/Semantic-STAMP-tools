@@ -70,3 +70,8 @@ body {
     margin-left: auto;
     margin-right: auto;
 }
+
+.autocomplete-results {
+    padding: 0 0 0 0;
+    list-style-type: none;
+}

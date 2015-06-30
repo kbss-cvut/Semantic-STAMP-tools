@@ -18,6 +18,7 @@ var EventTypeDialog = require('./wizard/event-type/EventTypeDialog');
 var RunwayIncursionSteps = require('./wizard/event-type/runway-incursion/Steps');
 var CorrectiveMeasureWizardSteps = require('./wizard/corrective-measure/Steps');
 var SeverityAssessmentWizardSteps = require('./wizard/severity-assessment/Steps');
+var EventTypeWizardSelector = require('./wizard/event-type/EventTypeWizardSelector');
 
 var ReportStatements = React.createClass({
     mixins: [OverlayMixin],
@@ -39,20 +40,13 @@ var ReportStatements = React.createClass({
         this.setState({isWizardOpen: false});
     },
 
-    onEventTypeSelect: function (e) {
-        var wizardProperties;
-        switch (e.target.value) {
-            case 'runway_incursion':
-                wizardProperties = {
-                    steps: RunwayIncursionSteps,
-                    title: 'Runway Incursion Wizard',
-                    onFinish: this.addEventTypeAssessment,
-                    statement: {
-                        eventType: 'runway_incursion'
-                    }
-                };
-                break;
+    onEventTypeSelect: function (eventType) {
+        // TODO This is temporary, the wizard type should be decidable from the event type
+        if (eventType.name.toLowerCase().indexOf('incursion') !== -1) {
+            eventType.wizard = 'runway_incursion';
         }
+        var wizardProperties = EventTypeWizardSelector.getWizardSettings(eventType);
+        wizardProperties.onFinish = this.addEventTypeAssessment;
         this.openWizard(wizardProperties);
     },
     addEventTypeAssessment: function (data, closeCallback) {
@@ -121,8 +115,14 @@ var ReportStatements = React.createClass({
         } else {
             var toShow = [];
             for (var i = 0; i < data.length; i++) {
-                if (data[i].eventType === 'runway_incursion') {
+                // TODO This is also temporary. There has to be some mapping from event type to string representation
+                if (data[i].eventType.name.toLowerCase().indexOf('incursion') !== -1) {
                     toShow.push(this.getRunwayIncursionData(data[i]));
+                } else {
+                    toShow.push({
+                        eventType: data[i].eventType.name,
+                        summary: data[i].description
+                    })
                 }
             }
             component = this.renderTable(toShow, ['eventType', 'summary'], (<tr>
@@ -130,7 +130,7 @@ var ReportStatements = React.createClass({
                 <th>Summary</th>
             </tr>), 'eventType');
         }
-        var typeWizard = (<EventTypeDialog onChange={this.onEventTypeSelect}/>);
+        var typeWizard = (<EventTypeDialog onTypeSelect={this.onEventTypeSelect}/>);
         return (
             <div>
                 {component}
@@ -158,7 +158,7 @@ var ReportStatements = React.createClass({
                 break;
         }
         return {
-            eventType: 'Runway Incursion',
+            eventType: incursion.eventType.name,
             summary: 'Flight ' + incursion.clearedAircraft.flightNumber + ' was cleared to use runway, but ' + intruder +
             ' intruded on the runway.'
         }

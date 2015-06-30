@@ -1,13 +1,18 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model;
 
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.EventType;
+
+import java.net.URI;
 
 /**
  * @author ledvima1
  */
 public class RunwayIncursionDto extends EventTypeAssessmentDto {
 
-    private String eventType;
+    private URI uri;
+
+    private EventType eventType;
 
     private String lvp;
 
@@ -15,18 +20,24 @@ public class RunwayIncursionDto extends EventTypeAssessmentDto {
 
     private IntruderDto intruder;
 
-    public String getLvp() {
-        return lvp;
+    public URI getUri() {
+        return uri;
     }
 
-    @Override
-    public String getEventType() {
+    public void setUri(URI uri) {
+        this.uri = uri;
+    }
+
+    public EventType getEventType() {
         return eventType;
     }
 
-    @Override
-    public void setEventType(String eventType) {
+    public void setEventType(EventType eventType) {
         this.eventType = eventType;
+    }
+
+    public String getLvp() {
+        return lvp;
     }
 
     public void setLvp(String lvp) {
@@ -52,7 +63,9 @@ public class RunwayIncursionDto extends EventTypeAssessmentDto {
     @Override
     public String toString() {
         return "RunwayIncursionDto{" +
-                "clearedAircraft=" + clearedAircraft +
+                "eventType=" + eventType +
+                ", lvp='" + lvp + '\'' +
+                ", clearedAircraft=" + clearedAircraft +
                 ", intruder=" + intruder +
                 "} " + super.toString();
     }

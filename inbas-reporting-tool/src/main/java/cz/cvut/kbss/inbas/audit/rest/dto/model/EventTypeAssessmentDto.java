@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model;
 
+import cz.cvut.kbss.inbas.audit.model.EventType;
+
 import java.net.URI;
 
 /**
@@ -9,7 +11,7 @@ public class EventTypeAssessmentDto {
 
     private URI uri;
 
-    private String eventType;
+    private EventType eventType;
 
     public URI getUri() {
         return uri;
@@ -19,11 +21,11 @@ public class EventTypeAssessmentDto {
         this.uri = uri;
     }
 
-    public String getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 
-    public void setEventType(String eventType) {
+    public void setEventType(EventType eventType) {
         this.eventType = eventType;
     }
 

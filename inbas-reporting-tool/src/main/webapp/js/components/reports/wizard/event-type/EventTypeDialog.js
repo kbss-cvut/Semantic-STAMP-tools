@@ -17,33 +17,37 @@ var Select = require('../../../Select');
 
 var EventTypeDialog = React.createClass({
     mixins: [Reflux.ListenerMixin],
-    getInitialState: function() {
+    getInitialState: function () {
         return {
             options: []
         };
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         this.listenTo(EventTypeStore, this.onEventsLoaded);
         Actions.loadEventTypes();
     },
-    onEventsLoaded: function(eventTypes) {
+    onEventsLoaded: function (eventTypes) {
         this.setState({options: eventTypes});
-        console.log(eventTypes);
     },
-    onSelect: function(e) {
-        e.stopPropagation();
-        this.props.onChange(e);
-        this.props.onRequestHide();
+    onSelect: function (option) {
+        this.props.onTypeSelect(option);
+        // We're getting errors when we call the onRequestHide immediately on select
+        setTimeout(this.props.onRequestHide, 100);
+
     },
     render: function () {
-        var options = [
-            {value: 'runway_incursion', label: 'Runway Incursion'}
-        ];
+        var classes = {
+            input: 'form-control',
+            listItem: 'btn-link',
+            results: 'autocomplete-results'
+        };
         return (
             <Modal {...this.props} bsSize='small' title='Event Type' animation={false}>
                 <Panel>
                     <div className='centered'>
-                        <Select label='Event Type' onChange={this.onSelect} options={options}/>
+                        <TypeAhead name='eventType' formInputOption='id' placeholder='Event Type'
+                                   onOptionSelected={this.onSelect} filterOption='name' displayOption='name'
+                                   options={this.state.options} customClasses={classes}/>
                     </div>
                 </Panel>
             </Modal>

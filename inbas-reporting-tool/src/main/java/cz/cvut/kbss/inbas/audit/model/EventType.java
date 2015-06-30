@@ -14,17 +14,17 @@ import java.net.URI;
 public class EventType {
 
     @Id
-    private URI uri;
+    private URI id;
 
     @OWLDataProperty(iri = "http://www.w3.org/2000/01/rdf-schema#label")
     private String name;
 
-    public URI getUri() {
-        return uri;
+    public URI getId() {
+        return id;
     }
 
-    public void setUri(URI uri) {
-        this.uri = uri;
+    public void setId(URI id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -38,7 +38,7 @@ public class EventType {
     @Override
     public String toString() {
         return "EventType{" +
-                "uri=" + uri +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
     }

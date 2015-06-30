@@ -43,8 +43,7 @@ public class DtoFactoryImpl implements DtoFactory {
     public EventTypeAssessment toDomainModel(RunwayIncursionDto dto) {
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
         final EventType et = new EventType();
-        et.setName(dto.getEventType());
-        typeAssessment.setEventType(et);
+        typeAssessment.setEventType(dto.getEventType());
         final RunwayIncursion ri = new RunwayIncursion();
         typeAssessment.setRunwayIncursion(ri);
         ri.setLowVisibilityProcedure(dto.getLvp());
@@ -125,7 +124,7 @@ public class DtoFactoryImpl implements DtoFactory {
                 }
                 final RunwayIncursionDto rw = new RunwayIncursionDto();
                 rw.setClearedAircraft(incursion.getClearedAircraft());
-                rw.setEventType(eta.getEventType().getName());
+                rw.setEventType(eta.getEventType());
                 rw.setLvp(incursion.getLowVisibilityProcedure());
                 rw.setIntruder(toDto(incursion.getIntruder()));
                 dto.getTypeAssessments().add(rw);

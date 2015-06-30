@@ -755,14 +755,8 @@
   "description": null,
   "childrenIRIs": [  ]
 },
-   
+
 { "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200303",
-"name": "Apron incursion by a person",
-  "description": null,
-  "childrenIRIs": [  ]
-},
-   
-{ "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200304",
 "name": "Apron incursion by a person",
   "description": null,
   "childrenIRIs": [  ]
