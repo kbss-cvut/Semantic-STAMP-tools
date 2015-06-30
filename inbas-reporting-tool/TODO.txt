@@ -1,4 +1,3 @@
-Use DTOs for get and update, add uri to DTOs
 Create a component that will show only portion of text and the full text will be in title (and maybe the component could open to show full text)
 Revise the DTOs - how does inheritance work in JAXB (JSON)
     http://stackoverflow.com/questions/16429717/jaxb-and-inheritance
