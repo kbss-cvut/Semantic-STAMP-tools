@@ -63,10 +63,10 @@ var ReportEdit = React.createClass({
         this.setState(assign(this.state, {submitting: true}));
         this.state.report.lastEditedBy = this.props.user;
         if (this.isReportNew()) {
-            Actions.createReport(this.state.report, this.onSubmitError);
+            Actions.createReport(this.state.report, null, this.onSubmitError);
         }
         else {
-            Actions.updateReport(this.state.report, this.onSubmitError);
+            Actions.updateReport(this.state.report, null, this.onSubmitError);
         }
     },
     onSubmitError: function (error) {

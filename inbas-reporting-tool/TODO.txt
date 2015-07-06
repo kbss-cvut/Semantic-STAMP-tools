@@ -1,4 +1,5 @@
-Add a way to recover from report submit error
+Add remove button for event type statement and corrective measures statement
+Modify routing so that each report detail gets its own route, new report should also have route
 Revise the strategy of enabling/disabling next/finish button in wizards
 Revise the DTOs - how does inheritance work in JAXB (JSON)
     http://stackoverflow.com/questions/16429717/jaxb-and-inheritance
@@ -13,3 +14,4 @@ Design some generic validation mechanism for the wizards
 Design a way to represent wizards in ontology and generate them based on this ontology
 Revise the wizards according to the updated requirements
 Create wizard for severity assessment
+Check localization options for the application

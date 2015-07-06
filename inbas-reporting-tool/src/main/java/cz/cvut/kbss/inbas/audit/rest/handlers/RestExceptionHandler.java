@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -22,12 +23,17 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.NOT_FOUND);
     }
 
-    private ErrorInfo errorInfo(HttpServletRequest request, Exception e) {
+    private ErrorInfo errorInfo(HttpServletRequest request, Throwable e) {
         return new ErrorInfo(e.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(InvalidReportException.class)
     public ResponseEntity<ErrorInfo> invalidReport(HttpServletRequest request, Exception e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorInfo> mappingException(HttpServletRequest request, Exception e) {
+        return new ResponseEntity<>(errorInfo(request, e.getCause()), HttpStatus.BAD_REQUEST);
     }
 }
