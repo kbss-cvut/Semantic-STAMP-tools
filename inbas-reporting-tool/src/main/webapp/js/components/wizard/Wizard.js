@@ -11,6 +11,12 @@ var ListGroupItem = require('react-bootstrap').ListGroupItem;
 var WizardStep = require('./WizardStep');
 
 var Wizard = React.createClass({
+
+    propTypes: {
+        start: React.PropTypes.number,
+        steps: React.PropTypes.array
+    },
+
     getInitialState: function () {
         return {
             currentStep: this.props.start || 0,
@@ -92,7 +98,8 @@ var Wizard = React.createClass({
             component: step.component,
             data: this.state.data,
             isFirstStep: this.state.currentStep === 0,
-            isLastStep: this.state.currentStep === this.props.steps.length - 1
+            isLastStep: this.state.currentStep === this.props.steps.length - 1,
+            defaultAdvanceDisabled: step.defaultAdvanceDisabled
         });
         return component;
     }

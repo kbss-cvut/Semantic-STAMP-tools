@@ -8,6 +8,15 @@ var React = require('react');
 var Input = require('react-bootstrap').Input;
 
 var Select = React.createClass({
+
+    propTypes: {
+        options: React.PropTypes.array,
+        name: React.PropTypes.string,
+        title: React.PropTypes.string,
+        label: React.PropTypes.string,
+        onChange: React.PropTypes.func
+    },
+
     render: function () {
         var options = this.generateOptions();
         return (

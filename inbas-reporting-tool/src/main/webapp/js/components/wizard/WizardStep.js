@@ -12,7 +12,7 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var WizardStep = React.createClass({
     getInitialState: function () {
         return {
-            advanceDisabled: false,
+            advanceDisabled: this.props.defaultAdvanceDisabled != null ? this.props.defaultAdvanceDisabled : false,
             retreatDisabled: false
         };
     },
@@ -60,25 +60,26 @@ var WizardStep = React.createClass({
     render: function () {
         var previousButton;
         if (!this.props.isFirstStep) {
-            previousButton = (<Button onClick={this.onPrevious} disabled={this.state.retreatDisabled} bsStyle="primary">Previous</Button>);
+            previousButton = (<Button onClick={this.onPrevious} disabled={this.state.retreatDisabled} bsStyle='primary'>Previous</Button>);
         }
         var nextButton;
         var finishButton;
+        var disabledTitle = this.state.advanceDisabled ? 'Some required values are missing' : null;
         if (!this.props.isLastStep) {
             nextButton = (
-                <Button onClick={this.onNext} disabled={this.state.advanceDisabled} bsStyle="primary">Next</Button>);
+                <Button onClick={this.onNext} disabled={this.state.advanceDisabled} bsStyle='primary' title={disabledTitle}>Next</Button>);
         } else {
-            finishButton = (<Button onClick={this.onFinish} bsStyle="primary">Finish</Button>);
+            finishButton = (<Button onClick={this.onFinish} disabled={this.state.advanceDisabled} bsStyle='primary' title={disabledTitle}>Finish</Button>);
         }
-        var cancelButton = (<Button onClick={this.props.onClose} bsStyle="primary">Cancel</Button>);
+        var cancelButton = (<Button onClick={this.props.onClose} bsStyle='primary'>Cancel</Button>);
         var error;
         if (this.state.currentError) {
-            error = (<Alert bsStyle="danger"><p>{this.state.currentError.message}</p></Alert>);
+            error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);
         }
         var Component = this.props.component;
         return (
-            <div className="wizard-step">
-                <div className="wizard-step-content">
+            <div className='wizard-step'>
+                <div className='wizard-step-content'>
                     <Component data={this.props.data} updateNextButtonState={this.updateNextButtonState}/>
                 </div>
                 <ButtonToolbar style={{float: 'right'}}>

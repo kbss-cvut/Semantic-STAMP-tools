@@ -31,18 +31,21 @@ var EventTypeDialog = React.createClass({
     },
     onSelect: function (option) {
         this.props.onTypeSelect(option);
-        // We're getting errors when we call the onRequestHide immediately on select
-        setTimeout(this.props.onRequestHide, 100);
+        // We're getting errors when we call the onHide immediately on select
+        setTimeout(this.props.onHide, 100);
 
     },
     render: function () {
         var classes = {
             input: 'form-control',
-            listItem: 'btn-link',
+            listItem: 'btn-link item',
             results: 'autocomplete-results'
         };
         return (
             <Modal {...this.props} bsSize='small' title='Event Type' animation={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Event Type</Modal.Title>
+                </Modal.Header>
                 <Panel>
                     <div className='centered'>
                         <TypeAhead name='eventType' formInputOption='id' placeholder='Event Type'

@@ -1,13 +1,15 @@
-Create a component that will show only portion of text and the full text will be in title (and maybe the component could open to show full text)
+Add a way to recover from report submit error
+Revise the strategy of enabling/disabling next/finish button in wizards
 Revise the DTOs - how does inheritance work in JAXB (JSON)
     http://stackoverflow.com/questions/16429717/jaxb-and-inheritance
     http://blog.bdoughan.com/2010/11/jaxb-and-inheritance-using-substitution.html
-Revise the domain classes and relationships, especially the persist cascading (e.g. for organizations it makes no sense)
 Rewrite the DTO factory
-Revise the wizards according to the updated requirements
-Add a way to recover from report submit error
-Create wizard for severity assessment
+Revise the domain classes and relationships, especially the persist cascading (e.g. for organizations it makes no sense)
 Create tests for the app
-Validation of fields in wizards
-Show validation errors on the corresponding fields
-Add possibility to disable Next button in wizard for invalid step values
+    React component tests
+    Java tests
+Design some generic validation mechanism for the wizards
+    Show validation errors on the corresponding fields
+Design a way to represent wizards in ontology and generate them based on this ontology
+Revise the wizards according to the updated requirements
+Create wizard for severity assessment

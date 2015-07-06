@@ -9,6 +9,7 @@ var EventDescription = require('./EventDescription');
 module.exports = [
     {
         name: 'Event Description',
-        component: EventDescription
+        component: EventDescription,
+        defaultAdvanceDisabled: true
     }
 ];
