@@ -5,9 +5,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-var ModalTrigger = require('react-bootstrap').ModalTrigger;
 var Modal = require('react-bootstrap').Modal;
-var OverlayMixin = require('react-bootstrap').OverlayMixin;
 
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils.js');
