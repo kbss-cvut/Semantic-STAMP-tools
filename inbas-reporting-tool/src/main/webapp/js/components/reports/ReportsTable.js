@@ -14,6 +14,7 @@ var ReportsTable = React.createClass({
     render: function () {
         var title = <h3>Reports</h3>;
         var reports = this.prepareReports();
+        // TODO Change the styles to bootstrap classes
         return (<div>
             <Panel header={title}>
                 <Table striped bordered condensed hover>

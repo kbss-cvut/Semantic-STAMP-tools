@@ -13,13 +13,15 @@ var UserStore = require('../../stores/UserStore');
 var Reports = require('./Reports');
 var Actions = require('../../actions/Actions');
 
+var router = require('../../utils/router');
+
 var ReportsController = React.createClass({
     mixins: [
         Reflux.listenTo(ReportsStore, 'onReportsChange'),
         Reflux.listenTo(UserStore, 'onChange')],
     getInitialState: function () {
         return {
-            user: UserStore.getCurrentUser().user,
+            user: UserStore.getCurrentUser(),
             reports: ReportsStore.getReports(),
             editedReport: null,
             editing: false
@@ -41,10 +43,7 @@ var ReportsController = React.createClass({
         this.setState(assign({}, this.state, {editing: true}))
     },
     onEditReport: function (report) {
-        this.setState(assign({}, this.state, {
-            editing: true,
-            editedReport: report
-        }));
+        router.transitionTo('report', {reportKey: report.key}, {onSuccess: 'reports', onCancel: 'reports'});
     },
     onEditCancel: function () {
         this.setState(assign({}, this.state, {

@@ -10,6 +10,10 @@ var request = require('superagent');
 
 
 var reports = null;
+var keyToReport = {};
+
+// TODO The reports should probably be loaded once the app starts, because for example when someone refreshes a report detail,
+//  he gets an error, because the reports are not loaded and so there is no detail to show
 
 function loadReports() {
     request.get('rest/reports').accept('json').end(function (err, resp) {
@@ -35,11 +39,19 @@ var ReportsStore = Reflux.createStore({
     getReports: function () {
         return reports;
     },
+    getReport: function (key) {
+        return keyToReport[key];
+    },
     onLoadReports: function () {
         loadReports();
     },
     onReportsLoaded: function (data) {
         reports = data;
+        keyToReport = {};
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            keyToReport[data[i].key] = data[i];
+        }
         this.trigger(this.getCurrentState());
     },
     handleError: function (err) {

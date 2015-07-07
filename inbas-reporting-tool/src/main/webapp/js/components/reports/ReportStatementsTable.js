@@ -57,11 +57,11 @@ var ReportStatementsTable = React.createClass({
         var tableHeader = [];
         for (var i = 0; i < len; i++) {
             var cls = header[i].flex ? 'col-xs-' + header[i].flex : null;
-            tableHeader.push(<th className={cls}>{header[i].name}</th>);
+            tableHeader.push(<th key={'col_' + header[i].name} className={cls}>{header[i].name}</th>);
         }
-        tableHeader.push(<th className='col-xs-1'>Actions</th>);
+        tableHeader.push(<th key='col_actions' className='col-xs-1'>Actions</th>);
         return (
-            <tr>
+            <tr key={this.props.keyBase + 'header'}>
                 {tableHeader}
             </tr>
         );

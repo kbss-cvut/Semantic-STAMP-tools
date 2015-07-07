@@ -16,35 +16,34 @@ var DateTimePicker = require('react-bootstrap-datetimepicker');
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
 var ReportStatements = require('./ReportStatements');
+var ReportsStore = require('../../stores/ReportsStore');
+var UserStore = require('../../stores/UserStore');
+var router = require('../../utils/router');
+
+// TODO How to cancel the detail without explicitly calling router?
+// The same for submit
 
 var ReportEdit = React.createClass({
     getInitialState: function () {
-        if (!this.isReportNew()) {
-            return {
-                report: this.initReport(this.props.report),
-                submitting: false,
-                error: null
-            };
-        }
         return {
-            report: this.initReport(null),
+            report: this.initReport(),
             submitting: false,
             error: null
         };
     },
-    initReport: function (report) {
-        if (report !== null) {
-            return assign({}, report);
+    initReport: function () {
+        if (!this.isReportNew()) {
+            return assign({}, ReportsStore.getReport(this.props.params.reportKey));
         } else {
             return {
                 eventTime: Date.now(),
                 description: '',
-                author: this.props.user
+                author: UserStore.getCurrentUser()
             }
         }
     },
     isReportNew: function () {
-        return this.props.report == null;
+        return this.props.params.reportKey == null;
     },
     onChange: function (e) {
         var value = e.target.value;
@@ -61,13 +60,16 @@ var ReportEdit = React.createClass({
     onSubmit: function (e) {
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
-        this.state.report.lastEditedBy = this.props.user;
+        this.state.report.lastEditedBy = UserStore.getCurrentUser();
         if (this.isReportNew()) {
-            Actions.createReport(this.state.report, null, this.onSubmitError);
+            Actions.createReport(this.state.report, this.onSubmitSuccess, this.onSubmitError);
         }
         else {
-            Actions.updateReport(this.state.report, null, this.onSubmitError);
+            Actions.updateReport(this.state.report, this.onSubmitSuccess, this.onSubmitError);
         }
+    },
+    onSubmitSuccess: function() {
+        router.transitionTo(this.props.query.onSuccess);
     },
     onSubmitError: function (error) {
         this.setState(assign({}, this.state, {
@@ -77,6 +79,9 @@ var ReportEdit = React.createClass({
     },
     handleAlertDismiss: function () {
         this.setState(assign({}, this.state, {error: null}));
+    },
+    onCancel: function() {
+        router.transitionTo(this.props.query.onCancel);
     },
     render: function () {
         var authorName = this.state.report.author.firstName + " " + this.state.report.author.lastName;
@@ -125,7 +130,7 @@ var ReportEdit = React.createClass({
                         <Button bsStyle="success" disabled={loading || this.state.report.description === ''}
                                 ref="submit"
                                 onClick={this.onSubmit}>{loading ? 'Submitting...' : 'Submit'}</Button>
-                        <Button bsStyle="link" title="Discard changes" onClick={this.props.onCancelEdit}>Cancel</Button>
+                        <Button bsStyle="link" title="Discard changes" onClick={this.onCancel}>Cancel</Button>
                     </div>
 
                     {alert}
