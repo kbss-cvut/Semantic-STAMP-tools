@@ -13,6 +13,7 @@ var OverlayMixin = require('react-bootstrap').OverlayMixin;
 var ModalTrigger = require('react-bootstrap').ModalTrigger;
 
 var ReportStatementRow = require('./ReportStatementRow');
+var ReportStatementsTable = require('./ReportStatementsTable');
 var WizardWindow = require('../wizard/WizardWindow');
 var EventTypeDialog = require('./wizard/event-type/EventTypeDialog');
 var RunwayIncursionSteps = require('./wizard/event-type/runway-incursion/Steps');
@@ -125,10 +126,17 @@ var ReportStatements = React.createClass({
                     })
                 }
             }
-            component = this.renderTable(toShow, ['eventType', 'summary'], (<tr>
-                <th>Event Type</th>
-                <th>Summary</th>
-            </tr>), 'eventType');
+            var header = [{
+                attribute: 'eventType',
+                name: 'Event Type',
+                flex: 3
+            }, {
+                attribute: 'summary',
+                name: 'Summary',
+                flex: 8
+            }];
+            component = (<ReportStatementsTable data={toShow} header={header} key='eventType'
+                                                handlers={{onRemove: this.onRemoveEventTypeAssessment}}/>);
         }
         var typeWizard = (<EventTypeDialog onTypeSelect={this.onEventTypeSelect}/>);
         return (
@@ -163,6 +171,11 @@ var ReportStatements = React.createClass({
             ' intruded on the runway.'
         }
     },
+    onRemoveEventTypeAssessment: function (index) {
+        var types = this.props.report.typeAssessments;
+        types.splice(index, 1);
+        this.props.onUpdateReport({typeAssessments: types});
+    },
 
     renderCorrectiveMeasures: function () {
         var data = this.props.report.correctiveMeasures;
@@ -170,9 +183,13 @@ var ReportStatements = React.createClass({
         if (data == null || data.length === 0) {
             component = null;
         } else {
-            component = this.renderTable(data, ['description'], (<tr>
-                <th>Description</th>
-            </tr>), 'corrective');
+            var header = [{
+                flex: 11,
+                attribute: 'description',
+                name: 'Description'
+            }];
+            component = (<ReportStatementsTable data={data} header={header} key='corrective'
+                                                handlers={{onRemove: this.onRemoveCorrectiveMeasure}}/>);
         }
         return (
             <div>
@@ -184,15 +201,25 @@ var ReportStatements = React.createClass({
         );
     },
 
+    onRemoveCorrectiveMeasure: function (index) {
+        var measures = this.props.report.correctiveMeasures;
+        measures.splice(index, 1);
+        this.props.onUpdateReport({correctiveMeasures: measures});
+    },
+
     renderSeverityAssessments: function () {
         var data = this.props.report.severityAssessments;
         var component;
         if (data == null || data.length === 0) {
             component = null;
         } else {
-            component = this.renderTable(data, ['level'], (<tr>
-                <th>Level</th>
-            </tr>), 'severity');
+            var header = [{
+                flex: 11,
+                attribute: 'level',
+                name: 'Severity Level'
+            }];
+            component = (<ReportStatementsTable data={data} header={header} key='severity'
+                                                handlers={{onRemove: this.onRemoveSeverityAssessment}}/>);
         }
         return (
             <div>
@@ -205,27 +232,10 @@ var ReportStatements = React.createClass({
         );
     },
 
-    renderTable: function (data, attributes, header, type) {
-        var len = data.length;
-        var rows = [];
-        for (var i = 0; i < len; i++) {
-            var toShow = {};
-            var attLen = attributes.length;
-            for (var j = 0; j < attLen; j++) {
-                toShow[attributes[j]] = data[i][attributes[j]];
-            }
-            rows.push(<ReportStatementRow key={type + i} data={toShow}/>);
-        }
-        return (
-            <Table striped bordered condensed hover>
-                <thead>
-                {header}
-                </thead>
-                <tbody>
-                {rows}
-                </tbody>
-            </Table>
-        );
+    onRemoveSeverityAssessment: function (index) {
+        var assessments = this.props.report.severityAssessments;
+        assessments.splice(index, 1);
+        this.props.onUpdateReport({severityAssessments: assessments});
     },
 
     renderOverlay: function () {
