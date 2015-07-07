@@ -14,16 +14,15 @@ var ReportsTable = React.createClass({
     render: function () {
         var title = <h3>Reports</h3>;
         var reports = this.prepareReports();
-        // TODO Change the styles to bootstrap classes
         return (<div>
             <Panel header={title}>
                 <Table striped bordered condensed hover>
                     <thead>
                     <tr>
-                        <th style={{width: '15em', minWidth: '15em'}}>Event name</th>
-                        <th style={{width: '13em', minWidth: '13em'}}>Event date</th>
-                        <th>Description</th>
-                        <th style={{width: '10em', minWidth: '10em'}}>Actions</th>
+                        <th className='col-xs-2'>Event name</th>
+                        <th className='col-xs-2'>Event date</th>
+                        <th className='col-xs-6'>Description</th>
+                        <th className='col-xs-2'>Actions</th>
                     </tr>
                     </thead>
                     <tbody>

@@ -16,7 +16,6 @@ var CollapsibleText = require('../CollapsibleText');
 var DESCRIPTION_LENGTH_THRESHOLD = 100;
 
 var ReportRow = React.createClass({
-    mixins: [OverlayMixin],
 
     getInitialState: function () {
         return {
@@ -33,12 +32,12 @@ var ReportRow = React.createClass({
     onDeleteClick: function () {
         this.setState({modalOpen: true});
     },
-    toggleModal: function () {
-        this.setState({modalOpen: !this.state.modalOpen});
+    onCloseModal: function () {
+        this.setState({modalOpen: false});
     },
     removeReport: function () {
         Actions.deleteReport(this.props.report);
-        this.toggleModal();
+        this.onCloseModal();
     },
     render: function () {
         var report = this.props.report;
@@ -56,27 +55,23 @@ var ReportRow = React.createClass({
                         <Button bsStyle="primary" bsSize="small" onClick={this.onEditClick}>Edit</Button>
                     </span>
                     <span className="actions">
-                    <Button bsStyle="danger" bsSize="small" onClick={this.onDeleteClick}>Delete</Button>
+                        <Button bsStyle="danger" bsSize="small" onClick={this.onDeleteClick}>Delete</Button>
+                        <Modal show={this.state.modalOpen} onHide={this.onCloseModal}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Delete Event Report?</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                Are you sure you want to remove this report?
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button bsStyle="primary" onClick={this.removeReport}>Delete</Button>
+                                <Button onClick={this.onCloseModal}>Cancel</Button>
+                            </Modal.Footer>
+                        </Modal>
                     </span>
                 </td>
             </tr>
         );
-    },
-    renderOverlay: function () {
-        if (!this.state.modalOpen) {
-            return <span/>
-        }
-        return (
-            <Modal title='Delete Event Report?' onRequestHide={this.toggleModal}>
-                <div className="modal-body">
-                    Are you sure you want to remove this report?
-                </div>
-                <div className="modal-footer">
-                    <Button bsStyle="primary" onClick={this.removeReport}>Delete</Button>
-                    <Button onClick={this.toggleModal}>Cancel</Button>
-                </div>
-            </Modal>
-        )
     }
 });
 
