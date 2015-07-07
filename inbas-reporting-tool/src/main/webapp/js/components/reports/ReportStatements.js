@@ -12,7 +12,6 @@ var Glyphicon = require('react-bootstrap').Glyphicon;
 var OverlayMixin = require('react-bootstrap').OverlayMixin;
 var ModalTrigger = require('react-bootstrap').ModalTrigger;
 
-var ReportStatementRow = require('./ReportStatementRow');
 var ReportStatementsTable = require('./ReportStatementsTable');
 var WizardWindow = require('../wizard/WizardWindow');
 var EventTypeDialog = require('./wizard/event-type/EventTypeDialog');
@@ -20,6 +19,7 @@ var RunwayIncursionSteps = require('./wizard/event-type/runway-incursion/Steps')
 var CorrectiveMeasureWizardSteps = require('./wizard/corrective-measure/Steps');
 var SeverityAssessmentWizardSteps = require('./wizard/severity-assessment/Steps');
 var EventTypeWizardSelector = require('./wizard/event-type/EventTypeWizardSelector');
+var EventTypeFactory = require('../../model/EventTypeFactory');
 
 var ReportStatements = React.createClass({
     mixins: [OverlayMixin],
@@ -116,15 +116,10 @@ var ReportStatements = React.createClass({
         } else {
             var toShow = [];
             for (var i = 0; i < data.length; i++) {
-                // TODO This is also temporary. There has to be some mapping from event type to string representation
-                if (data[i].eventType.name.toLowerCase().indexOf('incursion') !== -1) {
-                    toShow.push(this.getRunwayIncursionData(data[i]));
-                } else {
-                    toShow.push({
-                        eventType: data[i].eventType.name,
-                        summary: data[i].description
-                    })
-                }
+                toShow.push({
+                    eventType: data[i].eventType.name,
+                    summary: EventTypeFactory.create(data[i]).toString()
+                });
             }
             var header = [{
                 attribute: 'eventType',
@@ -135,7 +130,7 @@ var ReportStatements = React.createClass({
                 name: 'Summary',
                 flex: 8
             }];
-            component = (<ReportStatementsTable data={toShow} header={header} key='eventType'
+            component = (<ReportStatementsTable data={toShow} header={header} keyBase='eventType'
                                                 handlers={{onRemove: this.onRemoveEventTypeAssessment}}/>);
         }
         var typeWizard = (<EventTypeDialog onTypeSelect={this.onEventTypeSelect}/>);
@@ -149,27 +144,6 @@ var ReportStatements = React.createClass({
                 </ModalTrigger>
             </div>
         );
-    },
-    getRunwayIncursionData: function (incursion) {
-        var intruder = '';
-        switch (incursion.intruder.intruderType) {
-            case 'aircraft':
-                intruder = 'an aircraft (call sign ' + incursion.intruder.callSign + ')';
-                break;
-            case 'vehicle':
-                intruder = 'a vehicle (call sign ' + incursion.intruder.callSign + ')';
-                break;
-            case 'person':
-                intruder = 'a person (organization ' + incursion.intruder.personOrganization + ')';
-                break;
-            default:
-                break;
-        }
-        return {
-            eventType: incursion.eventType.name,
-            summary: 'Flight ' + incursion.clearedAircraft.flightNumber + ' was cleared to use runway, but ' + intruder +
-            ' intruded on the runway.'
-        }
     },
     onRemoveEventTypeAssessment: function (index) {
         var types = this.props.report.typeAssessments;
@@ -188,7 +162,7 @@ var ReportStatements = React.createClass({
                 attribute: 'description',
                 name: 'Description'
             }];
-            component = (<ReportStatementsTable data={data} header={header} key='corrective'
+            component = (<ReportStatementsTable data={data} header={header} keyBase='corrective'
                                                 handlers={{onRemove: this.onRemoveCorrectiveMeasure}}/>);
         }
         return (
@@ -218,7 +192,7 @@ var ReportStatements = React.createClass({
                 attribute: 'level',
                 name: 'Severity Level'
             }];
-            component = (<ReportStatementsTable data={data} header={header} key='severity'
+            component = (<ReportStatementsTable data={data} header={header} keyBase='severity'
                                                 handlers={{onRemove: this.onRemoveSeverityAssessment}}/>);
         }
         return (

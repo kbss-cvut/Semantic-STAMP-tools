@@ -37,7 +37,7 @@ var ReportStatementsTable = React.createClass({
                 var attName = this.props.header[j].attribute;
                 toShow[attName] = data[i][attName];
             }
-            rows.push(<ReportStatementRow key={this.props.key + i} statementIndex={i} data={toShow}
+            rows.push(<ReportStatementRow key={this.props.keyBase + i} statementIndex={i} data={toShow}
                                           onRemove={handlers.onRemove}/>);
         }
         return (
