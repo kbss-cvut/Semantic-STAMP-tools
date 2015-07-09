@@ -11,9 +11,7 @@ var request = require('superagent');
 
 var reports = null;
 var keyToReport = {};
-
-// TODO The reports should probably be loaded once the app starts, because for example when someone refreshes a report detail,
-//  he gets an error, because the reports are not loaded and so there is no detail to show
+var loaded = false;
 
 function loadReports() {
     request.get('rest/reports').accept('json').end(function (err, resp) {
@@ -29,6 +27,18 @@ function loadReports() {
     });
 }
 
+function findReport(key) {
+    request.get('rest/reports/' + key).accept('json').end(function (err, resp) {
+        if (err) {
+            if (err.status !== 404) {
+                console.log(err.status, err.response);
+            }
+            ReportsStore.onReportLoaded(null);
+        }
+        ReportsStore.onReportLoaded(resp.body);
+    });
+}
+
 var ReportsStore = Reflux.createStore({
     listenables: [Actions],
     getCurrentState: function () {
@@ -39,24 +49,19 @@ var ReportsStore = Reflux.createStore({
     getReports: function () {
         return reports;
     },
-    getReport: function (key) {
-        return keyToReport[key];
-    },
     onLoadReports: function () {
         loadReports();
     },
     onReportsLoaded: function (data) {
         reports = data;
-        keyToReport = {};
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            keyToReport[data[i].key] = data[i];
-        }
+        loaded = true;
         this.trigger(this.getCurrentState());
     },
-    handleError: function (err) {
-        var error = JSON.parse(err.response.text);
-        console.log(err.status, error.message, error.requestUri);
+    onReportLoaded: function (report) {
+        this.trigger(report);
+    },
+    onFindReport: function(key) {
+        findReport(key);
     },
     onCreateReport: function (report, onSuccess, onError) {
         request.post('rest/reports').send(report).type('json').end(function (err, res) {
@@ -70,6 +75,10 @@ var ReportsStore = Reflux.createStore({
                 loadReports();
             }
         }.bind(this));
+    },
+    handleError: function (err) {
+        var error = JSON.parse(err.response.text);
+        console.log(err.status, error.message, error.requestUri);
     },
     onUpdateReport: function (report, onSuccess, onError) {
         request.put('rest/reports/' + report.key).send(report).type('json').end(function (err, res) {
@@ -96,6 +105,9 @@ var ReportsStore = Reflux.createStore({
                 loadReports();
             }
         }.bind(this));
+    },
+    isLoaded: function () {
+        return loaded;
     }
 });
 

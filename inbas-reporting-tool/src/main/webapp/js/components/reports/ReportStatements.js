@@ -54,8 +54,13 @@ var ReportStatements = React.createClass({
         var statement = data.statement;
         var eventTypes = this.props.report.typeAssessments != null ? this.props.report.typeAssessments : [];
         eventTypes.push(statement);
-        this.props.onUpdateReport({typeAssessments: eventTypes});
+        this.props.onChange('typeAssessments', eventTypes);
         closeCallback();
+    },
+    onRemoveEventTypeAssessment: function (index) {
+        var types = this.props.report.typeAssessments;
+        types.splice(index, 1);
+        this.props.onChange('typeAssessments', types);
     },
 
     openCorrectiveMeasureWizard: function () {
@@ -72,8 +77,13 @@ var ReportStatements = React.createClass({
         };
         var measures = this.props.report.correctiveMeasures != null ? this.props.report.correctiveMeasures : [];
         measures.push(measure);
-        this.props.onUpdateReport({correctiveMeasures: measures});
+        this.props.onChange('correctiveMeasures', measures);
         closeCallback();
+    },
+    onRemoveCorrectiveMeasure: function (index) {
+        var measures = this.props.report.correctiveMeasures;
+        measures.splice(index, 1);
+        this.props.onChange('correctiveMeasures', measures);
     },
 
     openSeverityAssessmentWizard: function () {
@@ -84,9 +94,14 @@ var ReportStatements = React.createClass({
         };
         this.openWizard(properties);
     },
-    addSeverityAssessment: function (statement, closeCallback) {
+    addSeverityAssessment: function (data, closeCallback) {
         // TODO
         closeCallback();
+    },
+    onRemoveSeverityAssessment: function (index) {
+        var assessments = this.props.report.severityAssessments;
+        assessments.splice(index, 1);
+        this.props.onChange('severityAssessments', assessments);
     },
 
     render: function () {
@@ -145,11 +160,6 @@ var ReportStatements = React.createClass({
             </div>
         );
     },
-    onRemoveEventTypeAssessment: function (index) {
-        var types = this.props.report.typeAssessments;
-        types.splice(index, 1);
-        this.props.onUpdateReport({typeAssessments: types});
-    },
 
     renderCorrectiveMeasures: function () {
         var data = this.props.report.correctiveMeasures;
@@ -175,12 +185,6 @@ var ReportStatements = React.createClass({
         );
     },
 
-    onRemoveCorrectiveMeasure: function (index) {
-        var measures = this.props.report.correctiveMeasures;
-        measures.splice(index, 1);
-        this.props.onUpdateReport({correctiveMeasures: measures});
-    },
-
     renderSeverityAssessments: function () {
         var data = this.props.report.severityAssessments;
         var component;
@@ -204,12 +208,6 @@ var ReportStatements = React.createClass({
                 </Button>
             </div>
         );
-    },
-
-    onRemoveSeverityAssessment: function (index) {
-        var assessments = this.props.report.severityAssessments;
-        assessments.splice(index, 1);
-        this.props.onUpdateReport({severityAssessments: assessments});
     },
 
     renderOverlay: function () {

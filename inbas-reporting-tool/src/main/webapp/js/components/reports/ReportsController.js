@@ -27,10 +27,6 @@ var ReportsController = React.createClass({
             editing: false
         };
     },
-    componentWillMount: function () {
-        Actions.loadReports({});
-        Actions.loadUser({});
-    },
     onReportsChange: function (newState) {
         newState.editing = false;
         newState.editedReport = null;
@@ -40,7 +36,7 @@ var ReportsController = React.createClass({
         this.setState(assign({}, this.state, newState));
     },
     onCreateReport: function () {
-        this.setState(assign({}, this.state, {editing: true}))
+        router.transitionTo('report_new', null, {onSuccess: 'reports', onCancel: 'reports'});
     },
     onEditReport: function (report) {
         router.transitionTo('report', {reportKey: report.key}, {onSuccess: 'reports', onCancel: 'reports'});

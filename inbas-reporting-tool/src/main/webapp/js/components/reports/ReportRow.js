@@ -11,8 +11,6 @@ var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
 
-var DESCRIPTION_LENGTH_THRESHOLD = 100;
-
 var ReportRow = React.createClass({
 
     getInitialState: function () {

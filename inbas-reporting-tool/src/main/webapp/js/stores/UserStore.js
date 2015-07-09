@@ -10,6 +10,7 @@ var request = require('superagent');
 var Actions = require('../actions/Actions');
 
 var currentUser = null;
+var loaded = false;
 
 function loadCurrentUser() {
     request.get('rest/persons/current').accept('json').end(function (err, resp) {
@@ -30,10 +31,14 @@ var UserStore = Reflux.createStore({
     },
     userLoaded: function (user) {
         currentUser = user;
+        loaded = true;
         this.trigger(this.getCurrentUser());
     },
     getCurrentUser: function () {
         return currentUser;
+    },
+    isLoaded: function() {
+        return loaded;
     }
 });
 
