@@ -1,9 +1,9 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.factory;
 
 import cz.cvut.kbss.inbas.audit.model.*;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.EventReportDto;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.IntruderDto;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.RunwayIncursionDto;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.EventReport;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.AircraftIntruder;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.VehicleIntruder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -11,15 +11,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author ledvima1
- * TODO Tohle je strasna prasarna, predelat!!!
+ * @author ledvima1 TODO Tohle je strasna prasarna, predelat!!!
  */
 @Service
 public class DtoFactoryImpl implements DtoFactory {
 
     @Override
-    public EventReport toDomainModel(EventReportDto dto) {
-        final EventReport report = new EventReport();
+    public cz.cvut.kbss.inbas.audit.model.EventReport toDomainModel(EventReport dto) {
+        final cz.cvut.kbss.inbas.audit.model.EventReport report = new cz.cvut.kbss.inbas.audit.model.EventReport();
         report.setUri(dto.getUri());
         report.setKey(dto.getKey());
         report.setLastEdited(dto.getLastEdited());
@@ -42,28 +41,29 @@ public class DtoFactoryImpl implements DtoFactory {
     }
 
     @Override
-    public EventTypeAssessment toDomainModel(RunwayIncursionDto dto) {
+    public EventTypeAssessment toDomainModel(cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion dto) {
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
         typeAssessment.setEventType(dto.getEventType());
-        final RunwayIncursion ri = new RunwayIncursion();
+        final cz.cvut.kbss.inbas.audit.model.RunwayIncursion ri = new cz.cvut.kbss.inbas.audit.model.RunwayIncursion();
         typeAssessment.setRunwayIncursion(ri);
         ri.setLowVisibilityProcedure(dto.getLvp());
         ri.setClearedAircraft(dto.getClearedAircraft());
-        final Intruder intruder = new Intruder();
+        final cz.cvut.kbss.inbas.audit.model.Intruder intruder = new cz.cvut.kbss.inbas.audit.model.Intruder();
         ri.setIntruder(intruder);
         switch (dto.getIntruder().getIntruderType()) {
             case "aircraft":
-                intruder.setAircraft(getAircraft(dto.getIntruder()));
+                intruder.setAircraft(getAircraft((AircraftIntruder) dto.getIntruder()));
                 break;
             case "vehicle":
-                intruder.setVehicle(getVehicle(dto.getIntruder()));
+                intruder.setVehicle(getVehicle((VehicleIntruder) dto.getIntruder()));
             case "person":
-                intruder.setPerson(getPersonIntruder(dto.getIntruder()));
+                intruder.setPerson(getPersonIntruder(
+                        (cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.PersonIntruder) dto.getIntruder()));
         }
         return typeAssessment;
     }
 
-    private Aircraft getAircraft(IntruderDto intruder) {
+    private Aircraft getAircraft(AircraftIntruder intruder) {
         final Aircraft aircraftIntruder = new Aircraft();
         aircraftIntruder.setCallSign(intruder.getCallSign());
         aircraftIntruder.setFlightNumber(intruder.getFlightNumber());
@@ -71,17 +71,12 @@ public class DtoFactoryImpl implements DtoFactory {
         aircraftIntruder.setLastDeparturePoint(intruder.getLastDeparturePoint());
         aircraftIntruder.setPlannedDestination(intruder.getPlannedDestination());
         aircraftIntruder.setOperationType(intruder.getOperationType());
-        if (intruder.getOrganization() != null) {
-            final Organization org = new Organization();
-            org.setName(intruder.getOrganization());
-            aircraftIntruder.setOperator(org);
-        }
         aircraftIntruder.setRegistration(intruder.getRegistration());
         aircraftIntruder.setStateOfRegistry(intruder.getStateOfRegistry());
         return aircraftIntruder;
     }
 
-    private Vehicle getVehicle(IntruderDto intruder) {
+    private Vehicle getVehicle(VehicleIntruder intruder) {
         final Vehicle vehicleIntruder = new Vehicle();
         vehicleIntruder.setVehicleType(intruder.getType());
         vehicleIntruder.setCallSign(intruder.getCallSign());
@@ -92,78 +87,17 @@ public class DtoFactoryImpl implements DtoFactory {
         return vehicleIntruder;
     }
 
-    private PersonIntruder getPersonIntruder(IntruderDto intruder) {
+    private PersonIntruder getPersonIntruder(
+            cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.PersonIntruder intruder) {
         final PersonIntruder personIntruder = new PersonIntruder();
         personIntruder.setCategory(intruder.getPersonCategory());
-        personIntruder.setOrganization(new Organization(intruder.getOrganization()));
+        personIntruder.setOrganization(new Organization(intruder.getPersonOrganization()));
         personIntruder.setWhatWasDoing(intruder.getWasDoing());
         return personIntruder;
     }
 
     @Override
-    public EventReportDto toDto(EventReport report) {
-        final EventReportDto dto = new EventReportDto();
-        dto.setUri(report.getUri());
-        dto.setKey(report.getKey());
-        dto.setName(report.getName());
-        dto.setCreated(report.getCreated());
-        dto.setEventTime(report.getEventTime());
-        dto.setAuthor(report.getAuthor());
-        dto.setLastEdited(report.getLastEdited());
-        dto.setLastEditedBy(report.getLastEditedBy());
-        dto.setDescription(report.getDescription());
-        dto.setFactors(report.getFactors());
-        dto.setResource(report.getResource());
-        dto.setCorrectiveMeasures(report.getCorrectiveMeasures());
-        dto.setSeverityAssessment(report.getSeverityAssessment());
-        if (report.getTypeAssessments() != null) {
-            dto.setTypeAssessments(new HashSet<>());
-            for (EventTypeAssessment eta : report.getTypeAssessments()) {
-                final RunwayIncursion incursion = eta.getRunwayIncursion();
-                if (incursion == null) {
-                    continue;
-                }
-                final RunwayIncursionDto rw = new RunwayIncursionDto();
-                rw.setClearedAircraft(incursion.getClearedAircraft());
-                rw.setEventType(eta.getEventType());
-                rw.setLvp(incursion.getLowVisibilityProcedure());
-                rw.setIntruder(toDto(incursion.getIntruder()));
-                dto.getTypeAssessments().add(rw);
-            }
-        }
-        return dto;
-    }
-
-    public IntruderDto toDto(Intruder intruder) {
-        final IntruderDto dto = new IntruderDto();
-        if (intruder.getAircraft() != null) {
-            final Aircraft aircraft = intruder.getAircraft();
-            dto.setRegistration(aircraft.getRegistration());
-            dto.setStateOfRegistry(aircraft.getStateOfRegistry());
-            dto.setCallSign(aircraft.getCallSign());
-            dto.setOperator(aircraft.getOperator() != null ? aircraft.getOperator().getName() : null);
-            dto.setFlightNumber(aircraft.getFlightNumber());
-            dto.setFlightPhase(aircraft.getFlightPhase());
-            dto.setOperationType(aircraft.getOperationType());
-            dto.setLastDeparturePoint(aircraft.getLastDeparturePoint());
-            dto.setPlannedDestination(aircraft.getPlannedDestination());
-            dto.setIntruderType(Aircraft.INTRUDER_TYPE);
-        } else if (intruder.getVehicle() != null) {
-            dto.setType(intruder.getVehicle().getVehicleType());
-            dto.setCallSign(intruder.getVehicle().getCallSign());
-            dto.setIsAtsUnit(intruder.getVehicle().getIsAtsUnit());
-            dto.setHasRadio(intruder.getVehicle().getHasRadio());
-            dto.setOrganization(
-                    intruder.getVehicle().getOrganization() != null ? intruder.getVehicle().getOrganization()
-                                                                              .getName() : null);
-            dto.setIntruderType(Vehicle.INTRUDER_TYPE);
-        } else if (intruder.getPerson() != null) {
-            dto.setPersonCategory(intruder.getPerson().getCategory());
-            dto.setOrganization(intruder.getPerson().getOrganization() != null ? intruder.getPerson().getOrganization()
-                                                                                         .getName() : null);
-            dto.setWasDoing(intruder.getPerson().getWhatWasDoing());
-            dto.setIntruderType(PersonIntruder.INTRUDER_TYPE);
-        }
-        return dto;
+    public EventReport toDto(cz.cvut.kbss.inbas.audit.model.EventReport report) {
+        return new EventReport(report);
     }
 }

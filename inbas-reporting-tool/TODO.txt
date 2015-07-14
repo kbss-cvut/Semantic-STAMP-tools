@@ -1,4 +1,3 @@
-Revise the strategy of enabling/disabling next/finish button in wizards
 Revise the DTOs - how does inheritance work in JAXB (JSON)
     http://stackoverflow.com/questions/16429717/jaxb-and-inheritance
     http://blog.bdoughan.com/2010/11/jaxb-and-inheritance-using-substitution.html

@@ -1,21 +1,13 @@
-package cz.cvut.kbss.inbas.audit.rest.dto.model;
+package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
 
 import java.net.URI;
-import java.util.Map;
 
 /**
  * @author ledvima1
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class IntruderDto {
-
-    private URI uri;
-
-    private String intruderType;
-
-    // Aircraft
+public class AircraftIntruder extends RunwayIntruder {
 
     private String registration;
 
@@ -35,36 +27,20 @@ public class IntruderDto {
 
     private String plannedDestination;
 
-    // Vehicle
-
-    private String type;
-
-    private String organization;
-
-    private String isAtsUnit;
-
-    private String hasRadio;
-
-    private String wasDoing;
-
-    // PersonIntruder
-
-    private String personCategory;
-
-    public URI getUri() {
-        return uri;
+    public AircraftIntruder() {
     }
 
-    public void setUri(URI uri) {
-        this.uri = uri;
-    }
-
-    public String getIntruderType() {
-        return intruderType;
-    }
-
-    public void setIntruderType(String intruderType) {
-        this.intruderType = intruderType;
+    public AircraftIntruder(Aircraft aircraft) {
+        super(aircraft.getUri(), Aircraft.INTRUDER_TYPE);
+        this.registration = aircraft.getRegistration();
+        this.stateOfRegistry = aircraft.getStateOfRegistry();
+        this.callSign = aircraft.getCallSign();
+        this.operator = aircraft.getOperator() != null ? aircraft.getOperator().getName() : null;
+        this.flightNumber = aircraft.getFlightNumber();
+        this.flightPhase = aircraft.getFlightPhase();
+        this.operationType = aircraft.getOperationType();
+        this.lastDeparturePoint = aircraft.getLastDeparturePoint();
+        this.plannedDestination = aircraft.getPlannedDestination();
     }
 
     public String getRegistration() {
@@ -139,51 +115,12 @@ public class IntruderDto {
         this.plannedDestination = plannedDestination;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(String organization) {
-        this.organization = organization;
-    }
-
-    public String getIsAtsUnit() {
-        return isAtsUnit;
-    }
-
-    public void setIsAtsUnit(String isAtsUnit) {
-        this.isAtsUnit = isAtsUnit;
-    }
-
-    public String getHasRadio() {
-        return hasRadio;
-    }
-
-    public void setHasRadio(String hasRadio) {
-        this.hasRadio = hasRadio;
-    }
-
-    public String getWasDoing() {
-        return wasDoing;
-    }
-
-    public void setWasDoing(String wasDoing) {
-        this.wasDoing = wasDoing;
-    }
-
-    public String getPersonCategory() {
-        return personCategory;
-    }
-
-    public void setPersonCategory(String personCategory) {
-        this.personCategory = personCategory;
+    @Override
+    public String toString() {
+        return "AircraftIntruder{" +
+                "flightNumber='" + flightNumber + '\'' +
+                ", callSign='" + callSign + '\'' +
+                ", operator='" + operator + '\'' +
+                "} " + super.toString();
     }
 }

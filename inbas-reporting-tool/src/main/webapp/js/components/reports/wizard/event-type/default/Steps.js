@@ -10,6 +10,6 @@ module.exports = [
     {
         name: 'Event Description',
         component: EventDescription,
-        defaultAdvanceDisabled: true
+        defaultNextDisabled: true
     }
 ];

@@ -1,10 +1,8 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
-import cz.cvut.kbss.inbas.audit.model.EventReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.factory.DtoFactory;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.EventReportDto;
-import cz.cvut.kbss.inbas.audit.rest.exceptions.ConflictException;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.EventReport;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.services.ReportService;
 import org.slf4j.Logger;
@@ -33,8 +31,8 @@ public class ReportController {
     private DtoFactory dtoFactory;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<EventReportDto> getAllReports() {
-        final Collection<EventReport> reports = reportService.findAll();
+    public Collection<EventReport> getAllReports() {
+        final Collection<cz.cvut.kbss.inbas.audit.model.EventReport> reports = reportService.findAll();
         if (reports.isEmpty()) {
             throw new NotFoundException("No reports found.");
         }
@@ -42,12 +40,12 @@ public class ReportController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public EventReportDto getReport(@PathVariable("key") String key) {
+    public EventReport getReport(@PathVariable("key") String key) {
         return dtoFactory.toDto(getEventReport(key));
     }
 
-    private EventReport getEventReport(String key) {
-        final EventReport original = reportService.findByKey(key);
+    private cz.cvut.kbss.inbas.audit.model.EventReport getEventReport(String key) {
+        final cz.cvut.kbss.inbas.audit.model.EventReport original = reportService.findByKey(key);
         if (original == null) {
             throw NotFoundException.create("Report", key);
         }
@@ -56,8 +54,8 @@ public class ReportController {
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createReport(@RequestBody EventReportDto report) {
-        final EventReport eventReport = dtoFactory.toDomainModel(report);
+    public void createReport(@RequestBody EventReport report) {
+        final cz.cvut.kbss.inbas.audit.model.EventReport eventReport = dtoFactory.toDomainModel(report);
         assert eventReport != null;
         reportService.persist(eventReport);
         if (LOG.isDebugEnabled()) {
@@ -67,9 +65,9 @@ public class ReportController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{key}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateReport(@PathVariable("key") String key, @RequestBody EventReportDto report) {
-        final EventReport original = getEventReport(key);
-        final EventReport update = dtoFactory.toDomainModel(report);
+    public void updateReport(@PathVariable("key") String key, @RequestBody EventReport report) {
+        final cz.cvut.kbss.inbas.audit.model.EventReport original = getEventReport(key);
+        final cz.cvut.kbss.inbas.audit.model.EventReport update = dtoFactory.toDomainModel(report);
         validateReportForUpdate(original, update);
         reportService.update(update);
         if (LOG.isDebugEnabled()) {
@@ -77,7 +75,7 @@ public class ReportController {
         }
     }
 
-    private void validateReportForUpdate(EventReport original, EventReport update) {
+    private void validateReportForUpdate(cz.cvut.kbss.inbas.audit.model.EventReport original, cz.cvut.kbss.inbas.audit.model.EventReport update) {
         if (!original.getUri().equals(update.getUri())) {
             throw new InvalidReportException(
                     "The updated report URI " + update.getUri() + " is different from the original URI " + original
@@ -93,7 +91,7 @@ public class ReportController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/{key}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReport(@PathVariable("key") String key) {
-        final EventReport report = getEventReport(key);
+        final cz.cvut.kbss.inbas.audit.model.EventReport report = getEventReport(key);
         reportService.remove(report);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Deleted event report {}.", report.getUri());

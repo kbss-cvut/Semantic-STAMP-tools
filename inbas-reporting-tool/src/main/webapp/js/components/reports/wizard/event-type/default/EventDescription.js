@@ -20,7 +20,11 @@ var EventDescription = React.createClass({
         var value = e.target.value;
         var statement = this.props.data.statement;
         statement.description = value;
-        this.props.updateNextButtonState(value !== '');
+        if (value !== '') {
+            this.props.enableNext();
+        } else {
+            this.props.disableNext();
+        }
         this.setState({description: value, descriptionValid: value !== ''});
     },
 

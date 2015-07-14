@@ -99,7 +99,7 @@ var Wizard = React.createClass({
             data: this.state.data,
             isFirstStep: this.state.currentStep === 0,
             isLastStep: this.state.currentStep === this.props.steps.length - 1,
-            defaultAdvanceDisabled: step.defaultAdvanceDisabled
+            defaultNextDisabled: step.defaultNextDisabled
         });
         return component;
     }

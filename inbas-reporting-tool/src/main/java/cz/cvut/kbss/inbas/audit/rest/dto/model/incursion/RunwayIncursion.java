@@ -1,24 +1,31 @@
-package cz.cvut.kbss.inbas.audit.rest.dto.model;
+package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
-import cz.cvut.kbss.inbas.audit.model.EventType;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 
 import java.net.URI;
 
 /**
  * @author ledvima1
  */
-public class RunwayIncursionDto extends EventTypeAssessmentDto {
+public class RunwayIncursion extends EventTypeAssessment {
 
     private URI uri;
-
-    private EventType eventType;
 
     private String lvp;
 
     private Aircraft clearedAircraft;
 
-    private IntruderDto intruder;
+    private RunwayIntruder intruder;
+
+    public RunwayIncursion() {
+    }
+
+    public RunwayIncursion(cz.cvut.kbss.inbas.audit.model.RunwayIncursion incursion) {
+        this.uri = incursion.getUri();
+        lvp = incursion.getLowVisibilityProcedure();
+        this.clearedAircraft = incursion.getClearedAircraft();
+    }
 
     public URI getUri() {
         return uri;
@@ -26,14 +33,6 @@ public class RunwayIncursionDto extends EventTypeAssessmentDto {
 
     public void setUri(URI uri) {
         this.uri = uri;
-    }
-
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
     }
 
     public String getLvp() {
@@ -52,18 +51,18 @@ public class RunwayIncursionDto extends EventTypeAssessmentDto {
         this.clearedAircraft = clearedAircraft;
     }
 
-    public IntruderDto getIntruder() {
+    public RunwayIntruder getIntruder() {
         return intruder;
     }
 
-    public void setIntruder(IntruderDto intruder) {
+    public void setIntruder(RunwayIntruder intruder) {
         this.intruder = intruder;
     }
 
     @Override
     public String toString() {
         return "RunwayIncursionDto{" +
-                "eventType=" + eventType +
+                "eventType=" + getEventType() +
                 ", lvp='" + lvp + '\'' +
                 ", clearedAircraft=" + clearedAircraft +
                 ", intruder=" + intruder +

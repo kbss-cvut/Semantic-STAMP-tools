@@ -7,7 +7,7 @@ import java.net.URI;
 /**
  * @author ledvima1
  */
-public class EventTypeAssessmentDto {
+public class EventTypeAssessment {
 
     private URI uri;
 

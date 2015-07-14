@@ -10,9 +10,24 @@ var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 
 var WizardStep = React.createClass({
+
+    propTypes: {
+        onClose: React.PropTypes.func,
+        onFinish: React.PropTypes.func,
+        onAdvance: React.PropTypes.func,
+        onRetreat: React.PropTypes.func,
+        onNext: React.PropTypes.func,
+        onPrevious: React.PropTypes.func,
+        component: React.PropTypes.object,
+        data: React.PropTypes.object,
+        isFirstStep: React.PropTypes.boolean,
+        isLastStep: React.PropTypes.boolean,
+        defaultNextDisabled: React.PropTypes.boolean
+    },
+
     getInitialState: function () {
         return {
-            advanceDisabled: this.props.defaultAdvanceDisabled != null ? this.props.defaultAdvanceDisabled : false,
+            advanceDisabled: this.props.defaultNextDisabled != null ? this.props.defaultNextDisabled : false,
             retreatDisabled: false
         };
     },
@@ -53,8 +68,12 @@ var WizardStep = React.createClass({
         }
     },
 
-    updateNextButtonState: function(enabled) {
-        this.setState({advanceDisabled: !enabled})
+    enableNext: function () {
+        this.setState({advanceDisabled: false});
+    },
+
+    disableNext: function () {
+        this.setState({advanceDisabled: true});
     },
 
     render: function () {
@@ -62,17 +81,9 @@ var WizardStep = React.createClass({
         if (!this.props.isFirstStep) {
             previousButton = (<Button onClick={this.onPrevious} disabled={this.state.retreatDisabled} bsStyle='primary'>Previous</Button>);
         }
-        var nextButton;
-        var finishButton;
-        var disabledTitle = this.state.advanceDisabled ? 'Some required values are missing' : null;
-        if (!this.props.isLastStep) {
-            nextButton = (
-                <Button onClick={this.onNext} disabled={this.state.advanceDisabled} bsStyle='primary' title={disabledTitle}>Next</Button>);
-        } else {
-            finishButton = (<Button onClick={this.onFinish} disabled={this.state.advanceDisabled} bsStyle='primary' title={disabledTitle}>Finish</Button>);
-        }
+        var advanceButton = this.renderAdvanceButton();
         var cancelButton = (<Button onClick={this.props.onClose} bsStyle='primary'>Cancel</Button>);
-        var error;
+        var error = null;
         if (this.state.currentError) {
             error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);
         }
@@ -80,17 +91,30 @@ var WizardStep = React.createClass({
         return (
             <div className='wizard-step'>
                 <div className='wizard-step-content'>
-                    <Component data={this.props.data} updateNextButtonState={this.updateNextButtonState}/>
+                    <Component data={this.props.data} enableNext={this.enableNext} disableNext={this.disableNext}/>
                 </div>
                 <ButtonToolbar style={{float: 'right'}}>
                     {previousButton}
-                    {nextButton}
-                    {finishButton}
+                    {advanceButton}
                     {cancelButton}
                 </ButtonToolbar>
                 {error}
             </div>
         );
+    },
+
+    renderAdvanceButton: function () {
+        var disabledTitle = this.state.advanceDisabled ? 'Some required values are missing' : null;
+        var button;
+        if (!this.props.isLastStep) {
+            button = (
+                <Button onClick={this.onNext} disabled={this.state.advanceDisabled} bsStyle='primary'
+                        title={disabledTitle}>Next</Button>);
+        } else {
+            button = (<Button onClick={this.onFinish} disabled={this.state.advanceDisabled} bsStyle='primary'
+                              title={disabledTitle}>Finish</Button>);
+        }
+        return button;
     }
 });
 
