@@ -12,7 +12,6 @@ import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.net.URI;
 import java.util.List;
@@ -21,20 +20,21 @@ import java.util.Objects;
 /**
  * Base implementation of the generic DAO.
  */
-@Repository
-public class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
+public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     protected static final Logger LOG = LoggerFactory.getLogger(BaseDao.class);
 
-    public BaseDao() {
+    private final Class<T> type;
+
+    protected BaseDao(Class<T> type) {
+        this.type = type;
     }
 
     @Autowired
     private EntityManagerFactory emf;
 
     @Override
-    public T findByUri(Class<T> type, URI uri) {
-        Objects.requireNonNull(type, ErrorUtils.createNPXMessage("type"));
+    public T findByUri(URI uri) {
         Objects.requireNonNull(uri, ErrorUtils.createNPXMessage("uri"));
         final EntityManager em = entityManager();
         try {
@@ -45,8 +45,7 @@ public class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     }
 
     @Override
-    public T findByKey(Class<T> type, String key) {
-        Objects.requireNonNull(type, ErrorUtils.createNPXMessage("type"));
+    public T findByKey(String key) {
         Objects.requireNonNull(key, ErrorUtils.createNPXMessage("key"));
         final EntityManager em = entityManager();
         try {
@@ -61,16 +60,15 @@ public class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     }
 
     @Override
-    public List<T> findAll(Class<T> cls) {
-        Objects.requireNonNull(cls, ErrorUtils.createNPXMessage("cls"));
+    public List<T> findAll() {
         final String query = "SELECT ?x WHERE { ?x a <$type$> .}";
-        final OWLClass owlClass = cls.getDeclaredAnnotation(OWLClass.class);
+        final OWLClass owlClass = type.getDeclaredAnnotation(OWLClass.class);
         if (owlClass == null) {
-            throw new IllegalArgumentException("Class " + cls + " is not an entity.");
+            throw new IllegalArgumentException("Class " + type + " is not an entity.");
         }
         final EntityManager em = entityManager();
         try {
-            return em.createNativeQuery(query.replace("$type$", owlClass.iri()), cls).getResultList();
+            return em.createNativeQuery(query.replace("$type$", owlClass.iri()), type).getResultList();
         } finally {
             em.close();
         }
@@ -127,6 +125,21 @@ public class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         } catch (Exception e) {
             LOG.error("Error when removing entity.", e);
             throw new PersistenceException(e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public boolean exists(URI uri) {
+        final String owlClass = type.getDeclaredAnnotation(OWLClass.class).iri();
+        final EntityManager em = entityManager();
+        try {
+            // TODO Ask queries don't work
+            final List<List<String>> result = em
+                    .createNativeQuery("ASK { <" + uri.toString() + "> a <" + owlClass + "> . }").getResultList();
+            final String exists = result.get(0).get(0);
+            return exists.equals("yes");
         } finally {
             em.close();
         }

@@ -7,15 +7,13 @@ import cz.cvut.kbss.inbas.audit.services.validation.ReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
-import java.util.Collection;
 import java.util.Date;
 
 /**
  * @author ledvima1
  */
 @Service
-public class ReportServiceImpl implements ReportService {
+public class ReportServiceImpl extends BaseService<EventReport> implements ReportService {
 
     @Autowired
     private ReportValidator reportValidator;
@@ -25,17 +23,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public EventReport findByKey(String key) {
-        return reportDao.findByKey(EventReport.class, key);
-    }
-
-    @Override
-    public Collection<EventReport> findAll() {
-        return reportDao.findAll(EventReport.class);
-    }
-
-    @Override
-    public EventReport find(URI uri) {
-        return reportDao.findByUri(EventReport.class, uri);
+        return reportDao.findByKey(key);
     }
 
     @Override
@@ -54,10 +42,5 @@ public class ReportServiceImpl implements ReportService {
         reportValidator.validateReport(report);
         report.setLastEdited(new Date());
         reportDao.update(report);
-    }
-
-    @Override
-    public void remove(EventReport report) {
-        reportDao.remove(report);
     }
 }

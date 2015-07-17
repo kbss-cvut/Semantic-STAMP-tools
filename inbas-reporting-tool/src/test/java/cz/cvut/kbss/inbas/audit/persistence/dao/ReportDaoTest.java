@@ -1,12 +1,10 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.URI;
 import java.util.Collection;
@@ -18,9 +16,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * @author ledvima1
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
-public class ReportDaoTest {
+public class ReportDaoTest extends BaseDaoTestRunner {
 
     private static EventType eventType;
     private static Organization organization;
@@ -39,7 +35,7 @@ public class ReportDaoTest {
 
     @Test
     public void persistenceInitialization() throws Exception {
-        final Collection<EventReport> res = dao.findAll(EventReport.class);
+        final Collection<EventReport> res = dao.findAll();
         assertNotNull(res);
     }
 
@@ -51,10 +47,10 @@ public class ReportDaoTest {
         final EventReport rTwo = initEventReportWithTypeAssessment(eventType);
         dao.persist(rTwo);
 
-        final EventReport resOne = dao.findByUri(EventReport.class, rOne.getUri());
+        final EventReport resOne = dao.findByUri(rOne.getUri());
         assertNotNull(resOne);
         assertEquals(1, resOne.getTypeAssessments().size());
-        final EventReport resTwo = dao.findByUri(EventReport.class, rTwo.getUri());
+        final EventReport resTwo = dao.findByUri(rTwo.getUri());
         assertNotNull(resTwo);
         assertEquals(1, resTwo.getTypeAssessments().size());
         assertEquals(resOne.getTypeAssessments().iterator().next().getEventType(),
@@ -83,12 +79,12 @@ public class ReportDaoTest {
         assTwo.setRunwayIncursion(incursionTwo);
         dao.persist(rTwo);
 
-        final EventReport resOne = dao.findByUri(EventReport.class, rOne.getUri());
+        final EventReport resOne = dao.findByUri(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
         final Aircraft aircraft = typeOne.getRunwayIncursion().getClearedAircraft();
         final Organization org = aircraft.getOperator();
         assertEquals(organization, org);
-        final EventReport resTwo = dao.findByUri(EventReport.class, rTwo.getUri());
+        final EventReport resTwo = dao.findByUri(rTwo.getUri());
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
         final PersonIntruder person = typeTwo.getRunwayIncursion().getIntruder().getPerson();
         assertEquals(organization, person.getOrganization());
@@ -120,12 +116,12 @@ public class ReportDaoTest {
         assTwo.setRunwayIncursion(incursionTwo);
         dao.persist(rTwo);
 
-        final EventReport resOne = dao.findByUri(EventReport.class, rOne.getUri());
+        final EventReport resOne = dao.findByUri(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
         final Aircraft aircraft = typeOne.getRunwayIncursion().getClearedAircraft();
         final Organization org = aircraft.getOperator();
         assertEquals(organization, org);
-        final EventReport resTwo = dao.findByUri(EventReport.class, rTwo.getUri());
+        final EventReport resTwo = dao.findByUri(rTwo.getUri());
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
         final Vehicle vehicle = typeTwo.getRunwayIncursion().getIntruder().getVehicle();
         assertEquals(organization, vehicle.getOrganization());
@@ -144,12 +140,12 @@ public class ReportDaoTest {
         assTwo.setRunwayIncursion(incursionTwo);
         dao.persist(rTwo);
 
-        final EventReport resOne = dao.findByUri(EventReport.class, rOne.getUri());
+        final EventReport resOne = dao.findByUri(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
         final Aircraft clearedAircraft = typeOne.getRunwayIncursion().getClearedAircraft();
         final Organization org = clearedAircraft.getOperator();
         assertEquals(organization, org);
-        final EventReport resTwo = dao.findByUri(EventReport.class, rTwo.getUri());
+        final EventReport resTwo = dao.findByUri(rTwo.getUri());
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
         final Aircraft aircraft = typeTwo.getRunwayIncursion().getIntruder().getAircraft();
         assertEquals(organization, aircraft.getOperator());

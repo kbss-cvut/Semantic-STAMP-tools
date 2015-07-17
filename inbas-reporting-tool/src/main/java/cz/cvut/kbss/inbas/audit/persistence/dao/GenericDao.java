@@ -11,38 +11,44 @@ public interface GenericDao<T> {
     /**
      * Finds entity instance with the specified identifier.
      *
-     * @param type Return type class
-     * @param uri  Identifier
+     * @param uri Identifier
      * @return Entity instance or {@code null} if no such instance exists
      */
-    public T findByUri(Class<T> type, URI uri);
+    T findByUri(URI uri);
 
     /**
      * Finds all instances of the specified class.
      *
-     * @param cls Type to search
      * @return List of instances, possibly empty
      */
-    public List<T> findAll(Class<T> cls);
+    List<T> findAll();
 
     /**
      * Persists the specified entity.
      *
      * @param entity Entity to persist
      */
-    public void persist(T entity);
+    void persist(T entity);
 
     /**
      * Updates the specified entity.
      *
      * @param entity Entity to update
      */
-    public void update(T entity);
+    void update(T entity);
 
     /**
      * Removes the specified entity.
      *
      * @param entity Entity to remove
      */
-    public void remove(T entity);
+    void remove(T entity);
+
+    /**
+     * Checks whether an entity with the specified URI exists (and has the type managed by this DAO).
+     *
+     * @param uri Entity identifier
+     * @return {@literal true} if entity exists, {@literal false} otherwise
+     */
+    boolean exists(URI uri);
 }

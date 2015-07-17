@@ -25,6 +25,7 @@ var EventTypeDialog = React.createClass({
     componentDidMount: function () {
         this.listenTo(EventTypeStore, this.onEventsLoaded);
         Actions.loadEventTypes();
+        this.refs.eventTypeSelect.focus();
     },
     onEventsLoaded: function (eventTypes) {
         this.setState({options: eventTypes});
@@ -48,7 +49,7 @@ var EventTypeDialog = React.createClass({
                 </Modal.Header>
                 <Panel>
                     <div className='centered'>
-                        <TypeAhead name='eventType' formInputOption='id' placeholder='Event Type'
+                        <TypeAhead ref='eventTypeSelect' name='eventType' formInputOption='id' placeholder='Event Type'
                                    onOptionSelected={this.onSelect} filterOption='name' displayOption='name'
                                    options={this.state.options} customClasses={classes}/>
                     </div>

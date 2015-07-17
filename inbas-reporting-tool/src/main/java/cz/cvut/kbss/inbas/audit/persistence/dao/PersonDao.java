@@ -12,6 +12,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PersonDao extends BaseDao<Person> {
 
+    public PersonDao() {
+        super(Person.class);
+    }
+
     public Person findByUsername(String username) {
         final EntityManager em = entityManager();
         try {

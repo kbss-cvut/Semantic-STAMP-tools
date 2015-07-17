@@ -16,7 +16,7 @@
     "reflux": "^0.2.7",
     "react-bootstrap-datetimepicker": "^0.0.17",
     "classnames": "^2.1.2",
-    "react-typeahead": "~1.0.8",
+    "react-typeahead": "~1.1.1",
     "remarkable": "~1.6.0"
   },
   "devDependencies": {

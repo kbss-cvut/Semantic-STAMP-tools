@@ -17,14 +17,12 @@ public class BaseService<T> implements InbasService<T> {
 
     @Override
     public Collection<T> findAll() {
-        // TODO
-        return null;
+        return dao.findAll();
     }
 
     @Override
     public T find(URI uri) {
-        // TODO
-        return null;
+        return dao.findByUri(uri);
     }
 
     @Override

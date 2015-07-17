@@ -14,6 +14,10 @@ import java.util.Set;
 @Repository
 public class ReportDao extends BaseDao<EventReport> {
 
+    public ReportDao() {
+        super(EventReport.class);
+    }
+
     @Override
     public void persist(EventReport entity) {
         Objects.requireNonNull(entity);
