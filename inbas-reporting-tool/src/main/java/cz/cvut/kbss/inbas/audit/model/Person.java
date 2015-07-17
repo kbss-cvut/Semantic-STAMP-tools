@@ -15,7 +15,7 @@ import java.util.Set;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.Person)
-public class Person {
+public class Person implements HasDerivableUri {
 
     @Id
     private URI uri;
@@ -78,8 +78,9 @@ public class Person {
     }
 
     /**
-     * Generates URI using {@link Constants#BASE_URI} and the person's first and last name.
+     * Generates URI using {@link Constants#PERSON_BASE_URI} and the person's first and last name.
      */
+    @Override
     public void generateUri() {
         if (firstName == null || firstName.isEmpty()) {
             throw new IllegalStateException("Missing first name.");
@@ -87,6 +88,6 @@ public class Person {
         if (lastName == null || lastName.isEmpty()) {
             throw new IllegalStateException("Missing last name.");
         }
-        this.uri = URI.create(Constants.BASE_URI + firstName + "+" + lastName);
+        this.uri = URI.create(Constants.PERSON_BASE_URI + firstName + "+" + lastName);
     }
 }

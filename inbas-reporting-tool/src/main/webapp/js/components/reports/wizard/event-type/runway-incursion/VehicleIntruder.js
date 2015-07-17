@@ -32,8 +32,8 @@ var VehicleIntruder = React.createClass({
                                title='Vehicle call sign aerodrome manual'/>
                     </div>
                     <div className='report-detail-float-right'>
-                        <Input type='text' label='Organization/Aerodrome Department' name='operator'
-                               value={statement.intruder.operator}
+                        <Input type='text' label='Organization/Aerodrome Department' name='organization'
+                               value={statement.intruder.organization}
                                onChange={this.props.onChange}
                                title='Organization/Aerodrome department operating the vehicle'/>
                     </div>
@@ -51,8 +51,8 @@ var VehicleIntruder = React.createClass({
                     </div>
                 </div>
                 <div className='form-group'>
-                    <Input type='textarea' label='What was the vehicle doing on the Runway?' name='intruderAction'
-                           value={statement.intruder.intruderAction} onChange={this.props.onChange}
+                    <Input type='textarea' label='What was the vehicle doing on the Runway?' name='wasDoing'
+                           value={statement.intruder.wasDoing} onChange={this.props.onChange}
                            title='What was the vehicle doing on the Runway?'/>
                 </div>
             </Panel>

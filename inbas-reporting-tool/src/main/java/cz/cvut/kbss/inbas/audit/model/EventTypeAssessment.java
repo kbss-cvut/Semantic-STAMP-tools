@@ -19,7 +19,7 @@ public class EventTypeAssessment implements ReportingStatement, HasOwlKey {
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
     private EventType eventType;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEvent, fetch = FetchType.EAGER)

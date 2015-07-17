@@ -56,9 +56,11 @@ public class DtoFactoryImpl implements DtoFactory {
                 break;
             case "vehicle":
                 intruder.setVehicle(getVehicle((VehicleIntruder) dto.getIntruder()));
+                break;
             case "person":
                 intruder.setPerson(getPersonIntruder(
                         (cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.PersonIntruder) dto.getIntruder()));
+                break;
         }
         return typeAssessment;
     }
@@ -78,7 +80,7 @@ public class DtoFactoryImpl implements DtoFactory {
 
     private Vehicle getVehicle(VehicleIntruder intruder) {
         final Vehicle vehicleIntruder = new Vehicle();
-        vehicleIntruder.setVehicleType(intruder.getType());
+        vehicleIntruder.setVehicleType(intruder.getVehicleType());
         vehicleIntruder.setCallSign(intruder.getCallSign());
         vehicleIntruder.setIsAtsUnit(intruder.getIsAtsUnit());
         vehicleIntruder.setHasRadio(intruder.getHasRadio());
@@ -90,8 +92,8 @@ public class DtoFactoryImpl implements DtoFactory {
     private PersonIntruder getPersonIntruder(
             cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.PersonIntruder intruder) {
         final PersonIntruder personIntruder = new PersonIntruder();
-        personIntruder.setCategory(intruder.getPersonCategory());
-        personIntruder.setOrganization(new Organization(intruder.getPersonOrganization()));
+        personIntruder.setCategory(intruder.getCategory());
+        personIntruder.setOrganization(new Organization(intruder.getOrganization()));
         personIntruder.setWhatWasDoing(intruder.getWasDoing());
         return personIntruder;
     }

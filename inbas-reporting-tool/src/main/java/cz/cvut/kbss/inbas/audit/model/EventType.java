@@ -19,6 +19,13 @@ public class EventType {
     @OWLDataProperty(iri = "http://www.w3.org/2000/01/rdf-schema#label")
     private String name;
 
+    public EventType() {
+    }
+
+    public EventType(URI id) {
+        this.id = id;
+    }
+
     public URI getId() {
         return id;
     }
@@ -33,6 +40,22 @@ public class EventType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EventType eventType = (EventType) o;
+
+        return !(id != null ? !id.equals(eventType.id) : eventType.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override

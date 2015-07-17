@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.model;
 
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
@@ -11,7 +12,7 @@ import java.net.URI;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.Organization)
-public class Organization {
+public class Organization implements HasDerivableUri {
 
     @Id
     private URI uri;
@@ -40,6 +41,30 @@ public class Organization {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public void generateUri() {
+        if (uri != null) {
+            return;
+        }
+        this.uri = URI.create(Constants.ORGANIZATION_BASE_URI + name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Organization that = (Organization) o;
+
+        return !(uri != null ? !uri.equals(that.uri) : that.uri != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return uri != null ? uri.hashCode() : 0;
     }
 
     @Override

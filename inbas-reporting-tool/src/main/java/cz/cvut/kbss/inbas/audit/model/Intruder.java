@@ -23,6 +23,21 @@ public class Intruder {
     @OWLObjectProperty(iri = Vocabulary.p_hasPersonIntruder, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private PersonIntruder person;
 
+    public Intruder() {
+    }
+
+    public Intruder(Aircraft aircraft) {
+        this.aircraft = aircraft;
+    }
+
+    public Intruder(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public Intruder(PersonIntruder person) {
+        this.person = person;
+    }
+
     public URI getUri() {
         return uri;
     }

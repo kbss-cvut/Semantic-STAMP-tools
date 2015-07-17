@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 
 import java.net.URI;
@@ -7,6 +8,7 @@ import java.net.URI;
 /**
  * @author ledvima1
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AircraftIntruder extends RunwayIntruder {
 
     private String registration;

@@ -19,18 +19,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Provides entity manager factory bean.
- *
  * @author ledvima1
  */
 @Configuration
 @PropertySource("classpath:config.properties")
-public class PersistenceFactory {
+public class TestPersistenceFactory {
 
-    private static final String URL_PROPERTY = "repositoryUrl";
-    private static final String DRIVER_PROPERTY = "driver";
-    private static final String USERNAME_PROPERTY = "username";
-    private static final String PASSWORD_PROPERTY = "password";
+    private static final String URL_PROPERTY = "test.repositoryUrl";
+    private static final String DRIVER_PROPERTY = "test.driver";
+    private static final String USERNAME_PROPERTY = "test.username";
+    private static final String PASSWORD_PROPERTY = "test.password";
 
     private static final Map<String, String> PARAMS = initParams();
 
@@ -53,7 +51,7 @@ public class PersistenceFactory {
             builder.password(environment.getProperty(PASSWORD_PROPERTY));
         }
         final OntologyStorageProperties storageProperties = builder.build();
-        this.emf = Persistence.createEntityManagerFactory("inbasPU", storageProperties, PARAMS);
+        this.emf = Persistence.createEntityManagerFactory("inbasTestPU", storageProperties, PARAMS);
     }
 
     @PreDestroy
@@ -65,6 +63,8 @@ public class PersistenceFactory {
         final Map<String, String> map = new HashMap<>();
         map.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, "en");
         map.put(OWLAPIPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.audit.model");
+        map.put(OntoDriverProperties.SESAME_USE_VOLATILE_STORAGE, Boolean.TRUE.toString());
+        map.put(OntoDriverProperties.SESAME_USE_INFERENCE, Boolean.FALSE.toString());
         map.put("storage", "new");  // Will be removed in the future
         map.put(OWLAPIPersistenceProperties.JPA_PERSISTENCE_PROVIDER,
                 OWLAPIPersistenceProvider.class.getName());

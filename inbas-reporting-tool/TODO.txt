@@ -1,8 +1,6 @@
-Revise the DTOs - how does inheritance work in JAXB (JSON)
-    http://stackoverflow.com/questions/16429717/jaxb-and-inheritance
-    http://blog.bdoughan.com/2010/11/jaxb-and-inheritance-using-substitution.html
+Add exists method to DAO
+Add protected methods which take EntityManager as parameter to DAOs, so that they can be used as part of other method calls
 Rewrite the DTO factory
-Revise the domain classes and relationships, especially the persist cascading (e.g. for organizations, event types it makes no sense)
 Create tests for the app
     React component tests
     Java tests

@@ -37,7 +37,7 @@ var ReportDetail = React.createClass({
     },
 
     onDateChange: function (value) {
-        this.prop.onChange('eventTime', new Date(Number(value)));
+        this.props.onChange('eventTime', new Date(Number(value)));
     },
 
     onSubmit: function (e) {

@@ -5,9 +5,9 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
  */
 public class PersonIntruder extends RunwayIntruder {
 
-    private String personCategory;
+    private String category;
 
-    private String personOrganization;
+    private String organization;
 
     private String wasDoing;
 
@@ -16,25 +16,25 @@ public class PersonIntruder extends RunwayIntruder {
 
     public PersonIntruder(cz.cvut.kbss.inbas.audit.model.PersonIntruder intruder) {
         super(intruder.getUri(), cz.cvut.kbss.inbas.audit.model.PersonIntruder.INTRUDER_TYPE);
-        this.personCategory = intruder.getCategory();
-        this.personOrganization = intruder.getOrganization() != null ? intruder.getOrganization().getName() : null;
+        this.category = intruder.getCategory();
+        this.organization = intruder.getOrganization() != null ? intruder.getOrganization().getName() : null;
         this.wasDoing = intruder.getWhatWasDoing();
     }
 
-    public String getPersonCategory() {
-        return personCategory;
+    public String getCategory() {
+        return category;
     }
 
-    public void setPersonCategory(String personCategory) {
-        this.personCategory = personCategory;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getPersonOrganization() {
-        return personOrganization;
+    public String getOrganization() {
+        return organization;
     }
 
-    public void setPersonOrganization(String personOrganization) {
-        this.personOrganization = personOrganization;
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 
     public String getWasDoing() {
@@ -48,8 +48,8 @@ public class PersonIntruder extends RunwayIntruder {
     @Override
     public String toString() {
         return "PersonIntruder{" +
-                "personCategory='" + personCategory + '\'' +
-                ", organization='" + personOrganization + '\'' +
+                "category='" + category + '\'' +
+                ", organization='" + organization + '\'' +
                 "} " + super.toString();
     }
 }

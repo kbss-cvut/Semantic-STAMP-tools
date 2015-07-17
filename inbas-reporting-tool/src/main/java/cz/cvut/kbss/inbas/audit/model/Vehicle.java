@@ -31,7 +31,7 @@ public class Vehicle {
     @OWLDataProperty(iri = Vocabulary.p_activityDescription)
     private String whatWasDoing;
 
-    @OWLObjectProperty(iri = Vocabulary.p_memberOf, cascade = CascadeType.PERSIST)
+    @OWLObjectProperty(iri = Vocabulary.p_memberOf)
     private Organization organization;
 
     public URI getUri() {

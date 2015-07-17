@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class RestExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorInfo> resourceNotFound(HttpServletRequest request, Exception e) {
+    public ResponseEntity<ErrorInfo> resourceNotFound(HttpServletRequest request, NotFoundException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.NOT_FOUND);
     }
 
@@ -28,12 +28,12 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(InvalidReportException.class)
-    public ResponseEntity<ErrorInfo> invalidReport(HttpServletRequest request, Exception e) {
+    public ResponseEntity<ErrorInfo> invalidReport(HttpServletRequest request, InvalidReportException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorInfo> mappingException(HttpServletRequest request, Exception e) {
+    public ResponseEntity<ErrorInfo> mappingException(HttpServletRequest request, HttpMessageNotReadableException e) {
         return new ResponseEntity<>(errorInfo(request, e.getCause()), HttpStatus.BAD_REQUEST);
     }
 }

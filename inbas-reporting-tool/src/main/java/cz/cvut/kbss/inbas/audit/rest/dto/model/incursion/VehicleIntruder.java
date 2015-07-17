@@ -7,7 +7,7 @@ import cz.cvut.kbss.inbas.audit.model.Vehicle;
  */
 public class VehicleIntruder extends RunwayIntruder {
 
-    private String type;
+    private String vehicleType;
 
     private String callSign;
 
@@ -24,19 +24,19 @@ public class VehicleIntruder extends RunwayIntruder {
 
     public VehicleIntruder(Vehicle vehicle) {
         super(vehicle.getUri(), Vehicle.INTRUDER_TYPE);
-        this.type = vehicle.getVehicleType();
+        this.vehicleType = vehicle.getVehicleType();
         this.callSign = vehicle.getCallSign();
         this.isAtsUnit = vehicle.getIsAtsUnit();
         this.hasRadio = vehicle.getHasRadio();
         this.wasDoing = vehicle.getWhatWasDoing();
     }
 
-    public String getType() {
-        return type;
+    public String getVehicleType() {
+        return vehicleType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     public String getCallSign() {
@@ -82,7 +82,7 @@ public class VehicleIntruder extends RunwayIntruder {
     @Override
     public String toString() {
         return "VehicleIntruder{" +
-                "type='" + type + '\'' +
+                "vehicleType='" + vehicleType + '\'' +
                 ", callSign='" + callSign + '\'' +
                 ", organization='" + organization + '\'' +
                 "} " + super.toString();

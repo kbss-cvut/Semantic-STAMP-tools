@@ -18,11 +18,11 @@ var WizardStep = React.createClass({
         onRetreat: React.PropTypes.func,
         onNext: React.PropTypes.func,
         onPrevious: React.PropTypes.func,
-        component: React.PropTypes.object,
+        //component: React.PropTypes.object,
         data: React.PropTypes.object,
-        isFirstStep: React.PropTypes.boolean,
-        isLastStep: React.PropTypes.boolean,
-        defaultNextDisabled: React.PropTypes.boolean
+        isFirstStep: React.PropTypes.bool,
+        isLastStep: React.PropTypes.bool,
+        defaultNextDisabled: React.PropTypes.bool
     },
 
     getInitialState: function () {

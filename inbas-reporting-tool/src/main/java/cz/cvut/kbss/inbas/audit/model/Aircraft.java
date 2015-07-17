@@ -41,7 +41,7 @@ public class Aircraft {
     @OWLDataProperty(iri = Vocabulary.p_plannedDestination)
     private String plannedDestination;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasOperator, fetch = FetchType.LAZY)
+    @OWLObjectProperty(iri = Vocabulary.p_hasOperator, fetch = FetchType.EAGER)
     private Organization operator;
 
     public URI getUri() {
