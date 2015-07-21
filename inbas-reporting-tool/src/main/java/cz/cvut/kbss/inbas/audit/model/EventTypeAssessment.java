@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.audit.model;
 
-import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -11,19 +10,19 @@ import java.util.Set;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.EventTypeAssessment)
-public class EventTypeAssessment implements ReportingStatement, HasOwlKey {
+public class EventTypeAssessment implements ReportingStatement {
 
     @Id(generated = true)
     private URI uri;
-
-    @OWLDataProperty(iri = Vocabulary.p_hasKey)
-    private String key;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
     private EventType eventType;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEvent, fetch = FetchType.EAGER)
     private EventReport eventReport;
+
+    @OWLDataProperty(iri = Vocabulary.p_description)
+    private String description;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasIncursion, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private RunwayIncursion runwayIncursion;
@@ -55,6 +54,14 @@ public class EventTypeAssessment implements ReportingStatement, HasOwlKey {
         this.eventReport = eventReport;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public RunwayIncursion getRunwayIncursion() {
         return runwayIncursion;
     }
@@ -73,29 +80,11 @@ public class EventTypeAssessment implements ReportingStatement, HasOwlKey {
     }
 
     @Override
-    public String getKey() {
-        return key;
-    }
-
-    @Override
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    @Override
-    public void generateKey() {
-        if (key != null) {
-            return;
-        }
-        this.key = IdentificationUtils.generateKey();
-    }
-
-    @Override
     public String toString() {
         return "EventTypeAssessment{" +
                 "uri=" + uri +
                 ", eventType=" + eventType +
-                ", eventReport=" + eventReport +
+                (runwayIncursion != null ? runwayIncursion : description) +
                 '}';
     }
 }

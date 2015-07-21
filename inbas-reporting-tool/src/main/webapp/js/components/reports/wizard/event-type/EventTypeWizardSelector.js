@@ -26,6 +26,7 @@ var EventTypeWizardSelect = {
         if (this.wizardSettings[eventType.wizard]) {
             var wizardProperties = this.wizardSettings[eventType.wizard];
             wizardProperties.statement = statement;
+            statement.dtoClass = eventType.dtoClass;
             return wizardProperties;
         }
         return {

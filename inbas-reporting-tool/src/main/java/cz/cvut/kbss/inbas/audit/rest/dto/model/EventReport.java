@@ -42,7 +42,7 @@ public class EventReport {
 
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    private Set<RunwayIncursion> typeAssessments;
+    private Set<EventTypeAssessment> typeAssessments;
 
     public EventReport() {
     }
@@ -64,10 +64,15 @@ public class EventReport {
         this.typeAssessments = new HashSet<>();
         if (report.getTypeAssessments() != null) {
             report.getTypeAssessments().stream().filter(type -> type.getRunwayIncursion() != null).forEach(type -> {
-                final RunwayIncursion incursion = new RunwayIncursion(type.getRunwayIncursion());
-                incursion.setEventType(type.getEventType());
-                incursion.setIntruder(getIntruder(type.getRunwayIncursion().getIntruder()));
-                typeAssessments.add(incursion);
+                if (type.getRunwayIncursion() != null) {
+                    final RunwayIncursion incursion = new RunwayIncursion(type.getRunwayIncursion());
+                    incursion.setEventType(type.getEventType());
+                    incursion.setIntruder(getIntruder(type.getRunwayIncursion().getIntruder()));
+                    typeAssessments.add(incursion);
+                } else {
+                    final GeneralEvent ge = new GeneralEvent(type);
+                    typeAssessments.add(ge);
+                }
             });
         }
     }
@@ -187,11 +192,11 @@ public class EventReport {
         this.correctiveMeasures = correctiveMeasures;
     }
 
-    public Set<RunwayIncursion> getTypeAssessments() {
+    public Set<EventTypeAssessment> getTypeAssessments() {
         return typeAssessments;
     }
 
-    public void setTypeAssessments(Set<RunwayIncursion> typeAssessments) {
+    public void setTypeAssessments(Set<EventTypeAssessment> typeAssessments) {
         this.typeAssessments = typeAssessments;
     }
 }

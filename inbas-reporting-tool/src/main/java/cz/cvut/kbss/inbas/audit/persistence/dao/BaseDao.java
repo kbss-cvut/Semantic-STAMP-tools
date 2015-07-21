@@ -38,10 +38,14 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         Objects.requireNonNull(uri, ErrorUtils.createNPXMessage("uri"));
         final EntityManager em = entityManager();
         try {
-            return em.find(type, uri);
+            return findByUri(uri, em);
         } finally {
             em.close();
         }
+    }
+
+    protected T findByUri(URI uri, EntityManager em) {
+        return em.find(type, uri);
     }
 
     @Override
@@ -49,29 +53,39 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         Objects.requireNonNull(key, ErrorUtils.createNPXMessage("key"));
         final EntityManager em = entityManager();
         try {
-            return em.createNativeQuery(
-                    "SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> \"" + key + "\"@en . }",
-                    type).getSingleResult();
-        } catch (NoResultException e) {
-            return null;
+            return findByKey(key, em);
         } finally {
             em.close();
         }
     }
 
+    protected T findByKey(String key, EntityManager em) {
+        try {
+            return em.createNativeQuery(
+                    "SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> \"" + key + "\"@en . }",
+                    type).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
     @Override
     public List<T> findAll() {
+        final EntityManager em = entityManager();
+        try {
+            return findAll(em);
+        } finally {
+            em.close();
+        }
+    }
+
+    protected List<T> findAll(EntityManager em) {
         final String query = "SELECT ?x WHERE { ?x a <$type$> .}";
         final OWLClass owlClass = type.getDeclaredAnnotation(OWLClass.class);
         if (owlClass == null) {
             throw new IllegalArgumentException("Class " + type + " is not an entity.");
         }
-        final EntityManager em = entityManager();
-        try {
-            return em.createNativeQuery(query.replace("$type$", owlClass.iri()), type).getResultList();
-        } finally {
-            em.close();
-        }
+        return em.createNativeQuery(query.replace("$type$", owlClass.iri()), type).getResultList();
     }
 
     @Override
@@ -80,13 +94,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
-            if (entity instanceof HasOwlKey) {
-                ((HasOwlKey) entity).generateKey();
-            }
-            if (entity instanceof HasDerivableUri) {
-                ((HasDerivableUri) entity).generateUri();
-            }
-            em.persist(entity);
+            persist(entity, em);
             em.getTransaction().commit();
         } catch (Exception e) {
             LOG.error("Error when persisting entity.", e);
@@ -96,13 +104,23 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         }
     }
 
+    protected void persist(T entity, EntityManager em) {
+        if (entity instanceof HasOwlKey) {
+            ((HasOwlKey) entity).generateKey();
+        }
+        if (entity instanceof HasDerivableUri) {
+            ((HasDerivableUri) entity).generateUri();
+        }
+        em.persist(entity);
+    }
+
     @Override
     public void update(T entity) {
         Objects.requireNonNull(entity, ErrorUtils.createNPXMessage("entity"));
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
-            em.merge(entity);
+            update(entity, em);
             em.getTransaction().commit();
         } catch (Exception e) {
             LOG.error("Error when updating entity.", e);
@@ -112,15 +130,17 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         }
     }
 
+    protected void update(T entity, EntityManager em) {
+        em.merge(entity);
+    }
+
     @Override
     public void remove(T entity) {
         Objects.requireNonNull(entity, ErrorUtils.createNPXMessage("entity"));
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
-            final T toRemove = em.merge(entity);
-            assert toRemove != null;
-            em.remove(toRemove);
+            remove(entity, em);
             em.getTransaction().commit();
         } catch (Exception e) {
             LOG.error("Error when removing entity.", e);
@@ -130,19 +150,26 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         }
     }
 
+    protected void remove(T entity, EntityManager em) {
+        final T toRemove = em.merge(entity);
+        assert toRemove != null;
+        em.remove(toRemove);
+    }
+
     @Override
     public boolean exists(URI uri) {
-        final String owlClass = type.getDeclaredAnnotation(OWLClass.class).iri();
         final EntityManager em = entityManager();
         try {
-            // TODO Ask queries don't work
-            final List<List<String>> result = em
-                    .createNativeQuery("ASK { <" + uri.toString() + "> a <" + owlClass + "> . }").getResultList();
-            final String exists = result.get(0).get(0);
-            return exists.equals("yes");
+            return exists(uri, em);
         } finally {
             em.close();
         }
+    }
+
+    protected boolean exists(URI uri, EntityManager em) {
+        final String owlClass = type.getDeclaredAnnotation(OWLClass.class).iri();
+        return em.createNativeQuery("ASK { <" + uri.toString() + "> a <" + owlClass + "> . }", Boolean.class)
+                 .getSingleResult();
     }
 
     protected EntityManager entityManager() {

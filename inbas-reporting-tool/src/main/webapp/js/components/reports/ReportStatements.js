@@ -43,7 +43,7 @@ var ReportStatements = React.createClass({
 
     onEventTypeSelect: function (eventType) {
         // TODO This is temporary, the wizard type should be decidable from the event type
-        if (eventType.name.toLowerCase().indexOf('incursion') !== -1) {
+        if (eventType.dtoClass && eventType.dtoClass.indexOf('RunwayIncursion') !== -1) {
             eventType.wizard = 'runway_incursion';
         }
         var wizardProperties = EventTypeWizardSelector.getWizardSettings(eventType);

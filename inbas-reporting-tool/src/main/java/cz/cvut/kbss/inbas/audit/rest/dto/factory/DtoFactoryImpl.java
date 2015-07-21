@@ -1,8 +1,14 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.factory;
 
-import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.Organization;
+import cz.cvut.kbss.inbas.audit.model.PersonIntruder;
+import cz.cvut.kbss.inbas.audit.model.Vehicle;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventReport;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEvent;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.AircraftIntruder;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.VehicleIntruder;
 import org.springframework.stereotype.Service;
 
@@ -33,16 +39,22 @@ public class DtoFactoryImpl implements DtoFactory {
         report.setResource(dto.getResource());
         report.setSeverityAssessment(dto.getSeverityAssessment());
         if (dto.getTypeAssessments() != null) {
-            final Set<EventTypeAssessment> assessments = new HashSet<>(dto.getTypeAssessments().size());
+            final Set<cz.cvut.kbss.inbas.audit.model.EventTypeAssessment> assessments = new HashSet<>(
+                    dto.getTypeAssessments().size());
             assessments.addAll(dto.getTypeAssessments().stream().map(this::toDomainModel).collect(Collectors.toList()));
             report.setTypeAssessments(assessments);
         }
         return report;
     }
 
-    @Override
-    public EventTypeAssessment toDomainModel(cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion dto) {
-        final EventTypeAssessment typeAssessment = new EventTypeAssessment();
+    public cz.cvut.kbss.inbas.audit.model.EventTypeAssessment toDomainModel(EventTypeAssessment assessment) {
+        final cz.cvut.kbss.inbas.audit.model.EventTypeAssessment typeAssessment = new cz.cvut.kbss.inbas.audit.model.EventTypeAssessment();
+        typeAssessment.setEventType(assessment.getEventType());
+        if (assessment instanceof GeneralEvent) {
+            typeAssessment.setDescription(((GeneralEvent) assessment).getDescription());
+            return typeAssessment;
+        }
+        final RunwayIncursion dto = (RunwayIncursion) assessment;
         typeAssessment.setEventType(dto.getEventType());
         final cz.cvut.kbss.inbas.audit.model.RunwayIncursion ri = new cz.cvut.kbss.inbas.audit.model.RunwayIncursion();
         typeAssessment.setRunwayIncursion(ri);

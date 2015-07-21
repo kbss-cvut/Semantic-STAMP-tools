@@ -32,7 +32,7 @@ RunwayIncursion.prototype.toString = function () {
             intruder = 'a vehicle (call sign ' + this.intruder.callSign + ')';
             break;
         case 'person':
-            intruder = 'a person (organization ' + this.intruder.personOrganization + ')';
+            intruder = 'a person (organization ' + this.intruder.organization + ')';
             break;
         default:
             break;

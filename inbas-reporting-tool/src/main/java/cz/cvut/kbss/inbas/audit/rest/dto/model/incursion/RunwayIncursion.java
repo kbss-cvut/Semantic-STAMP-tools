@@ -3,14 +3,10 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 
-import java.net.URI;
-
 /**
  * @author ledvima1
  */
 public class RunwayIncursion extends EventTypeAssessment {
-
-    private URI uri;
 
     private String lvp;
 
@@ -22,17 +18,9 @@ public class RunwayIncursion extends EventTypeAssessment {
     }
 
     public RunwayIncursion(cz.cvut.kbss.inbas.audit.model.RunwayIncursion incursion) {
-        this.uri = incursion.getUri();
+        super(incursion.getUri());
         lvp = incursion.getLowVisibilityProcedure();
         this.clearedAircraft = incursion.getClearedAircraft();
-    }
-
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
     }
 
     public String getLvp() {
@@ -66,6 +54,6 @@ public class RunwayIncursion extends EventTypeAssessment {
                 ", lvp='" + lvp + '\'' +
                 ", clearedAircraft=" + clearedAircraft +
                 ", intruder=" + intruder +
-                "} " + super.toString();
+                "}";
     }
 }

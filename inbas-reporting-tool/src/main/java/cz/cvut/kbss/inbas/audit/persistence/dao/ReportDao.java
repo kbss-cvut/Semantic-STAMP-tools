@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 import cz.cvut.kbss.inbas.audit.model.*;
 import cz.cvut.kbss.inbas.audit.persistence.PersistenceException;
 import cz.cvut.kbss.jopa.model.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
@@ -13,6 +14,12 @@ import java.util.Set;
  */
 @Repository
 public class ReportDao extends BaseDao<EventReport> {
+
+    @Autowired
+    private EventTypeDao eventTypeDao;
+
+    @Autowired
+    private OrganizationDao organizationDao;
 
     public ReportDao() {
         super(EventReport.class);
@@ -42,7 +49,7 @@ public class ReportDao extends BaseDao<EventReport> {
             return;
         }
         for (EventTypeAssessment assessment : typeAssessments) {
-            if (em.find(EventType.class, assessment.getEventType().getId()) == null) {
+            if (!eventTypeDao.exists(assessment.getEventType().getId(), em)) {
                 em.persist(assessment.getEventType());
             }
             if (assessment.getRunwayIncursion() != null) {
@@ -71,8 +78,26 @@ public class ReportDao extends BaseDao<EventReport> {
             return;
         }
         organization.generateUri();
-        if (em.find(Organization.class, organization.getUri()) == null) {
+        if (!organizationDao.exists(organization.getUri(), em)) {
             em.persist(organization);
+        }
+    }
+
+    @Override
+    public void update(EventReport entity) {
+        Objects.requireNonNull(entity);
+
+        final EntityManager em = entityManager();
+        try {
+            em.getTransaction().begin();
+            saveEventTypes(entity.getTypeAssessments(), em);
+            em.merge(entity);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            LOG.error("Error when persisting entity.", e);
+            throw new PersistenceException(e);
+        } finally {
+            em.close();
         }
     }
 }

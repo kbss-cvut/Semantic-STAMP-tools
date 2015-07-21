@@ -18,14 +18,13 @@ var ReportStatementRow = React.createClass({
     },
     render: function () {
         var cells = [];
-        var len = this.props.data.length;
         for (var att in this.props.data) {
             var value = this.props.data[att];
             cells.push(<td key={att} style={{whiteSpace: 'pre-wrap'}}>{value}</td>);
         }
         cells.push(
             <td key='cell_actions' className='actions'>
-                <Button onClick={this.props.onRemove} title='Remove statement' bsSize='xsmall' bsStyle='danger'>
+                <Button onClick={this.onRemove} title='Remove statement' bsSize='xsmall' bsStyle='danger'>
                     <Glyphicon glyph='remove'/>
                 </Button>
             </td>);

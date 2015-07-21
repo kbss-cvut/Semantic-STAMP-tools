@@ -19,6 +19,9 @@ public class EventType {
     @OWLDataProperty(iri = "http://www.w3.org/2000/01/rdf-schema#label")
     private String name;
 
+    @OWLDataProperty(iri = Vocabulary.p_dtoClass)
+    private String dtoClass;
+
     public EventType() {
     }
 
@@ -40,6 +43,14 @@ public class EventType {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDtoClass() {
+        return dtoClass;
+    }
+
+    public void setDtoClass(String dtoClass) {
+        this.dtoClass = dtoClass;
     }
 
     @Override

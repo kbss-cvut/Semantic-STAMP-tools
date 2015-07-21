@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.cvut.kbss.inbas.audit.model.EventType;
 
 import java.net.URI;
@@ -7,11 +8,12 @@ import java.net.URI;
 /**
  * @author ledvima1
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "dtoClass", defaultImpl = GeneralEvent.class)
 public class EventTypeAssessment {
 
-    private URI uri;
+    protected URI uri;
 
-    private EventType eventType;
+    protected EventType eventType;
 
     public URI getUri() {
         return uri;
@@ -27,6 +29,13 @@ public class EventTypeAssessment {
 
     public void setEventType(EventType eventType) {
         this.eventType = eventType;
+    }
+
+    public EventTypeAssessment() {
+    }
+
+    protected EventTypeAssessment(URI uri) {
+        this.uri = uri;
     }
 
     @Override

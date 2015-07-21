@@ -1,6 +1,6 @@
-Add exists method to DAO
-Add protected methods which take EntityManager as parameter to DAOs, so that they can be used as part of other method calls
+Verify that GeneralEvents are correctly persisted into the ontology
 Rewrite the DTO factory
+    Come up with some kind of mapping between DTOs and domain classes so that the transformation can be done generally
 Create tests for the app
     React component tests
     Java tests
