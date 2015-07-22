@@ -1,4 +1,3 @@
-Edit corrective measures
 Implement severity level assessment
 Add location info to EventType assessment
 Rewrite the DTO factory

@@ -199,4 +199,14 @@ public class EventReport {
     public void setTypeAssessments(Set<EventTypeAssessment> typeAssessments) {
         this.typeAssessments = typeAssessments;
     }
+
+    @Override
+    public String toString() {
+        return "EventReport{" +
+                "uri=" + uri +
+                ", key='" + key + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
