@@ -10,6 +10,7 @@ import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author ledvima1
@@ -63,17 +64,16 @@ public class EventReport {
         this.correctiveMeasures = report.getCorrectiveMeasures();
         this.typeAssessments = new HashSet<>();
         if (report.getTypeAssessments() != null) {
-            report.getTypeAssessments().stream().filter(type -> type.getRunwayIncursion() != null).forEach(type -> {
+            this.typeAssessments = report.getTypeAssessments().stream().map(type -> {
                 if (type.getRunwayIncursion() != null) {
                     final RunwayIncursion incursion = new RunwayIncursion(type.getRunwayIncursion());
                     incursion.setEventType(type.getEventType());
                     incursion.setIntruder(getIntruder(type.getRunwayIncursion().getIntruder()));
-                    typeAssessments.add(incursion);
+                    return incursion;
                 } else {
-                    final GeneralEvent ge = new GeneralEvent(type);
-                    typeAssessments.add(ge);
+                    return new GeneralEvent(type);
                 }
-            });
+            }).collect(Collectors.toSet());
         }
     }
 
