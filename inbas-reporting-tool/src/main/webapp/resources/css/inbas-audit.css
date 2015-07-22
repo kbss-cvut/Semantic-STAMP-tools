@@ -84,3 +84,12 @@ body {
 .vertical-middle {
     vertical-align: middle;
 }
+
+td.actions {
+    vertical-align: middle;
+    text-align: center;
+}
+
+td.actions button {
+    margin: 5px 5px 5px 5px;
+}

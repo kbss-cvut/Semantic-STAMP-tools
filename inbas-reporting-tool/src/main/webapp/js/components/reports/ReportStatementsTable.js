@@ -38,7 +38,7 @@ var ReportStatementsTable = React.createClass({
                 toShow[attName] = data[i][attName];
             }
             rows.push(<ReportStatementRow key={this.props.keyBase + i} statementIndex={i} data={toShow}
-                                          onRemove={handlers.onRemove}/>);
+                                          onRemove={handlers.onRemove} onEdit={handlers.onEdit}/>);
         }
         return (
             <Table striped bordered condensed hover>

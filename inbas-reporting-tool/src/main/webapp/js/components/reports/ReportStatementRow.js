@@ -16,6 +16,11 @@ var ReportStatementRow = React.createClass({
     onRemove: function () {
         this.props.onRemove(this.props.statementIndex);
     },
+
+    onEdit: function () {
+        this.props.onEdit(this.props.statementIndex);
+    },
+
     render: function () {
         var cells = [];
         for (var att in this.props.data) {
@@ -23,7 +28,10 @@ var ReportStatementRow = React.createClass({
             cells.push(<td key={att} style={{whiteSpace: 'pre-wrap'}}>{value}</td>);
         }
         cells.push(
-            <td key='cell_actions' className='actions'>
+            <td key='cell_actions' style={{verticalAlign: 'middle'}} className='actions'>
+                <Button onClick={this.onEdit} title='Edit statement' bsSize='xsmall' bsStyle='primary'>
+                    <Glyphicon glyph='edit'/>
+                </Button>
                 <Button onClick={this.onRemove} title='Remove statement' bsSize='xsmall' bsStyle='danger'>
                     <Glyphicon glyph='remove'/>
                 </Button>

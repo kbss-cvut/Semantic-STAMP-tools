@@ -10,7 +10,7 @@ var DefaultWizardSteps = require('./default/Steps');
 var EventTypeWizardSelect = {
     // Here we map wizard type to the wizard steps
     wizardSettings: {
-        'runway_incursion': {
+        'cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion': {
             steps: RunwayIncursionSteps,
             title: 'Runway Incursion Wizard'
         }
@@ -20,11 +20,12 @@ var EventTypeWizardSelect = {
         var statement = {
             eventType: {
                 id: eventType.id,
-                name: eventType.name
+                name: eventType.name,
+                dtoClass: eventType.dtoClass
             }
         };
-        if (this.wizardSettings[eventType.wizard]) {
-            var wizardProperties = this.wizardSettings[eventType.wizard];
+        if (this.wizardSettings[eventType.dtoClass]) {
+            var wizardProperties = this.wizardSettings[eventType.dtoClass];
             wizardProperties.statement = statement;
             statement.dtoClass = eventType.dtoClass;
             return wizardProperties;

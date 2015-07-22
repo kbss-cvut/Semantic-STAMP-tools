@@ -10,10 +10,16 @@ var Input = require('react-bootstrap').Input;
 
 var EventDescription = React.createClass({
     getInitialState: function () {
+        var description = this.props.data.statement.description;
         return {
-            description: '',
+            description: description ? description : '',
             descriptionValid: true
         };
+    },
+    componentDidMount: function() {
+        if (this.state.description !== '') {
+            this.props.enableNext();
+        }
     },
 
     onChange: function (e) {

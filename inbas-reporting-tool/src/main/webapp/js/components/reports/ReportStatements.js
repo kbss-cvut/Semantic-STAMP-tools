@@ -5,6 +5,7 @@
 'use strict';
 
 var React = require('react');
+var assign = require('object-assign');
 var Button = require('react-bootstrap').Button;
 var Table = require('react-bootstrap').Table;
 var Panel = require('react-bootstrap').Panel;
@@ -42,10 +43,6 @@ var ReportStatements = React.createClass({
     },
 
     onEventTypeSelect: function (eventType) {
-        // TODO This is temporary, the wizard type should be decidable from the event type
-        if (eventType.dtoClass && eventType.dtoClass.indexOf('RunwayIncursion') !== -1) {
-            eventType.wizard = 'runway_incursion';
-        }
         var wizardProperties = EventTypeWizardSelector.getWizardSettings(eventType);
         wizardProperties.onFinish = this.addEventTypeAssessment;
         this.openWizard(wizardProperties);
@@ -57,10 +54,26 @@ var ReportStatements = React.createClass({
         this.props.onChange('typeAssessments', eventTypes);
         closeCallback();
     },
+    updateEventTypeAssessment: function(data, closeCallback) {
+        var statement = data.statement;
+        var eventTypes = this.props.report.typeAssessments;
+        eventTypes.splice(statement.index, 1, statement);
+        delete statement.index;
+        this.props.onChange('typeAssessments', eventTypes);
+        closeCallback();
+    },
     onRemoveEventTypeAssessment: function (index) {
         var types = this.props.report.typeAssessments;
         types.splice(index, 1);
         this.props.onChange('typeAssessments', types);
+    },
+    onEditEventTypeAssessment: function(index) {
+        var assessment = assign({}, this.props.report.typeAssessments[index]);
+        assessment.index = index;
+        var wizardProperties = EventTypeWizardSelector.getWizardSettings(assessment.eventType);
+        wizardProperties.statement = assessment;
+        wizardProperties.onFinish = this.updateEventTypeAssessment;
+        this.openWizard(wizardProperties);
     },
 
     openCorrectiveMeasureWizard: function () {
@@ -124,10 +137,24 @@ var ReportStatements = React.createClass({
     },
 
     renderTypeAssessments: function () {
+        var component = this.initTypeAssessmentsTable();
+        var typeWizard = (<EventTypeDialog onTypeSelect={this.onEventTypeSelect}/>);
+        return (
+            <div>
+                {component}
+                <ModalTrigger modal={typeWizard}>
+                    <Button bsStyle='primary' title='Add new Event Type Assessment'>
+                        <Glyphicon glyph='plus'/>
+                    </Button>
+                </ModalTrigger>
+            </div>
+        );
+    },
+
+    initTypeAssessmentsTable: function() {
         var data = this.props.report.typeAssessments;
-        var component;
         if (data == null || data.length === 0) {
-            component = null;
+            return null;
         } else {
             var toShow = [];
             for (var i = 0; i < data.length; i++) {
@@ -145,20 +172,13 @@ var ReportStatements = React.createClass({
                 name: 'Summary',
                 flex: 8
             }];
-            component = (<ReportStatementsTable data={toShow} header={header} keyBase='eventType'
-                                                handlers={{onRemove: this.onRemoveEventTypeAssessment}}/>);
+            var handlers = {
+                onRemove: this.onRemoveEventTypeAssessment,
+                onEdit: this.onEditEventTypeAssessment
+            };
+            return (<ReportStatementsTable data={toShow} header={header} keyBase='eventType'
+                                                handlers={handlers}/>);
         }
-        var typeWizard = (<EventTypeDialog onTypeSelect={this.onEventTypeSelect}/>);
-        return (
-            <div>
-                {component}
-                <ModalTrigger modal={typeWizard}>
-                    <Button bsStyle='primary' title='Add new Event Type Assessment'>
-                        <Glyphicon glyph='plus'/>
-                    </Button>
-                </ModalTrigger>
-            </div>
-        );
     },
 
     renderCorrectiveMeasures: function () {

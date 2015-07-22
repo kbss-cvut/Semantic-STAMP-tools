@@ -46,7 +46,7 @@ var ReportRow = React.createClass({
                 <td style={verticalAlign}>{report.name}</td>
                 <td style={verticalAlign}>{formattedDate}</td>
                 <td><CollapsibleText text={report.description}/></td>
-                <td style={verticalAlign}>
+                <td style={verticalAlign} className='actions'>
                     <span className="actions">
                         <Button bsStyle="primary" bsSize="small" onClick={this.onEditClick}>Edit</Button>
                     </span>
