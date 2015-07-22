@@ -12,9 +12,9 @@ var Wizard = require('./Wizard');
 
 var WizardWindow = React.createClass({
     render: function () {
-        var properties = assign({}, this.props, {onClose: this.props.onRequestHide});
+        var properties = assign({}, this.props, {onClose: this.props.onHide});
         return (
-            <Modal {...this.props} bsSize="large" title={this.props.title} animation={true}
+            <Modal {...this.props} show={this.props.show} bsSize="large" title={this.props.title} animation={true}
                                    dialogClassName="large-modal">
                 <Modal.Header closeButton>
                     <Modal.Title>{this.props.title}</Modal.Title>

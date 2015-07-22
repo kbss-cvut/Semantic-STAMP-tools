@@ -9,14 +9,16 @@ var Panel = require('react-bootstrap').Panel;
 var Input = require('react-bootstrap').Input;
 
 var Description = React.createClass({
-    getInitialState: function() {
+    getInitialState: function () {
+        var description = this.props.data.statement.description;
         return {
-            description: ''
+            description: description ? description : ''
         };
     },
-    onChange: function(e) {
-        var value = e.target.value;
-        this.props.data.description = value;
+    onChange: function (e) {
+        var value = e.target.value,
+            statement = this.props.data.statement;
+        statement.description = value;
         this.setState({description: value});
     },
     render: function () {
