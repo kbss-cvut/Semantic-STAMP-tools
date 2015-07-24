@@ -54,22 +54,6 @@ public class EventType {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EventType eventType = (EventType) o;
-
-        return !(id != null ? !id.equals(eventType.id) : eventType.id != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
-
-    @Override
     public String toString() {
         return "EventType{" +
                 "id=" + id +

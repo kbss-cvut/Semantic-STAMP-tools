@@ -17,10 +17,10 @@ public class RunwayIncursion {
     @OWLDataProperty(iri = Vocabulary.p_lowVisibilityProcedure)
     private String lowVisibilityProcedure;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasClearedAircraft, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OWLObjectProperty(iri = Vocabulary.p_hasClearedAircraft, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Aircraft clearedAircraft;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasIntruder, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OWLObjectProperty(iri = Vocabulary.p_hasIntruder, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Intruder intruder;
 
     public URI getUri() {

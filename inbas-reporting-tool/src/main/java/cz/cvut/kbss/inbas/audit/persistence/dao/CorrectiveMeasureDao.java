@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CorrectiveMeasureDao extends BaseDao<CorrectiveMeasure> {
 
-    protected CorrectiveMeasureDao() {
+    public CorrectiveMeasureDao() {
         super(CorrectiveMeasure.class);
     }
 }

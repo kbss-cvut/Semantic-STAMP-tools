@@ -2,8 +2,6 @@ package cz.cvut.kbss.inbas.audit.services.impl;
 
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.services.InbasService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.util.Collection;
@@ -11,7 +9,6 @@ import java.util.Collection;
 /**
  * @author ledvima1
  */
-@Service
 public abstract class BaseService<T> implements InbasService<T> {
 
     protected abstract GenericDao<T> getPrimaryDao();
