@@ -24,7 +24,8 @@ public class EventTypeAssessment implements ReportingStatement {
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasIncursion, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OWLObjectProperty(iri = Vocabulary.p_hasIncursion, fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST,
+            CascadeType.REFRESH})
     private RunwayIncursion runwayIncursion;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)

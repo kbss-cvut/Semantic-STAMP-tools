@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.services.impl;
 
 import cz.cvut.kbss.inbas.audit.exceptions.UsernameExistsException;
 import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,15 @@ import org.springframework.stereotype.Service;
 public class PersonServiceImpl extends BaseService<Person> implements PersonService {
 
     @Autowired
-    private PersonDao dao;
+    private PersonDao personDao;
+
+    @Override
+    protected GenericDao<Person> getPrimaryDao() {
+        return personDao;
+    }
 
     public Person findByUsername(String username) {
-        return dao.findByUsername(username);
+        return personDao.findByUsername(username);
     }
 
     public void persist(Person person) {
@@ -25,7 +31,7 @@ public class PersonServiceImpl extends BaseService<Person> implements PersonServ
             throw new UsernameExistsException("Username " + person.getUsername() + " already exists.");
         }
         person.generateUri();
-        dao.persist(person);
+        this.personDao.persist(person);
     }
 
     @Override

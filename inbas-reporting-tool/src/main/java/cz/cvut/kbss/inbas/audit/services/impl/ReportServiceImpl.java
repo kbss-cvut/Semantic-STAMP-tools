@@ -1,7 +1,8 @@
 package cz.cvut.kbss.inbas.audit.services.impl;
 
 import cz.cvut.kbss.inbas.audit.model.EventReport;
-import cz.cvut.kbss.inbas.audit.persistence.dao.SupportsOwlKey;
+import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.ReportDao;
 import cz.cvut.kbss.inbas.audit.services.ReportService;
 import cz.cvut.kbss.inbas.audit.services.validation.ReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,12 @@ public class ReportServiceImpl extends BaseService<EventReport> implements Repor
     private ReportValidator reportValidator;
 
     @Autowired
-    private SupportsOwlKey<EventReport> reportDao;
+    private ReportDao reportDao;
+
+    @Override
+    protected GenericDao<EventReport> getPrimaryDao() {
+        return reportDao;
+    }
 
     @Override
     public EventReport findByKey(String key) {

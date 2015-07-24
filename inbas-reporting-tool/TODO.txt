@@ -1,4 +1,5 @@
 Implement severity level assessment
+Delete assessments when they're removed from the EventReport
 Add location info to EventType assessment
 Rewrite the DTO factory
     Come up with some kind of mapping between DTOs and domain classes so that the transformation can be done generally

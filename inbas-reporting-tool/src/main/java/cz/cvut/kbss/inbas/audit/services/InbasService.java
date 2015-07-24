@@ -31,6 +31,13 @@ public interface InbasService<T> {
     void persist(T instance);
 
     /**
+     * Persists all the specified instances.
+     *
+     * @param instances Instances to persist
+     */
+    void persist(Collection<T> instances);
+
+    /**
      * Merges the state of the specified instance into the storage.
      *
      * @param instance The updated instance
@@ -43,4 +50,13 @@ public interface InbasService<T> {
      * @param instance Instance to remove
      */
     void remove(T instance);
+
+    /**
+     * Deletes all the specified instances.
+     * <p>
+     * if any of the instances is not found, it is just skipped and the removal continues.
+     *
+     * @param instances Instances to remove
+     */
+    void remove(Collection<T> instances);
 }
