@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.model;
 
+import java.net.URI;
 import java.util.Set;
 
 /**
@@ -8,6 +9,8 @@ import java.util.Set;
  * @author ledvima1
  */
 public interface ReportingStatement {
+
+    URI getUri();
 
     Set<Resource> getResources();
 }

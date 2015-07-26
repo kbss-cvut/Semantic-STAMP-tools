@@ -3,7 +3,6 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 import cz.cvut.kbss.inbas.audit.model.HasDerivableUri;
 import cz.cvut.kbss.inbas.audit.model.HasOwlKey;
 import cz.cvut.kbss.inbas.audit.persistence.PersistenceException;
-import cz.cvut.kbss.inbas.audit.util.ErrorUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -12,8 +11,10 @@ import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     @Override
     public T findByUri(URI uri) {
-        Objects.requireNonNull(uri, ErrorUtils.createNPXMessage("uri"));
+        Objects.requireNonNull(uri);
         final EntityManager em = entityManager();
         try {
             return findByUri(uri, em);
@@ -50,7 +51,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     @Override
     public T findByKey(String key) {
-        Objects.requireNonNull(key, ErrorUtils.createNPXMessage("key"));
+        Objects.requireNonNull(key);
         final EntityManager em = entityManager();
         try {
             return findByKey(key, em);
@@ -90,7 +91,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     @Override
     public void persist(T entity) {
-        Objects.requireNonNull(entity, ErrorUtils.createNPXMessage("entity"));
+        Objects.requireNonNull(entity);
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
@@ -115,8 +116,27 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     }
 
     @Override
+    public void persist(Collection<T> entities) {
+        Objects.requireNonNull(entities);
+        if (entities.isEmpty()) {
+            return;
+        }
+        final EntityManager em = entityManager();
+        try {
+            em.getTransaction().begin();
+            entities.forEach(em::persist);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            LOG.error("Error when persisting entities.", e);
+            throw new PersistenceException(e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
     public void update(T entity) {
-        Objects.requireNonNull(entity, ErrorUtils.createNPXMessage("entity"));
+        Objects.requireNonNull(entity);
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
@@ -136,7 +156,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     @Override
     public void remove(T entity) {
-        Objects.requireNonNull(entity, ErrorUtils.createNPXMessage("entity"));
+        Objects.requireNonNull(entity);
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
@@ -154,6 +174,28 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         final T toRemove = em.merge(entity);
         assert toRemove != null;
         em.remove(toRemove);
+    }
+
+    @Override
+    public void remove(Collection<T> entities) {
+        Objects.requireNonNull(entities);
+        if (entities.isEmpty()) {
+            return;
+        }
+        final EntityManager em = entityManager();
+        try {
+            em.getTransaction().begin();
+            entities.forEach(entity -> {
+                final T toRemove = em.merge(entity);
+                em.remove(toRemove);
+            });
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            LOG.error("Error when removing entities.", e);
+            throw new PersistenceException(e);
+        } finally {
+            em.close();
+        }
     }
 
     @Override

@@ -3,8 +3,10 @@ package cz.cvut.kbss.inbas.audit.services.impl.validation;
 import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.model.EventReport;
 import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.services.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.audit.services.validation.ReportValidator;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
 import java.util.Date;
@@ -12,11 +14,12 @@ import java.util.Date;
 /**
  * @author ledvima1
  */
-public class BaseReportValidatorTest {
+public class BaseReportValidatorTest extends BaseServiceTestRunner {
 
     private static final Person PERSON = initPerson();
 
-    private ReportValidator validator = new BaseReportValidator();
+    @Autowired
+    private ReportValidator validator;
 
     private static Person initPerson() {
         final Person p = new Person();

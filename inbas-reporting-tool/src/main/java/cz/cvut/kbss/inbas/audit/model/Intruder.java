@@ -14,13 +14,13 @@ public class Intruder {
     @Id(generated = true)
     private URI uri;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasAircraft, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OWLObjectProperty(iri = Vocabulary.p_hasAircraft, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Aircraft aircraft;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasVehicle, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OWLObjectProperty(iri = Vocabulary.p_hasVehicle, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Vehicle vehicle;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasPersonIntruder, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OWLObjectProperty(iri = Vocabulary.p_hasPersonIntruder, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private PersonIntruder person;
 
     public Intruder() {
