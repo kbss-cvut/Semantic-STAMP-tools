@@ -17,6 +17,9 @@ public class RunwayIncursion {
     @OWLDataProperty(iri = Vocabulary.p_lowVisibilityProcedure)
     private LowVisibilityProcedure lowVisibilityProcedure;
 
+    @OWLObjectProperty(iri = Vocabulary.p_hasLocation, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Location location;
+
     @OWLObjectProperty(iri = Vocabulary.p_hasClearedAircraft, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Aircraft conflictingAircraft;
 
@@ -37,6 +40,14 @@ public class RunwayIncursion {
 
     public void setLowVisibilityProcedure(LowVisibilityProcedure lowVisibilityProcedure) {
         this.lowVisibilityProcedure = lowVisibilityProcedure;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public Aircraft getConflictingAircraft() {

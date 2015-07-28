@@ -22,6 +22,7 @@ public class Vocabulary {
     public static final String PersonIntruder = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#PersonIntruder";
     public static final String Organization = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Organization";
     public static final String RunwayIncursion = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#RunwayIncursion";
+    public static final String Location = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Location";
 
     public static final String p_hasResource = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasResource";
     public static final String p_severityLevel = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#severityLevel";
@@ -57,6 +58,7 @@ public class Vocabulary {
     public static final String p_activityDescription = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#activityDescription";
     public static final String p_memberOf = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#memberOf";
     public static final String p_personCategory = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#personCategory";
+    public static final String p_simpleLocation = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#simpleLocation";
 
     public static final String p_hasIncursion = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasRunwayIncursion";
     public static final String p_hasClearedAircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasClearedAircraft";
@@ -64,6 +66,7 @@ public class Vocabulary {
     public static final String p_hasAircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasAircraft";
     public static final String p_hasVehicle = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasVehicle";
     public static final String p_hasPersonIntruder = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasPersonIntruder";
+    public static final String p_hasLocation = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasLocation";
 
     public static final String p_hasKey = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasKey";
     public static final String p_dtoClass = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#dtoClass";

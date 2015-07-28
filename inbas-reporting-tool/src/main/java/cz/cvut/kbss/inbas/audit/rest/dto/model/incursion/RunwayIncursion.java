@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 
@@ -10,6 +11,8 @@ import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 public class RunwayIncursion extends EventTypeAssessment {
 
     private LowVisibilityProcedure lvp;
+
+    private Location location;
 
     private Aircraft conflictingAircraft;
 
@@ -21,6 +24,7 @@ public class RunwayIncursion extends EventTypeAssessment {
     public RunwayIncursion(cz.cvut.kbss.inbas.audit.model.RunwayIncursion incursion) {
         super(incursion.getUri());
         lvp = incursion.getLowVisibilityProcedure();
+        this.location = incursion.getLocation();
         this.conflictingAircraft = incursion.getConflictingAircraft();
     }
 
@@ -30,6 +34,14 @@ public class RunwayIncursion extends EventTypeAssessment {
 
     public void setLvp(LowVisibilityProcedure lvp) {
         this.lvp = lvp;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public Aircraft getConflictingAircraft() {
@@ -52,9 +64,8 @@ public class RunwayIncursion extends EventTypeAssessment {
     public String toString() {
         return "RunwayIncursionDto{" +
                 "eventType=" + getEventType() +
-                ", lvp='" + lvp + '\'' +
-                ", conflictingAircraft=" + conflictingAircraft +
                 ", intruder=" + intruder +
+                ", conflictingAircraft=" + conflictingAircraft +
                 "}";
     }
 }

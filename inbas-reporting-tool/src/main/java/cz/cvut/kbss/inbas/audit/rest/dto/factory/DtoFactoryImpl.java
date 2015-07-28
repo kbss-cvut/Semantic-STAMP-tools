@@ -59,6 +59,7 @@ public class DtoFactoryImpl implements DtoFactory {
         final cz.cvut.kbss.inbas.audit.model.RunwayIncursion ri = new cz.cvut.kbss.inbas.audit.model.RunwayIncursion();
         typeAssessment.setRunwayIncursion(ri);
         ri.setLowVisibilityProcedure(dto.getLvp());
+        ri.setLocation(dto.getLocation());
         ri.setConflictingAircraft(dto.getConflictingAircraft());
         final cz.cvut.kbss.inbas.audit.model.Intruder intruder = new cz.cvut.kbss.inbas.audit.model.Intruder();
         ri.setIntruder(intruder);

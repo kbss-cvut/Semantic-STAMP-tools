@@ -112,6 +112,8 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
                           .getSingleResult());
             assertFalse(em.createNativeQuery("ASK { ?x a <" + Vocabulary.RunwayIncursion + "> .}", Boolean.class)
                           .getSingleResult());
+            assertFalse(em.createNativeQuery("ASK { ?x a <" + Vocabulary.Location + "> .}", Boolean.class)
+                          .getSingleResult());
         } finally {
             em.close();
         }

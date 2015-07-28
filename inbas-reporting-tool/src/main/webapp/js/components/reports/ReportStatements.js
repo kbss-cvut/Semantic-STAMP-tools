@@ -176,7 +176,7 @@ var ReportStatements = React.createClass({
                     {severityAssessments}
                 </Panel>
                 <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
-                                                               onHide={this.closeWizard}/>
+                                                               onHide={this.closeWizard} enableForwardSkip={true}/>
             </div>
         );
     },
