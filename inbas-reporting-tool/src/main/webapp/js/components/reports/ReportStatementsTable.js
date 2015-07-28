@@ -5,9 +5,7 @@
 'use strict';
 
 var React = require('react');
-var Button = require('react-bootstrap').Button;
 var Table = require('react-bootstrap').Table;
-var Glyphicon = require('react-bootstrap').Glyphicon;
 
 var ReportStatementRow = require('./ReportStatementRow');
 

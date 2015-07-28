@@ -9,7 +9,6 @@ var assign = require('object-assign');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 var Button = require('react-bootstrap').Button;
 var ProgressBar = require('react-bootstrap').ProgressBar;
-var ModalTrigger = require('react-bootstrap').ModalTrigger;
 
 var ReportsTable = require('./ReportsTable');
 var ReportDetail = require('./ReportDetail');

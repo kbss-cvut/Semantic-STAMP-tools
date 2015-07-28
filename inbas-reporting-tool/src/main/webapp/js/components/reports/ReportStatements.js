@@ -7,14 +7,12 @@
 var React = require('react');
 var assign = require('object-assign');
 var Button = require('react-bootstrap').Button;
-var Table = require('react-bootstrap').Table;
 var Panel = require('react-bootstrap').Panel;
 var Glyphicon = require('react-bootstrap').Glyphicon;
 
 var ReportStatementsTable = require('./ReportStatementsTable');
 var WizardWindow = require('../wizard/WizardWindow');
 var EventTypeDialog = require('./wizard/event-type/EventTypeDialog');
-var RunwayIncursionSteps = require('./wizard/event-type/runway-incursion/Steps');
 var CorrectiveMeasureWizardSteps = require('./wizard/corrective-measure/Steps');
 var SeverityAssessmentWizardSteps = require('./wizard/severity-assessment/Steps');
 var EventTypeWizardSelector = require('./wizard/event-type/EventTypeWizardSelector');

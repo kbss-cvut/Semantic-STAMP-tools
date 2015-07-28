@@ -9,7 +9,6 @@ var Button = require('react-bootstrap').Button;
 var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 var Alert = require('react-bootstrap').Alert;
-var Table = require('react-bootstrap').Table;
 var ProgressBar = require('react-bootstrap').ProgressBar;
 var assign = require('object-assign');
 var DateTimePicker = require('react-bootstrap-datetimepicker');
