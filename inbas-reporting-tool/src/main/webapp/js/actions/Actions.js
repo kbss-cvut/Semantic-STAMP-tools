@@ -6,6 +6,10 @@
 
 var Reflux = require('reflux');
 
-var Actions = Reflux.createActions(['loadUser', 'loadReports', 'findReport', 'createReport', 'updateReport', 'deleteReport', 'loadEventTypes']);
+var Actions = Reflux.createActions([
+    'loadUser',
+    'loadReports', 'findReport', 'createReport', 'updateReport', 'deleteReport',
+    'loadEventTypes', 'loadLvpOptions'
+]);
 
 module.exports = Actions;

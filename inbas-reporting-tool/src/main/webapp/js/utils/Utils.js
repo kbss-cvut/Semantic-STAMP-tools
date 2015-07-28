@@ -16,6 +16,16 @@ var Utils = {
         var period = date.getHours() >= 12 ? 'PM' : 'AM';
         var minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes().toString();
         return (day + '-' + month + '-' + year + ' ' + hour + ':' + minute + ' ' + period);
+    },
+
+    /**
+     * Returns a Java constant (uppercase with underscores) as a nicer string.
+     *
+     * Replaces underscores with spaces.
+     */
+    constantToString: function(constant) {
+        return constant.replace(/_/g, ' ');
+        //return words.charAt(0) + words.substring(1).toLowerCase();
     }
 };
 

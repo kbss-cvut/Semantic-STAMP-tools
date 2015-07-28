@@ -15,7 +15,7 @@ public class RunwayIncursion {
     private URI uri;
 
     @OWLDataProperty(iri = Vocabulary.p_lowVisibilityProcedure)
-    private String lowVisibilityProcedure;
+    private LowVisibilityProcedure lowVisibilityProcedure;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasClearedAircraft, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Aircraft conflictingAircraft;
@@ -31,11 +31,11 @@ public class RunwayIncursion {
         this.uri = uri;
     }
 
-    public String getLowVisibilityProcedure() {
+    public LowVisibilityProcedure getLowVisibilityProcedure() {
         return lowVisibilityProcedure;
     }
 
-    public void setLowVisibilityProcedure(String lowVisibilityProcedure) {
+    public void setLowVisibilityProcedure(LowVisibilityProcedure lowVisibilityProcedure) {
         this.lowVisibilityProcedure = lowVisibilityProcedure;
     }
 

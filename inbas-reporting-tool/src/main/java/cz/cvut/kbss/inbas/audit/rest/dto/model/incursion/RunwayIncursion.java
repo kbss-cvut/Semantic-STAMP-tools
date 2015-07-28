@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 
 /**
@@ -8,7 +9,7 @@ import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
  */
 public class RunwayIncursion extends EventTypeAssessment {
 
-    private String lvp;
+    private LowVisibilityProcedure lvp;
 
     private Aircraft conflictingAircraft;
 
@@ -23,11 +24,11 @@ public class RunwayIncursion extends EventTypeAssessment {
         this.conflictingAircraft = incursion.getConflictingAircraft();
     }
 
-    public String getLvp() {
+    public LowVisibilityProcedure getLvp() {
         return lvp;
     }
 
-    public void setLvp(String lvp) {
+    public void setLvp(LowVisibilityProcedure lvp) {
         this.lvp = lvp;
     }
 
