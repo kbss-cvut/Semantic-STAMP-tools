@@ -16,6 +16,7 @@ var DateTimePicker = require('react-bootstrap-datetimepicker');
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
 var ReportStatements = require('./ReportStatements');
+var EventSeverity = require('./EventSeverity');
 
 var ReportDetail = React.createClass({
     getInitialState: function () {
@@ -33,6 +34,10 @@ var ReportDetail = React.createClass({
         var value = e.target.value;
         var attributeName = e.target.name;
         this.props.onChange(attributeName, value);
+    },
+
+    onAttributeChange(attribute, value) {
+        this.props.onChange(attribute, value);
     },
 
     onDateChange: function (value) {
@@ -102,14 +107,19 @@ var ReportDetail = React.createClass({
                                label='Report Name' title='Short descriptive name for this report'/>
                     </div>
 
-                    {this.renderAuthor()}
-
                     <div className='picker-container form-group report-detail'>
                         <label className='control-label'>Event Time</label>
                         <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={report.eventTime.toString()}
                                         onChange={this.onDateChange}
                                         inputProps={{title: 'Date and time when the event occurred'}}/>
                     </div>
+
+                    <div className='form-group report-detail'>
+                        <EventSeverity onChange={this.onAttributeChange}
+                                       severityAssessment={report.severityAssessment}/>
+                    </div>
+
+                    {this.renderAuthor()}
 
                     {this.renderLastEdited()}
 
@@ -166,17 +176,10 @@ var ReportDetail = React.createClass({
         }
         var report = this.props.report;
         var formattedDate = Utils.formatDate(new Date(report.lastEdited));
+        var text = 'Last edited on ' + formattedDate + ' by ' + this.getFullName(report.lastEditedBy) + '.';
         return (
-            <div style={{overflow: 'hidden'}}>
-                <div className='report-detail-float'>
-                    <Input type='text' label='Last Edited' value={formattedDate}
-                           title='Date of last editing of this report' disabled/>
-                </div>
-                <div className='report-detail-float-right'>
-                    <Input type='text' label='By' value={this.getFullName(report.lastEditedBy)}
-                           title='The user who edited this report last'
-                           disabled/>
-                </div>
+            <div className='form-group italics'>
+                {text}
             </div>
         );
     }

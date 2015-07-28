@@ -1,5 +1,3 @@
-Implement severity level assessment
-Add location info to EventType assessment
 Rewrite the DTO factory
     Come up with some kind of mapping between DTOs and domain classes so that the transformation can be done generally
 Create tests for the app

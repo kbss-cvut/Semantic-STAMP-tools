@@ -14,7 +14,6 @@ var ReportStatementsTable = require('./ReportStatementsTable');
 var WizardWindow = require('../wizard/WizardWindow');
 var EventTypeDialog = require('./wizard/event-type/EventTypeDialog');
 var CorrectiveMeasureWizardSteps = require('./wizard/corrective-measure/Steps');
-var SeverityAssessmentWizardSteps = require('./wizard/severity-assessment/Steps');
 var EventTypeWizardSelector = require('./wizard/event-type/EventTypeWizardSelector');
 var EventTypeFactory = require('../../model/EventTypeFactory');
 
@@ -135,35 +134,12 @@ var ReportStatements = React.createClass({
         this.openWizard(wizardProperties);
     },
 
-    // Severity Assessments
-
-    openSeverityAssessmentWizard: function () {
-        var properties = {
-            steps: SeverityAssessmentWizardSteps,
-            title: 'Severity Assessment Wizard',
-            onFinish: this.addSeverityAssessment
-        };
-        this.openWizard(properties);
-    },
-
-    addSeverityAssessment: function (data, closeCallback) {
-        // TODO
-        closeCallback();
-    },
-
-    onRemoveSeverityAssessment: function (index) {
-        var assessments = this.props.report.severityAssessments;
-        assessments.splice(index, 1);
-        this.props.onChange('severityAssessments', assessments);
-    },
-
 
     // Rendering
 
     render: function () {
         var typeAssessments = this.renderTypeAssessments();
         var correctiveMeasures = this.renderCorrectiveMeasures();
-        var severityAssessments = this.renderSeverityAssessments();
         return (
             <div>
                 <Panel header='Event Type Assessments'>
@@ -171,9 +147,6 @@ var ReportStatements = React.createClass({
                 </Panel>
                 <Panel header='Corrective Measures'>
                     {correctiveMeasures}
-                </Panel>
-                <Panel header='Event Severity Assessments'>
-                    {severityAssessments}
                 </Panel>
                 <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
                                                                onHide={this.closeWizard} enableForwardSkip={true}/>
@@ -246,31 +219,6 @@ var ReportStatements = React.createClass({
             <div>
                 {component}
                 <Button bsStyle='primary' title='Add new Corrective Measure' onClick={this.openCorrectiveMeasureWizard}>
-                    <Glyphicon glyph='plus'/>
-                </Button>
-            </div>
-        );
-    },
-
-    renderSeverityAssessments: function () {
-        var data = this.props.report.severityAssessments;
-        var component;
-        if (data == null || data.length === 0) {
-            component = null;
-        } else {
-            var header = [{
-                flex: 11,
-                attribute: 'level',
-                name: 'Severity Level'
-            }];
-            component = (<ReportStatementsTable data={data} header={header} keyBase='severity'
-                                                handlers={{onRemove: this.onRemoveSeverityAssessment}}/>);
-        }
-        return (
-            <div>
-                {component}
-                <Button bsStyle='primary' title='Add new Severity Assessment'
-                        onClick={this.openSeverityAssessmentWizard} disabled>
                     <Glyphicon glyph='plus'/>
                 </Button>
             </div>

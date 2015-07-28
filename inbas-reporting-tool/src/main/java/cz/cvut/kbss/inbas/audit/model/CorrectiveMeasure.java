@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.audit.model;
 
-import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -11,13 +10,10 @@ import java.util.Set;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.CorrectiveMeasure)
-public class CorrectiveMeasure implements ReportingStatement, HasOwlKey {
+public class CorrectiveMeasure implements ReportingStatement {
 
     @Id(generated = true)
     URI uri;
-
-    @OWLDataProperty(iri = Vocabulary.p_hasKey)
-    private String key;
 
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
@@ -48,24 +44,6 @@ public class CorrectiveMeasure implements ReportingStatement, HasOwlKey {
 
     public void setResources(Set<Resource> resources) {
         this.resources = resources;
-    }
-
-    @Override
-    public String getKey() {
-        return key;
-    }
-
-    @Override
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    @Override
-    public void generateKey() {
-        if (key != null) {
-            return;
-        }
-        this.key = IdentificationUtils.generateKey();
     }
 
     @Override

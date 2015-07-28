@@ -16,6 +16,10 @@ body {
     background-color: #f5f5f5;
 }
 
+.italics {
+    font-style: italic;
+}
+
 .container .text-muted {
     margin: 20px 0;
 }
