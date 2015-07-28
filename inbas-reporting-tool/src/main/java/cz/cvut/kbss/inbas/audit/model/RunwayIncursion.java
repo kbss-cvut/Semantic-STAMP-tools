@@ -18,7 +18,7 @@ public class RunwayIncursion {
     private String lowVisibilityProcedure;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasClearedAircraft, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Aircraft clearedAircraft;
+    private Aircraft conflictingAircraft;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasIntruder, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Intruder intruder;
@@ -39,12 +39,12 @@ public class RunwayIncursion {
         this.lowVisibilityProcedure = lowVisibilityProcedure;
     }
 
-    public Aircraft getClearedAircraft() {
-        return clearedAircraft;
+    public Aircraft getConflictingAircraft() {
+        return conflictingAircraft;
     }
 
-    public void setClearedAircraft(Aircraft clearedAircraft) {
-        this.clearedAircraft = clearedAircraft;
+    public void setConflictingAircraft(Aircraft conflictingAircraft) {
+        this.conflictingAircraft = conflictingAircraft;
     }
 
     public Intruder getIntruder() {
@@ -58,7 +58,7 @@ public class RunwayIncursion {
     @Override
     public String toString() {
         return "RunwayIncursion{" +
-                "clearedAircraft=" + clearedAircraft +
+                "conflictingAircraft=" + conflictingAircraft +
                 ", intruder=" + intruder +
                 '}';
     }

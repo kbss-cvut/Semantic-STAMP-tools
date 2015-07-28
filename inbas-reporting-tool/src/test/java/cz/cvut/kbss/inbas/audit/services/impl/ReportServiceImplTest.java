@@ -79,7 +79,7 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
         final RunwayIncursion incursion = new RunwayIncursion();
         final Aircraft cleared = new Aircraft();
         cleared.setCallSign("test");
-        incursion.setClearedAircraft(cleared);
+        incursion.setConflictingAircraft(cleared);
         final Intruder intruder = new Intruder(new PersonIntruder());
         incursion.setIntruder(intruder);
         one.setRunwayIncursion(incursion);

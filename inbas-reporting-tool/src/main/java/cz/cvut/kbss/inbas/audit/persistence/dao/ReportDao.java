@@ -59,8 +59,8 @@ public class ReportDao extends BaseDao<EventReport> {
     }
 
     private void saveIncursionOrganizations(RunwayIncursion incursion, EntityManager em) {
-        if (incursion.getClearedAircraft() != null) {
-            saveOrganizationIfNotExists(incursion.getClearedAircraft().getOperator(), em);
+        if (incursion.getConflictingAircraft() != null) {
+            saveOrganizationIfNotExists(incursion.getConflictingAircraft().getOperator(), em);
         }
         if (incursion.getIntruder() != null) {
             if (incursion.getIntruder().getAircraft() != null) {

@@ -87,11 +87,10 @@ var WizardStep = React.createClass({
         if (this.state.currentError) {
             error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);
         }
-        var Component = this.props.component;
         return (
             <div className='wizard-step'>
                 <div className='wizard-step-content'>
-                    <Component data={this.props.data} enableNext={this.enableNext} disableNext={this.disableNext}/>
+                    {this.renderComponent()}
                 </div>
                 <ButtonToolbar style={{float: 'right'}}>
                     {previousButton}
@@ -115,6 +114,20 @@ var WizardStep = React.createClass({
                               title={disabledTitle}>Finish</Button>);
         }
         return button;
+    },
+
+    renderComponent: function() {
+        return React.createElement(this.props.component, {
+            data: this.props.data,
+            enableNext: this.enableNext,
+            disableNext: this.disableNext,
+            next: this.onNext,
+            previous: this.onPrevious,
+            finish: this.onFinish,
+            insertStepAfterCurrent: this.props.onInsertStepAfterCurrent,
+            addStep: this.props.onAddStep,
+            removeStep: this.props.onRemoveStep
+        });
     }
 });
 

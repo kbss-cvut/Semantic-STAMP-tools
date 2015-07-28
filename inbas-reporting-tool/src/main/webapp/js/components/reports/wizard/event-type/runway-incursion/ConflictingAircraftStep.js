@@ -13,26 +13,29 @@ var FlightInfo = require('../../FlightInfo');
 var FlightOperationType = require('../../FlightOperationType');
 var Select = require('../../../../Select');
 
-var AircraftClearedStep = React.createClass({
+
+var ConflictingAircraft = React.createClass({
     getInitialState: function () {
         var statement = this.props.data.statement;
-        if (!statement.clearedAircraft) {
-            statement.clearedAircraft = {};
+        if (!statement.conflictingAircraft) {
+            statement.conflictingAircraft = {};
         }
         return {
             statement: statement
         };
     },
+
     onChange: function (e) {
         var value = e.target.value;
         var attributeName = e.target.name;
-        this.state.statement.clearedAircraft[attributeName] = value;
+        this.state.statement.conflictingAircraft[attributeName] = value;
         this.setState({statement: this.state.statement});
     },
 
+    // Rendering
 
     render: function () {
-        var title = (<h3>Aircraft Cleared to Use Runway</h3>);
+        var title = (<h3>Conflicting Aircraft</h3>);
         var statement = this.state.statement;
         var phaseOptions = [
             {value: 'takeoff', label: 'Take-off', title: 'Plane taking off'},
@@ -41,30 +44,30 @@ var AircraftClearedStep = React.createClass({
         ];
         return (
             <Panel header={title}>
-                <AircraftRegistration registration={statement.clearedAircraft.registration}
-                                      stateOfRegistry={statement.clearedAircraft.stateOfRegistry}
+                <AircraftRegistration registration={statement.conflictingAircraft.registration}
+                                      stateOfRegistry={statement.conflictingAircraft.stateOfRegistry}
                                       onChange={this.onChange}/>
                 <Panel header='Aviation Operation'>
                     <div className='report-detail'>
                         <Input type='text' label='Flight Number' name='flightNumber' onChange={this.onChange}
-                               value={statement.clearedAircraft.flightNumber}/>
+                               value={statement.conflictingAircraft.flightNumber}/>
                     </div>
                     <div style={{overflow: 'hidden'}}>
                         <div className='report-detail-float'>
-                            <Select label='Phase' name='flightPhase' value={statement.clearedAircraft.flightPhase} onChange={this.onChange}
+                            <Select label='Phase' name='flightPhase' value={statement.conflictingAircraft.flightPhase} onChange={this.onChange}
                                     title='Phase of flight when the event occurred' options={phaseOptions}/>
                         </div>
                         <div className='report-detail-float-right'>
-                            <FlightOperationType operationType={statement.clearedAircraft.operationType}
+                            <FlightOperationType operationType={statement.conflictingAircraft.operationType}
                                                  onChange={this.onChange}/>
                         </div>
                     </div>
-                    <FlightInfo lastDeparturePoint={statement.clearedAircraft.lastDeparturePoint}
-                                plannedDestination={statement.clearedAircraft.plannedDestination} onChange={this.onChange}/>
+                    <FlightInfo lastDeparturePoint={statement.conflictingAircraft.lastDeparturePoint}
+                                plannedDestination={statement.conflictingAircraft.plannedDestination} onChange={this.onChange}/>
                 </Panel>
             </Panel>
         );
     }
 });
 
-module.exports = AircraftClearedStep;
+module.exports = ConflictingAircraft;

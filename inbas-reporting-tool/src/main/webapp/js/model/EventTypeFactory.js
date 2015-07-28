@@ -9,7 +9,7 @@ var RunwayIncursion = require('./RunwayIncursion');
 
 module.exports = {
     create: function (data) {
-        if (data.clearedAircraft && data.intruder) {
+        if (data.intruder) {
             return new RunwayIncursion(data);
         } else {
             return new EventTypeStatement(data);

@@ -68,7 +68,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistingPersonIntruderFromExistingOrganizationUsesTheExistingOne() throws Exception {
-        EventReport rOne = persistReportWithClearedAircraftAndOrganization();
+        EventReport rOne = persistReportWithConflictingAircraftAndOrganization();
 
         final EventReport rTwo = initEventReportWithTypeAssessment(eventType);
         final EventTypeAssessment assTwo = rTwo.getTypeAssessments().iterator().next();
@@ -81,7 +81,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
 
         final EventReport resOne = dao.findByUri(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
-        final Aircraft aircraft = typeOne.getRunwayIncursion().getClearedAircraft();
+        final Aircraft aircraft = typeOne.getRunwayIncursion().getConflictingAircraft();
         final Organization org = aircraft.getOperator();
         assertEquals(organization, org);
         final EventReport resTwo = dao.findByUri(rTwo.getUri());
@@ -90,14 +90,14 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         assertEquals(organization, person.getOrganization());
     }
 
-    private EventReport persistReportWithClearedAircraftAndOrganization() {
+    private EventReport persistReportWithConflictingAircraftAndOrganization() {
         final EventReport rOne = initEventReportWithTypeAssessment(eventType);
         final EventTypeAssessment ass = rOne.getTypeAssessments().iterator().next();
         final Aircraft cleared = new Aircraft();
         cleared.setOperator(organization);
         cleared.setOperationType("passenger");
         final RunwayIncursion incursion = new RunwayIncursion();
-        incursion.setClearedAircraft(cleared);
+        incursion.setConflictingAircraft(cleared);
         ass.setRunwayIncursion(incursion);
         dao.persist(rOne);
         return rOne;
@@ -105,7 +105,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistingVehicleIntruderFromExistingOrganizationUsesTheExistingOne() {
-        EventReport rOne = persistReportWithClearedAircraftAndOrganization();
+        EventReport rOne = persistReportWithConflictingAircraftAndOrganization();
 
         final EventReport rTwo = initEventReportWithTypeAssessment(eventType);
         final EventTypeAssessment assTwo = rTwo.getTypeAssessments().iterator().next();
@@ -118,7 +118,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
 
         final EventReport resOne = dao.findByUri(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
-        final Aircraft aircraft = typeOne.getRunwayIncursion().getClearedAircraft();
+        final Aircraft aircraft = typeOne.getRunwayIncursion().getConflictingAircraft();
         final Organization org = aircraft.getOperator();
         assertEquals(organization, org);
         final EventReport resTwo = dao.findByUri(rTwo.getUri());
@@ -129,7 +129,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistingAircraftIntruderFromExistingOrganizationUsesTheExistingOne() {
-        EventReport rOne = persistReportWithClearedAircraftAndOrganization();
+        EventReport rOne = persistReportWithConflictingAircraftAndOrganization();
 
         final EventReport rTwo = initEventReportWithTypeAssessment(eventType);
         final EventTypeAssessment assTwo = rTwo.getTypeAssessments().iterator().next();
@@ -142,7 +142,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
 
         final EventReport resOne = dao.findByUri(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
-        final Aircraft clearedAircraft = typeOne.getRunwayIncursion().getClearedAircraft();
+        final Aircraft clearedAircraft = typeOne.getRunwayIncursion().getConflictingAircraft();
         final Organization org = clearedAircraft.getOperator();
         assertEquals(organization, org);
         final EventReport resTwo = dao.findByUri(rTwo.getUri());

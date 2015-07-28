@@ -26,19 +26,18 @@ RunwayIncursion.prototype.toString = function () {
     var intruder = '';
     switch (this.intruder.intruderType) {
         case 'aircraft':
-            intruder = 'an aircraft (call sign ' + this.intruder.callSign + ')';
+            intruder = 'An aircraft (call sign ' + this.intruder.callSign + ')';
             break;
         case 'vehicle':
-            intruder = 'a vehicle (call sign ' + this.intruder.callSign + ')';
+            intruder = 'A vehicle (call sign ' + this.intruder.callSign + ')';
             break;
         case 'person':
-            intruder = 'a person (organization ' + this.intruder.organization + ')';
+            intruder = 'A person (organization ' + this.intruder.organization + ')';
             break;
         default:
             break;
     }
-    return 'Flight ' + this.clearedAircraft.flightNumber + ' was cleared to use runway, but ' + intruder +
-        ' intruded on the runway.'
+    return intruder + ' intruded on the runway.'
 };
 
 module.exports = RunwayIncursion;

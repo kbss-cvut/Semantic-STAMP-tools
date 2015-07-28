@@ -10,7 +10,7 @@ public class RunwayIncursion extends EventTypeAssessment {
 
     private String lvp;
 
-    private Aircraft clearedAircraft;
+    private Aircraft conflictingAircraft;
 
     private RunwayIntruder intruder;
 
@@ -20,7 +20,7 @@ public class RunwayIncursion extends EventTypeAssessment {
     public RunwayIncursion(cz.cvut.kbss.inbas.audit.model.RunwayIncursion incursion) {
         super(incursion.getUri());
         lvp = incursion.getLowVisibilityProcedure();
-        this.clearedAircraft = incursion.getClearedAircraft();
+        this.conflictingAircraft = incursion.getConflictingAircraft();
     }
 
     public String getLvp() {
@@ -31,12 +31,12 @@ public class RunwayIncursion extends EventTypeAssessment {
         this.lvp = lvp;
     }
 
-    public Aircraft getClearedAircraft() {
-        return clearedAircraft;
+    public Aircraft getConflictingAircraft() {
+        return conflictingAircraft;
     }
 
-    public void setClearedAircraft(Aircraft clearedAircraft) {
-        this.clearedAircraft = clearedAircraft;
+    public void setConflictingAircraft(Aircraft conflictingAircraft) {
+        this.conflictingAircraft = conflictingAircraft;
     }
 
     public RunwayIntruder getIntruder() {
@@ -52,7 +52,7 @@ public class RunwayIncursion extends EventTypeAssessment {
         return "RunwayIncursionDto{" +
                 "eventType=" + getEventType() +
                 ", lvp='" + lvp + '\'' +
-                ", clearedAircraft=" + clearedAircraft +
+                ", conflictingAircraft=" + conflictingAircraft +
                 ", intruder=" + intruder +
                 "}";
     }

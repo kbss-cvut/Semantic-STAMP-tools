@@ -23,6 +23,11 @@ var RunwayIntruderStep = React.createClass({
             statement: statement
         };
     },
+    componentDidMount: function() {
+        if (this.state.statement.intruder.intruderType) {
+            this.props.enableNext();
+        }
+    },
     onChange: function (e) {
         var value = e.target.value;
         var attributeName = e.target.name;
@@ -33,6 +38,7 @@ var RunwayIntruderStep = React.createClass({
         // Delete old values if present
         assign(this.state.statement, {intruder: {}});
         this.setState(assign(this.state.statement.intruder, {intruderType: e.target.value}));
+        this.props.enableNext();
     },
 
 

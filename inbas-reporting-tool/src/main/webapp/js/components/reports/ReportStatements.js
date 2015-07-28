@@ -83,8 +83,7 @@ var ReportStatements = React.createClass({
     onEditEventTypeAssessment: function (index) {
         var assessment = assign({}, this.props.report.typeAssessments[index]);
         assessment.index = index;
-        var wizardProperties = EventTypeWizardSelector.getWizardSettings(assessment.eventType);
-        wizardProperties.statement = assessment;
+        var wizardProperties = EventTypeWizardSelector.getWizardSettingsForStatement(assessment);
         wizardProperties.onFinish = this.updateEventTypeAssessment;
         this.openWizard(wizardProperties);
     },

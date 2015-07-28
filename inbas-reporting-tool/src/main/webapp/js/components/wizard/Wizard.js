@@ -47,6 +47,34 @@ var Wizard = React.createClass({
             currentStep: this.state.currentStep - 1
         });
     },
+    /**
+     * Insert the specified step after the current one.
+     * @param step The step to insert
+     */
+    onInsertStepAfterCurrent: function (step) {
+        this.props.steps.splice(this.state.currentStep + 1, 0, step);
+    },
+    /**
+     * Adds the specified step to the end of this wizard.
+     * @param step The step to add
+     */
+    onAddStep: function(step) {
+        this.props.steps.push(step);
+    },
+    onRemoveStep: function(stepId) {
+        var stateUpdate = {};
+        for (var i = 0, len = this.props.steps.length; i < len; i++) {
+            if (this.props.steps[i].id === stepId) {
+                this.props.steps.splice(i, 1);
+                if (i === this.state.currentStep) {
+                    stateUpdate.currentStep = this.state.currentStep - 1;
+                }
+                break;
+            }
+        }
+        this.setState(stateUpdate);
+    },
+
 
     render: function () {
         var navMenu = this.initNavMenu();
@@ -87,7 +115,7 @@ var Wizard = React.createClass({
     },
     initComponent: function () {
         var step = this.props.steps[this.state.currentStep];
-        var component = React.createElement(WizardStep, {
+        return React.createElement(WizardStep, {
             key: 'step' + this.state.currentStep,
             onClose: this.props.onClose,
             onFinish: this.state.data.onFinish,
@@ -95,13 +123,15 @@ var Wizard = React.createClass({
             onRetreat: this.onRetreat,
             onNext: step.onNext,
             onPrevious: step.onPrevious,
+            onInsertStepAfterCurrent: this.onInsertStepAfterCurrent,
+            onAddStep: this.onAddStep,
+            onRemoveStep: this.onRemoveStep,
             component: step.component,
             data: this.state.data,
             isFirstStep: this.state.currentStep === 0,
             isLastStep: this.state.currentStep === this.props.steps.length - 1,
             defaultNextDisabled: step.defaultNextDisabled
         });
-        return component;
     }
 });
 
