@@ -37,14 +37,14 @@ var EventTypeWizardSelect = {
         return this.getDefaultWizardProperties(statement);
     },
 
-    getExistingWizardProperties(dtoClass, statement) {
+    getExistingWizardProperties: function(dtoClass, statement) {
         var wizardProperties = assign({}, this.wizardSettings[dtoClass]);
         wizardProperties.steps = wizardProperties.steps.slice();
         wizardProperties.statement = statement;
         return wizardProperties;
     },
 
-    getDefaultWizardProperties(statement) {
+    getDefaultWizardProperties: function(statement) {
         return {
             steps: DefaultWizardSteps.slice(),
             title: 'Default Event Type Assessment',

@@ -10,7 +10,6 @@ var request = require('superagent');
 
 
 var reports = null;
-var keyToReport = {};
 var loaded = false;
 
 function loadReports() {

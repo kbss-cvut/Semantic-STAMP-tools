@@ -13,7 +13,6 @@ var TypeAhead = require('react-typeahead').Typeahead;
 
 var Actions = require('../../../../actions/Actions');
 var EventTypeStore = require('../../../../stores/EventTypeStore');
-var Select = require('../../../Select');
 
 var EventTypeDialog = React.createClass({
     mixins: [Reflux.ListenerMixin],

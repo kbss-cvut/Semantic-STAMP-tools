@@ -6,7 +6,6 @@
 
 var React = require('react');
 var Reflux = require('reflux');
-var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
 var ReportDetail = require('./ReportDetail');

@@ -10,7 +10,6 @@ var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
 var DateTimePicker = require('react-bootstrap-datetimepicker');
 
-var Actions = require('../../../actions/Actions');
 var Utils = require('../../../utils/Utils');
 
 var BasicInfo = React.createClass({

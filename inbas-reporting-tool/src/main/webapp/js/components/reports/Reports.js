@@ -5,18 +5,12 @@
 'use strict';
 
 var React = require('react');
-var assign = require('object-assign');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 var Button = require('react-bootstrap').Button;
 var ProgressBar = require('react-bootstrap').ProgressBar;
 
 var ReportsTable = require('./ReportsTable');
 var ReportDetail = require('./ReportDetail');
-var WizardWindow = require('../wizard/WizardWindow');
-var Actions = require('../../actions/Actions');
-
-// Report wizard steps
-var WizardSteps = require('./wizard/Steps');
 
 var Reports = React.createClass({
     render: function () {
