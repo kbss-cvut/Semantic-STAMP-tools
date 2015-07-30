@@ -36,7 +36,7 @@ var ReportDetail = React.createClass({
         this.props.onChange(attributeName, value);
     },
 
-    onAttributeChange(attribute, value) {
+    onAttributeChange: function(attribute, value) {
         this.props.onChange(attribute, value);
     },
 
