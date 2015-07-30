@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 /**
  * @author ledvima1
  */
-public class EventReport {
+public class OccurrenceReport {
 
     private URI uri;
 
     private String key;
 
-    private Date eventTime;
+    private Date occurrenceTime;
 
     private Date created;
 
@@ -45,13 +45,13 @@ public class EventReport {
 
     private Set<EventTypeAssessment> typeAssessments;
 
-    public EventReport() {
+    public OccurrenceReport() {
     }
 
-    public EventReport(cz.cvut.kbss.inbas.audit.model.EventReport report) {
+    public OccurrenceReport(cz.cvut.kbss.inbas.audit.model.OccurrenceReport report) {
         this.uri = report.getUri();
         this.key = report.getKey();
-        this.eventTime = report.getEventTime();
+        this.occurrenceTime = report.getOccurrenceTime();
         this.created = report.getCreated();
         this.lastEdited = report.getLastEdited();
         this.name = report.getName();
@@ -104,12 +104,12 @@ public class EventReport {
         this.key = key;
     }
 
-    public Date getEventTime() {
-        return eventTime;
+    public Date getOccurrenceTime() {
+        return occurrenceTime;
     }
 
-    public void setEventTime(Date eventTime) {
-        this.eventTime = eventTime;
+    public void setOccurrenceTime(Date occurrenceTime) {
+        this.occurrenceTime = occurrenceTime;
     }
 
     public Date getCreated() {
@@ -202,7 +202,7 @@ public class EventReport {
 
     @Override
     public String toString() {
-        return "EventReport{" +
+        return "OccurrenceReport{" +
                 "uri=" + uri +
                 ", key='" + key + '\'' +
                 ", name='" + name + '\'' +

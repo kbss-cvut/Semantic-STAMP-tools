@@ -22,7 +22,7 @@ var ReportDetailController = React.createClass({
         var isNew = !this.props.params.reportKey;
         return {
             user: UserStore.getCurrentUser(),
-            report: isNew ? {eventTime: Date.now()} : null,
+            report: isNew ? {occurrenceTime: Date.now()} : null,
             loading: !isNew
         }
     },

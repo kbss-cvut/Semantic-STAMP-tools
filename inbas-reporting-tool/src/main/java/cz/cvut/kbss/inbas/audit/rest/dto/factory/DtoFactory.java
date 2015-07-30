@@ -1,15 +1,13 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.factory;
 
-import cz.cvut.kbss.inbas.audit.model.EventTypeAssessment;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.EventReport;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReport;
 
 /**
  * @author ledvima1
  */
 public interface DtoFactory {
 
-    cz.cvut.kbss.inbas.audit.model.EventReport toDomainModel(EventReport dto);
+    cz.cvut.kbss.inbas.audit.model.OccurrenceReport toDomainModel(OccurrenceReport dto);
 
-    EventReport toDto(cz.cvut.kbss.inbas.audit.model.EventReport report);
+    OccurrenceReport toDto(cz.cvut.kbss.inbas.audit.model.OccurrenceReport report);
 }

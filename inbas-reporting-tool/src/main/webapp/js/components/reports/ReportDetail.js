@@ -41,7 +41,7 @@ var ReportDetail = React.createClass({
     },
 
     onDateChange: function (value) {
-        this.props.onChange('eventTime', new Date(Number(value)));
+        this.props.onChange('occurrenceTime', new Date(Number(value)));
     },
 
     onSubmit: function (e) {
@@ -86,7 +86,7 @@ var ReportDetail = React.createClass({
             return (<Alert bsStyle='danger' onDismiss={this.props.onCancel}>
                 <h4>Not Found</h4>
 
-                <p>Event report not found.</p>
+                <p>Occurrence report not found.</p>
 
                 <p>
                     <Button onClick={this.props.onCancel}>Close</Button>
@@ -100,7 +100,7 @@ var ReportDetail = React.createClass({
         var report = this.props.report;
         var loading = this.state.submitting;
         return (
-            <Panel header='Edit Event Report'>
+            <Panel header='Edit Occurrence Report'>
                 <form>
                     <div className='form-group report-detail'>
                         <Input type='text' name='name' value={report.name} onChange={this.onChange}
@@ -109,7 +109,7 @@ var ReportDetail = React.createClass({
 
                     <div className='picker-container form-group report-detail'>
                         <label className='control-label'>Event Time</label>
-                        <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={report.eventTime.toString()}
+                        <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={report.occurrenceTime.toString()}
                                         onChange={this.onDateChange}
                                         inputProps={{title: 'Date and time when the event occurred'}}/>
                     </div>

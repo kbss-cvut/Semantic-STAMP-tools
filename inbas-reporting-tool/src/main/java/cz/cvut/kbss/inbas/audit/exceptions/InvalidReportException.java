@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.exceptions;
 
 /**
- * Exception thrown when an invalid event report is encountered.
+ * Exception thrown when an invalid occurrence report is encountered.
  *
  * @author ledvima1
  */

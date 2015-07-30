@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.services.validation;
 
 import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
-import cz.cvut.kbss.inbas.audit.model.EventReport;
+import cz.cvut.kbss.inbas.audit.model.OccurrenceReport;
 
 /**
  * @author ledvima1
@@ -9,10 +9,10 @@ import cz.cvut.kbss.inbas.audit.model.EventReport;
 public interface ReportValidator {
 
     /**
-     * Validates the specified event report, checking its values.
+     * Validates the specified report, checking its values.
      *
      * @param report The report to validate
      * @throws InvalidReportException When the report is not valid
      */
-    void validateReport(EventReport report) throws InvalidReportException;
+    void validateReport(OccurrenceReport report) throws InvalidReportException;
 }

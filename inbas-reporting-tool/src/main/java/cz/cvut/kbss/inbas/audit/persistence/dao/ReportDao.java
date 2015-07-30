@@ -13,7 +13,7 @@ import java.util.Set;
  * @author ledvima1
  */
 @Repository
-public class ReportDao extends BaseDao<EventReport> {
+public class ReportDao extends BaseDao<OccurrenceReport> {
 
     @Autowired
     private EventTypeDao eventTypeDao;
@@ -22,11 +22,11 @@ public class ReportDao extends BaseDao<EventReport> {
     private OrganizationDao organizationDao;
 
     public ReportDao() {
-        super(EventReport.class);
+        super(OccurrenceReport.class);
     }
 
     @Override
-    public void persist(EventReport entity) {
+    public void persist(OccurrenceReport entity) {
         Objects.requireNonNull(entity);
 
         final EntityManager em = entityManager();
@@ -84,7 +84,7 @@ public class ReportDao extends BaseDao<EventReport> {
     }
 
     @Override
-    public void update(EventReport entity) {
+    public void update(OccurrenceReport entity) {
         Objects.requireNonNull(entity);
 
         final EntityManager em = entityManager();

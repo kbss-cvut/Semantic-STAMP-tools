@@ -37,7 +37,7 @@ var ReportRow = React.createClass({
     },
     render: function () {
         var report = this.props.report;
-        var date = new Date(report.eventTime);
+        var date = new Date(report.occurrenceTime);
         var formattedDate = Utils.formatDate(date);
         // Have to set style directly, class style is overridden by the bootstrap styling
         var verticalAlign = {verticalAlign: 'middle'};
@@ -45,22 +45,24 @@ var ReportRow = React.createClass({
             <tr onDoubleClick={this.onDoubleClick}>
                 <td style={verticalAlign}>{report.name}</td>
                 <td style={verticalAlign}>{formattedDate}</td>
-                <td><CollapsibleText text={report.description}/></td>
+                <td style={verticalAlign}><CollapsibleText text={report.description}/></td>
                 <td style={verticalAlign} className='actions'>
-                    <span className="actions">
-                        <Button bsStyle="primary" bsSize="small" onClick={this.onEditClick}>Edit</Button>
+                    <span className='actions'>
+                        <Button bsStyle='primary' bsSize='small' title='Edit this occurrence report'
+                                onClick={this.onEditClick}>Edit</Button>
                     </span>
-                    <span className="actions">
-                        <Button bsStyle="danger" bsSize="small" onClick={this.onDeleteClick}>Delete</Button>
+                    <span className='actions'>
+                        <Button bsStyle='danger' bsSize='small' title='Delete this occurrence report'
+                                onClick={this.onDeleteClick}>Delete</Button>
                         <Modal show={this.state.modalOpen} onHide={this.onCloseModal}>
                             <Modal.Header closeButton>
-                                <Modal.Title>Delete Event Report?</Modal.Title>
+                                <Modal.Title>Delete Occurrence Report?</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
                                 Are you sure you want to remove this report?
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button bsStyle="primary" onClick={this.removeReport}>Delete</Button>
+                                <Button bsStyle='primary' onClick={this.removeReport}>Delete</Button>
                                 <Button onClick={this.onCloseModal}>Cancel</Button>
                             </Modal.Footer>
                         </Modal>

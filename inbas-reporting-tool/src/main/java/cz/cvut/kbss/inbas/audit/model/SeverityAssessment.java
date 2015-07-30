@@ -16,7 +16,7 @@ public class SeverityAssessment implements ReportingStatement {
     private URI uri;
 
     @OWLDataProperty(iri = Vocabulary.p_severityLevel)
-    private EventSeverity severity;
+    private OccurrenceSeverity severity;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
     private Set<Resource> resources;
@@ -29,11 +29,11 @@ public class SeverityAssessment implements ReportingStatement {
         this.uri = uri;
     }
 
-    public EventSeverity getSeverity() {
+    public OccurrenceSeverity getSeverity() {
         return severity;
     }
 
-    public void setSeverity(EventSeverity severity) {
+    public void setSeverity(OccurrenceSeverity severity) {
         this.severity = severity;
     }
 

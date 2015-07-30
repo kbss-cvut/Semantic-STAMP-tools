@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
-import cz.cvut.kbss.inbas.audit.model.EventReport;
+import cz.cvut.kbss.inbas.audit.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class BaseDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void existsForExistingInstanceReturnsTrue() throws Exception {
-        final EventReport report = new EventReport();
+        final OccurrenceReport report = new OccurrenceReport();
         dao.persist(report);
         assertNotNull(report.getUri());
         assertTrue(dao.exists(report.getUri()));

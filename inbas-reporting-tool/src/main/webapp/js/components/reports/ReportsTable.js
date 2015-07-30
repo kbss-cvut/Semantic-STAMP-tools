@@ -12,15 +12,15 @@ var ReportRow = require('./ReportRow');
 
 var ReportsTable = React.createClass({
     render: function () {
-        var title = <h3>Reports</h3>;
+        var title = <h3>Occurrence Reports</h3>;
         var reports = this.prepareReports();
         return (<div>
             <Panel header={title}>
                 <Table striped bordered condensed hover>
                     <thead>
                     <tr>
-                        <th className='col-xs-2'>Event name</th>
-                        <th className='col-xs-2'>Event date</th>
+                        <th className='col-xs-2'>Occurrence name</th>
+                        <th className='col-xs-2'>Occurrence date</th>
                         <th className='col-xs-6'>Description</th>
                         <th className='col-xs-2'>Actions</th>
                     </tr>

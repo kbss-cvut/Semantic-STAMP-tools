@@ -48,7 +48,7 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
 
     @Test
     public void eventTypeAssessmentsWithRunwayIncursionAreDeletedWhenRemovedFromReport() throws Exception {
-        final EventReport reportWithIncursion = persistReportWithIncursion();
+        final OccurrenceReport reportWithIncursion = persistReportWithIncursion();
         assertNotNull(reportWithIncursion.getKey());
         final List<EventTypeAssessment> removed = new ArrayList<>();
         final Iterator<EventTypeAssessment> it = reportWithIncursion.getTypeAssessments().iterator();
@@ -62,17 +62,17 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
         reportService.update(reportWithIncursion);
 
         // Check there is no incursion and no leftovers
-        final EventReport result = reportService.findByKey(reportWithIncursion.getKey());
+        final OccurrenceReport result = reportService.findByKey(reportWithIncursion.getKey());
         assertNotNull(result);
         assertEquals(reportWithIncursion.getTypeAssessments().size(), result.getTypeAssessments().size());
         verifyStatementsDeleted(removed, Vocabulary.EventTypeAssessment);
         verifyNoIncursionLeftoversArePresent();
     }
 
-    private EventReport persistReportWithIncursion() {
-        final EventReport report = new EventReport();
+    private OccurrenceReport persistReportWithIncursion() {
+        final OccurrenceReport report = new OccurrenceReport();
         report.setAuthor(author);
-        report.setEventTime(new Date());
+        report.setOccurrenceTime(new Date());
         report.setDescription("test report");
         final EventTypeAssessment one = new EventTypeAssessment();
         one.setEventType(new EventType(URI.create("http://krizik.felk.cvut.cz/ontologies/eventTypes#Incursion")));
@@ -121,7 +121,7 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
 
     @Test
     public void generalEventTypeAssessmentIsRemovedWhenMissingInUpdatedReport() throws Exception {
-        final EventReport report = persistReportWithIncursion();
+        final OccurrenceReport report = persistReportWithIncursion();
         final List<EventTypeAssessment> removed = new ArrayList<>();
         final Iterator<EventTypeAssessment> it = report.getTypeAssessments().iterator();
         while (it.hasNext()) {
@@ -133,7 +133,7 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
         }
         reportService.update(report);
 
-        final EventReport res = reportService.find(report.getUri());
+        final OccurrenceReport res = reportService.find(report.getUri());
         assertNotNull(res);
         assertEquals(report.getTypeAssessments().size(), res.getTypeAssessments().size());
         verifyStatementsDeleted(removed, Vocabulary.EventTypeAssessment);
@@ -141,7 +141,7 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
 
     @Test
     public void correctiveMeasureIsRemovedWhenMissingInUpdatedReport() throws Exception {
-        final EventReport report = persistReportWithCorrectiveMeasure();
+        final OccurrenceReport report = persistReportWithCorrectiveMeasure();
         boolean remove = false;
         final List<CorrectiveMeasure> removed = new ArrayList<>();
         final Iterator<CorrectiveMeasure> it = report.getCorrectiveMeasures().iterator();
@@ -155,16 +155,16 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
         }
         reportService.update(report);
 
-        final EventReport res = reportService.find(report.getUri());
+        final OccurrenceReport res = reportService.find(report.getUri());
         assertNotNull(res);
         assertEquals(report.getCorrectiveMeasures().size(), res.getCorrectiveMeasures().size());
         verifyStatementsDeleted(removed, Vocabulary.CorrectiveMeasure);
     }
 
-    private EventReport persistReportWithCorrectiveMeasure() {
-        final EventReport report = new EventReport();
+    private OccurrenceReport persistReportWithCorrectiveMeasure() {
+        final OccurrenceReport report = new OccurrenceReport();
         report.setAuthor(author);
-        report.setEventTime(new Date());
+        report.setOccurrenceTime(new Date());
         report.setDescription("test report");
         final CorrectiveMeasure mOne = new CorrectiveMeasure();
         mOne.setDescription("Corrective measure one");

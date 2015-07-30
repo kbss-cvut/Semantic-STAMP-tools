@@ -14,8 +14,8 @@ import java.util.Set;
 /**
  * @author ledvima1
  */
-@OWLClass(iri = Vocabulary.EventReport)
-public class EventReport implements HasOwlKey {
+@OWLClass(iri = Vocabulary.OccurrenceReport)
+public class OccurrenceReport implements HasOwlKey {
 
     @Id(generated = true)
     private URI uri;
@@ -23,8 +23,8 @@ public class EventReport implements HasOwlKey {
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
 
-    @OWLDataProperty(iri = Vocabulary.p_date)
-    private Date eventTime;
+    @OWLDataProperty(iri = Vocabulary.p_occurrenceTime)
+    private Date occurrenceTime;
 
     @OWLDataProperty(iri = Vocabulary.p_dateCreated)
     private Date created;
@@ -67,12 +67,12 @@ public class EventReport implements HasOwlKey {
         this.uri = uri;
     }
 
-    public Date getEventTime() {
-        return eventTime;
+    public Date getOccurrenceTime() {
+        return occurrenceTime;
     }
 
-    public void setEventTime(Date eventTime) {
-        this.eventTime = eventTime;
+    public void setOccurrenceTime(Date occurrenceTime) {
+        this.occurrenceTime = occurrenceTime;
     }
 
     public Date getCreated() {
@@ -191,7 +191,7 @@ public class EventReport implements HasOwlKey {
 
     @Override
     public String toString() {
-        return "EventReport{" +
+        return "OccurrenceReport{" +
                 "uri=" + uri +
                 ", name=" + name +
                 ", key=" + key +

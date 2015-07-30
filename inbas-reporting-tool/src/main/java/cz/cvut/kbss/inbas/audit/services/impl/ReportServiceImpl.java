@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.services.impl;
 
 import cz.cvut.kbss.inbas.audit.model.CorrectiveMeasure;
-import cz.cvut.kbss.inbas.audit.model.EventReport;
+import cz.cvut.kbss.inbas.audit.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.persistence.dao.*;
 import cz.cvut.kbss.inbas.audit.services.ReportService;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author ledvima1
  */
 @Service
-public class ReportServiceImpl extends BaseService<EventReport> implements ReportService {
+public class ReportServiceImpl extends BaseService<OccurrenceReport> implements ReportService {
 
     @Autowired
     private ReportValidator reportValidator;
@@ -38,17 +38,17 @@ public class ReportServiceImpl extends BaseService<EventReport> implements Repor
     private SeverityAssessmentDao severityAssessmentDao;
 
     @Override
-    protected GenericDao<EventReport> getPrimaryDao() {
+    protected GenericDao<OccurrenceReport> getPrimaryDao() {
         return reportDao;
     }
 
     @Override
-    public EventReport findByKey(String key) {
+    public OccurrenceReport findByKey(String key) {
         return reportDao.findByKey(key);
     }
 
     @Override
-    public void persist(EventReport report) {
+    public void persist(OccurrenceReport report) {
         reportValidator.validateReport(report);
         report.setCreated(new Date());
         report.setLastEdited(new Date());
@@ -56,25 +56,25 @@ public class ReportServiceImpl extends BaseService<EventReport> implements Repor
     }
 
     @Override
-    public void update(EventReport report) {
+    public void update(OccurrenceReport report) {
         if (report.getUri() == null || report.getKey() == null) {
             throw new IllegalArgumentException("Updated report missing URI or key. " + report);
         }
         reportValidator.validateReport(report);
         report.setLastEdited(new Date());
-        final EventReport original = reportDao.findByUri(report.getUri());
+        final OccurrenceReport original = reportDao.findByUri(report.getUri());
         assert original != null;
         deleteObsoleteStatements(report, original);
         reportDao.update(report);
     }
 
-    private void deleteObsoleteStatements(EventReport updated, EventReport original) {
+    private void deleteObsoleteStatements(OccurrenceReport updated, OccurrenceReport original) {
         removeObsoleteEventTypeAssessments(updated, original);
         removeObsoleteCorrectiveMeasures(updated, original);
         removeObsoleteSeverityAssessment(updated, original);
     }
 
-    private void removeObsoleteEventTypeAssessments(EventReport updated, EventReport original) {
+    private void removeObsoleteEventTypeAssessments(OccurrenceReport updated, OccurrenceReport original) {
         if (original.getTypeAssessments() != null) {
             // We have to use ids, because the entities don't override equals/hashCode
             final Set<URI> updatedIds =
@@ -89,7 +89,7 @@ public class ReportServiceImpl extends BaseService<EventReport> implements Repor
         }
     }
 
-    private void removeObsoleteCorrectiveMeasures(EventReport updated, EventReport original) {
+    private void removeObsoleteCorrectiveMeasures(OccurrenceReport updated, OccurrenceReport original) {
         if (original.getCorrectiveMeasures() != null) {
             // We have to use ids, because the entities don't override equals/hashCode
             final Set<URI> updatedIds =
@@ -103,7 +103,7 @@ public class ReportServiceImpl extends BaseService<EventReport> implements Repor
         }
     }
 
-    private void removeObsoleteSeverityAssessment(EventReport updated, EventReport original) {
+    private void removeObsoleteSeverityAssessment(OccurrenceReport updated, OccurrenceReport original) {
         if (original.getSeverityAssessment() != null && updated.getSeverityAssessment() == null) {
             severityAssessmentDao.remove(original.getSeverityAssessment());
         }

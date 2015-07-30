@@ -11,7 +11,7 @@ var Select = require('../Select');
 var Actions = require('../../actions/Actions');
 var OptionsStore = require('../../stores/OptionsStore');
 
-var EventSeverity = React.createClass({
+var OccurrenceSeverity = React.createClass({
     mixins: [Reflux.ListenerMixin],
     getInitialState: function () {
         return {
@@ -22,7 +22,7 @@ var EventSeverity = React.createClass({
 
     componentDidMount: function () {
         this.listenTo(OptionsStore, this.onSeveritiesLoaded);
-        Actions.loadEventSeverityOptions();
+        Actions.loadOccurrenceSeverityOptions();
     },
 
     onSeveritiesLoaded: function (severities) {
@@ -42,10 +42,10 @@ var EventSeverity = React.createClass({
 
     render: function () {
         return (
-            <Select label='Event Severity Assessment' value={this.state.severity} options={this.state.options}
+            <Select label='Occurrence Severity Assessment' value={this.state.severity} options={this.state.options}
                     onChange={this.onChange}/>
         )
     }
 });
 
-module.exports = EventSeverity;
+module.exports = OccurrenceSeverity;

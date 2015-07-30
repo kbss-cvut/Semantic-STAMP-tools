@@ -19,7 +19,7 @@ public class EventTypeAssessment implements ReportingStatement {
     private EventType eventType;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEvent, fetch = FetchType.EAGER)
-    private EventReport eventReport;
+    private OccurrenceReport occurrenceReport;
 
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
@@ -46,12 +46,12 @@ public class EventTypeAssessment implements ReportingStatement {
         this.eventType = eventType;
     }
 
-    public EventReport getEventReport() {
-        return eventReport;
+    public OccurrenceReport getOccurrenceReport() {
+        return occurrenceReport;
     }
 
-    public void setEventReport(EventReport eventReport) {
-        this.eventReport = eventReport;
+    public void setOccurrenceReport(OccurrenceReport occurrenceReport) {
+        this.occurrenceReport = occurrenceReport;
     }
 
     public String getDescription() {

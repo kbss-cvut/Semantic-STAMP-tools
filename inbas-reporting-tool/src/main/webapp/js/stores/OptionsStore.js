@@ -10,12 +10,12 @@ var request = require('superagent');
 var Actions = require('../actions/Actions');
 
 var lvpOptions = [];
-var eventSeverityOptions = [];
+var occurrenceSeverityOptions = [];
 
 var OptionsStore = Reflux.createStore({
     init: function() {
         this.listenTo(Actions.loadLvpOptions, this.onLoadLvpOptions);
-        this.listenTo(Actions.loadEventSeverityOptions, this.onLoadEventSeverityOptions);
+        this.listenTo(Actions.loadOccurrenceSeverityOptions, this.onLoadOccurrenceSeverityOptions);
     },
 
     onLoadLvpOptions: function() {
@@ -39,18 +39,18 @@ var OptionsStore = Reflux.createStore({
         }
     },
 
-    onLoadEventSeverityOptions: function() {
-        if (eventSeverityOptions.length !== 0) {
-            this.trigger(eventSeverityOptions);
+    onLoadOccurrenceSeverityOptions: function() {
+        if (occurrenceSeverityOptions.length !== 0) {
+            this.trigger(occurrenceSeverityOptions);
             return;
         }
-        request('rest/options/eventSeverity').accept('json').end(function(err, resp) {
+        request('rest/options/occurrenceSeverity').accept('json').end(function(err, resp) {
             if (err) {
-                this.onLoadingError(err, 'Event severity');
+                this.onLoadingError(err, 'Occurrence severity');
             } else {
-                eventSeverityOptions = resp.body;
+                occurrenceSeverityOptions = resp.body;
             }
-            this.trigger(eventSeverityOptions);
+            this.trigger(occurrenceSeverityOptions);
         }.bind(this));
     }
 });

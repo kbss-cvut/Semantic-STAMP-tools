@@ -1,10 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.factory;
 
-import cz.cvut.kbss.inbas.audit.model.Aircraft;
-import cz.cvut.kbss.inbas.audit.model.Organization;
-import cz.cvut.kbss.inbas.audit.model.PersonIntruder;
-import cz.cvut.kbss.inbas.audit.model.Vehicle;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.EventReport;
+import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEvent;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.AircraftIntruder;
@@ -23,15 +20,15 @@ import java.util.stream.Collectors;
 public class DtoFactoryImpl implements DtoFactory {
 
     @Override
-    public cz.cvut.kbss.inbas.audit.model.EventReport toDomainModel(EventReport dto) {
-        final cz.cvut.kbss.inbas.audit.model.EventReport report = new cz.cvut.kbss.inbas.audit.model.EventReport();
+    public cz.cvut.kbss.inbas.audit.model.OccurrenceReport toDomainModel(OccurrenceReport dto) {
+        final cz.cvut.kbss.inbas.audit.model.OccurrenceReport report = new cz.cvut.kbss.inbas.audit.model.OccurrenceReport();
         report.setUri(dto.getUri());
         report.setKey(dto.getKey());
         report.setLastEdited(dto.getLastEdited());
         report.setLastEditedBy(dto.getLastEditedBy());
         report.setCreated(dto.getCreated());
         report.setDescription(dto.getDescription());
-        report.setEventTime(dto.getEventTime());
+        report.setOccurrenceTime(dto.getOccurrenceTime());
         report.setAuthor(dto.getAuthor());
         report.setCorrectiveMeasures(dto.getCorrectiveMeasures());
         report.setFactors(dto.getFactors());
@@ -112,7 +109,7 @@ public class DtoFactoryImpl implements DtoFactory {
     }
 
     @Override
-    public EventReport toDto(cz.cvut.kbss.inbas.audit.model.EventReport report) {
-        return new EventReport(report);
+    public OccurrenceReport toDto(cz.cvut.kbss.inbas.audit.model.OccurrenceReport report) {
+        return new OccurrenceReport(report);
     }
 }
