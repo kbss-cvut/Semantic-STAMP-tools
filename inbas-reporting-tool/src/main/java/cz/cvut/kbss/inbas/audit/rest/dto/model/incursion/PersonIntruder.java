@@ -14,8 +14,8 @@ public class PersonIntruder extends RunwayIntruder {
     public PersonIntruder() {
     }
 
-    public PersonIntruder(cz.cvut.kbss.inbas.audit.model.PersonIntruder intruder) {
-        super(intruder.getUri(), cz.cvut.kbss.inbas.audit.model.PersonIntruder.INTRUDER_TYPE);
+    public PersonIntruder(cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder intruder) {
+        super(intruder.getUri(), cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder.INTRUDER_TYPE);
         this.category = intruder.getCategory();
         this.organization = intruder.getOrganization() != null ? intruder.getOrganization().getName() : null;
         this.wasDoing = intruder.getWhatWasDoing();

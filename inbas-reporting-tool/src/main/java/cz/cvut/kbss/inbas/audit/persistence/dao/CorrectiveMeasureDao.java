@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
-import cz.cvut.kbss.inbas.audit.model.CorrectiveMeasure;
+import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.model;
+package cz.cvut.kbss.inbas.audit.model.reports;
 
 /**
  * TODO Define proper event severity levels

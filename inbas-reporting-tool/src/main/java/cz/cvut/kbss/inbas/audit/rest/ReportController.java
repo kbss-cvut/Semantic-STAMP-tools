@@ -32,7 +32,7 @@ public class ReportController {
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<OccurrenceReport> getAllReports() {
-        final Collection<cz.cvut.kbss.inbas.audit.model.OccurrenceReport> reports = reportService.findAll();
+        final Collection<cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport> reports = reportService.findAll();
         if (reports.isEmpty()) {
             throw new NotFoundException("No reports found.");
         }
@@ -44,8 +44,8 @@ public class ReportController {
         return dtoFactory.toDto(getOccurrenceReport(key));
     }
 
-    private cz.cvut.kbss.inbas.audit.model.OccurrenceReport getOccurrenceReport(String key) {
-        final cz.cvut.kbss.inbas.audit.model.OccurrenceReport original = reportService.findByKey(key);
+    private cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport getOccurrenceReport(String key) {
+        final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport original = reportService.findByKey(key);
         if (original == null) {
             throw NotFoundException.create("Report", key);
         }
@@ -55,7 +55,7 @@ public class ReportController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void createReport(@RequestBody OccurrenceReport report) {
-        final cz.cvut.kbss.inbas.audit.model.OccurrenceReport occurrenceReport = dtoFactory.toDomainModel(report);
+        final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport occurrenceReport = dtoFactory.toDomainModel(report);
         assert occurrenceReport != null;
         reportService.persist(occurrenceReport);
         if (LOG.isDebugEnabled()) {
@@ -66,8 +66,8 @@ public class ReportController {
     @RequestMapping(method = RequestMethod.PUT, value = "/{key}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateReport(@PathVariable("key") String key, @RequestBody OccurrenceReport report) {
-        final cz.cvut.kbss.inbas.audit.model.OccurrenceReport original = getOccurrenceReport(key);
-        final cz.cvut.kbss.inbas.audit.model.OccurrenceReport update = dtoFactory.toDomainModel(report);
+        final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport original = getOccurrenceReport(key);
+        final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport update = dtoFactory.toDomainModel(report);
         validateReportForUpdate(original, update);
         reportService.update(update);
         if (LOG.isDebugEnabled()) {
@@ -75,7 +75,7 @@ public class ReportController {
         }
     }
 
-    private void validateReportForUpdate(cz.cvut.kbss.inbas.audit.model.OccurrenceReport original, cz.cvut.kbss.inbas.audit.model.OccurrenceReport update) {
+    private void validateReportForUpdate(cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport original, cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport update) {
         if (!original.getUri().equals(update.getUri())) {
             throw new InvalidReportException(
                     "The updated report URI " + update.getUri() + " is different from the original URI " + original
@@ -91,7 +91,7 @@ public class ReportController {
     @RequestMapping(method = RequestMethod.DELETE, value = "/{key}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReport(@PathVariable("key") String key) {
-        final cz.cvut.kbss.inbas.audit.model.OccurrenceReport report = getOccurrenceReport(key);
+        final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport report = getOccurrenceReport(key);
         reportService.remove(report);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Deleted report {}.", report.getUri());

@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import cz.cvut.kbss.inbas.audit.model.EventType;
+import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 
 import java.net.URI;
 

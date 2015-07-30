@@ -1,6 +1,9 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.factory;
 
 import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEvent;
@@ -20,8 +23,8 @@ import java.util.stream.Collectors;
 public class DtoFactoryImpl implements DtoFactory {
 
     @Override
-    public cz.cvut.kbss.inbas.audit.model.OccurrenceReport toDomainModel(OccurrenceReport dto) {
-        final cz.cvut.kbss.inbas.audit.model.OccurrenceReport report = new cz.cvut.kbss.inbas.audit.model.OccurrenceReport();
+    public cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport toDomainModel(OccurrenceReport dto) {
+        final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport report = new cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport();
         report.setUri(dto.getUri());
         report.setKey(dto.getKey());
         report.setLastEdited(dto.getLastEdited());
@@ -36,7 +39,7 @@ public class DtoFactoryImpl implements DtoFactory {
         report.setResource(dto.getResource());
         report.setSeverityAssessment(dto.getSeverityAssessment());
         if (dto.getTypeAssessments() != null) {
-            final Set<cz.cvut.kbss.inbas.audit.model.EventTypeAssessment> assessments = new HashSet<>(
+            final Set<cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment> assessments = new HashSet<>(
                     dto.getTypeAssessments().size());
             assessments.addAll(dto.getTypeAssessments().stream().map(this::toDomainModel).collect(Collectors.toList()));
             report.setTypeAssessments(assessments);
@@ -44,8 +47,8 @@ public class DtoFactoryImpl implements DtoFactory {
         return report;
     }
 
-    public cz.cvut.kbss.inbas.audit.model.EventTypeAssessment toDomainModel(EventTypeAssessment assessment) {
-        final cz.cvut.kbss.inbas.audit.model.EventTypeAssessment typeAssessment = new cz.cvut.kbss.inbas.audit.model.EventTypeAssessment();
+    public cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment toDomainModel(EventTypeAssessment assessment) {
+        final cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment typeAssessment = new cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment();
         typeAssessment.setEventType(assessment.getEventType());
         if (assessment instanceof GeneralEvent) {
             typeAssessment.setDescription(((GeneralEvent) assessment).getDescription());
@@ -53,12 +56,12 @@ public class DtoFactoryImpl implements DtoFactory {
         }
         final RunwayIncursion dto = (RunwayIncursion) assessment;
         typeAssessment.setEventType(dto.getEventType());
-        final cz.cvut.kbss.inbas.audit.model.RunwayIncursion ri = new cz.cvut.kbss.inbas.audit.model.RunwayIncursion();
+        final cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion ri = new cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion();
         typeAssessment.setRunwayIncursion(ri);
         ri.setLowVisibilityProcedure(dto.getLvp());
         ri.setLocation(dto.getLocation());
         ri.setConflictingAircraft(dto.getConflictingAircraft());
-        final cz.cvut.kbss.inbas.audit.model.Intruder intruder = new cz.cvut.kbss.inbas.audit.model.Intruder();
+        final Intruder intruder = new Intruder();
         ri.setIntruder(intruder);
         switch (dto.getIntruder().getIntruderType()) {
             case "aircraft":
@@ -109,7 +112,7 @@ public class DtoFactoryImpl implements DtoFactory {
     }
 
     @Override
-    public OccurrenceReport toDto(cz.cvut.kbss.inbas.audit.model.OccurrenceReport report) {
+    public OccurrenceReport toDto(cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport report) {
         return new OccurrenceReport(report);
     }
 }

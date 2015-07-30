@@ -7,7 +7,7 @@ import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReport;
  */
 public interface DtoFactory {
 
-    cz.cvut.kbss.inbas.audit.model.OccurrenceReport toDomainModel(OccurrenceReport dto);
+    cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport toDomainModel(OccurrenceReport dto);
 
-    OccurrenceReport toDto(cz.cvut.kbss.inbas.audit.model.OccurrenceReport report);
+    OccurrenceReport toDto(cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport report);
 }

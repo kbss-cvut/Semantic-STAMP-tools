@@ -2,7 +2,7 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Location;
-import cz.cvut.kbss.inbas.audit.model.LowVisibilityProcedure;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 
 /**
@@ -21,7 +21,7 @@ public class RunwayIncursion extends EventTypeAssessment {
     public RunwayIncursion() {
     }
 
-    public RunwayIncursion(cz.cvut.kbss.inbas.audit.model.RunwayIncursion incursion) {
+    public RunwayIncursion(cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion incursion) {
         super(incursion.getUri());
         lvp = incursion.getLowVisibilityProcedure();
         this.location = incursion.getLocation();

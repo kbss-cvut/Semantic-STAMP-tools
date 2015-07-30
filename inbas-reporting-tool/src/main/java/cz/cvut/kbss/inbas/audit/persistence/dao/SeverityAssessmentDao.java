@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
-import cz.cvut.kbss.inbas.audit.model.SeverityAssessment;
+import cz.cvut.kbss.inbas.audit.model.reports.SeverityAssessment;
 import org.springframework.stereotype.Repository;
 
 /**

@@ -1,6 +1,9 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model;
 
 import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
+import cz.cvut.kbss.inbas.audit.model.reports.SeverityAssessment;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.AircraftIntruder;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIntruder;
@@ -48,7 +51,7 @@ public class OccurrenceReport {
     public OccurrenceReport() {
     }
 
-    public OccurrenceReport(cz.cvut.kbss.inbas.audit.model.OccurrenceReport report) {
+    public OccurrenceReport(cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport report) {
         this.uri = report.getUri();
         this.key = report.getKey();
         this.occurrenceTime = report.getOccurrenceTime();
@@ -77,7 +80,7 @@ public class OccurrenceReport {
         }
     }
 
-    private RunwayIntruder getIntruder(cz.cvut.kbss.inbas.audit.model.Intruder intruder) {
+    private RunwayIntruder getIntruder(Intruder intruder) {
         if (intruder.getAircraft() != null) {
             return new AircraftIntruder(intruder.getAircraft());
         } else if (intruder.getVehicle() != null) {

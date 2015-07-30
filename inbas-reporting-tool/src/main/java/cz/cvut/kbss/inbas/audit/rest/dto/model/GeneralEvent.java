@@ -18,7 +18,7 @@ public class GeneralEvent extends EventTypeAssessment {
     public GeneralEvent() {
     }
 
-    public GeneralEvent(cz.cvut.kbss.inbas.audit.model.EventTypeAssessment assessment) {
+    public GeneralEvent(cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment assessment) {
         super(assessment.getUri());
         this.eventType = assessment.getEventType();
         this.description = assessment.getDescription();

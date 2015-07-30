@@ -1,6 +1,10 @@
 package cz.cvut.kbss.inbas.audit.services.impl;
 
 import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.model.reports.*;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.services.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.audit.services.PersonService;
 import cz.cvut.kbss.inbas.audit.services.ReportService;

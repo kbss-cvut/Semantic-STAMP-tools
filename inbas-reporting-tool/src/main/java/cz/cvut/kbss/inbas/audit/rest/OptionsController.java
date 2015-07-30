@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
-import cz.cvut.kbss.inbas.audit.model.OccurrenceSeverity;
-import cz.cvut.kbss.inbas.audit.model.LowVisibilityProcedure;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

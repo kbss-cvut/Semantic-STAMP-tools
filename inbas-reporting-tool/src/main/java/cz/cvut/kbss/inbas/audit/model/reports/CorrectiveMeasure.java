@@ -1,5 +1,6 @@
-package cz.cvut.kbss.inbas.audit.model;
+package cz.cvut.kbss.inbas.audit.model.reports;
 
+import cz.cvut.kbss.inbas.audit.model.Resource;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -9,14 +10,14 @@ import java.util.Set;
 /**
  * @author ledvima1
  */
-@OWLClass(iri = Vocabulary.SeverityAssessment)
-public class SeverityAssessment implements ReportingStatement {
+@OWLClass(iri = Vocabulary.CorrectiveMeasure)
+public class CorrectiveMeasure implements ReportingStatement {
 
     @Id(generated = true)
-    private URI uri;
+    URI uri;
 
-    @OWLDataProperty(iri = Vocabulary.p_severityLevel)
-    private OccurrenceSeverity severity;
+    @OWLDataProperty(iri = Vocabulary.p_description)
+    private String description;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
     private Set<Resource> resources;
@@ -29,12 +30,12 @@ public class SeverityAssessment implements ReportingStatement {
         this.uri = uri;
     }
 
-    public OccurrenceSeverity getSeverity() {
-        return severity;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSeverity(OccurrenceSeverity severity) {
-        this.severity = severity;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -48,9 +49,9 @@ public class SeverityAssessment implements ReportingStatement {
 
     @Override
     public String toString() {
-        return "SeverityAssessment{" +
+        return "CorrectiveMeasure{" +
                 "uri=" + uri +
-                ", severity=" + severity +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

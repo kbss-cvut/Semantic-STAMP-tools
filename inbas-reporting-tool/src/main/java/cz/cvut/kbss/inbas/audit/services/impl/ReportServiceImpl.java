@@ -1,8 +1,8 @@
 package cz.cvut.kbss.inbas.audit.services.impl;
 
-import cz.cvut.kbss.inbas.audit.model.CorrectiveMeasure;
-import cz.cvut.kbss.inbas.audit.model.OccurrenceReport;
-import cz.cvut.kbss.inbas.audit.model.EventTypeAssessment;
+import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.persistence.dao.*;
 import cz.cvut.kbss.inbas.audit.services.ReportService;
 import cz.cvut.kbss.inbas.audit.services.validation.ReportValidator;

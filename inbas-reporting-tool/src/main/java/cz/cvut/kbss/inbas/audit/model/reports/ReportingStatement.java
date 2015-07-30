@@ -1,4 +1,6 @@
-package cz.cvut.kbss.inbas.audit.model;
+package cz.cvut.kbss.inbas.audit.model.reports;
+
+import cz.cvut.kbss.inbas.audit.model.Resource;
 
 import java.net.URI;
 import java.util.Set;

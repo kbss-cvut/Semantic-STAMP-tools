@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
-import cz.cvut.kbss.inbas.audit.model.Vehicle;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 
 /**
  * @author ledvima1

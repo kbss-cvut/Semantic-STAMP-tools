@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
-import cz.cvut.kbss.inbas.audit.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
