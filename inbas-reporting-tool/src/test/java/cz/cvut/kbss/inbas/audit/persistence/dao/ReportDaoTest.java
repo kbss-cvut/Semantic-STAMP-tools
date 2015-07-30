@@ -1,7 +1,10 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
-import cz.cvut.kbss.inbas.audit.model.*;
-import cz.cvut.kbss.inbas.audit.model.reports.*;
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.Organization;
+import cz.cvut.kbss.inbas.audit.model.reports.EventType;
+import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
