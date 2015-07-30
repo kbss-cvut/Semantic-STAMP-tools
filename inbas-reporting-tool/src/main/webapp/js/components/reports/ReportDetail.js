@@ -16,7 +16,7 @@ var DateTimePicker = require('react-bootstrap-datetimepicker');
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
 var ReportStatements = require('./ReportStatements');
-var EventSeverity = require('./EventSeverity');
+var OccurrenceSeverity = require('./OccurrenceSeverity');
 
 var ReportDetail = React.createClass({
     getInitialState: function () {
@@ -115,7 +115,7 @@ var ReportDetail = React.createClass({
                     </div>
 
                     <div className='form-group report-detail'>
-                        <EventSeverity onChange={this.onAttributeChange}
+                        <OccurrenceSeverity onChange={this.onAttributeChange}
                                        severityAssessment={report.severityAssessment}/>
                     </div>
 

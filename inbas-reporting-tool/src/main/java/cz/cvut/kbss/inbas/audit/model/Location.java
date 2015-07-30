@@ -11,13 +11,15 @@ import java.net.URI;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.Location)
-public class Location {
+public class Location implements HasDerivableUri {
 
-    @Id(generated = true)
+    private static final String BASE = "http://onto.fel.cvut.cz/ontologies/aviation-safety/";
+
+    @Id
     private URI uri;
 
-    @OWLDataProperty(iri = Vocabulary.p_simpleLocation)
-    private String location;
+    @OWLDataProperty(iri = Vocabulary.p_label)
+    private String name;
 
     public URI getUri() {
         return uri;
@@ -27,16 +29,40 @@ public class Location {
         this.uri = uri;
     }
 
-    public String getLocation() {
-        return location;
+    public String getName() {
+        return name;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void generateUri() {
+        this.uri = URI.create(BASE + name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Location location = (Location) o;
+
+        if (uri != null ? !uri.equals(location.uri) : location.uri != null) return false;
+        return !(name != null ? !name.equals(location.name) : location.name != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = uri != null ? uri.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
-        return "Location=" + location;
+        return "Location=" + uri;
     }
 }

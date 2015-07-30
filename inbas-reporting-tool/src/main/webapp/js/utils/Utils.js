@@ -1,6 +1,18 @@
 /**
- * Created by ledvima1 on 11.6.15.
+ * @author ledvima1
  */
+    'use strict';
+
+/**
+ * Common propositions that should not be capitalized
+ */
+var PROPOSITIONS = [
+    'a', 'about', 'across', 'after', 'along', 'among', 'an', 'around', 'as', 'aside', 'at', 'before', 'behind', 'below',
+    'beneath', 'beside', 'besides', 'between', 'beyond', 'but', 'by', 'for', 'given', 'in', 'inside', 'into', 'like', 'near',
+    'of', 'off', 'on', 'onto', 'outside', 'over', 'since', 'than', 'through', 'to', 'until', 'up', 'via', 'with', 'within',
+    'without'
+];
+var WORD_LENGTH_THRESHOLD = 4;
 
 var Utils = {
     /**
@@ -21,11 +33,24 @@ var Utils = {
     /**
      * Returns a Java constant (uppercase with underscores) as a nicer string.
      *
-     * Replaces underscores with spaces.
+     * Replaces underscores with spaces. And if capitalize is selected, capitalizes the words.
      */
-    constantToString: function(constant) {
-        return constant.replace(/_/g, ' ');
-        //return words.charAt(0) + words.substring(1).toLowerCase();
+    constantToString: function(constant, capitalize) {
+        if (!capitalize) {
+            return constant.replace(/_/g, ' ');
+        }
+        var words = constant.split('_');
+        for (var i = 0, len = words.length; i < len; i++) {
+            var word = words[i];
+            if (word.length < WORD_LENGTH_THRESHOLD) {
+                if (PROPOSITIONS.indexOf(word) === -1) {
+                    continue;
+                }
+                words[i] = word.toLowerCase();
+            }
+            words[i] = word.charAt(0) + word.substring(1).toLowerCase();
+        }
+        return words.join(' ');
     }
 };
 

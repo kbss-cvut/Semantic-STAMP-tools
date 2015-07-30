@@ -5,8 +5,6 @@ import cz.cvut.kbss.inbas.audit.rest.dto.factory.DtoFactory;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.services.ReportService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,9 +18,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/reports")
-public class ReportController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ReportController.class);
+public class ReportController extends BaseController {
 
     @Autowired
     private ReportService reportService;

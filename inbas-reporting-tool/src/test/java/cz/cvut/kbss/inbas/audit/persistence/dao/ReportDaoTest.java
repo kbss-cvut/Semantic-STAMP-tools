@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
@@ -157,5 +158,40 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
         final Aircraft aircraft = typeTwo.getRunwayIncursion().getIntruder().getAircraft();
         assertEquals(organization, aircraft.getOperator());
+    }
+
+    @Test
+    public void persistingIncursionWithExistingLocationReusesTheExistingOne() {
+        final Location loc = new Location();
+        loc.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/aviation-safety/LKPR"));
+        loc.setName("LKPR");
+        final OccurrenceReport rOne = initOccurrenceReportWithLocation(loc);
+        dao.persist(rOne);
+
+        final OccurrenceReport rTwo = initOccurrenceReportWithLocation(loc);
+        dao.persist(rTwo);
+
+        final OccurrenceReport resOne = dao.findByUri(rOne.getUri());
+        assertNotNull(resOne);
+        final Location resLocOne = resOne.getTypeAssessments().iterator().next().getRunwayIncursion().getLocation();
+        assertNotNull(resLocOne);
+        assertEquals(loc, resLocOne);
+
+        final OccurrenceReport resTwo = dao.findByUri(rOne.getUri());
+        assertNotNull(resTwo);
+        final Location resLocTwo = resTwo.getTypeAssessments().iterator().next().getRunwayIncursion().getLocation();
+        assertNotNull(resLocTwo);
+        assertEquals(loc, resLocTwo);
+    }
+
+    private OccurrenceReport initOccurrenceReportWithLocation(Location location) {
+        final OccurrenceReport r = new OccurrenceReport();
+        final EventTypeAssessment type = new EventTypeAssessment();
+        type.setEventType(eventType);
+        final RunwayIncursion ri = new RunwayIncursion();
+        ri.setLocation(location);
+        type.setRunwayIncursion(ri);
+        r.setTypeAssessments(Collections.singleton(type));
+        return r;
     }
 }

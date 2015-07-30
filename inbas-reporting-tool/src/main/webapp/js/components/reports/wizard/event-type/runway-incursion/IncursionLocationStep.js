@@ -6,38 +6,40 @@
 
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
-var Input = require('react-bootstrap').Input;
+
+var LocationTypeahead = require('../../../../LocationTypeahead');
 
 var IncursionLocation = React.createClass({
     getInitialState: function () {
         var incursionLocation = this.props.data.statement.location;
         return {
-            location: incursionLocation ? incursionLocation.location : ''
+            location: incursionLocation ? incursionLocation.name : ''
         };
     },
 
-    onChange: function (e) {
-        var value = e.target.value;
+    onChange: function (option) {
         var statement = this.props.data.statement;
-        if (value === '' && statement.location) {
+        if (option.label === '' && statement.location) {
             delete statement.location;
         } else {
             statement.location = {
-                location: value
+                uri: option.id,
+                name: option.name
             }
         }
-        this.setState({location: value});
+        this.setState({location: option.name});
     },
 
     // Rendering
 
     render: function () {
         var title = (<h3>Incursion location</h3>);
+        var location = this.props.data.statement.location;
         return (
             <Panel header={title}>
                 <div>
-                    <Input type='text' label='Incursion location' value={this.state.location} onChange={this.onChange}
-                           title='Where the incursion occurred'/>
+                    <LocationTypeahead name='incursionLocation' onChange={this.onChange}
+                                       value={location ? location.name : null}/>
                 </div>
             </Panel>
         );

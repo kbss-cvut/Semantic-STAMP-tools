@@ -12,7 +12,7 @@ var TypeAhead = require('react-typeahead').Typeahead;
 
 
 var Actions = require('../../../../actions/Actions');
-var EventTypeStore = require('../../../../stores/EventTypeStore');
+var TypeaheadStore = require('../../../../stores/TypeaheadStore');
 
 var EventTypeDialog = React.createClass({
     mixins: [Reflux.ListenerMixin],
@@ -22,11 +22,11 @@ var EventTypeDialog = React.createClass({
         };
     },
     componentDidMount: function () {
-        this.listenTo(EventTypeStore, this.onEventsLoaded);
+        this.listenTo(TypeaheadStore, this.onEventsLoaded);
         Actions.loadEventTypes();
     },
-    onEventsLoaded: function (eventTypes) {
-        this.setState({options: eventTypes});
+    onEventsLoaded: function () {
+        this.setState({options: TypeaheadStore.getEventTypes()});
     },
     onSelect: function (option) {
         this.props.onTypeSelect(option);

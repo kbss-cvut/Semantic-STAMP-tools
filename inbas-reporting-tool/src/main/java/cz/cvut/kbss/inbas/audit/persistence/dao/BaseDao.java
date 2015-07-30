@@ -11,7 +11,6 @@ import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.net.URI;
 import java.util.Collection;
@@ -200,6 +199,9 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     @Override
     public boolean exists(URI uri) {
+        if (uri == null) {
+            return false;
+        }
         final EntityManager em = entityManager();
         try {
             return exists(uri, em);
@@ -209,6 +211,9 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     }
 
     protected boolean exists(URI uri, EntityManager em) {
+        if (uri == null) {
+            return false;
+        }
         final String owlClass = type.getDeclaredAnnotation(OWLClass.class).iri();
         return em.createNativeQuery("ASK { <" + uri.toString() + "> a <" + owlClass + "> . }", Boolean.class)
                  .getSingleResult();

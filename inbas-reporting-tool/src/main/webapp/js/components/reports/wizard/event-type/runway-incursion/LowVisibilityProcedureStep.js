@@ -32,7 +32,7 @@ var LowVisibilityProcedureStep = React.createClass({
         for (var i = 0, len = lvpOptions.length; i < len; i++) {
             options.push({
                 value: lvpOptions[i],
-                label: Utils.constantToString(lvpOptions[i])
+                label: Utils.constantToString(lvpOptions[i], true)
             });
         }
         this.setState({options: options});

@@ -17,7 +17,7 @@ import java.util.Collection;
  */
 @RestController
 @RequestMapping("/persons")
-public class PersonController {
+public class PersonController extends BaseController {
 
     @Autowired
     private PersonService personService;

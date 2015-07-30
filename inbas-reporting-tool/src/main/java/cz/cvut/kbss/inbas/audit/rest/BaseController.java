@@ -9,4 +9,5 @@ import org.slf4j.LoggerFactory;
 public class BaseController {
 
     protected static final Logger LOG = LoggerFactory.getLogger(BaseController.class);
+
 }

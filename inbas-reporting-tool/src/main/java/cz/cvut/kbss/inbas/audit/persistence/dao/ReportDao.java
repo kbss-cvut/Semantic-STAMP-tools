@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
-import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.model.Location;
+import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
@@ -23,6 +24,9 @@ public class ReportDao extends BaseDao<OccurrenceReport> {
 
     @Autowired
     private OrganizationDao organizationDao;
+
+    @Autowired
+    private LocationDao locationDao;
 
     public ReportDao() {
         super(OccurrenceReport.class);
@@ -56,7 +60,17 @@ public class ReportDao extends BaseDao<OccurrenceReport> {
                 em.persist(assessment.getEventType());
             }
             if (assessment.getRunwayIncursion() != null) {
+                saveIncursionLocation(assessment.getRunwayIncursion(), em);
                 saveIncursionOrganizations(assessment.getRunwayIncursion(), em);
+            }
+        }
+    }
+
+    private void saveIncursionLocation(RunwayIncursion incursion, EntityManager em) {
+        if (incursion.getLocation() != null) {
+            final Location location = incursion.getLocation();
+            if (!locationDao.exists(location.getUri(), em)) {
+                locationDao.persist(location, em);
             }
         }
     }
