@@ -20,7 +20,7 @@ public class BaseReportValidator implements ReportValidator {
 
         if (report.getOccurrenceTime() == null || report.getAuthor() == null || report.getDescription() == null) {
             throw new InvalidReportException(
-                    "Occurrence report is missing one of the required attributes: event time, author, description. " + report);
+                    "Occurrence report is missing one of the required attributes: occurrence time, author, description. " + report);
         }
         final Date now = new Date();
         if (now.compareTo(report.getOccurrenceTime()) < 0) {

@@ -45,7 +45,7 @@ public class BaseReportValidatorTest extends BaseServiceTestRunner {
     }
 
     @Test(expected = InvalidReportException.class)
-    public void futureEventTimeThrowsException() throws Exception {
+    public void futureOccurrenceTimeThrowsException() throws Exception {
         final OccurrenceReport report = getDefaultValidReport();
         report.setOccurrenceTime(new Date(System.currentTimeMillis() + 10000));
         validator.validateReport(report);

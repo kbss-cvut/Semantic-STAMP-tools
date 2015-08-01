@@ -108,7 +108,7 @@ var ReportDetail = React.createClass({
                     </div>
 
                     <div className='picker-container form-group report-detail'>
-                        <label className='control-label'>Event Time</label>
+                        <label className='control-label'>Occurrence Time</label>
                         <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={report.occurrenceTime.toString()}
                                         onChange={this.onDateChange}
                                         inputProps={{title: 'Date and time when the event occurred'}}/>
