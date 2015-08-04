@@ -1,3 +1,4 @@
+Modify Organization to include code (ICAO) so that the operators.json can be used
 Add spring security
 Add loss of separation wizard
 Rewrite the DTO factory

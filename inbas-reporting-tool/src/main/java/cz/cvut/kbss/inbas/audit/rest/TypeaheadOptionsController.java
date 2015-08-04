@@ -38,7 +38,7 @@ public class TypeaheadOptionsController extends BaseController {
         return new RawJson(values);
     }
 
-    private synchronized String loadOptions(String type) {
+    private String loadOptions(String type) {
         final InputStream is = this.getClass().getClassLoader().getResourceAsStream(type + ".json");
         if (is == null) {
             throw new NotFoundException("Options for typeahead of type " + type + " not found.");
