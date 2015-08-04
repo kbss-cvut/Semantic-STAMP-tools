@@ -13,11 +13,13 @@ var URL = 'rest/typeahead/options?type=';
 
 var eventTypes = [];
 var locations = [];
+var operators = [];
 
 var TypeaheadStore = Reflux.createStore({
     init: function () {
         this.listenTo(Actions.loadEventTypes, this.onLoadEventTypes);
         this.listenTo(Actions.loadLocations, this.onLoadLocations);
+        this.listenTo(Actions.loadOperators, this.onLoadOperators);
     },
 
     onLoadEventTypes: function () {
@@ -55,6 +57,16 @@ var TypeaheadStore = Reflux.createStore({
 
     getLocations: function () {
         return locations;
+    },
+
+    onLoadOperators: function() {
+        this.load('operators', 'operators', operators, function(data) {
+            operators = data;
+        });
+    },
+
+    getOperators: function() {
+        return operators;
     }
 });
 

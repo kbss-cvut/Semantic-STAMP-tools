@@ -2,8 +2,7 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
-
-import java.net.URI;
+import cz.cvut.kbss.inbas.audit.model.Organization;
 
 /**
  * @author ledvima1
@@ -17,7 +16,7 @@ public class AircraftIntruder extends RunwayIntruder {
 
     private String callSign;
 
-    private String operator;
+    private Organization operator;
 
     private String flightNumber;
 
@@ -37,7 +36,7 @@ public class AircraftIntruder extends RunwayIntruder {
         this.registration = aircraft.getRegistration();
         this.stateOfRegistry = aircraft.getStateOfRegistry();
         this.callSign = aircraft.getCallSign();
-        this.operator = aircraft.getOperator() != null ? aircraft.getOperator().getName() : null;
+        this.operator = aircraft.getOperator();
         this.flightNumber = aircraft.getFlightNumber();
         this.flightPhase = aircraft.getFlightPhase();
         this.operationType = aircraft.getOperationType();
@@ -69,11 +68,11 @@ public class AircraftIntruder extends RunwayIntruder {
         this.callSign = callSign;
     }
 
-    public String getOperator() {
+    public Organization getOperator() {
         return operator;
     }
 
-    public void setOperator(String operator) {
+    public void setOperator(Organization operator) {
         this.operator = operator;
     }
 

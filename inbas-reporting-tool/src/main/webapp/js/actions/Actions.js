@@ -9,7 +9,7 @@ var Reflux = require('reflux');
 var Actions = Reflux.createActions([
     'loadUser',
     'loadReports', 'findReport', 'createReport', 'updateReport', 'deleteReport',
-    'loadEventTypes', 'loadLvpOptions', 'loadOccurrenceSeverityOptions', 'loadLocations'
+    'loadEventTypes', 'loadLvpOptions', 'loadOccurrenceSeverityOptions', 'loadLocations', 'loadOperators'
 ]);
 
 module.exports = Actions;

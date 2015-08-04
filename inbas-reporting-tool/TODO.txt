@@ -1,4 +1,5 @@
-Modify Organization to include code (ICAO) so that the operators.json can be used
+Disable fuzzy string matching in autocomplete
+    - requires writing our own string matching function
 Add spring security
 Add loss of separation wizard
 Rewrite the DTO factory

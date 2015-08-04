@@ -1,12 +1,13 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.factory;
 
-import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEvent;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.AircraftIntruder;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.VehicleIntruder;
@@ -88,6 +89,7 @@ public class DtoFactoryImpl implements DtoFactory {
         aircraftIntruder.setOperationType(intruder.getOperationType());
         aircraftIntruder.setRegistration(intruder.getRegistration());
         aircraftIntruder.setStateOfRegistry(intruder.getStateOfRegistry());
+        aircraftIntruder.setOperator(intruder.getOperator());
         return aircraftIntruder;
     }
 

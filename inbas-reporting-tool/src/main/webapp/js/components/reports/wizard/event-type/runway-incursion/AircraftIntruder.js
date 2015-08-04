@@ -13,6 +13,7 @@ var AircraftRegistration = require('../../AircraftRegistration');
 var FlightInfo = require('../../FlightInfo');
 var FlightOperationType = require('../../FlightOperationType');
 var Select = require('../../../../Select');
+var OperatorTypeahead = require('../../../../OperatorTypeahead');
 
 var AircraftIntruder = React.createClass({
     getInitialState: function () {
@@ -24,6 +25,7 @@ var AircraftIntruder = React.createClass({
             statement: statement
         };
     },
+
     onAircraftEventTypeSelect: function (e) {
         var change = {
             aircraftEventType: e.target.value
@@ -35,9 +37,7 @@ var AircraftIntruder = React.createClass({
         assign(this.state.statement.intruder, change);
         this.setState({statement: this.state.statement});
     },
-    onPhaseChange: function (e) {
-        this.setState(assign(this.state.statement.intruder, {flightPhase: e.target.value}));
-    },
+
     eraseFlightAttributes: function () {
         var intruder = this.state.statement.intruder;
         delete intruder.flightNumber;
@@ -46,9 +46,24 @@ var AircraftIntruder = React.createClass({
         delete intruder.plannedDestination;
     },
 
+    onPhaseChange: function (e) {
+        this.setState(assign(this.state.statement.intruder, {flightPhase: e.target.value}));
+    },
+
+    onOperatorChange: function (option) {
+        this.setState(assign(this.state.statement.intruder, {
+            operator: {
+                code: option.code,
+                name: option.name,
+                uri: option.uri
+            }
+        }));
+    },
+
 
     render: function () {
-        var intruder = this.state.statement.intruder;
+        var intruder = this.state.statement.intruder,
+            operator = intruder.operator ? intruder.operator.name + ' (' + intruder.operator.code + ')' : null;
         return (
             <div>
                 <div className='form-group'>
@@ -63,8 +78,8 @@ var AircraftIntruder = React.createClass({
                                    onChange={this.props.onChange}/>
                         </div>
                         <div className='report-detail-float-right'>
-                            <Input type='text' label='Operator' name='operator' value={intruder.operator}
-                                   onChange={this.props.onChange}/>
+                            <OperatorTypeahead name='operator' value={operator}
+                                               onChange={this.onOperatorChange}/>
                         </div>
                     </div>
                     <div>

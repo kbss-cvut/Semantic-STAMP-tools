@@ -17,6 +17,9 @@ public class Organization implements HasDerivableUri {
     @Id
     private URI uri;
 
+    @OWLDataProperty(iri = Vocabulary.p_organizationCode)
+    private String code;
+
     @OWLDataProperty(iri = Vocabulary.p_label)
     private String name;
 
@@ -35,6 +38,14 @@ public class Organization implements HasDerivableUri {
         this.uri = uri;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getName() {
         return name;
     }
@@ -48,7 +59,13 @@ public class Organization implements HasDerivableUri {
         if (uri != null) {
             return;
         }
-        this.uri = URI.create(Constants.ORGANIZATION_BASE_URI + name);
+        if (code != null) {
+            this.uri = URI.create(Constants.ORGANIZATION_BASE_URI + code);
+        } else if (name != null) {
+            this.uri = URI.create(Constants.ORGANIZATION_BASE_URI + name);
+        } else {
+            throw new IllegalStateException("Cannot generate URI of Organization. It is missing both code and name.");
+        }
     }
 
     @Override
@@ -69,6 +86,6 @@ public class Organization implements HasDerivableUri {
 
     @Override
     public String toString() {
-        return name + "(" + uri + ")";
+        return name + " - " + code + "(" + uri + ")";
     }
 }
