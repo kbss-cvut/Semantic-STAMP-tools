@@ -1,0 +1,6498 @@
+[
+  {
+    "IATA":"0B",
+    "ICAO":"JOR",
+    "operator":"Blue Air",
+    "country":"Romania",
+    "radioCallsign":"Blue Transport"
+  },
+  {
+    "IATA":"0J",
+    "ICAO":"JCS",
+    "operator":"Jetclub",
+    "country":"Switzerland",
+    "radioCallsign":"Jetclub"
+  },
+  {
+    "IATA":"0V",
+    "ICAO":"VFC",
+    "operator":"VASCO Vietnam Air Service Company",
+    "country":"Vietnam",
+    "radioCallsign":"Vasco"
+  },
+  {
+    "IATA":"1B",
+    "ICAO":"BGH",
+    "operator":"BH Air",
+    "country":"Bulgaria",
+    "radioCallsign":"Balkan Holidays"
+  },
+  {
+    "IATA":"1I",
+    "ICAO":"AMB",
+    "operator":"Deutsche Rettungsflugwacht",
+    "country":"Germany",
+    "radioCallsign":"Civil Air Ambulance"
+  },
+  {
+    "IATA":"1I",
+    "ICAO":"EJA",
+    "operator":"Netjets",
+    "country":"USA",
+    "radioCallsign":"Execjet"
+  },
+  {
+    "IATA":"1I",
+    "ICAO":"NVR",
+    "operator":"Novair/Nova Airlines",
+    "country":"Sweden",
+    "radioCallsign":"Navigator"
+  },
+  {
+    "IATA":"1T",
+    "ICAO":"BUC",
+    "operator":"Bulgarian Air Charter",
+    "country":"Bulgaria",
+    "radioCallsign":"Bulgarian Charter"
+  },
+  {
+    "IATA":"2A",
+    "ICAO":"DBB",
+    "operator":"Deutsche Bahn",
+    "country":"Germany",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"2C",
+    "ICAO":"TGV",
+    "operator":"SNCF",
+    "country":"France",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"2D",
+    "ICAO":"OST",
+    "operator":"Alania Airlines",
+    "country":"Russia",
+    "radioCallsign":"Alania"
+  },
+  {
+    "IATA":"2E",
+    "ICAO":"PHW",
+    "operator":"AVE.com",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Phoenix Sharjah"
+  },
+  {
+    "IATA":"2F",
+    "ICAO":"FTA",
+    "operator":"Frontier Alaska/Frontier Flying Service",
+    "country":"USA",
+    "radioCallsign":"Frontier Air"
+  },
+  {
+    "IATA":"2F",
+    "ICAO":"IRP",
+    "operator":"Payam/IPTAS",
+    "country":"Iran",
+    "radioCallsign":"Payamair"
+  },
+  {
+    "IATA":"2I",
+    "ICAO":"SRU",
+    "operator":"Star Peru",
+    "country":"Peru",
+    "radioCallsign":"Star Up"
+  },
+  {
+    "IATA":"2J",
+    "ICAO":"VBW",
+    "operator":"Air Burkina",
+    "country":"Burkina Faso",
+    "radioCallsign":"Burkina"
+  },
+  {
+    "IATA":"2K",
+    "ICAO":"GLG",
+    "operator":"Aerogal Aerolineas Galapagos",
+    "country":"Ecuador",
+    "radioCallsign":"Aerogal"
+  },
+  {
+    "IATA":"2L",
+    "ICAO":"OAW",
+    "operator":"Helvetic Airways",
+    "country":"Switzerland",
+    "radioCallsign":"Helvetic"
+  },
+  {
+    "IATA":"2M",
+    "ICAO":"MDV",
+    "operator":"Moldavian Airlines",
+    "country":"Moldova",
+    "radioCallsign":"Moldavian"
+  },
+  {
+    "IATA":"2N",
+    "ICAO":"NTJ",
+    "operator":"Nextjet",
+    "country":"Sweden",
+    "radioCallsign":"Nextjet"
+  },
+  {
+    "IATA":"2N",
+    "ICAO":"UMK",
+    "operator":"Yuzmashavia",
+    "country":"Ukraine",
+    "radioCallsign":"Yuzmash"
+  },
+  {
+    "IATA":"2P",
+    "ICAO":"GAP",
+    "operator":"Air Philippines",
+    "country":"Philippines",
+    "radioCallsign":"Orient Pacific"
+  },
+  {
+    "IATA":"2Q",
+    "ICAO":"SNC",
+    "operator":"Air Cargo Carriers",
+    "country":"USA",
+    "radioCallsign":"Night Cargo"
+  },
+  {
+    "IATA":"2R",
+    "ICAO":"VRR",
+    "operator":"VIA Rail Canada",
+    "country":"Canada",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"2S",
+    "ICAO":"SDY",
+    "operator":"Island Express",
+    "country":"USA",
+    "radioCallsign":"Sandy Isle"
+  },
+  {
+    "IATA":"2T",
+    "ICAO":"ANH",
+    "operator":"Alajnihah Airways",
+    "country":"Libya",
+    "radioCallsign":"Alajnihah"
+  },
+  {
+    "IATA":"2W",
+    "ICAO":"WLC",
+    "operator":"Welcome Air",
+    "country":"Austria",
+    "radioCallsign":"Welcome Air"
+  },
+  {
+    "IATA":"2Z",
+    "ICAO":"CGN",
+    "operator":"Changan Airlines",
+    "country":"China",
+    "radioCallsign":"Changan"
+  },
+  {
+    "IATA":"3C",
+    "ICAO":"CMV",
+    "operator":"Calima Aviacion",
+    "country":"Spain",
+    "radioCallsign":"Calima"
+  },
+  {
+    "IATA":"3G",
+    "ICAO":"GBQ",
+    "operator":"Gambia Bird",
+    "country":"Gambia",
+    "radioCallsign":"Gambia Bird"
+  },
+  {
+    "IATA":"3H",
+    "ICAO":"AIE",
+    "operator":"Air Inuit",
+    "country":"Canada",
+    "radioCallsign":"Air Inuit"
+  },
+  {
+    "IATA":"3K",
+    "ICAO":"JSA",
+    "operator":"Jetstar Asia Airways",
+    "country":"Singapore",
+    "radioCallsign":"Jetstar Asia"
+  },
+  {
+    "IATA":"3L",
+    "ICAO":"ISK",
+    "operator":"Intersky",
+    "country":"Austria",
+    "radioCallsign":"Intersky"
+  },
+  {
+    "IATA":"3M",
+    "ICAO":"GFT",
+    "operator":"Gulfstream International Airlines",
+    "country":"USA",
+    "radioCallsign":"Gulf Flight"
+  },
+  {
+    "IATA":"3N",
+    "ICAO":"URG",
+    "operator":"Air Urga",
+    "country":"Ukraine",
+    "radioCallsign":"Urga"
+  },
+  {
+    "IATA":"3O",
+    "ICAO":"MAC",
+    "operator":"Air Arabia Maroc",
+    "country":"Morocco",
+    "radioCallsign":"Nawras"
+  },
+  {
+    "IATA":"3P",
+    "ICAO":"TNM",
+    "operator":"Tiara Air",
+    "country":"Aruba",
+    "radioCallsign":"Tiara"
+  },
+  {
+    "IATA":"3R",
+    "ICAO":"GAI",
+    "operator":"Moskovia Airlines",
+    "country":"Russia",
+    "radioCallsign":"Gromov Airline"
+  },
+  {
+    "IATA":"3S",
+    "ICAO":"AEN",
+    "operator":"Aeroland Airways",
+    "country":"Greece",
+    "radioCallsign":"Aeroland"
+  },
+  {
+    "IATA":"3S",
+    "ICAO":"BOX",
+    "operator":"AeroLogic",
+    "country":"Germany",
+    "radioCallsign":"German Cargo"
+  },
+  {
+    "IATA":"3S",
+    "ICAO":"GUY",
+    "operator":"Air Guyane Express/Air Antilles Express",
+    "country":"French Guiana",
+    "radioCallsign":"Green Bird"
+  },
+  {
+    "IATA":"3T",
+    "ICAO":"URN",
+    "operator":"Turan Air",
+    "country":"Azerbaijan",
+    "radioCallsign":"Turan"
+  },
+  {
+    "IATA":"3U",
+    "ICAO":"CSC",
+    "operator":"Sichuan Airlines",
+    "country":"China",
+    "radioCallsign":"Si Chuan"
+  },
+  {
+    "IATA":"3V",
+    "ICAO":"TAY",
+    "operator":"TNT Airways",
+    "country":"Belgium",
+    "radioCallsign":"Quality"
+  },
+  {
+    "IATA":"3W",
+    "ICAO":"MWI",
+    "operator":"Malawian Airlines",
+    "country":"Malawi",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"3X",
+    "ICAO":"JAC",
+    "operator":"Japan Air Commuter",
+    "country":"Japan",
+    "radioCallsign":"Commuter"
+  },
+  {
+    "IATA":"3Y",
+    "ICAO":"XBO",
+    "operator":"Baseops International",
+    "country":"USA",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"3Z",
+    "ICAO":"TVP",
+    "operator":"Travel Service Polska",
+    "country":"Poland",
+    "radioCallsign":"Jettravel"
+  },
+  {
+    "IATA":"3Z",
+    "ICAO":"VTS",
+    "operator":"Everts Air/Tatonduk Outfitters",
+    "country":"USA",
+    "radioCallsign":"Everts"
+  },
+  {
+    "IATA":"3Z",
+    "ICAO":"ZAW",
+    "operator":"Zoom Airways",
+    "country":"Bangladesh",
+    "radioCallsign":"Zed Air"
+  },
+  {
+    "IATA":"4A",
+    "ICAO":"AGS",
+    "operator":"Air Go Airlines",
+    "country":"Greece",
+    "radioCallsign":"Airgo Cargo"
+  },
+  {
+    "IATA":"4A",
+    "ICAO":"AKL",
+    "operator":"Air Kiribati",
+    "country":"Kiribati",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"4A",
+    "ICAO":"EYE",
+    "operator":"FS Air Service",
+    "country":"USA",
+    "radioCallsign":"Sockeye"
+  },
+  {
+    "IATA":"4B",
+    "ICAO":"PAG",
+    "operator":"Perimeter Aviation",
+    "country":"Canada",
+    "radioCallsign":"Perimeter"
+  },
+  {
+    "IATA":"4C",
+    "ICAO":"ARE",
+    "operator":"Aires",
+    "country":"Colombia",
+    "radioCallsign":"Aires"
+  },
+  {
+    "IATA":"4C",
+    "ICAO":"CGK",
+    "operator":"Click Airways",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Click Air"
+  },
+  {
+    "IATA":"4D",
+    "ICAO":"ASD",
+    "operator":"Air Sinai",
+    "country":"Egypt",
+    "radioCallsign":"Air Sinai"
+  },
+  {
+    "IATA":"4G",
+    "ICAO":"GZP",
+    "operator":"Gazpromavia",
+    "country":"Russia",
+    "radioCallsign":"Gazprom"
+  },
+  {
+    "IATA":"4H",
+    "ICAO":"UBD",
+    "operator":"United Airways",
+    "country":"Bangladesh",
+    "radioCallsign":"United Bangladesh"
+  },
+  {
+    "IATA":"4I",
+    "ICAO":"IZM",
+    "operator":"Izair",
+    "country":"Turkey",
+    "radioCallsign":"Izmir"
+  },
+  {
+    "IATA":"4J",
+    "ICAO":"NWZ",
+    "operator":"Nationwide Airlines Zambia",
+    "country":"Zambia",
+    "radioCallsign":"Zamnat"
+  },
+  {
+    "IATA":"4J",
+    "ICAO":"SMR",
+    "operator":"Somon Air",
+    "country":"Tajikistan",
+    "radioCallsign":"Somon Air"
+  },
+  {
+    "IATA":"4K",
+    "ICAO":"AAS",
+    "operator":"Askari Aviation",
+    "country":"Pakistan",
+    "radioCallsign":"Al Aas"
+  },
+  {
+    "IATA":"4K",
+    "ICAO":"KBA",
+    "operator":"Kenn Borek Air",
+    "country":"Canada",
+    "radioCallsign":"Borek Air"
+  },
+  {
+    "IATA":"4L",
+    "ICAO":"MJX",
+    "operator":"Euroline",
+    "country":"Georgia",
+    "radioCallsign":"Geo Line"
+  },
+  {
+    "IATA":"4M",
+    "ICAO":"DSM",
+    "operator":"LAN Argentina",
+    "country":"Argentina",
+    "radioCallsign":"Lan Ar"
+  },
+  {
+    "IATA":"4N",
+    "ICAO":"ANT",
+    "operator":"Air North Charter",
+    "country":"Canada",
+    "radioCallsign":"Air North"
+  },
+  {
+    "IATA":"4O",
+    "ICAO":"AIJ",
+    "operator":"Interjet/ABC Aerolineas",
+    "country":"Mexico",
+    "radioCallsign":"ABC Aerolineas"
+  },
+  {
+    "IATA":"4P",
+    "ICAO":"SBO",
+    "operator":"Stabo Air",
+    "country":"Zambia",
+    "radioCallsign":"Stabair"
+  },
+  {
+    "IATA":"4Q",
+    "ICAO":"SFW",
+    "operator":"Safi Airways",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Safi Airways"
+  },
+  {
+    "IATA":"4R",
+    "ICAO":"NTA",
+    "operator":"Northern Thunderbird Air",
+    "country":"Canada",
+    "radioCallsign":"Thunderbird"
+  },
+  {
+    "IATA":"4T",
+    "ICAO":"BHP",
+    "operator":"Belair Airlines",
+    "country":"Switzerland",
+    "radioCallsign":"Belair"
+  },
+  {
+    "IATA":"4U",
+    "ICAO":"GWI",
+    "operator":"Germanwings",
+    "country":"Germany",
+    "radioCallsign":"Germanwings"
+  },
+  {
+    "IATA":"4W",
+    "ICAO":"AJK",
+    "operator":"Allied Air Cargo",
+    "country":"Nigeria",
+    "radioCallsign":"Bambi"
+  },
+  {
+    "IATA":"4W",
+    "ICAO":"WAV",
+    "operator":"Warbelow?s Air Ventures",
+    "country":"USA",
+    "radioCallsign":"Warbelow"
+  },
+  {
+    "IATA":"4X",
+    "ICAO":"MEC",
+    "operator":"Air Mercury/Mercury Air Cargo",
+    "country":"USA",
+    "radioCallsign":"Mercair"
+  },
+  {
+    "IATA":"4Y",
+    "ICAO":"TUD",
+    "operator":"Flight Alaska",
+    "country":"USA",
+    "radioCallsign":"Tundra"
+  },
+  {
+    "IATA":"4Z",
+    "ICAO":"LNK",
+    "operator":"Airlink",
+    "country":"South Africa",
+    "radioCallsign":"Link"
+  },
+  {
+    "IATA":"5A",
+    "ICAO":"AIP",
+    "operator":"Alpine Air Express",
+    "country":"USA",
+    "radioCallsign":"Alpine Air"
+  },
+  {
+    "IATA":"5B",
+    "ICAO":"EAK",
+    "operator":"Euro Asia Air International",
+    "country":"Kazakhstan",
+    "radioCallsign":"Eakaz"
+  },
+  {
+    "IATA":"5B",
+    "ICAO":"NCH",
+    "operator":"Chanchangi Airlines Nigeria",
+    "country":"Nigeria",
+    "radioCallsign":"Chanchangi"
+  },
+  {
+    "IATA":"5C",
+    "ICAO":"ICL",
+    "operator":"CAL Cargo Air Lines/Cavei Avir Levitanim",
+    "country":"Israel",
+    "radioCallsign":"Cal"
+  },
+  {
+    "IATA":"5C",
+    "ICAO":"NRR",
+    "operator":"Nature Air",
+    "country":"Costa Rica",
+    "radioCallsign":"Nature Air"
+  },
+  {
+    "IATA":"5D",
+    "ICAO":"SLI",
+    "operator":"Aeromexico Connect",
+    "country":"Mexico",
+    "radioCallsign":"Costera"
+  },
+  {
+    "IATA":"5E",
+    "ICAO":"EKA",
+    "operator":"Equaflight Service",
+    "country":"Congo",
+    "radioCallsign":"Equaflight"
+  },
+  {
+    "IATA":"5H",
+    "ICAO":"FFV",
+    "operator":"Fly540/Five Forty Aviation",
+    "country":"Kenya",
+    "radioCallsign":"Swift Tango"
+  },
+  {
+    "IATA":"5J",
+    "ICAO":"CEB",
+    "operator":"Cebu Pacific Air",
+    "country":"Philippines",
+    "radioCallsign":"Cebu Air"
+  },
+  {
+    "IATA":"5K",
+    "ICAO":"HFY",
+    "operator":"Hifly",
+    "country":"Portugal",
+    "radioCallsign":"Sky Flyer"
+  },
+  {
+    "IATA":"5K",
+    "ICAO":"ODS",
+    "operator":"Odessa Airlines",
+    "country":"Ukraine",
+    "radioCallsign":"Odessa Air"
+  },
+  {
+    "IATA":"5M",
+    "ICAO":"HFM",
+    "operator":"Hi Fly Malta",
+    "country":"Malta",
+    "radioCallsign":"Moonraker"
+  },
+  {
+    "IATA":"5M",
+    "ICAO":"MEG",
+    "operator":"Mega Maldives",
+    "country":"Maldives",
+    "radioCallsign":"Sandbar"
+  },
+  {
+    "IATA":"5N",
+    "ICAO":"AUL",
+    "operator":"Nordavia",
+    "country":"Russia",
+    "radioCallsign":"Archangelsk Air"
+  },
+  {
+    "IATA":"5O",
+    "ICAO":"FPO",
+    "operator":"Europe Airpost",
+    "country":"France",
+    "radioCallsign":"French Post"
+  },
+  {
+    "IATA":"5Q",
+    "ICAO":"BQB",
+    "operator":"BQB Lineas Aereas",
+    "country":"Uruguay",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"5R",
+    "ICAO":"KAJ",
+    "operator":"Karthago Airlines",
+    "country":"Tunisia",
+    "radioCallsign":"Karthago"
+  },
+  {
+    "IATA":"5S",
+    "ICAO":"PSV",
+    "operator":"Servicios Aereos Profesionales",
+    "country":"Dominican Rep.",
+    "radioCallsign":"Proservicios"
+  },
+  {
+    "IATA":"5T",
+    "ICAO":"MPE",
+    "operator":"Canadian North",
+    "country":"Canada",
+    "radioCallsign":"Empress"
+  },
+  {
+    "IATA":"5U",
+    "ICAO":"CHG",
+    "operator":"Challenge Aero",
+    "country":"Ukraine",
+    "radioCallsign":"Sky Challenger"
+  },
+  {
+    "IATA":"5U",
+    "ICAO":"LDE",
+    "operator":"LADE Lineas Aereas del Estado",
+    "country":"Argentina",
+    "radioCallsign":"Lade"
+  },
+  {
+    "IATA":"5V",
+    "ICAO":"UKW",
+    "operator":"Lviv Airlines/Lvov Airlines",
+    "country":"Ukraine",
+    "radioCallsign":"Ukraine West"
+  },
+  {
+    "IATA":"5X",
+    "ICAO":"UPS",
+    "operator":"UPS Airlines/United Parcel Service",
+    "country":"USA",
+    "radioCallsign":"UPS"
+  },
+  {
+    "IATA":"5Y",
+    "ICAO":"GTI",
+    "operator":"Atlas Air",
+    "country":"USA",
+    "radioCallsign":"Giant"
+  },
+  {
+    "IATA":"5Y",
+    "ICAO":"IOS",
+    "operator":"Isles of Scilly Skybus",
+    "country":"United Kingdom",
+    "radioCallsign":"Scillonia"
+  },
+  {
+    "IATA":"5Z",
+    "ICAO":"KEM",
+    "operator":"CemAir",
+    "country":"South Africa",
+    "radioCallsign":"CemAir"
+  },
+  {
+    "IATA":"6B",
+    "ICAO":"BLX",
+    "operator":"TUIfly Nordic",
+    "country":"Sweden",
+    "radioCallsign":"Bluescan"
+  },
+  {
+    "IATA":"6D",
+    "ICAO":"PAS",
+    "operator":"Pelita Air Service",
+    "country":"Indonesia",
+    "radioCallsign":"Pelita"
+  },
+  {
+    "IATA":"6E",
+    "ICAO":"IGO",
+    "operator":"IndiGo Airlines",
+    "country":"India",
+    "radioCallsign":"Ifly"
+  },
+  {
+    "IATA":"6F",
+    "ICAO":"FAO",
+    "operator":"Falcon Air Express",
+    "country":"USA",
+    "radioCallsign":"Panther"
+  },
+  {
+    "IATA":"6F",
+    "ICAO":"FRJ",
+    "operator":"Afrijet Airlines",
+    "country":"Nigeria",
+    "radioCallsign":"Afrijet"
+  },
+  {
+    "IATA":"6G",
+    "ICAO":"RLX",
+    "operator":"Go2Sky",
+    "country":"Slovakia",
+    "radioCallsign":"Relax"
+  },
+  {
+    "IATA":"6H",
+    "ICAO":"ISR",
+    "operator":"Israir",
+    "country":"Israel",
+    "radioCallsign":"Israir"
+  },
+  {
+    "IATA":"6I",
+    "ICAO":"IBZ",
+    "operator":"International Business Air",
+    "country":"Sweden",
+    "radioCallsign":"Interbiz"
+  },
+  {
+    "IATA":"6I",
+    "ICAO":"MMD",
+    "operator":"Alsie Express/MMD",
+    "country":"Denmark",
+    "radioCallsign":"Mermaid"
+  },
+  {
+    "IATA":"6I",
+    "ICAO":"VVA",
+    "operator":"Aviast",
+    "country":"Russia",
+    "radioCallsign":"Ialsi"
+  },
+  {
+    "IATA":"6J",
+    "ICAO":"JBW",
+    "operator":"Jubba Airways",
+    "country":"Kenya",
+    "radioCallsign":"Airjub"
+  },
+  {
+    "IATA":"6J",
+    "ICAO":"SNJ",
+    "operator":"Skynet Asia Airways",
+    "country":"Japan",
+    "radioCallsign":"Newsky"
+  },
+  {
+    "IATA":"6L",
+    "ICAO":"AKK",
+    "operator":"Aklak Air",
+    "country":"Canada",
+    "radioCallsign":"Aklak"
+  },
+  {
+    "IATA":"6R",
+    "ICAO":"DRU",
+    "operator":"Alrosa Mirny Air Enterprise",
+    "country":"Russia",
+    "radioCallsign":"Mirny"
+  },
+  {
+    "IATA":"6R",
+    "ICAO":"TNO",
+    "operator":"Aerounion/Aerotransporte de Carga Union",
+    "country":"Mexico",
+    "radioCallsign":"Aero Union"
+  },
+  {
+    "IATA":"6T",
+    "ICAO":"LMT",
+    "operator":"Almaty Aviation",
+    "country":"Kazakhstan",
+    "radioCallsign":"Almaty"
+  },
+  {
+    "IATA":"6W",
+    "ICAO":"SOV",
+    "operator":"Saravia Saratov Airlines",
+    "country":"Russia",
+    "radioCallsign":"Saratov Air"
+  },
+  {
+    "IATA":"6Y",
+    "ICAO":"LTC",
+    "operator":"SmartLynx Airlines",
+    "country":"Latvia",
+    "radioCallsign":"Latcharter"
+  },
+  {
+    "IATA":"7C",
+    "ICAO":"COY",
+    "operator":"Coyne Airways",
+    "country":"United Kingdom",
+    "radioCallsign":"Coyne Air"
+  },
+  {
+    "IATA":"7C",
+    "ICAO":"JJA",
+    "operator":"Jeju Air",
+    "country":"Korea ? Rep. of",
+    "radioCallsign":"Jeju Air"
+  },
+  {
+    "IATA":"7E",
+    "ICAO":"AWU",
+    "operator":"Sylt Air",
+    "country":"Germany",
+    "radioCallsign":"Sylt-Air"
+  },
+  {
+    "IATA":"7F",
+    "ICAO":"FAB",
+    "operator":"First Air",
+    "country":"Canada",
+    "radioCallsign":"First Air"
+  },
+  {
+    "IATA":"7G",
+    "ICAO":"SFJ",
+    "operator":"StarFlyer",
+    "country":"Japan",
+    "radioCallsign":"Starflyer"
+  },
+  {
+    "IATA":"7H",
+    "ICAO":"CAI",
+    "operator":"Corendon Airlines",
+    "country":"Turkey",
+    "radioCallsign":"Corendon"
+  },
+  {
+    "IATA":"7H",
+    "ICAO":"ERH",
+    "operator":"ERA Aviation",
+    "country":"USA",
+    "radioCallsign":"Erah"
+  },
+  {
+    "IATA":"7I",
+    "ICAO":"CSV",
+    "operator":"Coastal Travel Limited",
+    "country":"Tanzania",
+    "radioCallsign":"Coastal Travel"
+  },
+  {
+    "IATA":"7I",
+    "ICAO":"INC",
+    "operator":"Insel Air",
+    "country":"Curacao",
+    "radioCallsign":"Inselair"
+  },
+  {
+    "IATA":"7J",
+    "ICAO":"TJK",
+    "operator":"Tajik Air",
+    "country":"Tajikistan",
+    "radioCallsign":"Tajik Air"
+  },
+  {
+    "IATA":"7K",
+    "ICAO":"KGL",
+    "operator":"Kolavia/Kogalymavia Airlines",
+    "country":"Russia",
+    "radioCallsign":"Kogalym"
+  },
+  {
+    "IATA":"7L",
+    "ICAO":"CRN",
+    "operator":"Aero Caribbean",
+    "country":"Cuba",
+    "radioCallsign":"Aerocaribbean"
+  },
+  {
+    "IATA":"7M",
+    "ICAO":"AAG",
+    "operator":"Air Atlantique",
+    "country":"United Kingdom",
+    "radioCallsign":"Atlantic"
+  },
+  {
+    "IATA":"7Q",
+    "ICAO":"TLR",
+    "operator":"Air Libya",
+    "country":"Libya",
+    "radioCallsign":"Air Libya"
+  },
+  {
+    "IATA":"7S",
+    "ICAO":"RYA",
+    "operator":"Arctic Transportation Services/Ryan Air Services",
+    "country":"USA",
+    "radioCallsign":"Ryan Air"
+  },
+  {
+    "IATA":"7T",
+    "ICAO":"AGV",
+    "operator":"Air Glaciers",
+    "country":"Switzerland",
+    "radioCallsign":"Air Glaciers"
+  },
+  {
+    "IATA":"7T",
+    "ICAO":"RTM",
+    "operator":"Aero Express Del Ecuador",
+    "country":"Ecuador",
+    "radioCallsign":"Aero Transam"
+  },
+  {
+    "IATA":"7T",
+    "ICAO":"TOB",
+    "operator":"Tobruk Air Transport and Cargo",
+    "country":"Libya",
+    "radioCallsign":"Tobruk Air"
+  },
+  {
+    "IATA":"7W",
+    "ICAO":"WRC",
+    "operator":"Wind Rose Aviation",
+    "country":"Ukraine",
+    "radioCallsign":"Windrose"
+  },
+  {
+    "IATA":"7Y",
+    "ICAO":"AGO",
+    "operator":"Angola Air Charter",
+    "country":"Angola",
+    "radioCallsign":"Angola Charter"
+  },
+  {
+    "IATA":"7Y",
+    "ICAO":"NYL",
+    "operator":"Mid Airlines",
+    "country":"Sudan",
+    "radioCallsign":"Nile"
+  },
+  {
+    "IATA":"8C",
+    "ICAO":"ATN",
+    "operator":"Air Transport International ATI",
+    "country":"USA",
+    "radioCallsign":"Air Transport"
+  },
+  {
+    "IATA":"8D",
+    "ICAO":"EXV",
+    "operator":"Expo Aviation",
+    "country":"Sri Lanka",
+    "radioCallsign":"Expo Avia"
+  },
+  {
+    "IATA":"8E",
+    "ICAO":"BRG",
+    "operator":"Bering Air",
+    "country":"USA",
+    "radioCallsign":"Bering Air"
+  },
+  {
+    "IATA":"8F",
+    "ICAO":"STP",
+    "operator":"STP Airways",
+    "country":"Sao Tome and Principe",
+    "radioCallsign":"Saotome Airways"
+  },
+  {
+    "IATA":"8H",
+    "ICAO":"HFR",
+    "operator":"Heli France",
+    "country":"France",
+    "radioCallsign":"Helifrance"
+  },
+  {
+    "IATA":"8L",
+    "ICAO":"LKE",
+    "operator":"Lucky Air",
+    "country":"China",
+    "radioCallsign":"Lucky Air"
+  },
+  {
+    "IATA":"8L",
+    "ICAO":"RHC",
+    "operator":"Redhill Aviation",
+    "country":"United Kingdom",
+    "radioCallsign":"Redair"
+  },
+  {
+    "IATA":"8M",
+    "ICAO":"MMA",
+    "operator":"Myanmar Airways International",
+    "country":"Myanmar",
+    "radioCallsign":"Myanmar"
+  },
+  {
+    "IATA":"8N",
+    "ICAO":"NKF",
+    "operator":"Barents AirLink/Nordkalottflyg",
+    "country":"Sweden",
+    "radioCallsign":"Nordflight"
+  },
+  {
+    "IATA":"8P",
+    "ICAO":"PCO",
+    "operator":"Pacific Coastal Airlines",
+    "country":"Canada",
+    "radioCallsign":"Pasco"
+  },
+  {
+    "IATA":"8Q",
+    "ICAO":"BAJ",
+    "operator":"Baker Aviation",
+    "country":"USA",
+    "radioCallsign":"Baker Aviation"
+  },
+  {
+    "IATA":"8Q",
+    "ICAO":"OHY",
+    "operator":"Onur Air",
+    "country":"Turkey",
+    "radioCallsign":"Onur Air"
+  },
+  {
+    "IATA":"8R",
+    "ICAO":"OLS",
+    "operator":"Sol Lineas Aereas",
+    "country":"Argentina",
+    "radioCallsign":"Flight Sol"
+  },
+  {
+    "IATA":"8U",
+    "ICAO":"AAW",
+    "operator":"Afriqiyah Airways",
+    "country":"Libya",
+    "radioCallsign":"Afriqiyah"
+  },
+  {
+    "IATA":"8V",
+    "ICAO":"ACP",
+    "operator":"Astral Aviation",
+    "country":"Kenya",
+    "radioCallsign":"Astral Cargo"
+  },
+  {
+    "IATA":"8W",
+    "ICAO":"PWF",
+    "operator":"Private Wings Flugcharter",
+    "country":"Germany",
+    "radioCallsign":"Private Wings"
+  },
+  {
+    "IATA":"8Y",
+    "ICAO":"CYZ",
+    "operator":"China Postal Airlines",
+    "country":"China",
+    "radioCallsign":"China Post"
+  },
+  {
+    "IATA":"8Y",
+    "ICAO":"GGE",
+    "operator":"EGA Ecuato Guineana de Aviacion",
+    "country":"Equatorial Guinea",
+    "radioCallsign":"Ecuato Guineana"
+  },
+  {
+    "IATA":"9A",
+    "ICAO":"EZX",
+    "operator":"Eaglexpress",
+    "country":"Malaysia",
+    "radioCallsign":"Eaglexpress Air"
+  },
+  {
+    "IATA":"9C",
+    "ICAO":"WDA",
+    "operator":"Wimbi Dira Airways",
+    "country":"Congo ? Democratic Rep.",
+    "radioCallsign":"Wimbi Dira"
+  },
+  {
+    "IATA":"9D",
+    "ICAO":"THE",
+    "operator":"Toumai Air Tchad",
+    "country":"Chad",
+    "radioCallsign":"Toumai Air"
+  },
+  {
+    "IATA":"9E",
+    "ICAO":"FLG",
+    "operator":"Endeavor Air",
+    "country":"USA",
+    "radioCallsign":"Flagship"
+  },
+  {
+    "IATA":"9G",
+    "ICAO":"PGP",
+    "operator":"Perm Airlines",
+    "country":"Russia",
+    "radioCallsign":"Perm Air"
+  },
+  {
+    "IATA":"9J",
+    "ICAO":"DAN",
+    "operator":"Dana Air",
+    "country":"Nigeria",
+    "radioCallsign":"Danaco"
+  },
+  {
+    "IATA":"9K",
+    "ICAO":"KAP",
+    "operator":"Cape Air",
+    "country":"USA",
+    "radioCallsign":"Cair"
+  },
+  {
+    "IATA":"9M",
+    "ICAO":"GLR",
+    "operator":"Central Mountain Air",
+    "country":"Canada",
+    "radioCallsign":"Glacier"
+  },
+  {
+    "IATA":"9N",
+    "ICAO":"NSE",
+    "operator":"SATENA",
+    "country":"Colombia",
+    "radioCallsign":"Satena"
+  },
+  {
+    "IATA":"9R",
+    "ICAO":"VAP",
+    "operator":"Phuket Air",
+    "country":"Thailand",
+    "radioCallsign":"Phuket Air"
+  },
+  {
+    "IATA":"9S",
+    "ICAO":"CQH",
+    "operator":"Spring Airlines",
+    "country":"China",
+    "radioCallsign":"Air Spring"
+  },
+  {
+    "IATA":"9S",
+    "ICAO":"SOO",
+    "operator":"Southern Air",
+    "country":"USA",
+    "radioCallsign":"Southern Air"
+  },
+  {
+    "IATA":"9T",
+    "ICAO":"ABS",
+    "operator":"Transwest Air",
+    "country":"Canada",
+    "radioCallsign":"Athabaska"
+  },
+  {
+    "IATA":"9T",
+    "ICAO":"RUN",
+    "operator":"ACT Airlines",
+    "country":"Turkey",
+    "radioCallsign":"Cargo Turk"
+  },
+  {
+    "IATA":"9U",
+    "ICAO":"MLD",
+    "operator":"Air Moldova",
+    "country":"Moldova",
+    "radioCallsign":"Air Moldova"
+  },
+  {
+    "IATA":"9V",
+    "ICAO":"AMV",
+    "operator":"AMC Airlines",
+    "country":"Egypt",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"9V",
+    "ICAO":"ROI",
+    "operator":"Avior Airlines",
+    "country":"Venezuela",
+    "radioCallsign":"Avior"
+  },
+  {
+    "IATA":"9W",
+    "ICAO":"JAI",
+    "operator":"Jet Airways",
+    "country":"India",
+    "radioCallsign":"Jet Airways"
+  },
+  {
+    "IATA":"9X",
+    "ICAO":"AXY",
+    "operator":"New Axis Airways",
+    "country":"France",
+    "radioCallsign":"Axis"
+  },
+  {
+    "IATA":"A2",
+    "ICAO":"CIU",
+    "operator":"Cielos Airlines",
+    "country":"Peru",
+    "radioCallsign":"Cielos"
+  },
+  {
+    "IATA":"A3",
+    "ICAO":"AEE",
+    "operator":"Aegean Airlines",
+    "country":"Greece",
+    "radioCallsign":"Aegean"
+  },
+  {
+    "IATA":"A5",
+    "ICAO":"HOP",
+    "operator":"Hop!",
+    "country":"France",
+    "radioCallsign":"Air Op"
+  },
+  {
+    "IATA":"A8",
+    "ICAO":"BGL",
+    "operator":"Benin Golf Air",
+    "country":"Benin",
+    "radioCallsign":"Benin Golf"
+  },
+  {
+    "IATA":"A9",
+    "ICAO":"TGZ",
+    "operator":"Georgian Airways/Air Zena",
+    "country":"Georgia",
+    "radioCallsign":"Tamazi"
+  },
+  {
+    "IATA":"AA",
+    "ICAO":"AAL",
+    "operator":"American Airlines",
+    "country":"USA",
+    "radioCallsign":"American"
+  },
+  {
+    "IATA":"AB",
+    "ICAO":"BER",
+    "operator":"Air Berlin",
+    "country":"Germany",
+    "radioCallsign":"Air Berlin"
+  },
+  {
+    "IATA":"AC",
+    "ICAO":"ACA",
+    "operator":"Air Canada",
+    "country":"Canada",
+    "radioCallsign":"Air Canada"
+  },
+  {
+    "IATA":"AD",
+    "ICAO":"AZU",
+    "operator":"Azul Linhas Aereas Brasileiras",
+    "country":"Brazil",
+    "radioCallsign":"Azul"
+  },
+  {
+    "IATA":"AE",
+    "ICAO":"MDA",
+    "operator":"Mandarin Airlines",
+    "country":"Taiwan",
+    "radioCallsign":"Mandarin"
+  },
+  {
+    "IATA":"AF",
+    "ICAO":"AFR",
+    "operator":"Air France",
+    "country":"France",
+    "radioCallsign":"Airfrans"
+  },
+  {
+    "IATA":"AG",
+    "ICAO":"ABR",
+    "operator":"Air Contractors",
+    "country":"Ireland",
+    "radioCallsign":"Contract"
+  },
+  {
+    "IATA":"AH",
+    "ICAO":"DAH",
+    "operator":"Air Algerie",
+    "country":"Algeria",
+    "radioCallsign":"Air Algerie"
+  },
+  {
+    "IATA":"AI",
+    "ICAO":"AIA",
+    "operator":"Airmark Indonesia",
+    "country":"Indonesia",
+    "radioCallsign":"Airmark"
+  },
+  {
+    "IATA":"AI",
+    "ICAO":"AIC",
+    "operator":"Air India",
+    "country":"India",
+    "radioCallsign":"Air India"
+  },
+  {
+    "IATA":"AJ",
+    "ICAO":"NIG",
+    "operator":"Aero Contractors",
+    "country":"Nigeria",
+    "radioCallsign":"Aeroline"
+  },
+  {
+    "IATA":"AK",
+    "ICAO":"AXM",
+    "operator":"AirAsia",
+    "country":"Malaysia",
+    "radioCallsign":"Red Cap"
+  },
+  {
+    "IATA":"AL",
+    "ICAO":"TXC",
+    "operator":"Transaviaexport Cargo Airline",
+    "country":"Belarus",
+    "radioCallsign":"Transexport"
+  },
+  {
+    "IATA":"AM",
+    "ICAO":"AMX",
+    "operator":"Aeromexico",
+    "country":"Mexico",
+    "radioCallsign":"Aeromexico"
+  },
+  {
+    "IATA":"AR",
+    "ICAO":"ARG",
+    "operator":"Aerolineas Argentinas",
+    "country":"Argentina",
+    "radioCallsign":"Argentina"
+  },
+  {
+    "IATA":"AS",
+    "ICAO":"ASA",
+    "operator":"Alaska Airlines",
+    "country":"USA",
+    "radioCallsign":"Alaska"
+  },
+  {
+    "IATA":"AT",
+    "ICAO":"RAM",
+    "operator":"Royal Air Maroc",
+    "country":"Morocco",
+    "radioCallsign":"Royalair Maroc"
+  },
+  {
+    "IATA":"AU",
+    "ICAO":"AUT",
+    "operator":"Austral Lineas Aereas",
+    "country":"Argentina",
+    "radioCallsign":"Austral"
+  },
+  {
+    "IATA":"AV",
+    "ICAO":"AVA",
+    "operator":"Avianca",
+    "country":"Colombia",
+    "radioCallsign":"Avianca"
+  },
+  {
+    "IATA":"AW",
+    "ICAO":"AWN",
+    "operator":"Air Niamey",
+    "country":"Niger",
+    "radioCallsign":"Air Niamey"
+  },
+  {
+    "IATA":"AW",
+    "ICAO":"SCH",
+    "operator":"CHC Airways",
+    "country":"Netherlands",
+    "radioCallsign":"Schreiner"
+  },
+  {
+    "IATA":"AX",
+    "ICAO":"LOF",
+    "operator":"Trans States Airlines",
+    "country":"USA",
+    "radioCallsign":"Waterski"
+  },
+  {
+    "IATA":"AY",
+    "ICAO":"FIN",
+    "operator":"Finnair",
+    "country":"Finland",
+    "radioCallsign":"Finnair"
+  },
+  {
+    "IATA":"AZ",
+    "ICAO":"AZA",
+    "operator":"Alitalia",
+    "country":"Italy",
+    "radioCallsign":"Alitalia"
+  },
+  {
+    "IATA":"B2",
+    "ICAO":"BRU",
+    "operator":"Belavia",
+    "country":"Belarus",
+    "radioCallsign":"Belarus Avia"
+  },
+  {
+    "IATA":"B4",
+    "ICAO":"BCF",
+    "operator":"BACH Flugbetriebs",
+    "country":"Austria",
+    "radioCallsign":"Bach"
+  },
+  {
+    "IATA":"B4",
+    "ICAO":"BKA",
+    "operator":"Bankair",
+    "country":"USA",
+    "radioCallsign":"Bankair"
+  },
+  {
+    "IATA":"B5",
+    "ICAO":"EXZ",
+    "operator":"East African Safari Air Express",
+    "country":"Kenya",
+    "radioCallsign":"Twiga"
+  },
+  {
+    "IATA":"B6",
+    "ICAO":"JBU",
+    "operator":"JetBlue Airways {Jet Blue}",
+    "country":"USA",
+    "radioCallsign":"Jetblue"
+  },
+  {
+    "IATA":"B7",
+    "ICAO":"UIA",
+    "operator":"UNI Airways Corporation",
+    "country":"Taiwan",
+    "radioCallsign":"Glory"
+  },
+  {
+    "IATA":"B8",
+    "ICAO":"ERT",
+    "operator":"Eritrean Airlines",
+    "country":"Eritrea",
+    "radioCallsign":"Eritrean"
+  },
+  {
+    "IATA":"B9",
+    "ICAO":"IRB",
+    "operator":"Iran Air Tours",
+    "country":"Iran",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"BA",
+    "ICAO":"BAT",
+    "operator":"British Airways",
+    "country":"BA",
+    "radioCallsign":"Limited (United Kingdom) Gherkin ? LCY-JFK flights only"
+  },
+  {
+    "IATA":"BA",
+    "ICAO":"BAW",
+    "operator":"British Airways Plc",
+    "country":"United Kingdom",
+    "radioCallsign":"Speedbird"
+  },
+  {
+    "IATA":"BA",
+    "ICAO":"SHT",
+    "operator":"British Airways Shuttle",
+    "country":"United Kingdom",
+    "radioCallsign":"Shuttle"
+  },
+  {
+    "IATA":"BB",
+    "ICAO":"SBS",
+    "operator":"Seaborne Airlines",
+    "country":"Virgin Islands ? USA",
+    "radioCallsign":"Seaborne"
+  },
+  {
+    "IATA":"BC",
+    "ICAO":"SKY",
+    "operator":"Skymark Airlines",
+    "country":"Japan",
+    "radioCallsign":"Skymark"
+  },
+  {
+    "IATA":"BE",
+    "ICAO":"BEE",
+    "operator":"flybe",
+    "country":"United Kingdom",
+    "radioCallsign":"Jersey"
+  },
+  {
+    "IATA":"BE",
+    "ICAO":"FCM",
+    "operator":"flybe Nordic/Finnish Commuter Airlines",
+    "country":"Finland",
+    "radioCallsign":"Finncomm"
+  },
+  {
+    "IATA":"BF",
+    "ICAO":"BBD",
+    "operator":"Bluebird Cargo",
+    "country":"Iceland",
+    "radioCallsign":"Blue Cargo"
+  },
+  {
+    "IATA":"BF",
+    "ICAO":"RSR",
+    "operator":"Aero-Service",
+    "country":"Congo",
+    "radioCallsign":"Congoserv"
+  },
+  {
+    "IATA":"BG",
+    "ICAO":"BBC",
+    "operator":"Biman Bangladesh",
+    "country":"Bangladesh",
+    "radioCallsign":"Bangladesh"
+  },
+  {
+    "IATA":"BH",
+    "ICAO":"BHA",
+    "operator":"Hawkair",
+    "country":"Canada",
+    "radioCallsign":"Hawk"
+  },
+  {
+    "IATA":"BI",
+    "ICAO":"RBA",
+    "operator":"Royal Brunei Airlines",
+    "country":"Brunei Darussalam",
+    "radioCallsign":"Brunei"
+  },
+  {
+    "IATA":"BJ",
+    "ICAO":"BRJ",
+    "operator":"Borajet",
+    "country":"Turkey",
+    "radioCallsign":"Bora Jet"
+  },
+  {
+    "IATA":"BJ",
+    "ICAO":"LBT",
+    "operator":"Nouvelair",
+    "country":"Tunisia",
+    "radioCallsign":"Nouvelair"
+  },
+  {
+    "IATA":"BK",
+    "ICAO":"OKA",
+    "operator":"Okay Airways",
+    "country":"China",
+    "radioCallsign":"Okayjet"
+  },
+  {
+    "IATA":"BL",
+    "ICAO":"PIC",
+    "operator":"Jetstar Pacific Airlines",
+    "country":"Vietnam",
+    "radioCallsign":"Pacific"
+  },
+  {
+    "IATA":"BM",
+    "ICAO":"BMR",
+    "operator":"bmi Regional",
+    "country":"United Kingdom",
+    "radioCallsign":"Kittiwake"
+  },
+  {
+    "IATA":"BO",
+    "ICAO":"BBW",
+    "operator":"BB Airways",
+    "country":"Nepal",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"BP",
+    "ICAO":"BOT",
+    "operator":"Air Botswana",
+    "country":"Botswana",
+    "radioCallsign":"Botswana"
+  },
+  {
+    "IATA":"BQ",
+    "ICAO":"BBV",
+    "operator":"Bravo Airlines",
+    "country":"Spain",
+    "radioCallsign":"Bravo Europa"
+  },
+  {
+    "IATA":"BR",
+    "ICAO":"EVA",
+    "operator":"EVA Airways Corporation",
+    "country":"Taiwan",
+    "radioCallsign":"Eva"
+  },
+  {
+    "IATA":"BS",
+    "ICAO":"BIH",
+    "operator":"British International Helicopters",
+    "country":"United Kingdom",
+    "radioCallsign":"Brintel"
+  },
+  {
+    "IATA":"BT",
+    "ICAO":"BTI",
+    "operator":"Air Baltic",
+    "country":"Latvia",
+    "radioCallsign":"Air Baltic"
+  },
+  {
+    "IATA":"BV",
+    "ICAO":"BPA",
+    "operator":"Blue Panorama Airlines/Blu-Express",
+    "country":"Italy",
+    "radioCallsign":"Blue Panorama"
+  },
+  {
+    "IATA":"BW",
+    "ICAO":"BWA",
+    "operator":"Caribbean Airlines/Air Jamaica",
+    "country":"Trinidad and Tobago",
+    "radioCallsign":"Caribbean Airlines"
+  },
+  {
+    "IATA":"BX",
+    "ICAO":"ABL",
+    "operator":"Air Busan",
+    "country":"Korea ? Rep. of",
+    "radioCallsign":"Air Busan"
+  },
+  {
+    "IATA":"BY",
+    "ICAO":"TOM",
+    "operator":"Thomson Airways",
+    "country":"United Kingdom",
+    "radioCallsign":"Tomson"
+  },
+  {
+    "IATA":"BZ",
+    "ICAO":"BBG",
+    "operator":"Bluebird Airways",
+    "country":"Greece",
+    "radioCallsign":"Candia Bird"
+  },
+  {
+    "IATA":"BZ",
+    "ICAO":"BDA",
+    "operator":"Blue Dart Aviation",
+    "country":"India",
+    "radioCallsign":"Blue Dart"
+  },
+  {
+    "IATA":"BZ",
+    "ICAO":"KEE",
+    "operator":"Keystone Air Service",
+    "country":"Canada",
+    "radioCallsign":"Keystone"
+  },
+  {
+    "IATA":"C2",
+    "ICAO":"CEL",
+    "operator":"CEIBA Intercontinental",
+    "country":"Equatorial Guinea",
+    "radioCallsign":"Ceiba Line"
+  },
+  {
+    "IATA":"C4",
+    "ICAO":"IMX",
+    "operator":"Zimex Aviation",
+    "country":"Switzerland",
+    "radioCallsign":"Zimex"
+  },
+  {
+    "IATA":"C5",
+    "ICAO":"UCA",
+    "operator":"Commutair",
+    "country":"USA",
+    "radioCallsign":"Commutair"
+  },
+  {
+    "IATA":"C6",
+    "ICAO":"CJA",
+    "operator":"CanJet",
+    "country":"Canada",
+    "radioCallsign":"Canjet"
+  },
+  {
+    "IATA":"C7",
+    "ICAO":"CIN",
+    "operator":"Cinnamon Air",
+    "country":"Sri Lanka",
+    "radioCallsign":"Cinnamon"
+  },
+  {
+    "IATA":"CA",
+    "ICAO":"CAO",
+    "operator":"Air China Cargo",
+    "country":"China",
+    "radioCallsign":"Airchina Freight"
+  },
+  {
+    "IATA":"CA",
+    "ICAO":"CCA",
+    "operator":"Air China",
+    "country":"China",
+    "radioCallsign":"Air China"
+  },
+  {
+    "IATA":"CA",
+    "ICAO":"CCD",
+    "operator":"Dalian Airlines",
+    "country":"China",
+    "radioCallsign":"Xiangjian"
+  },
+  {
+    "IATA":"CC",
+    "ICAO":"ABD",
+    "operator":"Air Atlanta Icelandic",
+    "country":"Iceland",
+    "radioCallsign":"Atlanta"
+  },
+  {
+    "IATA":"CD",
+    "ICAO":"LLR",
+    "operator":"Air India Regional",
+    "country":"India",
+    "radioCallsign":"Allied"
+  },
+  {
+    "IATA":"CG",
+    "ICAO":"TOK",
+    "operator":"Airlines PNG/Airlines of Papua New Guinea",
+    "country":"Papua New Guinea",
+    "radioCallsign":"Balus"
+  },
+  {
+    "IATA":"CH",
+    "ICAO":"BMJ",
+    "operator":"Bemidji Airlines",
+    "country":"USA",
+    "radioCallsign":"Bemidji"
+  },
+  {
+    "IATA":"CI",
+    "ICAO":"CAL",
+    "operator":"China Airlines",
+    "country":"Taiwan",
+    "radioCallsign":"Dynasty"
+  },
+  {
+    "IATA":"CJ",
+    "ICAO":"CFE",
+    "operator":"BA CityFlyer Express",
+    "country":"United Kingdom",
+    "radioCallsign":"Flyer"
+  },
+  {
+    "IATA":"CK",
+    "ICAO":"CKK",
+    "operator":"China Cargo Airlines",
+    "country":"China",
+    "radioCallsign":"Cargo King"
+  },
+  {
+    "IATA":"CL",
+    "ICAO":"CLH",
+    "operator":"Lufthansa Cityline",
+    "country":"Germany",
+    "radioCallsign":"Hansa Line"
+  },
+  {
+    "IATA":"CL",
+    "ICAO":"CLW",
+    "operator":"LOT Charters",
+    "country":"Poland",
+    "radioCallsign":"Central Wings"
+  },
+  {
+    "IATA":"CM",
+    "ICAO":"CMP",
+    "operator":"Copa Airlines",
+    "country":"Panama",
+    "radioCallsign":"Copa"
+  },
+  {
+    "IATA":"CN",
+    "ICAO":"GDC",
+    "operator":"Grand China Air",
+    "country":"China",
+    "radioCallsign":"Grand China"
+  },
+  {
+    "IATA":"CP",
+    "ICAO":"CPZ",
+    "operator":"Compass Airlines",
+    "country":"USA",
+    "radioCallsign":"Compass Rose"
+  },
+  {
+    "IATA":"CQ",
+    "ICAO":"EXL",
+    "operator":"Sunshine Express Airlines",
+    "country":"Australia",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"CT",
+    "ICAO":"CYL",
+    "operator":"Alitalia CityLiner",
+    "country":"Italy",
+    "radioCallsign":"Cityliner"
+  },
+  {
+    "IATA":"CU",
+    "ICAO":"CUB",
+    "operator":"Cubana de Aviacion",
+    "country":"Cuba",
+    "radioCallsign":"Cubana"
+  },
+  {
+    "IATA":"CV",
+    "ICAO":"CLX",
+    "operator":"Cargolux",
+    "country":"Luxembourg",
+    "radioCallsign":"Cargolux"
+  },
+  {
+    "IATA":"CV",
+    "ICAO":"CVA",
+    "operator":"Air Chathams",
+    "country":"New Zealand",
+    "radioCallsign":"Chatham"
+  },
+  {
+    "IATA":"CW",
+    "ICAO":"MRS",
+    "operator":"Air Marshall Islands",
+    "country":"Marshall Islands",
+    "radioCallsign":"Marshall Islands"
+  },
+  {
+    "IATA":"CX",
+    "ICAO":"CPA",
+    "operator":"Cathay Pacific Airways",
+    "country":"Hong Kong",
+    "radioCallsign":"Cathay"
+  },
+  {
+    "IATA":"CY",
+    "ICAO":"CYP",
+    "operator":"Cyprus Airways",
+    "country":"Cyprus",
+    "radioCallsign":"Cyprus"
+  },
+  {
+    "IATA":"CZ",
+    "ICAO":"CSN",
+    "operator":"China Southern Airlines",
+    "country":"China",
+    "radioCallsign":"China Southern"
+  },
+  {
+    "IATA":"D0",
+    "ICAO":"DHK",
+    "operator":"DHL Air UK/DHL Air Ltd",
+    "country":"United Kingdom",
+    "radioCallsign":"Eurotrans"
+  },
+  {
+    "IATA":"D2",
+    "ICAO":"SSF",
+    "operator":"Severstal Aircompany",
+    "country":"Russia",
+    "radioCallsign":"Severstal"
+  },
+  {
+    "IATA":"D3",
+    "ICAO":"DAO",
+    "operator":"Daallo Airlines",
+    "country":"Djibouti",
+    "radioCallsign":"Dalo Airlines"
+  },
+  {
+    "IATA":"D4",
+    "ICAO":"LID",
+    "operator":"Alidaunia",
+    "country":"Italy",
+    "radioCallsign":"Alida"
+  },
+  {
+    "IATA":"D5",
+    "ICAO":"DAE",
+    "operator":"DHL Aero Expreso",
+    "country":"Panama",
+    "radioCallsign":"Yellow"
+  },
+  {
+    "IATA":"D6",
+    "ICAO":"ILN",
+    "operator":"Inter Air",
+    "country":"South Africa",
+    "radioCallsign":"Inline"
+  },
+  {
+    "IATA":"D7",
+    "ICAO":"XAX",
+    "operator":"AirAsia X",
+    "country":"Malaysia",
+    "radioCallsign":"Xanadu"
+  },
+  {
+    "IATA":"D9",
+    "ICAO":"DNV",
+    "operator":"Donavia",
+    "country":"Russia",
+    "radioCallsign":"Donavia"
+  },
+  {
+    "IATA":"DC",
+    "ICAO":"GAO",
+    "operator":"Golden Air",
+    "country":"Sweden",
+    "radioCallsign":"Golden"
+  },
+  {
+    "IATA":"DD",
+    "ICAO":"NOK",
+    "operator":"Nok Air",
+    "country":"Thailand",
+    "radioCallsign":"Nok Air"
+  },
+  {
+    "IATA":"DE",
+    "ICAO":"CFG",
+    "operator":"Condor Airlines",
+    "country":"Germany",
+    "radioCallsign":"Condor"
+  },
+  {
+    "IATA":"DF",
+    "ICAO":"DER",
+    "operator":"Beijing Capital Airlines",
+    "country":"China",
+    "radioCallsign":"Deer Jet"
+  },
+  {
+    "IATA":"DG",
+    "ICAO":"SRQ",
+    "operator":"South East Asian Airlines",
+    "country":"Philippines",
+    "radioCallsign":"Seair"
+  },
+  {
+    "IATA":"DJ",
+    "ICAO":"VOZ",
+    "operator":"Virgin Australia Airlines",
+    "country":"Australia",
+    "radioCallsign":"Virgin"
+  },
+  {
+    "IATA":"DJ",
+    "ICAO":"PBN",
+    "operator":"Virgin Samoa",
+    "country":"Samoa",
+    "radioCallsign":"Bluebird"
+  },
+  {
+    "IATA":"DK",
+    "ICAO":"VKG",
+    "operator":"Thomas Cook Airlines Scandinavia",
+    "country":"Denmark",
+    "radioCallsign":"Viking"
+  },
+  {
+    "IATA":"DL",
+    "ICAO":"DAL",
+    "operator":"Delta Air Lines",
+    "country":"USA",
+    "radioCallsign":"Delta"
+  },
+  {
+    "IATA":"DN",
+    "ICAO":"SGG",
+    "operator":"Senegal Airlines",
+    "country":"USA",
+    "radioCallsign":"Senegal Air"
+  },
+  {
+    "IATA":"DQ",
+    "ICAO":"CXT",
+    "operator":"Coastal Air Transport",
+    "country":"USA",
+    "radioCallsign":"Coastal"
+  },
+  {
+    "IATA":"DS",
+    "ICAO":"EZS",
+    "operator":"easyJet Switzerland",
+    "country":"Switzerland",
+    "radioCallsign":"Top Swiss"
+  },
+  {
+    "IATA":"DT",
+    "ICAO":"DTA",
+    "operator":"TAAG Angola Airlines",
+    "country":"Angola",
+    "radioCallsign":"DTA"
+  },
+  {
+    "IATA":"DU",
+    "ICAO":"NLH",
+    "operator":"Norwegian Long Haul",
+    "country":"Norway",
+    "radioCallsign":"Norstar"
+  },
+  {
+    "IATA":"DV",
+    "ICAO":"VSV",
+    "operator":"Scat Air/PLL Scat Aircompany",
+    "country":"Kazakhstan",
+    "radioCallsign":"Vlasta"
+  },
+  {
+    "IATA":"DW",
+    "ICAO":"UCR",
+    "operator":"Aero Charter Ukraine",
+    "country":"Ukraine",
+    "radioCallsign":"Charter Ukraine"
+  },
+  {
+    "IATA":"DX",
+    "ICAO":"DTR",
+    "operator":"DAT Danish Air Transport",
+    "country":"Denmark",
+    "radioCallsign":"Danish"
+  },
+  {
+    "IATA":"DY",
+    "ICAO":"NAX",
+    "operator":"Norwegian Air Shuttle",
+    "country":"Norway",
+    "radioCallsign":"Nor Shuttle"
+  },
+  {
+    "IATA":"E5",
+    "ICAO":"RBG",
+    "operator":"Air Arabia Egypt",
+    "country":"Egypt",
+    "radioCallsign":"Arabia Egypt"
+  },
+  {
+    "IATA":"E7",
+    "ICAO":"ESF",
+    "operator":"Estafeta Carga Aerea",
+    "country":"Mexico",
+    "radioCallsign":"Estafeta"
+  },
+  {
+    "IATA":"E8",
+    "ICAO":"GTA",
+    "operator":"City Airways",
+    "country":"Thailand",
+    "radioCallsign":"City Airways"
+  },
+  {
+    "IATA":"E9",
+    "ICAO":"EVE",
+    "operator":"Evelop Airlines",
+    "country":"Spain",
+    "radioCallsign":"Evelop"
+  },
+  {
+    "IATA":"EB",
+    "ICAO":"PLM",
+    "operator":"Pullmantur Air",
+    "country":"Spain",
+    "radioCallsign":"Pullmantur"
+  },
+  {
+    "IATA":"EC",
+    "ICAO":"BOS",
+    "operator":"OpenSkies",
+    "country":"United Kingdom",
+    "radioCallsign":"Mistral"
+  },
+  {
+    "IATA":"EC",
+    "ICAO":"TWN",
+    "operator":"Avialeasing Aviation Company",
+    "country":"Uzbekistan",
+    "radioCallsign":"Twin Arrow"
+  },
+  {
+    "IATA":"ED",
+    "ICAO":"ABQ",
+    "operator":"Airblue",
+    "country":"Pakistan",
+    "radioCallsign":"Airblue"
+  },
+  {
+    "IATA":"EF",
+    "ICAO":"ESY",
+    "operator":"EasyFly",
+    "country":"Colombia",
+    "radioCallsign":"Easy Fly"
+  },
+  {
+    "IATA":"EG",
+    "ICAO":"ENJ",
+    "operator":"Enerjet",
+    "country":"Canada",
+    "radioCallsign":"Enerjet Air"
+  },
+  {
+    "IATA":"EH",
+    "ICAO":"AKX",
+    "operator":"ANA Wings",
+    "country":"Japan",
+    "radioCallsign":"Alfa Wing"
+  },
+  {
+    "IATA":"EI",
+    "ICAO":"EIN",
+    "operator":"Aer Lingus",
+    "country":"Ireland",
+    "radioCallsign":"Shamrock"
+  },
+  {
+    "IATA":"EJ",
+    "ICAO":"NEA",
+    "operator":"New England Airlines",
+    "country":"USA",
+    "radioCallsign":"New England"
+  },
+  {
+    "IATA":"EK",
+    "ICAO":"UAE",
+    "operator":"Emirates",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Emirates"
+  },
+  {
+    "IATA":"EM",
+    "ICAO":"AEB",
+    "operator":"Aero Benin",
+    "country":"Benin",
+    "radioCallsign":"Aeroben"
+  },
+  {
+    "IATA":"EM",
+    "ICAO":"CFS",
+    "operator":"Empire Airlines",
+    "country":"USA",
+    "radioCallsign":"Empire Air"
+  },
+  {
+    "IATA":"EN",
+    "ICAO":"DLA",
+    "operator":"Air Dolomiti",
+    "country":"Italy",
+    "radioCallsign":"Dolomiti"
+  },
+  {
+    "IATA":"EO",
+    "ICAO":"LHN",
+    "operator":"Express One International",
+    "country":"USA",
+    "radioCallsign":"Longhorn"
+  },
+  {
+    "IATA":"EP",
+    "ICAO":"IRC",
+    "operator":"Iran Asseman Airlines",
+    "country":"Iran",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"EQ",
+    "ICAO":"TAE",
+    "operator":"TAME",
+    "country":"Ecuador",
+    "radioCallsign":"Tame"
+  },
+  {
+    "IATA":"ES",
+    "ICAO":"DHX",
+    "operator":"SNAS/DHL/DHL International Aviation ME",
+    "country":"Bahrain",
+    "radioCallsign":"Dilmun"
+  },
+  {
+    "IATA":"ET",
+    "ICAO":"ETH",
+    "operator":"Ethiopian Airlines",
+    "country":"Ethiopia",
+    "radioCallsign":"Ethiopian"
+  },
+  {
+    "IATA":"EU",
+    "ICAO":"UEA",
+    "operator":"Chengdu Airlines",
+    "country":"China",
+    "radioCallsign":"Hibiscus City"
+  },
+  {
+    "IATA":"EV",
+    "ICAO":"ASQ",
+    "operator":"ExpressJet Airlines",
+    "country":"USA",
+    "radioCallsign":"Acey"
+  },
+  {
+    "IATA":"EW",
+    "ICAO":"EWG",
+    "operator":"Eurowings",
+    "country":"Germany",
+    "radioCallsign":"Eurowings"
+  },
+  {
+    "IATA":"EX",
+    "ICAO":"BJK",
+    "operator":"Atlantic Airlines",
+    "country":"USA",
+    "radioCallsign":"Blackjack"
+  },
+  {
+    "IATA":"EY",
+    "ICAO":"EFL",
+    "operator":"Eagle Air",
+    "country":"Tanzania",
+    "radioCallsign":"Flying Eagle"
+  },
+  {
+    "IATA":"EY",
+    "ICAO":"ETD",
+    "operator":"Etihad Airways",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Etihad"
+  },
+  {
+    "IATA":"EZ",
+    "ICAO":"EIA",
+    "operator":"Evergreen International Airlines",
+    "country":"USA",
+    "radioCallsign":"Evergreen"
+  },
+  {
+    "IATA":"EZ",
+    "ICAO":"SUS",
+    "operator":"Sun Air of Scandinavia",
+    "country":"Denmark",
+    "radioCallsign":"Sun Scan"
+  },
+  {
+    "IATA":"F3",
+    "ICAO":"FSW",
+    "operator":"Faso Airways",
+    "country":"Burkina Faso",
+    "radioCallsign":"Faso"
+  },
+  {
+    "IATA":"F3",
+    "ICAO":"FXL",
+    "operator":"Fly Excellent",
+    "country":"Sweden",
+    "radioCallsign":"Fly Excellent"
+  },
+  {
+    "IATA":"F3",
+    "ICAO":"SGB",
+    "operator":"Sky King",
+    "country":"USA",
+    "radioCallsign":"Songbird"
+  },
+  {
+    "IATA":"F7",
+    "ICAO":"DWT",
+    "operator":"Darwin Airline/Etihad Regional",
+    "country":"Switzerland",
+    "radioCallsign":"Darwin"
+  },
+  {
+    "IATA":"F7",
+    "ICAO":"VRE",
+    "operator":"Volare Airlines",
+    "country":"Ukraine",
+    "radioCallsign":"Ukraine Volare"
+  },
+  {
+    "IATA":"F9",
+    "ICAO":"FFT",
+    "operator":"Frontier Airlines",
+    "country":"USA",
+    "radioCallsign":"Frontier Flight"
+  },
+  {
+    "IATA":"FA",
+    "ICAO":"SFR",
+    "operator":"Safair/FlySafair",
+    "country":"South Africa",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"FB",
+    "ICAO":"LZB",
+    "operator":"Bulgaria Air",
+    "country":"Bulgaria",
+    "radioCallsign":"Flying Bulgaria"
+  },
+  {
+    "IATA":"FC",
+    "ICAO":"FCX",
+    "operator":"Falcon Express Cargo Airlines",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Falcon Cargo"
+  },
+  {
+    "IATA":"FD",
+    "ICAO":"AIQ",
+    "operator":"Thai AirAsia",
+    "country":"Thailand",
+    "radioCallsign":"Thai Asia"
+  },
+  {
+    "IATA":"FG",
+    "ICAO":"AFG",
+    "operator":"Ariana Afghan Airlines",
+    "country":"Afghanistan",
+    "radioCallsign":"Ariana"
+  },
+  {
+    "IATA":"FI",
+    "ICAO":"ICE",
+    "operator":"Icelandair",
+    "country":"Iceland",
+    "radioCallsign":"Ice Air"
+  },
+  {
+    "IATA":"FJ",
+    "ICAO":"FJI",
+    "operator":"Fiji Airways",
+    "country":"Fiji",
+    "radioCallsign":"Fiji "
+  },
+  {
+    "IATA":"FJ",
+    "ICAO":"FJA",
+    "operator":"Pacific Sun/Fiji Airlines",
+    "country":"-",
+    "radioCallsign":"Pac Sun"
+  },
+  {
+    "IATA":"FK  WTA   Africa West Airlines",
+    "ICAO":"Togo",
+    "operator":"West Togo",
+    "country":"",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"FM",
+    "ICAO":"CSH",
+    "operator":"Shanghai Airlines",
+    "country":"China",
+    "radioCallsign":"Shanghai Air"
+  },
+  {
+    "IATA":"FN",
+    "ICAO":"FTZ",
+    "operator":"Fastjet",
+    "country":"United Kingdom/Tanzania",
+    "radioCallsign":"Greybird"
+  },
+  {
+    "IATA":"FN",
+    "ICAO":"RGL",
+    "operator":"Royal Air Maroc Express/Regional Airlines",
+    "country":"Morocco",
+    "radioCallsign":"Maroc Regional"
+  },
+  {
+    "IATA":"FO",
+    "ICAO":"ATM",
+    "operator":"Airlines of Tasmania",
+    "country":"Australia",
+    "radioCallsign":"Air Tas"
+  },
+  {
+    "IATA":"FO",
+    "ICAO":"FXX",
+    "operator":"Felix Airways",
+    "country":"Yemen",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"FP",
+    "ICAO":"FPG",
+    "operator":"TAG Aviation",
+    "country":"Switzerland",
+    "radioCallsign":"Tag Aviation"
+  },
+  {
+    "IATA":"FP",
+    "ICAO":"FRE",
+    "operator":"Freedom Air/Aviation Services",
+    "country":"Guam",
+    "radioCallsign":"Freedom"
+  },
+  {
+    "IATA":"FQ",
+    "ICAO":"TCW",
+    "operator":"Thomas Cook Airlines Belgium",
+    "country":"Belgium",
+    "radioCallsign":"Thomas Cook"
+  },
+  {
+    "IATA":"FR",
+    "ICAO":"RYR",
+    "operator":"Ryanair",
+    "country":"Ireland",
+    "radioCallsign":"Ryanair"
+  },
+  {
+    "IATA":"FS",
+    "ICAO":"SYA",
+    "operator":"Syphax Airlines",
+    "country":"Tunisia",
+    "radioCallsign":"Syphaxair"
+  },
+  {
+    "IATA":"FV",
+    "ICAO":"SDM",
+    "operator":"Rossiya Russian Airlines",
+    "country":"Russia",
+    "radioCallsign":"Russia"
+  },
+  {
+    "IATA":"FW",
+    "ICAO":"FRI",
+    "operator":"Ibex Airlines",
+    "country":"Japan",
+    "radioCallsign":"Ibex"
+  },
+  {
+    "IATA":"FX",
+    "ICAO":"FDX",
+    "operator":"FedEx Express/Federal Express",
+    "country":"USA",
+    "radioCallsign":"Fedex"
+  },
+  {
+    "IATA":"FY",
+    "ICAO":"FFM",
+    "operator":"Firefly",
+    "country":"Malaysia",
+    "radioCallsign":"Firefly"
+  },
+  {
+    "IATA":"FY",
+    "ICAO":"NWR",
+    "operator":"Northwest Regional Airlines",
+    "country":"Australia",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"FZ",
+    "ICAO":"FDB",
+    "operator":"Flydubai",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Sky Dubai"
+  },
+  {
+    "IATA":"G2",
+    "ICAO":"VXG",
+    "operator":"Avirex Gabon",
+    "country":"Gabon",
+    "radioCallsign":"Avirex Gabon"
+  },
+  {
+    "IATA":"G3",
+    "ICAO":"GLO",
+    "operator":"GOL Transportes Aereos",
+    "country":"Brazil",
+    "radioCallsign":"Gol Transporte"
+  },
+  {
+    "IATA":"G4",
+    "ICAO":"AAY",
+    "operator":"Allegiant Air",
+    "country":"USA",
+    "radioCallsign":"Allegiant"
+  },
+  {
+    "IATA":"G4",
+    "ICAO":"GZD",
+    "operator":"Grizodubova Air Company",
+    "country":"Russia",
+    "radioCallsign":"Grizodubova Air"
+  },
+  {
+    "IATA":"G5",
+    "ICAO":"HXA",
+    "operator":"China Express Airlines",
+    "country":"China",
+    "radioCallsign":"China Express"
+  },
+  {
+    "IATA":"G7",
+    "ICAO":"GJS",
+    "operator":"GoJet Airlines",
+    "country":"USA",
+    "radioCallsign":"Lindbergh"
+  },
+  {
+    "IATA":"G8",
+    "ICAO":"ENK",
+    "operator":"Enkor",
+    "country":"Russia",
+    "radioCallsign":"Enkor"
+  },
+  {
+    "IATA":"G8",
+    "ICAO":"GOW",
+    "operator":"GoAir",
+    "country":"India",
+    "radioCallsign":"Go Air"
+  },
+  {
+    "IATA":"G9",
+    "ICAO":"ABY",
+    "operator":"Air Arabia",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Arabia"
+  },
+  {
+    "IATA":"GA",
+    "ICAO":"GIA",
+    "operator":"Garuda Indonesia",
+    "country":"Indonesia",
+    "radioCallsign":"Indonesia"
+  },
+  {
+    "IATA":"GB",
+    "ICAO":"ABX",
+    "operator":"ABX Air",
+    "country":"USA",
+    "radioCallsign":"Abex"
+  },
+  {
+    "IATA":"GC",
+    "ICAO":"GCB",
+    "operator":"Lina Congo",
+    "country":"Congo",
+    "radioCallsign":"Linacongo"
+  },
+  {
+    "IATA":"GC",
+    "ICAO":"GNR",
+    "operator":"Gambia International Airlines",
+    "country":"Gambia",
+    "radioCallsign":"Gambia International"
+  },
+  {
+    "IATA":"GE",
+    "ICAO":"TNA",
+    "operator":"TransAsia Airways",
+    "country":"Taiwan",
+    "radioCallsign":"Trans Asia"
+  },
+  {
+    "IATA":"GF",
+    "ICAO":"GFA",
+    "operator":"Gulf Air",
+    "country":"Bahrain",
+    "radioCallsign":"Gulf Air"
+  },
+  {
+    "IATA":"GH",
+    "ICAO":"GLP",
+    "operator":"Globus",
+    "country":"Russia",
+    "radioCallsign":"Globus"
+  },
+  {
+    "IATA":"GJ",
+    "ICAO":"CDC",
+    "operator":"Zhejiang Loong Airlines",
+    "country":"China",
+    "radioCallsign":"Gualong"
+  },
+  {
+    "IATA":"GK",
+    "ICAO":"JJP",
+    "operator":"JetStar Japan",
+    "country":"Japan",
+    "radioCallsign":"Orange Liner"
+  },
+  {
+    "IATA":"GL",
+    "ICAO":"GRL",
+    "operator":"Air Greenland",
+    "country":"Denmark",
+    "radioCallsign":"Greenlandair"
+  },
+  {
+    "IATA":"GO",
+    "ICAO":"KZU",
+    "operator":"ULS Airlines Cargo Transport",
+    "country":"Turkey",
+    "radioCallsign":"Universal Cargo"
+  },
+  {
+    "IATA":"GP",
+    "ICAO":"GDR",
+    "operator":"Gadair European Airlines",
+    "country":"Spain",
+    "radioCallsign":"Gadair Lines"
+  },
+  {
+    "IATA":"GP",
+    "ICAO":"GES",
+    "operator":"Gestair",
+    "country":"Spain",
+    "radioCallsign":"Gestair"
+  },
+  {
+    "IATA":"GQ",
+    "ICAO":"SEH",
+    "operator":"Sky Express",
+    "country":"Greece",
+    "radioCallsign":"Air Crete"
+  },
+  {
+    "IATA":"GR",
+    "ICAO":"AUR",
+    "operator":"Aurigny Air Services",
+    "country":"United Kingdom",
+    "radioCallsign":"Ayline"
+  },
+  {
+    "IATA":"GS",
+    "ICAO":"GCR",
+    "operator":"Tianjin Airlines",
+    "country":"China",
+    "radioCallsign":"China Dragon"
+  },
+  {
+    "IATA":"GX",
+    "ICAO":"JXX",
+    "operator":"Primera Air",
+    "country":"Iceland",
+    "radioCallsign":"Jetbird"
+  },
+  {
+    "IATA":"GY",
+    "ICAO":"GBK",
+    "operator":"Gabon Airlines",
+    "country":"Gabon",
+    "radioCallsign":"Gabon Airlines"
+  },
+  {
+    "IATA":"GY",
+    "ICAO":"TMG",
+    "operator":"Tri-MG Intra Asia Airlines",
+    "country":"Indonesia",
+    "radioCallsign":"Trilines"
+  },
+  {
+    "IATA":"H2",
+    "ICAO":"SKU",
+    "operator":"Sky Airline",
+    "country":"Chile",
+    "radioCallsign":"Aerosky"
+  },
+  {
+    "IATA":"H3",
+    "ICAO":"HRM",
+    "operator":"Hermes Airlines",
+    "country":"Greece",
+    "radioCallsign":"Hermes"
+  },
+  {
+    "IATA":"H4",
+    "ICAO":"HLI",
+    "operator":"Heli Securite Helicopter Airlines",
+    "country":"France",
+    "radioCallsign":"Heli Saint Tropez"
+  },
+  {
+    "IATA":"H5",
+    "ICAO":"RSY",
+    "operator":"I-Fly",
+    "country":"Russia",
+    "radioCallsign":"Russian Sky"
+  },
+  {
+    "IATA":"H6",
+    "ICAO":"HAG",
+    "operator":"Hageland Aviation Services",
+    "country":"USA",
+    "radioCallsign":"Hageland"
+  },
+  {
+    "IATA":"H7",
+    "ICAO":"EGU",
+    "operator":"Eagle Air",
+    "country":"Uganda",
+    "radioCallsign":"African Eagle"
+  },
+  {
+    "IATA":"H9",
+    "ICAO":"HTH",
+    "operator":"Helitt Lineas Aereas",
+    "country":"Spain",
+    "radioCallsign":"Alboran"
+  },
+  {
+    "IATA":"HA",
+    "ICAO":"HAL",
+    "operator":"Hawaiian Airlines",
+    "country":"USA",
+    "radioCallsign":"Hawaiian"
+  },
+  {
+    "IATA":"HB",
+    "ICAO":"AAQ",
+    "operator":"Asia Atlantic Airlines",
+    "country":"Thailand",
+    "radioCallsign":"Asia Atlantic"
+  },
+  {
+    "IATA":"HD",
+    "ICAO":"ADO",
+    "operator":"Hokkaido International Airlines/Air Do",
+    "country":"Japan",
+    "radioCallsign":"Air Do"
+  },
+  {
+    "IATA":"HE",
+    "ICAO":"LGW",
+    "operator":"LGW Luftfahrtgesellschaft Walter",
+    "country":"Germany",
+    "radioCallsign":"Walter"
+  },
+  {
+    "IATA":"HF",
+    "ICAO":"VRE",
+    "operator":"Air C?te d?Ivoire",
+    "country":"Cote d?Ivoire",
+    "radioCallsign":"Cote d?Ivoire"
+  },
+  {
+    "IATA":"HG",
+    "ICAO":"NLY",
+    "operator":"Niki",
+    "country":"Austria",
+    "radioCallsign":"Flyniki"
+  },
+  {
+    "IATA":"HJ",
+    "ICAO":"TMN",
+    "operator":"Tasman Cargo Airlines",
+    "country":"Australia",
+    "radioCallsign":"Tasman"
+  },
+  {
+    "IATA":"HK",
+    "ICAO":"FSC",
+    "operator":"Four Star Air Cargo",
+    "country":"Virgin Islands ? USA",
+    "radioCallsign":"Four Star"
+  },
+  {
+    "IATA":"HK",
+    "ICAO":"HAY",
+    "operator":"Hamburg Airways",
+    "country":"Germany",
+    "radioCallsign":"Hamburg Airways"
+  },
+  {
+    "IATA":"HM",
+    "ICAO":"SEY",
+    "operator":"Air Seychelles",
+    "country":"Seychelles",
+    "radioCallsign":"Seychelles"
+  },
+  {
+    "IATA":"HN",
+    "ICAO":"HVY",
+    "operator":"HeavyLift Cargo Airlines",
+    "country":"Australia",
+    "radioCallsign":"Heavy Cargo"
+  },
+  {
+    "IATA":"HN",
+    "ICAO":"PTH",
+    "operator":"Proteus Helicopteres",
+    "country":"France",
+    "radioCallsign":"Proteus"
+  },
+  {
+    "IATA":"HO",
+    "ICAO":"DKH",
+    "operator":"Juneyao Airlines",
+    "country":"China",
+    "radioCallsign":"Air Juneyao"
+  },
+  {
+    "IATA":"HR",
+    "ICAO":"HHN",
+    "operator":"Hahn Air",
+    "country":"Germany",
+    "radioCallsign":"Rooster"
+  },
+  {
+    "IATA":"HS",
+    "ICAO":"HSV",
+    "operator":"Svenska Direktflyg",
+    "country":"Sweden",
+    "radioCallsign":"Highswede"
+  },
+  {
+    "IATA":"HT",
+    "ICAO":"IMP",
+    "operator":"Hellenic Imperial Airways",
+    "country":"Greece",
+    "radioCallsign":"Imperial"
+  },
+  {
+    "IATA":"HU",
+    "ICAO":"CHH",
+    "operator":"Hainan Airlines",
+    "country":"China",
+    "radioCallsign":"Hainan"
+  },
+  {
+    "IATA":"HV",
+    "ICAO":"TRA",
+    "operator":"transavia.com/Transavia Airlines",
+    "country":"Netherlands",
+    "radioCallsign":"Transavia"
+  },
+  {
+    "IATA":"HW",
+    "ICAO":"NWL",
+    "operator":"North-Wright Airways",
+    "country":"Canada",
+    "radioCallsign":"Northwright"
+  },
+  {
+    "IATA":"HX",
+    "ICAO":"CRK",
+    "operator":"Hong Kong Airlines",
+    "country":"Hong Kong",
+    "radioCallsign":"Bauhinia"
+  },
+  {
+    "IATA":"HY",
+    "ICAO":"UZB",
+    "operator":"Uzbekistan Airways",
+    "country":"Uzbekistan",
+    "radioCallsign":"Uzbek"
+  },
+  {
+    "IATA":"HZ",
+    "ICAO":"SHU",
+    "operator":"Aurora",
+    "country":"Russia",
+    "radioCallsign":"Satair"
+  },
+  {
+    "IATA":"I2",
+    "ICAO":"IBS",
+    "operator":"Iberia Express",
+    "country":"Spain",
+    "radioCallsign":"Iberexpres"
+  },
+  {
+    "IATA":"I4",
+    "ICAO":"FWA",
+    "operator":"Interstate Airlines",
+    "country":"Netherlands",
+    "radioCallsign":"Freewayair"
+  },
+  {
+    "IATA":"I5",
+    "ICAO":"IAD",
+    "operator":"AirAsia India",
+    "country":"India",
+    "radioCallsign":"Ariya"
+  },
+  {
+    "IATA":"I5",
+    "ICAO":"CMM",
+    "operator":"Air Mali",
+    "country":"Mali",
+    "radioCallsign":"Camali"
+  },
+  {
+    "IATA":"I6",
+    "ICAO":"SEQ",
+    "operator":"Sky Eyes",
+    "country":"Thailand",
+    "radioCallsign":"Sky Eyes"
+  },
+  {
+    "IATA":"IA",
+    "ICAO":"IAW",
+    "operator":"Iraqi Airways",
+    "country":"Iraq",
+    "radioCallsign":"Iraqi"
+  },
+  {
+    "IATA":"IB",
+    "ICAO":"IBE",
+    "operator":"Iberia",
+    "country":"Spain",
+    "radioCallsign":"Iberia"
+  },
+  {
+    "IATA":"ID",
+    "ICAO":"BTK",
+    "operator":"Batik Air",
+    "country":"Indonesia",
+    "radioCallsign":"Batik"
+  },
+  {
+    "IATA":"IE",
+    "ICAO":"SOL",
+    "operator":"Solomon Airlines",
+    "country":"Solomon Islands",
+    "radioCallsign":"Solomon"
+  },
+  {
+    "IATA":"IG",
+    "ICAO":"ISS",
+    "operator":"Meridiana Fly",
+    "country":"Italy",
+    "radioCallsign":"Merair"
+  },
+  {
+    "IATA":"IH",
+    "ICAO":"MZA",
+    "operator":"Irtysh Air",
+    "country":"Kazakhstan",
+    "radioCallsign":"Azamat"
+  },
+  {
+    "IATA":"II",
+    "ICAO":"CSQ",
+    "operator":"IBC Airways",
+    "country":"USA",
+    "radioCallsign":"Chasqui"
+  },
+  {
+    "IATA":"IM",
+    "ICAO":"MNJ",
+    "operator":"Menajet",
+    "country":"Lebanon",
+    "radioCallsign":"Menajet"
+  },
+  {
+    "IATA":"IR",
+    "ICAO":"IRA",
+    "operator":"Iran Air",
+    "country":"Iran",
+    "radioCallsign":"Iran Air"
+  },
+  {
+    "IATA":"IS",
+    "ICAO":"ISA",
+    "operator":"Island Airlines",
+    "country":"USA",
+    "radioCallsign":"Island"
+  },
+  {
+    "IATA":"IW",
+    "ICAO":"WON",
+    "operator":"Wings Abadi Air",
+    "country":"Indonesia",
+    "radioCallsign":"Wings Abadi"
+  },
+  {
+    "IATA":"IX",
+    "ICAO":"AXB",
+    "operator":"Air India Express",
+    "country":"India",
+    "radioCallsign":"Express India"
+  },
+  {
+    "IATA":"IY",
+    "ICAO":"IYE",
+    "operator":"Yemenia",
+    "country":"Yemen",
+    "radioCallsign":"Yemeni"
+  },
+  {
+    "IATA":"IZ",
+    "ICAO":"AIZ",
+    "operator":"Arkia",
+    "country":"Israel",
+    "radioCallsign":"Arkia"
+  },
+  {
+    "IATA":"J2",
+    "ICAO":"AHC",
+    "operator":"AZAL Avia Cargo",
+    "country":"Azerbaijan",
+    "radioCallsign":"Azalaviacargo"
+  },
+  {
+    "IATA":"J2",
+    "ICAO":"AHY",
+    "operator":"AZAL Azerbaijan Airlines/AHY",
+    "country":"Azerbaijan",
+    "radioCallsign":"Azal"
+  },
+  {
+    "IATA":"J3",
+    "ICAO":"PLR",
+    "operator":"Northwestern Air",
+    "country":"Canada",
+    "radioCallsign":"Polaris"
+  },
+  {
+    "IATA":"J4",
+    "ICAO":"BFL",
+    "operator":"Buffalo Airways",
+    "country":"Canada",
+    "radioCallsign":"Buffalo Airways"
+  },
+  {
+    "IATA":"J5",
+    "ICAO":"EPA",
+    "operator":"Shenzhen Donghai Airlines",
+    "country":"China",
+    "radioCallsign":"Donghai Air"
+  },
+  {
+    "IATA":"J6",
+    "ICAO":"ARW",
+    "operator":"Jamaica Air Shuttle",
+    "country":"Jamaica",
+    "radioCallsign":"Jamaica Shuttle"
+  },
+  {
+    "IATA":"J7",
+    "ICAO":"DNM",
+    "operator":"Denim Air",
+    "country":"Netherlands",
+    "radioCallsign":"Denim"
+  },
+  {
+    "IATA":"J8",
+    "ICAO":"BVT",
+    "operator":"Berjaya Air",
+    "country":"Malaysia",
+    "radioCallsign":"Berjaya"
+  },
+  {
+    "IATA":"J9",
+    "ICAO":"JZR",
+    "operator":"Jazeera Airways",
+    "country":"Kuwait",
+    "radioCallsign":"Jazeera"
+  },
+  {
+    "IATA":"JA",
+    "ICAO":"BON",
+    "operator":"B & H Airlines",
+    "country":"Bosnia-Herzegovina",
+    "radioCallsign":"BH Airlines"
+  },
+  {
+    "IATA":"JA",
+    "ICAO":"JGN",
+    "operator":"Jagson Airlines",
+    "country":"India",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"JB",
+    "ICAO":"JBA",
+    "operator":"Helijet International",
+    "country":"Canada",
+    "radioCallsign":"Helijet"
+  },
+  {
+    "IATA":"JC",
+    "ICAO":"JEX",
+    "operator":"JAL Express",
+    "country":"Japan",
+    "radioCallsign":"Janex"
+  },
+  {
+    "IATA":"JE",
+    "ICAO":"MNO",
+    "operator":"Mango",
+    "country":"South Africa",
+    "radioCallsign":"Tulca"
+  },
+  {
+    "IATA":"JF",
+    "ICAO":"LAB",
+    "operator":"LAB Flying Service",
+    "country":"USA",
+    "radioCallsign":"Lab"
+  },
+  {
+    "IATA":"JH",
+    "ICAO":"FDA",
+    "operator":"Fuji Dream Airlines",
+    "country":"Japan",
+    "radioCallsign":"Fuji Dream"
+  },
+  {
+    "IATA":"JJ",
+    "ICAO":"AGX",
+    "operator":"Aviogenex",
+    "country":"Serbia",
+    "radioCallsign":"Genex"
+  },
+  {
+    "IATA":"JJ",
+    "ICAO":"TAM",
+    "operator":"TAM Linhas Aereas",
+    "country":"Brazil",
+    "radioCallsign":"Tam"
+  },
+  {
+    "IATA":"JL",
+    "ICAO":"JAL",
+    "operator":"Japan Airlines",
+    "country":"Japan",
+    "radioCallsign":"Japan Air"
+  },
+  {
+    "IATA":"JM",
+    "ICAO":"JKT",
+    "operator":"Jetstar Hong Kong",
+    "country":"Italy",
+    "radioCallsign":"Kai Tak"
+  },
+  {
+    "IATA":"JN",
+    "ICAO":"NLV",
+    "operator":"Livingston Compagnia Aerea",
+    "country":"Italy",
+    "radioCallsign":"Seagull"
+  },
+  {
+    "IATA":"JP",
+    "ICAO":"ADR",
+    "operator":"Adria Airways",
+    "country":"Slovenia",
+    "radioCallsign":"Adria"
+  },
+  {
+    "IATA":"JQ",
+    "ICAO":"JST",
+    "operator":"Jetstar Airways",
+    "country":"Australia",
+    "radioCallsign":"Jetstar"
+  },
+  {
+    "IATA":"JQ",
+    "ICAO":"LAV",
+    "operator":"AlbaStar",
+    "country":"Spain",
+    "radioCallsign":"Alba Star"
+  },
+  {
+    "IATA":"JR",
+    "ICAO":"JOY",
+    "operator":"Joy Air",
+    "country":"China",
+    "radioCallsign":"Joy Air"
+  },
+  {
+    "IATA":"JS",
+    "ICAO":"KOR",
+    "operator":"Air Koryo",
+    "country":"Korea ? Dem. People?s Rep.",
+    "radioCallsign":"Air Koryo"
+  },
+  {
+    "IATA":"JT",
+    "ICAO":"LNI",
+    "operator":"Lion Airlines/Lion Mentari Air",
+    "country":"Indonesia",
+    "radioCallsign":"Lion Inter"
+  },
+  {
+    "IATA":"JU",
+    "ICAO":"JAT",
+    "operator":"Jat Airways",
+    "country":"Serbia",
+    "radioCallsign":"Jat"
+  },
+  {
+    "IATA":"JV",
+    "ICAO":"BLS",
+    "operator":"Bearskin Airlines",
+    "country":"Canada",
+    "radioCallsign":"Bearskin"
+  },
+  {
+    "IATA":"JW",
+    "ICAO":"VNL",
+    "operator":"Vanilla Air",
+    "country":"Japan",
+    "radioCallsign":"Vanilla"
+  },
+  {
+    "IATA":"JZ",
+    "ICAO":"IWY",
+    "operator":"Air Turks and Caicos",
+    "country":"Turks and Caicos Islands",
+    "radioCallsign":"Islandways"
+  },
+  {
+    "IATA":"K2",
+    "ICAO":"ELO",
+    "operator":"EuroLOT",
+    "country":"Poland",
+    "radioCallsign":"Eurolot"
+  },
+  {
+    "IATA":"K4",
+    "ICAO":"CKS",
+    "operator":"Kalitta Air",
+    "country":"USA",
+    "radioCallsign":"Connie"
+  },
+  {
+    "IATA":"K5",
+    "ICAO":"ABE",
+    "operator":"Aban Air",
+    "country":"Iran",
+    "radioCallsign":"Aban"
+  },
+  {
+    "IATA":"K5",
+    "ICAO":"SQH",
+    "operator":"Wings of Alaska/SeaPort Airlines",
+    "country":"USA",
+    "radioCallsign":"Sasquach"
+  },
+  {
+    "IATA":"K6",
+    "ICAO":"KHV",
+    "operator":"Cambodia Angkor Air",
+    "country":"Cambodia",
+    "radioCallsign":"Cambodia Air"
+  },
+  {
+    "IATA":"K8",
+    "ICAO":"ZAK",
+    "operator":"Zambia Skyways",
+    "country":"Zambia",
+    "radioCallsign":"Zambia Skies"
+  },
+  {
+    "IATA":"K9",
+    "ICAO":"ESD",
+    "operator":"Esen Air",
+    "country":"Kyrgyzstan",
+    "radioCallsign":"Esen Air"
+  },
+  {
+    "IATA":"K9",
+    "ICAO":"KFS",
+    "operator":"Kalitta Charters",
+    "country":"USA",
+    "radioCallsign":"Kalitta"
+  },
+  {
+    "IATA":"K9",
+    "ICAO":"KRI",
+    "operator":"Krylo Aviakompania",
+    "country":"Russia",
+    "radioCallsign":"Krilo"
+  },
+  {
+    "IATA":"KA",
+    "ICAO":"HDA",
+    "operator":"Dragonair/Hong Kong Dragon Airlines",
+    "country":"Hong Kong",
+    "radioCallsign":"Dragon"
+  },
+  {
+    "IATA":"KB",
+    "ICAO":"DRK",
+    "operator":"Druk Air",
+    "country":"Bhutan",
+    "radioCallsign":"Royal Bhutan"
+  },
+  {
+    "IATA":"KC",
+    "ICAO":"KZR",
+    "operator":"Air Astana",
+    "country":"Kazakhstan",
+    "radioCallsign":"Astana Line"
+  },
+  {
+    "IATA":"KE",
+    "ICAO":"KAL",
+    "operator":"Korean Air",
+    "country":"Korea ? Rep. of",
+    "radioCallsign":"Korean Air"
+  },
+  {
+    "IATA":"KF",
+    "ICAO":"BLF",
+    "operator":"Blue1",
+    "country":"Finland",
+    "radioCallsign":"Bluefin"
+  },
+  {
+    "IATA":"KG",
+    "ICAO":"GTV",
+    "operator":"Aerogaviota",
+    "country":"Cuba",
+    "radioCallsign":"Gaviota"
+  },
+  {
+    "IATA":"KH",
+    "ICAO":"AAH",
+    "operator":"Aloha Air Cargo",
+    "country":"USA",
+    "radioCallsign":"Aloha"
+  },
+  {
+    "IATA":"KK",
+    "ICAO":"KKK",
+    "operator":"AtlasJet",
+    "country":"Turkey",
+    "radioCallsign":"Atlasjet"
+  },
+  {
+    "IATA":"KL",
+    "ICAO":"KLM",
+    "operator":"KLM Royal Dutch Airlines",
+    "country":"Netherlands",
+    "radioCallsign":"KLM"
+  },
+  {
+    "IATA":"KM",
+    "ICAO":"AMC",
+    "operator":"Air Malta",
+    "country":"Malta",
+    "radioCallsign":"Air Malta"
+  },
+  {
+    "IATA":"KN",
+    "ICAO":"CUA",
+    "operator":"China United Airlines",
+    "country":"China",
+    "radioCallsign":"Lianhang"
+  },
+  {
+    "IATA":"KO",
+    "ICAO":"AER",
+    "operator":"Alaska Central Express",
+    "country":"USA",
+    "radioCallsign":"Ace Air"
+  },
+  {
+    "IATA":"KO",
+    "ICAO":"QNK",
+    "operator":"Kabo Air",
+    "country":"Nigeria",
+    "radioCallsign":"Kabo"
+  },
+  {
+    "IATA":"KQ",
+    "ICAO":"KQA",
+    "operator":"Kenya Airways",
+    "country":"Kenya",
+    "radioCallsign":"Kenya"
+  },
+  {
+    "IATA":"KR",
+    "ICAO":"KMZ",
+    "operator":"Comores Aviation",
+    "country":"Comoros",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"KS",
+    "ICAO":"PEN",
+    "operator":"Penair/Peninsula Airways",
+    "country":"USA",
+    "radioCallsign":"Peninsula"
+  },
+  {
+    "IATA":"KU",
+    "ICAO":"KAC",
+    "operator":"Kuwait Airways",
+    "country":"Kuwait",
+    "radioCallsign":"Kuwaiti"
+  },
+  {
+    "IATA":"KW",
+    "ICAO":"KFA",
+    "operator":"Kelowna Flightcraft Air Charter",
+    "country":"Canada",
+    "radioCallsign":"Flightcraft"
+  },
+  {
+    "IATA":"KX",
+    "ICAO":"CAY",
+    "operator":"Cayman Airways",
+    "country":"Cayman Islands",
+    "radioCallsign":"Cayman"
+  },
+  {
+    "IATA":"KZ",
+    "ICAO":"NCA",
+    "operator":"Nippon Cargo Airlines",
+    "country":"Japan",
+    "radioCallsign":"Nippon Cargo"
+  },
+  {
+    "IATA":"L2",
+    "ICAO":"LYC",
+    "operator":"Lynden Air Cargo",
+    "country":"USA",
+    "radioCallsign":"Lynden"
+  },
+  {
+    "IATA":"L3",
+    "ICAO":"JOS",
+    "operator":"DHL de Guatemala",
+    "country":"Guatemala",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"L5",
+    "ICAO":"LTR",
+    "operator":"Lufttransport",
+    "country":"Norway",
+    "radioCallsign":"Lufttransport"
+  },
+  {
+    "IATA":"L6",
+    "ICAO":"MAI",
+    "operator":"Mauritanian Airlines International",
+    "country":"Mauritania",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"L6",
+    "ICAO":"VNZ",
+    "operator":"TAM Air/Tbilaviamsheni",
+    "country":"Georgia",
+    "radioCallsign":"Tbilavia"
+  },
+  {
+    "IATA":"L7",
+    "ICAO":"LHS",
+    "operator":"Lugansk Airlines",
+    "country":"Ukraine",
+    "radioCallsign":"Enterprise Luhansk"
+  },
+  {
+    "IATA":"LA",
+    "ICAO":"LAN",
+    "operator":"LAN Airlines",
+    "country":"Chile",
+    "radioCallsign":"Lan Chile"
+  },
+  {
+    "IATA":"LB",
+    "ICAO":"LBR",
+    "operator":"Air Costa",
+    "country":"India",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"LC",
+    "ICAO":"LOG",
+    "operator":"Loganair",
+    "country":"United Kingdom",
+    "radioCallsign":"Logan"
+  },
+  {
+    "IATA":"LD",
+    "ICAO":"AHK",
+    "operator":"Air Hong Kong",
+    "country":"Hong Kong",
+    "radioCallsign":"Air Hong Kong"
+  },
+  {
+    "IATA":"LD",
+    "ICAO":"TUY",
+    "operator":"Linea Turistica Aerotuy",
+    "country":"Venezuela",
+    "radioCallsign":"Aereotuy"
+  },
+  {
+    "IATA":"LG",
+    "ICAO":"LGL",
+    "operator":"Luxair",
+    "country":"Luxembourg",
+    "radioCallsign":"Luxair"
+  },
+  {
+    "IATA":"LH",
+    "ICAO":"DLH",
+    "operator":"Lufthansa",
+    "country":"Germany",
+    "radioCallsign":"Lufthansa"
+  },
+  {
+    "IATA":"LH",
+    "ICAO":"GEC",
+    "operator":"Lufthansa Cargo",
+    "country":"Germany",
+    "radioCallsign":"Lufthansa Cargo"
+  },
+  {
+    "IATA":"LI",
+    "ICAO":"LIA",
+    "operator":"LIAT",
+    "country":"Antigua and Barbuda",
+    "radioCallsign":"Liat"
+  },
+  {
+    "IATA":"LJ",
+    "ICAO":"JNA",
+    "operator":"Jin Air",
+    "country":"Korea ? Rep. of",
+    "radioCallsign":"Jin Air"
+  },
+  {
+    "IATA":"LJ",
+    "ICAO":"SLA",
+    "operator":"Sierra National Airlines",
+    "country":"Sierra Leone",
+    "radioCallsign":"Selair"
+  },
+  {
+    "IATA":"LL",
+    "ICAO":"BSK",
+    "operator":"Miami Air International",
+    "country":"USA",
+    "radioCallsign":"Biscayne"
+  },
+  {
+    "IATA":"LN",
+    "ICAO":"LAA",
+    "operator":"Lybian Arab Airlines",
+    "country":"Libya",
+    "radioCallsign":"Libair"
+  },
+  {
+    "IATA":"LO",
+    "ICAO":"LOT",
+    "operator":"LOT Polish Airlines",
+    "country":"Poland",
+    "radioCallsign":"Pollot"
+  },
+  {
+    "IATA":"LP",
+    "ICAO":"LPE",
+    "operator":"LAN Peru",
+    "country":"Peru",
+    "radioCallsign":"Patagonia"
+  },
+  {
+    "IATA":"LQ",
+    "ICAO":"LAQ",
+    "operator":"Lebanese Air Transport",
+    "country":"Lebanon",
+    "radioCallsign":"Lat"
+  },
+  {
+    "IATA":"LR",
+    "ICAO":"LRC",
+    "operator":"Lacsa",
+    "country":"Costa Rica",
+    "radioCallsign":"Lacsa"
+  },
+  {
+    "IATA":"LS",
+    "ICAO":"EXS",
+    "operator":"Jet2.com",
+    "country":"United Kingdom",
+    "radioCallsign":"Channex"
+  },
+  {
+    "IATA":"LT",
+    "ICAO":"LTU",
+    "operator":"Air Lituanica",
+    "country":"Lithuania",
+    "radioCallsign":"Lituanica"
+  },
+  {
+    "IATA":"LU",
+    "ICAO":"LXP",
+    "operator":"Lan Express",
+    "country":"Chile",
+    "radioCallsign":"Lan Ex"
+  },
+  {
+    "IATA":"LW",
+    "ICAO":"NMI",
+    "operator":"Pacific Wings/GeorgiaSkies/New Mexico Airlines",
+    "country":"USA",
+    "radioCallsign":"Tsunami"
+  },
+  {
+    "IATA":"LX",
+    "ICAO":"SWR",
+    "operator":"Swiss International Air Lines",
+    "country":"Switzerland",
+    "radioCallsign":"Swiss"
+  },
+  {
+    "IATA":"LX",
+    "ICAO":"SWU",
+    "operator":"Swiss European Air Lines",
+    "country":"Switzerland",
+    "radioCallsign":"Euroswiss"
+  },
+  {
+    "IATA":"LY",
+    "ICAO":"ELY",
+    "operator":"El Al",
+    "country":"Israel",
+    "radioCallsign":"El Al"
+  },
+  {
+    "IATA":"M0",
+    "ICAO":"MNG",
+    "operator":"Aero Mongolia",
+    "country":"Mongolia",
+    "radioCallsign":"Aero Mongolia"
+  },
+  {
+    "IATA":"M2",
+    "ICAO":"MZS",
+    "operator":"Mahfooz Aviation",
+    "country":"Gambia",
+    "radioCallsign":"Mahfooz"
+  },
+  {
+    "IATA":"M3",
+    "ICAO":"NFA",
+    "operator":"Air Norway/North Flying",
+    "country":"Denmark",
+    "radioCallsign":"North Flying"
+  },
+  {
+    "IATA":"M3",
+    "ICAO":"TUS",
+    "operator":"ABSA Aerolinhas Brasileiras",
+    "country":"Brazil",
+    "radioCallsign":"Turismo"
+  },
+  {
+    "IATA":"M6",
+    "ICAO":"AJT",
+    "operator":"Amerijet International",
+    "country":"USA",
+    "radioCallsign":"Amerijet"
+  },
+  {
+    "IATA":"M7",
+    "ICAO":"MAA",
+    "operator":"MasAir",
+    "country":"Mexico",
+    "radioCallsign":"Mas Carga"
+  },
+  {
+    "IATA":"M7",
+    "ICAO":"MSL",
+    "operator":"Marsland Aviation",
+    "country":"Sudan",
+    "radioCallsign":"Marsland Air"
+  },
+  {
+    "IATA":"M9",
+    "ICAO":"MSI",
+    "operator":"Motor Sich Aviakompania",
+    "country":"Ukraine",
+    "radioCallsign":"Motor Sich"
+  },
+  {
+    "IATA":"MB",
+    "ICAO":"MNB",
+    "operator":"MNG Airlines",
+    "country":"Turkey",
+    "radioCallsign":"Black Sea"
+  },
+  {
+    "IATA":"MC",
+    "ICAO":"MSC",
+    "operator":"Air Cairo",
+    "country":"Egypt",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"MC",
+    "ICAO":"RCH",
+    "operator":"Air Mobility Command",
+    "country":"USA",
+    "radioCallsign":"Reach"
+  },
+  {
+    "IATA":"MD",
+    "ICAO":"MDG",
+    "operator":"Air Madagascar",
+    "country":"Madagascar",
+    "radioCallsign":"Air Madagascar"
+  },
+  {
+    "IATA":"ME",
+    "ICAO":"MEA",
+    "operator":"MEA Middle East Airlines Airliban",
+    "country":"Lebanon",
+    "radioCallsign":"Cedar Jet"
+  },
+  {
+    "IATA":"MF",
+    "ICAO":"CXA",
+    "operator":"Xiamen Airlines",
+    "country":"China",
+    "radioCallsign":"Xiamen Air"
+  },
+  {
+    "IATA":"MG",
+    "ICAO":"MIX",
+    "operator":"Midex Airlines",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Midexcargo"
+  },
+  {
+    "IATA":"MH",
+    "ICAO":"MAS",
+    "operator":"Malaysia Airlines",
+    "country":"Malaysia",
+    "radioCallsign":"Malaysian"
+  },
+  {
+    "IATA":"MH",
+    "ICAO":"MWG",
+    "operator":"MASwings",
+    "country":"Malaysia",
+    "radioCallsign":"Maswings"
+  },
+  {
+    "IATA":"MI",
+    "ICAO":"SLK",
+    "operator":"SilkAir",
+    "country":"Singapore",
+    "radioCallsign":"Silkair"
+  },
+  {
+    "IATA":"MJ",
+    "ICAO":"MLR",
+    "operator":"Mihin Lanka",
+    "country":"Sri Lanka",
+    "radioCallsign":"Mihin Lanka"
+  },
+  {
+    "IATA":"MK",
+    "ICAO":"MAU",
+    "operator":"Air Mauritius",
+    "country":"Mauritius",
+    "radioCallsign":"Air Mauritius"
+  },
+  {
+    "IATA":"ML",
+    "ICAO":"BIE",
+    "operator":"Air Mediterranee",
+    "country":"France",
+    "radioCallsign":"Mediterrannee"
+  },
+  {
+    "IATA":"ML",
+    "ICAO":"ETC",
+    "operator":"ATTICO African Transport Trading and Investment Co.",
+    "country":"Sudan",
+    "radioCallsign":"Tranattico"
+  },
+  {
+    "IATA":"MM",
+    "ICAO":"APJ",
+    "operator":"Peach Aviation",
+    "country":"Japan",
+    "radioCallsign":"Air Peach"
+  },
+  {
+    "IATA":"MM",
+    "ICAO":"MMZ",
+    "operator":"euroAtlantic airways",
+    "country":"Portugal",
+    "radioCallsign":"Euroatlantic"
+  },
+  {
+    "IATA":"MN",
+    "ICAO":"CAW",
+    "operator":"kulula.com/Comair Commercial Airlines",
+    "country":"South Africa",
+    "radioCallsign":"Commercial"
+  },
+  {
+    "IATA":"MO",
+    "ICAO":"AUH",
+    "operator":"Abu Dhabi Amiri Flight",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Sultan"
+  },
+  {
+    "IATA":"MO",
+    "ICAO":"CAV",
+    "operator":"Calm Air",
+    "country":"Canada",
+    "radioCallsign":"Calm Air"
+  },
+  {
+    "IATA":"MP",
+    "ICAO":"MPH",
+    "operator":"Martinair",
+    "country":"Netherlands",
+    "radioCallsign":"Martinair"
+  },
+  {
+    "IATA":"MQ",
+    "ICAO":"ENY",
+    "operator":"Envoy Air/American Eagle",
+    "country":"USA",
+    "radioCallsign":"Envoy"
+  },
+  {
+    "IATA":"MR",
+    "ICAO":"MML",
+    "operator":"Hunnu Air",
+    "country":"Mongolia",
+    "radioCallsign":"Trans Mongolia"
+  },
+  {
+    "IATA":"MS",
+    "ICAO":"MSE",
+    "operator":"EgyptAir Express",
+    "country":"Egypt",
+    "radioCallsign":"Egyptair Express"
+  },
+  {
+    "IATA":"MS",
+    "ICAO":"MSR",
+    "operator":"EgyptAir",
+    "country":"Egypt",
+    "radioCallsign":"Egyptair"
+  },
+  {
+    "IATA":"MT",
+    "ICAO":"TCX",
+    "operator":"Thomas Cook Airlines",
+    "country":"United Kingdom",
+    "radioCallsign":"Kestrel"
+  },
+  {
+    "IATA":"MU",
+    "ICAO":"CES",
+    "operator":"China Eastern Airlines",
+    "country":"China",
+    "radioCallsign":"China Eastern"
+  },
+  {
+    "IATA":"MW",
+    "ICAO":"BUG",
+    "operator":"Mokulele Airlines",
+    "country":"USA",
+    "radioCallsign":"Speedbuggy"
+  },
+  {
+    "IATA":"MW",
+    "ICAO":"MYD",
+    "operator":"Maya Island Air",
+    "country":"Belize",
+    "radioCallsign":"Myland"
+  },
+  {
+    "IATA":"MY",
+    "ICAO":"MWA",
+    "operator":"Midwest Airlines",
+    "country":"Egypt",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"N2",
+    "ICAO":"QNK",
+    "operator":"Kabo Air",
+    "country":"Nigeria",
+    "radioCallsign":"Kabo"
+  },
+  {
+    "IATA":"N4",
+    "ICAO":"NWS",
+    "operator":"Nordwind Airlines",
+    "country":"Russia",
+    "radioCallsign":"Nordland"
+  },
+  {
+    "IATA":"N4",
+    "ICAO":"TNB",
+    "operator":"Trans Air Benin",
+    "country":"Benin",
+    "radioCallsign":"Trans Benin"
+  },
+  {
+    "IATA":"N5",
+    "ICAO":"MDM",
+    "operator":"Medavia",
+    "country":"Malta",
+    "radioCallsign":"Medavia"
+  },
+  {
+    "IATA":"N5",
+    "ICAO":"SGY",
+    "operator":"Skagway Air Service",
+    "country":"USA",
+    "radioCallsign":"Skagway Air"
+  },
+  {
+    "IATA":"N8",
+    "ICAO":"MUA",
+    "operator":"National Airlines",
+    "country":"USA",
+    "radioCallsign":"Murray Air"
+  },
+  {
+    "IATA":"N9",
+    "ICAO":"NVD",
+    "operator":"Avion Express",
+    "country":"Lithuania",
+    "radioCallsign":"Norvind"
+  },
+  {
+    "IATA":"NC",
+    "ICAO":"NAC",
+    "operator":"Northern Air Cargo",
+    "country":"USA",
+    "radioCallsign":"Yukon"
+  },
+  {
+    "IATA":"NC",
+    "ICAO":"NJS",
+    "operator":"Cobham Aviation Services Australia",
+    "country":"Australia",
+    "radioCallsign":"National Jet"
+  },
+  {
+    "IATA":"NE",
+    "ICAO":"NMA",
+    "operator":"Nesma Airlines",
+    "country":"Egypt",
+    "radioCallsign":"Nesma"
+  },
+  {
+    "IATA":"NF",
+    "ICAO":"AVN",
+    "operator":"Air Vanuatu",
+    "country":"Vanuatu",
+    "radioCallsign":"Air Van"
+  },
+  {
+    "IATA":"NH",
+    "ICAO":"ANA",
+    "operator":"ANA All-Nippon Airways",
+    "country":"Japan",
+    "radioCallsign":"All Nippon"
+  },
+  {
+    "IATA":"NI",
+    "ICAO":"PGA",
+    "operator":"Portugalia",
+    "country":"Portugal",
+    "radioCallsign":"Portugalia"
+  },
+  {
+    "IATA":"NJ",
+    "ICAO":"NGB",
+    "operator":"Nordic Global Airlines",
+    "country":"Finland",
+    "radioCallsign":"Nordic Global"
+  },
+  {
+    "IATA":"NK",
+    "ICAO":"NKS",
+    "operator":"Spirit Airlines",
+    "country":"USA",
+    "radioCallsign":"Spirit Wings"
+  },
+  {
+    "IATA":"NL",
+    "ICAO":"SAI",
+    "operator":"Shaheen Air International",
+    "country":"Pakistan",
+    "radioCallsign":"Shaheen Air"
+  },
+  {
+    "IATA":"NM",
+    "ICAO":"NZM",
+    "operator":"Mount Cook Airline",
+    "country":"New Zealand",
+    "radioCallsign":"Mount Cook"
+  },
+  {
+    "IATA":"NN",
+    "ICAO":"MOV",
+    "operator":"VIM Airlines",
+    "country":"Russia",
+    "radioCallsign":"Mov Air"
+  },
+  {
+    "IATA":"NO",
+    "ICAO":"NOS",
+    "operator":"Neos",
+    "country":"Italy",
+    "radioCallsign":"Moonflower"
+  },
+  {
+    "IATA":"NP",
+    "ICAO":"NIA",
+    "operator":"Nile Air",
+    "country":"Egypt",
+    "radioCallsign":"Nile Bird"
+  },
+  {
+    "IATA":"NP",
+    "ICAO":"SKP",
+    "operator":"Skytrans Airlines",
+    "country":"Australia",
+    "radioCallsign":"Skytrans"
+  },
+  {
+    "IATA":"NQ",
+    "ICAO":"AJX",
+    "operator":"Air Japan",
+    "country":"Japan",
+    "radioCallsign":"Air Japan"
+  },
+  {
+    "IATA":"NS",
+    "ICAO":"HBH",
+    "operator":"Hebei Airlines",
+    "country":"China",
+    "radioCallsign":"Hebei Air"
+  },
+  {
+    "IATA":"NT",
+    "ICAO":"IBB",
+    "operator":"Binter Canarias",
+    "country":"Spain",
+    "radioCallsign":"Binter"
+  },
+  {
+    "IATA":"NU",
+    "ICAO":"JTA",
+    "operator":"Japan Transocean Air",
+    "country":"Japan",
+    "radioCallsign":"Jai Ocean"
+  },
+  {
+    "IATA":"NX",
+    "ICAO":"AMU",
+    "operator":"Air Macau",
+    "country":"Macau",
+    "radioCallsign":"Air Macao"
+  },
+  {
+    "IATA":"NY",
+    "ICAO":"FNA",
+    "operator":"Air Iceland/Flugfelag Islands",
+    "country":"Iceland",
+    "radioCallsign":"Faxi"
+  },
+  {
+    "IATA":"NZ",
+    "ICAO":"ANZ",
+    "operator":"Air New Zealand",
+    "country":"New Zealand",
+    "radioCallsign":"New Zealand"
+  },
+  {
+    "IATA":"NZ",
+    "ICAO":"AWK",
+    "operator":"Airwork",
+    "country":"New Zealand",
+    "radioCallsign":"Airwork"
+  },
+  {
+    "IATA":"NZ",
+    "ICAO":"RLK",
+    "operator":"Air Nelson",
+    "country":"New Zealand",
+    "radioCallsign":"Link"
+  },
+  {
+    "IATA":"O2",
+    "ICAO":"JEA",
+    "operator":"OLT Jetair",
+    "country":"Poland",
+    "radioCallsign":"Jeta"
+  },
+  {
+    "IATA":"O4",
+    "ICAO":"ABV",
+    "operator":"Antrak Air",
+    "country":"Ghana",
+    "radioCallsign":"Antrak"
+  },
+  {
+    "IATA":"O6",
+    "ICAO":"ONE",
+    "operator":"Avianca Brazil",
+    "country":"Brazil",
+    "radioCallsign":"Oceanair"
+  },
+  {
+    "IATA":"O9",
+    "ICAO":"NOV",
+    "operator":"Nova Airline",
+    "country":"Sudan",
+    "radioCallsign":"Novanile"
+  },
+  {
+    "IATA":"OA",
+    "ICAO":"OAL",
+    "operator":"Olympic Air",
+    "country":"Greece",
+    "radioCallsign":"Olympic"
+  },
+  {
+    "IATA":"OB",
+    "ICAO":"BOV",
+    "operator":"Boliviana de Aviacion",
+    "country":"Bolivia",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"OC",
+    "ICAO":"OAV",
+    "operator":"Omni Aviacao e Tecnologia/PGA Express",
+    "country":"Portugal",
+    "radioCallsign":"Omni"
+  },
+  {
+    "IATA":"OD",
+    "ICAO":"MXD",
+    "operator":"Malindo Air",
+    "country":"Malaysia",
+    "radioCallsign":"Malindo Express"
+  },
+  {
+    "IATA":"OF",
+    "ICAO":"ENT",
+    "operator":"Enter Air",
+    "country":"Poland",
+    "radioCallsign":"Enterair"
+  },
+  {
+    "IATA":"OF",
+    "ICAO":"TML",
+    "operator":"Transports et Travaux Aeriens de Madagascar",
+    "country":"Madagascar",
+    "radioCallsign":"Tam Airline"
+  },
+  {
+    "IATA":"OJ",
+    "ICAO":"FJM",
+    "operator":"Fly Jamaica Airways",
+    "country":"Jamaica",
+    "radioCallsign":"Greenheart"
+  },
+  {
+    "IATA":"OJ",
+    "ICAO":"OLA",
+    "operator":"Overland Airways",
+    "country":"Nigeria",
+    "radioCallsign":"Overland"
+  },
+  {
+    "IATA":"OK",
+    "ICAO":"CSA",
+    "operator":"Czech Airlines",
+    "country":"Czech Rep.",
+    "radioCallsign":"CSA Lines"
+  },
+  {
+    "IATA":"OM",
+    "ICAO":"MGL",
+    "operator":"MIAT Mongolian Airlines",
+    "country":"Mongolia",
+    "radioCallsign":"Mongol Air"
+  },
+  {
+    "IATA":"ON",
+    "ICAO":"RON",
+    "operator":"Our Airline",
+    "country":"Nauru",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"OO",
+    "ICAO":"SKW",
+    "operator":"Skywest Airlines",
+    "country":"USA",
+    "radioCallsign":"Skywest"
+  },
+  {
+    "IATA":"OQ",
+    "ICAO":"CQN",
+    "operator":"Chongqing Airlines",
+    "country":"China",
+    "radioCallsign":"Chong Qing"
+  },
+  {
+    "IATA":"OR",
+    "ICAO":"CRF",
+    "operator":"Krym",
+    "country":"Ukraine",
+    "radioCallsign":"Crimea Air"
+  },
+  {
+    "IATA":"OR",
+    "ICAO":"TFL",
+    "operator":"Arkefly",
+    "country":"Netherlands",
+    "radioCallsign":"Arkefly"
+  },
+  {
+    "IATA":"OS",
+    "ICAO":"AUA",
+    "operator":"Austrian Airlines",
+    "country":"Austria",
+    "radioCallsign":"Austrian"
+  },
+  {
+    "IATA":"OU",
+    "ICAO":"CTN",
+    "operator":"Croatia Airlines",
+    "country":"Croatia",
+    "radioCallsign":"Croatia"
+  },
+  {
+    "IATA":"OV",
+    "ICAO":"ELL",
+    "operator":"Estonian Air",
+    "country":"Estonia",
+    "radioCallsign":"Estonian"
+  },
+  {
+    "IATA":"OV",
+    "ICAO":"OVA",
+    "operator":"Melilla Airlines",
+    "country":"Spain",
+    "radioCallsign":"Aeronova"
+  },
+  {
+    "IATA":"OX",
+    "ICAO":"OEA",
+    "operator":"Orient Thai Airlines",
+    "country":"Thailand",
+    "radioCallsign":"Orient Thai"
+  },
+  {
+    "IATA":"OY",
+    "ICAO":"ANS",
+    "operator":"Andes Lineas Aereas",
+    "country":"Argentina",
+    "radioCallsign":"Aeroandes"
+  },
+  {
+    "IATA":"OY",
+    "ICAO":"OAE",
+    "operator":"Omni Air Express/Omni Air International",
+    "country":"USA",
+    "radioCallsign":"Omni Express"
+  },
+  {
+    "IATA":"OZ",
+    "ICAO":"AAR",
+    "operator":"Asiana Airlines",
+    "country":"Korea ? Rep. of",
+    "radioCallsign":"Asiana"
+  },
+  {
+    "IATA":"P0",
+    "ICAO":"PFZ",
+    "operator":"Proflight Commuter Services",
+    "country":"Zambia",
+    "radioCallsign":"Proflight Zambia"
+  },
+  {
+    "IATA":"P2",
+    "ICAO":"XAK",
+    "operator":"Airkenya Express",
+    "country":"Kenya",
+    "radioCallsign":"Sunexpress"
+  },
+  {
+    "IATA":"P3",
+    "ICAO":"PTB",
+    "operator":"Passaredo Transportes Aereos",
+    "country":"Brazil",
+    "radioCallsign":"Passaredo"
+  },
+  {
+    "IATA":"P4",
+    "ICAO":"NSO",
+    "operator":"Aerolineas Sosa",
+    "country":"Honduras",
+    "radioCallsign":"Sosa"
+  },
+  {
+    "IATA":"P5",
+    "ICAO":"RPB",
+    "operator":"Copa Airlines Colombia",
+    "country":"Colombia",
+    "radioCallsign":"Aerorepublica"
+  },
+  {
+    "IATA":"P6",
+    "ICAO":"MUI",
+    "operator":"Trans Air",
+    "country":"USA",
+    "radioCallsign":"Maui"
+  },
+  {
+    "IATA":"P7",
+    "ICAO":"ESL",
+    "operator":"Russian Sky Airlines",
+    "country":"Russia",
+    "radioCallsign":"Raduga"
+  },
+  {
+    "IATA":"P8",
+    "ICAO":"PTN",
+    "operator":"Pantanal Linhas Aereas Sul-Matogrossenses",
+    "country":"Brazil",
+    "radioCallsign":"Pantanal"
+  },
+  {
+    "IATA":"P9",
+    "ICAO":"PVN",
+    "operator":"Peruvian Airlines",
+    "country":"Peru",
+    "radioCallsign":"Peruvian"
+  },
+  {
+    "IATA":"PA",
+    "ICAO":"FCL",
+    "operator":"Florida Coastal Airlines",
+    "country":"USA",
+    "radioCallsign":"Florida Coastal"
+  },
+  {
+    "IATA":"PB",
+    "ICAO":"SPR",
+    "operator":"Provincial Airlines",
+    "country":"Canada",
+    "radioCallsign":"Speedair"
+  },
+  {
+    "IATA":"PC",
+    "ICAO":"PGT",
+    "operator":"Pegasus Airlines",
+    "country":"Turkey",
+    "radioCallsign":"Sun Turk"
+  },
+  {
+    "IATA":"PD",
+    "ICAO":"POE",
+    "operator":"Porter Airlines",
+    "country":"Canada",
+    "radioCallsign":"Porter"
+  },
+  {
+    "IATA":"PE",
+    "ICAO":"PEV",
+    "operator":"People?s Viennaline/Altenrhein Luftfahrt",
+    "country":"Austria",
+    "radioCallsign":"Peoples"
+  },
+  {
+    "IATA":"PF",
+    "ICAO":"PNW",
+    "operator":"Palestinian Airlines",
+    "country":"Palestinian Territory",
+    "radioCallsign":"Palestinian"
+  },
+  {
+    "IATA":"PG",
+    "ICAO":"BKP",
+    "operator":"Bangkok Airways",
+    "country":"Thailand",
+    "radioCallsign":"Bangkok Air"
+  },
+  {
+    "IATA":"PH",
+    "ICAO":"PAO",
+    "operator":"Polynesian Airlines",
+    "country":"Samoa",
+    "radioCallsign":"Polynesian"
+  },
+  {
+    "IATA":"PJ",
+    "ICAO":"SPM",
+    "operator":"Air Saint-Pierre",
+    "country":"St. Pierre and Miquelon",
+    "radioCallsign":"Saint-Pierre"
+  },
+  {
+    "IATA":"PK",
+    "ICAO":"PIA",
+    "operator":"Pakistan International Airlines",
+    "country":"Pakistan",
+    "radioCallsign":"Pakistan"
+  },
+  {
+    "IATA":"PM",
+    "ICAO":"TOS",
+    "operator":"Tropic Air",
+    "country":"Belize",
+    "radioCallsign":"Tropiser"
+  },
+  {
+    "IATA":"PN",
+    "ICAO":"CHB",
+    "operator":"China West Air",
+    "country":"China",
+    "radioCallsign":"West China"
+  },
+  {
+    "IATA":"PO",
+    "ICAO":"PAC",
+    "operator":"Polar Air Cargo",
+    "country":"USA",
+    "radioCallsign":"Polar"
+  },
+  {
+    "IATA":"PP",
+    "ICAO":"PJS",
+    "operator":"Jet Aviation Business Jets",
+    "country":"Switzerland",
+    "radioCallsign":"Jet Aviation"
+  },
+  {
+    "IATA":"PQ",
+    "ICAO":"APG",
+    "operator":"Philippines AirAsia",
+    "country":"Philippines",
+    "radioCallsign":"Cool Red"
+  },
+  {
+    "IATA":"PQ",
+    "ICAO":"TFK",
+    "operator":"Transafrik International",
+    "country":"Sao Tome and Principe",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"PR",
+    "ICAO":"PAL",
+    "operator":"Philippine Airlines",
+    "country":"Philippines",
+    "radioCallsign":"Philippine"
+  },
+  {
+    "IATA":"PS",
+    "ICAO":"AUI",
+    "operator":"Ukraine International Airlines",
+    "country":"Ukraine",
+    "radioCallsign":"Ukraine International"
+  },
+  {
+    "IATA":"PT",
+    "ICAO":"SWN",
+    "operator":"West Air Sweden",
+    "country":"Sweden",
+    "radioCallsign":"Air Sweden"
+  },
+  {
+    "IATA":"PV",
+    "ICAO":"PNR",
+    "operator":"PAN Air Lineas Aereas",
+    "country":"Spain",
+    "radioCallsign":"Skyjet"
+  },
+  {
+    "IATA":"PW",
+    "ICAO":"PRF",
+    "operator":"Precision Air Services",
+    "country":"Tanzania",
+    "radioCallsign":"Precision Air"
+  },
+  {
+    "IATA":"PX",
+    "ICAO":"ANG",
+    "operator":"Air Niugini",
+    "country":"Papua New Guinea",
+    "radioCallsign":"Niugini"
+  },
+  {
+    "IATA":"PY",
+    "ICAO":"SLM",
+    "operator":"Surinam Airways",
+    "country":"Suriname",
+    "radioCallsign":"Surinam"
+  },
+  {
+    "IATA":"PZ",
+    "ICAO":"LAP",
+    "operator":"TAM Airlines/Transportes Aereos del Mercosur",
+    "country":"Paraguay",
+    "radioCallsign":"Paraguaya"
+  },
+  {
+    "IATA":"Q2",
+    "ICAO":"DQA",
+    "operator":"Maldivian/Island Aviation Services",
+    "country":"Maldives",
+    "radioCallsign":"Island Aviation"
+  },
+  {
+    "IATA":"Q5",
+    "ICAO":"MLA",
+    "operator":"40-Mile Air",
+    "country":"USA",
+    "radioCallsign":"Mile Air"
+  },
+  {
+    "IATA":"Q6",
+    "ICAO":"CDP",
+    "operator":"Aero Condor",
+    "country":"Peru",
+    "radioCallsign":"Condor Peru"
+  },
+  {
+    "IATA":"Q8",
+    "ICAO":"PEC",
+    "operator":"Pacific East Asia Cargo Airlines",
+    "country":"Philippines",
+    "radioCallsign":"Cool Red"
+  },
+  {
+    "IATA":"Q8",
+    "ICAO":"TSG",
+    "operator":"Trans Air Congo",
+    "country":"Congo",
+    "radioCallsign":"Trans Congo"
+  },
+  {
+    "IATA":"QA",
+    "ICAO":"CIM",
+    "operator":"Cimber",
+    "country":"Denmark",
+    "radioCallsign":"Cimber"
+  },
+  {
+    "IATA":"QB",
+    "ICAO":"GFG",
+    "operator":"SkyGeorgia",
+    "country":"Georgia",
+    "radioCallsign":"National"
+  },
+  {
+    "IATA":"QD",
+    "ICAO":"QCL",
+    "operator":"Air Class Lineas Aereas",
+    "country":"Uruguay",
+    "radioCallsign":"Acla"
+  },
+  {
+    "IATA":"QF",
+    "ICAO":"EAQ",
+    "operator":"Eastern Australia Airlines",
+    "country":"Australia",
+    "radioCallsign":"Eastern"
+  },
+  {
+    "IATA":"QF",
+    "ICAO":"QFA",
+    "operator":"Qantas Airways",
+    "country":"Australia",
+    "radioCallsign":"Qantas"
+  },
+  {
+    "IATA":"QF",
+    "ICAO":"QLK",
+    "operator":"QantasLink",
+    "country":"Australia",
+    "radioCallsign":"Q Link"
+  },
+  {
+    "IATA":"QF",
+    "ICAO":"QNZ",
+    "operator":"JetConnect",
+    "country":"New Zealand",
+    "radioCallsign":"Qantas JetConnect"
+  },
+  {
+    "IATA":"QF",
+    "ICAO":"SSQ",
+    "operator":"Sunstate Airlines",
+    "country":"Australia",
+    "radioCallsign":"Sunstate"
+  },
+  {
+    "IATA":"QH",
+    "ICAO":"LYN",
+    "operator":"Kyrgyzstan",
+    "country":"Kyrgyzstan",
+    "radioCallsign":"Altyn Avia"
+  },
+  {
+    "IATA":"QK",
+    "ICAO":"JZA",
+    "operator":"Jazz Aviation/Air Canada Express",
+    "country":"Canada",
+    "radioCallsign":"Jazz"
+  },
+  {
+    "IATA":"QL",
+    "ICAO":"LER",
+    "operator":"LASER Linea Aerea de Servicio Ejecutivo Regional",
+    "country":"Venezuela",
+    "radioCallsign":"Laser"
+  },
+  {
+    "IATA":"QL",
+    "ICAO":"RNL",
+    "operator":"Aero Lanka/Serendib Express",
+    "country":"Sri Lanka",
+    "radioCallsign":"Aero Lanka"
+  },
+  {
+    "IATA":"QM",
+    "ICAO":"AML",
+    "operator":"Air Malawi",
+    "country":"Malawi",
+    "radioCallsign":"Malawi"
+  },
+  {
+    "IATA":"QN",
+    "ICAO":"ARR",
+    "operator":"Air Armenia",
+    "country":"Armenia",
+    "radioCallsign":"Air Armenia"
+  },
+  {
+    "IATA":"QQ",
+    "ICAO":"UTY",
+    "operator":"Alliance Airlines",
+    "country":"Australia",
+    "radioCallsign":"Unity"
+  },
+  {
+    "IATA":"QR",
+    "ICAO":"QTR",
+    "operator":"Qatar Airways",
+    "country":"Qatar",
+    "radioCallsign":"Qatari"
+  },
+  {
+    "IATA":"QS",
+    "ICAO":"TVS",
+    "operator":"Travel Service/Smart Wings",
+    "country":"Czech Rep.",
+    "radioCallsign":"Skytravel"
+  },
+  {
+    "IATA":"QT",
+    "ICAO":"TPA",
+    "operator":"TAMPA Transportes Aereos Mercantiles Panamericanos",
+    "country":"Colombia",
+    "radioCallsign":"Tampa"
+  },
+  {
+    "IATA":"QU",
+    "ICAO":"UGX",
+    "operator":"East African Airlines",
+    "country":"Uganda",
+    "radioCallsign":"Crane"
+  },
+  {
+    "IATA":"QU",
+    "ICAO":"UTN",
+    "operator":"UTair-Ukraine",
+    "country":"Ukraine",
+    "radioCallsign":"UT Ukraine"
+  },
+  {
+    "IATA":"QV",
+    "ICAO":"LAO",
+    "operator":"Lao Airlines",
+    "country":"Laos",
+    "radioCallsign":"Lao"
+  },
+  {
+    "IATA":"QW",
+    "ICAO":"TCI",
+    "operator":"Turks Air Cargo",
+    "country":"Turks and Caicos Islands",
+    "radioCallsign":"Kerrmont"
+  },
+  {
+    "IATA":"QX",
+    "ICAO":"QXE",
+    "operator":"Horizon Air",
+    "country":"USA",
+    "radioCallsign":"Horizon Air"
+  },
+  {
+    "IATA":"QY",
+    "ICAO":"BCS",
+    "operator":"European Air Transport",
+    "country":"Belgium",
+    "radioCallsign":"Eurotrans"
+  },
+  {
+    "IATA":"QZ",
+    "ICAO":"AWQ",
+    "operator":"Indonesia AirAsia",
+    "country":"Indonesia",
+    "radioCallsign":"Wagon Air"
+  },
+  {
+    "IATA":"R0",
+    "ICAO":"RPK",
+    "operator":"Royal Airlines",
+    "country":"Pakistan",
+    "radioCallsign":"Royal Pakistan"
+  },
+  {
+    "IATA":"R2",
+    "ICAO":"ORB",
+    "operator":"Orenair/Orenburg Airlines",
+    "country":"Russia",
+    "radioCallsign":"Orenburg"
+  },
+  {
+    "IATA":"R3",
+    "ICAO":"SYL",
+    "operator":"Yakutia Airlines",
+    "country":"Russia",
+    "radioCallsign":"Air Yakutia"
+  },
+  {
+    "IATA":"R5",
+    "ICAO":"JAV",
+    "operator":"Jordan Aviation",
+    "country":"Jordan",
+    "radioCallsign":"Jordan Aviation"
+  },
+  {
+    "IATA":"R6",
+    "ICAO":"DNU",
+    "operator":"DOT LT/Danu Oro Transportas",
+    "country":"Lithuania",
+    "radioCallsign":"Danu"
+  },
+  {
+    "IATA":"R7",
+    "ICAO":"OCA",
+    "operator":"Aserca Airlines",
+    "country":"Venezuela",
+    "radioCallsign":"Arosca"
+  },
+  {
+    "IATA":"R9",
+    "ICAO":"CAM",
+    "operator":"Camai Air/Village Aviation",
+    "country":"USA",
+    "radioCallsign":"Air Camai"
+  },
+  {
+    "IATA":"R9",
+    "ICAO":"TSD",
+    "operator":"TAF Linhas Aereas",
+    "country":"Brazil",
+    "radioCallsign":"Tafi"
+  },
+  {
+    "IATA":"RA",
+    "ICAO":"RNA",
+    "operator":"Nepal Airlines",
+    "country":"Nepal",
+    "radioCallsign":"Nepal"
+  },
+  {
+    "IATA":"RB",
+    "ICAO":"SYR",
+    "operator":"Syrian Arab Airlines",
+    "country":"Syrian Arab Rep.",
+    "radioCallsign":"Syrianair"
+  },
+  {
+    "IATA":"RC",
+    "ICAO":"FLI",
+    "operator":"Atlantic Airways",
+    "country":"Faroe Islands",
+    "radioCallsign":"Faroeline"
+  },
+  {
+    "IATA":"RE",
+    "ICAO":"REA",
+    "operator":"Stobart Air",
+    "country":"Ireland",
+    "radioCallsign":"Aer Arann"
+  },
+  {
+    "IATA":"RF",
+    "ICAO":"FWL",
+    "operator":"Florida West International Airways",
+    "country":"USA",
+    "radioCallsign":"Flo West"
+  },
+  {
+    "IATA":"RH",
+    "ICAO":"RPH",
+    "operator":"RPX Airlines/Republic Express Airlines",
+    "country":"Indonesia",
+    "radioCallsign":"Public Express"
+  },
+  {
+    "IATA":"RJ",
+    "ICAO":"RJA",
+    "operator":"Royal Jordanian",
+    "country":"Jordan",
+    "radioCallsign":"Jordanian"
+  },
+  {
+    "IATA":"RK",
+    "ICAO":"RCT",
+    "operator":"R Airlines",
+    "country":"Thailand",
+    "radioCallsign":"Green Sky"
+  },
+  {
+    "IATA":"RL",
+    "ICAO":"RIO",
+    "operator":"Rio Linhas Aereas",
+    "country":"Brazil",
+    "radioCallsign":"Rio Linhas"
+  },
+  {
+    "IATA":"RO",
+    "ICAO":"ROT",
+    "operator":"Tarom Romanian Air Transport",
+    "country":"Romania",
+    "radioCallsign":"Tarom"
+  },
+  {
+    "IATA":"RP",
+    "ICAO":"CHQ",
+    "operator":"Chautauqua Airlines",
+    "country":"USA",
+    "radioCallsign":"Chautauqua"
+  },
+  {
+    "IATA":"RQ",
+    "ICAO":"KMF",
+    "operator":"Kam Air",
+    "country":"Afghanistan",
+    "radioCallsign":"Kamgar"
+  },
+  {
+    "IATA":"RR",
+    "ICAO":"RFR",
+    "operator":"Royal Air Force",
+    "country":"United Kingdom",
+    "radioCallsign":"Rafair (+ various others)"
+  },
+  {
+    "IATA":"RS",
+    "ICAO":"ORF",
+    "operator":"Oman Royal Flight",
+    "country":"Oman",
+    "radioCallsign":"Oman"
+  },
+  {
+    "IATA":"RS",
+    "ICAO":"SKV",
+    "operator":"Sky Regional Airlines/Air Canada Express",
+    "country":"Canada",
+    "radioCallsign":"Maple"
+  },
+  {
+    "IATA":"RU",
+    "ICAO":"ABW",
+    "operator":"AirBridge Cargo Airlines",
+    "country":"Russia",
+    "radioCallsign":"Airbridge Cargo"
+  },
+  {
+    "IATA":"RV",
+    "ICAO":"CPN",
+    "operator":"Caspian Airlines Service Company",
+    "country":"Iran",
+    "radioCallsign":"Caspian"
+  },
+  {
+    "IATA":"RV",
+    "ICAO":"ROU",
+    "operator":"Air Canada Rouge",
+    "country":"Canada",
+    "radioCallsign":"Rouge"
+  },
+  {
+    "IATA":"RW",
+    "ICAO":"RPA",
+    "operator":"Republic Airlines",
+    "country":"USA",
+    "radioCallsign":"Brickyard"
+  },
+  {
+    "IATA":"RZ",
+    "ICAO":"LRS",
+    "operator":"SANSA Servicios Aereos Nacionales SA",
+    "country":"Costa Rica",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"S3",
+    "ICAO":"BBR",
+    "operator":"Santa Barbara Airlines",
+    "country":"Venezuela",
+    "radioCallsign":"Santa Barbara"
+  },
+  {
+    "IATA":"S4",
+    "ICAO":"RZO",
+    "operator":"Sata International",
+    "country":"Portugal",
+    "radioCallsign":"Air Azores"
+  },
+  {
+    "IATA":"S5",
+    "ICAO":"TCF",
+    "operator":"Shuttle America",
+    "country":"USA",
+    "radioCallsign":"Mercury"
+  },
+  {
+    "IATA":"S6",
+    "ICAO":"SRR",
+    "operator":"Star Air",
+    "country":"Denmark",
+    "radioCallsign":"White Star"
+  },
+  {
+    "IATA":"S7",
+    "ICAO":"SBI",
+    "operator":"S7 Airlines/Siberia Airlines",
+    "country":"Russia",
+    "radioCallsign":"Siberian Airlines"
+  },
+  {
+    "IATA":"S8",
+    "ICAO":"SWW",
+    "operator":"Shovkoviy Shlyah Airlines",
+    "country":"Ukraine",
+    "radioCallsign":"Way Aero"
+  },
+  {
+    "IATA":"S9",
+    "ICAO":"IKM",
+    "operator":"Starbow Airlines",
+    "country":"Ghana",
+    "radioCallsign":"Easy Shuttle"
+  },
+  {
+    "IATA":"SA",
+    "ICAO":"SAA",
+    "operator":"South African Airways",
+    "country":"South Africa",
+    "radioCallsign":"Springbok"
+  },
+  {
+    "IATA":"SB",
+    "ICAO":"ACI",
+    "operator":"Aircalin/Air Caledonie International",
+    "country":"New Caledonia",
+    "radioCallsign":"Aircalin"
+  },
+  {
+    "IATA":"SC",
+    "ICAO":"CDG",
+    "operator":"Shandong Airlines",
+    "country":"China",
+    "radioCallsign":"Shandong"
+  },
+  {
+    "IATA":"SD",
+    "ICAO":"SUD",
+    "operator":"Sudan Airways",
+    "country":"Sudan",
+    "radioCallsign":"Sudanair"
+  },
+  {
+    "IATA":"SE",
+    "ICAO":"XLF",
+    "operator":"XL Airways France",
+    "country":"France",
+    "radioCallsign":"Starway"
+  },
+  {
+    "IATA":"SF",
+    "ICAO":"DTH",
+    "operator":"Tassili Airlines",
+    "country":"Algeria",
+    "radioCallsign":"Tassili Air"
+  },
+  {
+    "IATA":"SG",
+    "ICAO":"SEJ",
+    "operator":"SpiceJet",
+    "country":"India",
+    "radioCallsign":"SpiceJet"
+  },
+  {
+    "IATA":"SI",
+    "ICAO":"AWS",
+    "operator":"Arab Wings",
+    "country":"Jordan",
+    "radioCallsign":"Arab Wings"
+  },
+  {
+    "IATA":"SI",
+    "ICAO":"BCI",
+    "operator":"Blue Islands",
+    "country":"United Kingdom",
+    "radioCallsign":"Blue Island"
+  },
+  {
+    "IATA":"SI",
+    "ICAO":"SPA",
+    "operator":"Sierra Pacific Airlines",
+    "country":"USA",
+    "radioCallsign":"Sierra Pacific"
+  },
+  {
+    "IATA":"SJ",
+    "ICAO":"CGL",
+    "operator":"Seagle Air",
+    "country":"Slovakia",
+    "radioCallsign":"Seagle"
+  },
+  {
+    "IATA":"SK",
+    "ICAO":"SAS",
+    "operator":"SAS Scandinavian Airlines System",
+    "country":"Denmark/Norway/Sweden",
+    "radioCallsign":"Scandinavian"
+  },
+  {
+    "IATA":"SL",
+    "ICAO":"TLM",
+    "operator":"Thai Lion Air",
+    "country":"Thailand",
+    "radioCallsign":"Mentari"
+  },
+  {
+    "IATA":"SM",
+    "ICAO":"MNP",
+    "operator":"Spirit of Manila Airlines",
+    "country":"Philippines",
+    "radioCallsign":"Manila Sky"
+  },
+  {
+    "IATA":"SN",
+    "ICAO":"BEL",
+    "operator":"Brussels Airlines",
+    "country":"Belgium",
+    "radioCallsign":"Bee Line"
+  },
+  {
+    "IATA":"SO",
+    "ICAO":"HKA",
+    "operator":"Superior Aviation",
+    "country":"USA",
+    "radioCallsign":"Spend Air"
+  },
+  {
+    "IATA":"SO",
+    "ICAO":"SLC",
+    "operator":"SALSA d?Haiti",
+    "country":"Haiti",
+    "radioCallsign":"Salsa"
+  },
+  {
+    "IATA":"SP",
+    "ICAO":"SAT",
+    "operator":"SATA Air Acores",
+    "country":"Portugal",
+    "radioCallsign":"Sata"
+  },
+  {
+    "IATA":"SQ",
+    "ICAO":"SIA",
+    "operator":"Singapore Airlines",
+    "country":"Singapore",
+    "radioCallsign":"Singapore"
+  },
+  {
+    "IATA":"SQ",
+    "ICAO":"SQC",
+    "operator":"Singapore Airlines Cargo",
+    "country":"Singapore",
+    "radioCallsign":"Singcargo"
+  },
+  {
+    "IATA":"SS",
+    "ICAO":"CRL",
+    "operator":"Corsairfly",
+    "country":"France",
+    "radioCallsign":"Corsair"
+  },
+  {
+    "IATA":"ST",
+    "ICAO":"GMI",
+    "operator":"Germania",
+    "country":"Germany",
+    "radioCallsign":"Germania"
+  },
+  {
+    "IATA":"SU",
+    "ICAO":"AFL",
+    "operator":"Aeroflot Russian Airlines",
+    "country":"Russia",
+    "radioCallsign":"Aeroflot"
+  },
+  {
+    "IATA":"SV",
+    "ICAO":"SVA",
+    "operator":"Saudi Arabian Airlines",
+    "country":"Saudi Arabia",
+    "radioCallsign":"Saudia"
+  },
+  {
+    "IATA":"SW",
+    "ICAO":"NMB",
+    "operator":"Air Namibia",
+    "country":"Namibia",
+    "radioCallsign":"Namibia"
+  },
+  {
+    "IATA":"SY",
+    "ICAO":"SCX",
+    "operator":"Sun Country Airlines",
+    "country":"USA",
+    "radioCallsign":"Sun Country"
+  },
+  {
+    "IATA":"T0",
+    "ICAO":"TPU",
+    "operator":"Taca Peru",
+    "country":"Peru",
+    "radioCallsign":"Trans Peru"
+  },
+  {
+    "IATA":"T2",
+    "ICAO":"TMA",
+    "operator":"Trans Mediterranean Airways",
+    "country":"Lebanon",
+    "radioCallsign":"Tango Lima"
+  },
+  {
+    "IATA":"T3",
+    "ICAO":"EZE",
+    "operator":"Eastern Airways",
+    "country":"United Kingdom",
+    "radioCallsign":"East Flight"
+  },
+  {
+    "IATA":"T4",
+    "ICAO":"TIB",
+    "operator":"TRIP Linhas Aereas",
+    "country":"Brazil",
+    "radioCallsign":"Trip"
+  },
+  {
+    "IATA":"T5",
+    "ICAO":"TUA",
+    "operator":"Turkmenistan Airlines",
+    "country":"Turkmenistan",
+    "radioCallsign":"Turkmenistan"
+  },
+  {
+    "IATA":"T6",
+    "ICAO":"TVR",
+    "operator":"Tavrey Airlines/Tavria Aviakompania",
+    "country":"Ukraine",
+    "radioCallsign":"Travey"
+  },
+  {
+    "IATA":"T7",
+    "ICAO":"TJT",
+    "operator":"Twin Jet",
+    "country":"France",
+    "radioCallsign":"Twinjet"
+  },
+  {
+    "IATA":"TA",
+    "ICAO":"TAI",
+    "operator":"Taca International Airlines",
+    "country":"El Salvador",
+    "radioCallsign":"Taca"
+  },
+  {
+    "IATA":"TB",
+    "ICAO":"JAF",
+    "operator":"Jetairfly",
+    "country":"Belgium",
+    "radioCallsign":"Beauty"
+  },
+  {
+    "IATA":"TC",
+    "ICAO":"ATC",
+    "operator":"Air Tanzania",
+    "country":"Tanzania",
+    "radioCallsign":"Tanzania"
+  },
+  {
+    "IATA":"TD",
+    "ICAO":"LUR",
+    "operator":"Atlantis European Airways",
+    "country":"Armenia",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"TF",
+    "ICAO":"SCW",
+    "operator":"Malmo Aviation",
+    "country":"Sweden",
+    "radioCallsign":"Scanwing"
+  },
+  {
+    "IATA":"TG",
+    "ICAO":"THA",
+    "operator":"Thai Airways International",
+    "country":"Thailand",
+    "radioCallsign":"Thai"
+  },
+  {
+    "IATA":"TH",
+    "ICAO":"TSE",
+    "operator":"Transmile Air Services",
+    "country":"Malaysia",
+    "radioCallsign":"Transmile"
+  },
+  {
+    "IATA":"TI",
+    "ICAO":"TOL",
+    "operator":"TolAir Services",
+    "country":"Puerto Rico",
+    "radioCallsign":"Tol Air"
+  },
+  {
+    "IATA":"TK",
+    "ICAO":"AJA",
+    "operator":"AnadoluJet",
+    "country":"Turkey",
+    "radioCallsign":"Anadolujet"
+  },
+  {
+    "IATA":"TK",
+    "ICAO":"THY",
+    "operator":"Turkish Airlines",
+    "country":"Turkey",
+    "radioCallsign":"Turk Air"
+  },
+  {
+    "IATA":"TL",
+    "ICAO":"ANO",
+    "operator":"Airnorth Regional",
+    "country":"Australia",
+    "radioCallsign":"Top End"
+  },
+  {
+    "IATA":"TM",
+    "ICAO":"LAM",
+    "operator":"LAM",
+    "country":"Mozambique",
+    "radioCallsign":"Mozambique"
+  },
+  {
+    "IATA":"TN",
+    "ICAO":"THT",
+    "operator":"Air Tahiti Nui",
+    "country":"French Polynesia",
+    "radioCallsign":"Tahiti Lines"
+  },
+  {
+    "IATA":"TO",
+    "ICAO":"TVF",
+    "operator":"Transavia France",
+    "country":"France",
+    "radioCallsign":"France Soleil"
+  },
+  {
+    "IATA":"TP",
+    "ICAO":"TAP",
+    "operator":"TAP Portugal",
+    "country":"Portugal",
+    "radioCallsign":"Air Portugal"
+  },
+  {
+    "IATA":"TQ",
+    "ICAO":"TDM",
+    "operator":"Tandem Aereo",
+    "country":"Moldova",
+    "radioCallsign":"Tandem"
+  },
+  {
+    "IATA":"TR",
+    "ICAO":"TGW",
+    "operator":"Tiger Airways",
+    "country":"Singapore",
+    "radioCallsign":"Go Cat"
+  },
+  {
+    "IATA":"TS",
+    "ICAO":"TSC",
+    "operator":"Air Transat",
+    "country":"Canada",
+    "radioCallsign":"Air Transat"
+  },
+  {
+    "IATA":"TT",
+    "ICAO":"TGW",
+    "operator":"Tiger Airways Australia",
+    "country":"Australia",
+    "radioCallsign":"Go Cat"
+  },
+  {
+    "IATA":"TU",
+    "ICAO":"TAR",
+    "operator":"Tunisair",
+    "country":"Tunisia",
+    "radioCallsign":"Tunair"
+  },
+  {
+    "IATA":"TV",
+    "ICAO":"TBA",
+    "operator":"Tibet Airlines",
+    "country":"China",
+    "radioCallsign":"Tibet"
+  },
+  {
+    "IATA":"TX",
+    "ICAO":"FWI",
+    "operator":"Air Caraibes",
+    "country":"Guadeloupe/Martinique",
+    "radioCallsign":"French West"
+  },
+  {
+    "IATA":"TY",
+    "ICAO":"TPC",
+    "operator":"Air Caledonie",
+    "country":"New Caledonia",
+    "radioCallsign":"Air Cal"
+  },
+  {
+    "IATA":"TZ",
+    "ICAO":"SCO",
+    "operator":"Scoot",
+    "country":"Singapore",
+    "radioCallsign":"Scooter"
+  },
+  {
+    "IATA":"TZ",
+    "ICAO":"TWG",
+    "operator":"Air-taxi europe",
+    "country":"Germany",
+    "radioCallsign":"Twin-Goose"
+  },
+  {
+    "IATA":"U2",
+    "ICAO":"EZY",
+    "operator":"easyJet",
+    "country":"United Kingdom",
+    "radioCallsign":"Easy"
+  },
+  {
+    "IATA":"U3",
+    "ICAO":"AIA",
+    "operator":"Avies",
+    "country":"Estonia",
+    "radioCallsign":"Avies"
+  },
+  {
+    "IATA":"U6",
+    "ICAO":"SVR",
+    "operator":"Ural Airlines",
+    "country":"Russia",
+    "radioCallsign":"Sverdlovsk Air"
+  },
+  {
+    "IATA":"UA",
+    "ICAO":"UAL",
+    "operator":"United Airlines",
+    "country":"USA",
+    "radioCallsign":"United"
+  },
+  {
+    "IATA":"UB",
+    "ICAO":"UBA",
+    "operator":"Myanma Airways",
+    "country":"Myanmar",
+    "radioCallsign":"Unionair"
+  },
+  {
+    "IATA":"UC",
+    "ICAO":"LCO",
+    "operator":"LAN Cargo",
+    "country":"Chile",
+    "radioCallsign":"Lan Cargo"
+  },
+  {
+    "IATA":"UD",
+    "ICAO":"HER",
+    "operator":"Hex?Air",
+    "country":"France",
+    "radioCallsign":"Hex Airline"
+  },
+  {
+    "IATA":"UE",
+    "ICAO":"NAS",
+    "operator":"Nasair",
+    "country":"Eritrea",
+    "radioCallsign":"Nasairways"
+  },
+  {
+    "IATA":"UF",
+    "ICAO":"UKM",
+    "operator":"UM Air/Ukrainian Mediterranean Airlines",
+    "country":"Ukraine",
+    "radioCallsign":"Ukraine Mediterrannee"
+  },
+  {
+    "IATA":"UG",
+    "ICAO":"SEN",
+    "operator":"Sevenair",
+    "country":"Tunisia",
+    "radioCallsign":"Sevenair"
+  },
+  {
+    "IATA":"UJ",
+    "ICAO":"GMT",
+    "operator":"Magnicharters",
+    "country":"Mexico",
+    "radioCallsign":"Grupo Monterrey"
+  },
+  {
+    "IATA":"UJ",
+    "ICAO":"LMU",
+    "operator":"AlMasria Universal Airlines",
+    "country":"Egypt",
+    "radioCallsign":"Almasria"
+  },
+  {
+    "IATA":"UL",
+    "ICAO":"ALK",
+    "operator":"SriLankan Airlines",
+    "country":"Sri Lanka",
+    "radioCallsign":"Sri Lankan"
+  },
+  {
+    "IATA":"UN",
+    "ICAO":"TSO",
+    "operator":"Transaero Airlines",
+    "country":"Russia",
+    "radioCallsign":"Trans Soviet"
+  },
+  {
+    "IATA":"UO",
+    "ICAO":"HKE",
+    "operator":"Hong Kong Express",
+    "country":"Hong Kong",
+    "radioCallsign":"Hongkong Shuttle"
+  },
+  {
+    "IATA":"UP",
+    "ICAO":"BHS",
+    "operator":"Bahamasair",
+    "country":"Bahamas",
+    "radioCallsign":"Bahamas"
+  },
+  {
+    "IATA":"UR",
+    "ICAO":"KMV",
+    "operator":"UTair Express",
+    "country":"Russia",
+    "radioCallsign":"Kominter"
+  },
+  {
+    "IATA":"US",
+    "ICAO":"AWE",
+    "operator":"US Airways",
+    "country":"USA",
+    "radioCallsign":"Cactus"
+  },
+  {
+    "IATA":"US",
+    "ICAO":"JIA",
+    "operator":"PSA Airlines",
+    "country":"USA",
+    "radioCallsign":"Blue Streak"
+  },
+  {
+    "IATA":"US",
+    "ICAO":"PDT",
+    "operator":"Piedmont Airlines",
+    "country":"USA",
+    "radioCallsign":"Piedmont"
+  },
+  {
+    "IATA":"UT",
+    "ICAO":"UTA",
+    "operator":"UTair Aviation",
+    "country":"Russia",
+    "radioCallsign":"Utair"
+  },
+  {
+    "IATA":"UU",
+    "ICAO":"REU",
+    "operator":"Air Austral",
+    "country":"Reunion Island",
+    "radioCallsign":"Reunion"
+  },
+  {
+    "IATA":"UW",
+    "ICAO":"UTP",
+    "operator":"Uni-Top Airlines",
+    "country":"China",
+    "radioCallsign":"Uni-Top"
+  },
+  {
+    "IATA":"UX",
+    "ICAO":"AEA",
+    "operator":"Air Europa",
+    "country":"Spain",
+    "radioCallsign":"Europa"
+  },
+  {
+    "IATA":"UZ",
+    "ICAO":"BRQ",
+    "operator":"Buraq Air Transport",
+    "country":"Libya",
+    "radioCallsign":"Buraq Air"
+  },
+  {
+    "IATA":"V0",
+    "ICAO":"VCV",
+    "operator":"Conviasa",
+    "country":"Venezuela",
+    "radioCallsign":"Conviasa"
+  },
+  {
+    "IATA":"V2",
+    "ICAO":"RBY",
+    "operator":"Vision Airlines",
+    "country":"USA",
+    "radioCallsign":"Ruby"
+  },
+  {
+    "IATA":"V3",
+    "ICAO":"KRP",
+    "operator":"Carpatair",
+    "country":"Romania",
+    "radioCallsign":"Carpatair"
+  },
+  {
+    "IATA":"V4",
+    "ICAO":"VEC",
+    "operator":"Vensecar Internacional",
+    "country":"Venezuela",
+    "radioCallsign":"Vensecar"
+  },
+  {
+    "IATA":"V6",
+    "ICAO":"VOG",
+    "operator":"Voyager Airlines",
+    "country":"Bangladesh",
+    "radioCallsign":"Voyager Air"
+  },
+  {
+    "IATA":"V7",
+    "ICAO":"VOE",
+    "operator":"Volotea",
+    "country":"Spain",
+    "radioCallsign":"Volotea"
+  },
+  {
+    "IATA":"V8",
+    "ICAO":"TPS",
+    "operator":"TAPSA Transportes Aereos Petroleros SA",
+    "country":"Argentina",
+    "radioCallsign":"Tapsa"
+  },
+  {
+    "IATA":"V8",
+    "ICAO":"VAS",
+    "operator":"ATRAN Aviatrans Cargo Airlines",
+    "country":"Russia",
+    "radioCallsign":"Atran"
+  },
+  {
+    "IATA":"VA",
+    "ICAO":"VAU",
+    "operator":"Virgin Australia International Airlines",
+    "country":"Australia",
+    "radioCallsign":"Vee Oz"
+  },
+  {
+    "IATA":"VB",
+    "ICAO":"VIV",
+    "operator":"Viva Aerobus",
+    "country":"Mexico",
+    "radioCallsign":"Aeroenlaces"
+  },
+  {
+    "IATA":"VC",
+    "ICAO":"VAL",
+    "operator":"Voyageur Airways",
+    "country":"Canada",
+    "radioCallsign":"Voyageur"
+  },
+  {
+    "IATA":"VD",
+    "ICAO":"KPA",
+    "operator":"Henan Airlines",
+    "country":"China",
+    "radioCallsign":"Kun Peng"
+  },
+  {
+    "IATA":"VD",
+    "ICAO":"VJC",
+    "operator":"VietJet Air",
+    "country":"Vietnam",
+    "radioCallsign":"Vietjetair"
+  },
+  {
+    "IATA":"VG",
+    "ICAO":"VLM",
+    "operator":"VLM",
+    "country":"Belgium",
+    "radioCallsign":"Rubens"
+  },
+  {
+    "IATA":"VH",
+    "ICAO":"ALV",
+    "operator":"Aeropostal Alas de Venezuela",
+    "country":"Venezuela",
+    "radioCallsign":"Alven"
+  },
+  {
+    "IATA":"VI",
+    "ICAO":"VDA",
+    "operator":"Volga-Dnepr Airlines",
+    "country":"Russia",
+    "radioCallsign":"Volda Dnepr"
+  },
+  {
+    "IATA":"VI",
+    "ICAO":"VES",
+    "operator":"Vieques Air Link",
+    "country":"Puerto Rico",
+    "radioCallsign":"Vieques"
+  },
+  {
+    "IATA":"VL",
+    "ICAO":"VIM",
+    "operator":"Air VIA Bulgarian Airways",
+    "country":"Bulgaria",
+    "radioCallsign":"Via Airways"
+  },
+  {
+    "IATA":"VN",
+    "ICAO":"HVN",
+    "operator":"Vietnam Airlines",
+    "country":"Vietnam",
+    "radioCallsign":"Vietnam Airlines"
+  },
+  {
+    "IATA":"VO",
+    "ICAO":"TYR",
+    "operator":"Tyrolean Airways/Austrian Arrows",
+    "country":"Austria",
+    "radioCallsign":"Tyrolean"
+  },
+  {
+    "IATA":"VR",
+    "ICAO":"TCV",
+    "operator":"TACV Cabo Verde Airlines",
+    "country":"Cape Verde",
+    "radioCallsign":"Cabo Verde"
+  },
+  {
+    "IATA":"VS",
+    "ICAO":"VIR",
+    "operator":"Virgin Atlantic Airways",
+    "country":"United Kingdom",
+    "radioCallsign":"Virgin"
+  },
+  {
+    "IATA":"VT",
+    "ICAO":"VTA",
+    "operator":"Air Tahiti",
+    "country":"French Polynesia",
+    "radioCallsign":"Air Tahiti"
+  },
+  {
+    "IATA":"VW",
+    "ICAO":"TAO",
+    "operator":"Transportes Aeromar",
+    "country":"Mexico",
+    "radioCallsign":"Trans Aeromar"
+  },
+  {
+    "IATA":"VX",
+    "ICAO":"VRD",
+    "operator":"Virgin America",
+    "country":"USA",
+    "radioCallsign":"Redwood"
+  },
+  {
+    "IATA":"VY",
+    "ICAO":"VLG",
+    "operator":"Vueling Airlines",
+    "country":"Spain",
+    "radioCallsign":"Vueling"
+  },
+  {
+    "IATA":"W1",
+    "ICAO":"WDL",
+    "operator":"WDL Aviation",
+    "country":"Germany",
+    "radioCallsign":"WDL"
+  },
+  {
+    "IATA":"W3",
+    "ICAO":"ARA",
+    "operator":"Arik Air",
+    "country":"Nigeria",
+    "radioCallsign":"Arik Air"
+  },
+  {
+    "IATA":"W3",
+    "ICAO":"DNU",
+    "operator":"Danu Oro Transportas",
+    "country":"Lithuania",
+    "radioCallsign":"Danu"
+  },
+  {
+    "IATA":"W3",
+    "ICAO":"SWT",
+    "operator":"Swiftair",
+    "country":"Spain",
+    "radioCallsign":"Swift"
+  },
+  {
+    "IATA":"W4",
+    "ICAO":"BES",
+    "operator":"Aero Services Executive",
+    "country":"France",
+    "radioCallsign":"Bird Express"
+  },
+  {
+    "IATA":"W5",
+    "ICAO":"IRM",
+    "operator":"Mahan Air",
+    "country":"Iran",
+    "radioCallsign":"Mahan Air"
+  },
+  {
+    "IATA":"W6",
+    "ICAO":"WZZ",
+    "operator":"Wizz Air",
+    "country":"Hungary",
+    "radioCallsign":"Wizz Air"
+  },
+  {
+    "IATA":"W8",
+    "ICAO":"CJT",
+    "operator":"CargoJet Airways",
+    "country":"Canada",
+    "radioCallsign":"Cargojet"
+  },
+  {
+    "IATA":"W9",
+    "ICAO":"JAB",
+    "operator":"Air Bagan",
+    "country":"Myanmar",
+    "radioCallsign":"Air Bagan"
+  },
+  {
+    "IATA":"WA",
+    "ICAO":"KLC",
+    "operator":"KLM Cityhopper",
+    "country":"Netherlands",
+    "radioCallsign":"City"
+  },
+  {
+    "IATA":"WB",
+    "ICAO":"RWD",
+    "operator":"Rwandair Express",
+    "country":"Rwanda",
+    "radioCallsign":"Rwandair"
+  },
+  {
+    "IATA":"WC",
+    "ICAO":"ISV",
+    "operator":"Islena Airlines",
+    "country":"Honduras",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"WE",
+    "ICAO":"CWC",
+    "operator":"Centurion Air Cargo",
+    "country":"USA",
+    "radioCallsign":"Challenge Cargo"
+  },
+  {
+    "IATA":"WF",
+    "ICAO":"WIF",
+    "operator":"Wideroe Flyveselskap",
+    "country":"Norway",
+    "radioCallsign":"Wideroe"
+  },
+  {
+    "IATA":"WG",
+    "ICAO":"SWG",
+    "operator":"Sunwing Airlines",
+    "country":"Canada",
+    "radioCallsign":"Sunwing"
+  },
+  {
+    "IATA":"WI",
+    "ICAO":"TDX",
+    "operator":"TradeWinds Airlines",
+    "country":"USA",
+    "radioCallsign":"Tradewinds Express"
+  },
+  {
+    "IATA":"WJ",
+    "ICAO":"LAL",
+    "operator":"Air Labrador",
+    "country":"Canada",
+    "radioCallsign":"Lab Air"
+  },
+  {
+    "IATA":"WK",
+    "ICAO":"EDW",
+    "operator":"Edelweiss Air",
+    "country":"Switzerland",
+    "radioCallsign":"Edelweiss"
+  },
+  {
+    "IATA":"WM",
+    "ICAO":"WIA",
+    "operator":"Winair/Windward Islands Airways",
+    "country":"Sint Maarten",
+    "radioCallsign":"Windward"
+  },
+  {
+    "IATA":"WN",
+    "ICAO":"SWA",
+    "operator":"Southwest Airlines",
+    "country":"USA",
+    "radioCallsign":"Southwest"
+  },
+  {
+    "IATA":"WP",
+    "ICAO":"MKU",
+    "operator":"Island Air",
+    "country":"USA",
+    "radioCallsign":"Moku"
+  },
+  {
+    "IATA":"WR",
+    "ICAO":"WEN",
+    "operator":"WestJet Encore",
+    "country":"Canada",
+    "radioCallsign":"Encore"
+  },
+  {
+    "IATA":"WS",
+    "ICAO":"WJA",
+    "operator":"WestJet",
+    "country":"Canada",
+    "radioCallsign":"Westjet"
+  },
+  {
+    "IATA":"WT",
+    "ICAO":"WSG",
+    "operator":"Wasaya Airways",
+    "country":"Canada",
+    "radioCallsign":"Wasaya"
+  },
+  {
+    "IATA":"WW",
+    "ICAO":"WOW",
+    "operator":"WOW air",
+    "country":"Iceland",
+    "radioCallsign":"Wow Air"
+  },
+  {
+    "IATA":"WX",
+    "ICAO":"BCY",
+    "operator":"CityJet",
+    "country":"Ireland",
+    "radioCallsign":"City Ireland"
+  },
+  {
+    "IATA":"WY",
+    "ICAO":"OMA",
+    "operator":"Oman Air",
+    "country":"Oman",
+    "radioCallsign":"Oman Air"
+  },
+  {
+    "IATA":"WZ",
+    "ICAO":"MDJ",
+    "operator":"Jetran Air",
+    "country":"Romania",
+    "radioCallsign":"Jetran Air"
+  },
+  {
+    "IATA":"WZ",
+    "ICAO":"VAZ",
+    "operator":"Red Wings Airlines",
+    "country":"Russia",
+    "radioCallsign":"Remont Air"
+  },
+  {
+    "IATA":"X3",
+    "ICAO":"TUI",
+    "operator":"TUIfly",
+    "country":"Germany",
+    "radioCallsign":"TUI Jet"
+  },
+  {
+    "IATA":"X5",
+    "ICAO":"OTJ",
+    "operator":"Fly Romania",
+    "country":"Romania",
+    "radioCallsign":"Fly Romania"
+  },
+  {
+    "IATA":"X8",
+    "ICAO":"DAP",
+    "operator":"Aerovias DAP",
+    "country":"Chile",
+    "radioCallsign":"Dap"
+  },
+  {
+    "IATA":"X9",
+    "ICAO":"KHO",
+    "operator":"Khors Aircompany",
+    "country":"Ukraine",
+    "radioCallsign":"Aircompany Khors"
+  },
+  {
+    "IATA":"XA",
+    "ICAO":"XAA",
+    "operator":"ARINC/Aeronautical Radio Inc.",
+    "country":"USA",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"XB",
+    "ICAO":"IAT",
+    "operator":"IATA/International Air Transport Association",
+    "country":"Canada",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"XC",
+    "ICAO":"KDC",
+    "operator":"KD Air",
+    "country":"Canada",
+    "radioCallsign":"Kay Dee"
+  },
+  {
+    "IATA":"XF",
+    "ICAO":"VLK",
+    "operator":"Vladivostok Air",
+    "country":"Russia",
+    "radioCallsign":"Vladair"
+  },
+  {
+    "IATA":"XH",
+    "ICAO":"KHH",
+    "operator":"Alexandria Airlines",
+    "country":"Egypt",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"XH",
+    "ICAO":"XXH",
+    "operator":"Special Ground Handling Service",
+    "country":"USA",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"XI",
+    "ICAO":"XXI",
+    "operator":"AEROTEL/Aeronautical Telecommunications",
+    "country":"Jamaica",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"XJ",
+    "ICAO":"TAX",
+    "operator":"Thai AirAsia X",
+    "country":"Thailand",
+    "radioCallsign":"Express Wing"
+  },
+  {
+    "IATA":"XK",
+    "ICAO":"CCM",
+    "operator":"CCM Airlines/Compagnie Corse Mediterrannee",
+    "country":"France",
+    "radioCallsign":"Corsica"
+  },
+  {
+    "IATA":"XL",
+    "ICAO":"LNE",
+    "operator":"LAN Ecuador",
+    "country":"Ecuador",
+    "radioCallsign":"Lan Ecuador"
+  },
+  {
+    "IATA":"XM",
+    "ICAO":"JLJ",
+    "operator":"J-Air",
+    "country":"Japan",
+    "radioCallsign":"J-Air"
+  },
+  {
+    "IATA":"XM",
+    "ICAO":"JTE",
+    "operator":"JetEx/Australian Air Express",
+    "country":"Australia",
+    "radioCallsign":"JetEx"
+  },
+  {
+    "IATA":"XN",
+    "ICAO":"XAR",
+    "operator":"Xpress Air",
+    "country":"Indonesia",
+    "radioCallsign":"Travel Express"
+  },
+  {
+    "IATA":"XQ",
+    "ICAO":"SXS",
+    "operator":"SunExpress",
+    "country":"Turkey",
+    "radioCallsign":"Sun Express"
+  },
+  {
+    "IATA":"XR",
+    "ICAO":"OZW",
+    "operator":"SkyWest Airlines",
+    "country":"Australia",
+    "radioCallsign":"Ozwest"
+  },
+  {
+    "IATA":"XS",
+    "ICAO":"SIT",
+    "operator":"SITA",
+    "country":"Belgium",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"XT",
+    "ICAO":"INX",
+    "operator":"Indonesia AirAsia X",
+    "country":"Indonesia",
+    "radioCallsign":"IndonesianRedcap"
+  },
+  {
+    "IATA":"XU",
+    "ICAO":"AXK",
+    "operator":"African Express Airways",
+    "country":"Kenya",
+    "radioCallsign":"Express Jet"
+  },
+  {
+    "IATA":"XY",
+    "ICAO":"KNE",
+    "operator":"Nas Air/Al-Khayala Airline",
+    "country":"Saudi Arabia",
+    "radioCallsign":"Nas Express"
+  },
+  {
+    "IATA":"XZ",
+    "ICAO":"EXY",
+    "operator":"South African Express Airways",
+    "country":"South Africa",
+    "radioCallsign":"Expresswayx"
+  },
+  {
+    "IATA":"Y4",
+    "ICAO":"VOI",
+    "operator":"Volaris",
+    "country":"Mexico",
+    "radioCallsign":"Volaris"
+  },
+  {
+    "IATA":"Y5",
+    "ICAO":"AWA",
+    "operator":"Asia Wings",
+    "country":"Kazakhstan",
+    "radioCallsign":"Asia Wings"
+  },
+  {
+    "IATA":"Y5",
+    "ICAO":"GMR",
+    "operator":"Golden Myanmar Airlines",
+    "country":"Myanmar",
+    "radioCallsign":"Golden Myanmar"
+  },
+  {
+    "IATA":"Y7",
+    "ICAO":"TYA",
+    "operator":"Taimyr Air Company",
+    "country":"Russia",
+    "radioCallsign":"Taimyr"
+  },
+  {
+    "IATA":"Y8",
+    "ICAO":"YZR",
+    "operator":"Yangtze River Express Airlines",
+    "country":"China",
+    "radioCallsign":"Yangtze River"
+  },
+  {
+    "IATA":"Y9",
+    "ICAO":"IRK",
+    "operator":"Kish Air",
+    "country":"Iran",
+    "radioCallsign":"Kishair"
+  },
+  {
+    "IATA":"YC",
+    "ICAO":"LLM",
+    "operator":"Yamal Airlines",
+    "country":"Russia",
+    "radioCallsign":"Yamal"
+  },
+  {
+    "IATA":"YF",
+    "ICAO":"CFC",
+    "operator":"Canadian Armed Forces",
+    "country":"Canada",
+    "radioCallsign":"Canforce"
+  },
+  {
+    "IATA":"YG",
+    "ICAO":"OTL",
+    "operator":"South Airlines",
+    "country":"Ukraine",
+    "radioCallsign":"Southline"
+  },
+  {
+    "IATA":"YI",
+    "ICAO":"RSI",
+    "operator":"Air Sunshine",
+    "country":"USA",
+    "radioCallsign":"Air Sunshine"
+  },
+  {
+    "IATA":"YJ",
+    "ICAO":"NTN",
+    "operator":"National Airways",
+    "country":"South Africa",
+    "radioCallsign":"Natchair"
+  },
+  {
+    "IATA":"YL",
+    "ICAO":"BSA",
+    "operator":"Air Bissau International",
+    "country":"Guinea-Bissau",
+    "radioCallsign":"Bissau International"
+  },
+  {
+    "IATA":"YL",
+    "ICAO":"ULG",
+    "operator":"U Airlines",
+    "country":"Thailand",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"YM",
+    "ICAO":"MGX",
+    "operator":"Montenegro Airlines",
+    "country":"Montenegro",
+    "radioCallsign":"Montair"
+  },
+  {
+    "IATA":"YN",
+    "ICAO":"CRQ",
+    "operator":"Air Creebec",
+    "country":"Canada",
+    "radioCallsign":"Cree"
+  },
+  {
+    "IATA":"YO",
+    "ICAO":"MCM",
+    "operator":"Heli Air Monaco",
+    "country":"Monaco",
+    "radioCallsign":"Heli Air"
+  },
+  {
+    "IATA":"YQ",
+    "ICAO":"POT",
+    "operator":"Polet Cargo Airlines",
+    "country":"Russia",
+    "radioCallsign":"Polet"
+  },
+  {
+    "IATA":"YR",
+    "ICAO":"EGJ",
+    "operator":"Scenic Airlines",
+    "country":"USA",
+    "radioCallsign":"Scenic"
+  },
+  {
+    "IATA":"YV",
+    "ICAO":"ASH",
+    "operator":"Mesa Airlines",
+    "country":"USA",
+    "radioCallsign":"Air Shuttle"
+  },
+  {
+    "IATA":"YW",
+    "ICAO":"ANE",
+    "operator":"Air Nostrum",
+    "country":"Spain",
+    "radioCallsign":"Nostrum Air"
+  },
+  {
+    "IATA":"Z2",
+    "ICAO":"EZD",
+    "operator":"AirAsia Zest",
+    "country":"Philippines",
+    "radioCallsign":"Zest Airways"
+  },
+  {
+    "IATA":"Z3",
+    "ICAO":"SMJ",
+    "operator":"AV Cargo",
+    "country":"Zimbabwe",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"Z6",
+    "ICAO":"UDN",
+    "operator":"Dnieproavia",
+    "country":"Ukraine",
+    "radioCallsign":"Dniepro"
+  },
+  {
+    "IATA":"Z8",
+    "ICAO":"AZN",
+    "operator":"Linea Aerea Amaszonas",
+    "country":"Bolivia",
+    "radioCallsign":"Amaszonas"
+  },
+  {
+    "IATA":"Z8",
+    "ICAO":"MTZ",
+    "operator":"Mali Airways",
+    "country":"Mali",
+    "radioCallsign":"Mali Airways"
+  },
+  {
+    "IATA":"Z9",
+    "ICAO":"DCP",
+    "operator":"Delta Connection Kenya",
+    "country":"Kenya",
+    "radioCallsign":"Nilecat"
+  },
+  {
+    "IATA":"ZA",
+    "ICAO":"SWM",
+    "operator":"Sky Wings Asia Airlines",
+    "country":"Cambodia",
+    "radioCallsign":"Sky Wings"
+  },
+  {
+    "IATA":"ZB",
+    "ICAO":"MON",
+    "operator":"Monarch Airlines",
+    "country":"United Kingdom",
+    "radioCallsign":"Monarch"
+  },
+  {
+    "IATA":"ZD",
+    "ICAO":"FDN",
+    "operator":"Dolphin Air",
+    "country":"United Arab Emirates",
+    "radioCallsign":"Flying Dolphin"
+  },
+  {
+    "IATA":"ZE",
+    "ICAO":"AZE",
+    "operator":"Arcus-Air Logistics",
+    "country":"Germany",
+    "radioCallsign":"Arcus Air"
+  },
+  {
+    "IATA":"ZE",
+    "ICAO":"ESR",
+    "operator":"Eastar Jet",
+    "country":"Korea ? Rep. of",
+    "radioCallsign":"Eastar"
+  },
+  {
+    "IATA":"ZH",
+    "ICAO":"CSZ",
+    "operator":"Shenzhen Airlines",
+    "country":"China",
+    "radioCallsign":"Shenzhen Air"
+  },
+  {
+    "IATA":"ZI",
+    "ICAO":"AAF",
+    "operator":"Aigle Azur",
+    "country":"France",
+    "radioCallsign":"Aigle Azur"
+  },
+  {
+    "IATA":"ZJ",
+    "ICAO":"ARC",
+    "operator":"Air Routing International",
+    "country":"USA",
+    "radioCallsign":""
+  },
+  {
+    "IATA":"ZK",
+    "ICAO":"GLA",
+    "operator":"Great Lakes Aviation",
+    "country":"USA",
+    "radioCallsign":"Lakes Air"
+  },
+  {
+    "IATA":"ZL",
+    "ICAO":"RXA",
+    "operator":"Regional Express",
+    "country":"Australia",
+    "radioCallsign":"Rex"
+  },
+  {
+    "IATA":"ZM",
+    "ICAO":"CNB",
+    "operator":"CityLine Hungary",
+    "country":"Hungary",
+    "radioCallsign":"Cityhun"
+  },
+  {
+    "IATA":"ZN",
+    "ICAO":"NAY",
+    "operator":"NAYSA Navegacion y Servicios Aereos Canarios",
+    "country":"Spain",
+    "radioCallsign":"Naysa"
+  },
+  {
+    "IATA":"ZP",
+    "ICAO":"AZQ",
+    "operator":"Silk Way Airlines",
+    "country":"Azerbaijan",
+    "radioCallsign":"Silk Line"
+  },
+  {
+    "IATA":"ZQ",
+    "ICAO":"LOC",
+    "operator":"Locair",
+    "country":"USA",
+    "radioCallsign":"Locair"
+  },
+  {
+    "IATA":"ZR",
+    "ICAO":"AZS",
+    "operator":"Aviacon Zitotrans",
+    "country":"Russia",
+    "radioCallsign":"Zitotrans"
+  },
+  {
+    "IATA":"ZR",
+    "ICAO":"PUN",
+    "operator":"Punto Azul",
+    "country":"Equatorial Guinea",
+    "radioCallsign":"Punto Azul"
+  },
+  {
+    "IATA":"ZT",
+    "ICAO":"AWC",
+    "operator":"Titan Airways",
+    "country":"United Kingdom",
+    "radioCallsign":"Zap"
+  },
+  {
+    "IATA":"ZW",
+    "ICAO":"AWI",
+    "operator":"Air Wisconsin",
+    "country":"USA",
+    "radioCallsign":"Air Wisconsin"
+  },
+  {
+    "IATA":"ZX",
+    "ICAO":"GGN",
+    "operator":"Air Georgian/Air Alliance",
+    "country":"Canada",
+    "radioCallsign":"Georgian"
+  }
+]
