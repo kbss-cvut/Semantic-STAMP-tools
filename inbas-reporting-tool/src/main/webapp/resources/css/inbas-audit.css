@@ -97,3 +97,14 @@ td.actions {
 td.actions button {
     margin: 5px 5px 5px 5px;
 }
+
+.login-panel {
+    width: 400px;
+    height: 220px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}

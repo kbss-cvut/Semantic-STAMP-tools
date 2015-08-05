@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
-@Import({PersistenceConfig.class, ServiceConfig.class, SecurityConfig.class, RestConfig.class})
+@Import({PersistenceConfig.class, ServiceConfig.class, RestConfig.class, SecurityConfig.class})
 public class WebAppConfig extends WebMvcConfigurerAdapter {
 
     @Override

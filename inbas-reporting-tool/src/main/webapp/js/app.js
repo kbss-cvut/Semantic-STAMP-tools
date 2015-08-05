@@ -8,9 +8,13 @@ var React = require('react');
 var router = require('./utils/router');
 var Actions = require('./actions/Actions');
 
-Actions.loadReports();
-Actions.loadUser();
+var Login = require('./components/login/Login');
 
-router.run(function (Handler) {
-    React.render(<Handler />, document.getElementById('content'));
-});
+React.render(<Login />, document.getElementById('content'));
+
+//Actions.loadReports();
+//Actions.loadUser();
+//
+//router.run(function (Handler) {
+//    React.render(<Handler />, document.getElementById('content'));
+//});
