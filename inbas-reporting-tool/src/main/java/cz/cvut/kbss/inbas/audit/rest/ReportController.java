@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.audit.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -48,6 +49,7 @@ public class ReportController extends BaseController {
         return original;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void createReport(@RequestBody OccurrenceReport report) {
@@ -59,6 +61,7 @@ public class ReportController extends BaseController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method = RequestMethod.PUT, value = "/{key}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateReport(@PathVariable("key") String key, @RequestBody OccurrenceReport report) {
@@ -84,6 +87,7 @@ public class ReportController extends BaseController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method = RequestMethod.DELETE, value = "/{key}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReport(@PathVariable("key") String key) {

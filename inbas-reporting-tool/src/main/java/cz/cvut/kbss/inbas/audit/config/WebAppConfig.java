@@ -3,7 +3,6 @@ package cz.cvut.kbss.inbas.audit.config;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -22,8 +21,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"cz.cvut.kbss.inbas.audit.rest"})
-@Import({PersistenceConfig.class, ServiceConfig.class})
+@Import({PersistenceConfig.class, ServiceConfig.class, SecurityConfig.class, RestConfig.class})
 public class WebAppConfig extends WebMvcConfigurerAdapter {
 
     @Override

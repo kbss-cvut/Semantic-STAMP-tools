@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PersonServiceImpl extends BaseService<Person> implements PersonService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private PersonDao personDao;
@@ -31,12 +35,20 @@ public class PersonServiceImpl extends BaseService<Person> implements PersonServ
             throw new UsernameExistsException("Username " + person.getUsername() + " already exists.");
         }
         person.generateUri();
-        this.personDao.persist(person);
+        person.encodePassword(passwordEncoder);
+        personDao.persist(person);
     }
 
     @Override
     public void update(Person instance) {
-
+        final Person orig = personDao.findByUri(instance.getUri());
+        if (orig == null) {
+            throw new IllegalArgumentException("Cannot update person URI");
+        }
+        if (!orig.getPassword().equals(instance.getPassword())) {
+            instance.encodePassword(passwordEncoder);
+        }
+        personDao.update(instance);
     }
 
     @Override

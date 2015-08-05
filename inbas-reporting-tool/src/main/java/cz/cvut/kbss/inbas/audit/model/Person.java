@@ -6,6 +6,7 @@ import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.Properties;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.net.URI;
 import java.util.Map;
@@ -28,6 +29,9 @@ public class Person implements HasDerivableUri {
 
     @OWLDataProperty(iri = Vocabulary.p_username)
     private String username;
+
+    @OWLDataProperty(iri = Vocabulary.p_password)
+    private String password;
 
     @Properties
     private Map<String, Set<String>> properties;
@@ -62,6 +66,26 @@ public class Person implements HasDerivableUri {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * Encodes password of this person.
+     *
+     * @param encoder Encoder to user to encode the password
+     */
+    public void encodePassword(PasswordEncoder encoder) {
+        if (password == null || password.isEmpty()) {
+            throw new IllegalStateException("Cannot encode an empty password.");
+        }
+        this.password = encoder.encode(password);
     }
 
     public Map<String, Set<String>> getProperties() {

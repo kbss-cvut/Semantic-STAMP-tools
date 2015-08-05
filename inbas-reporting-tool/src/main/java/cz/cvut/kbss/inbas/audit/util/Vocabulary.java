@@ -29,6 +29,7 @@ public class Vocabulary {
     public static final String p_firstName = "http://xmlns.com/foaf/0.1/firstName";
     public static final String p_lastName = "http://xmlns.com/foaf/0.1/lastName";
     public static final String p_label = "http://www.w3.org/2000/01/rdf-schema#label";
+    public static final String p_password = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#password";
     public static final String p_username = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#username";
     public static final String p_hasEventType = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasEventType";
     public static final String p_hasEvent = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasEvent";

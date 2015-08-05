@@ -1,9 +1,13 @@
 package cz.cvut.kbss.inbas.audit.config;
 
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import java.util.EnumSet;
 
 /**
  * Created by ledvima1 on 8.4.15.
@@ -29,6 +33,14 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
     public void onStartup(ServletContext servletContext) throws ServletException {
         System.out.println("****** Application Context Initialization ******");
 
+        initSecurityFilter(servletContext);
         super.onStartup(servletContext);
+    }
+
+    private void initSecurityFilter(ServletContext servletContext) {
+        FilterRegistration.Dynamic securityFilter = servletContext.addFilter("springSecurityFilterChain",
+                DelegatingFilterProxy.class);
+        final EnumSet<DispatcherType> es = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
+        securityFilter.addMappingForUrlPatterns(es, true, "/*");
     }
 }
