@@ -12,6 +12,7 @@ var AircraftRegistration = require('../../AircraftRegistration');
 var FlightInfo = require('../../FlightInfo');
 var FlightOperationType = require('../../FlightOperationType');
 var Select = require('../../../../Select');
+var Input = require('../../../../Input');
 
 
 var ConflictingAircraft = React.createClass({
@@ -54,7 +55,8 @@ var ConflictingAircraft = React.createClass({
                     </div>
                     <div style={{overflow: 'hidden'}}>
                         <div className='report-detail-float'>
-                            <Select label='Phase' name='flightPhase' value={statement.conflictingAircraft.flightPhase} onChange={this.onChange}
+                            <Select label='Phase' name='flightPhase' value={statement.conflictingAircraft.flightPhase}
+                                    onChange={this.onChange}
                                     title='Phase of flight when the event occurred' options={phaseOptions}/>
                         </div>
                         <div className='report-detail-float-right'>
@@ -63,7 +65,8 @@ var ConflictingAircraft = React.createClass({
                         </div>
                     </div>
                     <FlightInfo lastDeparturePoint={statement.conflictingAircraft.lastDeparturePoint}
-                                plannedDestination={statement.conflictingAircraft.plannedDestination} onChange={this.onChange}/>
+                                plannedDestination={statement.conflictingAircraft.plannedDestination}
+                                onChange={this.onChange}/>
                 </Panel>
             </Panel>
         );

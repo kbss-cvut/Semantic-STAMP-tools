@@ -5,7 +5,8 @@
 'use strict';
 
 var React = require('react');
-var Input = require('react-bootstrap').Input;
+
+var Input = require('../../Input');
 
 var FlightInfo = React.createClass({
     render: function () {

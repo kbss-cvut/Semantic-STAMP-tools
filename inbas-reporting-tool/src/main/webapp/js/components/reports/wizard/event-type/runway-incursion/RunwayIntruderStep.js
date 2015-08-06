@@ -6,12 +6,12 @@
 
 var React = require('react');
 var assign = require('object-assign');
-var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
 var AircraftIntruder = require('./AircraftIntruder');
 var PersonIntruder = require('./PersonIntruder');
 var VehicleIntruder = require('./VehicleIntruder');
+var Input = require('../../../../Input');
 
 var RunwayIntruderStep = React.createClass({
     getInitialState: function () {

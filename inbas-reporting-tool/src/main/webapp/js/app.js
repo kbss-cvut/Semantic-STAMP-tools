@@ -9,8 +9,9 @@ var router = require('./utils/router');
 var Actions = require('./actions/Actions');
 
 var Login = require('./components/login/Login');
+var Register = require('./components/register/Register');
 
-React.render(<Login />, document.getElementById('content'));
+React.render(<Register />, document.getElementById('content'));
 
 //Actions.loadReports();
 //Actions.loadUser();

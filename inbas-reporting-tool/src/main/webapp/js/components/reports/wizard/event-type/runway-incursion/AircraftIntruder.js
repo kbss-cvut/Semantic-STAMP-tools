@@ -6,13 +6,13 @@
 
 var React = require('react');
 var assign = require('object-assign');
-var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
 var AircraftRegistration = require('../../AircraftRegistration');
 var FlightInfo = require('../../FlightInfo');
 var FlightOperationType = require('../../FlightOperationType');
 var Select = require('../../../../Select');
+var INput = require('../../../../Input');
 var OperatorTypeahead = require('../../../../OperatorTypeahead');
 
 var AircraftIntruder = React.createClass({

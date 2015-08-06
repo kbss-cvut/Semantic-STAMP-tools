@@ -6,10 +6,11 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 var CollapsibleMixin = require('react-bootstrap').CollapsibleMixin;
 var classNames = require('classnames');
+
+var Input = require('../../Input');
 
 var AircraftRegistration = React.createClass({
     mixins: [CollapsibleMixin],
@@ -34,13 +35,13 @@ var AircraftRegistration = React.createClass({
                     <Button bsStyle='link' onClick={this.onToggleCollapsible}>Aircraft Registration</Button>
                 </div>
                 <Panel ref='panel' className={classNames(styles)}>
-                    <div style={{overflow: 'hidden'}}>
-                        <div className='report-detail-float'>
+                    <div className='float-container'>
+                        <div className='component-float-left'>
                             <Input type='text' label='Aircraft Registration' name='registration'
                                    value={this.props.registration} onChange={this.props.onChange}
                                    title='Aircraft registration'/>
                         </div>
-                        <div className='report-detail-float-right'>
+                        <div className='component-float-right'>
                             <Input type='text' label='State of Registry' name='stateOfRegistry'
                                    value={this.props.stateOfRegistry} onChange={this.props.onChange}
                                    title='Aircraft state of registry'/>

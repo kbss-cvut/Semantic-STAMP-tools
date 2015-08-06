@@ -1,5 +1,7 @@
+Perhaps buttons should also be replaced with the small variant
 Disable fuzzy string matching in autocomplete
     - requires writing our own string matching function
+Create a better option list for the typeahead. One that would have absolute position and wouldn't push other components down when it is long
 Add spring security
 Add loss of separation wizard
 Rewrite the DTO factory

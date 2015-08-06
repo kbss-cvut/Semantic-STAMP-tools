@@ -6,13 +6,13 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 var Alert = require('react-bootstrap').Alert;
 var ProgressBar = require('react-bootstrap').ProgressBar;
 var assign = require('object-assign');
 var DateTimePicker = require('react-bootstrap-datetimepicker');
 
+var Input = require('../Input');
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
 var ReportStatements = require('./ReportStatements');

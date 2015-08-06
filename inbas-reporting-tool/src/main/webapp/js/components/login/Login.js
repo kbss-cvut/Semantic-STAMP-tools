@@ -6,9 +6,10 @@
 
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
-var Input = require('react-bootstrap').Input;
 var Button = require('react-bootstrap').Button;
 var Alert = require('react-bootstrap').Alert;
+
+var Input = require('../Input');
 
 var title = (<h3>INBAS Reporting Tool - Login</h3>);
 

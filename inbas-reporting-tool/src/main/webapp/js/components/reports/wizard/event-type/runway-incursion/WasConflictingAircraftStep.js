@@ -6,10 +6,10 @@
 
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
-var Input = require('react-bootstrap').Input;
 
 var ConflictingAircraftStep = require('./ConflictingAircraftStep');
 var Constants = require('../../../../../constants/Constants');
+var Input = require('../../../../Input');
 
 var WasConflictingAircraft = React.createClass({
     getInitialState: function() {

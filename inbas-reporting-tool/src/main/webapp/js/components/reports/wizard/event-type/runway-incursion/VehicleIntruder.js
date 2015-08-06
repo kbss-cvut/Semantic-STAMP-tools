@@ -5,10 +5,10 @@
 'use strict';
 
 var React = require('react');
-var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
 var Select = require('../../../../Select');
+var Input = require('../../../../Input');
 
 var VehicleIntruder = React.createClass({
     render: function () {

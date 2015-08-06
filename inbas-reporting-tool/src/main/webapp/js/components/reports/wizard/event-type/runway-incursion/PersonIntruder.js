@@ -5,8 +5,9 @@
 'use strict';
 
 var React = require('react');
-var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
+
+var Input = require('../../../../Input');
 
 var PersonIntruder = React.createClass({
     render: function () {
