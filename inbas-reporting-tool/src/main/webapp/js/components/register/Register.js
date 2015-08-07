@@ -26,6 +26,10 @@ var Register = React.createClass({
     },
 
     onChange: function (e) {
+        var state = this.state;
+        state[e.target.name] = e.target.value;
+        state.alertVisible = false;
+        this.setState(state);
     },
 
     checkPasswordConfirm: function (e) {
