@@ -55,8 +55,10 @@ var Ajax = {
             if (err) {
                 if (err.status === 401) {
                     var currentRoute = window.location.hash.substr(1);
-                    router.saveOriginalTarget(currentRoute);
-                    router.transitionTo('login');
+                    if (currentRoute !== '/register' && currentRoute !== '/login') {
+                        router.saveOriginalTarget(currentRoute);
+                        router.transitionTo('login');
+                    }
                     return;
                 }
             }

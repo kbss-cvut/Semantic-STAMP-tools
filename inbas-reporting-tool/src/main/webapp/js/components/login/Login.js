@@ -12,6 +12,7 @@ var Alert = require('react-bootstrap').Alert;
 var Input = require('../Input');
 var router = require('../../utils/router');
 var Ajax = require('../../utils/Ajax');
+var Actions = require('../../actions/Actions');
 
 var title = (<h3>INBAS Reporting Tool - Login</h3>);
 
@@ -51,6 +52,7 @@ var Login = React.createClass({
                     this.setState({alertVisible: true});
                     return;
                 }
+                Actions.loadUser();
                 console.log('User successfully authenticated.');
                 router.transitionToOriginalTarget();
             }.bind(this));

@@ -3,3 +3,4 @@
 target
 repositories
 node_modules
+**/bundle.js

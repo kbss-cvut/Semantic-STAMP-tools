@@ -12,15 +12,23 @@ var Navbar = require('react-bootstrap').Navbar;
 var Nav = require('react-bootstrap').Nav;
 var NavItemLink = require('react-router-bootstrap').NavItemLink;
 
+var UserStore = require('../stores/UserStore');
+
 var MainView = React.createClass({
+    getInitialState: function() {
+        return {
+            loggedIn: UserStore.isLoaded()
+        }
+    },
+
     render: function () {
         return (
             <div>
                 <header>
                     <Navbar brand='INBAS Reporting Tool'>
                         <Nav>
-                            <NavItemLink to='home' disabled>Home</NavItemLink>
-                            <NavItemLink to='reports' disabled>Reports</NavItemLink>
+                            <NavItemLink to='home' disabled={!this.state.loggedIn}>Home</NavItemLink>
+                            <NavItemLink to='reports' disabled={!this.state.loggedIn}>Reports</NavItemLink>
                         </Nav>
                     </Navbar>
                 </header>
