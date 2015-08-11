@@ -115,11 +115,15 @@ td.actions button {
 
 .register-panel {
     width: 800px;
-    height: 400px;
+    height: 310px;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
+}
+
+.register-panel.expanded {
+    height: 380px;
 }

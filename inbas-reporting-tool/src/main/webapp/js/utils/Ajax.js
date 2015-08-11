@@ -9,7 +9,7 @@ var Cookies = require('js-cookie');
 
 var router = require('./router');
 
-var csrfToken = 'X-CSRF-Token';
+var csrfTokenHeader = 'X-CSRF-Token';
 
 var Ajax = {
     req: null,
@@ -51,7 +51,7 @@ var Ajax = {
     },
 
     end: function (fn) {
-        this.req.set(csrfToken, this.getCsrfToken()).end(function (err, resp) {
+        this.req.set(csrfTokenHeader, this.getCsrfToken()).end(function (err, resp) {
             if (err) {
                 if (err.status === 401) {
                     var currentRoute = window.location.hash.substr(1);

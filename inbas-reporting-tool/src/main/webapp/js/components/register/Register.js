@@ -7,9 +7,11 @@
 var React = require('react/addons');
 var Panel = require('react-bootstrap').Panel;
 var Button = require('react-bootstrap').Button;
+var Alert = require('react-bootstrap').Alert;
 
 var Input = require('../Input');
 var router = require('../../utils/router');
+var Ajax = require('../../utils/Ajax');
 
 var title = (<h3>INBAS Reporting Tool - Registration</h3>);
 
@@ -23,7 +25,8 @@ var Register = React.createClass({
             password: '',
             passwordConfirm: '',
             passwordMatch: true,
-            alertVisible: false
+            alertVisible: false,
+            errorMessage: ''
         }
     },
 
@@ -36,12 +39,62 @@ var Register = React.createClass({
         }
     },
 
+    onKeyDown: function (e) {
+        if (e.key === 'Enter') {
+            this.register();
+        }
+    },
+
+    dismissAlert: function () {
+        this.setState({alertVisible: false});
+    },
+
     isValid: function () {
         var state = this.state;
         return (state.firstName !== '' && state.lastName !== '' && state.username !== '' && state.password !== '' && state.passwordMatch);
     },
 
     register: function () {
+        if (!this.isValid()) {
+            return;
+        }
+        var data = {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            username: this.state.username,
+            password: this.state.password
+        };
+        Ajax.post('rest/persons', data).end(function (err, resp) {
+            if (err) {
+                this.setState({
+                    alertVisible: true,
+                    errorMessage: resp.body.message ? resp.body.message : 'Unknown error.'
+                });
+            }
+            if (resp.status === 201) {
+                this.doSyntheticLogin(data.username, data.password);
+            }
+        }.bind(this));
+    },
+
+    /**
+     * After successful registration, perform a synthetic login so that the user receives his session and can start
+     * working.
+     */
+    doSyntheticLogin: function (username, password) {
+        Ajax.post('j_spring_security_check', null, 'form').send('username=' + username).send('password=' + password)
+            .end(function (err, resp) {
+                if (err) {
+                    console.log('Unable to perform synthetic login. Received response with status ' + err.status);
+                }
+                var status = JSON.parse(resp.text);
+                if (!status.success || !status.loggedIn) {
+                    this.setState({alertVisible: true});
+                    return;
+                }
+                console.log('User successfully authenticated.');
+                router.transitionTo('home');
+            }.bind(this));
     },
 
     cancel: function () {
@@ -49,9 +102,10 @@ var Register = React.createClass({
     },
 
     render: function () {
-        var containerStyle = {margin: '1em 0em 0em 0em'};
+        var containerStyle = {margin: '1em 0em 0em 0em'},
+            panelCls = this.state.alertVisible ? 'register-panel expanded' : 'register-panel';
         return (
-            <Panel header={title} bsStyle='info' className='register-panel'>
+            <Panel header={title} bsStyle='info' className={panelCls}>
                 <form className='form-horizontal'>
                     {this.renderAlert()}
                     <div className='float-container' style={containerStyle}>
@@ -93,8 +147,8 @@ var Register = React.createClass({
 
     renderAlert: function () {
         return this.state.alertVisible ? (
-            <Alert>
-                <div>An error occurred during registration.</div>
+            <Alert bsStyle='danger' bsSize='small' dismissAfter={3000} onDismiss={this.dismissAlert}>
+                <div>{this.state.errorMessage}</div>
             </Alert>
         ) : null;
     },
@@ -102,11 +156,11 @@ var Register = React.createClass({
     renderPasswordConfirm: function () {
         if (this.state.passwordMatch) {
             return (<Input type='password' name='passwordConfirm' label='Password (confirm)' labelClassName='col-xs-4'
-                           wrapperClassName='col-xs-8' onChange={this.onPasswordChange}
+                           wrapperClassName='col-xs-8' onChange={this.onPasswordChange} onKeyDown={this.onKeyDown}
                            value={this.state.passwordConfirm}/>);
         } else {
             return (<Input type='password' name='passwordConfirm' label='Password (confirm)' labelClassName='col-xs-4'
-                           wrapperClassName='col-xs-8' onChange={this.onPasswordChange}
+                           wrapperClassName='col-xs-8' onChange={this.onPasswordChange} onKeyDown={this.onKeyDown}
                            value={this.state.passwordConfirm} bsStyle='error'
                            hasFeedback/>);
         }

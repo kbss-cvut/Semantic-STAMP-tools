@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.handlers;
 
 import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
+import cz.cvut.kbss.inbas.audit.exceptions.UsernameExistsException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +36,10 @@ public class RestExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorInfo> mappingException(HttpServletRequest request, HttpMessageNotReadableException e) {
         return new ResponseEntity<>(errorInfo(request, e.getCause()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UsernameExistsException.class)
+    public ResponseEntity<ErrorInfo> usernameExistsException(HttpServletRequest request, UsernameExistsException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.CONFLICT);
     }
 }
