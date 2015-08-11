@@ -45,6 +45,7 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
         author.setFirstName("Catherine");
         author.setLastName("Halsey");
         author.setUsername("halsey@unsc.org");
+        author.setPassword("john117");
         author.generateUri();
         if (personService.findByUsername(USERNAME) == null) {
             personService.persist(author);
