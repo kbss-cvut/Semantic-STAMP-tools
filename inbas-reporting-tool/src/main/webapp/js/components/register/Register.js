@@ -4,15 +4,17 @@
 
 'use strict';
 
-var React = require('react');
+var React = require('react/addons');
 var Panel = require('react-bootstrap').Panel;
 var Button = require('react-bootstrap').Button;
 
 var Input = require('../Input');
+var router = require('../../utils/router');
 
 var title = (<h3>INBAS Reporting Tool - Registration</h3>);
 
 var Register = React.createClass({
+    mixins: [React.addons.LinkedStateMixin],
     getInitialState: function () {
         return {
             firstName: '',
@@ -20,31 +22,30 @@ var Register = React.createClass({
             username: '',
             password: '',
             passwordConfirm: '',
-            passwordConfirmMatches: true,
+            passwordMatch: true,
             alertVisible: false
         }
     },
 
-    onChange: function (e) {
-        var state = this.state;
-        state[e.target.name] = e.target.value;
-        state.alertVisible = false;
-        this.setState(state);
+    onPasswordChange: function (e) {
+        this.state[e.target.name] = e.target.value;
+        if (this.state.password !== this.state.passwordConfirm) {
+            this.setState({passwordMatch: false});
+        } else {
+            this.setState({passwordMatch: true});
+        }
     },
 
-    checkPasswordConfirm: function (e) {
-        var val = e.target.value;
-        if (val !== this.state.password) {
-            this.setState({passwordConfirm: val, passwordConfirmMatches: false});
-        } else {
-            this.setState({passwordConfirm: val, passwordConfirmMatches: true});
-        }
+    isValid: function () {
+        var state = this.state;
+        return (state.firstName !== '' && state.lastName !== '' && state.username !== '' && state.password !== '' && state.passwordMatch);
     },
 
     register: function () {
     },
 
     cancel: function () {
+        router.transitionTo('login');
     },
 
     render: function () {
@@ -56,39 +57,33 @@ var Register = React.createClass({
                     <div className='float-container' style={containerStyle}>
                         <div className='component-float-left'>
                             <Input type='text' name='firstName' label='First name' labelClassName='col-xs-4'
-                                   value={this.state.firstName} onChange={this.onChange} wrapperClassName='col-xs-8'/>
+                                   valueLink={this.linkState('firstName')} wrapperClassName='col-xs-8'/>
                         </div>
                         <div className='component-float-right'>
                             <Input type='text' name='lastName' label='Last name' labelClassName='col-xs-4'
-                                   value={this.state.lastName} onChange={this.onChange} wrapperClassName='col-xs-8'/>
+                                   valueLink={this.linkState('lastName')} wrapperClassName='col-xs-8'/>
                         </div>
                     </div>
                     <div className='float-container' style={containerStyle}>
                         <div className='component-float-left'>
                             <Input type='text' name='username' label='Username' labelClassName='col-xs-4'
-                                   value={this.state.username} onChange={this.onChange} wrapperClassName='col-xs-8'/>
+                                   valueLink={this.linkState('username')} wrapperClassName='col-xs-8'/>
                         </div>
                     </div>
                     <div className='float-container' style={containerStyle}>
                         <div className='component-float-left'>
-                            <Input type='text' name='password' label='Password' labelClassName='col-xs-4'
-                                   value={this.state.password} onChange={this.onChange} wrapperClassName='col-xs-8'/>
+                            <Input type='password' name='password' label='Password' labelClassName='col-xs-4'
+                                   onChange={this.onPasswordChange} value={this.state.password}
+                                   wrapperClassName='col-xs-8'/>
                         </div>
                         <div className='component-float-right'>
                             {this.renderPasswordConfirm()}
                         </div>
                     </div>
-                    <div className='float-container' style={containerStyle}>
-                        <div className='component-float-left'>
-                            <div className='col-xs-4'>&nbsp;</div>
-                            <div className='col-xs-8'>
-                                <Button bsStyle='success' bsSize='small' ref='submit'
-                                        onClick={this.register}>Register</Button>
-                            </div>
-                        </div>
-                        <div className='component-float-right'>
-                            <Button bsStyle='default' onClick={this.cancel}>Cancel</Button>
-                        </div>
+                    <div style={{margin: '1em 0em 0em 0em', textAlign: 'center'}}>
+                        <Button bsStyle='success' bsSize='small' ref='submit'
+                                disabled={!this.isValid()} onClick={this.register}>Register</Button>
+                        <Button bsSize='small' onClick={this.cancel} style={{margin: '0 0 0 4.7em'}}>Cancel</Button>
                     </div>
                 </form>
             </Panel>
@@ -105,16 +100,15 @@ var Register = React.createClass({
     },
 
     renderPasswordConfirm: function () {
-        if (this.state.passwordConfirmMatches) {
-            return (<Input type='text' name='passwordConfirm' label='Password (confirm)'
-                           labelClassName='col-xs-4'
-                           value={this.state.passwordConfirm} onChange={this.onChange}
-                           wrapperClassName='col-xs-8'/>);
+        if (this.state.passwordMatch) {
+            return (<Input type='password' name='passwordConfirm' label='Password (confirm)' labelClassName='col-xs-4'
+                           wrapperClassName='col-xs-8' onChange={this.onPasswordChange}
+                           value={this.state.passwordConfirm}/>);
         } else {
-            return (<Input type='text' name='passwordConfirm' label='Password (confirm)'
-                           labelClassName='col-xs-4'
-                           value={this.state.passwordConfirm} onChange={this.onChange}
-                           wrapperClassName='col-xs-8' bsStyle='error' hasFeedback/>);
+            return (<Input type='password' name='passwordConfirm' label='Password (confirm)' labelClassName='col-xs-4'
+                           wrapperClassName='col-xs-8' onChange={this.onPasswordChange}
+                           value={this.state.passwordConfirm} bsStyle='error'
+                           hasFeedback/>);
         }
     }
 });

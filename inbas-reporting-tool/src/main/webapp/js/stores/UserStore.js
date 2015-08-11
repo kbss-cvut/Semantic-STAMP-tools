@@ -8,16 +8,13 @@ var Reflux = require('reflux');
 var request = require('superagent');
 
 var Actions = require('../actions/Actions');
+var Ajax = require('../utils/Ajax');
 
 var currentUser = null;
 var loaded = false;
 
 function loadCurrentUser() {
-    request.get('rest/persons/current').accept('json').end(function (err, resp) {
-        if (err) {
-            console.log(err.status, err.response);
-            return;
-        }
+    Ajax.get('rest/persons/current').end(function (err, resp) {
         UserStore.userLoaded(resp.body);
     });
 }

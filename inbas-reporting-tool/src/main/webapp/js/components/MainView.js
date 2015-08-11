@@ -19,8 +19,8 @@ var MainView = React.createClass({
                 <header>
                     <Navbar brand='INBAS Reporting Tool'>
                         <Nav>
-                            <NavItemLink to='home'>Home</NavItemLink>
-                            <NavItemLink to='reports'>Reports</NavItemLink>
+                            <NavItemLink to='home' disabled>Home</NavItemLink>
+                            <NavItemLink to='reports' disabled>Reports</NavItemLink>
                         </Nav>
                     </Navbar>
                 </header>

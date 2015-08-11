@@ -8,6 +8,20 @@ var router;
 
 module.exports = {
 
+    originalTarget: null,
+
+    saveOriginalTarget: function(url) {
+        this.originalTarget = url;
+    },
+
+    transitionToOriginalTarget: function() {
+        if (this.originalTarget) {
+            this.transitionTo(this.originalTarget);
+        } else {
+            this.transitionTo('home');
+        }
+    },
+
     makePath: function (to, params, query) {
         return router.makePath(to, params, query);
     },
