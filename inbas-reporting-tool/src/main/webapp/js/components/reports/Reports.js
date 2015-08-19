@@ -7,20 +7,20 @@
 var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 var Button = require('react-bootstrap').Button;
-var ProgressBar = require('react-bootstrap').ProgressBar;
 
 var ReportsTable = require('./ReportsTable');
 var ReportDetail = require('./ReportDetail');
+var Mask = require('./../Mask');
 
 var Reports = React.createClass({
     render: function () {
         if (this.props.edit.editing) {
-            return (<ReportDetail user={this.props.user} report={this.props.edit.editedReport} onCancelEdit={this.props.edit.onCancelEdit}/>);
+            return (<ReportDetail report={this.props.edit.editedReport} onCancelEdit={this.props.edit.onCancelEdit}/>);
         }
         var reports = this.props.reports;
         if (reports === null) {
             return (
-                <ProgressBar active now={50}/>
+                <Mask text='Loading reports...'/>
             )
         }
         if (reports.length === 0) {

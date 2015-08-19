@@ -8,7 +8,6 @@ var React = require('react');
 var Button = require('react-bootstrap').Button;
 var Panel = require('react-bootstrap').Panel;
 var Alert = require('react-bootstrap').Alert;
-var ProgressBar = require('react-bootstrap').ProgressBar;
 var assign = require('object-assign');
 var DateTimePicker = require('react-bootstrap-datetimepicker');
 
@@ -17,6 +16,7 @@ var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
 var ReportStatements = require('./ReportStatements');
 var OccurrenceSeverity = require('./OccurrenceSeverity');
+var Mask = require('../Mask');
 
 var ReportDetail = React.createClass({
     getInitialState: function () {
@@ -79,7 +79,7 @@ var ReportDetail = React.createClass({
     render: function () {
         if (this.props.loading) {
             return (
-                <ProgressBar active now={50}/>
+                <Mask text='Loading report...'/>
             );
         }
         if (!this.props.report) {

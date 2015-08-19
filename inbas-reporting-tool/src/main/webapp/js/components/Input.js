@@ -8,9 +8,9 @@ var React = require('react');
 var BootstrapInput = require('react-bootstrap').Input;
 
 var Input = React.createClass({
-    render: function() {
+    render: function () {
         return (
-            <BootstrapInput bsSize='small' {...this.props}/>
+            <BootstrapInput {...this.props}/>
         );
     }
 });

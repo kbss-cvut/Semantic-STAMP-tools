@@ -24,8 +24,8 @@ var Description = React.createClass({
     render: function () {
         var title = (<h3>Corrective Measure</h3>);
         return (
-            <Panel header={title} className="wizard-step-content">
-                <Input type="textarea" rows="8" label="Description" placeholder="Corrective measure description"
+            <Panel header={title} className='wizard-step-content'>
+                <Input type='textarea' rows='8' bsSize='small' label='Description' placeholder='Corrective measure description'
                        value={this.state.description} onChange={this.onChange}/>
             </Panel>
         );

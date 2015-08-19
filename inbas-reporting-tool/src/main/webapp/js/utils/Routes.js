@@ -24,7 +24,7 @@ var Routes = (
         <Route name='reports' path='reports' handler={ReportsController}/>
         <Route name='report' path='reports/report/:reportKey' handler={ReportDetailController}/>
         <Route name='report_new' path='reports/create' handler={ReportDetailController}/>
-        <DefaultRoute handler={Login}/>
+        <DefaultRoute handler={Home}/>
     </Route>
 );
 

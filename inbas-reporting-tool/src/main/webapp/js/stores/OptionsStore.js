@@ -5,9 +5,9 @@
 'use strict';
 
 var Reflux = require('reflux');
-var request = require('superagent');
 
 var Actions = require('../actions/Actions');
+var Ajax = require('../utils/Ajax');
 
 var lvpOptions = [];
 var occurrenceSeverityOptions = [];
@@ -23,7 +23,7 @@ var OptionsStore = Reflux.createStore({
             this.trigger(lvpOptions);
             return;
         }
-        request.get('rest/options/lvp').accept('json').end(function(err, resp) {
+        Ajax.get('rest/options/lvp').end(function(err, resp) {
             if (err) {
                 this.onLoadingError(err, 'Low visibility procedure');
             } else {
@@ -44,7 +44,7 @@ var OptionsStore = Reflux.createStore({
             this.trigger(occurrenceSeverityOptions);
             return;
         }
-        request('rest/options/occurrenceSeverity').accept('json').end(function(err, resp) {
+        Ajax.get('rest/options/occurrenceSeverity').end(function(err, resp) {
             if (err) {
                 this.onLoadingError(err, 'Occurrence severity');
             } else {

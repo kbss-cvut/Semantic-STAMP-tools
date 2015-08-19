@@ -31,11 +31,6 @@ module.exports = {
     },
 
     transitionTo: function (to, params, query) {
-        if (UserStore.isLoaded()) {
-            this.saveOriginalTarget(to);
-            this.transitionTo('login');
-            return;
-        }
         router.transitionTo(to, params, query);
     },
 
@@ -55,7 +50,6 @@ module.exports = {
 
 var routes = require('./Routes'),
     Router = require('react-router');
-var UserStore = require('../stores/UserStore');
 
 router = Router.create({
     routes: routes,

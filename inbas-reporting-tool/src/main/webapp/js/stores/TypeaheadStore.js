@@ -5,9 +5,9 @@
 'use strict';
 
 var Reflux = require('reflux');
-var request = require('superagent');
 
 var Actions = require('../actions/Actions');
+var Ajax = require('../utils/Ajax');
 
 var URL = 'rest/typeahead/options?type=';
 
@@ -33,7 +33,7 @@ var TypeaheadStore = Reflux.createStore({
             this.trigger();
             return;
         }
-        request.get(URL + type).accept('json').end(function (err, resp) {
+        Ajax.get(URL + type).end(function (err, resp) {
             if (err) {
                 if (err.status !== 404) {
                     console.log('Unable to load ' + resourceName + '. Got status ' + err.status);

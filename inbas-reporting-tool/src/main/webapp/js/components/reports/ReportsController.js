@@ -8,30 +8,29 @@ var React = require('react');
 var Reflux = require('reflux');
 var assign = require('object-assign');
 
+var Actions = require('../../actions/Actions');
 var ReportsStore = require('../../stores/ReportsStore');
-var UserStore = require('../../stores/UserStore');
 var Reports = require('./Reports');
 
 var router = require('../../utils/router');
 
 var ReportsController = React.createClass({
     mixins: [
-        Reflux.listenTo(ReportsStore, 'onReportsChange'),
-        Reflux.listenTo(UserStore, 'onChange')],
+        Reflux.listenTo(ReportsStore, 'onReportsChange')
+    ],
     getInitialState: function () {
         return {
-            user: UserStore.getCurrentUser(),
             reports: ReportsStore.getReports(),
             editedReport: null,
             editing: false
         };
     },
+    componentWillMount: function() {
+        Actions.loadReports();
+    },
     onReportsChange: function (newState) {
         newState.editing = false;
         newState.editedReport = null;
-        this.onChange(newState);
-    },
-    onChange: function (newState) {
         this.setState(assign({}, this.state, newState));
     },
     onCreateReport: function () {
@@ -46,6 +45,8 @@ var ReportsController = React.createClass({
             editedReport: null
         }));
     },
+
+
     render: function () {
         var edit = {
             editing: this.state.editing,
@@ -55,7 +56,7 @@ var ReportsController = React.createClass({
             onCancelEdit: this.onEditCancel
         };
         return (
-            <Reports reports={this.state.reports} user={this.state.user} edit={edit}/>
+            <Reports reports={this.state.reports} edit={edit}/>
         );
     }
 });

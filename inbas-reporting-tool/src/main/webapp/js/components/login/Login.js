@@ -11,8 +11,7 @@ var Alert = require('react-bootstrap').Alert;
 
 var Input = require('../Input');
 var router = require('../../utils/router');
-var Ajax = require('../../utils/Ajax');
-var Actions = require('../../actions/Actions');
+var Authentication = require('../../utils/Authentication');
 
 var title = (<h3>INBAS Reporting Tool - Login</h3>);
 
@@ -39,23 +38,12 @@ var Login = React.createClass({
         }
     },
 
+    onLoginError: function() {
+        this.setState({alertVisible: true});
+    },
+
     login: function () {
-        Ajax.post('j_spring_security_check', null, 'form')
-            .send('username=' + this.state.username).send('password=' + this.state.password)
-            .end(function (err, resp) {
-                if (err) {
-                    this.setState({alertVisible: true});
-                    return;
-                }
-                var status = JSON.parse(resp.text);
-                if (!status.success || !status.loggedIn) {
-                    this.setState({alertVisible: true});
-                    return;
-                }
-                Actions.loadUser();
-                console.log('User successfully authenticated.');
-                router.transitionToOriginalTarget();
-            }.bind(this));
+        Authentication.login(this.state.username, this.state.password, this.onLoginError);
     },
 
     register: function () {

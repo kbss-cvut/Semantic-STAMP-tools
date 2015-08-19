@@ -5,7 +5,6 @@
 'use strict';
 
 var Reflux = require('reflux');
-var request = require('superagent');
 
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
