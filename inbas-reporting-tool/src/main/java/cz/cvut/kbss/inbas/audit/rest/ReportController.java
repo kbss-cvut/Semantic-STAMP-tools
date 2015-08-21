@@ -30,9 +30,6 @@ public class ReportController extends BaseController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<OccurrenceReport> getAllReports() {
         final Collection<cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport> reports = reportService.findAll();
-        if (reports.isEmpty()) {
-            throw new NotFoundException("No reports found.");
-        }
         return reports.stream().map(dtoFactory::toDto).collect(Collectors.toList());
     }
 
@@ -56,8 +53,8 @@ public class ReportController extends BaseController {
         final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport occurrenceReport = dtoFactory.toDomainModel(report);
         assert occurrenceReport != null;
         reportService.persist(occurrenceReport);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Created report from data {}", report);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Created report from data {}", report);
         }
     }
 
@@ -69,8 +66,8 @@ public class ReportController extends BaseController {
         final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport update = dtoFactory.toDomainModel(report);
         validateReportForUpdate(original, update);
         reportService.update(update);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Updated report {}", report);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Updated report {}", report);
         }
     }
 
@@ -93,8 +90,8 @@ public class ReportController extends BaseController {
     public void deleteReport(@PathVariable("key") String key) {
         final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport report = getOccurrenceReport(key);
         reportService.remove(report);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Deleted report {}.", report.getUri());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Deleted report {}.", report.getUri());
         }
     }
 }

@@ -35,9 +35,7 @@ var TypeaheadStore = Reflux.createStore({
         }
         Ajax.get(URL + type).end(function (err, resp) {
             if (err) {
-                if (err.status !== 404) {
-                    console.log('Unable to load ' + resourceName + '. Got status ' + err.status);
-                }
+                console.log('Unable to load ' + resourceName + '. Got status ' + err.status);
             } else {
                 success(resp.body);
             }
@@ -59,13 +57,13 @@ var TypeaheadStore = Reflux.createStore({
         return locations;
     },
 
-    onLoadOperators: function() {
-        this.load('operators', 'operators', operators, function(data) {
+    onLoadOperators: function () {
+        this.load('operators', 'operators', operators, function (data) {
             operators = data;
         });
     },
 
-    getOperators: function() {
+    getOperators: function () {
         return operators;
     }
 });

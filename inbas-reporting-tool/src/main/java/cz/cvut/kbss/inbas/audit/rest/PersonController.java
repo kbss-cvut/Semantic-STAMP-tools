@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import java.security.Principal;
 import java.util.Collection;
 
@@ -27,11 +26,7 @@ public class PersonController extends BaseController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<Person> getAll() {
-        final Collection<Person> people = personService.findAll();
-        if (people.isEmpty()) {
-            throw new NotFoundException("No people found.");
-        }
-        return people;
+        return personService.findAll();
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -58,18 +53,6 @@ public class PersonController extends BaseController {
             personService.persist(person);
         } catch (IllegalStateException e) {
             throw new BadRequestException(e.getMessage());
-        }
-    }
-
-    @PostConstruct
-    public void init() {
-        final Person p = new Person();
-        p.setFirstName("Catherine");
-        p.setLastName("Halsey");
-        p.setUsername("halsey@unsc.org");
-        p.setPassword("john117");
-        if (personService.findByUsername(p.getUsername()) == null) {
-            personService.persist(p);
         }
     }
 }

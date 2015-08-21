@@ -15,11 +15,7 @@ var loaded = false;
 function loadReports() {
     Ajax.get('rest/reports').end(function (err, resp) {
         if (err) {
-            if (err.status === 404) {
-                ReportsStore.onReportsLoaded([]);
-            } else {
-                console.log(err.status, err.response);
-            }
+            console.log(err.status, err.response);
             return;
         }
         ReportsStore.onReportsLoaded(resp.body);
@@ -59,7 +55,7 @@ var ReportsStore = Reflux.createStore({
     onReportLoaded: function (report) {
         this.trigger(report);
     },
-    onFindReport: function(key) {
+    onFindReport: function (key) {
         findReport(key);
     },
     onCreateReport: function (report, onSuccess, onError) {

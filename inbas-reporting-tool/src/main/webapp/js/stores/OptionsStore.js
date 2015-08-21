@@ -13,17 +13,17 @@ var lvpOptions = [];
 var occurrenceSeverityOptions = [];
 
 var OptionsStore = Reflux.createStore({
-    init: function() {
+    init: function () {
         this.listenTo(Actions.loadLvpOptions, this.onLoadLvpOptions);
         this.listenTo(Actions.loadOccurrenceSeverityOptions, this.onLoadOccurrenceSeverityOptions);
     },
 
-    onLoadLvpOptions: function() {
+    onLoadLvpOptions: function () {
         if (lvpOptions.length !== 0) {
             this.trigger(lvpOptions);
             return;
         }
-        Ajax.get('rest/options/lvp').end(function(err, resp) {
+        Ajax.get('rest/options/lvp').end(function (err, resp) {
             if (err) {
                 this.onLoadingError(err, 'Low visibility procedure');
             } else {
@@ -33,18 +33,16 @@ var OptionsStore = Reflux.createStore({
         }.bind(this));
     },
 
-    onLoadingError: function(err, type) {
-        if (err.status !== 404) {
-            console.log('Unable to load ' + type + ' options. Got status ' + err.status);
-        }
+    onLoadingError: function (err, type) {
+        console.log('Unable to load ' + type + ' options. Got status ' + err.status);
     },
 
-    onLoadOccurrenceSeverityOptions: function() {
+    onLoadOccurrenceSeverityOptions: function () {
         if (occurrenceSeverityOptions.length !== 0) {
             this.trigger(occurrenceSeverityOptions);
             return;
         }
-        Ajax.get('rest/options/occurrenceSeverity').end(function(err, resp) {
+        Ajax.get('rest/options/occurrenceSeverity').end(function (err, resp) {
             if (err) {
                 this.onLoadingError(err, 'Occurrence severity');
             } else {
