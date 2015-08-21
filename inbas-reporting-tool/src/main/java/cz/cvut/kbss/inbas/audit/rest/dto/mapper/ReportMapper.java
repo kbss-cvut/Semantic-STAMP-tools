@@ -6,10 +6,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEvent;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReport;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.AircraftIntruder;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.PersonIntruder;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.VehicleIntruder;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -17,7 +14,7 @@ import org.mapstruct.Mappings;
 /**
  * @author ledvima1
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class ReportMapper {
 
     public abstract OccurrenceReport occurrenceReportToOccurrenceReportDto(
@@ -38,6 +35,8 @@ public abstract class ReportMapper {
     @Mapping(target = "intruderType", constant = Aircraft.INTRUDER_TYPE)
     public abstract AircraftIntruder aircraftToAircraftIntruder(Aircraft aircraft);
 
+    public abstract Aircraft aircraftIntruderToAircraft(AircraftIntruder intruder);
+
     @Mappings({
             @Mapping(target = "intruderType", constant = cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder.INTRUDER_TYPE),
             @Mapping(target = "wasDoing", source = "whatWasDoing"),
@@ -46,6 +45,10 @@ public abstract class ReportMapper {
     public abstract PersonIntruder personIntruderToPersonIntruderDto(
             cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder personIntruder);
 
+    @Mapping(target = "whatWasDoing", source = "wasDoing")
+    public abstract cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder personIntruderDtoToPersonIntruder(
+            PersonIntruder intruder);
+
     @Mappings({
             @Mapping(target = "intruderType", constant = Vehicle.INTRUDER_TYPE),
             @Mapping(target = "wasDoing", source = "whatWasDoing"),
@@ -53,25 +56,21 @@ public abstract class ReportMapper {
     })
     public abstract VehicleIntruder vehicleToVehicleIntruder(Vehicle vehicle);
 
-    public RunwayIncursion runwayIncursionToRunwayIncursionDto(
-            cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion incursion) {
-        final RunwayIncursion result = new RunwayIncursion();
-        result.setUri(incursion.getUri());
-        result.setLvp(incursion.getLowVisibilityProcedure());
-        result.setLocation(incursion.getLocation());
-        result.setConflictingAircraft(incursion.getConflictingAircraft());
-        if (incursion.getIntruder() != null) {
-            final Intruder intruder = incursion.getIntruder();
-            if (intruder.getAircraft() != null) {
-                result.setIntruder(aircraftToAircraftIntruder(intruder.getAircraft()));
-            } else if (intruder.getVehicle() != null) {
-                result.setIntruder(vehicleToVehicleIntruder(intruder.getVehicle()));
-            } else if (intruder.getPerson() != null) {
-                result.setIntruder(personIntruderToPersonIntruderDto(intruder.getPerson()));
-            }
-        }
-        return result;
-    }
+    @Mappings({
+            @Mapping(target = "lvp", source = "lowVisibilityProcedure")
+    })
+    public abstract RunwayIncursion runwayIncursionToRunwayIncursionDto(
+            cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion incursion);
 
+    public RunwayIntruder intruderToIntruderDto(Intruder intruder) {
+        if (intruder.getAircraft() != null) {
+            return aircraftToAircraftIntruder(intruder.getAircraft());
+        } else if (intruder.getVehicle() != null) {
+            return vehicleToVehicleIntruder(intruder.getVehicle());
+        } else if (intruder.getPerson() != null) {
+            return personIntruderToPersonIntruderDto(intruder.getPerson());
+        }
+        return null;
+    }
     // TODO Dto to domain objects
 }
