@@ -1,13 +1,10 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Organization;
 
 /**
  * @author ledvima1
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AircraftIntruder extends RunwayIntruder {
 
     private String registration;
@@ -27,22 +24,6 @@ public class AircraftIntruder extends RunwayIntruder {
     private String lastDeparturePoint;
 
     private String plannedDestination;
-
-    public AircraftIntruder() {
-    }
-
-    public AircraftIntruder(Aircraft aircraft) {
-        super(aircraft.getUri(), Aircraft.INTRUDER_TYPE);
-        this.registration = aircraft.getRegistration();
-        this.stateOfRegistry = aircraft.getStateOfRegistry();
-        this.callSign = aircraft.getCallSign();
-        this.operator = aircraft.getOperator();
-        this.flightNumber = aircraft.getFlightNumber();
-        this.flightPhase = aircraft.getFlightPhase();
-        this.operationType = aircraft.getOperationType();
-        this.lastDeparturePoint = aircraft.getLastDeparturePoint();
-        this.plannedDestination = aircraft.getPlannedDestination();
-    }
 
     public String getRegistration() {
         return registration;

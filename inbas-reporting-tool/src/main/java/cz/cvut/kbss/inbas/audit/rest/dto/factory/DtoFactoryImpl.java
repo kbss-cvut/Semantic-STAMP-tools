@@ -112,9 +112,4 @@ public class DtoFactoryImpl implements DtoFactory {
         personIntruder.setWhatWasDoing(intruder.getWasDoing());
         return personIntruder;
     }
-
-    @Override
-    public OccurrenceReport toDto(cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport report) {
-        return new OccurrenceReport(report);
-    }
 }

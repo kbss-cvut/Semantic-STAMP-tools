@@ -22,14 +22,6 @@ public abstract class RunwayIntruder {
 
     private String intruderType;
 
-    public RunwayIntruder() {
-    }
-
-    protected RunwayIntruder(URI uri, String intruderType) {
-        this.uri = uri;
-        this.intruderType = intruderType;
-    }
-
     public URI getUri() {
         return uri;
     }

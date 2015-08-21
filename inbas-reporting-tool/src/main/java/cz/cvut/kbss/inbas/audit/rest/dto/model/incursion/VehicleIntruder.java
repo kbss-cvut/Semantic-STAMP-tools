@@ -1,7 +1,5 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
-import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
-
 /**
  * @author ledvima1
  */
@@ -18,18 +16,6 @@ public class VehicleIntruder extends RunwayIntruder {
     private String hasRadio;
 
     private String wasDoing;
-
-    public VehicleIntruder() {
-    }
-
-    public VehicleIntruder(Vehicle vehicle) {
-        super(vehicle.getUri(), Vehicle.INTRUDER_TYPE);
-        this.vehicleType = vehicle.getVehicleType();
-        this.callSign = vehicle.getCallSign();
-        this.isAtsUnit = vehicle.getIsAtsUnit();
-        this.hasRadio = vehicle.getHasRadio();
-        this.wasDoing = vehicle.getWhatWasDoing();
-    }
 
     public String getVehicleType() {
         return vehicleType;

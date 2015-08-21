@@ -22,6 +22,13 @@ public class CorrectiveMeasure implements ReportingStatement {
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
     private Set<Resource> resources;
 
+    public CorrectiveMeasure() {
+    }
+
+    public CorrectiveMeasure(String description) {
+        this.description = description;
+    }
+
     public URI getUri() {
         return uri;
     }

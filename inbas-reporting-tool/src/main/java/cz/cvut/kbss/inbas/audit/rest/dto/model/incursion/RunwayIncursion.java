@@ -18,16 +18,6 @@ public class RunwayIncursion extends EventTypeAssessment {
 
     private RunwayIntruder intruder;
 
-    public RunwayIncursion() {
-    }
-
-    public RunwayIncursion(cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion incursion) {
-        super(incursion.getUri());
-        lvp = incursion.getLowVisibilityProcedure();
-        this.location = incursion.getLocation();
-        this.conflictingAircraft = incursion.getConflictingAircraft();
-    }
-
     public LowVisibilityProcedure getLvp() {
         return lvp;
     }

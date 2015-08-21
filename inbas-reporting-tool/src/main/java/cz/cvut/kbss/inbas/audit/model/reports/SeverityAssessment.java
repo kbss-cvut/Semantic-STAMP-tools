@@ -22,6 +22,13 @@ public class SeverityAssessment implements ReportingStatement {
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
     private Set<Resource> resources;
 
+    public SeverityAssessment() {
+    }
+
+    public SeverityAssessment(OccurrenceSeverity severity) {
+        this.severity = severity;
+    }
+
     public URI getUri() {
         return uri;
     }

@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.rest.dto.factory.DtoFactory;
+import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.services.ReportService;
@@ -27,15 +28,18 @@ public class ReportController extends BaseController {
     @Autowired
     private DtoFactory dtoFactory;
 
+    @Autowired
+    private ReportMapper reportMapper;
+
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<OccurrenceReport> getAllReports() {
         final Collection<cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport> reports = reportService.findAll();
-        return reports.stream().map(dtoFactory::toDto).collect(Collectors.toList());
+        return reports.stream().map(reportMapper::occurrenceReportToOccurrenceReportDto).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
     public OccurrenceReport getReport(@PathVariable("key") String key) {
-        return dtoFactory.toDto(getOccurrenceReport(key));
+        return reportMapper.occurrenceReportToOccurrenceReportDto(getOccurrenceReport(key));
     }
 
     private cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport getOccurrenceReport(String key) {
@@ -50,7 +54,8 @@ public class ReportController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void createReport(@RequestBody OccurrenceReport report) {
-        final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport occurrenceReport = dtoFactory.toDomainModel(report);
+        final cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport occurrenceReport = dtoFactory
+                .toDomainModel(report);
         assert occurrenceReport != null;
         reportService.persist(occurrenceReport);
         if (LOG.isTraceEnabled()) {
@@ -71,7 +76,8 @@ public class ReportController extends BaseController {
         }
     }
 
-    private void validateReportForUpdate(cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport original, cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport update) {
+    private void validateReportForUpdate(cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport original,
+                                         cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport update) {
         if (!original.getUri().equals(update.getUri())) {
             throw new InvalidReportException(
                     "The updated report URI " + update.getUri() + " is different from the original URI " + original

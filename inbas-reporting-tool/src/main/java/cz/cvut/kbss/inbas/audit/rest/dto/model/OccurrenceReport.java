@@ -1,19 +1,13 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model;
 
-import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.model.Resource;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
-import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.SeverityAssessment;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.AircraftIntruder;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIntruder;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.VehicleIntruder;
 
 import java.net.URI;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author ledvima1
@@ -47,49 +41,6 @@ public class OccurrenceReport {
     private Set<CorrectiveMeasure> correctiveMeasures;
 
     private Set<EventTypeAssessment> typeAssessments;
-
-    public OccurrenceReport() {
-    }
-
-    public OccurrenceReport(cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport report) {
-        this.uri = report.getUri();
-        this.key = report.getKey();
-        this.occurrenceTime = report.getOccurrenceTime();
-        this.created = report.getCreated();
-        this.lastEdited = report.getLastEdited();
-        this.name = report.getName();
-        this.description = report.getDescription();
-        this.factors = report.getFactors();
-        this.author = report.getAuthor();
-        this.lastEditedBy = report.getLastEditedBy();
-        this.resource = report.getResource();
-        this.severityAssessment = report.getSeverityAssessment();
-        this.correctiveMeasures = report.getCorrectiveMeasures();
-        this.typeAssessments = new HashSet<>();
-        if (report.getTypeAssessments() != null) {
-            this.typeAssessments = report.getTypeAssessments().stream().map(type -> {
-                if (type.getRunwayIncursion() != null) {
-                    final RunwayIncursion incursion = new RunwayIncursion(type.getRunwayIncursion());
-                    incursion.setEventType(type.getEventType());
-                    incursion.setIntruder(getIntruder(type.getRunwayIncursion().getIntruder()));
-                    return incursion;
-                } else {
-                    return new GeneralEvent(type);
-                }
-            }).collect(Collectors.toSet());
-        }
-    }
-
-    private RunwayIntruder getIntruder(Intruder intruder) {
-        if (intruder.getAircraft() != null) {
-            return new AircraftIntruder(intruder.getAircraft());
-        } else if (intruder.getVehicle() != null) {
-            return new VehicleIntruder(intruder.getVehicle());
-        } else if (intruder.getPerson() != null) {
-            return new cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.PersonIntruder(intruder.getPerson());
-        }
-        return null;
-    }
 
     public URI getUri() {
         return uri;
