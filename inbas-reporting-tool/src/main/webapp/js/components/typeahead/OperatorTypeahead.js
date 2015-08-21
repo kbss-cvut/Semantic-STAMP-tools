@@ -8,8 +8,9 @@ var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-typeahead').Typeahead;
 
-var Actions = require('../actions/Actions');
-var TypeaheadStore = require('../stores/TypeaheadStore');
+var Actions = require('../../actions/Actions');
+var TypeaheadStore = require('../../stores/TypeaheadStore');
+var TypeaheadResultList = require('./TypeaheadResultList');
 
 var OperatorTypeahead = React.createClass({
     propTypes: {
@@ -57,7 +58,8 @@ var OperatorTypeahead = React.createClass({
                 <Typeahead ref='operatorSelect' name={this.props.name} formInputOption='code' placeholder='Operator'
                            onOptionSelected={this.onOptionSelected} filterOption='label' displayOption='label'
                            value={this.props.value ? this.props.value : null}
-                           options={this.state.options} customClasses={classes}/>
+                           options={this.state.options} customClasses={classes}
+                           customListComponent={TypeaheadResultList}/>
             </div>
         );
     }

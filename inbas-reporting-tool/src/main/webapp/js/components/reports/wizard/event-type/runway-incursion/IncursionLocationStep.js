@@ -7,7 +7,7 @@
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 
-var LocationTypeahead = require('../../../../LocationTypeahead');
+var LocationTypeahead = require('../../../../typeahead/LocationTypeahead');
 
 var IncursionLocation = React.createClass({
     getInitialState: function () {

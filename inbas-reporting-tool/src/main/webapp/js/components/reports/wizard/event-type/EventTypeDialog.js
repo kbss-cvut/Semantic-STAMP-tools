@@ -13,6 +13,7 @@ var TypeAhead = require('react-typeahead').Typeahead;
 
 var Actions = require('../../../../actions/Actions');
 var TypeaheadStore = require('../../../../stores/TypeaheadStore');
+var TypeaheadResultList = require('../../../typeahead/TypeaheadResultList');
 
 var EventTypeDialog = React.createClass({
     mixins: [Reflux.ListenerMixin],
@@ -63,7 +64,8 @@ var TypeAheadWrapper = React.createClass({
         };
         return (<TypeAhead ref='eventTypeSelect' name='eventType' formInputOption='id' placeholder='Event Type'
                            onOptionSelected={this.props.onSelect} filterOption='name' displayOption='name'
-                           options={this.props.options} customClasses={classes}/>);
+                           options={this.props.options} customClasses={classes}
+                           customListComponent={TypeaheadResultList}/>);
     }
 });
 

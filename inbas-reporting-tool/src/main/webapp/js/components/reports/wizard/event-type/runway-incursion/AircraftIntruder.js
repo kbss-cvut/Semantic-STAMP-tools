@@ -13,7 +13,7 @@ var FlightInfo = require('../../FlightInfo');
 var FlightOperationType = require('../../FlightOperationType');
 var Select = require('../../../../Select');
 var Input = require('../../../../Input');
-var OperatorTypeahead = require('../../../../OperatorTypeahead');
+var OperatorTypeahead = require('../../../../typeahead/OperatorTypeahead');
 
 var AircraftIntruder = React.createClass({
     getInitialState: function () {

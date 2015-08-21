@@ -8,8 +8,9 @@ var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-typeahead').Typeahead;
 
-var Actions = require('../actions/Actions');
-var TypeaheadStore = require('../stores/TypeaheadStore');
+var Actions = require('../../actions/Actions');
+var TypeaheadStore = require('../../stores/TypeaheadStore');
+var TypeaheadResultList = require('./TypeaheadResultList');
 
 var LocationTypeahead = React.createClass({
     propTypes: {
@@ -48,14 +49,13 @@ var LocationTypeahead = React.createClass({
 
     render: function () {
         var classes = {
-            input: 'form-control',
-            listItem: 'btn-link item',
-            results: 'autocomplete-results'
+            input: 'form-control'
         };
         return (<Typeahead ref='locationSelect' name={this.props.name} formInputOption='id' placeholder='Location'
                            onOptionSelected={this.onOptionSelected} filterOption='name' displayOption='name'
                            value={this.props.value ? this.props.value : null}
-                           options={this.state.options} customClasses={classes}/>);
+                           options={this.state.options} customClasses={classes}
+                           customListComponent={TypeaheadResultList}/>);
     }
 });
 

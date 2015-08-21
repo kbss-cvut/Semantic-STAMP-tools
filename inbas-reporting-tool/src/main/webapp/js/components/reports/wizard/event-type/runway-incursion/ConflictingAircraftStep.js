@@ -5,7 +5,6 @@
 'use strict';
 
 var React = require('react');
-var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 
 var AircraftRegistration = require('../../AircraftRegistration');
