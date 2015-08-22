@@ -12,11 +12,11 @@ import java.net.URI;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "intruderType", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = AircraftIntruder.class, name = Aircraft.INTRUDER_TYPE),
-        @JsonSubTypes.Type(value = VehicleIntruder.class, name = Vehicle.INTRUDER_TYPE),
-        @JsonSubTypes.Type(value = PersonIntruder.class, name = cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder.INTRUDER_TYPE)
+        @JsonSubTypes.Type(value = AircraftIntruderDto.class, name = Aircraft.INTRUDER_TYPE),
+        @JsonSubTypes.Type(value = VehicleIntruderDto.class, name = Vehicle.INTRUDER_TYPE),
+        @JsonSubTypes.Type(value = PersonIntruderDto.class, name = cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder.INTRUDER_TYPE)
 })
-public abstract class RunwayIntruder {
+public abstract class RunwayIntruderDto {
 
     private URI uri;
 

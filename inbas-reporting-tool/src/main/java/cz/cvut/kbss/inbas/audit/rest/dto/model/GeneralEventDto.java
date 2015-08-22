@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model;
 /**
  * @author ledvima1
  */
-public class GeneralEvent extends EventTypeAssessment {
+public class GeneralEventDto extends EventTypeAssessmentDto {
 
     private String description;
 
@@ -15,10 +15,10 @@ public class GeneralEvent extends EventTypeAssessment {
         this.description = description;
     }
 
-    public GeneralEvent() {
+    public GeneralEventDto() {
     }
 
-    public GeneralEvent(cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment assessment) {
+    public GeneralEventDto(cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment assessment) {
         super(assessment.getUri());
         this.eventType = assessment.getEventType();
         this.description = assessment.getDescription();

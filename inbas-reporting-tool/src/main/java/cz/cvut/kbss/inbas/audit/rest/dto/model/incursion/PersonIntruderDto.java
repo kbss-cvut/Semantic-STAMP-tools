@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 /**
  * @author ledvima1
  */
-public class PersonIntruder extends RunwayIntruder {
+public class PersonIntruderDto extends RunwayIntruderDto {
 
     private String category;
 

@@ -5,7 +5,7 @@ import cz.cvut.kbss.inbas.audit.model.Organization;
 /**
  * @author ledvima1
  */
-public class AircraftIntruder extends RunwayIntruder {
+public class AircraftIntruderDto extends RunwayIntruderDto {
 
     private String registration;
 

@@ -3,12 +3,12 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessment;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessmentDto;
 
 /**
  * @author ledvima1
  */
-public class RunwayIncursion extends EventTypeAssessment {
+public class RunwayIncursionDto extends EventTypeAssessmentDto {
 
     private LowVisibilityProcedure lvp;
 
@@ -16,7 +16,7 @@ public class RunwayIncursion extends EventTypeAssessment {
 
     private Aircraft conflictingAircraft;
 
-    private RunwayIntruder intruder;
+    private RunwayIntruderDto intruder;
 
     public LowVisibilityProcedure getLvp() {
         return lvp;
@@ -42,11 +42,11 @@ public class RunwayIncursion extends EventTypeAssessment {
         this.conflictingAircraft = conflictingAircraft;
     }
 
-    public RunwayIntruder getIntruder() {
+    public RunwayIntruderDto getIntruder() {
         return intruder;
     }
 
-    public void setIntruder(RunwayIntruder intruder) {
+    public void setIntruder(RunwayIntruderDto intruder) {
         this.intruder = intruder;
     }
 

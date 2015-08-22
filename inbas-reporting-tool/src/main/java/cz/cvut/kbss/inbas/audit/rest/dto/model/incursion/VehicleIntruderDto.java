@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 /**
  * @author ledvima1
  */
-public class VehicleIntruder extends RunwayIntruder {
+public class VehicleIntruderDto extends RunwayIntruderDto {
 
     private String vehicleType;
 

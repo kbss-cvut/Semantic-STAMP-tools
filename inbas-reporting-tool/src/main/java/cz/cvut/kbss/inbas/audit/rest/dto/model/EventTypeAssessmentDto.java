@@ -8,8 +8,8 @@ import java.net.URI;
 /**
  * @author ledvima1
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "dtoClass", defaultImpl = GeneralEvent.class)
-public class EventTypeAssessment {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "dtoClass", defaultImpl = GeneralEventDto.class)
+public class EventTypeAssessmentDto {
 
     protected URI uri;
 
@@ -31,10 +31,10 @@ public class EventTypeAssessment {
         this.eventType = eventType;
     }
 
-    public EventTypeAssessment() {
+    public EventTypeAssessmentDto() {
     }
 
-    protected EventTypeAssessment(URI uri) {
+    protected EventTypeAssessmentDto(URI uri) {
         this.uri = uri;
     }
 

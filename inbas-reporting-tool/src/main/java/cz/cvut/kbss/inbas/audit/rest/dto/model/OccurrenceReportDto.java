@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * @author ledvima1
  */
-public class OccurrenceReport {
+public class OccurrenceReportDto {
 
     private URI uri;
 
@@ -40,7 +40,7 @@ public class OccurrenceReport {
 
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    private Set<EventTypeAssessment> typeAssessments;
+    private Set<EventTypeAssessmentDto> typeAssessments;
 
     public URI getUri() {
         return uri;
@@ -146,11 +146,11 @@ public class OccurrenceReport {
         this.correctiveMeasures = correctiveMeasures;
     }
 
-    public Set<EventTypeAssessment> getTypeAssessments() {
+    public Set<EventTypeAssessmentDto> getTypeAssessments() {
         return typeAssessments;
     }
 
-    public void setTypeAssessments(Set<EventTypeAssessment> typeAssessments) {
+    public void setTypeAssessments(Set<EventTypeAssessmentDto> typeAssessments) {
         this.typeAssessments = typeAssessments;
     }
 
