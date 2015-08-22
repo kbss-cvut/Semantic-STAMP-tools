@@ -3,6 +3,5 @@
 target
 repositories
 node_modules
-**/bundle.min.js
 **/bundle.js
 **/generated-sources
