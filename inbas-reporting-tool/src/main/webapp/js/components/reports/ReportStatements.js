@@ -111,6 +111,7 @@ var ReportStatements = React.createClass({
         var measure = data.statement,
             measures = this.props.report.correctiveMeasures;
         measures.splice(measure.index, 1, measure);
+
         delete measure.index;
         this.props.onChange('correctiveMeasures', measures);
         closeCallback();
@@ -161,7 +162,7 @@ var ReportStatements = React.createClass({
         return (
             <div>
                 {component}
-                <Button bsStyle='primary' title='Add new Event Type Assessment' onClick={this.openEventTypeDialog}>
+                <Button bsStyle='primary' bsSize='xsmall' title='Add new Event Type Assessment' onClick={this.openEventTypeDialog}>
                     <Glyphicon glyph='plus'/>
                 </Button>
                 {typeWizard}
@@ -218,7 +219,7 @@ var ReportStatements = React.createClass({
         return (
             <div>
                 {component}
-                <Button bsStyle='primary' title='Add new Corrective Measure' onClick={this.openCorrectiveMeasureWizard}>
+                <Button bsStyle='primary' bsSize='xsmall' title='Add new Corrective Measure' onClick={this.openCorrectiveMeasureWizard}>
                     <Glyphicon glyph='plus'/>
                 </Button>
             </div>

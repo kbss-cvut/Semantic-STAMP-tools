@@ -36,7 +36,7 @@ var ReportDetail = React.createClass({
         this.props.onChange(attributeName, value);
     },
 
-    onAttributeChange: function(attribute, value) {
+    onAttributeChange: function (attribute, value) {
         this.props.onChange(attribute, value);
     },
 
@@ -107,16 +107,16 @@ var ReportDetail = React.createClass({
                                label='Report Name' title='Short descriptive name for this report'/>
                     </div>
 
-                    <div className='picker-container form-group report-detail'>
+                    <div className='picker-container form-group form-group-sm report-detail'>
                         <label className='control-label'>Occurrence Time</label>
                         <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={report.occurrenceTime.toString()}
                                         onChange={this.onDateChange}
-                                        inputProps={{title: 'Date and time when the event occurred'}}/>
+                                        inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
                     </div>
 
                     <div className='form-group report-detail'>
                         <OccurrenceSeverity onChange={this.onAttributeChange}
-                                       severityAssessment={report.severityAssessment}/>
+                                            severityAssessment={report.severityAssessment}/>
                     </div>
 
                     {this.renderAuthor()}
@@ -140,10 +140,10 @@ var ReportDetail = React.createClass({
                     </div>
 
                     <div className='form-group'>
-                        <Button bsStyle='success' disabled={loading || report.description === ''}
+                        <Button bsStyle='success' bsSize='small' disabled={loading || report.description === ''}
                                 ref='submit'
                                 onClick={this.onSubmit}>{loading ? 'Submitting...' : 'Submit'}</Button>
-                        <Button bsStyle='link' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
+                        <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
                     </div>
 
                     {this.renderError()}

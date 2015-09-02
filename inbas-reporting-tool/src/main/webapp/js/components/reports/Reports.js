@@ -30,7 +30,7 @@ var Reports = React.createClass({
                         <h2>INBAS Reporting</h2>
 
                         <p>There are no reports, yet.</p>
-                        <Button bsStyle="primary" onClick={this.props.edit.onCreateReport}>Create Report</Button>
+                        <Button bsStyle='primary' b sSize='small' onClick={this.props.edit.onCreateReport}>Create Report</Button>
                     </Jumbotron>
                 </div>
             );
@@ -39,7 +39,7 @@ var Reports = React.createClass({
                 <div>
                     <ReportsTable reports={reports} onEditReport={this.props.edit.onEditReport}/>
 
-                    <Button bsStyle="primary" onClick={this.props.edit.onCreateReport}>Create Report</Button>
+                    <Button bsStyle='primary' bsSize='small' onClick={this.props.edit.onCreateReport}>Create Report</Button>
                 </div>
             );
         }

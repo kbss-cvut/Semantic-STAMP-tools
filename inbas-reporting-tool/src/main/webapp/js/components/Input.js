@@ -9,9 +9,11 @@ var BootstrapInput = require('react-bootstrap').Input;
 
 var Input = React.createClass({
     render: function () {
-        return (
-            <BootstrapInput {...this.props}/>
-        );
+        if (this.props.type === 'textarea') {
+            return <BootstrapInput bsSize='small' style={{height: 'auto'}} {...this.props}/>;
+        } else {
+            return <BootstrapInput bsSize='small' {...this.props}/>;
+        }
     }
 });
 

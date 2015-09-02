@@ -55,7 +55,8 @@ var OperatorTypeahead = React.createClass({
         return (
             <div className='form-group'>
                 <label className='control-label'>Operator</label>
-                <Typeahead ref='operatorSelect' name={this.props.name} formInputOption='code' placeholder='Operator'
+                <Typeahead ref='operatorSelect' className='form-group form-group-sm' name={this.props.name}
+                           formInputOption='code' placeholder='Operator'
                            onOptionSelected={this.onOptionSelected} filterOption='label' displayOption='label'
                            value={this.props.value ? this.props.value : null}
                            options={this.state.options} customClasses={classes}

@@ -62,8 +62,8 @@ var ReportRow = React.createClass({
                                 Are you sure you want to remove this report?
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button bsStyle='primary' onClick={this.removeReport}>Delete</Button>
-                                <Button onClick={this.onCloseModal}>Cancel</Button>
+                                <Button bsStyle='primary' bsSize='small' onClick={this.removeReport}>Delete</Button>
+                                <Button bsSize='small' onClick={this.onCloseModal}>Cancel</Button>
                             </Modal.Footer>
                         </Modal>
                     </span>

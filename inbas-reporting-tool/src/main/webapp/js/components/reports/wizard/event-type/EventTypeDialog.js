@@ -62,10 +62,11 @@ var TypeAheadWrapper = React.createClass({
             listItem: 'btn-link item',
             results: 'autocomplete-results'
         };
-        return (<TypeAhead ref='eventTypeSelect' name='eventType' formInputOption='id' placeholder='Event Type'
-                           onOptionSelected={this.props.onSelect} filterOption='name' displayOption='name'
-                           options={this.props.options} customClasses={classes}
-                           customListComponent={TypeaheadResultList}/>);
+        return (
+            <TypeAhead ref='eventTypeSelect' className='form-group form-group-sm' name='eventType' formInputOption='id'
+                       placeholder='Event Type' onOptionSelected={this.props.onSelect} filterOption='name'
+                       displayOption='name' options={this.props.options} customClasses={classes}
+                       customListComponent={TypeaheadResultList}/>);
     }
 });
 

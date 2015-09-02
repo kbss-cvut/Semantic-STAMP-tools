@@ -79,10 +79,10 @@ var WizardStep = React.createClass({
     render: function () {
         var previousButton;
         if (!this.props.isFirstStep) {
-            previousButton = (<Button onClick={this.onPrevious} disabled={this.state.retreatDisabled} bsStyle='primary'>Previous</Button>);
+            previousButton = (<Button onClick={this.onPrevious} disabled={this.state.retreatDisabled} bsStyle='primary' bsSize='small'>Previous</Button>);
         }
         var advanceButton = this.renderAdvanceButton();
-        var cancelButton = (<Button onClick={this.props.onClose} bsStyle='primary'>Cancel</Button>);
+        var cancelButton = (<Button onClick={this.props.onClose} bsStyle='primary' bsSize='small'>Cancel</Button>);
         var error = null;
         if (this.state.currentError) {
             error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);
@@ -107,10 +107,10 @@ var WizardStep = React.createClass({
         var button;
         if (!this.props.isLastStep) {
             button = (
-                <Button onClick={this.onNext} disabled={this.state.advanceDisabled} bsStyle='primary'
+                <Button onClick={this.onNext} disabled={this.state.advanceDisabled} bsStyle='primary' bsSize='small'
                         title={disabledTitle}>Next</Button>);
         } else {
-            button = (<Button onClick={this.onFinish} disabled={this.state.advanceDisabled} bsStyle='primary'
+            button = (<Button onClick={this.onFinish} disabled={this.state.advanceDisabled} bsStyle='primary' bsSize='small'
                               title={disabledTitle}>Finish</Button>);
         }
         return button;

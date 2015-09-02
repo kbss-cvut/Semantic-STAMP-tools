@@ -1,5 +1,4 @@
 Integrate security with Liferay
-Perhaps buttons should also be replaced with the small variant
 Disable fuzzy string matching in autocomplete
     - requires writing our own string matching function
 Add loss of separation wizard

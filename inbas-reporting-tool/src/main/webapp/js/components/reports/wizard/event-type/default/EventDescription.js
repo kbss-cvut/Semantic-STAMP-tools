@@ -6,7 +6,7 @@
 
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
-var Input = require('react-bootstrap').Input;
+var Input = require('../../../../Input');
 
 var EventDescription = React.createClass({
     getInitialState: function () {
