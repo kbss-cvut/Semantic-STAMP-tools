@@ -52,12 +52,15 @@ var LocationTypeahead = React.createClass({
             input: 'form-control'
         };
         return (
-            <Typeahead ref='locationSelect' className='form-group form-group-sm' name={this.props.name}
-                       formInputOption='id' placeholder='Location'
-                       onOptionSelected={this.onOptionSelected} filterOption='name' displayOption='name'
-                       value={this.props.value ? this.props.value : null}
-                       options={this.state.options} customClasses={classes}
-                       customListComponent={TypeaheadResultList}/>
+            <div>
+                <label className='control-label'>Operator</label>
+                <Typeahead ref='locationSelect' className='form-group form-group-sm' name={this.props.name}
+                           formInputOption='id' placeholder='Location'
+                           onOptionSelected={this.onOptionSelected} filterOption='name' displayOption='name'
+                           value={this.props.value ? this.props.value : null}
+                           options={this.state.options} customClasses={classes}
+                           customListComponent={TypeaheadResultList}/>
+            </div>
         );
     }
 });

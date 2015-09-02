@@ -72,12 +72,12 @@ var AircraftIntruder = React.createClass({
                                           onChange={this.props.onChange}/>
                 </div>
                 <Panel header='Aircraft Event'>
-                    <div className='float-container'>
-                        <div className='report-detail-float'>
+                    <div className='row'>
+                        <div className='col-xs-6'>
                             <Input type='text' label='Call Sign' name='callSign' value={intruder.callSign}
                                    onChange={this.props.onChange}/>
                         </div>
-                        <div className='report-detail-float-right'>
+                        <div className='col-xs-6'>
                             <OperatorTypeahead name='operator' value={operator}
                                                onChange={this.onOperatorChange}/>
                         </div>
@@ -89,12 +89,10 @@ var AircraftIntruder = React.createClass({
                         <Input type='radio' label='Non Flight' value='nonflight'
                                checked={intruder.aircraftEventType === 'nonflight'}
                                onChange={this.onAircraftEventTypeSelect} wrapperClassName='col-xs-2'/>
-
-                        <div style={{clear: 'both'}}/>
                     </div>
+                    <div style={{clear: 'both'}}/>
                     {this.renderAircraftEventPane(intruder.aircraftEventType)}
                 </Panel>
-
             </div>
         );
     },
@@ -134,16 +132,18 @@ var AircraftIntruder = React.createClass({
         ];
         return (
             <Panel header='Aviation Operation'>
-                <div className='report-detail'>
-                    <Input type='text' label='Flight Number' name='flightNumber'
-                           value={intruder.flightNumber} onChange={this.props.onChange}/>
+                <div className='row'>
+                    <div className='col-xs-6'>
+                        <Input type='text' label='Flight Number' name='flightNumber'
+                               value={intruder.flightNumber} onChange={this.props.onChange}/>
+                    </div>
                 </div>
-                <div className='float-container'>
-                    <div className='report-detail-float'>
+                <div className='row'>
+                    <div className='col-xs-6'>
                         <Select label='Phase' value={intruder.flightPhase} onChange={this.onPhaseChange}
                                 title='What was the aircraft doing?' options={phaseOptions}/>
                     </div>
-                    <div className='report-detail-float-right'>
+                    <div className='col-xs-6'>
                         <FlightOperationType operationType={intruder.operationType}
                                              onChange={this.props.onChange}/>
                     </div>
@@ -156,10 +156,12 @@ var AircraftIntruder = React.createClass({
     renderNonFlightEventPane: function () {
         return (
             <Panel header='Other Aircraft Event'>
-                <div className='report-detail'>
-                    <Input type='select' label='Phase' value={this.state.statement.intruder.flightPhase} disabled>
-                        <option value='taxiing'>Taxiing: other</option>
-                    </Input>
+                <div className='row'>
+                    <div className='col-xs-6'>
+                        <Input type='select' label='Phase' value={this.state.statement.intruder.flightPhase} disabled>
+                            <option value='taxiing'>Taxiing: other</option>
+                        </Input>
+                    </div>
                 </div>
             </Panel>
         );

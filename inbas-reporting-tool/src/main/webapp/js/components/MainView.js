@@ -42,12 +42,12 @@ var MainView = React.createClass({
         return (
             <div>
                 <header>
-                    <Navbar brand='INBAS Reporting Tool'>
+                    <Navbar brand='INBAS Reporting Tool' fluid={true}>
                         <Nav>
                             <NavItemLink to='home'>Home</NavItemLink>
                             <NavItemLink to='reports'>Reports</NavItemLink>
                         </Nav>
-                        <Nav right style={{margin: '0 17px 0 0'}}>
+                        <Nav right style={{margin: '0 -15px 0 0'}}>
                             <DropdownButton title={name}>
                                 <MenuItem href='#' onClick={Authentication.logout}>Logout</MenuItem>
                             </DropdownButton>

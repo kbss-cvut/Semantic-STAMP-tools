@@ -11,13 +11,13 @@ var Input = require('../../Input');
 var FlightInfo = React.createClass({
     render: function () {
         return (
-            <div className='float-container'>
-                <div className='report-detail-float'>
+            <div className='row'>
+                <div className='col-xs-6'>
                     <Input type='text' label='Last Departure Point' name='lastDeparturePoint'
                            onChange={this.props.onChange}
                            value={this.props.lastDeparturePoint}/>
                 </div>
-                <div className='report-detail-float-right'>
+                <div className='col-xs-6'>
                     <Input type='text' label='Planned Destination' name='plannedDestination'
                            onChange={this.props.onChange}
                            value={this.props.plannedDestination}/>

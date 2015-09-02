@@ -48,17 +48,19 @@ var ConflictingAircraft = React.createClass({
                                       stateOfRegistry={statement.conflictingAircraft.stateOfRegistry}
                                       onChange={this.onChange}/>
                 <Panel header='Aviation Operation'>
-                    <div className='report-detail'>
-                        <Input type='text' label='Flight Number' name='flightNumber' onChange={this.onChange}
-                               value={statement.conflictingAircraft.flightNumber}/>
+                    <div className='row'>
+                        <div className='col-xs-6'>
+                            <Input type='text' label='Flight Number' name='flightNumber' onChange={this.onChange}
+                                   value={statement.conflictingAircraft.flightNumber}/>
+                        </div>
                     </div>
-                    <div style={{overflow: 'hidden'}}>
-                        <div className='report-detail-float'>
+                    <div className='row'>
+                        <div className='col-xs-6'>
                             <Select label='Phase' name='flightPhase' value={statement.conflictingAircraft.flightPhase}
                                     onChange={this.onChange}
                                     title='Phase of flight when the event occurred' options={phaseOptions}/>
                         </div>
-                        <div className='report-detail-float-right'>
+                        <div className='col-xs-6'>
                             <FlightOperationType operationType={statement.conflictingAircraft.operationType}
                                                  onChange={this.onChange}/>
                         </div>

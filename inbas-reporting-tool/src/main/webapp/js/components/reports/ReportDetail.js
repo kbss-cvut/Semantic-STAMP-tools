@@ -102,37 +102,47 @@ var ReportDetail = React.createClass({
         return (
             <Panel header='Edit Occurrence Report'>
                 <form>
-                    <div className='form-group report-detail'>
-                        <Input type='text' name='name' value={report.name} onChange={this.onChange}
-                               label='Report Name' title='Short descriptive name for this report'/>
+                    <div className='row'>
+                        <div className='col-xs-4'>
+                            <Input type='text' name='name' value={report.name} onChange={this.onChange}
+                                   label='Report Name' title='Short descriptive name for this report'/>
+                        </div>
                     </div>
 
-                    <div className='picker-container form-group form-group-sm report-detail'>
-                        <label className='control-label'>Occurrence Time</label>
-                        <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={report.occurrenceTime.toString()}
-                                        onChange={this.onDateChange}
-                                        inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
+                    <div className='row'>
+                        <div className='picker-container form-group form-group-sm col-xs-4'>
+                            <label className='control-label'>Occurrence Time</label>
+                            <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={report.occurrenceTime.toString()}
+                                            onChange={this.onDateChange}
+                                            inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
+                        </div>
                     </div>
 
-                    <div className='form-group report-detail'>
-                        <OccurrenceSeverity onChange={this.onAttributeChange}
-                                            severityAssessment={report.severityAssessment}/>
+                    <div className='row'>
+                        <div className='col-xs-4'>
+                            <OccurrenceSeverity onChange={this.onAttributeChange}
+                                                severityAssessment={report.severityAssessment}/>
+                        </div>
                     </div>
 
                     {this.renderAuthor()}
 
                     {this.renderLastEdited()}
 
-                    <div className='form-group'>
-                        <Input type='textarea' rows='3' label='Factors' name='factors' placeholder='Factors'
-                               value={report.factors} onChange={this.onChange} title='Event factors'/>
+                    <div className='row'>
+                        <div className='col-xs-12'>
+                            <Input type='textarea' rows='3' label='Factors' name='factors' placeholder='Factors'
+                                   value={report.factors} onChange={this.onChange} title='Event factors'/>
+                        </div>
                     </div>
 
-                    <div className='form-group'>
-                        <Input type='textarea' rows='8' label='Description' name='description'
-                               placeholder='Event description'
-                               value={report.description} onChange={this.onChange}
-                               title='Event description'/>
+                    <div className='row'>
+                        <div className='col-xs-12'>
+                            <Input type='textarea' rows='8' label='Description' name='description'
+                                   placeholder='Event description'
+                                   value={report.description} onChange={this.onChange}
+                                   title='Event description'/>
+                        </div>
                     </div>
 
                     <div className='form-group'>
@@ -154,10 +164,14 @@ var ReportDetail = React.createClass({
     },
 
     renderAuthor: function () {
-        return this.isReportNew() ? null : (<div className='form-group report-detail'>
-            <Input type='text' value={this.getFullName(this.props.report.author)} label='Author' title='Report author'
-                   disabled/>
-        </div>);
+        return this.isReportNew() ? null : (
+            <div className='row'>
+                <div className='col-xs-4'>
+                    <Input type='text' value={this.getFullName(this.props.report.author)} label='Author'
+                           title='Report author'
+                           disabled/>
+                </div>
+            </div>);
     },
 
     renderError: function () {

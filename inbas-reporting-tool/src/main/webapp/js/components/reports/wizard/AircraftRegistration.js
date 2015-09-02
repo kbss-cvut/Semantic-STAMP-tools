@@ -35,13 +35,13 @@ var AircraftRegistration = React.createClass({
                     <Button bsStyle='link' onClick={this.onToggleCollapsible}>Aircraft Registration</Button>
                 </div>
                 <Panel ref='panel' className={classNames(styles)}>
-                    <div className='float-container'>
-                        <div className='component-float-left'>
+                    <div className='row'>
+                        <div className='col-xs-6'>
                             <Input type='text' label='Aircraft Registration' name='registration'
                                    value={this.props.registration} onChange={this.props.onChange}
                                    title='Aircraft registration'/>
                         </div>
-                        <div className='component-float-right'>
+                        <div className='col-xs-6'>
                             <Input type='text' label='State of Registry' name='stateOfRegistry'
                                    value={this.props.stateOfRegistry} onChange={this.props.onChange}
                                    title='Aircraft state of registry'/>
