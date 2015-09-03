@@ -142,8 +142,9 @@ var Register = React.createClass({
                     </div>
                     <div style={{margin: '1em 0em 0em 0em', textAlign: 'center'}}>
                         <Button bsStyle='success' bsSize='small' ref='submit'
-                                disabled={!this.isValid()} onClick={this.register}>Register</Button>
-                        <Button bsSize='small' onClick={this.cancel} style={{margin: '0 0 0 3.2em'}}>Cancel</Button>
+                                disabled={!this.isValid() || this.state.mask} onClick={this.register}>Register</Button>
+                        <Button bsSize='small' onClick={this.cancel} style={{margin: '0 0 0 3.2em'}}
+                                disabled={this.state.mask}>Cancel</Button>
                     </div>
                 </form>
             </Panel>

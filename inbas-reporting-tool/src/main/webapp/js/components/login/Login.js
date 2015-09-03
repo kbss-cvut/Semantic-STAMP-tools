@@ -42,7 +42,7 @@ var Login = React.createClass({
     },
 
     onLoginError: function () {
-        this.setState({alertVisible: true});
+        this.setState({alertVisible: true, mask: false});
     },
 
     login: function () {
@@ -71,8 +71,10 @@ var Login = React.createClass({
 
                     <div className='col-xs-3'>&nbsp;</div>
                     <div className='col-xs-9' style={{padding: '0 0 0 7px'}}>
-                        <Button bsStyle='success' bsSize='small' onClick={this.login}>Login</Button>
-                        <Button bsStyle='link' bsSize='small' onClick={this.register} style={{padding: '0 0 0 15px'}}>Register</Button>
+                        <Button bsStyle='success' bsSize='small' onClick={this.login}
+                                disabled={this.state.mask}>Login</Button>
+                        <Button bsStyle='link' bsSize='small' onClick={this.register} style={{padding: '0 0 0 15px'}}
+                                disabled={this.state.mask}>Register</Button>
                     </div>
                 </form>
             </Panel>

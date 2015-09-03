@@ -16,10 +16,12 @@ var Authentication = {
             .end(function (err, resp) {
                 if (err) {
                     errorCallback();
+                    return;
                 }
                 var status = JSON.parse(resp.text);
                 if (!status.success || !status.loggedIn) {
                     errorCallback();
+                    return;
                 }
                 Actions.loadUser();
                 console.log('User successfully authenticated.');
