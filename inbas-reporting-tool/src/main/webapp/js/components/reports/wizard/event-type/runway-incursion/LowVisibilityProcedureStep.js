@@ -7,7 +7,6 @@
 var React = require('react');
 var Reflux = require('reflux');
 var assign = require('object-assign');
-var Panel = require('react-bootstrap').Panel;
 
 var Select = require('../../../../Select');
 var Actions = require('../../../../../actions/Actions');
@@ -27,7 +26,10 @@ var LowVisibilityProcedureStep = React.createClass({
         this.listenTo(OptionsStore, this.onLvpLoaded);
         Actions.loadLvpOptions();
     },
-    onLvpLoaded: function (lvpOptions) {
+    onLvpLoaded: function (type, lvpOptions) {
+        if (type !== 'lvp') {
+            return;
+        }
         var options = [];
         for (var i = 0, len = lvpOptions.length; i < len; i++) {
             options.push({
@@ -45,12 +47,10 @@ var LowVisibilityProcedureStep = React.createClass({
     render: function () {
         var title = (<h3>Low Visibility Procedure</h3>);
         return (
-            <Panel header={title}>
-                <div className='form-group'>
-                    <Select label='Low Visibility Procedure' onChange={this.onLvpChange}
-                            value={this.state.statement.lvp} options={this.state.options}/>
-                </div>
-            </Panel>
+            <div className='form-group'>
+                <Select label='Low Visibility Procedure' onChange={this.onLvpChange}
+                        value={this.state.statement.lvp} options={this.state.options}/>
+            </div>
         );
     }
 });

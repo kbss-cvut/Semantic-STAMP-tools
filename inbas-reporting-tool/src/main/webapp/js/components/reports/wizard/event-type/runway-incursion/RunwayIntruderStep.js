@@ -6,7 +6,6 @@
 
 var React = require('react');
 var assign = require('object-assign');
-var Panel = require('react-bootstrap').Panel;
 
 var AircraftIntruder = require('./AircraftIntruder');
 var PersonIntruder = require('./PersonIntruder');
@@ -23,7 +22,7 @@ var RunwayIntruderStep = React.createClass({
             statement: statement
         };
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         if (this.state.statement.intruder.intruderType) {
             this.props.enableNext();
         }
@@ -45,9 +44,8 @@ var RunwayIntruderStep = React.createClass({
     render: function () {
         var intruderType = this.state.statement.intruder.intruderType;
         var pane = this.renderPane(intruderType);
-        var title = (<h3>Runway Intruding Object</h3>);
         return (
-            <Panel header={title}>
+            <div>
                 <div>
                     <Input type='radio' label='Aircraft' value='aircraft'
                            checked={intruderType === 'aircraft'} onChange={this.onIntruderTypeSelect}
@@ -59,7 +57,7 @@ var RunwayIntruderStep = React.createClass({
                 </div>
                 <div style={{clear: 'both'}}/>
                 {pane}
-            </Panel>
+            </div>
         );
     },
     renderPane: function (intruderType) {

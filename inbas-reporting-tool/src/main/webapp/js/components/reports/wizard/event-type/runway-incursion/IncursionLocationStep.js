@@ -36,12 +36,10 @@ var IncursionLocation = React.createClass({
         var title = (<h3>Incursion location</h3>);
         var location = this.props.data.statement.location;
         return (
-            <Panel header={title}>
-                <div>
-                    <LocationTypeahead name='incursionLocation' onChange={this.onChange}
-                                       value={location ? location.name : null}/>
-                </div>
-            </Panel>
+            <div className='form-group'>
+                <LocationTypeahead name='incursionLocation' onChange={this.onChange}
+                                   value={location ? location.name : null}/>
+            </div>
         );
     }
 });

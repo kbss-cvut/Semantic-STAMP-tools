@@ -5,7 +5,6 @@
 'use strict';
 
 var React = require('react');
-var Panel = require('react-bootstrap').Panel;
 var Input = require('../../../../Input');
 
 var EventDescription = React.createClass({
@@ -16,7 +15,7 @@ var EventDescription = React.createClass({
             descriptionValid: true
         };
     },
-    componentDidMount: function() {
+    componentDidMount: function () {
         if (this.state.description !== '') {
             this.props.enableNext();
         }
@@ -36,14 +35,13 @@ var EventDescription = React.createClass({
 
 
     render: function () {
-        var title = (<h3>Event Description</h3>);
         return (
-            <Panel header={title} className="wizard-step-content">
+            <div>
                 <Input type="textarea" rows="8" label="Description*" placeholder="Event description"
                        bsStyle={this.state.descriptionValid ? null : 'error'}
                        title={this.state.descriptionValid ? 'Event description' : 'Description is required'}
                        value={this.state.description} onChange={this.onChange}/>
-            </Panel>
+            </div>
         );
     }
 });

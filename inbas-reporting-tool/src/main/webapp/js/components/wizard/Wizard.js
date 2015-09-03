@@ -127,6 +127,7 @@ var Wizard = React.createClass({
             onAddStep: this.onAddStep,
             onRemoveStep: this.onRemoveStep,
             component: step.component,
+            title: step.name,
             data: this.state.data,
             isFirstStep: this.state.currentStep === 0,
             isLastStep: this.state.currentStep === this.props.steps.length - 1,

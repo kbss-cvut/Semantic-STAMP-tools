@@ -8,6 +8,7 @@ var React = require('react');
 var Alert = require('react-bootstrap').Alert;
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+var Panel = require('react-bootstrap').Panel;
 
 var WizardStep = React.createClass({
 
@@ -18,7 +19,7 @@ var WizardStep = React.createClass({
         onRetreat: React.PropTypes.func,
         onNext: React.PropTypes.func,
         onPrevious: React.PropTypes.func,
-        //component: React.PropTypes.object,
+        title: React.PropTypes.string,
         data: React.PropTypes.object,
         isFirstStep: React.PropTypes.bool,
         isLastStep: React.PropTypes.bool,
@@ -87,11 +88,12 @@ var WizardStep = React.createClass({
         if (this.state.currentError) {
             error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);
         }
+        var title = (<h3>{this.props.title}</h3>);
         return (
             <div className='wizard-step'>
-                <div className='wizard-step-content'>
+                <Panel header={title} className='wizard-step-content'>
                     {this.renderComponent()}
-                </div>
+                </Panel>
                 <ButtonToolbar style={{float: 'right'}}>
                     {previousButton}
                     {advanceButton}

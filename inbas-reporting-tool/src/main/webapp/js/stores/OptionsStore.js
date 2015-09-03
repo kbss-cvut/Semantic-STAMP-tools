@@ -20,7 +20,7 @@ var OptionsStore = Reflux.createStore({
 
     onLoadLvpOptions: function () {
         if (lvpOptions.length !== 0) {
-            this.trigger(lvpOptions);
+            this.trigger('lvp', lvpOptions);
             return;
         }
         Ajax.get('rest/options/lvp').end(function (err, resp) {
@@ -29,7 +29,7 @@ var OptionsStore = Reflux.createStore({
             } else {
                 lvpOptions = resp.body;
             }
-            this.trigger(lvpOptions);
+            this.trigger('lvp', lvpOptions);
         }.bind(this));
     },
 
@@ -39,7 +39,7 @@ var OptionsStore = Reflux.createStore({
 
     onLoadOccurrenceSeverityOptions: function () {
         if (occurrenceSeverityOptions.length !== 0) {
-            this.trigger(occurrenceSeverityOptions);
+            this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
             return;
         }
         Ajax.get('rest/options/occurrenceSeverity').end(function (err, resp) {
@@ -48,7 +48,7 @@ var OptionsStore = Reflux.createStore({
             } else {
                 occurrenceSeverityOptions = resp.body;
             }
-            this.trigger(occurrenceSeverityOptions);
+            this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
         }.bind(this));
     }
 });

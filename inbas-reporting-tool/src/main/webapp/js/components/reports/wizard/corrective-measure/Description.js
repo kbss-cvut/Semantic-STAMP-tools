@@ -5,7 +5,6 @@
 'use strict';
 
 var React = require('react');
-var Panel = require('react-bootstrap').Panel;
 var Input = require('../../../Input');
 
 var Description = React.createClass({
@@ -22,12 +21,11 @@ var Description = React.createClass({
         this.setState({description: value});
     },
     render: function () {
-        var title = (<h3>Corrective Measure</h3>);
         return (
-            <Panel header={title} className='wizard-step-content'>
+            <div>
                 <Input type='textarea' rows='8' label='Description' placeholder='Corrective measure description'
                        value={this.state.description} onChange={this.onChange}/>
-            </Panel>
+            </div>
         );
     }
 });

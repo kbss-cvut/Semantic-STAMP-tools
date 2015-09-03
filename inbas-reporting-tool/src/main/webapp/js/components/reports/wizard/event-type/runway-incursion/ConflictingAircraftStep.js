@@ -35,7 +35,6 @@ var ConflictingAircraft = React.createClass({
     // Rendering
 
     render: function () {
-        var title = (<h3>Conflicting Aircraft</h3>);
         var statement = this.state.statement;
         var phaseOptions = [
             {value: 'takeoff', label: 'Take-off', title: 'Plane taking off'},
@@ -43,7 +42,7 @@ var ConflictingAircraft = React.createClass({
             {value: 'landing', label: 'Landing', title: 'Plane landing'}
         ];
         return (
-            <Panel header={title}>
+            <div>
                 <AircraftRegistration registration={statement.conflictingAircraft.registration}
                                       stateOfRegistry={statement.conflictingAircraft.stateOfRegistry}
                                       onChange={this.onChange}/>
@@ -69,7 +68,7 @@ var ConflictingAircraft = React.createClass({
                                 plannedDestination={statement.conflictingAircraft.plannedDestination}
                                 onChange={this.onChange}/>
                 </Panel>
-            </Panel>
+            </div>
         );
     }
 });

@@ -26,10 +26,13 @@ var OccurrenceSeverity = React.createClass({
         Actions.loadOccurrenceSeverityOptions();
     },
 
-    onSeveritiesLoaded: function (severities) {
+    onSeveritiesLoaded: function (type, data) {
+        if (type !== 'occurrenceSeverity') {
+            return;
+        }
         var options = [];
-        for (var i = 0, len = severities.length; i < len; i++) {
-            options.push({label: Utils.constantToString(severities[i], true), value: severities[i]});
+        for (var i = 0, len = data.length; i < len; i++) {
+            options.push({label: Utils.constantToString(data[i], true), value: data[i]});
         }
         this.setState({options: options});
     },
