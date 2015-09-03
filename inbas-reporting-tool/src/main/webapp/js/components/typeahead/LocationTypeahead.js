@@ -53,7 +53,7 @@ var LocationTypeahead = React.createClass({
         };
         return (
             <div>
-                <label className='control-label'>Operator</label>
+                <label className='control-label'>Location</label>
                 <Typeahead ref='locationSelect' className='form-group form-group-sm' name={this.props.name}
                            formInputOption='id' placeholder='Location'
                            onOptionSelected={this.onOptionSelected} filterOption='name' displayOption='name'

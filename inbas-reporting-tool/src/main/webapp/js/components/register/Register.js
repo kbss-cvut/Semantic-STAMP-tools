@@ -103,42 +103,41 @@ var Register = React.createClass({
     },
 
     render: function () {
-        var containerStyle = {margin: '1em 0em 0em 0em'},
-            panelCls = this.state.alertVisible ? 'register-panel expanded' : 'register-panel';
+        var panelCls = this.state.alertVisible ? 'register-panel expanded' : 'register-panel';
         return (
             <Panel header={title} bsStyle='info' className={panelCls}>
-                <form className='form-horizontal'>
+                <form className='form-horizontal' style={{margin: '0.5em 0 0 0'}}>
                     {this.renderAlert()}
-                    <div className='float-container' style={containerStyle}>
-                        <div className='component-float-left'>
+                    <div className='row'>
+                        <div className='col-xs-6'>
                             <Input type='text' name='firstName' label='First name' labelClassName='col-xs-4'
                                    valueLink={this.linkState('firstName')} wrapperClassName='col-xs-8'/>
                         </div>
-                        <div className='component-float-right'>
+                        <div className='col-xs-6'>
                             <Input type='text' name='lastName' label='Last name' labelClassName='col-xs-4'
                                    valueLink={this.linkState('lastName')} wrapperClassName='col-xs-8'/>
                         </div>
                     </div>
-                    <div className='float-container' style={containerStyle}>
-                        <div className='component-float-left'>
+                    <div className='row'>
+                        <div className='col-xs-6'>
                             <Input type='text' name='username' label='Username' labelClassName='col-xs-4'
                                    valueLink={this.linkState('username')} wrapperClassName='col-xs-8'/>
                         </div>
                     </div>
-                    <div className='float-container' style={containerStyle}>
-                        <div className='component-float-left'>
+                    <div className='row'>
+                        <div className='col-xs-6'>
                             <Input type='password' name='password' label='Password' labelClassName='col-xs-4'
                                    onChange={this.onPasswordChange} value={this.state.password}
                                    wrapperClassName='col-xs-8'/>
                         </div>
-                        <div className='component-float-right'>
+                        <div className='col-xs-6'>
                             {this.renderPasswordConfirm()}
                         </div>
                     </div>
                     <div style={{margin: '1em 0em 0em 0em', textAlign: 'center'}}>
                         <Button bsStyle='success' bsSize='small' ref='submit'
                                 disabled={!this.isValid()} onClick={this.register}>Register</Button>
-                        <Button bsSize='small' onClick={this.cancel} style={{margin: '0 0 0 4.7em'}}>Cancel</Button>
+                        <Button bsSize='small' onClick={this.cancel} style={{margin: '0 0 0 3.2em'}}>Cancel</Button>
                     </div>
                 </form>
             </Panel>
@@ -156,11 +155,11 @@ var Register = React.createClass({
 
     renderPasswordConfirm: function () {
         if (this.state.passwordMatch) {
-            return (<Input type='password' name='passwordConfirm' label='Password (confirm)' labelClassName='col-xs-4'
+            return (<Input type='password' name='passwordConfirm' label='Confirm password' labelClassName='col-xs-4'
                            wrapperClassName='col-xs-8' onChange={this.onPasswordChange} onKeyDown={this.onKeyDown}
                            value={this.state.passwordConfirm}/>);
         } else {
-            return (<Input type='password' name='passwordConfirm' label='Password (confirm)' labelClassName='col-xs-4'
+            return (<Input type='password' name='passwordConfirm' label='Confirm password' labelClassName='col-xs-4'
                            wrapperClassName='col-xs-8' onChange={this.onPasswordChange} onKeyDown={this.onKeyDown}
                            value={this.state.passwordConfirm} bsStyle='error'
                            hasFeedback/>);
