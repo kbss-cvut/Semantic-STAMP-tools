@@ -5,7 +5,6 @@
 'use strict';
 
 var React = require('react');
-var Panel = require('react-bootstrap').Panel;
 
 var LocationTypeahead = require('../../../../typeahead/LocationTypeahead');
 
@@ -33,7 +32,6 @@ var IncursionLocation = React.createClass({
     // Rendering
 
     render: function () {
-        var title = (<h3>Incursion location</h3>);
         var location = this.props.data.statement.location;
         return (
             <div className='form-group'>

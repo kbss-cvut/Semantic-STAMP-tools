@@ -23,13 +23,11 @@ public class PersonController extends BaseController {
     @Autowired
     private PersonService personService;
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<Person> getAll() {
         return personService.findAll();
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method = RequestMethod.GET, value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Person getByUsername(@PathVariable("username") String username) {
         final Person p = personService.findByUsername(username);
@@ -39,13 +37,13 @@ public class PersonController extends BaseController {
         return p;
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @RequestMapping(method = RequestMethod.GET, value = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
     public Person getCurrent(Principal principal) {
         final String username = principal.getName();
         return getByUsername(username);
     }
 
+    @PreAuthorize("permitAll()")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody Person person) {

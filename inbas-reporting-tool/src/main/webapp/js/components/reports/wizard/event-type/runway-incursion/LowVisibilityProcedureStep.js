@@ -45,7 +45,6 @@ var LowVisibilityProcedureStep = React.createClass({
 
 
     render: function () {
-        var title = (<h3>Low Visibility Procedure</h3>);
         return (
             <div className='form-group'>
                 <Select label='Low Visibility Procedure' onChange={this.onLvpChange}

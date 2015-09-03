@@ -15,7 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/options")
-public class OptionsController {
+public class OptionsController extends BaseController {
 
     @RequestMapping(value = "/lvp", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<LowVisibilityProcedure> getLowVisibilityProcedureOptions() {

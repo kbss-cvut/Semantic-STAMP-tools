@@ -10,6 +10,7 @@ var Button = require('react-bootstrap').Button;
 var Alert = require('react-bootstrap').Alert;
 
 var Input = require('../Input');
+var Mask = require('../Mask');
 var router = require('../../utils/router');
 var Ajax = require('../../utils/Ajax');
 var Actions = require('../../actions/Actions');
@@ -27,7 +28,8 @@ var Register = React.createClass({
             passwordConfirm: '',
             passwordMatch: true,
             alertVisible: false,
-            errorMessage: ''
+            errorMessage: '',
+            mask: false
         }
     },
 
@@ -69,6 +71,7 @@ var Register = React.createClass({
             if (err) {
                 this.setState({
                     alertVisible: true,
+                    mask: false,
                     errorMessage: resp.body.message ? resp.body.message : 'Unknown error.'
                 });
             }
@@ -76,6 +79,7 @@ var Register = React.createClass({
                 this.doSyntheticLogin(data.username, data.password);
             }
         }.bind(this));
+        this.setState({mask: true});
     },
 
     /**
@@ -104,8 +108,10 @@ var Register = React.createClass({
 
     render: function () {
         var panelCls = this.state.alertVisible ? 'register-panel expanded' : 'register-panel';
+        var mask = this.state.mask ? (<Mask text='Registering...'/>) : null;
         return (
             <Panel header={title} bsStyle='info' className={panelCls}>
+                {mask}
                 <form className='form-horizontal' style={{margin: '0.5em 0 0 0'}}>
                     {this.renderAlert()}
                     <div className='row'>
@@ -141,7 +147,6 @@ var Register = React.createClass({
                     </div>
                 </form>
             </Panel>
-
         );
     },
 
