@@ -106,7 +106,7 @@ var ReportDetail = React.createClass({
                     <div className='row'>
                         <div className='col-xs-4'>
                             <Input type='text' name='name' value={report.name} onChange={this.onChange}
-                                   label='Report Name' title='Short descriptive name for this report'/>
+                                   label='Occurrence Summary' title='Short descriptive summary of the occurrence'/>
                         </div>
                     </div>
 

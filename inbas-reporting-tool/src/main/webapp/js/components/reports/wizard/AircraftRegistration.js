@@ -11,6 +11,7 @@ var CollapsibleMixin = require('react-bootstrap').CollapsibleMixin;
 var classNames = require('classnames');
 
 var Input = require('../../Input');
+var EccairsLink = require('../../EccairsLink');
 
 var AircraftRegistration = React.createClass({
     mixins: [CollapsibleMixin],
@@ -29,6 +30,8 @@ var AircraftRegistration = React.createClass({
 
     render: function () {
         var styles = this.getCollapsibleClassSet();
+        var registrationLabel = (<span>Aircraft Registration (<EccairsLink text='244'/>)</span>);
+        var stateLabel = (<span>State of Registry (<EccairsLink text='281'/>)</span>);
         return (
             <div>
                 <div className='form-group'>
@@ -37,12 +40,12 @@ var AircraftRegistration = React.createClass({
                 <Panel ref='panel' className={classNames(styles)}>
                     <div className='row'>
                         <div className='col-xs-6'>
-                            <Input type='text' label='Aircraft Registration' name='registration'
+                            <Input type='text' label={registrationLabel} name='registration'
                                    value={this.props.registration} onChange={this.props.onChange}
                                    title='Aircraft registration'/>
                         </div>
                         <div className='col-xs-6'>
-                            <Input type='text' label='State of Registry' name='stateOfRegistry'
+                            <Input type='text' label={stateLabel} name='stateOfRegistry'
                                    value={this.props.stateOfRegistry} onChange={this.props.onChange}
                                    title='Aircraft state of registry'/>
                         </div>
