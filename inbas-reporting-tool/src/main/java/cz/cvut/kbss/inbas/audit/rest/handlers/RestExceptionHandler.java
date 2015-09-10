@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.rest.handlers;
 import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.exceptions.UsernameExistsException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
+import cz.cvut.kbss.inbas.audit.rest.exceptions.PortalAuthenticationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -13,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Contains exception handlers for REST controllers.
- *
- * @author ledvima1
  */
 @ControllerAdvice
 public class RestExceptionHandler {
@@ -41,5 +40,11 @@ public class RestExceptionHandler {
     @ExceptionHandler(UsernameExistsException.class)
     public ResponseEntity<ErrorInfo> usernameExistsException(HttpServletRequest request, UsernameExistsException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PortalAuthenticationException.class)
+    public ResponseEntity<ErrorInfo> portalAuthenticationFailed(HttpServletRequest request,
+                                                                PortalAuthenticationException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

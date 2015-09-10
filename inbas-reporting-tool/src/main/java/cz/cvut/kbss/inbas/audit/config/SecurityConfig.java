@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.audit.config;
 
-import cz.cvut.kbss.inbas.audit.security.CsrfHeaderFilter;
 import cz.cvut.kbss.inbas.audit.security.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +16,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.csrf.CsrfFilter;
 
 /**
  * @author ledvima1
@@ -64,9 +62,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests().anyRequest().permitAll().and()
             .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
+            .and().headers().frameOptions().sameOrigin()
             .and()
             .authenticationProvider(authenticationProvider)
-            .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+//            .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+            .csrf().disable()
             .formLogin().successHandler(authenticationSuccessHandler)
             .failureHandler(authenticationFailureHandler)
             .loginProcessingUrl(SecurityConstants.SECURITY_CHECK_URI)

@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.mapper;
 
 import cz.cvut.kbss.inbas.audit.config.RestConfig;
+import cz.cvut.kbss.inbas.audit.config.SecurityConfig;
 import cz.cvut.kbss.inbas.audit.config.ServiceConfig;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Location;
@@ -33,7 +34,7 @@ import static org.junit.Assert.*;
  * @author ledvima1
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {RestConfig.class, ServiceConfig.class, TestPersistenceConfig.class})
+@ContextConfiguration(classes = {RestConfig.class, ServiceConfig.class, TestPersistenceConfig.class, SecurityConfig.class})
 public class MappersTest {
 
     @Autowired

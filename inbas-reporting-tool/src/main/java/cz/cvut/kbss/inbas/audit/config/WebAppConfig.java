@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -51,6 +53,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         converter.setObjectMapper(objectMapper);
         converters.add(converter);
+        final StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        converters.add(stringConverter);
         super.configureMessageConverters(converters);
     }
 }
