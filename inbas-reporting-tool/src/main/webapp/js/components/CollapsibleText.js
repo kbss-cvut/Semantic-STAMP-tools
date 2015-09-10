@@ -1,12 +1,8 @@
-/**
- * Created by ledvima1 on 30.6.15.
- */
-
 'use strict';
 
 var React = require('react');
 
-var DEFAULT_THRESHOLD = 100;
+var DEFAULT_THRESHOLD = 120;
 
 var CollapsibleText = React.createClass({
 

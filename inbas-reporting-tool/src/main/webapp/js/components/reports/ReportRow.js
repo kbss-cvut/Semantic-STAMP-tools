@@ -43,7 +43,8 @@ var ReportRow = React.createClass({
         var verticalAlign = {verticalAlign: 'middle'};
         return (
             <tr onDoubleClick={this.onDoubleClick}>
-                <td style={verticalAlign}>{report.name}</td>
+                <td style={verticalAlign}><a href='javascript:void(0);' onClick={this.onEditClick}
+                                             title='Click to see report detail'>{report.name}</a></td>
                 <td style={verticalAlign}>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.initialReport}/></td>
                 <td style={verticalAlign} className='actions'>

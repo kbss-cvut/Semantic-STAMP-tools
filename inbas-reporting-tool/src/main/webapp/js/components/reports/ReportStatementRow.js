@@ -6,7 +6,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-var Glyphicon = require('react-bootstrap').Glyphicon;
+//var Glyphicon = require('react-bootstrap').Glyphicon;
 
 var ReportStatementRow = React.createClass({
     propTypes: {
@@ -29,11 +29,11 @@ var ReportStatementRow = React.createClass({
         }
         cells.push(
             <td key='cell_actions' style={{verticalAlign: 'middle'}} className='actions'>
-                <Button onClick={this.onEdit} title='Edit statement' bsSize='xsmall' bsStyle='primary'>
-                    <Glyphicon glyph='edit'/>
+                <Button onClick={this.onEdit} title='Edit statement' bsSize='small' bsStyle='primary'>
+                    Edit
                 </Button>
-                <Button onClick={this.onRemove} title='Remove statement' bsSize='xsmall' bsStyle='danger'>
-                    <Glyphicon glyph='remove'/>
+                <Button onClick={this.onRemove} title='Remove statement' bsSize='small' bsStyle='danger'>
+                    Delete
                 </Button>
             </td>);
         return (

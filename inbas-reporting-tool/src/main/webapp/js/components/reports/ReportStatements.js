@@ -8,7 +8,7 @@ var React = require('react');
 var assign = require('object-assign');
 var Button = require('react-bootstrap').Button;
 var Panel = require('react-bootstrap').Panel;
-var Glyphicon = require('react-bootstrap').Glyphicon;
+//var Glyphicon = require('react-bootstrap').Glyphicon;
 
 var ReportStatementsTable = require('./ReportStatementsTable');
 var WizardWindow = require('../wizard/WizardWindow');
@@ -162,8 +162,8 @@ var ReportStatements = React.createClass({
         return (
             <div>
                 {component}
-                <Button bsStyle='primary' bsSize='xsmall' title='Add new Event Type Assessment' onClick={this.openEventTypeDialog}>
-                    <Glyphicon glyph='plus'/>
+                <Button bsStyle='primary' bsSize='small' title='Add new Event Type Assessment' onClick={this.openEventTypeDialog}>
+                    Add
                 </Button>
                 {typeWizard}
             </div>
@@ -219,8 +219,8 @@ var ReportStatements = React.createClass({
         return (
             <div>
                 {component}
-                <Button bsStyle='primary' bsSize='xsmall' title='Add new Corrective Measure' onClick={this.openCorrectiveMeasureWizard}>
-                    <Glyphicon glyph='plus'/>
+                <Button bsStyle='primary' bsSize='small' title='Add new Corrective Measure' onClick={this.openCorrectiveMeasureWizard}>
+                    Add
                 </Button>
             </div>
         );
