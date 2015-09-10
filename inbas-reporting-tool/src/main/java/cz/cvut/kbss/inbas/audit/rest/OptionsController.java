@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.rest;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import java.util.List;
 /**
  * @author ledvima1
  */
+@PreAuthorize("permitAll()")
 @RestController
 @RequestMapping("/options")
 public class OptionsController extends BaseController {

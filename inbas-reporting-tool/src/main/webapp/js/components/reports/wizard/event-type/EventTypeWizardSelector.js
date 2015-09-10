@@ -14,7 +14,7 @@ var Constants = require('../../../../constants/Constants');
 var EventTypeWizardSelect = {
     // Here we map wizard type to the wizard steps
     wizardSettings: {
-        'cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion': {
+        'cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto': {
             steps: RunwayIncursionSteps,
             title: 'Runway Incursion Wizard'
         }

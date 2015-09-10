@@ -1,7 +1,3 @@
-/**
- * Created by ledvima1 on 17.6.15.
- */
-
 'use strict';
 
 var React = require('react');
@@ -35,7 +31,7 @@ var ConflictingAircraft = React.createClass({
     // Rendering
 
     render: function () {
-        var statement = this.state.statement;
+        var aircraft = this.state.statement.conflictingAircraft;
         var phaseOptions = [
             {value: 'takeoff', label: 'Take-off', title: 'Plane taking off'},
             {value: 'approach', label: 'Approach', title: 'Plane approaching the runway'},
@@ -43,30 +39,32 @@ var ConflictingAircraft = React.createClass({
         ];
         return (
             <div>
-                <AircraftRegistration registration={statement.conflictingAircraft.registration}
-                                      stateOfRegistry={statement.conflictingAircraft.stateOfRegistry}
+                <AircraftRegistration registration={aircraft.registration}
+                                      stateOfRegistry={aircraft.stateOfRegistry}
                                       onChange={this.onChange}/>
                 <Panel header='Aviation Operation'>
                     <div className='row'>
                         <div className='col-xs-6'>
+                            <Input type='text' label='Call Sign' name='callSign' value={aircraft.callSign}
+                                   onChange={this.onChange}/>
+                        </div>
+                        <div className='col-xs-6'>
                             <Input type='text' label='Flight Number' name='flightNumber' onChange={this.onChange}
-                                   value={statement.conflictingAircraft.flightNumber}/>
+                                   value={aircraft.flightNumber}/>
                         </div>
                     </div>
                     <div className='row'>
                         <div className='col-xs-6'>
-                            <Select label='Phase' name='flightPhase' value={statement.conflictingAircraft.flightPhase}
+                            <Select label='Phase' name='flightPhase' value={aircraft.flightPhase}
                                     onChange={this.onChange}
                                     title='Phase of flight when the event occurred' options={phaseOptions}/>
                         </div>
                         <div className='col-xs-6'>
-                            <FlightOperationType operationType={statement.conflictingAircraft.operationType}
-                                                 onChange={this.onChange}/>
+                            <FlightOperationType operationType={aircraft.operationType} onChange={this.onChange}/>
                         </div>
                     </div>
-                    <FlightInfo lastDeparturePoint={statement.conflictingAircraft.lastDeparturePoint}
-                                plannedDestination={statement.conflictingAircraft.plannedDestination}
-                                onChange={this.onChange}/>
+                    <FlightInfo lastDeparturePoint={aircraft.lastDeparturePoint}
+                                plannedDestination={aircraft.plannedDestination} onChange={this.onChange}/>
                 </Panel>
             </div>
         );

@@ -100,7 +100,7 @@ var ReportDetail = React.createClass({
         var report = this.props.report;
         var loading = this.state.submitting;
         return (
-            <Panel header='Edit Occurrence Report'>
+            <Panel header='Preliminary Occurrence Report'>
                 <form>
                     <div className='row'>
                         <div className='col-xs-4'>
@@ -129,19 +129,19 @@ var ReportDetail = React.createClass({
 
                     {this.renderLastEdited()}
 
-                    <div className='row'>
+                    {/*<div className='row'>
                         <div className='col-xs-12'>
                             <Input type='textarea' rows='3' label='Factors' name='factors' placeholder='Factors'
                                    value={report.factors} onChange={this.onChange} title='Event factors'/>
                         </div>
-                    </div>
+                    </div>*/}
 
                     <div className='row'>
                         <div className='col-xs-12'>
-                            <Input type='textarea' rows='8' label='Description' name='description'
-                                   placeholder='Event description'
-                                   value={report.description} onChange={this.onChange}
-                                   title='Event description'/>
+                            <Input type='textarea' rows='8' label='Initial Report' name='initialReport'
+                                   placeholder='Initial report'
+                                   value={report.initialReport} onChange={this.onChange}
+                                   title='Initial Report'/>
                         </div>
                     </div>
 

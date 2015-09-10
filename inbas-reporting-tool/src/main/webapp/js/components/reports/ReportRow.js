@@ -45,7 +45,7 @@ var ReportRow = React.createClass({
             <tr onDoubleClick={this.onDoubleClick}>
                 <td style={verticalAlign}>{report.name}</td>
                 <td style={verticalAlign}>{formattedDate}</td>
-                <td style={verticalAlign}><CollapsibleText text={report.description}/></td>
+                <td style={verticalAlign}><CollapsibleText text={report.initialReport}/></td>
                 <td style={verticalAlign} className='actions'>
                     <span className='actions'>
                         <Button bsStyle='primary' bsSize='small' title='Edit this occurrence report'

@@ -26,7 +26,7 @@ public class OccurrenceReportDto {
 
     private String name;
 
-    private String description;
+    private String initialReport;
 
     private String factors;
 
@@ -90,12 +90,12 @@ public class OccurrenceReportDto {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getInitialReport() {
+        return initialReport;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setInitialReport(String initialReport) {
+        this.initialReport = initialReport;
     }
 
     public String getFactors() {
@@ -160,7 +160,7 @@ public class OccurrenceReportDto {
                 "uri=" + uri +
                 ", key='" + key + '\'' +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                ", initialReport='" + initialReport + '\'' +
                 '}';
     }
 }

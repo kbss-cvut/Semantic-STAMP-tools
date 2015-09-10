@@ -39,7 +39,7 @@ public class OccurrenceReport implements HasOwlKey {
     private String name;    // Simple name of the event being reported
 
     @OWLDataProperty(iri = Vocabulary.p_description)
-    private String description;
+    private String initialReport;
 
     @OWLDataProperty(iri = Vocabulary.p_factors)
     private String factors;
@@ -94,12 +94,12 @@ public class OccurrenceReport implements HasOwlKey {
         this.lastEdited = lastEdited;
     }
 
-    public String getDescription() {
-        return description;
+    public String getInitialReport() {
+        return initialReport;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setInitialReport(String initialReport) {
+        this.initialReport = initialReport;
     }
 
     public String getFactors() {

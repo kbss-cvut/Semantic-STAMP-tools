@@ -121,7 +121,7 @@ public class MappersTest {
                 reportMapper.occurrenceReportToOccurrenceReportDto(
                         report);
         assertNotNull(result);
-        assertEquals(report.getDescription(), result.getDescription());
+        assertEquals(report.getInitialReport(), result.getInitialReport());
         assertEquals(report.getSeverityAssessment(), result.getSeverityAssessment());
         assertEquals(report.getCreated(), result.getCreated());
         boolean riFound = false, geFound = false;
@@ -142,7 +142,7 @@ public class MappersTest {
         final OccurrenceReport or = new OccurrenceReport();
         or.setTypeAssessments(
                 new HashSet<>(Arrays.asList(initEventTypeAssessment(true), initEventTypeAssessment(false))));
-        or.setDescription("Something happened.");
+        or.setInitialReport("Something happened.");
         or.setCreated(new Date());
         or.setSeverityAssessment(new SeverityAssessment(OccurrenceSeverity.MAJOR_INCIDENT));
         or.setCorrectiveMeasures(Collections.singleton(new CorrectiveMeasure("Pilot was fired.")));
@@ -199,7 +199,7 @@ public class MappersTest {
 
         final OccurrenceReport result = reportMapper.occurrenceReportDtoToOccurrenceReport(dto);
         assertNotNull(result);
-        assertEquals(dto.getDescription(), result.getDescription());
+        assertEquals(dto.getInitialReport(), result.getInitialReport());
         boolean riFound = false, geFound = false;
         for (EventTypeAssessment eta : result.getTypeAssessments()) {
             if (eta.getRunwayIncursion() != null) {
@@ -224,7 +224,7 @@ public class MappersTest {
         ge.setDescription("Some general event.");
         eTypes.add(ge);
         dto.setTypeAssessments(eTypes);
-        dto.setDescription("Does not really matter, its a simple string.");
+        dto.setInitialReport("Does not really matter, its a simple string.");
         return dto;
     }
 }

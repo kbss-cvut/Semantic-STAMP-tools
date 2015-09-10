@@ -18,7 +18,7 @@ public class BaseReportValidator implements ReportValidator {
     public void validateReport(OccurrenceReport report) throws InvalidReportException {
         Objects.requireNonNull(report);
 
-        if (report.getOccurrenceTime() == null || report.getAuthor() == null || report.getDescription() == null) {
+        if (report.getOccurrenceTime() == null || report.getAuthor() == null || report.getInitialReport() == null) {
             throw new InvalidReportException(
                     "Occurrence report is missing one of the required attributes: occurrence time, author, description. " + report);
         }

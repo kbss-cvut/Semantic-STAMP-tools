@@ -606,91 +606,91 @@
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200100",
         "name": "Runway incursions",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200101",
         "name": "Runway incursion by an aircraft",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200102",
         "name": "Runway incursion by a vehicle/equipment",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200103",
         "name": "Runway incursion by a person",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200104",
         "name": "Runway incursion by an animal",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200200",
         "name": "Taxiway incursion",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200201",
         "name": "Taxiway incursion by an aircraft",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200202",
         "name": "Taxiway incursion by a vehicle/equipment",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200203",
         "name": "Taxiway incursion by a person",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200204",
         "name": "Taxiway incursion by an animal",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200300",
         "name": "Apron/ramp incursion",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200301",
         "name": "Apron incursion by an aircraft",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200302",
         "name": "Apron incursion by a vehicle/equipment",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200303",
         "name": "Apron incursion by a person",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_2200304",
         "name": "Apron incursion by an animal",
         "description": null,
-        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursion"
+        "dtoClass": "cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto"
       },
       {
         "id": "http://onto.fel.cvut.cz/ontologies/2014/ECCAIRS_Aviation_1.3.0.12/eccairs-events-390#category_3000000",

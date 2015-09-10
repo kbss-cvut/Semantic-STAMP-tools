@@ -43,12 +43,12 @@ var VehicleIntruder = React.createClass({
                 </div>
                 <div className='row'>
                     <div className='col-xs-6'>
-                        <Select label='Is Vehicle Controlled By ATS Unit?' name='isAtsUnit'
+                        <Select label='Is the vehicle controlled by an ATS unit?' name='isAtsUnit'
                                 value={statement.intruder.isAtsUnit} onChange={this.props.onChange}
                                 options={yesNoUnknownOptions}/>
                     </div>
                     <div className='col-xs-6'>
-                        <Select label='Has Vehicle Radio Installed/Operational?' name='hasRadio'
+                        <Select label='Has the vehicle a radio installed/operational?' name='hasRadio'
                                 value={statement.intruder.hasRadio} onChange={this.props.onChange}
                                 options={yesNoUnknownOptions}/>
                     </div>
