@@ -28,6 +28,10 @@ var Login = React.createClass({
         }
     },
 
+    componentDidMount: function () {
+        this.refs.usernameField.focus();
+    },
+
     onChange: function (e) {
         var state = this.state;
         state[e.target.name] = e.target.value;
@@ -63,7 +67,7 @@ var Login = React.createClass({
                 {mask}
                 <form className='form-horizontal'>
                     {this.renderAlert()}
-                    <Input type='text' name='username' label='Username' value={this.state.username}
+                    <Input type='text' name='username' ref='usernameField' label='Username' value={this.state.username}
                            onChange={this.onChange} labelClassName='col-xs-3' wrapperClassName='col-xs-9'/>
                     <Input type='password' name='password' label='Password' value={this.state.password}
                            onChange={this.onChange} labelClassName='col-xs-3' onKeyPress={this.onKeyPress}

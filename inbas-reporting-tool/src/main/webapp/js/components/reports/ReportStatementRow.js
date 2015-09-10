@@ -6,7 +6,6 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-//var Glyphicon = require('react-bootstrap').Glyphicon;
 
 var ReportStatementRow = React.createClass({
     propTypes: {

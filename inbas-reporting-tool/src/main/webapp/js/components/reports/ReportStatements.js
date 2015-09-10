@@ -8,7 +8,6 @@ var React = require('react');
 var assign = require('object-assign');
 var Button = require('react-bootstrap').Button;
 var Panel = require('react-bootstrap').Panel;
-//var Glyphicon = require('react-bootstrap').Glyphicon;
 
 var ReportStatementsTable = require('./ReportStatementsTable');
 var WizardWindow = require('../wizard/WizardWindow');

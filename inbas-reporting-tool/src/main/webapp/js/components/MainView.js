@@ -1,7 +1,3 @@
-/**
- * Created by kidney on 7/7/15.
- */
-
 'use strict';
 
 var React = require('react');
@@ -46,6 +42,7 @@ var MainView = React.createClass({
                         <Nav>
                             <NavItemLink to='home'>Home</NavItemLink>
                             <NavItemLink to='reports'>Reports</NavItemLink>
+                            <NavItemLink to='investigations'>Investigations</NavItemLink>
                         </Nav>
                         <Nav right style={{margin: '0 -15px 0 0'}}>
                             <DropdownButton title={name}>

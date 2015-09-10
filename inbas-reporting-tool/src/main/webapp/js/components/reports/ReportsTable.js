@@ -15,7 +15,7 @@ var ReportsTable = React.createClass({
         var title = <h3>Occurrence Reports</h3>;
         var reports = this.prepareReports();
         return (<div>
-            <Panel header={title}>
+            <Panel header={title} {...this.props}>
                 <Table striped bordered condensed hover>
                     <thead>
                     <tr>

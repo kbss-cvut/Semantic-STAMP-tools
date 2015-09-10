@@ -1,7 +1,3 @@
-/**
- * Created by kidney on 7/7/15.
- */
-
 'use strict';
 
 var React = require('react');
@@ -15,6 +11,8 @@ var MainView = require('./../components/MainView');
 var Home = require('./../components/Home');
 var ReportsController = require('./../components/reports/ReportsController');
 var ReportDetailController = require('./../components/reports/ReportDetailController');
+var InvestigationsController = require('../components/investigation/InvestigationsController');
+var InvestigationController = require('./../components/investigation/InvestigationController');
 
 var Routes = (
     <Route handler={MainView} path='/'>
@@ -24,6 +22,8 @@ var Routes = (
         <Route name='reports' path='reports' handler={ReportsController}/>
         <Route name='report' path='reports/report/:reportKey' handler={ReportDetailController}/>
         <Route name='report_new' path='reports/create' handler={ReportDetailController}/>
+        <Route name='investigations' path='investigations' handler={InvestigationsController}/>
+        <Route name='investigation' path='investigations/investigation/:reportKey' handler={InvestigationController}/>
         <DefaultRoute handler={Home}/>
     </Route>
 );

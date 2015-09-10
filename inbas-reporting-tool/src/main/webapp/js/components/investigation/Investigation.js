@@ -10,12 +10,11 @@ var DateTimePicker = require('react-bootstrap-datetimepicker');
 var Input = require('../Input');
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
-var ReportStatements = require('./ReportStatements');
-var OccurrenceSeverity = require('./OccurrenceSeverity');
+var ReportStatements = require('../reports/ReportStatements');
+var OccurrenceSeverity = require('../reports/OccurrenceSeverity');
 var Mask = require('../Mask');
-var router = require('../../utils/router');
 
-var ReportDetail = React.createClass({
+var Investigation = React.createClass({
     getInitialState: function () {
         return {
             submitting: false,
@@ -24,7 +23,7 @@ var ReportDetail = React.createClass({
     },
 
     isReportNew: function () {
-        return this.props.report.key == null;
+        return this.props.investigation.key == null;
     },
 
     onChange: function (e) {
@@ -44,14 +43,8 @@ var ReportDetail = React.createClass({
     onSubmit: function (e) {
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
-        this.props.report.lastEditedBy = this.props.user;
-        if (this.isReportNew()) {
-            this.props.report.author = this.props.user;
-            Actions.createReport(this.props.report, this.props.onSuccess, this.onSubmitError);
-        }
-        else {
-            Actions.updateReport(this.props.report, this.props.onSuccess, this.onSubmitError);
-        }
+        this.props.investigation.lastEditedBy = this.props.user;
+
     },
 
     onSubmitError: function (error) {
@@ -72,48 +65,33 @@ var ReportDetail = React.createClass({
         return data.firstName + ' ' + data.lastName;
     },
 
-    investigate: function () {
-        router.transitionTo('investigation', {reportKey: this.props.report.key}, {onCancel: 'investigations'})
-    },
-
 
     render: function () {
         if (this.props.loading) {
             return (
-                <Mask text='Loading report...'/>
+                <Mask text='Loading report for investigation...'/>
             );
-        }
-        if (!this.props.report) {
-            return (<Alert bsStyle='danger' onDismiss={this.props.onCancel}>
-                <h4>Not Found</h4>
-
-                <p>Occurrence report not found.</p>
-
-                <p>
-                    <Button onClick={this.props.onCancel}>Close</Button>
-                </p>
-            </Alert>);
         }
         return this.renderDetail();
     },
 
     renderDetail: function () {
-        var report = this.props.report;
+        var investigation = this.props.investigation;
         var loading = this.state.submitting;
         return (
-            <Panel header='Preliminary Occurrence Report'>
+            <Panel header='Occurrence Investigation'>
                 <form>
                     <div className='row'>
                         <div className='col-xs-4'>
-                            <Input type='text' name='name' value={report.name} onChange={this.onChange}
-                                   label='Report Name' title='Short descriptive name for this report'/>
+                            <Input type='text' name='name' value={investigation.name} onChange={this.onChange}
+                                   label='Report Name' title='Short descriptive name for this investigation'/>
                         </div>
                     </div>
 
                     <div className='row'>
                         <div className='picker-container form-group form-group-sm col-xs-4'>
                             <label className='control-label'>Occurrence Time</label>
-                            <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={report.occurrenceTime.toString()}
+                            <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={investigation.occurrenceTime.toString()}
                                             onChange={this.onDateChange}
                                             inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
                         </div>
@@ -122,7 +100,7 @@ var ReportDetail = React.createClass({
                     <div className='row'>
                         <div className='col-xs-4'>
                             <OccurrenceSeverity onChange={this.onAttributeChange}
-                                                severityAssessment={report.severityAssessment}/>
+                                                severityAssessment={investigation.severityAssessment}/>
                         </div>
                     </div>
 
@@ -131,16 +109,23 @@ var ReportDetail = React.createClass({
                     {this.renderLastEdited()}
 
                     <div className='row'>
+                     <div className='col-xs-12'>
+                     <Input type='textarea' rows='3' label='Factors' name='factors' placeholder='Factors'
+                     value={investigation.factors} onChange={this.onChange} title='Event factors'/>
+                     </div>
+                     </div>
+
+                    <div className='row'>
                         <div className='col-xs-12'>
                             <Input type='textarea' rows='8' label='Initial Report' name='initialReport'
-                                   placeholder='Initial report'
-                                   value={report.initialReport} onChange={this.onChange}
+                                   placeholder='Initial investigation'
+                                   value={investigation.initialReport} onChange={this.onChange}
                                    title='Initial Report'/>
                         </div>
                     </div>
 
                     <div className='form-group'>
-                        <ReportStatements report={report} onChange={this.props.onChange}/>
+                        <ReportStatements report={investigation} onChange={this.props.onChange}/>
                     </div>
 
                     <div className='form-group'>
@@ -148,8 +133,6 @@ var ReportDetail = React.createClass({
                                 ref='submit'
                                 onClick={this.onSubmit}>{loading ? 'Submitting...' : 'Submit'}</Button>
                         <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
-                        <Button bsStyle='primary' bsSize='small' onClick={this.investigate}
-                                title='Start investigation based on this report'>Investigate</Button>
                     </div>
 
                     {this.renderError()}
@@ -163,7 +146,7 @@ var ReportDetail = React.createClass({
         return this.isReportNew() ? null : (
             <div className='row'>
                 <div className='col-xs-4'>
-                    <Input type='text' value={this.getFullName(this.props.report.author)} label='Author'
+                    <Input type='text' value={this.getFullName(this.props.investigation.author)} label='Author'
                            title='Report author'
                            disabled/>
                 </div>
@@ -174,7 +157,7 @@ var ReportDetail = React.createClass({
         return this.state.error ? (
             <div className='form-group'>
                 <Alert bsStyle='danger' onDismiss={this.handleAlertDismiss} dismissAfter={10000}>
-                    <p>Unable to submit report. Server responded with message: {this.state.error.message}</p>
+                    <p>Unable to submit investigation. Server responded with message: {this.state.error.message}</p>
                 </Alert>
             </div>
         ) : null;
@@ -184,9 +167,9 @@ var ReportDetail = React.createClass({
         if (this.isReportNew()) {
             return null;
         }
-        var report = this.props.report;
-        var formattedDate = Utils.formatDate(new Date(report.lastEdited));
-        var text = 'Last edited on ' + formattedDate + ' by ' + this.getFullName(report.lastEditedBy) + '.';
+        var investigation = this.props.investigation;
+        var formattedDate = Utils.formatDate(new Date(investigation.lastEdited));
+        var text = 'Last edited on ' + formattedDate + ' by ' + this.getFullName(investigation.lastEditedBy) + '.';
         return (
             <div className='form-group italics'>
                 {text}
@@ -195,4 +178,4 @@ var ReportDetail = React.createClass({
     }
 });
 
-module.exports = ReportDetail;
+module.exports = Investigation;

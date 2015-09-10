@@ -10,6 +10,7 @@ var Modal = require('react-bootstrap').Modal;
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
+var router = require('../../utils/router');
 
 var ReportRow = React.createClass({
 
@@ -35,6 +36,11 @@ var ReportRow = React.createClass({
         Actions.deleteReport(this.props.report);
         this.onCloseModal();
     },
+    onInvestigate: function () {
+        router.transitionTo('investigation', {reportKey: this.props.report.key}, {onCancel: 'investigations'})
+    },
+
+
     render: function () {
         var report = this.props.report;
         var date = new Date(report.occurrenceTime);
@@ -48,26 +54,24 @@ var ReportRow = React.createClass({
                 <td style={verticalAlign}>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.initialReport}/></td>
                 <td style={verticalAlign} className='actions'>
-                    <span className='actions'>
-                        <Button bsStyle='primary' bsSize='small' title='Edit this occurrence report'
-                                onClick={this.onEditClick}>Edit</Button>
-                    </span>
-                    <span className='actions'>
-                        <Button bsStyle='danger' bsSize='small' title='Delete this occurrence report'
-                                onClick={this.onDeleteClick}>Delete</Button>
-                        <Modal show={this.state.modalOpen} onHide={this.onCloseModal}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Delete Occurrence Report?</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                Are you sure you want to remove this report?
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button bsStyle='primary' bsSize='small' onClick={this.removeReport}>Delete</Button>
-                                <Button bsSize='small' onClick={this.onCloseModal}>Cancel</Button>
-                            </Modal.Footer>
-                        </Modal>
-                    </span>
+                    <Button bsStyle='primary' bsSize='small' title='Edit this occurrence report'
+                            onClick={this.onEditClick}>Edit</Button>
+                    <Button bsStyle='danger' bsSize='small' title='Delete this occurrence report'
+                            onClick={this.onDeleteClick}>Delete</Button>
+                    <Modal show={this.state.modalOpen} onHide={this.onCloseModal}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Delete Occurrence Report?</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            Are you sure you want to remove this report?
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button bsStyle='primary' bsSize='small' onClick={this.removeReport}>Delete</Button>
+                            <Button bsSize='small' onClick={this.onCloseModal}>Cancel</Button>
+                        </Modal.Footer>
+                    </Modal>
+                    <Button bsStyle='primary' bsSize='small' title='Start investigation based on this report'
+                            onClick={this.onInvestigate}>Investigate</Button>
                 </td>
             </tr>
         );
