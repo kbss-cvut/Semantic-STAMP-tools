@@ -8,7 +8,6 @@ var assign = require('object-assign');
 var DateTimePicker = require('react-bootstrap-datetimepicker');
 
 var Input = require('../Input');
-var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
 var ReportStatements = require('../reports/ReportStatements');
 var OccurrenceSeverity = require('../reports/OccurrenceSeverity');
