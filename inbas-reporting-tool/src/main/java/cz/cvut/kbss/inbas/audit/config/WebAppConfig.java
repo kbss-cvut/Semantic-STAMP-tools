@@ -18,9 +18,6 @@ import org.springframework.web.servlet.view.JstlView;
 import java.nio.charset.Charset;
 import java.util.List;
 
-/**
- * Created by ledvima1 on 8.4.15.
- */
 @Configuration
 @EnableWebMvc
 @Import({PersistenceConfig.class, ServiceConfig.class, RestConfig.class, SecurityConfig.class})

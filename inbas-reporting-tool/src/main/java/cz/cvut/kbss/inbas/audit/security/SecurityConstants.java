@@ -28,5 +28,5 @@ public class SecurityConstants {
     /**
      * Session timeout in seconds.
      */
-    public static final int SESSION_TIMEOUT = 5 * 60;
+    public static final int SESSION_TIMEOUT = 30 * 60;
 }

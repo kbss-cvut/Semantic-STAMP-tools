@@ -2,14 +2,10 @@ package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.portal.PortalUser;
-import cz.cvut.kbss.inbas.audit.rest.exceptions.PortalAuthenticationException;
 import cz.cvut.kbss.inbas.audit.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,11 +19,11 @@ import java.net.URI;
 @RequestMapping("/portal")
 public class PortalController extends BaseController {
 
-    private static final String PORTAL_USER_PATH = "api/jsonws/user/get-user-by-email-address";
-    // Params: emailAddress, companyId
-
-    @Autowired
-    private AuthenticationProvider authenticationProvider;
+    private static final String PORTAL_USER_PATH = "api/jsonws/user/get-user-by-id";
+    // Params: userId
+//
+//    @Autowired
+//    private AuthenticationProvider authenticationProvider;
 
     @Autowired
     private PersonService personService;
@@ -38,21 +34,22 @@ public class PortalController extends BaseController {
     public String portalLogin(
             @RequestParam(value = "username", required = true) String username,
             @RequestParam(value = "password", required = true) String password, HttpServletRequest request) {
-        if (personService.findByUsername(username) == null) {
-            doSyntheticRegistration(username, password, request);
-        }
-        final Authentication result = authenticationProvider
-                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
-        if (result.isAuthenticated()) {
-            // TODO Make this nicer
-            String uri = request.getRequestURI();
-            uri = uri.substring(0, uri.indexOf("/rest"));
-            return "<html>" +
-                    "<script>window.location='" + uri + "/index.html'</script>" +
-                    "</html>";
-        } else {
-            throw new PortalAuthenticationException("Cannot authenticate user " + username + " through portal.");
-        }
+//        if (personService.findByUsername(username) == null) {
+//            doSyntheticRegistration(username, password, request);
+//        }
+//        final Authentication result = authenticationProvider
+//                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+//        if (result.isAuthenticated()) {
+//            // TODO Make this nicer
+//            String uri = request.getRequestURI();
+//            uri = uri.substring(0, uri.indexOf("/rest"));
+//            return "<html>" +
+//                    "<script>window.location='" + uri + "/index.html'</script>" +
+//                    "</html>";
+//        } else {
+//            throw new PortalAuthenticationException("Cannot authenticate user " + username + " through portal.");
+//        }
+        return null;
     }
 
     private void doSyntheticRegistration(String username, String password, HttpServletRequest request) {

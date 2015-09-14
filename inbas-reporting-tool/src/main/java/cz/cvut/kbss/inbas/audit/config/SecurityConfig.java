@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.config;
 
 import cz.cvut.kbss.inbas.audit.security.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -45,11 +46,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private LogoutSuccessHandler logoutSuccessHandler;
 
     @Autowired
-    private AuthenticationProvider authenticationProvider;
+    @Qualifier("ontologyAuthenticationProvider")
+    private AuthenticationProvider ontologyAuthenticationProvider;
+
+    @Autowired
+    @Qualifier("portalAuthenticationProvider")
+    private AuthenticationProvider portalAuthenticationProvider;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider);
+        auth.authenticationProvider(ontologyAuthenticationProvider)
+            .authenticationProvider(portalAuthenticationProvider);
     }
 
     @Bean
@@ -64,16 +71,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
             .and().headers().frameOptions().sameOrigin()
             .and()
-            .authenticationProvider(authenticationProvider)
+            .authenticationProvider(ontologyAuthenticationProvider)
+                .authenticationProvider(portalAuthenticationProvider)
 //            .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
-            .csrf().disable()
-            .formLogin().successHandler(authenticationSuccessHandler)
-            .failureHandler(authenticationFailureHandler)
-            .loginProcessingUrl(SecurityConstants.SECURITY_CHECK_URI)
-            .usernameParameter(SecurityConstants.USERNAME_PARAM).passwordParameter(SecurityConstants.PASSWORD_PARAM)
-            .and()
-            .logout().invalidateHttpSession(true).deleteCookies(COOKIES_TO_DESTROY)
-            .logoutUrl(SecurityConstants.LOGOUT_URI).logoutSuccessHandler(logoutSuccessHandler)
-            .and().sessionManagement().maximumSessions(1);
+                .csrf().disable()
+                .formLogin().successHandler(authenticationSuccessHandler)
+                .failureHandler(authenticationFailureHandler)
+                .loginProcessingUrl(SecurityConstants.SECURITY_CHECK_URI)
+                .usernameParameter(SecurityConstants.USERNAME_PARAM).passwordParameter(SecurityConstants.PASSWORD_PARAM)
+                .and()
+                .logout().invalidateHttpSession(true).deleteCookies(COOKIES_TO_DESTROY)
+                .logoutUrl(SecurityConstants.LOGOUT_URI).logoutSuccessHandler(logoutSuccessHandler)
+                .and().sessionManagement().maximumSessions(1);
     }
 }

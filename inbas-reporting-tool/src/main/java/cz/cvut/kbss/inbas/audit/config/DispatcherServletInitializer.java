@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.config;
 
+import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -34,6 +35,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
         System.out.println("****** Application Context Initialization ******");
 
         initSecurityFilter(servletContext);
+        servletContext.addListener(new RequestContextListener());
         super.onStartup(servletContext);
     }
 

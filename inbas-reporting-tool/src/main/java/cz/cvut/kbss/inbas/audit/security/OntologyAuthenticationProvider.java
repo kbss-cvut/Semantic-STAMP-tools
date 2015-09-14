@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author ledvima1
  */
-@Service
+@Service("ontologyAuthenticationProvider")
 public class OntologyAuthenticationProvider implements AuthenticationProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntologyAuthenticationProvider.class);
@@ -36,6 +36,7 @@ public class OntologyAuthenticationProvider implements AuthenticationProvider {
         final String username = authentication.getPrincipal().toString();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Authenticating user {}", username);
+            LOG.debug("Password: {}", authentication.getCredentials().toString());
         }
 
         final UserDetails userDetails = (UserDetails) userDetailsService.loadUserByUsername(username);
