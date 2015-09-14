@@ -1,7 +1,3 @@
-/**
- * Created by ledvima1 on 27.5.15.
- */
-
 'use strict';
 
 var Reflux = require('reflux');

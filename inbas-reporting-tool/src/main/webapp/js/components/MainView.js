@@ -40,7 +40,7 @@ var MainView = React.createClass({
                 <header>
                     <Navbar brand='INBAS Reporting Tool' fluid={true}>
                         <Nav>
-                            <NavItemLink to='home'>Home</NavItemLink>
+                            <NavItemLink to='dashboard'>Dashboard</NavItemLink>
                             <NavItemLink to='reports'>Reports</NavItemLink>
                             <NavItemLink to='investigations'>Investigations</NavItemLink>
                         </Nav>
@@ -51,7 +51,7 @@ var MainView = React.createClass({
                         </Nav>
                     </Navbar>
                 </header>
-                <section>
+                <section style={{height: '100%'}}>
                     <RouteHandler />
                 </section>
             </div>
