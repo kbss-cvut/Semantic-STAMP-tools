@@ -10,6 +10,9 @@ var TypeaheadResultList = React.createClass({
 
     render: function () {
         var listCls = this.props.options.length < 21 ? 'autocomplete-results' : 'autocomplete-results extended';
+        if (this.props.customClasses.results) {
+            listCls += ' ' + this.props.customClasses.results;
+        }
         var items = [];
         for (var i = 0, len = this.props.options.length; i < len; i++) {
             var onClick = this.onClick.bind(this, this.props.options[i]);

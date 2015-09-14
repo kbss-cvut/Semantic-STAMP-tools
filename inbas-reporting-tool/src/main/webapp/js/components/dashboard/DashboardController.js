@@ -20,11 +20,15 @@ var DashboardController = React.createClass({
     },
 
     createEmptyReport: function () {
-        router.transitionTo('report_new', null, {onSuccess: 'reports', onCancel: 'reports'});
+        router.transitionTo('report_new', null, {onSuccess: 'reports', onCancel: 'dashboard'});
     },
 
     importInitialReport: function () {
 
+    },
+
+    openReport: function (report) {
+        router.transitionTo('report', {reportKey: report.key}, {onSuccess: 'reports', onCancel: 'dashboard'});
     },
 
     showReports: function () {
@@ -34,7 +38,8 @@ var DashboardController = React.createClass({
 
     render: function () {
         return (<Dashboard userFirstName={this.state.firstName} showAllReports={this.showReports}
-                           createEmptyReport={this.createEmptyReport} importInitialReport={this.importInitialReport}/>);
+                           createEmptyReport={this.createEmptyReport} importInitialReport={this.importInitialReport}
+                           openReport={this.openReport}/>);
     }
 });
 

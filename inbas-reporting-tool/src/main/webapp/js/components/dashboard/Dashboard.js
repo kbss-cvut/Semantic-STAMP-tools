@@ -6,16 +6,17 @@ var Jumbotron = require('react-bootstrap').Jumbotron;
 var Grid = require('react-bootstrap').Grid;
 var Col = require('react-bootstrap').Col;
 var Row = require('react-bootstrap').Row;
-var Input = require('../Input');
 
 var Tile = require('./DashboardTile');
+var ReportTypeahead = require('../typeahead/ReportTypeahead');
 
 var Dashboard = React.createClass({
     propTypes: {
         userFirstName: React.PropTypes.string,
         createEmptyReport: React.PropTypes.func.isRequired,
         importInitialReport: React.PropTypes.func.isRequired,
-        showAllReports: React.PropTypes.func.isRequired
+        showAllReports: React.PropTypes.func.isRequired,
+        openReport: React.PropTypes.func.isRequired
     },
 
     getInitialState: function () {
@@ -72,7 +73,7 @@ var Dashboard = React.createClass({
 
     renderMainDashboard: function () {
         var search = this.state.search ? (
-            <Input type='text' placeholder='Occurrence summary' style={{width: '300px', margin: 'auto'}}/>) : null;
+            <ReportTypeahead name='reportSearch' onChange={this.props.openReport}/>) : null;
         return (
             <Grid fluid={true}>
                 <Row>
