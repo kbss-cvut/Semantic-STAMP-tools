@@ -37,8 +37,8 @@ var Dashboard = React.createClass({
         this.setState({dashboard: 'createReport'});
     },
 
-    openSearch: function () {
-        this.setState({search: true});
+    toggleSearch: function () {
+        this.setState({search: !this.state.search});
     },
 
 
@@ -71,7 +71,8 @@ var Dashboard = React.createClass({
     },
 
     renderMainDashboard: function () {
-        var search = this.state.search ? (<Input style={{width: '15em;'}}/>) : null;
+        var search = this.state.search ? (
+            <Input type='text' placeholder='Occurrence summary' style={{width: '300px', margin: 'auto'}}/>) : null;
         return (
             <Grid fluid={true}>
                 <Row>
@@ -79,11 +80,9 @@ var Dashboard = React.createClass({
                         <Tile onClick={this.createReport}>Create Occurrence Report</Tile>
                     </Col>
                     <Col xs={4} className='dashboard-sector'>
-                        <Tile onClick={this.openSearch}>Search for Occurrence Report</Tile>
+                        <Tile onClick={this.toggleSearch}>Search for Occurrence Case</Tile>
 
-                        <div>
-                            {search}
-                        </div>
+                        {search}
                     </Col>
                     <Col xs={4} className='dashboard-sector'>
                         <Tile onClick={this.props.showAllReports}>View All Occurrences</Tile>
