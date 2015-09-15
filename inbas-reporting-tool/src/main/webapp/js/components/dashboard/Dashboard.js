@@ -9,6 +9,7 @@ var Row = require('react-bootstrap').Row;
 
 var Tile = require('./DashboardTile');
 var ReportTypeahead = require('../typeahead/ReportTypeahead');
+var RecentlyEdited = require('./RecentlyEditedReports');
 
 var Dashboard = React.createClass({
     propTypes: {
@@ -45,11 +46,18 @@ var Dashboard = React.createClass({
 
     render: function () {
         return (
-            <Jumbotron>
-                {this.renderTitle()}
+            <div style={{margin: '0 -15px 0 -15px'}}>
+                <div className='col-xs-8'>
+                    <Jumbotron>
+                        {this.renderTitle()}
+                        {this.renderDashboardContent()}
+                    </Jumbotron>
+                </div>
+                <div className='col-xs-4'>
+                    <RecentlyEdited reports={this.props.reports} onOpenReport={this.props.openReport}/>
+                </div>
+            </div>
 
-                {this.renderDashboardContent()}
-            </Jumbotron>
         );
     },
 

@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportInfo;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.services.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +30,9 @@ public class ReportController extends BaseController {
     private ReportMapper reportMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<OccurrenceReportDto> getAllReports() {
+    public Collection<OccurrenceReportInfo> getAllReports() {
         final Collection<OccurrenceReport> reports = reportService.findAll();
-        return reports.stream().map(reportMapper::occurrenceReportToOccurrenceReportDto).collect(Collectors.toList());
+        return reports.stream().map(reportMapper::occurrenceReportToOccurrenceReportInfo).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)

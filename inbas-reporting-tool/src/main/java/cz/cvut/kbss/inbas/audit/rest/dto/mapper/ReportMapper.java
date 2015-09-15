@@ -10,6 +10,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessmentDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEventDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportInfo;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.*;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -21,6 +22,8 @@ import org.mapstruct.Mappings;
  */
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class ReportMapper {
+
+    public abstract OccurrenceReportInfo occurrenceReportToOccurrenceReportInfo(OccurrenceReport report);
 
     public abstract OccurrenceReportDto occurrenceReportToOccurrenceReportDto(OccurrenceReport report);
 
