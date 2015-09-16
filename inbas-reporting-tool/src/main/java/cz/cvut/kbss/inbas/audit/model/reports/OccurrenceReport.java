@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
@@ -18,7 +19,7 @@ import java.util.Set;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.OccurrenceReport)
-public class OccurrenceReport implements HasOwlKey {
+public class OccurrenceReport implements HasOwlKey, Serializable {
 
     @Id(generated = true)
     private URI uri;

@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import java.util.Set;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.EventTypeAssessment)
-public class EventTypeAssessment implements ReportingStatement {
+public class EventTypeAssessment implements ReportingStatement, Serializable {
 
     @Id(generated = true)
     private URI uri;

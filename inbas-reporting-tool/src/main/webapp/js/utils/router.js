@@ -1,8 +1,6 @@
-/**
- * Created by kidney on 7/7/15.
- */
-
 'use strict';
+
+var Constants = require('../constants/Constants');
 
 var router;
 
@@ -18,7 +16,7 @@ module.exports = {
         if (this.originalTarget) {
             this.transitionTo(this.originalTarget);
         } else {
-            this.transitionTo('home');
+            this.transitionTo(Constants.HOME_ROUTE);
         }
     },
 

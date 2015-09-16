@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.audit.rest.dto.model.portal.PortalUser;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.PortalAuthenticationException;
 import cz.cvut.kbss.inbas.audit.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
+import cz.cvut.kbss.inbas.audit.services.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -47,18 +49,24 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private PersonService personService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         final String username = authentication.getPrincipal().toString();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Authenticating user {} against the portal.", username);
-            LOG.debug("Password is {}.", authentication.getCredentials().toString());
-            LOG.debug(authentication.toString());
         }
         final Person authenticatedUser = authenticateAgainstPortal(username,
                 authentication.getCredentials().toString());
+        saveUser(authenticatedUser);
         final UserDetails userDetails = new UserDetails(authenticatedUser,
                 Collections.singleton(new SimpleGrantedAuthority(PortalUser.PORTAL_USER_ROLE)));
+        userDetails.eraseCredentials();
         final AuthenticationToken token = new AuthenticationToken(userDetails.getAuthorities(), userDetails);
         token.setAuthenticated(true);
         token.setDetails(userDetails);
@@ -91,13 +99,14 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             url += "&" + COMPANY_ID_PARAM + "=" + companyId;
             final HttpHeaders requestHeaders = new HttpHeaders();
             requestHeaders.add("Authorization", "Basic " + encodeBase64(username + ":" + password));
-            LOG.debug("Authorization header: " + requestHeaders.get("Authorization"));
             final HttpEntity<Object> entity = new HttpEntity<>(null, requestHeaders);
-            final Object portalUser = restTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
-            LOG.debug("Portal response: {}", portalUser);
-            return new Person();
+            final PortalUser portalUser = restTemplate.exchange(url, HttpMethod.GET, entity, PortalUser.class)
+                                                      .getBody();
+            final Person person = portalUser.toPerson();
+            person.setPassword(password);
+            return person;
         } catch (RestClientException e) {
-            LOG.error("Unable to get user info from portal. Used url " + url, e);
+            LOG.error("Unable to get user info from portal at " + url, e);
             throw new PortalAuthenticationException(e);
         }
     }
@@ -108,6 +117,21 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
 
     private String encodeBase64(String value) {
         return Base64.getEncoder().encodeToString(value.getBytes());
+    }
+
+    /**
+     * We store the user because it is associated with occurrence reports.
+     */
+    private void saveUser(Person user) {
+        final Person existing = personService.findByUsername(user.getUsername());
+        if (existing == null) {
+            personService.persist(user);
+            return;
+        }
+        user.encodePassword(passwordEncoder);
+        if (!existing.valueEquals(user)) {
+            personService.update(user);
+        }
     }
 
     @Override

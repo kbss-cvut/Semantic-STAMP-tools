@@ -5,13 +5,14 @@ import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.EventType)
-public class EventType {
+public class EventType implements Serializable {
 
     @Id
     private URI id;

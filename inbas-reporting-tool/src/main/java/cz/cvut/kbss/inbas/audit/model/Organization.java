@@ -6,13 +6,14 @@ import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.Organization)
-public class Organization implements HasDerivableUri {
+public class Organization implements HasDerivableUri, Serializable {
 
     @Id
     private URI uri;

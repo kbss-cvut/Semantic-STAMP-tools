@@ -8,6 +8,7 @@ import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.Properties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Map;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.Set;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.Person)
-public class Person implements HasDerivableUri {
+public class Person implements HasDerivableUri, Serializable {
 
     @Id
     private URI uri;
@@ -113,5 +114,18 @@ public class Person implements HasDerivableUri {
             throw new IllegalStateException("Missing last name.");
         }
         this.uri = URI.create(Constants.PERSON_BASE_URI + firstName + "+" + lastName);
+    }
+
+    /**
+     * Returns true if attributes of this instance are equal to those of the other instance.
+     * <p>
+     * Instance uri and username are not compared, because they are assumed to be read-only.
+     *
+     * @param other The other instance to compare to this one
+     * @return true if the selected attributes are equal, false otherwise
+     */
+    public boolean valueEquals(Person other) {
+        return other != null && firstName.equals(other.firstName) && lastName.equals(other.lastName) &&
+                password.equals(other.password);
     }
 }

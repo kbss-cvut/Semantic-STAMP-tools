@@ -5,13 +5,14 @@ import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.Location)
-public class Location implements HasDerivableUri {
+public class Location implements HasDerivableUri, Serializable {
 
     private static final String BASE = "http://onto.fel.cvut.cz/ontologies/aviation-safety/";
 

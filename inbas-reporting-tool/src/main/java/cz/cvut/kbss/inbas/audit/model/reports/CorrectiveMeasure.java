@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.audit.model.Resource;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.CorrectiveMeasure)
-public class CorrectiveMeasure implements ReportingStatement {
+public class CorrectiveMeasure implements ReportingStatement, Serializable {
 
     @Id(generated = true)
     URI uri;

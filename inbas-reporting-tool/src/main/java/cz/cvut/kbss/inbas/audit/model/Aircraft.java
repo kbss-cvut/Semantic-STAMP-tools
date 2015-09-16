@@ -1,16 +1,16 @@
 package cz.cvut.kbss.inbas.audit.model;
 
-import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.Aircraft)
-public class Aircraft {
+public class Aircraft implements Serializable {
 
     public static final String INTRUDER_TYPE = "aircraft";
 

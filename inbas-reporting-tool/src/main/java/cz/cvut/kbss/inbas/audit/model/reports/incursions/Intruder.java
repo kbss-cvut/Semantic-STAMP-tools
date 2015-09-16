@@ -4,13 +4,14 @@ import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.Intruder)
-public class Intruder {
+public class Intruder implements Serializable {
 
     @Id(generated = true)
     private URI uri;

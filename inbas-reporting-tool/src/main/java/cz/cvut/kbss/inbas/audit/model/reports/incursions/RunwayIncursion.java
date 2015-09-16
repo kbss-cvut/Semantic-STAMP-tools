@@ -5,13 +5,14 @@ import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
  * @author ledvima1
  */
 @OWLClass(iri = Vocabulary.RunwayIncursion)
-public class RunwayIncursion {
+public class RunwayIncursion implements Serializable {
 
     @Id(generated = true)
     private URI uri;

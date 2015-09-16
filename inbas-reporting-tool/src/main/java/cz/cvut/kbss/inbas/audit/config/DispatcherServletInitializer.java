@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.config;
 
+import cz.cvut.kbss.inbas.audit.security.SecurityConstants;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -36,6 +37,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
         initSecurityFilter(servletContext);
         servletContext.addListener(new RequestContextListener());
+        servletContext.getSessionCookieConfig().setName(SecurityConstants.SESSION_COOKIE_NAME);
         super.onStartup(servletContext);
     }
 
