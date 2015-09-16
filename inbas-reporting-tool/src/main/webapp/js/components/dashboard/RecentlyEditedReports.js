@@ -5,6 +5,7 @@ var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 
 var Utils = require('../../utils/Utils');
+var CollapsibleText = require('../CollapsibleText');
 
 var RECENTLY_EDITED_COUNT = 10;
 
@@ -56,12 +57,15 @@ var ReportRow = React.createClass({
 
     render: function () {
         var report = this.props.report;
+        var vAlign = {verticalAlign: 'middle'};
         return (
             <tr>
-                <td><a href='javascript:void(0);' onClick={this.onOpenClick}
-                       title='Click to see report detail'>{report.name}</a></td>
-                <td>{Utils.formatDate(new Date(report.occurrenceTime))}</td>
-                <td>{Utils.formatDate(new Date(report.lastEdited))}</td>
+                <td style={vAlign}>
+                    <a href='javascript:void(0);' onClick={this.onOpenClick}
+                       title='Click to see report detail'><CollapsibleText text={report.name} maxLength={20}/></a>
+                </td>
+                <td style={vAlign}>{Utils.formatDate(new Date(report.occurrenceTime))}</td>
+                <td style={vAlign}>{Utils.formatDate(new Date(report.lastEdited))}</td>
             </tr>
         );
     }
