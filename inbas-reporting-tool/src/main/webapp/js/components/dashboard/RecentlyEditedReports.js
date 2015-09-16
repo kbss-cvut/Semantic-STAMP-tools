@@ -20,22 +20,28 @@ var RecentlyEditedReports = React.createClass({
     },
 
     render: function () {
-        var title = (<h3>Recently Edited/Added Reports</h3>);
-        var recentReports = this.renderRecentReports(this.filterRecentReports());
+        var title = (<h3>Recently Edited/Added Reports</h3>),
+            recentReports = this.renderRecentReports(this.filterRecentReports()),
+            content = null;
+        if (recentReports.length > 0) {
+            content = (<Table striped bordered condensed hover>
+                <thead>
+                <tr>
+                    <th className='col-xs-4'>Occurrence summary</th>
+                    <th className='col-xs-4'>Occurrence date</th>
+                    <th className='col-xs-4'>Last edited</th>
+                </tr>
+                </thead>
+                <tbody>
+                {recentReports}
+                </tbody>
+            </Table>);
+        } else {
+            content = (<div>There are no occurrence reports, yet.</div>);
+        }
         return (
             <Panel header={title} style={{height: '100%'}}>
-                <Table striped bordered condensed hover>
-                    <thead>
-                    <tr>
-                        <th className='col-xs-4'>Occurrence summary</th>
-                        <th className='col-xs-4'>Occurrence date</th>
-                        <th className='col-xs-4'>Last edited</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {recentReports}
-                    </tbody>
-                </Table>
+                {content}
             </Panel>
         );
     },

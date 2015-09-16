@@ -29,7 +29,7 @@ var Reports = React.createClass({
                     <Jumbotron>
                         <h2>INBAS Reporting</h2>
 
-                        <p>There are no reports, yet.</p>
+                        <p>There are no occurrence reports, yet.</p>
                         <Button bsStyle='primary' b sSize='small' onClick={this.props.edit.onCreateReport}>Create Report</Button>
                     </Jumbotron>
                 </div>

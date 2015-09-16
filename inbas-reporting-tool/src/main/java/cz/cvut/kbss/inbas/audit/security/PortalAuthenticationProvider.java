@@ -2,7 +2,6 @@ package cz.cvut.kbss.inbas.audit.security;
 
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.portal.PortalUser;
-import cz.cvut.kbss.inbas.audit.rest.exceptions.PortalAuthenticationException;
 import cz.cvut.kbss.inbas.audit.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
 import cz.cvut.kbss.inbas.audit.services.PersonService;
@@ -107,7 +106,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             return person;
         } catch (RestClientException e) {
             LOG.error("Unable to get user info from portal at " + url, e);
-            throw new PortalAuthenticationException(e);
+            throw new AuthenticationServiceException("Unable to authenticate user on portal.", e);
         }
     }
 
