@@ -215,8 +215,8 @@
                                 </resource>
                             </webResources>
                             <packagingExcludes>
-                                **/js/actions/,**/js/components/,**/js/constants/,**/js/stores/,**/js/utils/,**/js/app.js,**/js/bundle.js,
-                                **/node_modules/,package.json,TODO.txt
+                                **/js/actions/,**/js/components/,**/js/constants/,**/js/stores/,**/js/utils/,**/js/model/,
+                                **/js/app.js,**/js/bundle.js,**/js/.bundle.js,tests/,node_modules/,package.json,TODO.txt
                             </packagingExcludes>
                         </configuration>
                     </plugin>

@@ -1,7 +1,7 @@
 {
   "name": "inbas-audit-tool",
   "version": "1.0.0",
-  "description": "Auditing tool for the INBAS project.",
+  "description": "Reporting tool for the INBAS project.",
   "main": "js/app.js",
   "dependencies": {
     "react": "^0.13.3",
@@ -24,10 +24,11 @@
   "devDependencies": {
     "browserify": "^6.2.0",
     "envify": "^3.0.0",
-    "jest-cli": "^0.4.3",
+    "jest-cli": "^0.5.5",
     "reactify": "^0.15.2",
     "uglify-js": "~2.4.15",
-    "watchify": "^2.1.1"
+    "watchify": "^2.1.1",
+    "react-tools": "^0.13.3"
   },
   "scripts": {
     "start": "watchify -o js/bundle.js -v -d js/app.js",
@@ -42,6 +43,10 @@
       "reactify",
       "envify"
     ]
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/test/preprocessor.js",
+    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react"]
   },
   "author": "Martin Ledvinka"
 }
