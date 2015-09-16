@@ -29,7 +29,8 @@
     "uglify-js": "~2.4.15",
     "watchify": "^2.1.1",
     "react-tools": "^0.13.3",
-    "clean-css": "^3.4.3"
+    "clean-css": "^3.4.3",
+    "jasmine-reporters": "^1.0.0"
   },
   "scripts": {
     "start": "watchify -o js/bundle.js -v -d js/app.js",
@@ -48,8 +49,9 @@
     ]
   },
   "jest": {
-    "scriptPreprocessor": "<rootDir>/test/preprocessor.js",
-    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react"]
+    "scriptPreprocessor": "<rootDir>/tests/preprocessor.js",
+    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react"],
+    "setupTestFrameworkScriptFile": "<rootDir>/tests/setup-jasmine-env.js"
   },
   "author": "Martin Ledvinka"
 }

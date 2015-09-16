@@ -2,7 +2,7 @@
 
 jest.dontMock('../../js/utils/Utils');
 
-describe('Tests for the utilities object', function() {
+describe('Utility functions tests', function() {
     var React;
     var Utils;
 
