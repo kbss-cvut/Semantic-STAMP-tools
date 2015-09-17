@@ -32,6 +32,10 @@ module.exports = {
         router.transitionTo(to, params, query);
     },
 
+    transitionToHome: function() {
+        this.transitionTo(Constants.HOME_ROUTE);
+    },
+
     replaceWith: function (to, params, query) {
         router.replaceWith(to, params, query);
     },

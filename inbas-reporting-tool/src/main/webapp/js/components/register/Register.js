@@ -98,7 +98,7 @@ var Register = React.createClass({
                     return;
                 }
                 Actions.loadUser();
-                router.transitionTo('home');
+                router.transitionToHome();
             }.bind(this));
     },
 

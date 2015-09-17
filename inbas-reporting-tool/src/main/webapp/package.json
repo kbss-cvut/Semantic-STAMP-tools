@@ -1,5 +1,5 @@
 {
-  "name": "inbas-audit-tool",
+  "name": "inbas-reporting-tool",
   "version": "1.0.0",
   "description": "Reporting tool for the INBAS project.",
   "main": "js/app.js",

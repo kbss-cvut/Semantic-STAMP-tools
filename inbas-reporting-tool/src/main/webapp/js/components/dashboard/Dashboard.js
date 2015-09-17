@@ -85,15 +85,15 @@ var Dashboard = React.createClass({
         return (
             <Grid fluid={true}>
                 <Row>
-                    <Col xs={4} className='dashboard-sector'>
+                    <Col xs={4} className='dashboard-sector left'>
                         <Tile onClick={this.createReport}>Create Occurrence Report</Tile>
                     </Col>
-                    <Col xs={4} className='dashboard-sector'>
+                    <Col xs={4} className='dashboard-sector middle'>
                         <Tile onClick={this.toggleSearch}>Search for Occurrence Case</Tile>
 
                         {search}
                     </Col>
-                    <Col xs={4} className='dashboard-sector'>
+                    <Col xs={4} className='dashboard-sector right'>
                         <Tile onClick={this.props.showAllReports}>View All Occurrences</Tile>
                     </Col>
                 </Row>
@@ -105,10 +105,10 @@ var Dashboard = React.createClass({
         return (
             <Grid fluid={true}>
                 <Row>
-                    <Col xs={6} className='dashboard-sector'>
+                    <Col xs={6} className='dashboard-sector left'>
                         <Tile onClick={this.props.createEmptyReport}>Start With Empty Report</Tile>
                     </Col>
-                    <Col xs={6} className='dashboard-sector'>
+                    <Col xs={6} className='dashboard-sector right'>
                         <Tile onClick={this.props.importInitialReport}>Import Initial Report</Tile>
                     </Col>
                 </Row>
