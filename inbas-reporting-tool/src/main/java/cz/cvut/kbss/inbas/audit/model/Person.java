@@ -89,6 +89,15 @@ public class Person implements HasDerivableUri, Serializable {
         this.password = encoder.encode(password);
     }
 
+    /**
+     * Erases the password.
+     * <p>
+     * Handy for example before sending the instance outside the application.
+     */
+    public void erasePassword() {
+        this.password = null;
+    }
+
     public Map<String, Set<String>> getProperties() {
         return properties;
     }

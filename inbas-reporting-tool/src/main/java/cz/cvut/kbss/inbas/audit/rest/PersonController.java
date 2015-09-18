@@ -34,6 +34,7 @@ public class PersonController extends BaseController {
         if (p == null) {
             throw NotFoundException.create("Person", username);
         }
+        p.erasePassword();
         return p;
     }
 

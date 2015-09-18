@@ -63,7 +63,7 @@ public class Organization implements HasDerivableUri, Serializable {
         if (code != null) {
             this.uri = URI.create(Constants.ORGANIZATION_BASE_URI + code);
         } else if (name != null) {
-            this.uri = URI.create(Constants.ORGANIZATION_BASE_URI + name);
+            this.uri = URI.create(Constants.ORGANIZATION_BASE_URI + name.replace(' ', '-'));
         } else {
             throw new IllegalStateException("Cannot generate URI of Organization. It is missing both code and name.");
         }
