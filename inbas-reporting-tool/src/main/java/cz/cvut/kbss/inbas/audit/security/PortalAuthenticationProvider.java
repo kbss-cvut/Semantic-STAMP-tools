@@ -4,6 +4,8 @@ import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.portal.PortalUser;
 import cz.cvut.kbss.inbas.audit.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
+import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpoint;
+import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpointType;
 import cz.cvut.kbss.inbas.audit.services.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +38,10 @@ import java.util.Collections;
 @Service("portalAuthenticationProvider")
 public class PortalAuthenticationProvider implements AuthenticationProvider {
 
-    private static final String PORTAL_USER_PATH = "api/jsonws/user/get-user-by-email-address";
-    private static final String USER_EMAIL_PARAM = "emailAddress";
-    private static final String COMPANY_ID_PARAM = "companyId";
     private static final String COMPANY_ID_COOKIE = "COMPANY_ID";
 
     private static final String PORTAL_URL_CONFIG = "portalUrl";
+    private static final String PORTAL_TYPE_CONFIG = "portalEndpointType";
 
     private static final Logger LOG = LoggerFactory.getLogger(PortalAuthenticationProvider.class);
 
@@ -84,21 +84,14 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         if (!url.endsWith("/")) {
             url += "/";
         }
-        url += PORTAL_USER_PATH + "?" + USER_EMAIL_PARAM + "=" + username;
-        String companyId = null;
-        final RestTemplate restTemplate = new RestTemplate();
+        final PortalEndpoint portalEndpoint = resolvePortalEndpoint();
         try {
-            final HttpServletRequest request = getCurrentRequest();
-            for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals(COMPANY_ID_COOKIE)) {
-                    companyId = cookie.getValue();
-                }
-            }
-            assert companyId != null;
-            url += "&" + COMPANY_ID_PARAM + "=" + companyId;
+            String companyId = getCompanyId();
+            url += portalEndpoint.constructPath(username, companyId);
             final HttpHeaders requestHeaders = new HttpHeaders();
             requestHeaders.add("Authorization", "Basic " + encodeBase64(username + ":" + password));
             final HttpEntity<Object> entity = new HttpEntity<>(null, requestHeaders);
+            final RestTemplate restTemplate = new RestTemplate();
             final PortalUser portalUser = restTemplate.exchange(url, HttpMethod.GET, entity, PortalUser.class)
                                                       .getBody();
             final Person person = portalUser.toPerson();
@@ -108,6 +101,24 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             LOG.error("Unable to get user info from portal at " + url, e);
             throw new AuthenticationServiceException("Unable to authenticate user on portal.", e);
         }
+    }
+
+    private PortalEndpoint resolvePortalEndpoint() {
+        final String portalEndpointType = environment
+                .getProperty(PORTAL_TYPE_CONFIG, PortalEndpointType.EMAIL_ADDRESS.toString());
+        return PortalEndpoint.createEndpoint(PortalEndpointType.fromString(portalEndpointType));
+    }
+
+    private String getCompanyId() {
+        String companyId = null;
+        final HttpServletRequest request = getCurrentRequest();
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals(COMPANY_ID_COOKIE)) {
+                companyId = cookie.getValue();
+            }
+        }
+        assert companyId != null;
+        return companyId;
     }
 
     private HttpServletRequest getCurrentRequest() {
