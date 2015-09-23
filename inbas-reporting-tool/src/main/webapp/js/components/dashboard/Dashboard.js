@@ -85,16 +85,20 @@ var Dashboard = React.createClass({
         return (
             <Grid fluid={true}>
                 <Row>
-                    <Col xs={4} className='dashboard-sector left'>
+                    <Col xs={4} className='dashboard-sector'>
                         <Tile onClick={this.createReport}>Create Occurrence Report</Tile>
                     </Col>
-                    <Col xs={4} className='dashboard-sector middle'>
+                    <Col xs={4} className='dashboard-sector'>
                         <Tile onClick={this.toggleSearch}>Search for Occurrence Case</Tile>
+                    </Col>
+                    <Col xs={4} className='dashboard-sector'>
+                        <Tile onClick={this.props.showAllReports}>View All Occurrences</Tile>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={12} className='dashboard-sector-search'>
 
                         {search}
-                    </Col>
-                    <Col xs={4} className='dashboard-sector right'>
-                        <Tile onClick={this.props.showAllReports}>View All Occurrences</Tile>
                     </Col>
                 </Row>
             </Grid>
