@@ -94,6 +94,9 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             final RestTemplate restTemplate = new RestTemplate();
             final PortalUser portalUser = restTemplate.exchange(url, HttpMethod.GET, entity, PortalUser.class)
                                                       .getBody();
+            if (portalUser == null || portalUser.getEmailAddress() == null) {
+                throw new AuthenticationServiceException("Unable to authenticate user on portal.");
+            }
             final Person person = portalUser.toPerson();
             person.setPassword(password);
             return person;

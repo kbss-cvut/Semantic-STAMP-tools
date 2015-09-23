@@ -53,6 +53,6 @@ public class PersonServiceImpl extends BaseService<Person> implements PersonServ
 
     @Override
     public void remove(Person instance) {
-
+        personDao.remove(instance);
     }
 }

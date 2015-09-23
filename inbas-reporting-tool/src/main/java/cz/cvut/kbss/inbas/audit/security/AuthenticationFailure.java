@@ -31,7 +31,7 @@ public class AuthenticationFailure implements AuthenticationFailureHandler {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Login failed for user {}.", httpServletRequest.getParameter(SecurityConstants.USERNAME_PARAM));
         }
-        final LoginStatus status = new LoginStatus(true, false, null, e.getMessage());
+        final LoginStatus status = new LoginStatus(false, false, null, e.getMessage());
         mapper.writeValue(httpServletResponse.getOutputStream(), status);
     }
 }
