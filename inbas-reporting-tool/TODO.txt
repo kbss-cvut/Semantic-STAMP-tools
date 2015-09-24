@@ -1,4 +1,3 @@
-Integrate security with Liferay
 Disable fuzzy string matching in autocomplete
         - requires writing our own string matching function
 Add loss of separation wizard

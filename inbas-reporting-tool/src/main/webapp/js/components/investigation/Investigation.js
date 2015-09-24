@@ -7,6 +7,7 @@ var Alert = require('react-bootstrap').Alert;
 var assign = require('object-assign');
 var DateTimePicker = require('react-bootstrap-datetimepicker');
 
+var Factors = require('./Factors');
 var Input = require('../Input');
 var Utils = require('../../utils/Utils');
 var ReportStatements = require('../reports/ReportStatements');
@@ -90,7 +91,8 @@ var Investigation = React.createClass({
                     <div className='row'>
                         <div className='picker-container form-group form-group-sm col-xs-4'>
                             <label className='control-label'>Occurrence Time</label>
-                            <DateTimePicker inputFormat='DD-MM-YY hh:mm A' dateTime={investigation.occurrenceTime.toString()}
+                            <DateTimePicker inputFormat='DD-MM-YY hh:mm A'
+                                            dateTime={investigation.occurrenceTime.toString()}
                                             onChange={this.onDateChange}
                                             inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
                         </div>
@@ -108,18 +110,20 @@ var Investigation = React.createClass({
                     {this.renderLastEdited()}
 
                     <div className='row'>
-                     <div className='col-xs-12'>
-                     <Input type='textarea' rows='3' label='Factors' name='factors' placeholder='Factors'
-                     value={investigation.factors} onChange={this.onChange} title='Event factors'/>
-                     </div>
-                     </div>
-
-                    <div className='row'>
                         <div className='col-xs-12'>
                             <Input type='textarea' rows='8' label='Initial Report' name='initialReport'
                                    placeholder='Initial investigation'
                                    value={investigation.initialReport} onChange={this.onChange}
                                    title='Initial Report'/>
+                        </div>
+                    </div>
+
+                    <div className='row'>
+                        <div className='col-xs-12'>
+                            <div className='form-group form-group-sm'>
+                                <label className='control-label'>Factors</label>
+                                <Factors occurrence={investigation}/>
+                            </div>
                         </div>
                     </div>
 
