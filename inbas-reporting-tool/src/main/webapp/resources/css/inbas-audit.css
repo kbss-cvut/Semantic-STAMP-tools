@@ -212,3 +212,14 @@ td.actions button {
     left: 0;
     right: 0;
 }
+
+.factors-gantt {
+    width: 100%;
+    height: 350px;
+}
+
+.gantt_container {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}

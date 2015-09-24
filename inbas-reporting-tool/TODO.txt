@@ -1,3 +1,8 @@
+Timeline granularity in the gantt component
+    - do we want to add seconds?
+    - Add zooming on timeline?
+    - When a link is added (or updated), ask the user what kind of link it is. Use colors to differentiate between causes and mitigates
+Occurrences should have start and end time
 Disable fuzzy string matching in autocomplete
         - requires writing our own string matching function
 Add loss of separation wizard
