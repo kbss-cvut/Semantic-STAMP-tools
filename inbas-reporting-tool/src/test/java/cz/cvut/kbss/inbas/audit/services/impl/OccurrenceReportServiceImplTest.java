@@ -7,8 +7,8 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.services.BaseServiceTestRunner;
+import cz.cvut.kbss.inbas.audit.services.OccurrenceReportService;
 import cz.cvut.kbss.inbas.audit.services.PersonService;
-import cz.cvut.kbss.inbas.audit.services.ReportService;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 /**
  * @author ledvima1
  */
-public class ReportServiceImplTest extends BaseServiceTestRunner {
+public class OccurrenceReportServiceImplTest extends BaseServiceTestRunner {
 
     private static final String USERNAME = "halsey@unsc.org";
 
@@ -34,7 +34,7 @@ public class ReportServiceImplTest extends BaseServiceTestRunner {
     private PersonService personService;
 
     @Autowired
-    private ReportService reportService;
+    private OccurrenceReportService reportService;
 
     @Autowired
     private EntityManagerFactory emf;

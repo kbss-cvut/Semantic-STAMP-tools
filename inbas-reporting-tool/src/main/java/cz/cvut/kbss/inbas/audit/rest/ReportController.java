@@ -6,7 +6,7 @@ import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportInfo;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
-import cz.cvut.kbss.inbas.audit.services.ReportService;
+import cz.cvut.kbss.inbas.audit.services.OccurrenceReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 public class ReportController extends BaseController {
 
     @Autowired
-    private ReportService reportService;
+    private OccurrenceReportService occurrenceReportService;
 
     @Autowired
     private ReportMapper reportMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<OccurrenceReportInfo> getAllReports() {
-        final Collection<OccurrenceReport> reports = reportService.findAll();
+        final Collection<OccurrenceReport> reports = occurrenceReportService.findAll();
         return reports.stream().map(reportMapper::occurrenceReportToOccurrenceReportInfo).collect(Collectors.toList());
     }
 
@@ -41,7 +41,7 @@ public class ReportController extends BaseController {
     }
 
     private OccurrenceReport getOccurrenceReport(String key) {
-        final OccurrenceReport original = reportService.findByKey(key);
+        final OccurrenceReport original = occurrenceReportService.findByKey(key);
         if (original == null) {
             throw NotFoundException.create("Report", key);
         }
@@ -54,7 +54,7 @@ public class ReportController extends BaseController {
     public void createReport(@RequestBody OccurrenceReportDto report) {
         final OccurrenceReport occurrenceReport = reportMapper.occurrenceReportDtoToOccurrenceReport(report);
         assert occurrenceReport != null;
-        reportService.persist(occurrenceReport);
+        occurrenceReportService.persist(occurrenceReport);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Created report from data {}", report);
         }
@@ -67,7 +67,7 @@ public class ReportController extends BaseController {
         final OccurrenceReport original = getOccurrenceReport(key);
         final OccurrenceReport update = reportMapper.occurrenceReportDtoToOccurrenceReport(report);
         validateReportForUpdate(original, update);
-        reportService.update(update);
+        occurrenceReportService.update(update);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Updated report {}", report);
         }
@@ -91,7 +91,7 @@ public class ReportController extends BaseController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReport(@PathVariable("key") String key) {
         final OccurrenceReport report = getOccurrenceReport(key);
-        reportService.remove(report);
+        occurrenceReportService.remove(report);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Deleted report {}.", report.getUri());
         }

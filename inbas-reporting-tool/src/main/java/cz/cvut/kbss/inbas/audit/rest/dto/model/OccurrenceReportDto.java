@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.Resource;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
+import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.SeverityAssessment;
 
 import java.net.URI;
@@ -37,6 +38,8 @@ public class OccurrenceReportDto {
     private Resource resource;
 
     private SeverityAssessment severityAssessment;
+
+    private Set<InitialReport> initialReports;
 
     private Set<CorrectiveMeasure> correctiveMeasures;
 
@@ -128,6 +131,14 @@ public class OccurrenceReportDto {
 
     public void setResource(Resource resource) {
         this.resource = resource;
+    }
+
+    public Set<InitialReport> getInitialReports() {
+        return initialReports;
+    }
+
+    public void setInitialReports(Set<InitialReport> initialReports) {
+        this.initialReports = initialReports;
     }
 
     public SeverityAssessment getSeverityAssessment() {

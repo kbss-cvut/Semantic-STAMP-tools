@@ -1,10 +1,10 @@
 package cz.cvut.kbss.inbas.audit.services.impl;
 
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.persistence.dao.*;
-import cz.cvut.kbss.inbas.audit.services.ReportService;
+import cz.cvut.kbss.inbas.audit.services.OccurrenceReportService;
 import cz.cvut.kbss.inbas.audit.services.validation.ReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
  * @author ledvima1
  */
 @Service
-public class ReportServiceImpl extends BaseService<OccurrenceReport> implements ReportService {
+public class OccurrenceReportServiceImpl extends BaseService<OccurrenceReport> implements OccurrenceReportService {
 
     @Autowired
     private ReportValidator reportValidator;
 
     @Autowired
-    private ReportDao reportDao;
+    private OccurrenceReportDao occurrenceReportDao;
 
     @Autowired
     private EventTypeAssessmentDao eventTypeAssessmentDao;
@@ -39,12 +39,12 @@ public class ReportServiceImpl extends BaseService<OccurrenceReport> implements 
 
     @Override
     protected GenericDao<OccurrenceReport> getPrimaryDao() {
-        return reportDao;
+        return occurrenceReportDao;
     }
 
     @Override
     public OccurrenceReport findByKey(String key) {
-        return reportDao.findByKey(key);
+        return occurrenceReportDao.findByKey(key);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ReportServiceImpl extends BaseService<OccurrenceReport> implements 
         reportValidator.validateReport(report);
         report.setCreated(new Date());
         report.setLastEdited(new Date());
-        reportDao.persist(report);
+        occurrenceReportDao.persist(report);
     }
 
     @Override
@@ -62,10 +62,10 @@ public class ReportServiceImpl extends BaseService<OccurrenceReport> implements 
         }
         reportValidator.validateReport(report);
         report.setLastEdited(new Date());
-        final OccurrenceReport original = reportDao.findByUri(report.getUri());
+        final OccurrenceReport original = occurrenceReportDao.find(report.getUri());
         assert original != null;
         deleteObsoleteStatements(report, original);
-        reportDao.update(report);
+        occurrenceReportDao.update(report);
     }
 
     private void deleteObsoleteStatements(OccurrenceReport updated, OccurrenceReport original) {

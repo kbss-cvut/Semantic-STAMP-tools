@@ -41,7 +41,7 @@ public class PersonServiceImpl extends BaseService<Person> implements PersonServ
 
     @Override
     public void update(Person instance) {
-        final Person orig = personDao.findByUri(instance.getUri());
+        final Person orig = personDao.find(instance.getUri());
         if (orig == null) {
             throw new IllegalArgumentException("Cannot update person URI");
         }

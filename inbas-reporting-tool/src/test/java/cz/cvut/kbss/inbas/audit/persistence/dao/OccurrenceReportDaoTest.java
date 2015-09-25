@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
+import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
@@ -16,22 +17,23 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * @author ledvima1
  */
-public class ReportDaoTest extends BaseDaoTestRunner {
+public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     private static EventType eventType;
     private static Organization organization;
 
     @Autowired
-    private ReportDao dao;
+    private OccurrenceReportDao dao;
+
+    @Autowired
+    private InitialReportDao irDao;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -56,10 +58,10 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         final OccurrenceReport rTwo = initOccurrenceReportWithTypeAssessment(eventType);
         dao.persist(rTwo);
 
-        final OccurrenceReport resOne = dao.findByUri(rOne.getUri());
+        final OccurrenceReport resOne = dao.find(rOne.getUri());
         assertNotNull(resOne);
         assertEquals(1, resOne.getTypeAssessments().size());
-        final OccurrenceReport resTwo = dao.findByUri(rTwo.getUri());
+        final OccurrenceReport resTwo = dao.find(rTwo.getUri());
         assertNotNull(resTwo);
         assertEquals(1, resTwo.getTypeAssessments().size());
         assertEquals(resOne.getTypeAssessments().iterator().next().getEventType(),
@@ -88,12 +90,12 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         assTwo.setRunwayIncursion(incursionTwo);
         dao.persist(rTwo);
 
-        final OccurrenceReport resOne = dao.findByUri(rOne.getUri());
+        final OccurrenceReport resOne = dao.find(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
         final Aircraft aircraft = typeOne.getRunwayIncursion().getConflictingAircraft();
         final Organization org = aircraft.getOperator();
         assertEquals(organization, org);
-        final OccurrenceReport resTwo = dao.findByUri(rTwo.getUri());
+        final OccurrenceReport resTwo = dao.find(rTwo.getUri());
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
         final PersonIntruder person = typeTwo.getRunwayIncursion().getIntruder().getPerson();
         assertEquals(organization, person.getOrganization());
@@ -125,12 +127,12 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         assTwo.setRunwayIncursion(incursionTwo);
         dao.persist(rTwo);
 
-        final OccurrenceReport resOne = dao.findByUri(rOne.getUri());
+        final OccurrenceReport resOne = dao.find(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
         final Aircraft aircraft = typeOne.getRunwayIncursion().getConflictingAircraft();
         final Organization org = aircraft.getOperator();
         assertEquals(organization, org);
-        final OccurrenceReport resTwo = dao.findByUri(rTwo.getUri());
+        final OccurrenceReport resTwo = dao.find(rTwo.getUri());
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
         final Vehicle vehicle = typeTwo.getRunwayIncursion().getIntruder().getVehicle();
         assertEquals(organization, vehicle.getOrganization());
@@ -149,12 +151,12 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         assTwo.setRunwayIncursion(incursionTwo);
         dao.persist(rTwo);
 
-        final OccurrenceReport resOne = dao.findByUri(rOne.getUri());
+        final OccurrenceReport resOne = dao.find(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
         final Aircraft clearedAircraft = typeOne.getRunwayIncursion().getConflictingAircraft();
         final Organization org = clearedAircraft.getOperator();
         assertEquals(organization, org);
-        final OccurrenceReport resTwo = dao.findByUri(rTwo.getUri());
+        final OccurrenceReport resTwo = dao.find(rTwo.getUri());
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
         final Aircraft aircraft = typeTwo.getRunwayIncursion().getIntruder().getAircraft();
         assertEquals(organization, aircraft.getOperator());
@@ -171,13 +173,13 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         final OccurrenceReport rTwo = initOccurrenceReportWithLocation(loc);
         dao.persist(rTwo);
 
-        final OccurrenceReport resOne = dao.findByUri(rOne.getUri());
+        final OccurrenceReport resOne = dao.find(rOne.getUri());
         assertNotNull(resOne);
         final Location resLocOne = resOne.getTypeAssessments().iterator().next().getRunwayIncursion().getLocation();
         assertNotNull(resLocOne);
         assertEquals(loc, resLocOne);
 
-        final OccurrenceReport resTwo = dao.findByUri(rOne.getUri());
+        final OccurrenceReport resTwo = dao.find(rOne.getUri());
         assertNotNull(resTwo);
         final Location resLocTwo = resTwo.getTypeAssessments().iterator().next().getRunwayIncursion().getLocation();
         assertNotNull(resLocTwo);
@@ -193,5 +195,72 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         type.setRunwayIncursion(ri);
         r.setTypeAssessments(Collections.singleton(type));
         return r;
+    }
+
+    @Test
+    public void initialReportsArePersistedWhenOccurrenceReportIsPersisted() {
+        final OccurrenceReport report = new OccurrenceReport();
+        final Set<InitialReport> initialReports = initInitialReports(report);
+
+        dao.persist(report);
+
+        for (InitialReport ir : initialReports) {
+            assertNotNull(ir.getKey());
+            assertNotNull(ir.getUri());
+        }
+        final OccurrenceReport res = dao.find(report.getUri());
+        assertEquals(initialReports.size(), res.getInitialReports().size());
+    }
+
+    private Set<InitialReport> initInitialReports(OccurrenceReport report) {
+        report.setOccurrenceTime(new Date());
+        final Set<InitialReport> initialReports = new HashSet<>();
+        for (int i = 0; i < 3; i++) {
+            initialReports.add(new InitialReport("This is a test initial report no. " + i));
+        }
+        report.setInitialReports(initialReports);
+        return initialReports;
+    }
+
+    @Test
+    public void initialReportsArePersistedWhenOccurrenceReportIsUpdated() {
+        final OccurrenceReport report = new OccurrenceReport();
+        final Set<InitialReport> initialReports = initInitialReports(report);
+
+        dao.persist(report);
+
+        final OccurrenceReport toUpdate = dao.find(report.getUri());
+        final String addedText = "Added initial report";
+        toUpdate.getInitialReports().add(new InitialReport(addedText));
+        dao.update(toUpdate);
+
+        final OccurrenceReport result = dao.find(report.getUri());
+        assertEquals(initialReports.size() + 1, result.getInitialReports().size());
+        boolean found = false;
+        for (InitialReport ir : result.getInitialReports()) {
+            if (ir.getText().equals(addedText)) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
+    }
+
+    @Test
+    public void initialReportsAreUpdatedWhenOccurrenceReportIsUpdated() {
+        final OccurrenceReport report = new OccurrenceReport();
+        initInitialReports(report);
+
+        dao.persist(report);
+
+        final OccurrenceReport toUpdate = dao.find(report.getUri());
+        final String updatedText = "Updated initial report text.";
+        final InitialReport updated = toUpdate.getInitialReports().iterator().next();
+        updated.setText(updatedText);
+
+        dao.update(toUpdate);
+
+        final InitialReport result = irDao.find(updated.getUri());
+        assertEquals(updatedText, result.getText());
     }
 }

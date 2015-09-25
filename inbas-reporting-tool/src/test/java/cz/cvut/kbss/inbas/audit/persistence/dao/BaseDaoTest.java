@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 public class BaseDaoTest extends BaseDaoTestRunner {
 
     @Autowired
-    private ReportDao dao;  // We're using one of the DAO implementations for the basic tests
+    private OccurrenceReportDao dao;  // We're using one of the DAO implementations for the basic tests
 
     @Test
     public void existsForExistingInstanceReturnsTrue() throws Exception {

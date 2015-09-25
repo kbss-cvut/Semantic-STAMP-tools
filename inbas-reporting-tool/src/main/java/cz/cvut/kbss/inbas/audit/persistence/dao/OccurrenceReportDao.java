@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
+import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.PersistenceException;
@@ -17,7 +18,7 @@ import java.util.Set;
  * @author ledvima1
  */
 @Repository
-public class ReportDao extends BaseDao<OccurrenceReport> {
+public class OccurrenceReportDao extends BaseDao<OccurrenceReport> {
 
     @Autowired
     private EventTypeDao eventTypeDao;
@@ -28,7 +29,10 @@ public class ReportDao extends BaseDao<OccurrenceReport> {
     @Autowired
     private LocationDao locationDao;
 
-    public ReportDao() {
+    @Autowired
+    private InitialReportDao initialReportDao;
+
+    public OccurrenceReportDao() {
         super(OccurrenceReport.class);
     }
 
@@ -40,6 +44,7 @@ public class ReportDao extends BaseDao<OccurrenceReport> {
         try {
             em.getTransaction().begin();
             saveEventTypes(entity.getTypeAssessments(), em);
+            saveInitialReports(entity.getInitialReports(), em);
             entity.generateKey();
             em.persist(entity);
             em.getTransaction().commit();
@@ -100,6 +105,16 @@ public class ReportDao extends BaseDao<OccurrenceReport> {
         }
     }
 
+    private void saveInitialReports(Set<InitialReport> initialReports, EntityManager em) {
+        if (initialReports == null) {
+            return;
+        }
+        initialReports.stream().filter(ir -> !initialReportDao.exists(ir.getUri(), em)).forEach(ir -> {
+            ir.generateKey();
+            initialReportDao.persist(ir, em);
+        });
+    }
+
     @Override
     public void update(OccurrenceReport entity) {
         Objects.requireNonNull(entity);
@@ -108,6 +123,7 @@ public class ReportDao extends BaseDao<OccurrenceReport> {
         try {
             em.getTransaction().begin();
             saveEventTypes(entity.getTypeAssessments(), em);
+            saveInitialReports(entity.getInitialReports(), em);
             em.merge(entity);
             em.getTransaction().commit();
         } catch (Exception e) {

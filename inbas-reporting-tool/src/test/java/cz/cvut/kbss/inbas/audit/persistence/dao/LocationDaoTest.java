@@ -23,7 +23,7 @@ public class LocationDaoTest extends BaseDaoTestRunner {
         dao.persist(location);
         assertNotNull(location.getUri());
 
-        final Location res = dao.findByUri(location.getUri());
+        final Location res = dao.find(location.getUri());
         assertNotNull(res);
         assertEquals(location, res);
     }

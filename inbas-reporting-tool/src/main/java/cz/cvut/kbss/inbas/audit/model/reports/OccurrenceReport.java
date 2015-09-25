@@ -15,9 +15,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author ledvima1
- */
 @OWLClass(iri = Vocabulary.OccurrenceReport)
 public class OccurrenceReport implements HasOwlKey, Serializable {
 
@@ -40,7 +37,7 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
     private String name;    // Simple name of the event being reported
 
     @OWLDataProperty(iri = Vocabulary.p_description)
-    private String initialReport;
+    private String initialReport;   // TODO This will be either removed or renamed to 'Summary' or 'Description' or something like that
 
     @OWLDataProperty(iri = Vocabulary.p_factors)
     private String factors;
@@ -53,6 +50,9 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
 
     @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
     private Resource resource;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasInitialReport, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private Set<InitialReport> initialReports;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasSeverityAssessment, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private SeverityAssessment severityAssessment;
@@ -141,6 +141,14 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
 
     public void setResource(Resource resource) {
         this.resource = resource;
+    }
+
+    public Set<InitialReport> getInitialReports() {
+        return initialReports;
+    }
+
+    public void setInitialReports(Set<InitialReport> initialReports) {
+        this.initialReports = initialReports;
     }
 
     public SeverityAssessment getSeverityAssessment() {

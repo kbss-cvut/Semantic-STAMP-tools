@@ -34,7 +34,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     private EntityManagerFactory emf;
 
     @Override
-    public T findByUri(URI uri) {
+    public T find(URI uri) {
         Objects.requireNonNull(uri);
         final EntityManager em = entityManager();
         try {

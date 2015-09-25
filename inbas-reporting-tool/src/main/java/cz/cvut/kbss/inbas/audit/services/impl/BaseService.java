@@ -20,7 +20,7 @@ public abstract class BaseService<T> implements InbasService<T> {
 
     @Override
     public T find(URI uri) {
-        return getPrimaryDao().findByUri(uri);
+        return getPrimaryDao().find(uri);
     }
 
     @Override
