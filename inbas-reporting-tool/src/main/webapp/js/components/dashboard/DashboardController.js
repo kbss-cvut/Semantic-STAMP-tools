@@ -8,6 +8,8 @@ var router = require('../../utils/router');
 var UserStore = require('../../stores/UserStore');
 var ReportsStore = require('../../stores/ReportsStore');
 var Dashboard = require('./Dashboard');
+var WizardWindow = require('./../wizard/WizardWindow');
+var InitialReportImportSteps = require('../initialreport/Steps');
 
 var DashboardController = React.createClass({
     mixins: [
@@ -17,7 +19,8 @@ var DashboardController = React.createClass({
     getInitialState: function () {
         return {
             firstName: UserStore.getCurrentUser() ? UserStore.getCurrentUser().firstName : '',
-            reports: ReportsStore.getReports() ? ReportsStore.getReports() : []
+            reports: ReportsStore.getReports() ? ReportsStore.getReports() : [],
+            initialReportImportOpen: false
         }
     },
 
@@ -37,8 +40,20 @@ var DashboardController = React.createClass({
         router.transitionTo('report_new', null, {onSuccess: 'reports', onCancel: 'dashboard'});
     },
 
-    importInitialReport: function () {
+    cancelInitialReportImport: function () {
+        this.setState({initialReportImportOpen: false});
+    },
 
+    openInitialReportImport: function () {
+        this.setState({initialReportImportOpen: true});
+    },
+
+    importInitialReport: function (data, closeCallback) {
+        router.transitionTo('report_new', null, {
+            onSuccess: 'reports',
+            onCancel: 'dashboard'
+        }, {initialReports: [data.initialReport]});
+        closeCallback();
     },
 
     openReport: function (report) {
@@ -51,9 +66,21 @@ var DashboardController = React.createClass({
 
 
     render: function () {
-        return (<Dashboard userFirstName={this.state.firstName} reports={this.state.reports}
+        var wizardProperties = {
+            steps: InitialReportImportSteps,
+            initialReport: {},
+            title: 'Import Initial Report',
+            onFinish: this.importInitialReport
+        };
+        return (
+            <div>
+                <WizardWindow show={this.state.initialReportImportOpen} {...wizardProperties}
+                              onHide={this.cancelInitialReportImport}/>
+                <Dashboard userFirstName={this.state.firstName} reports={this.state.reports}
                            showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
-                           importInitialReport={this.importInitialReport} openReport={this.openReport}/>);
+                           importInitialReport={this.openInitialReportImport} openReport={this.openReport}/>
+            </div>
+        );
     }
 });
 

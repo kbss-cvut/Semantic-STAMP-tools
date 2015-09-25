@@ -1,3 +1,4 @@
+Upgrade to react-router 1.0.0
 Timeline granularity in the gantt component
     - do we want to add seconds?
     - Add zooming on timeline?

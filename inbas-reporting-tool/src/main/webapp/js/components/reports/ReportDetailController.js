@@ -1,7 +1,3 @@
-/**
- * Created by kidney on 7/9/15.
- */
-
 'use strict';
 
 var React = require('react');
@@ -12,6 +8,7 @@ var ReportDetail = require('./ReportDetail');
 var ReportsStore = require('../../stores/ReportsStore');
 var UserStore = require('../../stores/UserStore');
 var router = require('../../utils/router');
+var RouterStore = require('../../stores/RouterStore');
 
 var ReportDetailController = React.createClass({
     mixins: [
@@ -22,9 +19,19 @@ var ReportDetailController = React.createClass({
         var isNew = !this.props.params.reportKey;
         return {
             user: UserStore.getCurrentUser(),
-            report: isNew ? {occurrenceTime: Date.now()} : null,
+            report: isNew ? this.initNewReport() : null,
             loading: !isNew
         }
+    },
+
+    initNewReport: function () {
+        // TODO This needs to be tested
+        var report = {};
+        if (RouterStore.getTransitionPayload('report_new')) {
+            report = RouterStore.getTransitionPayload('report_new');
+        }
+        report.occurrenceTime = Date.now();
+        return report;
     },
 
     componentWillMount: function () {

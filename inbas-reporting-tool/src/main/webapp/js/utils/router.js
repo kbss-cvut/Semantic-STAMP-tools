@@ -1,6 +1,7 @@
 'use strict';
 
 var Constants = require('../constants/Constants');
+var RouterStore = require('../stores/RouterStore');
 
 var router;
 
@@ -8,11 +9,11 @@ module.exports = {
 
     originalTarget: null,
 
-    saveOriginalTarget: function(url) {
+    saveOriginalTarget: function (url) {
         this.originalTarget = url;
     },
 
-    transitionToOriginalTarget: function() {
+    transitionToOriginalTarget: function () {
         if (this.originalTarget) {
             this.transitionTo(this.originalTarget);
         } else {
@@ -28,11 +29,19 @@ module.exports = {
         return router.makeHref(to, params, query);
     },
 
-    transitionTo: function (to, params, query) {
+    /**
+     * Transitions to the specified route.
+     * @param to Target route name
+     * @param params (Optional) Path parameters
+     * @param query (Optional) Query parameters
+     * @param payload (Optional) Payload to pass to router store to make it accessible from the target route handler
+     */
+    transitionTo: function (to, params, query, payload) {
+        RouterStore.setTransitionPayload(to, payload);
         router.transitionTo(to, params, query);
     },
 
-    transitionToHome: function() {
+    transitionToHome: function () {
         this.transitionTo(Constants.HOME_ROUTE);
     },
 
