@@ -78,11 +78,11 @@ var InitialReports = React.createClass({
         var content = this.renderContent();
         return (
             <div>
-                <WizardWindow {...this.state.wizardProperties} show={this.state.showInitialReportWizard}
+                <WizardWindow ref='initialReportWizard' {...this.state.wizardProperties} show={this.state.showInitialReportWizard}
                                                                onHide={this.closeInitialReport}/>
                 <Panel header='Initial Reports'>
                     {content}
-                    <Button bsStyle='primary' bsSize='small' onClick={this.addInitialReport}>Add</Button>
+                    <Button ref='addInitialReport' bsStyle='primary' bsSize='small' onClick={this.addInitialReport}>Add</Button>
                 </Panel>
             </div>
         );

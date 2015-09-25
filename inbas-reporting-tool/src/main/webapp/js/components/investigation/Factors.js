@@ -2,8 +2,6 @@
 
 var React = require('react');
 
-var Utils = require('../../utils/Utils');
-
 var DATE_FORMAT = '%d-%m-%y %h:%i %A';
 
 function lightboxHeader(startDate, endDate, event) {

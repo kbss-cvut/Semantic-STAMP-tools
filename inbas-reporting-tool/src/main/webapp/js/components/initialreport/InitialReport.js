@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-var Modal = require('react-bootstrap').Modal;
 
 var Input = require('../Input');
 
