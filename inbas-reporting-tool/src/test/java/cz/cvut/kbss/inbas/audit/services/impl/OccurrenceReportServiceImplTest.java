@@ -79,7 +79,7 @@ public class OccurrenceReportServiceImplTest extends BaseServiceTestRunner {
         final OccurrenceReport report = new OccurrenceReport();
         report.setAuthor(author);
         report.setOccurrenceTime(new Date());
-        report.setInitialReport("test report");
+        report.setSummary("test report");
         final EventTypeAssessment one = new EventTypeAssessment();
         one.setEventType(new EventType(URI.create("http://krizik.felk.cvut.cz/ontologies/eventTypes#Incursion")));
         final RunwayIncursion incursion = new RunwayIncursion();
@@ -171,7 +171,7 @@ public class OccurrenceReportServiceImplTest extends BaseServiceTestRunner {
         final OccurrenceReport report = new OccurrenceReport();
         report.setAuthor(author);
         report.setOccurrenceTime(new Date());
-        report.setInitialReport("test report");
+        report.setSummary("test report");
         final CorrectiveMeasure mOne = new CorrectiveMeasure();
         mOne.setDescription("Corrective measure one");
         final CorrectiveMeasure mTwo = new CorrectiveMeasure();

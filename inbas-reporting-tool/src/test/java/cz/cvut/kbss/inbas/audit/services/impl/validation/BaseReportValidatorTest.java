@@ -40,7 +40,7 @@ public class BaseReportValidatorTest extends BaseServiceTestRunner {
         final OccurrenceReport report = new OccurrenceReport();
         report.setAuthor(PERSON);
         report.setOccurrenceTime(new Date(System.currentTimeMillis() - 1000000));
-        report.setInitialReport("Yadayadayada");
+        report.setSummary("Yadayadayada");
         return report;
     }
 

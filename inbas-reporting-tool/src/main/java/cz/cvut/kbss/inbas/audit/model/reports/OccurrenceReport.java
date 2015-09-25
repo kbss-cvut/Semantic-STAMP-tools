@@ -37,7 +37,7 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
     private String name;    // Simple name of the event being reported
 
     @OWLDataProperty(iri = Vocabulary.p_description)
-    private String initialReport;   // TODO This will be either removed or renamed to 'Summary' or 'Description' or something like that
+    private String summary;
 
     @OWLDataProperty(iri = Vocabulary.p_factors)
     private String factors;
@@ -95,12 +95,12 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
         this.lastEdited = lastEdited;
     }
 
-    public String getInitialReport() {
-        return initialReport;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setInitialReport(String initialReport) {
-        this.initialReport = initialReport;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getFactors() {

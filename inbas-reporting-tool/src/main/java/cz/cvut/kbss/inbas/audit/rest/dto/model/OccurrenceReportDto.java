@@ -10,9 +10,6 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-/**
- * @author ledvima1
- */
 public class OccurrenceReportDto {
 
     private URI uri;
@@ -27,7 +24,7 @@ public class OccurrenceReportDto {
 
     private String name;
 
-    private String initialReport;
+    private String summary;
 
     private String factors;
 
@@ -93,12 +90,12 @@ public class OccurrenceReportDto {
         this.name = name;
     }
 
-    public String getInitialReport() {
-        return initialReport;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setInitialReport(String initialReport) {
-        this.initialReport = initialReport;
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getFactors() {
@@ -171,7 +168,7 @@ public class OccurrenceReportDto {
                 "uri=" + uri +
                 ", key='" + key + '\'' +
                 ", name='" + name + '\'' +
-                ", initialReport='" + initialReport + '\'' +
+                ", summary='" + summary + '\'' +
                 '}';
     }
 }

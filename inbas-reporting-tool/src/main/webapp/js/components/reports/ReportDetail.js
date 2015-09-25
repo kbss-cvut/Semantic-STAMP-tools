@@ -137,17 +137,17 @@ var ReportDetail = React.createClass({
                         </div>
                     </div>
 
-                    <div className='row'>
-                        <div className='col-xs-12'>
-                            <Input type='textarea' rows='8' label='Initial Report' name='initialReport'
-                                   placeholder='Initial report'
-                                   value={report.initialReport} onChange={this.onChange}
-                                   title='Initial Report'/>
-                        </div>
-                    </div>
-
                     <div className='form-group'>
                         <ReportStatements report={report} onChange={this.props.onChange}/>
+                    </div>
+
+                    <div className='row'>
+                        <div className='col-xs-12'>
+                            <Input type='textarea' rows='8' label='Report Summary' name='summary'
+                                   placeholder='Report summary'
+                                   value={report.summary} onChange={this.onChange}
+                                   title='Report summary'/>
+                        </div>
                     </div>
 
                     <div className='form-group'>
