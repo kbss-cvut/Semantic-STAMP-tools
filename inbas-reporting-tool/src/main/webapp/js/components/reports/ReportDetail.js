@@ -10,6 +10,7 @@ var DateTimePicker = require('react-bootstrap-datetimepicker');
 var Input = require('../Input');
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
+var InitialReports = require('./../initialreport/InitialReports');
 var ReportStatements = require('./ReportStatements');
 var OccurrenceSeverity = require('./OccurrenceSeverity');
 var Mask = require('../Mask');
@@ -129,6 +130,12 @@ var ReportDetail = React.createClass({
                     {this.renderAuthor()}
 
                     {this.renderLastEdited()}
+
+                    <div className='row'>
+                        <div className='col-xs-12'>
+                            <InitialReports report={report} onAttributeChange={this.onAttributeChange}/>
+                        </div>
+                    </div>
 
                     <div className='row'>
                         <div className='col-xs-12'>
