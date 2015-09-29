@@ -1,5 +1,5 @@
 /**
- * Created by kidney on 7/7/15.
+ * @jsx
  */
 
 'use strict';

@@ -6,17 +6,9 @@ jest.dontMock('../../js/components/initialreport/Steps');
 
 describe('InitialReports component tests', function () {
 
-    var React,
-        TestUtils,
-        ShallowRenderer,
-        InitialReports;
-
-    beforeEach(function () {
-        React = require('react/addons');
-        TestUtils = React.addons.TestUtils;
-        ShallowRenderer = TestUtils.createRenderer();
+    var React = require('react/addons'),
+        TestUtils = React.addons.TestUtils,
         InitialReports = require('../../js/components/initialreport/InitialReports');
-    });
 
     it('Opens initial report add dialog on Add button click', function () {
         var reports = TestUtils.renderIntoDocument(<InitialReports report={{}} onAttributeChange={function() {}}/>);
@@ -29,8 +21,10 @@ describe('InitialReports component tests', function () {
 
     it('Adds new initial report when wizard is submitted', function () {
         var callbacks = {
-            onAttributeChange: function () {},
-            onClose: function () {}
+            onAttributeChange: function () {
+            },
+            onClose: function () {
+            }
         };
         spyOn(callbacks, 'onAttributeChange');
         spyOn(callbacks, 'onClose');
@@ -44,10 +38,12 @@ describe('InitialReports component tests', function () {
         expect(callbacks.onClose).toHaveBeenCalled();
     });
 
-    it('Updates initial reports when editing one is finished', function() {
+    it('Updates initial reports when editing one is finished', function () {
         var callbacks = {
-            onAttributeChange: function () {},
-            onClose: function () {}
+            onAttributeChange: function () {
+            },
+            onClose: function () {
+            }
         };
         spyOn(callbacks, 'onAttributeChange');
         spyOn(callbacks, 'onClose');

@@ -1,5 +1,5 @@
 /**
- * Created by ledvima1 on 25.6.15.
+ * @jsx
  */
 
 'use strict';

@@ -1,5 +1,5 @@
 /**
- * @author kidney
+ * @jsx
  */
 
 'use strict';

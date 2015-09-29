@@ -38,7 +38,7 @@
     "build-js": "browserify . -t [envify --NODE_ENV production] | uglifyjs -cm > ../../../profiles/production/js/bundle.min.js",
     "build-css": "cleancss -d -o ../../../profiles/production/resources/css/inbas-audit.min.css resources/css/inbas-audit.css",
     "build": "npm run build-css & npm run build-js",
-    "test": "jest",
+    "test": "jest tests/__tests__",
 
     "prebuild": "npm install"
   },
@@ -50,7 +50,7 @@
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/tests/preprocessor.js",
-    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react"],
+    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react", "<rootDir>/node_modules/reflux"],
     "setupTestFrameworkScriptFile": "<rootDir>/tests/setup-jasmine-env.js"
   },
   "author": "Martin Ledvinka"

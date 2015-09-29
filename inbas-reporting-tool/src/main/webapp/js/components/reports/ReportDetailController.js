@@ -1,3 +1,7 @@
+/**
+ * @jsx
+ */
+
 'use strict';
 
 var React = require('react');
@@ -25,10 +29,9 @@ var ReportDetailController = React.createClass({
     },
 
     initNewReport: function () {
-        // TODO This needs to be tested
-        var report = {};
-        if (RouterStore.getTransitionPayload('report_new')) {
-            report = RouterStore.getTransitionPayload('report_new');
+        var report = RouterStore.getTransitionPayload('report_new');
+        if (!report) {
+            report = {};
         }
         report.occurrenceTime = Date.now();
         return report;

@@ -1,3 +1,7 @@
+/**
+ * @jsx
+ */
+
 'use strict';
 
 var React = require('react');
@@ -42,6 +46,7 @@ var Factors = React.createClass({
         gantt.config.fit_tasks = true;
         gantt.config.duration_unit = 'minute';
         gantt.config.duration_step = 1;
+        gantt.config.min_duration = 60 * 1000;  // Duration in millis
         gantt.config.scroll_on_click = true;
         gantt.config.show_errors = false;   // Get rid of errors in case the grid has to resize
         gantt.config.drag_progress = false;

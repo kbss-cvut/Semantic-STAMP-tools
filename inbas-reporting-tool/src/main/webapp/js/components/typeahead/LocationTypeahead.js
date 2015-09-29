@@ -1,5 +1,5 @@
 /**
- * @author ledvima1
+ * @jsx
  */
 
 'use strict';
