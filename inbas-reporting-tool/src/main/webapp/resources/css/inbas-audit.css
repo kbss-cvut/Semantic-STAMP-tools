@@ -223,3 +223,18 @@ td.actions button {
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
+
+.gantt-zoom {
+    border: 1px solid #cecece;
+    border-top: none;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.gantt-zoom-label {
+    float: left;
+    margin: 10px 0;
+    padding: 0 15px;
+}

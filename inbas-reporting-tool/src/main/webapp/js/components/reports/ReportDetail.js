@@ -103,8 +103,9 @@ var ReportDetail = React.createClass({
     },
 
     renderDetail: function () {
-        var report = this.props.report;
-        var loading = this.state.submitting;
+        var report = this.props.report,
+            loading = this.state.submitting,
+            investigation = this.renderInvestigationButton();
         return (
             <Panel header='Preliminary Occurrence Report'>
                 <form>
@@ -159,8 +160,7 @@ var ReportDetail = React.createClass({
                                 ref='submit'
                                 onClick={this.onSubmit}>{loading ? 'Submitting...' : 'Submit'}</Button>
                         <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
-                        <Button bsStyle='primary' bsSize='small' onClick={this.investigate}
-                                title='Start investigation based on this report'>Investigate</Button>
+                        {investigation}
                     </div>
 
                     {this.renderError()}
@@ -203,6 +203,14 @@ var ReportDetail = React.createClass({
                 {text}
             </div>
         );
+    },
+
+    renderInvestigationButton: function () {
+        if (this.isReportNew()) {
+            return null;
+        }
+        return (<Button bsStyle='primary' bsSize='small' onClick={this.investigate}
+                        title='Start investigation based on this report'>Investigate</Button>);
     }
 });
 
