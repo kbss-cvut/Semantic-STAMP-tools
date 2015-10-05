@@ -1,12 +1,12 @@
-Upgrade to react-router 1.0.0
 Timeline granularity in the gantt component
     - do we want to add seconds?
-    - Add zooming on timeline?
     - When a link is added (or updated), ask the user what kind of link it is. Use colors to differentiate between causes and mitigates
+Create proper investigation screen
 Occurrences should have start and end time
 Disable fuzzy string matching in autocomplete
         - requires writing our own string matching function
 Add loss of separation wizard
+Upgrade to react-router 1.0.0
 Show autocomplete results as tree when appropriate
         - Try using react-bootstrap-treeview
 Create tests for the app

@@ -18,11 +18,11 @@ function lightboxHeader(startDate, endDate, event) {
  * Initializes time scale in seconds.
  */
 function initSecondsScale() {
-    gantt.date.second_start = function(date) {
+    gantt.date.second_start = function (date) {
         date.setMilliseconds(0);
         return date;
     };
-    gantt.date.add_second = function(date, inc) {
+    gantt.date.add_second = function (date, inc) {
         return new Date(date.valueOf() + 1000 * inc);
     }
 }
@@ -69,6 +69,44 @@ function linkAdded(id, link) {
     console.log(id);
 }
 
+function taskAdded(id) {
+    resizeParentTask(id);
+}
+
+function taskDragged(id, mode) {
+    if (mode !== 'resize') {
+        return;
+    }
+    resizeParentTask(id);
+}
+
+/**
+ * Resizes parent task (and recursively all ancestor tasks) so that they always contain all of their subtasks
+ * (time-wise).
+ * @param taskId The last updated task
+ * @param preventRefresh Whether gantt data refresh should be prevented
+ */
+function resizeParentTask(taskId, preventRefresh) {
+    var task = gantt.getTask(taskId),
+        parent;
+    if (!task.parent) {
+        return;
+    }
+    parent = gantt.getTask(task.parent);
+    if (task.start_date < parent.start_date) {
+        parent.start_date = task.start_date;
+    }
+    if (task.end_date > parent.end_date) {
+        parent.end_date = task.end_date;
+    }
+    if (parent.parent) {
+        resizeParentTask(parent.id, true);
+    }
+    if (!preventRefresh) {
+        gantt.refreshData();
+    }
+}
+
 var Factors = React.createClass({
 
     propTypes: {
@@ -84,10 +122,6 @@ var Factors = React.createClass({
     componentDidMount: function () {
         this.configureGantt();
         gantt.init('factors_gantt');
-        gantt.attachEvent('onTaskCreated', function (task) {
-            task.text = '';
-            return true;
-        });
         this.addOccurrenceEvent();
     },
 
@@ -107,13 +141,19 @@ var Factors = React.createClass({
         gantt.config.drag_progress = false;
         gantt.templates.lightbox_header = lightboxHeader;
         gantt.attachEvent('onAfterLinkAdd', linkAdded);
+        gantt.attachEvent('onTaskCreated', function (task) {
+            task.text = '';
+            return true;
+        });
+        gantt.attachEvent('onAfterTaskAdd', taskAdded);
+        gantt.attachEvent('onAfterTaskDrag', taskDragged);
         initSecondsScale();
     },
 
     addOccurrenceEvent: function () {
         var occurrence = this.props.occurrence;
         gantt.addTask({
-            id: 1,
+            id: Date.now(),
             text: occurrence.name,
             start_date: new Date(occurrence.occurrenceTime),
             duration: 1,
