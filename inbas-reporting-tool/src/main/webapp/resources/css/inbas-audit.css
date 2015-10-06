@@ -238,3 +238,9 @@ td.actions button {
     margin: 10px 0;
     padding: 0 15px;
 }
+
+.gantt_grid_head_add {
+    background-image: none;
+    cursor: default;
+    pointer-events: none;
+}

@@ -1,7 +1,7 @@
 /**
  * @author ledvima1
  */
-    'use strict';
+'use strict';
 
 /**
  * Common propositions that should not be capitalized
@@ -19,7 +19,7 @@ var Utils = {
      * Formats the specified date into DD-MM-YY HH:mm
      * @param date The date to format
      */
-    formatDate: function(date) {
+    formatDate: function (date) {
         var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate().toString();
         var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1).toString();
         var year = (date.getFullYear() % 100).toString();
@@ -34,7 +34,7 @@ var Utils = {
      *
      * Replaces underscores with spaces. And if capitalize is selected, capitalizes the words.
      */
-    constantToString: function(constant, capitalize) {
+    constantToString: function (constant, capitalize) {
         if (!capitalize) {
             return constant.replace(/_/g, ' ');
         }
@@ -50,6 +50,45 @@ var Utils = {
             words[i] = word.charAt(0) + word.substring(1).toLowerCase();
         }
         return words.join(' ');
+    },
+
+    /**
+     * Converts the specified time value from one time unit to the other.
+     *
+     * Currently supported units are seconds, minutes and hours. When converting to larger units (e.g. from seconds to
+     * minutes), the result is rounded to integer.
+     *
+     * @param fromUnit Unit to convert from
+     * @param toUnit Target unit
+     * @param value The value to convert
+     * @return {*} Converted value
+     */
+    convertTime: function (fromUnit, toUnit, value) {
+        if (fromUnit === toUnit) {
+            return value;
+        }
+        switch (fromUnit) {
+            case 'second':
+                if (toUnit === 'minute') {
+                    return Math.round(value / 60);
+                } else {
+                    return Math.round(value / 60 / 60);
+                }
+            case 'minute':
+                if (toUnit === 'second') {
+                    return 60 * value;
+                } else {
+                    return Math.round(value / 60);
+                }
+            case 'hour':
+                if (toUnit === 'second') {
+                    return 60 * 60 * value;
+                } else {
+                    return 60 * value;
+                }
+            default:
+                return value;
+        }
     }
 };
 

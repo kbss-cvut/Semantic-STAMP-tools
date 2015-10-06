@@ -6,8 +6,11 @@
 
 var React = require('react');
 var Input = require('../Input');
+var Utils = require('../../utils/Utils');
 
 var DATE_FORMAT = '%d-%m-%y %H:%i';
+
+var occurrenceGanttId = null;
 
 function lightboxHeader(startDate, endDate, event) {
     var text = event.text && !event.$new ? event.text.substr(0, 70) : 'New Event';
@@ -66,12 +69,15 @@ function setGanttScale(scale) {
 }
 
 function taskAdded(id, item) {
+    if (!item.parent) {
+        item.parent = occurrenceGanttId;
+    }
     resizeParentTask(id);
     item.durationUnit = gantt.config.duration_unit;
 }
 
 function taskDragged(id, mode) {
-    if (mode !== 'resize') {
+    if (mode !== 'resize' && mode !== 'move') {
         return;
     }
     resizeParentTask(id);
@@ -130,31 +136,7 @@ function setLightboxDurationUnit(taskId) {
 
 function convertTaskDurationToCurrentUnit(task) {
     var targetUnit = gantt.config.duration_unit;
-    if (task.durationUnit === targetUnit) {
-        return task.duration;
-    }
-    switch (task.durationUnit) {
-        case 'second':
-            if (targetUnit === 'minute') {
-                return Math.round(task.duration / 60);
-            } else {
-                return Math.round(task.duration / 60 / 60);
-            }
-        case 'minute':
-            if (targetUnit === 'second') {
-                return 60 * task.duration;
-            } else {
-                return Math.round(task.duration / 60);
-            }
-        case 'hour':
-            if (targetUnit === 'second') {
-                return 60 * 60 * task.duration;
-            } else {
-                return 60 * task.duration;
-            }
-        default:
-            return task.duration;
-    }
+    return Utils.convertTime(task.durationUnit, targetUnit, task.duration);
 }
 
 var Factors = React.createClass({
@@ -172,6 +154,7 @@ var Factors = React.createClass({
     componentDidMount: function () {
         this.configureGantt();
         gantt.init('factors_gantt');
+        gantt.clearAll();
         this.addOccurrenceEvent();
     },
 
@@ -204,14 +187,16 @@ var Factors = React.createClass({
     },
 
     addOccurrenceEvent: function () {
-        var occurrence = this.props.occurrence;
+        var occurrence = this.props.occurrence,
+            id = Date.now();
         gantt.addTask({
-            id: Date.now(),
+            id: id,
             text: occurrence.name,
             start_date: new Date(occurrence.occurrenceTime),
             duration: 1,
             readonly: true
         });
+        occurrenceGanttId = id;
     },
 
     onScaleChange: function (e) {
