@@ -244,3 +244,39 @@ td.actions button {
     cursor: default;
     pointer-events: none;
 }
+
+.gantt-link-causes {
+    background-color: #ff0000;
+}
+
+.gantt_task_link.gantt-link-causes .gantt_line_wrapper div {
+    background-color: #ff0000;
+}
+
+.gantt_task_link.gantt-link-causes:hover .gantt_line_wrapper div {
+    box-shadow: 0 0 5px 0 #ff0000;
+}
+
+.gantt_task_link.gantt-link-causes .gantt_link_arrow_right {
+    border-left-color: #ff0000;
+}
+
+.gantt_task_link.gantt-link-causes .gantt_link_arrow_left {
+    border-right-color: #ff0000;
+}
+
+.gantt_task_link.gantt-link-mitigates .gantt_line_wrapper div {
+    background-color: #00ff00;
+}
+
+.gantt_task_link.gantt-link-mitigates:hover .gantt_line_wrapper div {
+    box-shadow: 0 0 5px 0 #00ff00;
+}
+
+.gantt_task_link.gantt-link-mitigates .gantt_link_arrow_right {
+    border-left-color: #00ff00;
+}
+
+.gantt_task_link.gantt-link-mitigates .gantt_link_arrow_left {
+    border-right-color: #00ff00;
+}

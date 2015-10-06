@@ -69,7 +69,7 @@ function setGanttScale(scale) {
 }
 
 function taskAdded(id, item) {
-    if (!item.parent) {
+    if (id !== occurrenceGanttId && !item.parent) {
         item.parent = occurrenceGanttId;
     }
     resizeParentTask(id);
@@ -139,6 +139,19 @@ function convertTaskDurationToCurrentUnit(task) {
     return Utils.convertTime(task.durationUnit, targetUnit, task.duration);
 }
 
+var linkcnt = 0;
+
+function beforeLinkAdded(linkId, link) {
+    // TODO Show a dialog to select link type
+    if (linkcnt % 2 === 0) {
+        link.factorType = 'cause';
+    } else {
+        link.factorType = 'mitigate';
+    }
+    linkcnt++;
+    return true;
+}
+
 var Factors = React.createClass({
 
     propTypes: {
@@ -154,6 +167,13 @@ var Factors = React.createClass({
     componentDidMount: function () {
         this.configureGantt();
         gantt.init('factors_gantt');
+        gantt.templates.link_class = function (link) {
+            if (link.factorType === 'cause') {
+                return 'gantt-link-causes';
+            } else {
+                return 'gantt-link-mitigates';
+            }
+        };
         gantt.clearAll();
         this.addOccurrenceEvent();
     },
@@ -172,6 +192,8 @@ var Factors = React.createClass({
         gantt.config.scroll_on_click = true;
         gantt.config.show_errors = false;   // Get rid of errors in case the grid has to resize
         gantt.config.drag_progress = false;
+        gantt.config.link_line_width = 3;
+        gantt.config.link_arrow_size = 8;
         gantt.templates.lightbox_header = lightboxHeader;
         gantt.attachEvent('onTaskCreated', function (task) {
             task.text = '';
@@ -182,6 +204,7 @@ var Factors = React.createClass({
         gantt.attachEvent('onAfterTaskUpdate', function (id, item) {
             item.durationUnit = gantt.config.duration_unit;
         });
+        gantt.attachEvent('onBeforeLinkAdd', beforeLinkAdded);
         gantt.attachEvent('onLightbox', setLightboxDurationUnit);
         initSecondsScale();
     },
