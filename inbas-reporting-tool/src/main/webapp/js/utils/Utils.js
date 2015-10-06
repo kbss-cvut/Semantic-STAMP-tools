@@ -16,18 +16,17 @@ var WORD_LENGTH_THRESHOLD = 4;
 
 var Utils = {
     /**
-     * Formats the specified date into DD-MM-YY hh:mm A
+     * Formats the specified date into DD-MM-YY HH:mm
      * @param date The date to format
      */
     formatDate: function(date) {
         var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate().toString();
         var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1).toString();
         var year = (date.getFullYear() % 100).toString();
-        var h = date.getHours() % 12;
+        var h = date.getHours();
         var hour = h < 10 ? '0' + h : h.toString();
-        var period = date.getHours() >= 12 ? 'PM' : 'AM';
         var minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes().toString();
-        return (day + '-' + month + '-' + year + ' ' + hour + ':' + minute + ' ' + period);
+        return (day + '-' + month + '-' + year + ' ' + hour + ':' + minute);
     },
 
     /**
