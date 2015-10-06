@@ -1,6 +1,7 @@
 Timeline granularity in the gantt component
-    - do we want to add seconds?
+    - enable duration in lightbox in seconds
     - When a link is added (or updated), ask the user what kind of link it is. Use colors to differentiate between causes and mitigates
+Datetime picker is missing seconds scale
 Create proper investigation screen
 Occurrences should have start and end time
 Disable fuzzy string matching in autocomplete

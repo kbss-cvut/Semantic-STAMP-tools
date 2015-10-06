@@ -7,7 +7,7 @@
 var React = require('react');
 var Input = require('../Input');
 
-var DATE_FORMAT = '%d-%m-%y %h:%i %A';
+var DATE_FORMAT = '%d-%m-%y %H:%i';
 
 function lightboxHeader(startDate, endDate, event) {
     var text = event.text && !event.$new ? event.text.substr(0, 70) : 'New Event';
@@ -31,7 +31,7 @@ function setGanttScale(scale) {
     switch (scale) {
         case 'minute':
             gantt.config.scale_unit = 'minute';
-            gantt.config.date_scale = '%h:%i %A';
+            gantt.config.date_scale = '%H:%i';
             gantt.config.duration_unit = 'minute';
             gantt.config.min_duration = 60 * 1000;  // Duration in millis
             gantt.config.scale_height = 30;
@@ -40,7 +40,7 @@ function setGanttScale(scale) {
             break;
         case 'hour':
             gantt.config.scale_unit = 'hour';
-            gantt.config.date_scale = '%h %A';
+            gantt.config.date_scale = '%H';
             gantt.config.duration_unit = 'hour';
             gantt.config.min_duration = 60 * 60 * 1000;  // Duration in millis
             gantt.config.scale_height = 30;
@@ -50,12 +50,12 @@ function setGanttScale(scale) {
         case 'second':
             gantt.config.scale_unit = 'second';
             gantt.config.date_scale = '%s';
-            gantt.config.duration_unit = 'second';  // TODO This does not work in the lightbox form
+            gantt.config.duration_unit = 'second';
             gantt.config.min_duration = 1000;  // Duration in millis
             gantt.config.scale_height = 54;
             gantt.config.min_column_width = 50;
             gantt.config.subscales = [
-                {unit: 'minute', step: 1, date: '%h:%i %A'}
+                {unit: 'minute', step: 1, date: '%H:%i'}
             ];
             break;
         default:
@@ -65,12 +65,9 @@ function setGanttScale(scale) {
 
 }
 
-function linkAdded(id, link) {
-    console.log(id);
-}
-
-function taskAdded(id) {
+function taskAdded(id, item) {
     resizeParentTask(id);
+    item.durationUnit = gantt.config.duration_unit;
 }
 
 function taskDragged(id, mode) {
@@ -107,6 +104,59 @@ function resizeParentTask(taskId, preventRefresh) {
     }
 }
 
+function setLightboxDurationUnit(taskId) {
+    // Don't do this at home, kids
+    var durationContainer = document.getElementsByClassName('gantt_duration')[0],
+        durationInput = durationContainer.childNodes[1],
+        durationUnitTextNode = durationContainer.childNodes[3],
+        task = gantt.getTask(taskId);
+    durationInput.value = convertTaskDurationToCurrentUnit(task);
+    switch (gantt.config.duration_unit) {
+        case 'minute':
+            durationUnitTextNode.textContent = ' Minutes ';
+            break;
+        case 'hour':
+            durationUnitTextNode.textContent = ' Hours ';
+            break;
+        case 'second':
+            durationUnitTextNode.textContent = ' Seconds ';
+            break;
+        default:
+            console.warn('Unknown duration unit ' + gantt.config.duration_unit);
+            break;
+    }
+    return true;
+}
+
+function convertTaskDurationToCurrentUnit(task) {
+    var targetUnit = gantt.config.duration_unit;
+    if (task.durationUnit === targetUnit) {
+        return task.duration;
+    }
+    switch (task.durationUnit) {
+        case 'second':
+            if (targetUnit === 'minute') {
+                return Math.round(task.duration / 60);
+            } else {
+                return Math.round(task.duration / 60 / 60);
+            }
+        case 'minute':
+            if (targetUnit === 'second') {
+                return 60 * task.duration;
+            } else {
+                return Math.round(task.duration / 60);
+            }
+        case 'hour':
+            if (targetUnit === 'second') {
+                return 60 * 60 * task.duration;
+            } else {
+                return 60 * task.duration;
+            }
+        default:
+            return task.duration;
+    }
+}
+
 var Factors = React.createClass({
 
     propTypes: {
@@ -140,13 +190,16 @@ var Factors = React.createClass({
         gantt.config.show_errors = false;   // Get rid of errors in case the grid has to resize
         gantt.config.drag_progress = false;
         gantt.templates.lightbox_header = lightboxHeader;
-        gantt.attachEvent('onAfterLinkAdd', linkAdded);
         gantt.attachEvent('onTaskCreated', function (task) {
             task.text = '';
             return true;
         });
         gantt.attachEvent('onAfterTaskAdd', taskAdded);
         gantt.attachEvent('onAfterTaskDrag', taskDragged);
+        gantt.attachEvent('onAfterTaskUpdate', function (id, item) {
+            item.durationUnit = gantt.config.duration_unit;
+        });
+        gantt.attachEvent('onLightbox', setLightboxDurationUnit);
         initSecondsScale();
     },
 
