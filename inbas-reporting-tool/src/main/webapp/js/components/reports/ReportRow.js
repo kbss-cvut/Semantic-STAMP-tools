@@ -57,7 +57,7 @@ var ReportRow = React.createClass({
                 <td style={verticalAlign} className='actions'>
                     <Button bsStyle='primary' bsSize='small' title='Edit this occurrence report'
                             onClick={this.onEditClick}>Edit</Button>
-                    <Button bsStyle='danger' bsSize='small' title='Delete this occurrence report'
+                    <Button bsStyle='warning' bsSize='small' title='Delete this occurrence report'
                             onClick={this.onDeleteClick}>Delete</Button>
                     <Modal show={this.state.modalOpen} onHide={this.onCloseModal}>
                         <Modal.Header closeButton>

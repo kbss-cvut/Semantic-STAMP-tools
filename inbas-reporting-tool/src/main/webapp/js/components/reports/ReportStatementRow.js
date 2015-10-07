@@ -31,7 +31,7 @@ var ReportStatementRow = React.createClass({
                 <Button onClick={this.onEdit} title='Edit statement' bsSize='small' bsStyle='primary'>
                     Edit
                 </Button>
-                <Button onClick={this.onRemove} title='Remove statement' bsSize='small' bsStyle='danger'>
+                <Button onClick={this.onRemove} title='Remove statement' bsSize='small' bsStyle='warning'>
                     Delete
                 </Button>
             </td>);
