@@ -225,7 +225,6 @@ var Factors = React.createClass({
         var link = this.state.currentLink;
         link.factorType = e.target.value;
         gantt.addLink(link);
-        gantt.render();
         this.onCloseLinkTypeDialog();
     },
 
@@ -246,18 +245,37 @@ var Factors = React.createClass({
                 {this.renderLinkTypeDialog()}
                 <div id='factors_gantt' className='factors-gantt'/>
                 <div className='gantt-zoom'>
-                    <div className='gantt-zoom-label bold'>Scale:</div>
-                    <div className='col-xs-1'>
-                        <Input type='radio' label='Seconds' value='second' checked={this.state.scale == 'second'}
-                               onChange={this.onScaleChange}/>
+                    <div className='col-xs-4'>
+                        <div className='col-xs-3 gantt-zoom-label bold'>Scale:</div>
+                        <div className='col-xs-3'>
+                            <Input type='radio' label='Seconds' value='second' title='Click to select scale in seconds'
+                                   checked={this.state.scale == 'second'}
+                                   onChange={this.onScaleChange}/>
+                        </div>
+                        <div className='col-xs-3'>
+                            <Input type='radio' label='Minutes' value='minute' title='Click to select scale in minutes'
+                                   checked={this.state.scale == 'minute'}
+                                   onChange={this.onScaleChange}/>
+                        </div>
+                        <div className='col-xs-3'>
+                            <Input type='radio' label='Hours' value='hour' title='Click to select scale in hours'
+                                   checked={this.state.scale == 'hour'} onChange={this.onScaleChange}/>
+                        </div>
                     </div>
-                    <div className='col-xs-1'>
-                        <Input type='radio' label='Minutes' value='minute' checked={this.state.scale == 'minute'}
-                               onChange={this.onScaleChange}/>
-                    </div>
-                    <div className='col-xs-1'>
-                        <Input type='radio' label='Hours' value='hour' checked={this.state.scale == 'hour'}
-                               onChange={this.onScaleChange}/>
+
+                    <div className='col-xs-6'>&nbsp;</div>
+
+                    <div className='col-xs-2 gantt-zoom-label'>
+                        <div className='col-xs-6' style={{verticalAlign: 'middle'}}>
+                            <div className='gantt-link-causes'
+                                 style={{height: '4px', width: '2em', float: 'left', margin: '8px'}}/>
+                            <div style={{float: 'left'}}>Causes</div>
+                        </div>
+                        <div className='col-xs-6'>
+                            <div className='gantt-link-mitigates'
+                                 style={{height: '4px', width: '2em', float: 'left', margin: '8px'}}/>
+                            <div style={{float: 'left'}}>Mitigates</div>
+                        </div>
                     </div>
                 </div>
             </div>);

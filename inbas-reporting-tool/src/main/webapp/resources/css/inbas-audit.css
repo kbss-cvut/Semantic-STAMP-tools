@@ -234,9 +234,7 @@ td.actions button {
 }
 
 .gantt-zoom-label {
-    float: left;
     margin: 10px 0;
-    padding: 0 15px;
 }
 
 .gantt_grid_head_add {
@@ -247,6 +245,10 @@ td.actions button {
 
 .gantt-link-causes {
     background-color: #ff0000;
+}
+
+.gantt-link-mitigates {
+    background-color: #00ff00;
 }
 
 .gantt_task_link.gantt-link-causes .gantt_line_wrapper div {
