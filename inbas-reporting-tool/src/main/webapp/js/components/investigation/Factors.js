@@ -5,7 +5,9 @@
 'use strict';
 
 var React = require('react');
+var Modal = require('react-bootstrap').Modal;
 var Input = require('../Input');
+var Select = require('../Select');
 var Utils = require('../../utils/Utils');
 
 var DATE_FORMAT = '%d-%m-%y %H:%i';
@@ -139,19 +141,6 @@ function convertTaskDurationToCurrentUnit(task) {
     return Utils.convertTime(task.durationUnit, targetUnit, task.duration);
 }
 
-var linkcnt = 0;
-
-function beforeLinkAdded(linkId, link) {
-    // TODO Show a dialog to select link type
-    if (linkcnt % 2 === 0) {
-        link.factorType = 'cause';
-    } else {
-        link.factorType = 'mitigate';
-    }
-    linkcnt++;
-    return true;
-}
-
 var Factors = React.createClass({
 
     propTypes: {
@@ -160,7 +149,9 @@ var Factors = React.createClass({
 
     getInitialState: function () {
         return {
-            scale: 'minute'
+            scale: 'minute',
+            showLinkTypeDialog: false,
+            currentLink: null
         }
     },
 
@@ -204,7 +195,7 @@ var Factors = React.createClass({
         gantt.attachEvent('onAfterTaskUpdate', function (id, item) {
             item.durationUnit = gantt.config.duration_unit;
         });
-        gantt.attachEvent('onBeforeLinkAdd', beforeLinkAdded);
+        gantt.attachEvent('onBeforeLinkAdd', this.onLinkAdded);
         gantt.attachEvent('onLightbox', setLightboxDurationUnit);
         initSecondsScale();
     },
@@ -222,6 +213,26 @@ var Factors = React.createClass({
         occurrenceGanttId = id;
     },
 
+    onLinkAdded: function (linkId, link) {
+        if (link.factorType) {
+            return true;
+        }
+        this.setState({currentLink: link, showLinkTypeDialog: true});
+        return false;
+    },
+
+    onLinkTypeSelect: function (e) {
+        var link = this.state.currentLink;
+        link.factorType = e.target.value;
+        gantt.addLink(link);
+        gantt.render();
+        this.onCloseLinkTypeDialog();
+    },
+
+    onCloseLinkTypeDialog: function () {
+        this.setState({currentLink: null, showLinkTypeDialog: false});
+    },
+
     onScaleChange: function (e) {
         var scale = e.target.value;
         this.setState({scale: scale});
@@ -232,6 +243,7 @@ var Factors = React.createClass({
     render: function () {
         return (
             <div>
+                {this.renderLinkTypeDialog()}
                 <div id='factors_gantt' className='factors-gantt'/>
                 <div className='gantt-zoom'>
                     <div className='gantt-zoom-label bold'>Scale:</div>
@@ -249,6 +261,23 @@ var Factors = React.createClass({
                     </div>
                 </div>
             </div>);
+    },
+
+    renderLinkTypeDialog: function () {
+        var options = [
+            {value: 'cause', label: 'Causes'},
+            {value: 'mitigate', label: 'Mitigates'}
+        ];
+        return (
+            <Modal show={this.state.showLinkTypeDialog} bsSize='small' onHide={this.onCloseLinkTypeDialog}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Connection type?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Select title='Select link type' onChange={this.onLinkTypeSelect} options={options}/>
+                </Modal.Body>
+            </Modal>
+        );
     }
 });
 
