@@ -24,7 +24,7 @@ var RecentlyEditedReports = React.createClass({
     },
 
     render: function () {
-        var title = (<h3>Recently Edited/Added Reports</h3>),
+        var title = (<h5>Recently Edited/Added Reports</h5>),
             recentReports = this.renderRecentReports(this.filterRecentReports()),
             content = null;
         if (recentReports.length > 0) {
@@ -44,7 +44,7 @@ var RecentlyEditedReports = React.createClass({
             content = (<div>There are no occurrence reports, yet.</div>);
         }
         return (
-            <Panel header={title} style={{height: '100%'}}>
+            <Panel header={title} bsStyle='info' style={{height: '100%'}}>
                 {content}
             </Panel>
         );

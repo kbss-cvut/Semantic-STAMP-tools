@@ -6,6 +6,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
+var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 var Alert = require('react-bootstrap').Alert;
 var assign = require('object-assign');
@@ -107,7 +108,7 @@ var ReportDetail = React.createClass({
             loading = this.state.submitting,
             investigation = this.renderInvestigationButton();
         return (
-            <Panel header='Preliminary Occurrence Report'>
+            <Panel header={<h2>Preliminary Occurrence Report</h2>} bsStyle='primary'>
                 <form>
                     <div className='row'>
                         <div className='col-xs-4'>
@@ -155,13 +156,13 @@ var ReportDetail = React.createClass({
                         </div>
                     </div>
 
-                    <div className='form-group'>
+                    <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
                         <Button bsStyle='success' bsSize='small' disabled={loading}
                                 ref='submit'
                                 onClick={this.onSubmit}>{loading ? 'Submitting...' : 'Submit'}</Button>
                         <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
                         {investigation}
-                    </div>
+                    </ButtonToolbar>
 
                     {this.renderError()}
 

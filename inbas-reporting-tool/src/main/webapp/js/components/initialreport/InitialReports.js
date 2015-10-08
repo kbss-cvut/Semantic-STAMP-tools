@@ -8,6 +8,7 @@ var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 var Button = require('react-bootstrap').Button;
+var Glyphicon = require('react-bootstrap').Glyphicon;
 var assign = require('object-assign');
 
 var InitialReportSteps = require('./Steps');
@@ -80,15 +81,29 @@ var InitialReports = React.createClass({
             this.props.report.initialReports = [];
         }
         var content = this.renderContent();
+        var buttonCls = this.props.report.initialReports.length !== 0 ? 'float-right' : '';
         return (
             <div>
-                <WizardWindow ref='initialReportWizard' {...this.state.wizardProperties} show={this.state.showInitialReportWizard}
-                                                               onHide={this.closeInitialReport}/>
-                <Panel header='Initial Reports'>
+                <WizardWindow ref='initialReportWizard' {...this.state.wizardProperties}
+                              show={this.state.showInitialReportWizard}
+                              onHide={this.closeInitialReport}/>
+                <Panel header={this.renderHeader()} bsStyle='info'>
                     {content}
-                    <Button ref='addInitialReport' bsStyle='primary' bsSize='small' onClick={this.addInitialReport}>Add</Button>
+                    <div className={buttonCls}>
+                        <Button ref='addInitialReport' bsStyle='primary' bsSize='small'
+                                onClick={this.addInitialReport}>
+                            <Glyphicon glyph='plus' style={{margin: '0 5px 0 0'}}/>
+                            Add
+                        </Button>
+                    </div>
                 </Panel>
             </div>
+        );
+    },
+
+    renderHeader: function () {
+        return (
+            <h5>Initial Reports</h5>
         );
     },
 

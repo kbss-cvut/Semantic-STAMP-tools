@@ -7,6 +7,7 @@
 var React = require('react');
 var assign = require('object-assign');
 var Button = require('react-bootstrap').Button;
+var Glyphicon = require('react-bootstrap').Glyphicon;
 var Panel = require('react-bootstrap').Panel;
 
 var ReportStatementsTable = require('./ReportStatementsTable');
@@ -142,10 +143,10 @@ var ReportStatements = React.createClass({
         var correctiveMeasures = this.renderCorrectiveMeasures();
         return (
             <div>
-                <Panel header='Event Type Assessments'>
+                <Panel header={<h5>Event Type Assessments</h5>} bsStyle='info'>
                     {typeAssessments}
                 </Panel>
-                <Panel header='Corrective Measures'>
+                <Panel header={<h5>Corrective Measures</h5>} bsStyle='info'>
                     {correctiveMeasures}
                 </Panel>
                 <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
@@ -158,12 +159,17 @@ var ReportStatements = React.createClass({
         var component = this.initTypeAssessmentsTable();
         var typeWizard = (<EventTypeDialog show={this.state.eventTypeDialogOpen} onHide={this.closeEventTypeDialog}
                                            onTypeSelect={this.onEventTypeSelect}/>);
+        var buttonCls = component ? 'float-right' : '';
         return (
             <div>
                 {component}
-                <Button bsStyle='primary' bsSize='small' title='Add new Event Type Assessment' onClick={this.openEventTypeDialog}>
-                    Add
-                </Button>
+                <div className={buttonCls}>
+                    <Button bsStyle='primary' bsSize='small' title='Add new Event Type Assessment'
+                            onClick={this.openEventTypeDialog}>
+                        <Glyphicon glyph='plus' style={{margin: '0 5px 0 0'}}/>
+                        Add
+                    </Button>
+                </div>
                 {typeWizard}
             </div>
         );
@@ -215,12 +221,17 @@ var ReportStatements = React.createClass({
             };
             component = (<ReportStatementsTable data={data} header={header} keyBase='corrective' handlers={handlers}/>);
         }
+        var buttonCls = component ? 'float-right' : '';
         return (
             <div>
                 {component}
-                <Button bsStyle='primary' bsSize='small' title='Add new Corrective Measure' onClick={this.openCorrectiveMeasureWizard}>
-                    Add
-                </Button>
+                <div className={buttonCls}>
+                    <Button bsStyle='primary' bsSize='small' title='Add new Corrective Measure'
+                            onClick={this.openCorrectiveMeasureWizard}>
+                        <Glyphicon glyph='plus' style={{margin: '0 5px 0 0'}}/>
+                        Add
+                    </Button>
+                </div>
             </div>
         );
     }

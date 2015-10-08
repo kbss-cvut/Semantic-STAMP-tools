@@ -88,10 +88,10 @@ var WizardStep = React.createClass({
         if (this.state.currentError) {
             error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);
         }
-        var title = (<h3>{this.props.title}</h3>);
+        var title = (<h4>{this.props.title}</h4>);
         return (
             <div className='wizard-step'>
-                <Panel header={title} className='wizard-step-content'>
+                <Panel header={title} bsStyle='primary' className='wizard-step-content'>
                     {this.renderComponent()}
                 </Panel>
                 <ButtonToolbar style={{float: 'right'}}>
