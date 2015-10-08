@@ -65,6 +65,7 @@ describe('Tests of the factor dialog', function () {
             },
             origFactor = assign({}, factor),
             details = {
+                eventType: eventType,
                 intruder: {},
                 lvp: 'none',
                 location: 'LKPR31'
@@ -80,7 +81,6 @@ describe('Tests of the factor dialog', function () {
         expect(factor).toEqual(origFactor);
         detail.onSave();
         expect(factor.end_date).toBeDefined();
-        expect(factor.details).toEqual(details);
-        expect(factor.eventType).toEqual(eventType);
+        expect(factor.statement).toEqual(details);
     });
 });

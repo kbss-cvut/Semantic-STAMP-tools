@@ -14,7 +14,7 @@ var FactorDetail = require('./FactorDetail');
 
 var DATE_FORMAT = '%d-%m-%y %H:%i';
 
-var occurrenceGanttId = null;
+var occurrenceEventId = null;
 
 function lightboxHeader(startDate, endDate, event) {
     var text = event.text && !event.$new ? event.text.substr(0, 70) : 'New Event';
@@ -73,8 +73,8 @@ function setGanttScale(scale) {
 }
 
 function taskAdded(id, item) {
-    if (id !== occurrenceGanttId && !item.parent) {
-        item.parent = occurrenceGanttId;
+    if (id !== occurrenceEventId && !item.parent) {
+        item.parent = occurrenceEventId;
     }
     resizeParentTask(id);
 }
@@ -169,7 +169,7 @@ var Factors = React.createClass({
             }
         };
         gantt.clearAll();
-        this.addOccurrenceEvent();
+        this.addEvents();
     },
 
     configureGantt: function () {
@@ -204,15 +204,33 @@ var Factors = React.createClass({
 
     addOccurrenceEvent: function () {
         var occurrence = this.props.occurrence,
-            id = Date.now();
-        gantt.addTask({
-            id: id,
+            id;
+        id = gantt.addTask({
             text: occurrence.name,
             start_date: new Date(occurrence.occurrenceTime),
             duration: 1,
             readonly: true
         });
-        occurrenceGanttId = id;
+        occurrenceEventId = id;
+    },
+
+    addEvents: function() {
+        this.addOccurrenceEvent();
+        var eventAssessments = this.props.occurrence.typeAssessments,
+            startDate = gantt.getTask(occurrenceEventId).start_date;
+        if (!eventAssessments) {
+            return;
+        }
+        for (var i = 0, len = eventAssessments.length; i < len; i++) {
+            var evt = eventAssessments[i];
+            gantt.addTask({
+                text: evt.eventType.name,
+                start_date: startDate,
+                duration: 1,
+                parent: occurrenceEventId,
+                statement: evt
+            });
+        }
     },
 
     onLinkAdded: function (linkId, link) {
