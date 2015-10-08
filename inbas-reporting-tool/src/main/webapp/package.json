@@ -50,7 +50,7 @@
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/tests/preprocessor.js",
-    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react", "<rootDir>/node_modules/reflux"],
+    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react", "<rootDir>/node_modules/reflux", "<rootDir>/node_modules/object-assign"],
     "setupTestFrameworkScriptFile": "<rootDir>/tests/setup-jasmine-env.js"
   },
   "author": "Martin Ledvinka"
