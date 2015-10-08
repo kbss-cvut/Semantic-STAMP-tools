@@ -30,21 +30,21 @@ var EventTypeWizardSelect = {
             }
         };
         if (this.wizardSettings[eventType.dtoClass]) {
-            var wizardProperties = this.getExistingWizardProperties(eventType.dtoClass, statement);
+            var wizardProperties = this._getExistingWizardProperties(eventType.dtoClass, statement);
             statement.dtoClass = eventType.dtoClass;
             return wizardProperties;
         }
-        return this.getDefaultWizardProperties(statement);
+        return this._getDefaultWizardProperties(statement);
     },
 
-    getExistingWizardProperties: function(dtoClass, statement) {
+    _getExistingWizardProperties: function(dtoClass, statement) {
         var wizardProperties = assign({}, this.wizardSettings[dtoClass]);
         wizardProperties.steps = wizardProperties.steps.slice();
         wizardProperties.statement = statement;
         return wizardProperties;
     },
 
-    getDefaultWizardProperties: function(statement) {
+    _getDefaultWizardProperties: function(statement) {
         return {
             steps: DefaultWizardSteps.slice(),
             title: 'Default Event Type Assessment',
@@ -54,7 +54,7 @@ var EventTypeWizardSelect = {
 
     getWizardSettingsForStatement: function(statement) {
         if (this.wizardSettings[statement.dtoClass]) {
-            var wizardProperties = this.getExistingWizardProperties(statement.dtoClass, statement);
+            var wizardProperties = this._getExistingWizardProperties(statement.dtoClass, statement);
             if (statement.conflictingAircraft) {
                 wizardProperties.steps.push({
                     name: 'Conflicting Aircraft',
@@ -64,7 +64,7 @@ var EventTypeWizardSelect = {
             }
             return wizardProperties;
         }
-        return this.getDefaultWizardProperties(statement);
+        return this._getDefaultWizardProperties(statement);
     }
 };
 

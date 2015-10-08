@@ -195,6 +195,7 @@ var Factors = React.createClass({
         gantt.attachEvent('onAfterTaskDrag', taskDragged);
         gantt.attachEvent('onAfterTaskUpdate', function (id, item) {
             item.durationUnit = gantt.config.duration_unit;
+            resizeParentTask(id);
         });
         gantt.attachEvent('onBeforeLinkAdd', this.onLinkAdded);
         gantt.attachEvent('onLightbox', setLightboxDurationUnit);

@@ -13,6 +13,9 @@ var Input = require('../Input');
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
 var Utils = require('../../utils/Utils');
 
+var EventTypeWizardSelector = require('../reports/wizard/event-type/EventTypeWizardSelector');
+var WizardWindow = require('../wizard/WizardWindow');
+
 var scaleUnits = {
     'second': 'Seconds',
     'minute': 'Minutes',
@@ -37,7 +40,12 @@ var FactorDetail = React.createClass({
         return {
             showDeleteDialog: false,
             eventType: this.props.factor.eventType,
-            duration: convertDurationToCurrentUnit(this.props.factor)
+            startDate: this.props.factor.start_date.getTime(),
+            duration: convertDurationToCurrentUnit(this.props.factor),
+            details: this.props.factor.details,
+
+            isWizardOpen: false,
+            wizardProperties: null
         };
     },
 
@@ -74,11 +82,41 @@ var FactorDetail = React.createClass({
         this.setState({eventType: option});
     },
 
+    onDateChange: function (date) {
+        this.setState({startDate: Number(date)});
+    },
+
+    onOpenDetails: function () {
+        var wizardProps = !this.state.details ? EventTypeWizardSelector.getWizardSettings(this.state.eventType)
+            : EventTypeWizardSelector.getWizardSettingsForStatement(this.state.details);
+        wizardProps.onFinish = this.onUpdateFactorDetails;
+        this.openDetailsWizard(wizardProps);
+    },
+
+    openDetailsWizard: function (wizardProperties) {
+        this.setState({
+            isWizardOpen: true,
+            wizardProperties: wizardProperties
+        });
+    },
+
+    onCloseDetails: function () {
+        this.setState({isWizardOpen: false});
+    },
+
+    onUpdateFactorDetails: function (data, closeCallback) {
+        var details = data.statement;
+        this.setState({details: details});
+        closeCallback();
+    },
+
     onSave: function () {
         var factor = this.props.factor;
         factor.eventType = this.state.eventType;
         factor.text = this.state.eventType.name;
+        factor.start_date = new Date(this.state.startDate);
         factor.end_date = gantt.calculateEndDate(factor.start_date, this.state.duration, gantt.config.duration_unit);
+        factor.details = this.state.details;
         this.props.onSave();
     },
 
@@ -90,56 +128,70 @@ var FactorDetail = React.createClass({
             durationPlus = <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon glyph='plus'/></Button>;
 
         return (
-            <Modal show={this.props.show} onHide={this.props.onClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Factor Detail</Modal.Title>
-                </Modal.Header>
+            <div>
+                <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
+                                                               onHide={this.onCloseDetails} enableForwardSkip={true}/>
+                <Modal show={this.props.show} onHide={this.props.onClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Occurrence Factor</Modal.Title>
+                    </Modal.Header>
 
-                <Modal.Body>
-                    {this.renderDeleteDialog()}
-                    <div className='form-group'>
-                        <EventTypeTypeahead label='Event Type' value={eventTypeLabel}
-                                            onSelect={this.onEventTypeChange} focus={true}/>
-                    </div>
-                    <div>
+                    <Modal.Body>
+                        {this.renderDeleteDialog()}
+                        <div className='form-group'>
+                            <EventTypeTypeahead label='Event Type' value={eventTypeLabel}
+                                                onSelect={this.onEventTypeChange} focus={true}/>
+                        </div>
                         <div>
-                            <label className='control-label'>Time period</label>
-                        </div>
-                        <div className='row'>
-                            <div className='col-xs-2 bold' style={{padding: '7px 0 7px 15px'}}>Start time</div>
-                            <div className='col-xs-4 picker-container form-group-sm' style={{padding: '0 15px 0 0'}}>
-                                <DateTimePicker inputFormat='DD-MM-YY HH:mm'
-                                                dateTime={this.props.factor.start_date.getTime().toString()}
-                                                onChange={this.onDateChange}
-                                                inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
+                            <div>
+                                <label className='control-label'>Time period</label>
                             </div>
-                            <div className='col-xs-2 bold' style={{padding: '7px 0 7px 15px'}}>Duration</div>
-                            <div className='col-xs-4' style={{padding: '0 15px 0 0'}}>
-                                <div className='col-xs-7' style={{padding: '0'}}>
-                                    <Input type='text' buttonBefore={durationMinus} buttonAfter={durationPlus}
-                                           value={this.state.duration} onChange={this.onDurationSet}/>
+                            <div className='row'>
+                                <div className='col-xs-2 bold' style={{padding: '7px 0 7px 15px'}}>Start time</div>
+                                <div className='col-xs-4 picker-container form-group-sm'
+                                     style={{padding: '0 15px 0 0'}}>
+                                    <DateTimePicker inputFormat='DD-MM-YY HH:mm'
+                                                    dateTime={this.state.startDate.toString()}
+                                                    onChange={this.onDateChange}
+                                                    inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
                                 </div>
-                                <div className='col-xs-5' style={{padding: '7px 15px'}}>
-                                    {scaleUnits[this.props.scale]}
+                                <div className='col-xs-2 bold' style={{padding: '7px 0 7px 15px'}}>Duration</div>
+                                <div className='col-xs-4' style={{padding: '0 15px 0 0'}}>
+                                    <div className='col-xs-7' style={{padding: '0'}}>
+                                        <Input type='text' buttonBefore={durationMinus} buttonAfter={durationPlus}
+                                               value={this.state.duration} onChange={this.onDurationSet}/>
+                                    </div>
+                                    <div className='col-xs-5' style={{padding: '7px 15px'}}>
+                                        {scaleUnits[this.props.scale]}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </Modal.Body>
+                    </Modal.Body>
 
-                <Modal.Footer>
-                    <Button bsSize='small' bsStyle='success' onClick={this.onSave}
-                            disabled={!this.state.eventType}>Save</Button>
-                    <Button bsSize='small' onClick={this.props.onClose}>Cancel</Button>
-                    {this.renderDeleteButton()}
-                </Modal.Footer>
-            </Modal>
+                    <Modal.Footer>
+                        <Button bsSize='small' bsStyle='success' onClick={this.onSave}
+                                disabled={!this.state.eventType}>Save</Button>
+                        <Button bsSize='small' onClick={this.props.onClose}>Cancel</Button>
+                        {this.renderDeleteButton()}
+                        {this.renderWizardButton()}
+                    </Modal.Footer>
+                </Modal>
+            </div>
         )
     },
 
     renderDeleteButton: function () {
         return this.props.factor.isNew ? null : (
             <Button bsSize='small' bsStyle='warning' onClick={this.onDeleteClick}>Delete</Button>);
+    },
+
+    renderWizardButton: function () {
+        return (
+            <div style={{float: 'left'}}>
+                <Button bsStyle='primary' bsSize='small' onClick={this.onOpenDetails} disabled={!this.state.eventType}>Details</Button>
+            </div>
+        )
     },
 
     renderDeleteDialog: function () {
