@@ -77,7 +77,6 @@ function taskAdded(id, item) {
         item.parent = occurrenceGanttId;
     }
     resizeParentTask(id);
-    item.durationUnit = gantt.config.duration_unit;
 }
 
 function taskDragged(id, mode) {
@@ -174,7 +173,6 @@ var Factors = React.createClass({
     },
 
     configureGantt: function () {
-        var me = this;
         gantt.config.columns = [
             {name: 'text', label: 'Event', width: '*', tree: true},
             {name: 'start_date', label: 'Start time', width: '*', align: 'center'},
@@ -191,11 +189,8 @@ var Factors = React.createClass({
         gantt.config.link_line_width = 3;
         gantt.config.link_arrow_size = 8;
         gantt.templates.lightbox_header = lightboxHeader;
-        gantt.attachEvent('onTaskCreated', function (item) {
-            item.isNew = true;
-            me.setState({showFactorDialog: true, currentFactor: item});
-            return false;
-        });
+        gantt.attachEvent('onTaskCreated', this.onCreateFactor);
+        gantt.attachEvent('onTaskDblClick', this.onEditFactor);
         gantt.attachEvent('onAfterTaskAdd', taskAdded);
         gantt.attachEvent('onAfterTaskDrag', taskDragged);
         gantt.attachEvent('onAfterTaskUpdate', function (id, item) {
@@ -238,9 +233,28 @@ var Factors = React.createClass({
         this.setState({currentLink: null, showLinkTypeDialog: false});
     },
 
+    onCreateFactor: function(item) {
+        item.isNew = true;
+        item.text = '';
+        item.durationUnit = gantt.config.duration_unit;
+        this.setState({showFactorDialog: true, currentFactor: item});
+        return false;
+    },
+
+    onEditFactor: function(id, e) {
+        e.preventDefault();
+        var factor = gantt.getTask(id);
+        this.setState({currentFactor: factor, showFactorDialog: true});
+    },
+
     onSaveFactor: function () {
-        delete this.state.currentFactor.isNew;
-        gantt.addTask(this.state.currentFactor);
+        var factor = this.state.currentFactor;
+        if (factor.isNew) {
+            delete factor.isNew;
+            gantt.addTask(this.state.currentFactor);
+        } else {
+            gantt.updateTask(factor.id);
+        }
         this.onCloseFactorDialog();
     },
 
@@ -265,9 +279,7 @@ var Factors = React.createClass({
     render: function () {
         return (
             <div>
-                <FactorDetail show={this.state.showFactorDialog} factor={this.state.currentFactor}
-                              onClose={this.onCloseFactorDialog} onSave={this.onSaveFactor}
-                              onDelete={this.onDeleteFactor}/>
+                {this.renderFactorDetailDialog()}
                 {this.renderLinkTypeDialog()}
                 <div id='factors_gantt' className='factors-gantt'/>
                 <div className='gantt-zoom'>
@@ -305,6 +317,15 @@ var Factors = React.createClass({
                     </div>
                 </div>
             </div>);
+    },
+
+    renderFactorDetailDialog: function() {
+        if (!this.state.showFactorDialog) {
+            return null;
+        }
+        return (<FactorDetail show={this.state.showFactorDialog} factor={this.state.currentFactor}
+                      onClose={this.onCloseFactorDialog} onSave={this.onSaveFactor}
+                      onDelete={this.onDeleteFactor} scale={this.state.scale}/>);
     },
 
     renderLinkTypeDialog: function () {
