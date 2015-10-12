@@ -10,7 +10,6 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 var Alert = require('react-bootstrap').Alert;
 var assign = require('object-assign');
-var DateTimePicker = require('react-bootstrap-datetimepicker');
 
 var Factors = require('./Factors');
 var BasicOccurrenceInfo = require('../reports/BasicOccurrenceInfo');

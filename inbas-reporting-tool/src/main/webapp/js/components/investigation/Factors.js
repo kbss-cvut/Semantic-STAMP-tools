@@ -9,7 +9,6 @@ var Modal = require('react-bootstrap').Modal;
 var Panel = require('react-bootstrap').Panel;
 var Input = require('../Input');
 var Select = require('../Select');
-var Utils = require('../../utils/Utils');
 
 var FactorDetail = require('./FactorDetail');
 
@@ -90,7 +89,7 @@ function taskDragged(id, mode) {
  */
 function resizeParentTask(taskId, preventRefresh) {
     var task = gantt.getTask(taskId),
-        parent, changed = false;
+        parent;
     if (!task.parent) {
         return;
     }
@@ -154,10 +153,10 @@ var Factors = React.createClass({
                 me.ensureNonZeroDuration(item);
                 gantt.updateTask(item.id);
             }
-        })
+        });
     },
 
-    ensureNonZeroDuration(event) {
+    ensureNonZeroDuration: function(event) {
         if (gantt.calculateDuration(event.start_date, event.end_date) < 1) {
             event.end_date = gantt.calculateEndDate(event.start_date, 1, this.state.scale);
         }
