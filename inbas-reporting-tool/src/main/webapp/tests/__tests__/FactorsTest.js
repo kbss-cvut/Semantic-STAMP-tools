@@ -23,6 +23,8 @@ describe('Factors component tests', function () {
             render: function () {
             },
             getTask: function (taskId) {
+            },
+            open: function() {
             }
         },
         occurrence = {
@@ -71,16 +73,15 @@ describe('Factors component tests', function () {
 
     it('Adds event type assessments from PR into gantt with the same time as the occurrence event and having ' +
         ' the occurrence event as parent', function () {
-        var occurrenceEvt, added = [], parentId = 123456;
-        occurrence.id = parentId;
-        spyOn(gantt, 'addTask').andCallFake(function (arg) {
+        var occurrenceEvt, added = [], parentId;
+        spyOn(gantt, 'addTask').andCallFake(function (item, parent) {
             if (!occurrenceEvt) {
                 // The first added task is the occurrence event
-                arg.id = parentId;
-                occurrenceEvt = arg;
-                return parentId;
+                parentId = item.id;
+                occurrenceEvt = item;
+                return item.id;
             } else {
-                added.push(arg);
+                added.push(item);
             }
         });
         occurrence.typeAssessments = initTypeAssessments();
@@ -127,16 +128,16 @@ describe('Factors component tests', function () {
     }
 
     it('Adds factors with data from the event type assessment', function() {
-        var occurrenceEvt, added = [], parentId = 123456;
+        var occurrenceEvt, added = [], parentId;
         occurrence.typeAssessments = initTypeAssessments();
-        spyOn(gantt, 'addTask').andCallFake(function (arg) {
+        spyOn(gantt, 'addTask').andCallFake(function (item, parent) {
             if (!occurrenceEvt) {
                 // The first added task is the occurrence event
-                arg.id = parentId;
-                occurrenceEvt = arg;
-                return parentId;
+                parentId = item.id;
+                occurrenceEvt = item;
+                return item.id;
             } else {
-                added.push(arg);
+                added.push(item);
             }
         });
         TestUtils.renderIntoDocument(<Factors occurrence={occurrence}/>);

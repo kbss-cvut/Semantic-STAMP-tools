@@ -183,7 +183,7 @@ var Factors = React.createClass({
             start_date: new Date(occurrence.occurrenceTime),
             duration: 1,
             readonly: true
-        });
+        }, null);
     },
 
     addEvents: function() {
