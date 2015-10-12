@@ -25,6 +25,15 @@ describe('Factors component tests', function () {
             getTask: function (taskId) {
             },
             open: function() {
+            },
+            calculateDuration: function() {
+                return 1;
+            },
+            eachTask: function() {
+            },
+            updateTask: function() {
+            },
+            refreshData() {
             }
         },
         occurrence = {
