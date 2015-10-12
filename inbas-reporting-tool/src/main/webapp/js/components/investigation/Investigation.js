@@ -85,7 +85,7 @@ var Investigation = React.createClass({
                     </div>
 
                     <div className='form-group'>
-                        <ReportStatements report={investigation} onChange={this.props.onChange}/>
+                        <ReportStatements report={investigation} onChange={this.props.onChange} show={['correctiveMeasures']}/>
                     </div>
 
                     <div className='row'>

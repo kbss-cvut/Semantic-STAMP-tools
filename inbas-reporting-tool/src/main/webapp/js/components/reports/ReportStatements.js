@@ -19,6 +19,11 @@ var EventTypeFactory = require('../../model/EventTypeFactory');
 
 var ReportStatements = React.createClass({
 
+    propTypes: {
+        report: React.PropTypes.object,
+        show: React.PropTypes.array
+    },
+
     getInitialState: function () {
         return {
             isWizardOpen: false,
@@ -139,20 +144,31 @@ var ReportStatements = React.createClass({
     // Rendering
 
     render: function () {
-        var typeAssessments = this.renderTypeAssessments();
-        var correctiveMeasures = this.renderCorrectiveMeasures();
+        var components = this.renderComponentsToShow();
         return (
             <div>
-                <Panel header={<h5>Event Type Assessments</h5>} bsStyle='info'>
-                    {typeAssessments}
-                </Panel>
-                <Panel header={<h5>Corrective Measures</h5>} bsStyle='info'>
-                    {correctiveMeasures}
-                </Panel>
+                {components}
                 <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
                                                                onHide={this.closeWizard} enableForwardSkip={true}/>
             </div>
         );
+    },
+
+    renderComponentsToShow: function () {
+        var components = [],
+            show = this.props.show;
+        if (!show || show.length === 0) {
+            show = ['typeAssessments', 'correctiveMeasures'];
+        }
+        for (var i = 0, len = show.length; i < len; i++) {
+            var method = 'render' + show[i].charAt(0).toUpperCase() + show[i].substring(1);
+            if (this[method]) {
+                components.push(this[method].call());
+            } else {
+                console.warn('Cannot render statements ' + show[i]);
+            }
+        }
+        return components;
     },
 
     renderTypeAssessments: function () {
@@ -161,7 +177,7 @@ var ReportStatements = React.createClass({
                                            onTypeSelect={this.onEventTypeSelect}/>);
         var buttonCls = component ? 'float-right' : '';
         return (
-            <div>
+            <Panel header={<h5>Event Type Assessments</h5>} bsStyle='info' key='typeAssessments'>
                 {component}
                 <div className={buttonCls}>
                     <Button bsStyle='primary' bsSize='small' title='Add new Event Type Assessment'
@@ -171,7 +187,7 @@ var ReportStatements = React.createClass({
                     </Button>
                 </div>
                 {typeWizard}
-            </div>
+            </Panel>
         );
     },
 
@@ -223,7 +239,7 @@ var ReportStatements = React.createClass({
         }
         var buttonCls = component ? 'float-right' : '';
         return (
-            <div>
+            <Panel header={<h5>Corrective Measures</h5>} bsStyle='info' key='correctiveMeasures'>
                 {component}
                 <div className={buttonCls}>
                     <Button bsStyle='primary' bsSize='small' title='Add new Corrective Measure'
@@ -232,7 +248,7 @@ var ReportStatements = React.createClass({
                         Add
                     </Button>
                 </div>
-            </div>
+            </Panel>
         );
     }
 });

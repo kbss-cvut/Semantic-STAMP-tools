@@ -234,6 +234,9 @@ var Factors = React.createClass({
     },
 
     onEditFactor: function(id, e) {
+        if (!id) {
+            return true;
+        }
         e.preventDefault();
         var factor = gantt.getTask(id);
         this.setState({currentFactor: factor, showFactorDialog: true});
