@@ -17,11 +17,6 @@ var DATE_FORMAT = '%d-%m-%y %H:%i';
 
 var occurrenceEventId = null;
 
-function lightboxHeader(startDate, endDate, event) {
-    var text = event.text && !event.$new ? event.text.substr(0, 70) : 'New Event';
-    return gantt.templates.task_date(event.start_date) + "&nbsp;" + text;
-}
-
 /**
  * Initializes time scale in seconds.
  */
@@ -95,7 +90,7 @@ function taskDragged(id, mode) {
  */
 function resizeParentTask(taskId, preventRefresh) {
     var task = gantt.getTask(taskId),
-        parent;
+        parent, changed = false;
     if (!task.parent) {
         return;
     }
@@ -130,27 +125,65 @@ var Factors = React.createClass({
         }
     },
 
+    componentDidUpdate: function () {
+        var occurrence = this.props.occurrence,
+            occurrenceEvt = gantt.getTask(occurrenceEventId),
+            changes = false;
+        if (occurrenceEvt.text !== occurrence.name) {
+            occurrenceEvt.text = occurrence.name;
+            changes = true;
+        }
+        var startDate = new Date(occurrence.occurrenceTime);
+        if (occurrenceEvt.start_date !== startDate) {
+            occurrenceEvt.start_date = startDate;
+            this.ensureNonZeroDuration(occurrenceEvt);
+            this.updateDescendantsTimeInterval(startDate);
+            changes = true;
+        }
+        if (changes) {
+            gantt.updateTask(occurrenceEvt.id);
+            gantt.refreshData();
+        }
+    },
+
+    updateDescendantsTimeInterval: function(startDate) {
+        var me = this;
+        gantt.eachTask(function(item) {
+            if (item.start_date < startDate) {
+                item.start_date = startDate;
+                me.ensureNonZeroDuration(item);
+                gantt.updateTask(item.id);
+            }
+        })
+    },
+
+    ensureNonZeroDuration(event) {
+        if (gantt.calculateDuration(event.start_date, event.end_date) < 1) {
+            event.end_date = gantt.calculateEndDate(event.start_date, 1, this.state.scale);
+        }
+    },
+
     componentDidMount: function () {
         this.configureGantt();
         gantt.init('factors_gantt');
-        gantt.templates.link_class = function (link) {
-            if (link.factorType === 'cause') {
-                return 'gantt-link-causes';
-            } else {
-                return 'gantt-link-mitigates';
-            }
-        };
         gantt.clearAll();
         this.addEvents();
     },
 
     configureGantt: function () {
+        setGanttScale('minute');
+        this.configureGanttConfig();
+        this.configureGanttHandlers();
+        this.configureGanttTemplates();
+        initSecondsScale();
+    },
+
+    configureGanttConfig: function () {
         gantt.config.columns = [
             {name: 'text', label: 'Event', width: '*', tree: true},
             {name: 'start_date', label: 'Start time', width: '*', align: 'center'},
             {name: 'add', label: '', width: 44}
         ];
-        setGanttScale('minute');
         gantt.config.api_date = DATE_FORMAT;
         gantt.config.date_grid = DATE_FORMAT;
         gantt.config.fit_tasks = true;
@@ -160,17 +193,30 @@ var Factors = React.createClass({
         gantt.config.drag_progress = false;
         gantt.config.link_line_width = 3;
         gantt.config.link_arrow_size = 8;
-        gantt.templates.lightbox_header = lightboxHeader;
+    },
+
+    configureGanttTemplates: function () {
+        gantt.templates.link_class = function (link) {
+            if (link.factorType === 'cause') {
+                return 'gantt-link-causes';
+            } else {
+                return 'gantt-link-mitigates';
+            }
+        };
+    },
+
+    configureGanttHandlers: function () {
         gantt.attachEvent('onTaskCreated', this.onCreateFactor);
         gantt.attachEvent('onTaskDblClick', this.onEditFactor);
         gantt.attachEvent('onAfterTaskAdd', taskAdded);
         gantt.attachEvent('onAfterTaskDrag', taskDragged);
-        gantt.attachEvent('onAfterTaskUpdate', function (id, item) {
-            item.durationUnit = gantt.config.duration_unit;
-            resizeParentTask(id);
-        });
+        gantt.attachEvent('onAfterTaskUpdate', this.onFactorUpdated);
         gantt.attachEvent('onBeforeLinkAdd', this.onLinkAdded);
-        initSecondsScale();
+    },
+
+    onFactorUpdated: function(id, factor) {
+        factor.durationUnit = gantt.config.duration_unit;
+        resizeParentTask(id);
     },
 
     addOccurrenceEvent: function () {
@@ -186,7 +232,7 @@ var Factors = React.createClass({
         }, null);
     },
 
-    addEvents: function() {
+    addEvents: function () {
         this.addOccurrenceEvent();
         var eventAssessments = this.props.occurrence.typeAssessments,
             startDate = gantt.getTask(occurrenceEventId).start_date;
@@ -225,7 +271,7 @@ var Factors = React.createClass({
         this.setState({currentLink: null, showLinkTypeDialog: false});
     },
 
-    onCreateFactor: function(item) {
+    onCreateFactor: function (item) {
         item.isNew = true;
         item.text = '';
         item.durationUnit = gantt.config.duration_unit;
@@ -233,11 +279,14 @@ var Factors = React.createClass({
         return false;
     },
 
-    onEditFactor: function(id, e) {
+    onEditFactor: function (id, e) {
         if (!id) {
             return true;
         }
         e.preventDefault();
+        if (Number(id) === occurrenceEventId) {
+            return;
+        }
         var factor = gantt.getTask(id);
         this.setState({currentFactor: factor, showFactorDialog: true});
     },
@@ -314,13 +363,13 @@ var Factors = React.createClass({
             </Panel>);
     },
 
-    renderFactorDetailDialog: function() {
+    renderFactorDetailDialog: function () {
         if (!this.state.showFactorDialog) {
             return null;
         }
         return (<FactorDetail show={this.state.showFactorDialog} factor={this.state.currentFactor}
-                      onClose={this.onCloseFactorDialog} onSave={this.onSaveFactor}
-                      onDelete={this.onDeleteFactor} scale={this.state.scale}/>);
+                              onClose={this.onCloseFactorDialog} onSave={this.onSaveFactor}
+                              onDelete={this.onDeleteFactor} scale={this.state.scale}/>);
     },
 
     renderLinkTypeDialog: function () {

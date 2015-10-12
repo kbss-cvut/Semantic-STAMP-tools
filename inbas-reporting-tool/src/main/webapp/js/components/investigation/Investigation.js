@@ -81,7 +81,7 @@ var Investigation = React.createClass({
                     </div>
 
                     <div>
-                        <Factors occurrence={investigation}/>
+                        <Factors occurrence={investigation} onAttributeChange={this.onAttributeChange}/>
                     </div>
 
                     <div className='form-group'>
