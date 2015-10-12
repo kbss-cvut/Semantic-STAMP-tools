@@ -44,10 +44,15 @@ var InvestigationController = React.createClass({
         router.transitionTo(this.props.query.onCancel);
     },
 
+    onChange: function (attribute, value) {
+        this.state.investigation[attribute] = value;   // Using [] notation because the att name is in variable
+        this.setState({investigation: this.state.investigation}); // Force update
+    },
+
     render: function () {
         return (
             <Investigation investigation={this.state.investigation} loading={this.state.loading}
-                           onCancel={this.onCancel}/>
+                           onChange={this.onChange} onCancel={this.onCancel}/>
         );
     }
 });

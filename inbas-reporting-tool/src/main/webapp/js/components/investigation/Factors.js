@@ -6,6 +6,7 @@
 
 var React = require('react');
 var Modal = require('react-bootstrap').Modal;
+var Panel = require('react-bootstrap').Panel;
 var Input = require('../Input');
 var Select = require('../Select');
 var Utils = require('../../utils/Utils');
@@ -113,35 +114,6 @@ function resizeParentTask(taskId, preventRefresh) {
     }
 }
 
-function setLightboxDurationUnit(taskId) {
-    // Don't do this at home, kids
-    var durationContainer = document.getElementsByClassName('gantt_duration')[0],
-        durationInput = durationContainer.childNodes[1],
-        durationUnitTextNode = durationContainer.childNodes[3],
-        task = gantt.getTask(taskId);
-    durationInput.value = convertTaskDurationToCurrentUnit(task);
-    switch (gantt.config.duration_unit) {
-        case 'minute':
-            durationUnitTextNode.textContent = ' Minutes ';
-            break;
-        case 'hour':
-            durationUnitTextNode.textContent = ' Hours ';
-            break;
-        case 'second':
-            durationUnitTextNode.textContent = ' Seconds ';
-            break;
-        default:
-            console.warn('Unknown duration unit ' + gantt.config.duration_unit);
-            break;
-    }
-    return true;
-}
-
-function convertTaskDurationToCurrentUnit(task) {
-    var targetUnit = gantt.config.duration_unit;
-    return Utils.convertTime(task.durationUnit, targetUnit, task.duration);
-}
-
 var Factors = React.createClass({
 
     propTypes: {
@@ -198,20 +170,20 @@ var Factors = React.createClass({
             resizeParentTask(id);
         });
         gantt.attachEvent('onBeforeLinkAdd', this.onLinkAdded);
-        gantt.attachEvent('onLightbox', setLightboxDurationUnit);
         initSecondsScale();
     },
 
     addOccurrenceEvent: function () {
         var occurrence = this.props.occurrence,
-            id;
-        id = gantt.addTask({
+            id = Date.now();
+        occurrenceEventId = id;
+        gantt.addTask({
+            id: id,
             text: occurrence.name,
             start_date: new Date(occurrence.occurrenceTime),
             duration: 1,
             readonly: true
         });
-        occurrenceEventId = id;
     },
 
     addEvents: function() {
@@ -229,8 +201,9 @@ var Factors = React.createClass({
                 duration: 1,
                 parent: occurrenceEventId,
                 statement: evt
-            });
+            }, occurrenceEventId);
         }
+        gantt.open(occurrenceEventId);
     },
 
     onLinkAdded: function (linkId, link) {
@@ -297,7 +270,7 @@ var Factors = React.createClass({
 
     render: function () {
         return (
-            <div>
+            <Panel header={<h5>Factors</h5>} bsStyle='info'>
                 {this.renderFactorDetailDialog()}
                 {this.renderLinkTypeDialog()}
                 <div id='factors_gantt' className='factors-gantt'/>
@@ -335,7 +308,7 @@ var Factors = React.createClass({
                         </div>
                     </div>
                 </div>
-            </div>);
+            </Panel>);
     },
 
     renderFactorDetailDialog: function() {

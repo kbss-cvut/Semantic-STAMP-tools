@@ -34,6 +34,7 @@ var ReportDetailController = React.createClass({
             report = {};
         }
         report.occurrenceTime = Date.now();
+        report.isNew = true;
         return report;
     },
 
