@@ -15,6 +15,9 @@ function initSecondsScale() {
     }
 }
 
+/**
+ * Deals with management of the gantt component.
+ */
 var GanttController = {
 
     occurrenceEventId: null,
@@ -58,7 +61,7 @@ var GanttController = {
         gantt.render();
     },
 
-    init: function(config) {
+    init: function (config) {
         this.props = config;
         this.configureGanttConfig();
         this.configureGanttHandlers();
@@ -104,7 +107,7 @@ var GanttController = {
         gantt.attachEvent('onBeforeLinkAdd', this.onLinkAdded.bind(me));
     },
 
-    onCreateFactor: function(factor) {
+    onCreateFactor: function (factor) {
         factor.isNew = true;
         factor.text = '';
         factor.durationUnit = gantt.config.duration_unit;
@@ -128,17 +131,17 @@ var GanttController = {
         if (id !== this.occurrenceEventId && !factor.parent) {
             factor.parent = this.occurrenceEventId;
         }
-        this.updateAncestorsTimeInterval(factor);
+        this.extendAncestorsIfNecessary(factor);
     },
 
     onFactorUpdated: function (id, factor) {
         factor.durationUnit = gantt.config.duration_unit;
-        this.updateAncestorsTimeInterval(factor);
+        this.extendAncestorsIfNecessary(factor);
         this.updateDescendantsTimeInterval(factor);
         gantt.refreshData();
     },
 
-    updateAncestorsTimeInterval: function (factor) {
+    extendAncestorsIfNecessary: function (factor) {
         var parent, changed;
         if (!factor.parent) {
             return;
@@ -156,10 +159,15 @@ var GanttController = {
             if (parent.id === this.occurrenceEventId) {
                 this.props.updateOccurrence(factor.start_date.getTime(), factor.end_date.getTime());
             }
-            this.updateAncestorsTimeInterval(parent);
+            gantt.updateTask(parent.id);
         }
     },
 
+    /**
+     * Updates descendants' time intervals. It doesn't do explicit recursion, but the updateTask call fires an update
+     * event which in turn leads to calling this method again.
+     * @param factor
+     */
     updateDescendantsTimeInterval: function (factor) {
         var children = gantt.getChildren(factor.id),
             child, changed;
@@ -179,8 +187,6 @@ var GanttController = {
                 gantt.updateTask(child.id);
             }
         }
-        // No need to traverse other children than those which had to be resized, because parent is always at least as
-        // large as its descendants
     },
 
     ensureNonZeroDuration: function (event) {
@@ -197,7 +203,7 @@ var GanttController = {
         return false;
     },
 
-    updateOccurrenceEvent: function(occurrence) {
+    updateOccurrenceEvent: function (occurrence) {
         var occurrenceEvt = gantt.getTask(this.occurrenceEventId),
             changes = false, startDate;
         if (occurrenceEvt.text !== occurrence.name) {
@@ -215,27 +221,27 @@ var GanttController = {
         }
     },
 
-    setOccurrenceEventId: function(id) {
+    setOccurrenceEventId: function (id) {
         this.occurrenceEventId = id;
     },
 
-    addFactor: function(factor, parentId) {
+    addFactor: function (factor, parentId) {
         return gantt.addTask(factor, parentId);
     },
 
-    addLink: function(link) {
+    addLink: function (link) {
         gantt.addLink(link);
     },
 
-    updateFactor: function(factor) {
+    updateFactor: function (factor) {
         gantt.updateTask(factor.id);
     },
 
-    getFactor: function(factorId) {
+    getFactor: function (factorId) {
         return gantt.getTask(factorId);
     },
 
-    expandSubtree: function(rootId) {
+    expandSubtree: function (rootId) {
         gantt.open(rootId);
     }
 };
