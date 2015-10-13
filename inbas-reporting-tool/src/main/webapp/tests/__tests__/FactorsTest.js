@@ -33,7 +33,10 @@ describe('Factors component tests', function () {
             },
             updateTask: function() {
             },
-            refreshData() {
+            refreshData: function() {
+            },
+            getChildren: function() {
+                return [];
             }
         },
         occurrence = {

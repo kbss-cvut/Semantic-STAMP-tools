@@ -68,7 +68,8 @@ var Login = React.createClass({
                 <form className='form-horizontal'>
                     {this.renderAlert()}
                     <Input type='text' name='username' ref='usernameField' label='Username' value={this.state.username}
-                           onChange={this.onChange} labelClassName='col-xs-3' wrapperClassName='col-xs-9'/>
+                           onChange={this.onChange} labelClassName='col-xs-3' onKeyPress={this.onKeyPress}
+                           wrapperClassName='col-xs-9'/>
                     <Input type='password' name='password' label='Password' value={this.state.password}
                            onChange={this.onChange} labelClassName='col-xs-3' onKeyPress={this.onKeyPress}
                            wrapperClassName='col-xs-9'/>

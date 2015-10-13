@@ -67,47 +67,6 @@ function setGanttScale(scale) {
 
 }
 
-function taskAdded(id, item) {
-    if (id !== occurrenceEventId && !item.parent) {
-        item.parent = occurrenceEventId;
-    }
-    resizeParentTask(id);
-}
-
-function taskDragged(id, mode) {
-    if (mode !== 'resize' && mode !== 'move') {
-        return;
-    }
-    resizeParentTask(id);
-}
-
-/**
- * Resizes parent task (and recursively all ancestor tasks) so that they always contain all of their subtasks
- * (time-wise).
- * @param taskId The last updated task
- * @param preventRefresh Whether gantt data refresh should be prevented
- */
-function resizeParentTask(taskId, preventRefresh) {
-    var task = gantt.getTask(taskId),
-        parent;
-    if (!task.parent) {
-        return;
-    }
-    parent = gantt.getTask(task.parent);
-    if (task.start_date < parent.start_date) {
-        parent.start_date = task.start_date;
-    }
-    if (task.end_date > parent.end_date) {
-        parent.end_date = task.end_date;
-    }
-    if (parent.parent) {
-        resizeParentTask(parent.id, true);
-    }
-    if (!preventRefresh) {
-        gantt.refreshData();
-    }
-}
-
 var Factors = React.createClass({
 
     propTypes: {
@@ -136,7 +95,7 @@ var Factors = React.createClass({
         if (occurrenceEvt.start_date !== startDate) {
             occurrenceEvt.start_date = startDate;
             this.ensureNonZeroDuration(occurrenceEvt);
-            this.updateDescendantsTimeInterval(startDate);
+            this.updateDescendantsTimeInterval(occurrenceEvt);
             changes = true;
         }
         if (changes) {
@@ -145,18 +104,50 @@ var Factors = React.createClass({
         }
     },
 
-    updateDescendantsTimeInterval: function(startDate) {
-        var me = this;
-        gantt.eachTask(function(item) {
-            if (item.start_date < startDate) {
-                item.start_date = startDate;
-                me.ensureNonZeroDuration(item);
-                gantt.updateTask(item.id);
-            }
-        });
+    updateAncestorsTimeInterval: function (factor) {
+        var parent, changed;
+        if (!factor.parent) {
+            return;
+        }
+        parent = gantt.getTask(factor.parent);
+        if (factor.start_date < parent.start_date) {
+            parent.start_date = factor.start_date;
+            changed = true;
+        }
+        if (factor.end_date > parent.end_date) {
+            parent.end_date = factor.end_date;
+            changed = true;
+        }
+        if (changed) {
+            this.updateAncestorsTimeInterval(parent);
+        }
     },
 
-    ensureNonZeroDuration: function(event) {
+    updateDescendantsTimeInterval: function (factor) {
+        var children = gantt.getChildren(factor.id),
+            child, changed;
+        for (var i = 0, len = children.length; i < len; i++) {
+            child = gantt.getTask(children[i]);
+            changed = false;
+            if (child.start_date < factor.start_date) {
+                child.start_date = factor.start_date;
+                changed = true;
+            }
+            if (child.end_date > factor.end_date) {
+                child.end_date = factor.end_date;
+                changed = true;
+            }
+            if (changed) {
+                this.ensureNonZeroDuration(child);
+                gantt.updateTask(child.id);
+                this.updateDescendantsTimeInterval(child);
+            }
+        }
+        // No need to traverse other children than those which had to be resized, because parent is always at least as
+        // large as its descendants
+    },
+
+    ensureNonZeroDuration: function (event) {
         if (gantt.calculateDuration(event.start_date, event.end_date) < 1) {
             event.end_date = gantt.calculateEndDate(event.start_date, 1, this.state.scale);
         }
@@ -207,15 +198,23 @@ var Factors = React.createClass({
     configureGanttHandlers: function () {
         gantt.attachEvent('onTaskCreated', this.onCreateFactor);
         gantt.attachEvent('onTaskDblClick', this.onEditFactor);
-        gantt.attachEvent('onAfterTaskAdd', taskAdded);
-        gantt.attachEvent('onAfterTaskDrag', taskDragged);
+        gantt.attachEvent('onAfterTaskAdd', this.onFactorAdded);
         gantt.attachEvent('onAfterTaskUpdate', this.onFactorUpdated);
         gantt.attachEvent('onBeforeLinkAdd', this.onLinkAdded);
     },
 
-    onFactorUpdated: function(id, factor) {
+    onFactorAdded: function (id, factor) {
+        if (id !== occurrenceEventId && !factor.parent) {
+            factor.parent = occurrenceEventId;
+        }
+        this.updateAncestorsTimeInterval(factor);
+    },
+
+    onFactorUpdated: function (id, factor) {
         factor.durationUnit = gantt.config.duration_unit;
-        resizeParentTask(id);
+        this.updateAncestorsTimeInterval(factor);
+        this.updateDescendantsTimeInterval(factor);
+        gantt.refreshData();
     },
 
     addOccurrenceEvent: function () {
