@@ -11,67 +11,15 @@ var Input = require('../Input');
 var Select = require('../Select');
 
 var FactorDetail = require('./FactorDetail');
-
-var DATE_FORMAT = '%d-%m-%y %H:%i';
-
-var occurrenceEventId = null;
-
-/**
- * Initializes time scale in seconds.
- */
-function initSecondsScale() {
-    gantt.date.second_start = function (date) {
-        date.setMilliseconds(0);
-        return date;
-    };
-    gantt.date.add_second = function (date, inc) {
-        return new Date(date.valueOf() + 1000 * inc);
-    }
-}
-
-function setGanttScale(scale) {
-    switch (scale) {
-        case 'minute':
-            gantt.config.scale_unit = 'minute';
-            gantt.config.date_scale = '%H:%i';
-            gantt.config.duration_unit = 'minute';
-            gantt.config.min_duration = 60 * 1000;  // Duration in millis
-            gantt.config.scale_height = 30;
-            gantt.config.min_column_width = 70;
-            gantt.config.subscales = [];
-            break;
-        case 'hour':
-            gantt.config.scale_unit = 'hour';
-            gantt.config.date_scale = '%H';
-            gantt.config.duration_unit = 'hour';
-            gantt.config.min_duration = 60 * 60 * 1000;  // Duration in millis
-            gantt.config.scale_height = 30;
-            gantt.config.min_column_width = 70;
-            gantt.config.subscales = [];
-            break;
-        case 'second':
-            gantt.config.scale_unit = 'second';
-            gantt.config.date_scale = '%s';
-            gantt.config.duration_unit = 'second';
-            gantt.config.min_duration = 1000;  // Duration in millis
-            gantt.config.scale_height = 54;
-            gantt.config.min_column_width = 50;
-            gantt.config.subscales = [
-                {unit: 'minute', step: 1, date: '%H:%i'}
-            ];
-            break;
-        default:
-            console.warn('Unsupported gantt scale ' + scale);
-            break;
-    }
-
-}
+var GanttController = require('./GanttController');
 
 var Factors = React.createClass({
 
     propTypes: {
         occurrence: React.PropTypes.object.isRequired
     },
+
+    ganttController: null,
 
     getInitialState: function () {
         return {
@@ -84,144 +32,47 @@ var Factors = React.createClass({
     },
 
     componentDidUpdate: function () {
-        var occurrence = this.props.occurrence,
-            occurrenceEvt = gantt.getTask(occurrenceEventId),
-            changes = false;
-        if (occurrenceEvt.text !== occurrence.name) {
-            occurrenceEvt.text = occurrence.name;
-            changes = true;
-        }
-        var startDate = new Date(occurrence.occurrenceTime);
-        if (occurrenceEvt.start_date !== startDate) {
-            occurrenceEvt.start_date = startDate;
-            this.ensureNonZeroDuration(occurrenceEvt);
-            this.updateDescendantsTimeInterval(occurrenceEvt);
-            changes = true;
-        }
-        if (changes) {
-            gantt.updateTask(occurrenceEvt.id);
-            gantt.refreshData();
-        }
-    },
-
-    updateAncestorsTimeInterval: function (factor) {
-        var parent, changed;
-        if (!factor.parent) {
-            return;
-        }
-        parent = gantt.getTask(factor.parent);
-        if (factor.start_date < parent.start_date) {
-            parent.start_date = factor.start_date;
-            changed = true;
-        }
-        if (factor.end_date > parent.end_date) {
-            parent.end_date = factor.end_date;
-            changed = true;
-        }
-        if (changed) {
-            this.updateAncestorsTimeInterval(parent);
-        }
-    },
-
-    updateDescendantsTimeInterval: function (factor) {
-        var children = gantt.getChildren(factor.id),
-            child, changed;
-        for (var i = 0, len = children.length; i < len; i++) {
-            child = gantt.getTask(children[i]);
-            changed = false;
-            if (child.start_date < factor.start_date) {
-                child.start_date = factor.start_date;
-                changed = true;
-            }
-            if (child.end_date > factor.end_date) {
-                child.end_date = factor.end_date;
-                changed = true;
-            }
-            if (changed) {
-                this.ensureNonZeroDuration(child);
-                gantt.updateTask(child.id);
-                this.updateDescendantsTimeInterval(child);
-            }
-        }
-        // No need to traverse other children than those which had to be resized, because parent is always at least as
-        // large as its descendants
-    },
-
-    ensureNonZeroDuration: function (event) {
-        if (gantt.calculateDuration(event.start_date, event.end_date) < 1) {
-            event.end_date = gantt.calculateEndDate(event.start_date, 1, this.state.scale);
-        }
+        this.ganttController.updateOccurrenceEvent(this.props.occurrence);
     },
 
     componentDidMount: function () {
-        this.configureGantt();
-        gantt.init('factors_gantt');
-        gantt.clearAll();
+        this.ganttController = GanttController;
+        this.ganttController.init({
+            onLinkAdded: this.onLinkAdded,
+            onCreateFactor: this.onCreateFactor,
+            onEditFactor: this.onEditFactor,
+            updateOccurrence: this.onUpdateOccurrence
+        });
+        this.ganttController.setScale(this.state.scale);
         this.addEvents();
     },
 
-    configureGantt: function () {
-        setGanttScale('minute');
-        this.configureGanttConfig();
-        this.configureGanttHandlers();
-        this.configureGanttTemplates();
-        initSecondsScale();
-    },
-
-    configureGanttConfig: function () {
-        gantt.config.columns = [
-            {name: 'text', label: 'Event', width: '*', tree: true},
-            {name: 'start_date', label: 'Start time', width: '*', align: 'center'},
-            {name: 'add', label: '', width: 44}
-        ];
-        gantt.config.api_date = DATE_FORMAT;
-        gantt.config.date_grid = DATE_FORMAT;
-        gantt.config.fit_tasks = true;
-        gantt.config.duration_step = 1;
-        gantt.config.scroll_on_click = true;
-        gantt.config.show_errors = false;   // Get rid of errors in case the grid has to resize
-        gantt.config.drag_progress = false;
-        gantt.config.link_line_width = 3;
-        gantt.config.link_arrow_size = 8;
-    },
-
-    configureGanttTemplates: function () {
-        gantt.templates.link_class = function (link) {
-            if (link.factorType === 'cause') {
-                return 'gantt-link-causes';
-            } else {
-                return 'gantt-link-mitigates';
-            }
-        };
-    },
-
-    configureGanttHandlers: function () {
-        gantt.attachEvent('onTaskCreated', this.onCreateFactor);
-        gantt.attachEvent('onTaskDblClick', this.onEditFactor);
-        gantt.attachEvent('onAfterTaskAdd', this.onFactorAdded);
-        gantt.attachEvent('onAfterTaskUpdate', this.onFactorUpdated);
-        gantt.attachEvent('onBeforeLinkAdd', this.onLinkAdded);
-    },
-
-    onFactorAdded: function (id, factor) {
-        if (id !== occurrenceEventId && !factor.parent) {
-            factor.parent = occurrenceEventId;
+    addEvents: function () {
+        this.addOccurrenceEvent();
+        var eventAssessments = this.props.occurrence.typeAssessments,
+            occEventId = this.ganttController.occurrenceEventId,
+            startDate = this.ganttController.getFactor(occEventId).start_date;
+        if (!eventAssessments) {
+            return;
         }
-        this.updateAncestorsTimeInterval(factor);
-    },
-
-    onFactorUpdated: function (id, factor) {
-        factor.durationUnit = gantt.config.duration_unit;
-        this.updateAncestorsTimeInterval(factor);
-        this.updateDescendantsTimeInterval(factor);
-        gantt.refreshData();
+        for (var i = 0, len = eventAssessments.length; i < len; i++) {
+            var evt = eventAssessments[i];
+            this.ganttController.addFactor({
+                text: evt.eventType.name,
+                start_date: startDate,
+                duration: 1,
+                parent: occEventId,
+                statement: evt
+            }, occEventId);
+        }
+        this.ganttController.expandSubtree(occEventId);
     },
 
     addOccurrenceEvent: function () {
         var occurrence = this.props.occurrence,
             id = Date.now();
-        occurrenceEventId = id;
-        gantt.addTask({
+        this.ganttController.setOccurrenceEventId(id);
+        this.ganttController.addFactor({
             id: id,
             text: occurrence.name,
             start_date: new Date(occurrence.occurrenceTime),
@@ -230,38 +81,14 @@ var Factors = React.createClass({
         }, null);
     },
 
-    addEvents: function () {
-        this.addOccurrenceEvent();
-        var eventAssessments = this.props.occurrence.typeAssessments,
-            startDate = gantt.getTask(occurrenceEventId).start_date;
-        if (!eventAssessments) {
-            return;
-        }
-        for (var i = 0, len = eventAssessments.length; i < len; i++) {
-            var evt = eventAssessments[i];
-            gantt.addTask({
-                text: evt.eventType.name,
-                start_date: startDate,
-                duration: 1,
-                parent: occurrenceEventId,
-                statement: evt
-            }, occurrenceEventId);
-        }
-        gantt.open(occurrenceEventId);
-    },
-
-    onLinkAdded: function (linkId, link) {
-        if (link.factorType) {
-            return true;
-        }
+    onLinkAdded: function (link) {
         this.setState({currentLink: link, showLinkTypeDialog: true});
-        return false;
     },
 
     onLinkTypeSelect: function (e) {
         var link = this.state.currentLink;
         link.factorType = e.target.value;
-        gantt.addLink(link);
+        this.ganttController.addLink(link);
         this.onCloseLinkTypeDialog();
     },
 
@@ -269,23 +96,11 @@ var Factors = React.createClass({
         this.setState({currentLink: null, showLinkTypeDialog: false});
     },
 
-    onCreateFactor: function (item) {
-        item.isNew = true;
-        item.text = '';
-        item.durationUnit = gantt.config.duration_unit;
-        this.setState({showFactorDialog: true, currentFactor: item});
-        return false;
+    onCreateFactor: function (factor) {
+        this.setState({showFactorDialog: true, currentFactor: factor});
     },
 
-    onEditFactor: function (id, e) {
-        if (!id) {
-            return true;
-        }
-        e.preventDefault();
-        if (Number(id) === occurrenceEventId) {
-            return;
-        }
-        var factor = gantt.getTask(id);
+    onEditFactor: function (factor) {
         this.setState({currentFactor: factor, showFactorDialog: true});
     },
 
@@ -293,9 +108,9 @@ var Factors = React.createClass({
         var factor = this.state.currentFactor;
         if (factor.isNew) {
             delete factor.isNew;
-            gantt.addTask(this.state.currentFactor);
+            this.ganttController.addFactor(this.state.currentFactor);
         } else {
-            gantt.updateTask(factor.id);
+            this.ganttController.updateTask(factor.id);
         }
         this.onCloseFactorDialog();
     },
@@ -313,8 +128,12 @@ var Factors = React.createClass({
     onScaleChange: function (e) {
         var scale = e.target.value;
         this.setState({scale: scale});
-        setGanttScale(scale);
-        gantt.render();
+        this.ganttController.setScale(scale);
+    },
+
+    onUpdateOccurrence: function(startTime, endTime) {
+        // End time is not supported by occurrences, yet
+        this.props.onAttributeChange('occurrenceTime', startTime);
     },
 
 
