@@ -293,22 +293,3 @@ td.actions button {
 .float-right {
     float: right;
 }
-
-/* Overriding bootstrap Modal styling to center the dialog on the screen. */
-.modal {
-    text-align: center;
-    padding: 0 !important;
-}
-
-.modal:before {
-    content: '';
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-}
-
-.modal-dialog {
-    display: inline-block;
-    text-align: left;
-    vertical-align: middle;
-}
