@@ -224,7 +224,7 @@ var Factors = React.createClass({
                     <Modal.Title>Connection type?</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Select title='Select link type' onChange={this.onLinkTypeSelect} options={options}/>
+                    <Select ref='linkType' title='Select link type' onChange={this.onLinkTypeSelect} options={options}/>
                 </Modal.Body>
             </Modal>
         );
