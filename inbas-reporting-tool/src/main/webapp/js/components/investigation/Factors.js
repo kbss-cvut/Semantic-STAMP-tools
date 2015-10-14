@@ -5,6 +5,7 @@
 'use strict';
 
 var React = require('react');
+var Button = require('react-bootstrap').Button;
 var Modal = require('react-bootstrap').Modal;
 var Panel = require('react-bootstrap').Panel;
 var Input = require('../Input');
@@ -26,8 +27,11 @@ var Factors = React.createClass({
             scale: 'minute',
             showLinkTypeDialog: false,
             currentLink: null,
+            currentLinkSource: null,
+            currentLinkTarget: null,
             showFactorDialog: false,
-            currentFactor: null
+            currentFactor: null,
+            showDeleteLinkDialog: false
         }
     },
 
@@ -41,7 +45,8 @@ var Factors = React.createClass({
             onLinkAdded: this.onLinkAdded,
             onCreateFactor: this.onCreateFactor,
             onEditFactor: this.onEditFactor,
-            updateOccurrence: this.onUpdateOccurrence
+            updateOccurrence: this.onUpdateOccurrence,
+            onDeleteLink: this.onDeleteLink
         });
         this.ganttController.setScale(this.state.scale);
         this.addEvents();
@@ -108,21 +113,39 @@ var Factors = React.createClass({
         var factor = this.state.currentFactor;
         if (factor.isNew) {
             delete factor.isNew;
-            this.ganttController.addFactor(this.state.currentFactor);
+            this.ganttController.addFactor(factor);
         } else {
-            this.ganttController.updateTask(factor.id);
+            this.ganttController.updateFactor(factor);
         }
         this.onCloseFactorDialog();
     },
 
     onDeleteFactor: function () {
         var factor = this.state.currentFactor;
-        gantt.deleteTask(factor.id);
+        this.ganttController.deleteFactor(factor.id);
         this.onCloseFactorDialog();
     },
 
     onCloseFactorDialog: function () {
         this.setState({currentFactor: null, showFactorDialog: false});
+    },
+
+    onDeleteLink: function (link, source, target) {
+        this.setState({
+            showDeleteLinkDialog: true,
+            currentLink: link,
+            currentLinkSource: source,
+            currentLinkTarget: target
+        })
+    },
+
+    onCloseDeleteLinkDialog: function () {
+        this.setState({showDeleteLinkDialog: false, currentLink: null});
+    },
+
+    deleteLink: function () {
+        this.ganttController.deleteLink(this.state.currentLink.id);
+        this.onCloseDeleteLinkDialog();
     },
 
     onScaleChange: function (e) {
@@ -131,7 +154,7 @@ var Factors = React.createClass({
         this.ganttController.setScale(scale);
     },
 
-    onUpdateOccurrence: function(startTime, endTime) {
+    onUpdateOccurrence: function (startTime, endTime) {
         // End time is not supported by occurrences, yet
         this.props.onAttributeChange('occurrenceTime', startTime);
     },
@@ -142,6 +165,7 @@ var Factors = React.createClass({
             <Panel header={<h5>Factors</h5>} bsStyle='info'>
                 {this.renderFactorDetailDialog()}
                 {this.renderLinkTypeDialog()}
+                {this.renderDeleteLinkDialog()}
                 <div id='factors_gantt' className='factors-gantt'/>
                 <div className='gantt-zoom'>
                     <div className='col-xs-4'>
@@ -202,6 +226,29 @@ var Factors = React.createClass({
                 <Modal.Body>
                     <Select title='Select link type' onChange={this.onLinkTypeSelect} options={options}/>
                 </Modal.Body>
+            </Modal>
+        );
+    },
+
+    renderDeleteLinkDialog: function () {
+        var source = this.state.currentLinkSource ? this.state.currentLinkSource.text : '',
+            target = this.state.currentLinkTarget ? this.state.currentLinkTarget.text : '';
+        return (
+            <Modal show={this.state.showDeleteLinkDialog} bsSize='small' onHide={this.onCloseDeleteLinkDialog}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Delete link?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete the link from&nbsp;
+                    <span className='bold'>{source}</span>
+                    &nbsp;event to&nbsp;
+                    <span className='bold'>{target}</span>
+                    &nbsp;event?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button bsStyle='warning' bsSize='small' onClick={this.deleteLink}>Delete</Button>
+                    <Button bsSize='small' onClick={this.onCloseDeleteLinkDialog}>Cancel</Button>
+                </Modal.Footer>
             </Modal>
         );
     }

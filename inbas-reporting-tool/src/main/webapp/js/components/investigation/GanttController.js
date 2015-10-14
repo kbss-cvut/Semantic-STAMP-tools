@@ -105,6 +105,7 @@ var GanttController = {
         gantt.attachEvent('onAfterTaskAdd', this.onFactorAdded.bind(me));
         gantt.attachEvent('onAfterTaskUpdate', this.onFactorUpdated.bind(me));
         gantt.attachEvent('onBeforeLinkAdd', this.onLinkAdded.bind(me));
+        gantt.attachEvent('onLinkDblClick', this.onDeleteLink.bind(me));
     },
 
     onCreateFactor: function (factor) {
@@ -157,7 +158,7 @@ var GanttController = {
         }
         if (changed) {
             if (parent.id === this.occurrenceEventId) {
-                this.props.updateOccurrence(factor.start_date.getTime(), factor.end_date.getTime());
+                this.props.updateOccurrence(parent.start_date.getTime(), parent.end_date.getTime());
             }
             gantt.updateTask(parent.id);
         }
@@ -203,6 +204,13 @@ var GanttController = {
         return false;
     },
 
+    onDeleteLink: function(linkId) {
+        var link = gantt.getLink(linkId),
+            source = gantt.getTask(link.source),
+            target = gantt.getTask(link.target);
+        this.props.onDeleteLink(link, source, target);
+    },
+
     updateOccurrenceEvent: function (occurrence) {
         var occurrenceEvt = gantt.getTask(this.occurrenceEventId),
             changes = false, startDate;
@@ -243,6 +251,14 @@ var GanttController = {
 
     expandSubtree: function (rootId) {
         gantt.open(rootId);
+    },
+
+    deleteLink: function (linkId) {
+        gantt.deleteLink(linkId);
+    },
+
+    deleteFactor: function (factorId) {
+        gantt.deleteTask(factorId);
     }
 };
 

@@ -6,22 +6,28 @@ describe('Tests for the gantt component controller', function () {
 
     var GanttController = require('../../js/components/investigation/GanttController'),
         gantt = jasmine.createSpyObj('gantt', ['init', 'clearAll', 'attachEvent', 'updateTask', 'refreshData']),
-        props = jasmine.createSpyObj('props', ['onLinkAdded', 'onCreateFactor', 'onEditFactor', 'updateOccurrence']);
+        props = jasmine.createSpyObj('props', ['onLinkAdded', 'onCreateFactor', 'onEditFactor', 'updateOccurrence', 'onDeleteLink']);
 
     beforeEach(function () {
         gantt.config = {};
         gantt.templates = {};
         gantt.date = {};
         // The function that we want to mock have to exist
-        gantt.getTask = function() {};
-        gantt.calculateDuration = function(start, end) {
+        gantt.getTask = function () {
+        };
+        gantt.getLink = function () {
+        };
+        gantt.calculateDuration = function (start, end) {
             return end.getTime() - start.getTime();
         };
-        gantt.calculateEndDate = function(start, duration, unit) {
+        gantt.calculateEndDate = function (start, duration) {
             return new Date(start.getTime() + duration);
         };
-        gantt.getChildren = function(id) {
+        gantt.getChildren = function () {
             return [];
+        };
+        gantt.addTask = function (task) {
+            return task.id;
         };
         window.gantt = gantt;
         GanttController.init(props);
@@ -65,7 +71,7 @@ describe('Tests for the gantt component controller', function () {
         expect(occurrenceEvent.start_date.getTime()).toEqual(occurrence.occurrenceTime);
     });
 
-    it('Ensures that the occurrence event has never a duration less than 1 time unit', function() {
+    it('Ensures that the occurrence event has never a duration less than 1 time unit', function () {
         var occurrence = {
             occurrenceTime: Date.now(),
             name: 'Test occurrence'
@@ -75,7 +81,7 @@ describe('Tests for the gantt component controller', function () {
             text: 'Test'
         };
         spyOn(gantt, 'getTask').andReturn(occurrenceEvent);
-        spyOn(gantt, 'calculateDuration').andCallFake(function(start, end) {
+        spyOn(gantt, 'calculateDuration').andCallFake(function (start, end) {
             return (end.getTime() - start.getTime()) / 1000;
         });
         spyOn(gantt, 'calculateEndDate').andReturn(new Date());
@@ -84,7 +90,7 @@ describe('Tests for the gantt component controller', function () {
         expect(gantt.calculateEndDate).toHaveBeenCalled();
     });
 
-    it('Ensures parent event contains a newly added child event by expanding its time interval', function() {
+    it('Ensures parent event contains a newly added child event by expanding its time interval', function () {
         var parent = {
             id: 1,
             start_date: new Date(),
@@ -103,7 +109,7 @@ describe('Tests for the gantt component controller', function () {
         expect(parent.start_date).toEqual(child.start_date);
     });
 
-    it('Ensures parent event contains an updated child by expanding its time interval', function() {
+    it('Ensures parent event contains an updated child by expanding its time interval', function () {
         var parent = {
             id: 1,
             start_date: new Date(),
@@ -126,7 +132,7 @@ describe('Tests for the gantt component controller', function () {
         expect(gantt.refreshData).toHaveBeenCalled();
     });
 
-    it('Ensures child events shrink when parent event time interval is decreased', function() {
+    it('Ensures child events shrink when parent event time interval is decreased', function () {
         var parent = {
             id: 1,
             start_date: new Date(),
@@ -149,5 +155,45 @@ describe('Tests for the gantt component controller', function () {
         expect(GanttController.ensureNonZeroDuration).toHaveBeenCalled();
         expect(child.start_date).toEqual(parent.start_date);
         expect(gantt.updateTask).toHaveBeenCalledWith(child.id);
+    });
+
+    it('Extends occurrence event accordingly if event is added which starts after occurrence event end', function () {
+        var start = new Date(),
+            occurrenceEvt = {
+                id: 1,
+                start_date: start,
+                end_date: new Date(Date.now() + 1000)
+            }, added = {
+                id: 2,
+                parent: 1,
+                start_date: new Date(Date.now() + 2000),
+                end_date: new Date(Date.now() + 3000)
+            };
+        spyOn(gantt, 'getTask').andReturn(occurrenceEvt);
+        spyOn(gantt, 'addTask').andCallFake(function (task) {
+            GanttController.onFactorAdded(task.id, task);
+            return task.id;
+        });
+        GanttController.addFactor(added, occurrenceEvt.id);
+
+        expect(gantt.addTask).toHaveBeenCalled();
+        expect(occurrenceEvt.start_date).toEqual(start);
+        expect(occurrenceEvt.end_date).toEqual(added.end_date);
+        expect(props.updateOccurrence).toHaveBeenCalledWith(occurrenceEvt.start_date.getTime(), added.end_date.getTime());
+    });
+
+    it('Passes the link, its source and target to the delete link handler', function () {
+        var evt = {
+            id: 1
+        }, link = {
+            id: 2,
+            source: 1,
+            target: 1
+        };
+        spyOn(gantt, 'getTask').andReturn(evt);
+        spyOn(gantt, 'getLink').andReturn(link);
+        GanttController.onDeleteLink(link.id);
+
+        expect(props.onDeleteLink).toHaveBeenCalledWith(link, evt, evt);
     });
 });
