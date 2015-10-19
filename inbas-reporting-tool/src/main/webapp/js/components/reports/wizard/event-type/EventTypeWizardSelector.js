@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var assign = require('object-assign');
@@ -13,14 +9,15 @@ var Constants = require('../../../../constants/Constants');
 
 var EventTypeWizardSelect = {
     // Here we map wizard type to the wizard steps
-    wizardSettings: {
-        'cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto': {
+    wizardSettings: [
+        {
             steps: RunwayIncursionSteps,
-            title: 'Runway Incursion Wizard'
+            title: 'Runway Incursion Wizard',
+            dtoClass: 'cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto',
+            keywords: ['incursion']
         }
-    },
+    ],
 
-    // ! Always copy the steps so that when they are modified in the wizard, it does not affect other instances of the wizard
     getWizardSettings: function (eventType) {
         var statement = {
             eventType: {
@@ -29,22 +26,35 @@ var EventTypeWizardSelect = {
                 dtoClass: eventType.dtoClass
             }
         };
-        if (this.wizardSettings[eventType.dtoClass]) {
-            var wizardProperties = this._getExistingWizardProperties(eventType.dtoClass, statement);
-            statement.dtoClass = eventType.dtoClass;
+        var wizardProperties = this._getWizardProperties(eventType);
+        if (wizardProperties) {
+            wizardProperties.statement = statement;
+            statement.dtoClass = wizardProperties.dtoClass;
             return wizardProperties;
         }
         return this._getDefaultWizardProperties(statement);
     },
 
-    _getExistingWizardProperties: function(dtoClass, statement) {
-        var wizardProperties = assign({}, this.wizardSettings[dtoClass]);
+    _getWizardProperties: function (eventType) {
+        var name = eventType.name.toLowerCase();
+        for (var i = 0, len = this.wizardSettings.length; i < len; i++) {
+            var props = this.wizardSettings[i];
+            for (var j = 0, lenn = props.keywords.length; j < lenn; j++) {
+                if (name.indexOf(props.keywords[j]) !== -1) {
+                    return this._prepareExistingWizardProperties(props);
+                }
+            }
+        }
+        return null;
+    },
+
+    _prepareExistingWizardProperties: function (properties) {
+        var wizardProperties = assign({}, properties);
         wizardProperties.steps = wizardProperties.steps.slice();
-        wizardProperties.statement = statement;
         return wizardProperties;
     },
 
-    _getDefaultWizardProperties: function(statement) {
+    _getDefaultWizardProperties: function (statement) {
         return {
             steps: DefaultWizardSteps.slice(),
             title: 'Default Event Type Assessment',
@@ -52,9 +62,9 @@ var EventTypeWizardSelect = {
         };
     },
 
-    getWizardSettingsForStatement: function(statement) {
-        if (this.wizardSettings[statement.dtoClass]) {
-            var wizardProperties = this._getExistingWizardProperties(statement.dtoClass, statement);
+    getWizardSettingsForStatement: function (statement) {
+        var wizardProperties = this._getWizardPropertiesByDtoClass(statement.dtoClass);
+        if (wizardProperties) {
             if (statement.conflictingAircraft) {
                 wizardProperties.steps.push({
                     name: 'Conflicting Aircraft',
@@ -62,9 +72,19 @@ var EventTypeWizardSelect = {
                     id: Constants.CONFLICTING_AIRCRAFT_STEP_ID
                 });
             }
+            wizardProperties.statement = statement;
             return wizardProperties;
         }
         return this._getDefaultWizardProperties(statement);
+    },
+
+    _getWizardPropertiesByDtoClass: function (dtoClass) {
+        for (var i = 0, len = this.wizardSettings.length; i < len; i++) {
+            if (this.wizardSettings[i].dtoClass === dtoClass) {
+                return this._prepareExistingWizardProperties(this.wizardSettings[i]);
+            }
+        }
+        return null;
     }
 };
 
