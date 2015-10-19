@@ -1,3 +1,4 @@
+Don't use interfaces for services if they are not required
 Datetime picker is missing seconds scale
 Create proper investigation screen
 Occurrences should have start and end time

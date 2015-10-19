@@ -23,8 +23,8 @@ var TypeaheadStore = Reflux.createStore({
     },
 
     onLoadEventTypes: function () {
-        this.load('eventTypes', 'event types', eventTypes, function (data) {
-            eventTypes = data[0].nodes;
+        this.load('eventType', 'event types', eventTypes, function (data) {
+            eventTypes = data;
         });
     },
 
@@ -48,7 +48,7 @@ var TypeaheadStore = Reflux.createStore({
     },
 
     onLoadLocations: function () {
-        this.load('locations', 'locations', locations, function (data) {
+        this.load('location', 'locations', locations, function (data) {
             locations = data;
         });
     },
@@ -58,7 +58,7 @@ var TypeaheadStore = Reflux.createStore({
     },
 
     onLoadOperators: function () {
-        this.load('operators', 'operators', operators, function (data) {
+        this.load('operator', 'operators', operators, function (data) {
             operators = data;
         });
     },
