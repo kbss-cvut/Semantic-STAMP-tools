@@ -29,6 +29,9 @@ describe('Tests for the gantt component controller', function () {
         gantt.addTask = function (task) {
             return task.id;
         };
+        gantt.batchUpdate = function (callback) {
+            callback();
+        };
         window.gantt = gantt;
         GanttController.init(props);
     });
@@ -120,10 +123,12 @@ describe('Tests for the gantt component controller', function () {
             start_date: new Date(Date.now() - 1000),
             end_date: new Date(Date.now() + 200000)
         };
-        spyOn(gantt, 'getTask').andReturn(parent);
+        spyOn(gantt, 'getTask').andCallFake(function (id) {
+            return id === parent.id ? parent : child;
+        });
         spyOn(GanttController, 'extendAncestorsIfNecessary').andCallThrough();
         spyOn(GanttController, 'updateDescendantsTimeInterval');
-        GanttController.onFactorUpdated(2, child);
+        GanttController.onFactorUpdated(2);
 
         expect(GanttController.extendAncestorsIfNecessary).toHaveBeenCalled();
         expect(GanttController.updateDescendantsTimeInterval).toHaveBeenCalled();
@@ -143,12 +148,14 @@ describe('Tests for the gantt component controller', function () {
             start_date: new Date(Date.now() - 1000),
             end_date: new Date(Date.now() + 2000)
         };
-        spyOn(gantt, 'getTask').andReturn(child);
+        spyOn(gantt, 'getTask').andCallFake(function (id) {
+            return id === parent.id ? parent : child;
+        });
         spyOn(gantt, 'getChildren').andReturn([child]);
         spyOn(GanttController, 'ensureNonZeroDuration');
         spyOn(GanttController, 'extendAncestorsIfNecessary');
         spyOn(GanttController, 'updateDescendantsTimeInterval').andCallThrough();
-        GanttController.onFactorUpdated(1, parent);
+        GanttController.onFactorUpdated(1);
 
         expect(GanttController.extendAncestorsIfNecessary).toHaveBeenCalled();
         expect(GanttController.updateDescendantsTimeInterval).toHaveBeenCalled();
@@ -195,5 +202,29 @@ describe('Tests for the gantt component controller', function () {
         GanttController.onDeleteLink(link.id);
 
         expect(props.onDeleteLink).toHaveBeenCalledWith(link, evt, evt);
+    });
+
+    it('Shrinks the occurrence event to span exactly its children', function () {
+        var start = new Date(),
+            occurrenceEvt = {
+                id: 1,
+                start_date: start,
+                end_date: new Date(start.getTime() + 10000)
+            }, child = {
+                id: 2,
+                parent: 1,
+                start_date: start,
+                end_date: new Date(start.getTime() + 5000)
+            };
+        spyOn(gantt, 'getTask').andCallFake(function(id) {
+            return id === occurrenceEvt.id ? occurrenceEvt : child;
+        });
+        spyOn(gantt, 'getChildren').andReturn([child.id]);
+        spyOn(GanttController, 'shrinkRootIfNecessary').andCallThrough();
+        GanttController.onFactorUpdated(2);
+
+        expect(occurrenceEvt.start_date).toEqual(start);
+        expect(occurrenceEvt.end_date).toEqual(child.end_date);
+        expect(GanttController.shrinkRootIfNecessary).toHaveBeenCalled();
     });
 });

@@ -103,7 +103,7 @@ var GanttController = {
         gantt.attachEvent('onTaskCreated', this.onCreateFactor.bind(me));
         gantt.attachEvent('onTaskDblClick', this.onEditFactor.bind(me));
         gantt.attachEvent('onAfterTaskAdd', this.onFactorAdded.bind(me));
-        gantt.attachEvent('onAfterTaskUpdate', this.onFactorUpdated.bind(me));
+        gantt.attachEvent('onAfterTaskDrag', this.onFactorUpdated.bind(me));
         gantt.attachEvent('onBeforeLinkAdd', this.onLinkAdded.bind(me));
         gantt.attachEvent('onLinkDblClick', this.onDeleteLink.bind(me));
     },
@@ -129,20 +129,25 @@ var GanttController = {
     },
 
     onFactorAdded: function (id, factor) {
+        var updates = [];
         if (id !== this.occurrenceEventId && !factor.parent) {
             factor.parent = this.occurrenceEventId;
         }
-        this.extendAncestorsIfNecessary(factor);
+        this.extendAncestorsIfNecessary(factor, updates);
+        this.applyUpdates(updates);
     },
 
-    onFactorUpdated: function (id, factor) {
+    onFactorUpdated: function (id) {
+        var updates = [],
+            factor = gantt.getTask(id);
         factor.durationUnit = gantt.config.duration_unit;
-        this.extendAncestorsIfNecessary(factor);
-        this.updateDescendantsTimeInterval(factor);
-        gantt.refreshData();
+        this.extendAncestorsIfNecessary(factor, updates);
+        this.updateDescendantsTimeInterval(factor, updates);
+        this.shrinkRootIfNecessary(updates);
+        this.applyUpdates(updates);
     },
 
-    extendAncestorsIfNecessary: function (factor) {
+    extendAncestorsIfNecessary: function (factor, updates) {
         var parent, changed;
         if (!factor.parent) {
             return;
@@ -157,19 +162,18 @@ var GanttController = {
             changed = true;
         }
         if (changed) {
-            if (parent.id === this.occurrenceEventId) {
-                this.props.updateOccurrence(parent.start_date.getTime(), parent.end_date.getTime());
-            }
-            gantt.updateTask(parent.id);
+            updates.push(parent.id);
+            this.extendAncestorsIfNecessary(parent, updates);
         }
     },
 
     /**
-     * Updates descendants' time intervals. It doesn't do explicit recursion, but the updateTask call fires an update
-     * event which in turn leads to calling this method again.
-     * @param factor
+     * Updates descendants' time intervals.
+     *
+     * Does recursion on changed children and adds the changes to the updates array, so that they can be applied in a
+     * batch later.
      */
-    updateDescendantsTimeInterval: function (factor) {
+    updateDescendantsTimeInterval: function (factor, updates) {
         var children = gantt.getChildren(factor.id),
             child, changed;
         for (var i = 0, len = children.length; i < len; i++) {
@@ -185,7 +189,8 @@ var GanttController = {
             }
             if (changed) {
                 this.ensureNonZeroDuration(child);
-                gantt.updateTask(child.id);
+                updates.push(child.id);
+                this.updateDescendantsTimeInterval(child, updates);
             }
         }
     },
@@ -196,6 +201,58 @@ var GanttController = {
         }
     },
 
+    shrinkRootIfNecessary: function (updates) {
+        var root = gantt.getTask(this.occurrenceEventId),
+            children = gantt.getChildren(root.id),
+            lowestStart, highestEnd, changed, child;
+        if (!children || children.length === 0) {
+            return;
+        }
+        child = gantt.getTask(children[0]);
+        lowestStart = child.start_date;
+        highestEnd = child.end_date;
+        for (var i = 1, len = children.length; i < len; i++) {
+            child = gantt.getTask(children[i]);
+            if (child.start_date < lowestStart) {
+                lowestStart = child.start_date;
+            }
+            if (child.end_date > highestEnd) {
+                highestEnd = child.end_date;
+            }
+        }
+        if (root.start_date < lowestStart) {
+            root.start_date = lowestStart;
+            changed = true;
+        }
+        if (root.end_date > highestEnd) {
+            root.end_date = highestEnd;
+            changed = true;
+        }
+        if (changed) {
+            var duration = gantt.calculateDuration(root.start_date, root.end_date);
+            root.duration = duration;
+            root.end_date = gantt.calculateEndDate(root.start_date, duration, gantt.config.scale_unit);
+            updates.push(root.id);
+        }
+    },
+
+    applyUpdates: function (updates) {
+        var me = this, updateOccurrenceEvt = false;
+        gantt.batchUpdate(function () {
+            for (var i = 0, len = updates.length; i < len; i++) {
+                gantt.updateTask(updates[i]);
+                if (updates[i] === me.occurrenceEventId) {
+                    updateOccurrenceEvt = true;
+                }
+            }
+        });
+        if (updateOccurrenceEvt) {
+            var root = gantt.getTask(this.occurrenceEventId);
+            this.props.updateOccurrence(root.start_date.getTime(), root.end_date.getTime());
+        }
+        gantt.refreshData();
+    },
+
     onLinkAdded: function (linkId, link) {
         if (link.factorType) {
             return true;
@@ -204,7 +261,7 @@ var GanttController = {
         return false;
     },
 
-    onDeleteLink: function(linkId) {
+    onDeleteLink: function (linkId) {
         var link = gantt.getLink(linkId),
             source = gantt.getTask(link.source),
             target = gantt.getTask(link.target);
@@ -243,6 +300,7 @@ var GanttController = {
 
     updateFactor: function (factor) {
         gantt.updateTask(factor.id);
+        this.onFactorUpdated(factor.id);
     },
 
     getFactor: function (factorId) {
