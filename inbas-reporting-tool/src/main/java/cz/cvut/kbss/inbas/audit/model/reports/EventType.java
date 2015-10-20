@@ -23,6 +23,9 @@ public class EventType implements Serializable {
     @OWLDataProperty(iri = Vocabulary.p_dtoClass)
     private String dtoClass;
 
+    @OWLDataProperty(iri = Vocabulary.p_eventType)
+    private String type;
+
     public EventType() {
     }
 
@@ -52,6 +55,14 @@ public class EventType implements Serializable {
 
     public void setDtoClass(String dtoClass) {
         this.dtoClass = dtoClass;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

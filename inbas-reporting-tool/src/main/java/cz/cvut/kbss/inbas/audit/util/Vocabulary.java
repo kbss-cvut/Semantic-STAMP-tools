@@ -62,6 +62,7 @@ public class Vocabulary {
     public static final String p_memberOf = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#memberOf";
     public static final String p_personCategory = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#personCategory";
     public static final String p_organizationCode = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#code";
+    public static final String p_eventType = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#type";
 
     public static final String p_hasIncursion = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasRunwayIncursion";
     public static final String p_hasClearedAircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasClearedAircraft";

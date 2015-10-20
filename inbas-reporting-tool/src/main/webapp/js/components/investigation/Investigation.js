@@ -40,7 +40,6 @@ var Investigation = React.createClass({
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
         this.props.investigation.lastEditedBy = this.props.user;
-
     },
 
     onSubmitError: function (error) {

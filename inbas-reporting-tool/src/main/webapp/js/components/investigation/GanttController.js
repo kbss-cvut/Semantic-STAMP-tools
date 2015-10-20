@@ -31,7 +31,7 @@ var GanttController = {
                 gantt.config.duration_unit = 'minute';
                 gantt.config.min_duration = 60 * 1000;  // Duration in millis
                 gantt.config.scale_height = 30;
-                gantt.config.min_column_width = 70;
+                gantt.config.min_column_width = 60;
                 gantt.config.subscales = [];
                 break;
             case 'hour':
@@ -40,7 +40,7 @@ var GanttController = {
                 gantt.config.duration_unit = 'hour';
                 gantt.config.min_duration = 60 * 60 * 1000;  // Duration in millis
                 gantt.config.scale_height = 30;
-                gantt.config.min_column_width = 70;
+                gantt.config.min_column_width = 60;
                 gantt.config.subscales = [];
                 break;
             case 'second':
@@ -49,7 +49,7 @@ var GanttController = {
                 gantt.config.duration_unit = 'second';
                 gantt.config.min_duration = 1000;  // Duration in millis
                 gantt.config.scale_height = 54;
-                gantt.config.min_column_width = 50;
+                gantt.config.min_column_width = 40;
                 gantt.config.subscales = [
                     {unit: 'minute', step: 1, date: '%H:%i'}
                 ];
@@ -96,6 +96,21 @@ var GanttController = {
                 return 'gantt-link-mitigates';
             }
         };
+        gantt.templates.task_class = function(start, end, task) {
+            var eventType;
+            if (!task.statement) {
+                return 'factor-occurrence-event';
+            }
+            eventType = task.statement.eventType;
+            switch (eventType.type) {
+                case 'http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type':
+                    return 'factor-event-type';
+                case 'http://onto.fel.cvut.cz/ontologies/eccairs/model/descriptive-factor':
+                    return 'factor-descriptive-factor';
+                default:
+                    return 'factor-event-type';
+            }
+        }
     },
 
     configureGanttHandlers: function () {
@@ -254,6 +269,11 @@ var GanttController = {
     },
 
     onLinkAdded: function (linkId, link) {
+        var linkTypes = gantt.config.links;
+        // Only links from end to start are supported
+        if (link.type !== linkTypes.finish_to_start) {
+            return false;
+        }
         if (link.factorType) {
             return true;
         }

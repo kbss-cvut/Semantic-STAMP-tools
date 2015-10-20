@@ -32,6 +32,12 @@ describe('Tests for the gantt component controller', function () {
         gantt.batchUpdate = function (callback) {
             callback();
         };
+        gantt.config.links = {
+            "finish_to_start": "0",
+            "start_to_start": "1",
+            "finish_to_finish": "2",
+            "start_to_finish": "3"
+        };
         window.gantt = gantt;
         GanttController.init(props);
     });
@@ -216,7 +222,7 @@ describe('Tests for the gantt component controller', function () {
                 start_date: start,
                 end_date: new Date(start.getTime() + 5000)
             };
-        spyOn(gantt, 'getTask').andCallFake(function(id) {
+        spyOn(gantt, 'getTask').andCallFake(function (id) {
             return id === occurrenceEvt.id ? occurrenceEvt : child;
         });
         spyOn(gantt, 'getChildren').andReturn([child.id]);
@@ -227,4 +233,25 @@ describe('Tests for the gantt component controller', function () {
         expect(occurrenceEvt.end_date).toEqual(child.end_date);
         expect(GanttController.shrinkRootIfNecessary).toHaveBeenCalled();
     });
+
+    it('Supports only adding links from finish to start', function () {
+        var invalidLink = {
+                id: 2,
+                source: 1,
+                target: 1,
+                type: '1'
+            },
+            validLink = {
+                id: 3,
+                source: 1,
+                target: 1,
+                type: '0'
+            };
+        GanttController.onLinkAdded(invalidLink.id, invalidLink);
+
+        expect(props.onLinkAdded).not.toHaveBeenCalled();
+
+        GanttController.onLinkAdded(validLink.id, validLink);
+        expect(props.onLinkAdded).toHaveBeenCalledWith(validLink);
+    })
 });

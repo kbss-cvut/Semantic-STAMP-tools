@@ -5,9 +5,13 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import cz.cvut.kbss.inbas.audit.exceptions.JsonLdTransformationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Transforms JSON-LD result of SPARQL query for event types into an easier to use and read plain JSON.
@@ -19,6 +23,8 @@ import java.io.IOException;
  */
 public class EventTypeJsonLdTransformer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(EventTypeJsonLdTransformer.class);
+
     private static final String COMMENT_KEY = "http://www.w3.org/2000/01/rdf-schema#comment";
     private static final String LABEL_KEY = "http://www.w3.org/2000/01/rdf-schema#label";
     private static final String DESCRIPTION_KEY = "description";
@@ -28,6 +34,7 @@ public class EventTypeJsonLdTransformer {
     private boolean comment;
     private boolean label;
     private boolean inArray;
+    private List<String> arrayValues;
     private boolean inObject;
     private String currentKey;
 
@@ -83,7 +90,7 @@ public class EventTypeJsonLdTransformer {
                     endObject(generator);
                     break;
                 case START_ARRAY:
-                    startArray(generator);
+                    startArray();
                     break;
                 case END_ARRAY:
                     endArray(generator);
@@ -108,11 +115,10 @@ public class EventTypeJsonLdTransformer {
         }
     }
 
-    private void startArray(JsonGenerator generator) throws IOException {
+    private void startArray() throws IOException {
         if (currentKey != null && currentKey.equals(TYPE_KEY)) {
-            generator.writeFieldName(currentKey);
             this.inArray = true;
-            generator.writeStartArray();
+            this.arrayValues = new ArrayList<>();
         }
     }
 
@@ -133,7 +139,7 @@ public class EventTypeJsonLdTransformer {
 
     private void writeValue(JsonGenerator generator, JsonParser parser) throws IOException {
         if (inArray) {
-            generator.writeString(parser.getValueAsString());
+            arrayValues.add(parser.getValueAsString());
         } else {
             generator.writeStringField(currentKey, parser.getValueAsString());
         }
@@ -141,8 +147,14 @@ public class EventTypeJsonLdTransformer {
 
     private void endArray(JsonGenerator generator) throws IOException {
         if (currentKey.equals(TYPE_KEY)) {
-            generator.writeEndArray();
             this.inArray = false;
+            if (arrayValues.isEmpty()) {
+                return;
+            }
+            if (arrayValues.size() > 1) {
+                LOG.warn("Type array size is greater than 1, using the first value. Values: " + arrayValues);
+            }
+            generator.writeStringField(currentKey, arrayValues.get(0));
         }
     }
 

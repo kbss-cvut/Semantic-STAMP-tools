@@ -293,3 +293,18 @@ td.actions button {
 .float-right {
     float: right;
 }
+
+.factor-occurrence-event {
+    font-size: 110%;
+    font-weight: bold;
+}
+
+.factor-event-type {
+    background-color: #d98ed2;
+    border: 1px solid #d27cca;
+}
+
+.factor-descriptive-factor {
+    background-color: #b68914;
+    border: 1px solid #a77e10;
+}

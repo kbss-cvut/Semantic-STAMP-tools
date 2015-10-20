@@ -28,12 +28,12 @@ public class EventTypeJsonLdTransformerTest {
 
     private static final String JSON = "[{" +
             "\"id\":\"http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-26-27-488-10000000-11000000\"," +
-            "\"type\":[\"http://onto.fel.cvut.cz/ontologies/eccairs/model/descriptive-factor\"]," +
+            "\"type\":\"http://onto.fel.cvut.cz/ontologies/eccairs/model/descriptive-factor\"," +
             "\"description\":\"The aircraft, its systems and components.\"," +
             "\"name\":\"11000000 - Aircraft components and systems\"" +
             "},{" +
             "\"id\":\"http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-26-27-488-10000000-11000000-100000219\"," +
-            "\"type\":[\"http://onto.fel.cvut.cz/ontologies/eccairs/model/descriptive-factor\"]," +
+            "\"type\":\"http://onto.fel.cvut.cz/ontologies/eccairs/model/descriptive-factor\"," +
             "\"description\":\"(ATA Code 0500) Manufacturers' recommended time limits for inspections, maintenance checks" +
             " and inspections (both scheduled and unscheduled).\"," +
             "\"name\":\"100000219 - 0500 TIME LIMITS/MAINTENANCE CHECKS\"" +

@@ -23,7 +23,8 @@ var EventTypeWizardSelect = {
             eventType: {
                 id: eventType.id,
                 name: eventType.name,
-                dtoClass: eventType.dtoClass
+                dtoClass: eventType.dtoClass,
+                type: eventType.type
             }
         };
         var wizardProperties = this._getWizardProperties(eventType);
