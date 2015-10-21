@@ -1,5 +1,7 @@
 'use strict';
 
+var FactorStyleInfo = require('../../utils/FactorStyleInfo');
+
 var DATE_FORMAT = '%d-%m-%y %H:%i';
 
 /**
@@ -102,14 +104,7 @@ var GanttController = {
                 return 'factor-occurrence-event';
             }
             eventType = task.statement.eventType;
-            switch (eventType.type) {
-                case 'http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type':
-                    return 'factor-event-type';
-                case 'http://onto.fel.cvut.cz/ontologies/eccairs/model/descriptive-factor':
-                    return 'factor-descriptive-factor';
-                default:
-                    return 'factor-event-type';
-            }
+            return FactorStyleInfo.getStyleInfo(eventType.type).cls;
         }
     },
 

@@ -308,3 +308,31 @@ td.actions button {
     background-color: #b68914;
     border: 1px solid #a77e10;
 }
+
+ul.event-type {
+    list-style-type: none;
+}
+
+img.factor-event-type {
+    background-color: #0bb7aa;
+    border: none;
+    width: 16px;
+    height: 16px;
+    margin-right: 0.2em;
+    margin-bottom: 0.2em;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+img.factor-descriptive-factor {
+    background-color: #b68914;
+    border: none;
+    width: 16px;
+    height: 16px;
+    margin-right: 0.2em;
+    margin-bottom: 0.2em;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}

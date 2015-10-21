@@ -8,7 +8,7 @@ var Reflux = require('reflux');
 var Typeahead = require('react-typeahead').Typeahead;
 
 var Actions = require('../../actions/Actions');
-var TypeaheadResultList = require('./TypeaheadResultList');
+var TypeaheadResultList = require('./EventTypeTypeaheadResultList');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 
 var EventTypeTypeahead = React.createClass({

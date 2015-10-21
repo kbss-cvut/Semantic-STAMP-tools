@@ -12,6 +12,7 @@ var DateTimePicker = require('react-bootstrap-datetimepicker');
 var Input = require('../Input');
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
 var Utils = require('../../utils/Utils');
+var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 
 var EventTypeWizardSelector = require('../reports/wizard/event-type/EventTypeWizardSelector');
 var WizardWindow = require('../wizard/WizardWindow');
@@ -139,9 +140,14 @@ var FactorDetail = React.createClass({
 
                     <Modal.Body>
                         {this.renderDeleteDialog()}
-                        <div className='form-group'>
-                            <EventTypeTypeahead label='Type' value={eventTypeLabel}
-                                                onSelect={this.onEventTypeChange} focus={true}/>
+                        <div className='form-group row'>
+                            <div className='col-xs-11'>
+                                <EventTypeTypeahead label='Type' value={eventTypeLabel}
+                                                    onSelect={this.onEventTypeChange} focus={true}/>
+                            </div>
+                            <div className='col-xs-1'>
+                                {this.renderFactorTypeIcon()}
+                            </div>
                         </div>
                         <div>
                             <div>
@@ -180,6 +186,16 @@ var FactorDetail = React.createClass({
                 </Modal>
             </div>
         )
+    },
+
+    renderFactorTypeIcon: function () {
+        var type = this.state.eventType,
+            styleInfo;
+        if (!type) {
+            return null;
+        }
+        styleInfo = FactorStyleInfo.getStyleInfo(type.type);
+        return (<img src={styleInfo.icon} className={styleInfo.cls} title={styleInfo.title} style={{margin: '28px 15px 0 -10px', width: '24px', height: '24px'}}/>);
     },
 
     renderDeleteButton: function () {
