@@ -140,7 +140,7 @@ var FactorDetail = React.createClass({
                     <Modal.Body>
                         {this.renderDeleteDialog()}
                         <div className='form-group'>
-                            <EventTypeTypeahead label='Event Type' value={eventTypeLabel}
+                            <EventTypeTypeahead label='Type' value={eventTypeLabel}
                                                 onSelect={this.onEventTypeChange} focus={true}/>
                         </div>
                         <div>

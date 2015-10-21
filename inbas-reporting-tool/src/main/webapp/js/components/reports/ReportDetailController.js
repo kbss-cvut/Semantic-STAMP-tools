@@ -33,7 +33,8 @@ var ReportDetailController = React.createClass({
         if (!report) {
             report = {};
         }
-        report.occurrenceTime = Date.now();
+        // Round to seconds
+        report.occurrenceTime = (Date.now() / 1000) * 1000;
         report.isNew = true;
         return report;
     },

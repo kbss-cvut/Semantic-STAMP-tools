@@ -31,7 +31,7 @@ var GanttController = {
                 gantt.config.duration_unit = 'minute';
                 gantt.config.min_duration = 60 * 1000;  // Duration in millis
                 gantt.config.scale_height = 30;
-                gantt.config.min_column_width = 60;
+                gantt.config.min_column_width = 50;
                 gantt.config.subscales = [];
                 break;
             case 'hour':
@@ -40,7 +40,7 @@ var GanttController = {
                 gantt.config.duration_unit = 'hour';
                 gantt.config.min_duration = 60 * 60 * 1000;  // Duration in millis
                 gantt.config.scale_height = 30;
-                gantt.config.min_column_width = 60;
+                gantt.config.min_column_width = 50;
                 gantt.config.subscales = [];
                 break;
             case 'second':
@@ -49,7 +49,7 @@ var GanttController = {
                 gantt.config.duration_unit = 'second';
                 gantt.config.min_duration = 1000;  // Duration in millis
                 gantt.config.scale_height = 54;
-                gantt.config.min_column_width = 40;
+                gantt.config.min_column_width = 23;
                 gantt.config.subscales = [
                     {unit: 'minute', step: 1, date: '%H:%i'}
                 ];
