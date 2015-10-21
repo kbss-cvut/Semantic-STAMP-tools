@@ -2,6 +2,7 @@
 
 jest.dontMock('../../js/components/investigation/FactorDetail');
 jest.dontMock('../../js/components/reports/wizard/event-type/EventTypeWizardSelector');
+jest.dontMock('../../js/utils/FactorStyleInfo');
 
 describe('Tests of the factor dialog', function () {
 

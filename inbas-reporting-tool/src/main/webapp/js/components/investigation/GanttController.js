@@ -56,6 +56,12 @@ var GanttController = {
                     {unit: 'minute', step: 1, date: '%H:%i'}
                 ];
                 break;
+            case 'relative':
+                gantt.config.date_scale = '%s';
+                gantt.config.scale_height = 30;
+                gantt.config.min_column_width = 25;
+                gantt.config.subscales = [];
+                break;
             default:
                 console.warn('Unsupported gantt scale ' + scale);
                 break;
