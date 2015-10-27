@@ -253,5 +253,75 @@ describe('Tests for the gantt component controller', function () {
 
         GanttController.onLinkAdded(validLink.id, validLink);
         expect(props.onLinkAdded).toHaveBeenCalledWith(validLink);
-    })
+    });
+
+    it('Moves factors by the same amount of time as the occurrence start time changes (forward)', function() {
+        var start = new Date(),
+            occurrenceEvt = {
+                id: 1,
+                start_date: start,
+                duration: 2000,
+                end_date: new Date(start.getTime() + 2000)
+            }, child = {
+                id: 2,
+                parent: 1,
+                start_date: start,
+                duration: 1000,
+                end_date: new Date(start.getTime() + 1000)
+            },
+            timeDiff = 10000;
+        spyOn(gantt, 'getTask').andCallFake(function (id) {
+            return id === occurrenceEvt.id ? occurrenceEvt : child;
+        });
+        spyOn(gantt, 'getChildren').andCallFake(function(id) {
+            return id === occurrenceEvt.id ? [child] : [];
+        });
+        spyOn(GanttController, 'moveFactor').andCallThrough();
+        spyOn(GanttController, 'applyUpdates').andCallThrough();
+        GanttController.occurrenceEventId = occurrenceEvt.id;
+
+        GanttController.updateOccurrenceEvent({occurrenceTime: start.getTime() + timeDiff});
+
+        expect(GanttController.moveFactor).toHaveBeenCalled();
+        expect(GanttController.applyUpdates).toHaveBeenCalled();
+        expect(occurrenceEvt.start_date).toEqual(new Date(start.getTime() + timeDiff));
+        expect(occurrenceEvt.end_date).toEqual(new Date(start.getTime() + timeDiff + occurrenceEvt.duration));
+        expect(child.start_date).toEqual(new Date(start.getTime() + timeDiff));
+        expect(child.end_date).toEqual(new Date(start.getTime() + timeDiff + child.duration));
+    });
+
+    it('Moves factors by the same amount of time as the occurrence start time changes (backwards)', function() {
+        var start = new Date(),
+            occurrenceEvt = {
+                id: 1,
+                start_date: start,
+                duration: 2000,
+                end_date: new Date(start.getTime() + 2000)
+            }, child = {
+                id: 2,
+                parent: 1,
+                start_date: start,
+                duration: 1000,
+                end_date: new Date(start.getTime() + 1000)
+            },
+            timeDiff = -10000;
+        spyOn(gantt, 'getTask').andCallFake(function (id) {
+            return id === occurrenceEvt.id ? occurrenceEvt : child;
+        });
+        spyOn(gantt, 'getChildren').andCallFake(function(id) {
+            return id === occurrenceEvt.id ? [child] : [];
+        });
+        spyOn(GanttController, 'moveFactor').andCallThrough();
+        spyOn(GanttController, 'applyUpdates').andCallThrough();
+        GanttController.occurrenceEventId = occurrenceEvt.id;
+
+        GanttController.updateOccurrenceEvent({occurrenceTime: start.getTime() + timeDiff});
+
+        expect(GanttController.moveFactor).toHaveBeenCalled();
+        expect(GanttController.applyUpdates).toHaveBeenCalled();
+        expect(occurrenceEvt.start_date).toEqual(new Date(start.getTime() + timeDiff));
+        expect(occurrenceEvt.end_date).toEqual(new Date(start.getTime() + timeDiff + occurrenceEvt.duration));
+        expect(child.start_date).toEqual(new Date(start.getTime() + timeDiff));
+        expect(child.end_date).toEqual(new Date(start.getTime() + timeDiff + child.duration));
+    });
 });

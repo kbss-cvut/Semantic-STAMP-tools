@@ -104,7 +104,7 @@ var GanttController = {
                 return 'gantt-link-mitigates';
             }
         };
-        gantt.templates.task_class = function(start, end, task) {
+        gantt.templates.task_class = function (start, end, task) {
             var eventType;
             if (!task.statement) {
                 return 'factor-occurrence-event';
@@ -252,7 +252,7 @@ var GanttController = {
         }
     },
 
-    applyUpdates: function (updates) {
+    applyUpdates: function (updates, preventOccurrenceUpdate) {
         var me = this, updateOccurrenceEvt = false;
         gantt.batchUpdate(function () {
             for (var i = 0, len = updates.length; i < len; i++) {
@@ -262,7 +262,7 @@ var GanttController = {
                 }
             }
         });
-        if (updateOccurrenceEvt) {
+        if (updateOccurrenceEvt && !preventOccurrenceUpdate) {
             var root = gantt.getTask(this.occurrenceEventId);
             this.props.updateOccurrence(root.start_date.getTime(), root.end_date.getTime());
         }
@@ -291,19 +291,30 @@ var GanttController = {
 
     updateOccurrenceEvent: function (occurrence) {
         var occurrenceEvt = gantt.getTask(this.occurrenceEventId),
-            changes = false, startDate;
+            changes = [], startDate;
         if (occurrenceEvt.text !== occurrence.name) {
             occurrenceEvt.text = occurrence.name;
-            changes = true;
+            changes.push(this.occurrenceEventId);
         }
         startDate = new Date(occurrence.occurrenceTime);
         if (occurrenceEvt.start_date !== startDate) {
-            occurrenceEvt.start_date = startDate;
-            changes = true;
+            changes.push(this.occurrenceEventId);
+            var timeDiff = startDate.getTime() - occurrenceEvt.start_date.getTime();
+            this.moveFactor(occurrenceEvt.id, timeDiff, changes);
         }
-        if (changes) {
-            this.ensureNonZeroDuration(occurrenceEvt);
-            gantt.updateTask(occurrenceEvt.id);
+        if (changes.length > 0) {
+            this.applyUpdates(changes, true);
+        }
+    },
+
+    moveFactor: function (factorId, timeDiff, changes) {
+        var factor = gantt.getTask(factorId),
+            children = gantt.getChildren(factor.id);
+        factor.start_date = new Date(factor.start_date.getTime() + timeDiff);
+        factor.end_date = gantt.calculateEndDate(factor.start_date, factor.duration, gantt.config.scale_unit);
+        changes.push(factor.id);
+        for (var i = 0, len = children.length; i < len; i++) {
+            this.moveFactor(children[i], timeDiff, changes);
         }
     },
 
