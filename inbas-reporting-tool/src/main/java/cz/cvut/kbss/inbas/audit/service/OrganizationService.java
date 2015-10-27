@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.services.impl;
+package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;

@@ -2,7 +2,7 @@ package cz.cvut.kbss.inbas.audit.security;
 
 import cz.cvut.kbss.inbas.audit.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
-import cz.cvut.kbss.inbas.audit.services.security.UserDetailsService;
+import cz.cvut.kbss.inbas.audit.service.security.UserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

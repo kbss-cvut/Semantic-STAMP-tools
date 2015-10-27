@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.exceptions;
+package cz.cvut.kbss.inbas.audit.exception;
 
 /**
  * Thrown when an exception occurs during processing of JSON-LD input.

@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * @author ledvima1
  */
 @Configuration
-@ComponentScan(basePackages = "cz.cvut.kbss.inbas.audit.services")
+@ComponentScan(basePackages = "cz.cvut.kbss.inbas.audit.service")
 public class ServiceConfig {
 
     @Bean

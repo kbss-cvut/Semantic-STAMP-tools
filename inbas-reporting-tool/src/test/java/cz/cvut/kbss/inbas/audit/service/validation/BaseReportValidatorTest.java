@@ -1,10 +1,9 @@
-package cz.cvut.kbss.inbas.audit.services.impl.validation;
+package cz.cvut.kbss.inbas.audit.service.validation;
 
-import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
+import cz.cvut.kbss.inbas.audit.exception.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
-import cz.cvut.kbss.inbas.audit.services.BaseServiceTestRunner;
-import cz.cvut.kbss.inbas.audit.services.validation.ReportValidator;
+import cz.cvut.kbss.inbas.audit.service.BaseServiceTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

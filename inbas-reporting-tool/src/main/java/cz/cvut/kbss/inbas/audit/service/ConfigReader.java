@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.services;
+package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.util.ConfigParam;
 import org.springframework.beans.factory.annotation.Autowired;

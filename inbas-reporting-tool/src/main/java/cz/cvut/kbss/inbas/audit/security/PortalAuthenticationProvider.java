@@ -6,7 +6,7 @@ import cz.cvut.kbss.inbas.audit.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
 import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpoint;
 import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpointType;
-import cz.cvut.kbss.inbas.audit.services.PersonService;
+import cz.cvut.kbss.inbas.audit.service.PersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

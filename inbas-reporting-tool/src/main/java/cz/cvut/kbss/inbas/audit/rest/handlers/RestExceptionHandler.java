@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.handlers;
 
-import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
-import cz.cvut.kbss.inbas.audit.exceptions.UsernameExistsException;
+import cz.cvut.kbss.inbas.audit.exception.InvalidReportException;
+import cz.cvut.kbss.inbas.audit.exception.UsernameExistsException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

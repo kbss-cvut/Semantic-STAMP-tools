@@ -1,6 +1,6 @@
-package cz.cvut.kbss.inbas.audit.services.validation;
+package cz.cvut.kbss.inbas.audit.service.validation;
 
-import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
+import cz.cvut.kbss.inbas.audit.exception.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 
 /**

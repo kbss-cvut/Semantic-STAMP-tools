@@ -1,11 +1,10 @@
-package cz.cvut.kbss.inbas.audit.services.impl;
+package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.persistence.dao.*;
-import cz.cvut.kbss.inbas.audit.services.OccurrenceReportService;
-import cz.cvut.kbss.inbas.audit.services.validation.ReportValidator;
+import cz.cvut.kbss.inbas.audit.service.validation.ReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +15,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * @author ledvima1
- */
 @Service
-public class OccurrenceReportServiceImpl extends BaseService<OccurrenceReport> implements OccurrenceReportService {
+public class OccurrenceReportService extends BaseService<OccurrenceReport> {
 
     @Autowired
     private ReportValidator reportValidator;
@@ -42,7 +38,6 @@ public class OccurrenceReportServiceImpl extends BaseService<OccurrenceReport> i
         return occurrenceReportDao;
     }
 
-    @Override
     public OccurrenceReport findByKey(String key) {
         return occurrenceReportDao.findByKey(key);
     }

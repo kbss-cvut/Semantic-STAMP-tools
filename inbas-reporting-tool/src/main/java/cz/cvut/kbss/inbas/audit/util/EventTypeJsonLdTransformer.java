@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
-import cz.cvut.kbss.inbas.audit.exceptions.JsonLdTransformationException;
+import cz.cvut.kbss.inbas.audit.exception.JsonLdTransformationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

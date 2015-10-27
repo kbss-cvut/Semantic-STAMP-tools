@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.mapper;
 
 import cz.cvut.kbss.inbas.audit.model.Organization;
-import cz.cvut.kbss.inbas.audit.services.impl.OrganizationService;
+import cz.cvut.kbss.inbas.audit.service.OrganizationService;
 import org.mapstruct.TargetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

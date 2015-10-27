@@ -1,4 +1,5 @@
 Don't use interfaces for services if they are not required
+Draw icons for event type and descriptive factor
 Datetime picker is missing seconds scale
 Create proper investigation screen
 Occurrences should have start and end time

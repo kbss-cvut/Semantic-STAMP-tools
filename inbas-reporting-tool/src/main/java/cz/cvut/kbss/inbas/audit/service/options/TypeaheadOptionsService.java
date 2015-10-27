@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.services.options;
+package cz.cvut.kbss.inbas.audit.service.options;
 
 import cz.cvut.kbss.inbas.audit.rest.dto.model.RawJson;
 import org.springframework.beans.factory.annotation.Autowired;

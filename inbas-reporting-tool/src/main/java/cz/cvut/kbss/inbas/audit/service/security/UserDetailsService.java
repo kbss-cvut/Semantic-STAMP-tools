@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.services.security;
+package cz.cvut.kbss.inbas.audit.service.security;
 
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;

@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.audit.rest;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.BadRequestException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
-import cz.cvut.kbss.inbas.audit.services.PersonService;
+import cz.cvut.kbss.inbas.audit.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.rest.dto.model.RawJson;
-import cz.cvut.kbss.inbas.audit.services.options.TypeaheadOptionsService;
+import cz.cvut.kbss.inbas.audit.service.options.TypeaheadOptionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;

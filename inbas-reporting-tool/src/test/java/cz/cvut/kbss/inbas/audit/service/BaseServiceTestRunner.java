@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.services;
+package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.config.ServiceConfig;
 import cz.cvut.kbss.inbas.audit.test.config.TestPersistenceConfig;

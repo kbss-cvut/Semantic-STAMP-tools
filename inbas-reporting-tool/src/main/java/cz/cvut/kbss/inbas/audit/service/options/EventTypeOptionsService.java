@@ -1,7 +1,7 @@
-package cz.cvut.kbss.inbas.audit.services.options;
+package cz.cvut.kbss.inbas.audit.service.options;
 
 import cz.cvut.kbss.inbas.audit.rest.dto.model.RawJson;
-import cz.cvut.kbss.inbas.audit.services.ConfigReader;
+import cz.cvut.kbss.inbas.audit.service.ConfigReader;
 import cz.cvut.kbss.inbas.audit.util.ConfigParam;
 import cz.cvut.kbss.inbas.audit.util.EventTypeJsonLdTransformer;
 import org.slf4j.Logger;

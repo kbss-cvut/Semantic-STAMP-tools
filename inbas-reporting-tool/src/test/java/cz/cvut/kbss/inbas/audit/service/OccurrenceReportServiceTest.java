@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.services.impl;
+package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Person;
@@ -6,9 +6,6 @@ import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
-import cz.cvut.kbss.inbas.audit.services.BaseServiceTestRunner;
-import cz.cvut.kbss.inbas.audit.services.OccurrenceReportService;
-import cz.cvut.kbss.inbas.audit.services.PersonService;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -24,7 +21,7 @@ import static org.junit.Assert.*;
 /**
  * @author ledvima1
  */
-public class OccurrenceReportServiceImplTest extends BaseServiceTestRunner {
+public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
 
     private static final String USERNAME = "halsey@unsc.org";
 

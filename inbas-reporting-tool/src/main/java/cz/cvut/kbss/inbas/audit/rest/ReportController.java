@@ -1,12 +1,12 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
-import cz.cvut.kbss.inbas.audit.exceptions.InvalidReportException;
+import cz.cvut.kbss.inbas.audit.exception.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportInfo;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
-import cz.cvut.kbss.inbas.audit.services.OccurrenceReportService;
+import cz.cvut.kbss.inbas.audit.service.OccurrenceReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

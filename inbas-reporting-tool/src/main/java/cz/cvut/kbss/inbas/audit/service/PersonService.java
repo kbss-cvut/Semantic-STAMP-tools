@@ -1,19 +1,15 @@
-package cz.cvut.kbss.inbas.audit.services.impl;
+package cz.cvut.kbss.inbas.audit.service;
 
-import cz.cvut.kbss.inbas.audit.exceptions.UsernameExistsException;
+import cz.cvut.kbss.inbas.audit.exception.UsernameExistsException;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
-import cz.cvut.kbss.inbas.audit.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-/**
- * @author ledvima1
- */
 @Service
-public class PersonServiceImpl extends BaseService<Person> implements PersonService {
+public class PersonService extends BaseService<Person> {
 
     @Autowired
     private PasswordEncoder passwordEncoder;

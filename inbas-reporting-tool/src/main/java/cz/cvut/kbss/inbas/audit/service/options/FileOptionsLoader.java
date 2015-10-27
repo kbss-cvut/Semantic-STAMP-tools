@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.services.options;
+package cz.cvut.kbss.inbas.audit.service.options;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.exceptions;
+package cz.cvut.kbss.inbas.audit.exception;
 
 /**
  * @author ledvima1
