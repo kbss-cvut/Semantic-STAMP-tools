@@ -9,13 +9,13 @@ var FactorStyleInfo = {
         switch (type) {
             case 'http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type':
                 return {
-                    icon: 'resources/images/icons/event.png',
+                    icon: 'resources/images/icons/event_type.gif',
                     cls: 'factor-event-type',
                     title: 'Event type'
                 };
             case 'http://onto.fel.cvut.cz/ontologies/eccairs/model/descriptive-factor':
                 return {
-                    icon: 'resources/images/icons/descriptive-factor.png',
+                    icon: 'resources/images/icons/descriptive_factor.gif',
                     cls: 'factor-descriptive-factor',
                     title: 'Descriptive factor'
                 };
