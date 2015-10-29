@@ -1,6 +1,3 @@
-Don't use interfaces for services if they are not required
-Draw icons for event type and descriptive factor
-Datetime picker is missing seconds scale
 Create proper investigation screen
 Occurrences should have start and end time
 Disable fuzzy string matching in autocomplete
@@ -9,9 +6,6 @@ Add loss of separation wizard
 Upgrade to react-router 1.0.0
 Show autocomplete results as tree when appropriate
         - Try using react-bootstrap-treeview
-Create tests for the app
-    React component tests
-    Java tests
 Design some generic validation mechanism for the wizards
     Show validation errors on the corresponding fields
 Design a way to represent wizards in ontology and generate them based on this ontology

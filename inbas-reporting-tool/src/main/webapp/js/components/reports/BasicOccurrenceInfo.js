@@ -43,7 +43,7 @@ var BasicOccurrenceInfo = React.createClass({
                 <div className='row'>
                     <div className='picker-container form-group form-group-sm col-xs-4'>
                         <label className='control-label'>Occurrence Time</label>
-                        <DateTimePicker inputFormat='DD-MM-YY HH:mm' dateTime={report.occurrenceTime.toString()}
+                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrenceTime.toString()}
                                         onChange={this.onDateChange}
                                         inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
                     </div>
