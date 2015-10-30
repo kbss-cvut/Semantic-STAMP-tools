@@ -50,7 +50,12 @@
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/tests/preprocessor.js",
-    "unmockedModulePathPatterns": ["<rootDir>/node_modules/react", "<rootDir>/node_modules/reflux", "<rootDir>/node_modules/object-assign"],
+    "unmockedModulePathPatterns": [
+      "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/reflux",
+      "<rootDir>/node_modules/object-assign",
+      "<rootDir>/node_modules/kbss-react-bootstrap-datetimepicker"
+    ],
     "setupTestFrameworkScriptFile": "<rootDir>/tests/setup-jasmine-env.js"
   },
   "author": "Martin Ledvinka"

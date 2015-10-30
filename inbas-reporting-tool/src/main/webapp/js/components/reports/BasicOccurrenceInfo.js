@@ -4,7 +4,7 @@
 'use strict';
 
 var React = require('react');
-var DateTimePicker = require('react-bootstrap-datetimepicker');
+var DateTimePicker = require('kbss-react-bootstrap-datetimepicker');
 
 var Input = require('../Input');
 var Utils = require('../../utils/Utils');

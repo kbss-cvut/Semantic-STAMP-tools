@@ -7,7 +7,7 @@ var React = require('react');
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
-var DateTimePicker = require('react-bootstrap-datetimepicker');
+var DateTimePicker = require('kbss-react-bootstrap-datetimepicker');
 
 var Input = require('../Input');
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
