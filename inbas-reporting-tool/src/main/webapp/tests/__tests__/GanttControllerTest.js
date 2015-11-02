@@ -6,9 +6,11 @@ describe('Tests for the gantt component controller', function () {
 
     var GanttController = require('../../js/components/investigation/GanttController'),
         gantt = jasmine.createSpyObj('gantt', ['init', 'clearAll', 'attachEvent', 'updateTask', 'refreshData']),
-        props = jasmine.createSpyObj('props', ['onLinkAdded', 'onCreateFactor', 'onEditFactor', 'updateOccurrence', 'onDeleteLink']);
+        props = jasmine.createSpyObj('props', ['onLinkAdded', 'onCreateFactor', 'onEditFactor', 'onDeleteLink']);
 
     beforeEach(function () {
+        props.updateOccurrence = function () {
+        };
         gantt.config = {};
         gantt.templates = {};
         gantt.date = {};
@@ -187,6 +189,7 @@ describe('Tests for the gantt component controller', function () {
             GanttController.onFactorAdded(task.id, task);
             return task.id;
         });
+        spyOn(props, 'updateOccurrence');
         GanttController.addFactor(added, occurrenceEvt.id);
 
         expect(gantt.addTask).toHaveBeenCalled();
@@ -255,7 +258,7 @@ describe('Tests for the gantt component controller', function () {
         expect(props.onLinkAdded).toHaveBeenCalledWith(validLink);
     });
 
-    it('Moves factors by the same amount of time as the occurrence start time changes (forward)', function() {
+    it('Moves factors by the same amount of time as the occurrence start time changes (forward)', function () {
         var start = new Date(),
             occurrenceEvt = {
                 id: 1,
@@ -273,7 +276,7 @@ describe('Tests for the gantt component controller', function () {
         spyOn(gantt, 'getTask').andCallFake(function (id) {
             return id === occurrenceEvt.id ? occurrenceEvt : child;
         });
-        spyOn(gantt, 'getChildren').andCallFake(function(id) {
+        spyOn(gantt, 'getChildren').andCallFake(function (id) {
             return id === occurrenceEvt.id ? [child] : [];
         });
         spyOn(GanttController, 'moveFactor').andCallThrough();
@@ -290,7 +293,7 @@ describe('Tests for the gantt component controller', function () {
         expect(child.end_date).toEqual(new Date(start.getTime() + timeDiff + child.duration));
     });
 
-    it('Moves factors by the same amount of time as the occurrence start time changes (backwards)', function() {
+    it('Moves factors by the same amount of time as the occurrence start time changes (backwards)', function () {
         var start = new Date(),
             occurrenceEvt = {
                 id: 1,
@@ -308,7 +311,7 @@ describe('Tests for the gantt component controller', function () {
         spyOn(gantt, 'getTask').andCallFake(function (id) {
             return id === occurrenceEvt.id ? occurrenceEvt : child;
         });
-        spyOn(gantt, 'getChildren').andCallFake(function(id) {
+        spyOn(gantt, 'getChildren').andCallFake(function (id) {
             return id === occurrenceEvt.id ? [child] : [];
         });
         spyOn(GanttController, 'moveFactor').andCallThrough();
@@ -323,5 +326,31 @@ describe('Tests for the gantt component controller', function () {
         expect(occurrenceEvt.end_date).toEqual(new Date(start.getTime() + timeDiff + occurrenceEvt.duration));
         expect(child.start_date).toEqual(new Date(start.getTime() + timeDiff));
         expect(child.end_date).toEqual(new Date(start.getTime() + timeDiff + child.duration));
+    });
+
+    it('Prevents occurrence event update when updates are being applied', function () {
+        var oldName = 'Old name',
+            occurrenceEvt = {
+                id: 1,
+                text: 'Old name',
+                start_date: new Date(),
+                end_date: new Date(Date.now() + 1000)
+            },
+            occurrence = {
+                name: occurrenceEvt.text,
+                occurrenceTime: occurrenceEvt.start_date.getTime()
+            };
+        spyOn(gantt, 'getTask').andReturn(occurrenceEvt);
+        spyOn(props, 'updateOccurrence').andCallFake(function () {
+            occurrence.name = 'Updated name';
+            expect(GanttController.applyChangesRunning).toBeTruthy();
+            GanttController.updateOccurrenceEvent(occurrence);
+        });
+
+        GanttController.applyUpdates([occurrenceEvt.id], false);
+
+        expect(props.updateOccurrence).toHaveBeenCalled();
+        expect(occurrenceEvt.text).toEqual(oldName);
+        expect(GanttController.applyChangesRunning).toBeFalsy();
     });
 });
