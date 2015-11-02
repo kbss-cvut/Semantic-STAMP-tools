@@ -172,21 +172,21 @@ var Factors = React.createClass({
                         <div className='col-xs-2 gantt-zoom-label bold'>Scale:</div>
                         <div className='col-xs-2'>
                             <Input type='radio' label='Seconds' value='second' title='Click to select scale in seconds'
-                                   checked={this.state.scale == 'second'}
+                                   checked={this.state.scale === 'second'}
                                    onChange={this.onScaleChange}/>
                         </div>
                         <div className='col-xs-2'>
                             <Input type='radio' label='Minutes' value='minute' title='Click to select scale in minutes'
-                                   checked={this.state.scale == 'minute'}
+                                   checked={this.state.scale === 'minute'}
                                    onChange={this.onScaleChange}/>
                         </div>
                         <div className='col-xs-2'>
                             <Input type='radio' label='Hours' value='hour' title='Click to select scale in hours'
-                                   checked={this.state.scale == 'hour'} onChange={this.onScaleChange}/>
+                                   checked={this.state.scale === 'hour'} onChange={this.onScaleChange}/>
                         </div>
                         <div className='col-xs-2'>
                             <Input type='radio' label='Relative' value='relative' title='Click to select relative scale'
-                                   checked={this.state.scale == 'relative'} onChange={this.onScaleChange}/>
+                                   checked={this.state.scale === 'relative'} onChange={this.onScaleChange}/>
                         </div>
                     </div>
 

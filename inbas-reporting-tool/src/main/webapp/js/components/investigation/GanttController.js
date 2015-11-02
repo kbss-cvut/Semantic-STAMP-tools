@@ -3,8 +3,9 @@
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 
 var DATE_FORMAT = '%d-%m-%y %H:%i';
+var TOOLTIP_DATE_FORMAT = '%d-%m-%y %H:%i:%s';
 var COLUMN_DEFINITIONS = {
-    'text': {name: 'text', label: 'Event', width: 250, tree: true},
+    'text': {name: 'text', label: 'Event', width: '*', tree: true},
     'startDate': {name: 'start_date', label: 'Start time', width: '*', align: 'center'},
     'add': {name: 'add', label: '', width: 44}
 };
@@ -29,6 +30,7 @@ var GanttController = {
 
     occurrenceEventId: null,
     props: {},
+    applyChangesRunning: false,
 
     setScale: function (scale) {
         switch (scale) {
@@ -107,6 +109,7 @@ var GanttController = {
         gantt.config.drag_progress = false;
         gantt.config.link_line_width = 3;
         gantt.config.link_arrow_size = 8;
+        gantt.config.tooltip_timeout = 10;  // in millis
     },
 
     configureGanttTemplates: function () {
@@ -124,7 +127,20 @@ var GanttController = {
             }
             eventType = task.statement.eventType;
             return FactorStyleInfo.getStyleInfo(eventType.type).cls;
-        }
+        };
+        gantt.templates.tooltip_date_format = function (date) {
+            var formatFunc = gantt.date.date_to_str(TOOLTIP_DATE_FORMAT);
+            return formatFunc(date);
+        };
+        gantt.templates.tooltip_text = function (start, end, task) {
+            var tooltip = '<b>' + task.text + '</b><br/>';
+            if (task.statement) {
+                tooltip += task.statement.eventType.type + '<br/>';
+            }
+            tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
+                '<br/><b>End date:</b> ' + gantt.templates.tooltip_date_format(end);
+            return tooltip;
+        };
     },
 
     configureGanttHandlers: function () {
@@ -267,6 +283,7 @@ var GanttController = {
 
     applyUpdates: function (updates, preventOccurrenceUpdate) {
         var me = this, updateOccurrenceEvt = false;
+        me.applyChangesRunning = true;
         gantt.batchUpdate(function () {
             for (var i = 0, len = updates.length; i < len; i++) {
                 gantt.updateTask(updates[i]);
@@ -280,6 +297,7 @@ var GanttController = {
             this.props.updateOccurrence(root.start_date.getTime(), root.end_date.getTime());
         }
         gantt.refreshData();
+        me.applyChangesRunning = false;
     },
 
     onLinkAdded: function (linkId, link) {
@@ -303,6 +321,9 @@ var GanttController = {
     },
 
     updateOccurrenceEvent: function (occurrence) {
+        if (this.applyChangesRunning) {
+            return;
+        }
         var occurrenceEvt = gantt.getTask(this.occurrenceEventId),
             changes = [];
         if (occurrenceEvt.text !== occurrence.name) {
