@@ -3,6 +3,11 @@
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 
 var DATE_FORMAT = '%d-%m-%y %H:%i';
+var COLUMN_DEFINITIONS = {
+    'text': {name: 'text', label: 'Event', width: 250, tree: true},
+    'startDate': {name: 'start_date', label: 'Start time', width: '*', align: 'center'},
+    'add': {name: 'add', label: '', width: 44}
+};
 
 /**
  * Initializes time scale in seconds.
@@ -35,6 +40,7 @@ var GanttController = {
                 gantt.config.scale_height = 30;
                 gantt.config.min_column_width = 50;
                 gantt.config.subscales = [];
+                this.configureColumns(['text', 'startDate', 'add']);
                 break;
             case 'hour':
                 gantt.config.scale_unit = 'hour';
@@ -44,6 +50,7 @@ var GanttController = {
                 gantt.config.scale_height = 30;
                 gantt.config.min_column_width = 50;
                 gantt.config.subscales = [];
+                this.configureColumns(['text', 'startDate', 'add']);
                 break;
             case 'second':
                 gantt.config.scale_unit = 'second';
@@ -55,18 +62,28 @@ var GanttController = {
                 gantt.config.subscales = [
                     {unit: 'minute', step: 1, date: '%H:%i'}
                 ];
+                this.configureColumns(['text', 'startDate', 'add']);
                 break;
             case 'relative':
-                gantt.config.date_scale = '%s';
+                gantt.config.date_scale = ' ';
                 gantt.config.scale_height = 30;
                 gantt.config.min_column_width = 25;
                 gantt.config.subscales = [];
+                this.configureColumns(['text', 'add']);
                 break;
             default:
                 console.warn('Unsupported gantt scale ' + scale);
                 break;
         }
         gantt.render();
+    },
+
+    configureColumns: function (columns) {
+        var cols = [];
+        for (var i = 0, len = columns.length; i < len; i++) {
+            cols.push(COLUMN_DEFINITIONS[columns[i]]);
+        }
+        gantt.config.columns = cols;
     },
 
     init: function (config) {
@@ -80,11 +97,7 @@ var GanttController = {
     },
 
     configureGanttConfig: function () {
-        gantt.config.columns = [
-            {name: 'text', label: 'Event', width: '*', tree: true},
-            {name: 'start_date', label: 'Start time', width: '*', align: 'center'},
-            {name: 'add', label: '', width: 44}
-        ];
+        this.configureColumns(['text', 'startDate', 'add']);
         gantt.config.api_date = DATE_FORMAT;
         gantt.config.date_grid = DATE_FORMAT;
         gantt.config.fit_tasks = true;
@@ -291,15 +304,14 @@ var GanttController = {
 
     updateOccurrenceEvent: function (occurrence) {
         var occurrenceEvt = gantt.getTask(this.occurrenceEventId),
-            changes = [], startDate;
+            changes = [];
         if (occurrenceEvt.text !== occurrence.name) {
             occurrenceEvt.text = occurrence.name;
             changes.push(this.occurrenceEventId);
         }
-        startDate = new Date(occurrence.occurrenceTime);
-        if (occurrenceEvt.start_date !== startDate) {
+        if (occurrenceEvt.start_date.getTime() !== occurrence.occurrenceTime) {
             changes.push(this.occurrenceEventId);
-            var timeDiff = startDate.getTime() - occurrenceEvt.start_date.getTime();
+            var timeDiff = occurrence.occurrenceTime - occurrenceEvt.start_date.getTime();
             this.moveFactor(occurrenceEvt.id, timeDiff, changes);
         }
         if (changes.length > 0) {
