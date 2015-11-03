@@ -5,11 +5,15 @@
 'use strict';
 
 var React = require('react');
-var router = require('./utils/router');
+var ReactDOM = require('react-dom');
+var Router = require('react-router').Router;
+
+var history = require('./utils/Routing').history;
+var Routes = require('./utils/Routes');
 var Actions = require('./actions/Actions');
 
 Actions.loadUser();
 
-router.run(function (Handler) {
-    React.render(<Handler />, document.getElementById('content'));
-});
+ReactDOM.render((
+    <Router history={history} routes={Routes}/>
+), document.getElementById('content'));

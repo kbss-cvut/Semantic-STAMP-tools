@@ -12,7 +12,7 @@ var Actions = require('../../actions/Actions');
 var ReportsStore = require('../../stores/ReportsStore');
 var Reports = require('./Reports');
 
-var router = require('../../utils/router');
+var Routing = require('../../utils/Routing');
 
 var ReportsController = React.createClass({
     mixins: [
@@ -34,10 +34,10 @@ var ReportsController = React.createClass({
         this.setState(assign({}, this.state, newState));
     },
     onCreateReport: function () {
-        router.transitionTo('report_new', null, {onSuccess: 'reports', onCancel: 'reports'});
+        Routing.transitionTo('reports/create', null, null, {onSuccess: 'reports', onCancel: 'reports'});
     },
     onEditReport: function (report) {
-        router.transitionTo('report', {reportKey: report.key}, {onSuccess: 'reports', onCancel: 'reports'});
+        Routing.transitionTo('reports/' + report.key, null, null, {onSuccess: 'reports', onCancel: 'reports'});
     },
     onEditCancel: function () {
         this.setState(assign({}, this.state, {
@@ -48,6 +48,9 @@ var ReportsController = React.createClass({
 
 
     render: function () {
+        if (this.props.children) {
+            return this.props.children;
+        }
         var edit = {
             editing: this.state.editing,
             editedReport: this.state.editedReport,

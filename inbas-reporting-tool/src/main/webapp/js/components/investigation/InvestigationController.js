@@ -11,7 +11,8 @@ var assign = require('object-assign');
 var Actions = require('../../actions/Actions');
 var Investigation = require('./Investigation');
 var ReportsStore = require('../../stores/ReportsStore');
-var router = require('../../utils/router');
+var Routing = require('../../utils/Routing');
+var RouterStore = require('../../stores/RouterStore');
 
 var InvestigationController = React.createClass({
     mixins: [
@@ -41,7 +42,10 @@ var InvestigationController = React.createClass({
     },
 
     onCancel: function () {
-        router.transitionTo(this.props.query.onCancel);
+        var handlers = RouterStore.getViewHandlers(this.props.location);
+        if (handlers) {
+            Routing.transitionTo(handlers.onCancel);
+        }
     },
 
     onChange: function (attribute, value) {

@@ -11,6 +11,7 @@ var Reflux = require('reflux');
 var RouterStore = Reflux.createStore({
 
     transitionPayload: {},
+    viewHandlers: {},
 
     setTransitionPayload: function (route, payload) {
         if (!payload) {
@@ -27,6 +28,19 @@ var RouterStore = Reflux.createStore({
      */
     getTransitionPayload: function (route) {
         return this.transitionPayload[route];
+    },
+
+    setViewHandlers: function (viewPath, handlers) {
+        // Need to figure out a reliable way of determining view identifier for the handlers
+        if (!handlers) {
+            delete this.viewHandlers[viewPath];
+        } else {
+            this.viewHandlers[viewPath] = handlers;
+        }
+    },
+
+    getViewHandlers: function (location) {
+        return this.viewHandlers[location.pathname];
     }
 });
 

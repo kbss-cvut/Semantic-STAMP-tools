@@ -6,7 +6,7 @@
 
 var Actions = require('../actions/Actions');
 var Ajax = require('./Ajax');
-var router = require('./router');
+var Routing = require('./Routing');
 
 var Authentication = {
 
@@ -25,7 +25,7 @@ var Authentication = {
                 }
                 Actions.loadUser();
                 console.log('User successfully authenticated.');
-                router.transitionToOriginalTarget();
+                Routing.transitionToOriginalTarget();
             }.bind(this));
     },
 

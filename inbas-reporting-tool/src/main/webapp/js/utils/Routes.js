@@ -1,9 +1,8 @@
 'use strict';
 
 var React = require('react');
-var Router = require('react-router');
-var DefaultRoute = Router.DefaultRoute;
-var Route = Router.Route;
+var Route = require('react-router').Route;
+var IndexRoute = require('react-router').IndexRoute;
 
 var Login = require('./../components/login/Login');
 var Register = require('./../components/register/Register');
@@ -15,16 +14,16 @@ var InvestigationsController = require('../components/investigation/Investigatio
 var InvestigationController = require('./../components/investigation/InvestigationController');
 
 var Routes = (
-    <Route handler={MainView} path='/'>
-        <Route name='login' path='login' handler={Login}/>
-        <Route name='register' path='register' handler={Register}/>
-        <Route name='dashboard' path='dashboard' handler={DashboardController}/>
-        <Route name='reports' path='reports' handler={ReportsController}/>
-        <Route name='report' path='reports/report/:reportKey' handler={ReportDetailController}/>
-        <Route name='report_new' path='reports/create' handler={ReportDetailController}/>
-        <Route name='investigations' path='investigations' handler={InvestigationsController}/>
-        <Route name='investigation' path='investigations/investigation/:reportKey' handler={InvestigationController}/>
-        <DefaultRoute handler={DashboardController}/>
+    <Route path='/' component={MainView}>
+        <IndexRoute component={DashboardController}/>
+        <Route path='login' component={Login}/>
+        <Route path='register' component={Register}/>
+        <Route path='dashboard' component={DashboardController}/>
+        <Route path='reports' component={ReportsController}/>
+        <Route path='reports/create' component={ReportDetailController}/>
+        <Route path='reports/:reportKey' component={ReportDetailController}/>
+        <Route path='investigations' component={InvestigationsController}/>
+        <Route path='investigations/:reportKey' component={InvestigationController}/>
     </Route>
 );
 
