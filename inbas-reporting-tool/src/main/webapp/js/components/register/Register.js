@@ -4,21 +4,22 @@
 
 'use strict';
 
-var React = require('react/addons');
+var React = require('react');
+var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var Panel = require('react-bootstrap').Panel;
 var Button = require('react-bootstrap').Button;
 var Alert = require('react-bootstrap').Alert;
 
 var Input = require('../Input');
 var Mask = require('../Mask');
-var router = require('../../utils/router');
+var Routing = require('../../utils/Routing');
 var Ajax = require('../../utils/Ajax');
 var Actions = require('../../actions/Actions');
 
 var title = (<h3>INBAS Reporting Tool - Registration</h3>);
 
 var Register = React.createClass({
-    mixins: [React.addons.LinkedStateMixin],
+    mixins: [LinkedStateMixin],
     getInitialState: function () {
         return {
             firstName: '',
@@ -98,12 +99,12 @@ var Register = React.createClass({
                     return;
                 }
                 Actions.loadUser();
-                router.transitionToHome();
+                Routing.transitionToHome();
             }.bind(this));
     },
 
     cancel: function () {
-        router.transitionTo('login');
+        Routing.transitionTo('login');
     },
 
     render: function () {

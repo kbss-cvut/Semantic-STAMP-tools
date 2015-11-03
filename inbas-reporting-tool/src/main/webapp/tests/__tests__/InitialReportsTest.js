@@ -7,12 +7,13 @@ jest.dontMock('../../js/components/initialreport/Steps');
 describe('InitialReports component tests', function () {
 
     var React = require('react/addons'),
+        ReactDOM = require('react-dom'),
         TestUtils = React.addons.TestUtils,
         InitialReports = require('../../js/components/initialreport/InitialReports');
 
     it('Opens initial report add dialog on Add button click', function () {
         var reports = TestUtils.renderIntoDocument(<InitialReports report={{}} onAttributeChange={function() {}}/>);
-        var addButton = React.findDOMNode(reports.refs.addInitialReport);
+        var addButton = ReactDOM.findDOMNode(reports.refs.addInitialReport);
         var wizard = reports.refs.initialReportWizard;
         expect(wizard.props.show).toBeFalsy();
         TestUtils.Simulate.click(addButton);

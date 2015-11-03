@@ -57,12 +57,3 @@ module.exports = {
         router.run(render);
     }
 };
-
-
-var routes = require('./Routes'),
-    Router = require('react-router');
-
-router = Router.create({
-    routes: routes,
-    location: null
-});

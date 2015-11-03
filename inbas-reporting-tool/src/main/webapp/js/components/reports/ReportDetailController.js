@@ -11,7 +11,7 @@ var Actions = require('../../actions/Actions');
 var ReportDetail = require('./ReportDetail');
 var ReportsStore = require('../../stores/ReportsStore');
 var UserStore = require('../../stores/UserStore');
-var router = require('../../utils/router');
+var Routing = require('../../utils/Routing');
 var RouterStore = require('../../stores/RouterStore');
 
 var ReportDetailController = React.createClass({
@@ -29,7 +29,7 @@ var ReportDetailController = React.createClass({
     },
 
     initNewReport: function () {
-        var report = RouterStore.getTransitionPayload('report_new');
+        var report = RouterStore.getTransitionPayload(this.props.path);
         if (!report) {
             report = {};
         }
@@ -64,11 +64,17 @@ var ReportDetailController = React.createClass({
     },
 
     onSuccess: function () {
-        router.transitionTo(this.props.query.onSuccess);
+        var handlers = RouterStore.getViewHandlers(this.props.location);
+        if (handlers) {
+            Routing.transitionTo(handlers.onSuccess);
+        }
     },
 
     onCancel: function () {
-        router.transitionTo(this.props.query.onCancel);
+        var handlers = RouterStore.getViewHandlers(this.props.location);
+        if (handlers) {
+            Routing.transitionTo(handlers.onCancel);
+        }
     },
 
 

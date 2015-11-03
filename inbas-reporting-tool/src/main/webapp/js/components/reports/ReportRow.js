@@ -11,7 +11,7 @@ var Modal = require('react-bootstrap').Modal;
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
-var router = require('../../utils/router');
+var Routing = require('../../utils/Routing');
 
 var ReportRow = React.createClass({
 
@@ -38,7 +38,7 @@ var ReportRow = React.createClass({
         this.onCloseModal();
     },
     onInvestigate: function () {
-        router.transitionTo('investigation', {reportKey: this.props.report.key}, {onCancel: 'investigations'})
+        Routing.transitionTo('investigations/' + this.props.report.key, null, null, {onCancel: 'investigations'})
     },
 
 

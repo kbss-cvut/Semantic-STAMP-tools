@@ -8,7 +8,7 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var Actions = require('../../actions/Actions');
-var router = require('../../utils/router');
+var Routing = require('../../utils/Routing');
 var UserStore = require('../../stores/UserStore');
 var ReportsStore = require('../../stores/ReportsStore');
 var Dashboard = require('./Dashboard');
@@ -41,7 +41,7 @@ var DashboardController = React.createClass({
     },
 
     createEmptyReport: function () {
-        router.transitionTo('report_new', null, {onSuccess: 'reports', onCancel: 'dashboard'});
+        Routing.transitionTo('reports/create', null, null, {onSuccess: 'reports', onCancel: 'dashboard'});
     },
 
     cancelInitialReportImport: function () {
@@ -53,19 +53,19 @@ var DashboardController = React.createClass({
     },
 
     importInitialReport: function (data, closeCallback) {
-        router.transitionTo('report_new', null, {
+        Routing.transitionTo('reports/create', null, {initialReports: [data.initialReport]}, {
             onSuccess: 'reports',
             onCancel: 'dashboard'
-        }, {initialReports: [data.initialReport]});
+        });
         closeCallback();
     },
 
     openReport: function (report) {
-        router.transitionTo('report', {reportKey: report.key}, {onSuccess: 'reports', onCancel: 'dashboard'});
+        Routing.transitionTo('reports/' + report.key, null, {onSuccess: 'reports', onCancel: 'dashboard'});
     },
 
     showReports: function () {
-        router.transitionTo('reports');
+        Routing.transitionTo('reports');
     },
 
 

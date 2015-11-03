@@ -5,15 +5,16 @@
 'use strict';
 
 var React = require('react');
-var Router = require('react-router');
-var RouteHandler = Router.RouteHandler;
 var Reflux = require('reflux');
 
-var Navbar = require('react-bootstrap').Navbar;
 var Nav = require('react-bootstrap').Nav;
+var Navbar = require('react-bootstrap').Navbar;
+var NavBrand = require('react-bootstrap').NavBrand;
+var NavItem = require('react-bootstrap').NavItem;
+var NavDropdown = require('react-bootstrap').NavDropdown;
 var DropdownButton = require('react-bootstrap').DropdownButton;
 var MenuItem = require('react-bootstrap').MenuItem;
-var NavItemLink = require('react-router-bootstrap').NavItemLink;
+var LinkContainer = require('react-router-bootstrap').LinkContainer;
 
 var Authentication = require('../utils/Authentication');
 var UserStore = require('../stores/UserStore');
@@ -35,28 +36,29 @@ var MainView = React.createClass({
 
     render: function () {
         if (!this.state.loggedIn) {
-            return (<RouteHandler />);
+            return (<div>{this.props.children}</div>);
         }
         var user = UserStore.getCurrentUser();
         var name = user.firstName.substr(0, 1) + '. ' + user.lastName;
         return (
             <div>
                 <header>
-                    <Navbar brand='INBAS Reporting Tool' fluid={true}>
+                    <Navbar fluid={true}>
+                        <NavBrand>INBAS Reporting Tool</NavBrand>
                         <Nav>
-                            <NavItemLink to='dashboard'>Dashboard</NavItemLink>
-                            <NavItemLink to='reports'>Reports</NavItemLink>
-                            <NavItemLink to='investigations'>Investigations</NavItemLink>
+                            <LinkContainer to='dashboard'><NavItem>Dashboard</NavItem></LinkContainer>
+                            <LinkContainer to='reports'><NavItem>Reports</NavItem></LinkContainer>
+                            <LinkContainer to='investigations'><NavItem>Investigations</NavItem></LinkContainer>
                         </Nav>
                         <Nav right style={{margin: '0 -15px 0 0'}}>
-                            <DropdownButton title={name}>
+                            <NavDropdown id='logout' title={name}>
                                 <MenuItem href='#' onClick={Authentication.logout}>Logout</MenuItem>
-                            </DropdownButton>
+                            </NavDropdown>
                         </Nav>
                     </Navbar>
                 </header>
                 <section style={{height: '100%'}}>
-                    <RouteHandler />
+                    {this.props.children}
                 </section>
             </div>
         );

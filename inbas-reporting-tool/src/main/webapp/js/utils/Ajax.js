@@ -7,7 +7,7 @@
 var request = require('superagent');
 var Cookies = require('js-cookie');
 
-var router = require('./router');
+var Routing = require('./Routing');
 
 var csrfTokenHeader = 'X-CSRF-Token';
 
@@ -56,8 +56,8 @@ var Ajax = {
                 if (err.status === 401) {
                     var currentRoute = window.location.hash.substr(1);
                     if (currentRoute !== '/register' && currentRoute !== '/login') {
-                        router.saveOriginalTarget(currentRoute);
-                        router.transitionTo('login');
+                        Routing.saveOriginalTarget(currentRoute);
+                        Routing.transitionTo('login');
                     }
                     return;
                 }

@@ -11,7 +11,7 @@ var Alert = require('react-bootstrap').Alert;
 
 var Mask = require('../Mask');
 var Input = require('../Input');
-var router = require('../../utils/router');
+var Routing = require('../../utils/Routing');
 var Authentication = require('../../utils/Authentication');
 
 
@@ -55,7 +55,7 @@ var Login = React.createClass({
     },
 
     register: function () {
-        router.transitionTo('register');
+        Routing.transitionTo('register');
     },
 
 
