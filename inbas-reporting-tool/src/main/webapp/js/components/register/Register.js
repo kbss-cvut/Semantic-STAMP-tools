@@ -13,6 +13,7 @@ var Alert = require('react-bootstrap').Alert;
 var Input = require('../Input');
 var Mask = require('../Mask');
 var Routing = require('../../utils/Routing');
+var Routes = require('../../utils/Routes');
 var Ajax = require('../../utils/Ajax');
 var Actions = require('../../actions/Actions');
 
@@ -104,7 +105,7 @@ var Register = React.createClass({
     },
 
     cancel: function () {
-        Routing.transitionTo('login');
+        Routing.transitionTo(Routes.login);
     },
 
     render: function () {

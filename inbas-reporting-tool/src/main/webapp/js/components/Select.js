@@ -37,7 +37,7 @@ var Select = React.createClass({
         return (
             <Input ref='select' type='select' name={this.props.name} title={this.props.title} label={this.props.label}
                    defaultValue='' value={this.props.value} onChange={this.props.onChange}>
-                <option key='opt_default' disabled style={{display: 'none'}}> -- Select --</option>
+                <option key='opt_default' value='' disabled defaultValue style={{display: 'none'}}> -- Select --</option>
                 {options}
             </Input>
         );

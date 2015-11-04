@@ -12,7 +12,6 @@ var Navbar = require('react-bootstrap').Navbar;
 var NavBrand = require('react-bootstrap').NavBrand;
 var NavItem = require('react-bootstrap').NavItem;
 var NavDropdown = require('react-bootstrap').NavDropdown;
-var DropdownButton = require('react-bootstrap').DropdownButton;
 var MenuItem = require('react-bootstrap').MenuItem;
 var LinkContainer = require('react-router-bootstrap').LinkContainer;
 

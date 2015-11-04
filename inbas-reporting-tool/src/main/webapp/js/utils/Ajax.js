@@ -1,12 +1,9 @@
-/**
- * @author ledvima1
- */
-
 'use strict';
 
 var request = require('superagent');
 var Cookies = require('js-cookie');
 
+var Routes = require('./Routes');
 var Routing = require('./Routing');
 
 var csrfTokenHeader = 'X-CSRF-Token';
@@ -57,7 +54,7 @@ var Ajax = {
                     var currentRoute = window.location.hash.substr(1);
                     if (currentRoute !== '/register' && currentRoute !== '/login') {
                         Routing.saveOriginalTarget(currentRoute);
-                        Routing.transitionTo('login');
+                        Routing.transitionTo(Routes.login);
                     }
                     return;
                 }
