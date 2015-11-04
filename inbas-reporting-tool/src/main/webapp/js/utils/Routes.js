@@ -1,30 +1,16 @@
 'use strict';
 
-var React = require('react');
-var Route = require('react-router').Route;
-var IndexRoute = require('react-router').IndexRoute;
+var Routes = {
 
-var Login = require('./../components/login/Login');
-var Register = require('./../components/register/Register');
-var MainView = require('./../components/MainView');
-var DashboardController = require('../components/dashboard/DashboardController');
-var ReportsController = require('./../components/reports/ReportsController');
-var ReportDetailController = require('./../components/reports/ReportDetailController');
-var InvestigationsController = require('../components/investigation/InvestigationsController');
-var InvestigationController = require('./../components/investigation/InvestigationController');
+    login: {name: 'login', path: 'login'},
+    register: {name: 'register', path: 'register'},
+    dashboard: {name: 'dashboard', path: 'dashboard'},
+    reports: {name: 'reports', path: 'reports'},
+    createReport: {name: 'createReport', path: 'reports/create'},
+    editReport: {name: 'editReport', path: 'reports/:reportKey'},
+    investigations: {name: 'investigations', path: 'investigations'},
+    editInvestigation: {name: 'editInvestigation', path: 'investigations/:reportKey'}
 
-var Routes = (
-    <Route path='/' component={MainView}>
-        <IndexRoute component={DashboardController}/>
-        <Route path='login' component={Login}/>
-        <Route path='register' component={Register}/>
-        <Route path='dashboard' component={DashboardController}/>
-        <Route path='reports' component={ReportsController}/>
-        <Route path='reports/create' component={ReportDetailController}/>
-        <Route path='reports/:reportKey' component={ReportDetailController}/>
-        <Route path='investigations' component={InvestigationsController}/>
-        <Route path='investigations/:reportKey' component={InvestigationController}/>
-    </Route>
-);
+};
 
 module.exports = Routes;

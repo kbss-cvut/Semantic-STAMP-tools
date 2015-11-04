@@ -18,6 +18,7 @@ var BasicOccurrenceInfo = require('./BasicOccurrenceInfo');
 var ReportSummary = require('./ReportSummary');
 var Mask = require('../Mask');
 var Routing = require('../../utils/Routing');
+var Routes = require('../../utils/Routes');
 
 var ReportDetail = React.createClass({
     getInitialState: function () {
@@ -67,7 +68,10 @@ var ReportDetail = React.createClass({
     },
 
     investigate: function () {
-        Routing.transitionTo('investigations/' + this.props.report.key, null, null, {onCancel: 'investigations'})
+        Routing.transitionTo(Routes.editInvestigation, {
+            params: {reportKey: this.props.report.key},
+            handlers: {onCancel: Routes.investigations}
+        });
     },
 
 

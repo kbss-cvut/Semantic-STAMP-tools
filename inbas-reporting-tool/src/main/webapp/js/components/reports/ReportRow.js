@@ -12,6 +12,7 @@ var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
 var Routing = require('../../utils/Routing');
+var Routes = require('../../utils/Routes');
 
 var ReportRow = React.createClass({
 
@@ -38,7 +39,10 @@ var ReportRow = React.createClass({
         this.onCloseModal();
     },
     onInvestigate: function () {
-        Routing.transitionTo('investigations/' + this.props.report.key, null, null, {onCancel: 'investigations'})
+        Routing.transitionTo(Routes.editInvestigation, {
+            params: {reportKey: this.props.report.key},
+            handlers: {onCancel: Routes.investigations}
+        });
     },
 
 

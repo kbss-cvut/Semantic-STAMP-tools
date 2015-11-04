@@ -13,34 +13,33 @@ var RouterStore = Reflux.createStore({
     transitionPayload: {},
     viewHandlers: {},
 
-    setTransitionPayload: function (route, payload) {
+    setTransitionPayload: function (routeName, payload) {
         if (!payload) {
-            delete this.transitionPayload[route];
+            delete this.transitionPayload[routeName];
         } else {
-            this.transitionPayload[route] = payload;
+            this.transitionPayload[routeName] = payload;
         }
     },
 
     /**
      * Gets the specified route's payload, if there is any.
-     * @param route Route name
-     * @return {*} Route transition payload or null if there is none for the specified route
+     * @param routeName Route name
+     * @return {*} Route transition payload or null if there is none for the specified routeName
      */
-    getTransitionPayload: function (route) {
-        return this.transitionPayload[route];
+    getTransitionPayload: function (routeName) {
+        return this.transitionPayload[routeName];
     },
 
-    setViewHandlers: function (viewPath, handlers) {
-        // Need to figure out a reliable way of determining view identifier for the handlers
+    setViewHandlers: function (routeName, handlers) {
         if (!handlers) {
-            delete this.viewHandlers[viewPath];
+            delete this.viewHandlers[routeName];
         } else {
-            this.viewHandlers[viewPath] = handlers;
+            this.viewHandlers[routeName] = handlers;
         }
     },
 
-    getViewHandlers: function (location) {
-        return this.viewHandlers[location.pathname];
+    getViewHandlers: function (routeName) {
+        return this.viewHandlers[routeName];
     }
 });
 

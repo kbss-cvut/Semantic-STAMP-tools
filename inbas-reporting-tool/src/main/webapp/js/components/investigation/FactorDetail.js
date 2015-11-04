@@ -142,7 +142,7 @@ var FactorDetail = React.createClass({
                         {this.renderDeleteDialog()}
                         <div className='form-group row'>
                             <div className='col-xs-11'>
-                                <EventTypeTypeahead label='Type' value={eventTypeLabel}
+                                <EventTypeTypeahead label='Type' placeholder='Factor Type' value={eventTypeLabel}
                                                     onSelect={this.onEventTypeChange} focus={true}/>
                             </div>
                             <div className='col-xs-1'>

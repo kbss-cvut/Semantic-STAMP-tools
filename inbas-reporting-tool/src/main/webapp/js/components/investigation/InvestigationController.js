@@ -12,6 +12,7 @@ var Actions = require('../../actions/Actions');
 var Investigation = require('./Investigation');
 var ReportsStore = require('../../stores/ReportsStore');
 var Routing = require('../../utils/Routing');
+var Routes = require('../../utils/Routes');
 var RouterStore = require('../../stores/RouterStore');
 
 var InvestigationController = React.createClass({
@@ -42,7 +43,7 @@ var InvestigationController = React.createClass({
     },
 
     onCancel: function () {
-        var handlers = RouterStore.getViewHandlers(this.props.location);
+        var handlers = RouterStore.getViewHandlers(Routes.editInvestigation.name);
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
         }
