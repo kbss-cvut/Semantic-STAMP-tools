@@ -6,8 +6,8 @@ jest.dontMock('../../js/utils/FactorStyleInfo');
 
 describe('Tests of the factor dialog', function () {
 
-    var React = require('react/addons'),
-        TestUtils = React.addons.TestUtils,
+    var React = require('react'),
+        TestUtils = require('react-addons-test-utils'),
         FactorDetail = require('../../js/components/investigation/FactorDetail'),
         assign = require('object-assign'),
         callbacks = {

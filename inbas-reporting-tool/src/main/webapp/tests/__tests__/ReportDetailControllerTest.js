@@ -2,14 +2,16 @@
 
 jest.dontMock('../../js/components/reports/ReportDetailController');
 jest.dontMock('../../js/actions/Actions');
+jest.dontMock('../../js/utils/Routes');
 
 describe('ReportDetailController tests', function () {
 
-    var React = require('react/addons'),
-        TestUtils = React.addons.TestUtils,
+    var React = require('react'),
+        TestUtils = require('react-addons-test-utils'),
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
-        ReportDetailController = require('../../js/components/reports/ReportDetailController');
+        ReportDetailController = require('../../js/components/reports/ReportDetailController'),
+        Routes = require('../../js/utils/Routes');
 
     it('Creates new empty report when none is passed from router or in path key', function () {
         var controller = TestUtils.renderIntoDocument(<ReportDetailController params={{}}/>),
@@ -27,7 +29,7 @@ describe('ReportDetailController tests', function () {
 
         var controller = TestUtils.renderIntoDocument(<ReportDetailController params={{}}/>),
             state = controller.getInitialState();
-        expect(RouterStore.getTransitionPayload).toHaveBeenCalledWith('report_new');
+        expect(RouterStore.getTransitionPayload).toHaveBeenCalledWith(Routes.createReport.name);
         expect(state.loading).toBeFalsy();
         expect(state.report.initialReports).toEqual(report.initialReports);
         expect(state.report.occurrenceTime).toBeDefined();

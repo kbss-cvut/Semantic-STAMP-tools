@@ -4,8 +4,8 @@ jest.dontMock('../../js/components/investigation/Factors');
 
 describe('Factors component tests', function () {
 
-    var React = require('react/addons'),
-        TestUtils = React.addons.TestUtils,
+    var React = require('react'),
+        TestUtils = require('react-addons-test-utils'),
         Factors = require('../../js/components/investigation/Factors'),
         GanttController = require('../../js/components/investigation/GanttController'),
         occurrence = {
