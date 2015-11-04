@@ -26,13 +26,14 @@
   "devDependencies": {
     "browserify": "^6.2.0",
     "envify": "^3.0.0",
-    "jest-cli": "^0.6.1",
+    "jest-cli": "^0.7.1",
     "reactify": "^0.15.2",
     "uglify-js": "^2.4.15",
     "watchify": "^2.1.1",
     "react-tools": "^0.13.3",
     "clean-css": "^3.4.3",
-    "jasmine-reporters": "^1.0.0"
+    "jasmine-reporters": "^1.0.0",
+    "react-addons-test-utils": "^0.14.2"
   },
   "scripts": {
     "start": "watchify -o js/bundle.js -v -d js/app.js",
@@ -54,6 +55,8 @@
     "scriptPreprocessor": "<rootDir>/tests/preprocessor.js",
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/react",
+      "<rootDir>/node_modules/react-dom",
+      "<rootDir>/node_modules/react-addons-linked-state-mixin",
       "<rootDir>/node_modules/reflux",
       "<rootDir>/node_modules/object-assign",
       "<rootDir>/node_modules/kbss-react-bootstrap-datetimepicker"

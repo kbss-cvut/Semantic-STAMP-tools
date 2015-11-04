@@ -6,9 +6,9 @@ jest.dontMock('../../js/components/initialreport/Steps');
 
 describe('InitialReports component tests', function () {
 
-    var React = require('react/addons'),
+    var React = require('react'),
         ReactDOM = require('react-dom'),
-        TestUtils = React.addons.TestUtils,
+        TestUtils = require('react-addons-test-utils'),
         InitialReports = require('../../js/components/initialreport/InitialReports');
 
     it('Opens initial report add dialog on Add button click', function () {
