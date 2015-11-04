@@ -187,21 +187,6 @@
                         <version>1.4.0</version>
                         <executions>
                             <execution>
-                                <id>ui-build</id>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <phase>compile</phase>
-                                <configuration>
-                                    <workingDirectory>src/main/webapp/</workingDirectory>
-                                    <executable>npm</executable>
-                                    <arguments>
-                                        <argument>run</argument>
-                                        <argument>build</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
                                 <id>npm-module-cleanup</id>
                                 <goals>
                                     <goal>exec</goal>
@@ -213,6 +198,21 @@
                                     <arguments>
                                         <argument>-Rf</argument>
                                         <argument>node_modules</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>ui-build</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <phase>compile</phase>
+                                <configuration>
+                                    <workingDirectory>src/main/webapp/</workingDirectory>
+                                    <executable>npm</executable>
+                                    <arguments>
+                                        <argument>run</argument>
+                                        <argument>build</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
