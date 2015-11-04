@@ -202,7 +202,7 @@
                                 </configuration>
                             </execution>
                             <execution>
-                                <id>ui-build</id>
+                                <id>npm-module-cleanup</id>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
