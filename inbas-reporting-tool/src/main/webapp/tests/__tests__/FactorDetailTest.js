@@ -1,8 +1,5 @@
 'use strict';
 
-jest.dontMock('../../js/components/investigation/FactorDetail');
-jest.dontMock('../../js/components/reports/wizard/event-type/EventTypeWizardSelector');
-jest.dontMock('../../js/utils/FactorStyleInfo');
 
 describe('Tests of the factor dialog', function () {
 
@@ -10,14 +7,7 @@ describe('Tests of the factor dialog', function () {
         TestUtils = require('react-addons-test-utils'),
         FactorDetail = require('../../js/components/investigation/FactorDetail'),
         assign = require('object-assign'),
-        callbacks = {
-            onSave: function () {
-            },
-            onClose: function () {
-            },
-            onDelete: function () {
-            }
-        },
+        callbacks,
         gantt = {
             calculateEndDate: function () {
                 return new Date();
@@ -29,7 +19,8 @@ describe('Tests of the factor dialog', function () {
         factor;
 
     beforeEach(function () {
-        window.gantt = gantt;
+        callbacks = jasmine.createSpyObj('callbacks', ['onSave', 'onClose', 'onDelete']);
+        jasmine.getGlobal().gantt = gantt;
         factor = {
             id: 1,
             text: 'Test',
@@ -44,8 +35,7 @@ describe('Tests of the factor dialog', function () {
                 name: 'Runway Incursion',
                 id: 'http://incursion'
             };
-        spyOn(callbacks, 'onSave');
-        spyOn(gantt, 'calculateEndDate').andCallThrough();
+        spyOn(gantt, 'calculateEndDate').and.callThrough();
         detail = TestUtils.renderIntoDocument(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
                                                             onClose={callbacks.onClose}
                                                             onDelete={callbacks.onDelete}/>);

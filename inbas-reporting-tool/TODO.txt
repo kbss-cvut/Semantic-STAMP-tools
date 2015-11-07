@@ -1,4 +1,4 @@
-Upgrade to react-router 1.0.0 and react 0.14
+Set up the Jasmine tests so that they can be run in browser and debugged
 Create proper investigation screen
 Occurrences should have start and end time
 Disable fuzzy string matching in autocomplete

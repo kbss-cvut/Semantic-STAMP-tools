@@ -1,20 +1,21 @@
 'use strict';
 
-jest.dontMock('../../js/components/investigation/Factors');
-
 describe('Factors component tests', function () {
 
     var React = require('react'),
         TestUtils = require('react-addons-test-utils'),
-        Factors = require('../../js/components/investigation/Factors'),
-        GanttController = require('../../js/components/investigation/GanttController'),
+        rewire = require('rewire'),
+        Factors = rewire('../../js/components/investigation/Factors'),
+        GanttController = null,
         occurrence = {
             name: 'TestOccurrence',
             occurrenceTime: Date.now()
         };
 
     beforeEach(function () {
-        spyOn(GanttController, 'getFactor').andReturn({
+        GanttController = jasmine.createSpyObj('GanttController', ['init', 'getFactor', 'setScale', 'addFactor', 'setOccurrenceEventId', 'expandSubtree', 'updateOccurrenceEvent']);
+        Factors.__set__("GanttController", GanttController);
+        GanttController.getFactor.and.returnValue({
             text: occurrence.name,
             start_date: new Date(occurrence.occurrenceTime)
         });
@@ -22,16 +23,14 @@ describe('Factors component tests', function () {
 
     it('Initializes gantt with minute scale on component mount', function () {
         var factors;
-        spyOn(GanttController, 'init');
-        spyOn(GanttController, 'setScale');
         factors = TestUtils.renderIntoDocument(<Factors occurrence={occurrence}/>);
         expect(GanttController.init).toHaveBeenCalled();
         expect(GanttController.setScale).toHaveBeenCalledWith('minute');
     });
 
     it('Adds event of the occurrence into gantt on initialization', function () {
-        var factor;
-        spyOn(GanttController, 'addFactor').andCallFake(function (arg) {
+        var factor = null;
+        GanttController.addFactor.and.callFake(function (arg) {
             factor = arg;
         });
         TestUtils.renderIntoDocument(<Factors occurrence={occurrence}/>);
@@ -44,15 +43,14 @@ describe('Factors component tests', function () {
     it('Sets scale to seconds when seconds are selected', function () {
         var evt = {target: {value: 'second'}},
             factors = TestUtils.renderIntoDocument(<Factors occurrence={occurrence}/>);
-        spyOn(GanttController, 'setScale');
         factors.onScaleChange(evt);
         expect(GanttController.setScale).toHaveBeenCalledWith('second');
     });
 
     it('Adds event type assessments from PR into gantt with the same time as the occurrence event and having ' +
         ' the occurrence event as parent', function () {
-        var occurrenceEvt, added = [], parentId;
-        spyOn(GanttController, 'addFactor').andCallFake(function (item, parent) {
+        var occurrenceEvt = null, added = [], parentId;
+        GanttController.addFactor.and.callFake(function (item) {
             if (!occurrenceEvt) {
                 // The first added task is the occurrence event
                 parentId = item.id;
@@ -106,9 +104,9 @@ describe('Factors component tests', function () {
     }
 
     it('Adds factors with data from the event type assessment', function() {
-        var occurrenceEvt, added = [], parentId, args;
+        var occurrenceEvt = null, added = [], parentId, args;
         occurrence.typeAssessments = initTypeAssessments();
-        spyOn(GanttController, 'addFactor').andCallFake(function (item, parent) {
+        GanttController.addFactor.and.callFake(function (item) {
             if (!occurrenceEvt) {
                 // The first added task is the occurrence event
                 parentId = item.id;
@@ -126,10 +124,10 @@ describe('Factors component tests', function () {
             expect(added[i].statement).toBeDefined();
             expect(added[i].statement).toEqual(occurrence.typeAssessments[i]);
         }
-        args = GanttController.addFactor.argsForCall;
-        expect(args.length).toEqual(added.length + 1);
-        for (var i = 1, len = args.length; i < len; i++) {
-            expect(args[i][1]).toEqual(parentId);
+        args = GanttController.addFactor.calls.allArgs();
+        expect(GanttController.addFactor.calls.count()).toEqual(added.length + 1);
+        for (var j = 1, len = args.length; j < len; j++) {
+            expect(args[j][1]).toEqual(parentId);
         }
     });
 });

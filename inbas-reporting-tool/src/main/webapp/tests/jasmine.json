@@ -1,0 +1,18 @@
+{
+  "spec_dir": "tests",
+  "spec_files": [
+    "__tests__/FactorsTest.js",
+    "__tests__/UtilsTest.js",
+    "__tests__/RouterStoreTest.js",
+    "__tests__/GanttControllerTest.js",
+    "__tests__/InitialReportsTest.js",
+    "__tests__/EventTypeWizardSelectorTest.js",
+    "__tests__/FactorDetailTest.js",
+    "__tests__/ReportDetailControllerTest.js"
+  ],
+  "helpers": [
+    "../node_modules/babel-core/register.js",
+    "./setup.js",
+    "./setup-jasmine-env.js"
+  ]
+}

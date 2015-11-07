@@ -1,6 +1,5 @@
 'use strict';
 
-jest.dontMock('../../js/components/investigation/GanttController');
 
 describe('Tests for the gantt component controller', function () {
 
@@ -40,7 +39,7 @@ describe('Tests for the gantt component controller', function () {
             "finish_to_finish": "2",
             "start_to_finish": "3"
         };
-        window.gantt = gantt;
+        jasmine.getGlobal().gantt = gantt;
         GanttController.init(props);
     });
 
@@ -75,7 +74,7 @@ describe('Tests for the gantt component controller', function () {
             end_date: new Date(occurrence.occurrenceTime + 20000),
             text: 'Test'
         };
-        spyOn(gantt, 'getTask').andReturn(occurrenceEvent);
+        spyOn(gantt, 'getTask').and.returnValue(occurrenceEvent);
         GanttController.updateOccurrenceEvent(occurrence);
 
         expect(occurrenceEvent.text).toEqual(occurrence.name);
@@ -91,11 +90,11 @@ describe('Tests for the gantt component controller', function () {
             end_date: new Date(occurrence.occurrenceTime + 200),
             text: 'Test'
         };
-        spyOn(gantt, 'getTask').andReturn(occurrenceEvent);
-        spyOn(gantt, 'calculateDuration').andCallFake(function (start, end) {
+        spyOn(gantt, 'getTask').and.returnValue(occurrenceEvent);
+        spyOn(gantt, 'calculateDuration').and.callFake(function (start, end) {
             return (end.getTime() - start.getTime()) / 1000;
         });
-        spyOn(gantt, 'calculateEndDate').andReturn(new Date());
+        spyOn(gantt, 'calculateEndDate').and.returnValue(new Date());
         GanttController.updateOccurrenceEvent(occurrence);
 
         expect(gantt.calculateEndDate).toHaveBeenCalled();
@@ -112,8 +111,8 @@ describe('Tests for the gantt component controller', function () {
             start_date: new Date(Date.now() - 1000),
             end_date: new Date(Date.now() + 1000)
         };
-        spyOn(gantt, 'getTask').andReturn(parent);
-        spyOn(GanttController, 'extendAncestorsIfNecessary').andCallThrough();
+        spyOn(gantt, 'getTask').and.returnValue(parent);
+        spyOn(GanttController, 'extendAncestorsIfNecessary').and.callThrough();
         GanttController.onFactorAdded(2, child);
 
         expect(GanttController.extendAncestorsIfNecessary).toHaveBeenCalled();
@@ -131,10 +130,10 @@ describe('Tests for the gantt component controller', function () {
             start_date: new Date(Date.now() - 1000),
             end_date: new Date(Date.now() + 200000)
         };
-        spyOn(gantt, 'getTask').andCallFake(function (id) {
+        spyOn(gantt, 'getTask').and.callFake(function (id) {
             return id === parent.id ? parent : child;
         });
-        spyOn(GanttController, 'extendAncestorsIfNecessary').andCallThrough();
+        spyOn(GanttController, 'extendAncestorsIfNecessary').and.callThrough();
         spyOn(GanttController, 'updateDescendantsTimeInterval');
         GanttController.onFactorUpdated(2);
 
@@ -156,13 +155,13 @@ describe('Tests for the gantt component controller', function () {
             start_date: new Date(Date.now() - 1000),
             end_date: new Date(Date.now() + 2000)
         };
-        spyOn(gantt, 'getTask').andCallFake(function (id) {
+        spyOn(gantt, 'getTask').and.callFake(function (id) {
             return id === parent.id ? parent : child;
         });
-        spyOn(gantt, 'getChildren').andReturn([child]);
+        spyOn(gantt, 'getChildren').and.returnValue([child]);
         spyOn(GanttController, 'ensureNonZeroDuration');
         spyOn(GanttController, 'extendAncestorsIfNecessary');
-        spyOn(GanttController, 'updateDescendantsTimeInterval').andCallThrough();
+        spyOn(GanttController, 'updateDescendantsTimeInterval').and.callThrough();
         GanttController.onFactorUpdated(1);
 
         expect(GanttController.extendAncestorsIfNecessary).toHaveBeenCalled();
@@ -184,8 +183,8 @@ describe('Tests for the gantt component controller', function () {
                 start_date: new Date(Date.now() + 2000),
                 end_date: new Date(Date.now() + 3000)
             };
-        spyOn(gantt, 'getTask').andReturn(occurrenceEvt);
-        spyOn(gantt, 'addTask').andCallFake(function (task) {
+        spyOn(gantt, 'getTask').and.returnValue(occurrenceEvt);
+        spyOn(gantt, 'addTask').and.callFake(function (task) {
             GanttController.onFactorAdded(task.id, task);
             return task.id;
         });
@@ -206,8 +205,8 @@ describe('Tests for the gantt component controller', function () {
             source: 1,
             target: 1
         };
-        spyOn(gantt, 'getTask').andReturn(evt);
-        spyOn(gantt, 'getLink').andReturn(link);
+        spyOn(gantt, 'getTask').and.returnValue(evt);
+        spyOn(gantt, 'getLink').and.returnValue(link);
         GanttController.onDeleteLink(link.id);
 
         expect(props.onDeleteLink).toHaveBeenCalledWith(link, evt, evt);
@@ -225,11 +224,11 @@ describe('Tests for the gantt component controller', function () {
                 start_date: start,
                 end_date: new Date(start.getTime() + 5000)
             };
-        spyOn(gantt, 'getTask').andCallFake(function (id) {
+        spyOn(gantt, 'getTask').and.callFake(function (id) {
             return id === occurrenceEvt.id ? occurrenceEvt : child;
         });
-        spyOn(gantt, 'getChildren').andReturn([child.id]);
-        spyOn(GanttController, 'shrinkRootIfNecessary').andCallThrough();
+        spyOn(gantt, 'getChildren').and.returnValue([child.id]);
+        spyOn(GanttController, 'shrinkRootIfNecessary').and.callThrough();
         GanttController.onFactorUpdated(2);
 
         expect(occurrenceEvt.start_date).toEqual(start);
@@ -273,14 +272,14 @@ describe('Tests for the gantt component controller', function () {
                 end_date: new Date(start.getTime() + 1000)
             },
             timeDiff = 10000;
-        spyOn(gantt, 'getTask').andCallFake(function (id) {
+        spyOn(gantt, 'getTask').and.callFake(function (id) {
             return id === occurrenceEvt.id ? occurrenceEvt : child;
         });
-        spyOn(gantt, 'getChildren').andCallFake(function (id) {
+        spyOn(gantt, 'getChildren').and.callFake(function (id) {
             return id === occurrenceEvt.id ? [child] : [];
         });
-        spyOn(GanttController, 'moveFactor').andCallThrough();
-        spyOn(GanttController, 'applyUpdates').andCallThrough();
+        spyOn(GanttController, 'moveFactor').and.callThrough();
+        spyOn(GanttController, 'applyUpdates').and.callThrough();
         GanttController.occurrenceEventId = occurrenceEvt.id;
 
         GanttController.updateOccurrenceEvent({occurrenceTime: start.getTime() + timeDiff});
@@ -308,14 +307,14 @@ describe('Tests for the gantt component controller', function () {
                 end_date: new Date(start.getTime() + 1000)
             },
             timeDiff = -10000;
-        spyOn(gantt, 'getTask').andCallFake(function (id) {
+        spyOn(gantt, 'getTask').and.callFake(function (id) {
             return id === occurrenceEvt.id ? occurrenceEvt : child;
         });
-        spyOn(gantt, 'getChildren').andCallFake(function (id) {
+        spyOn(gantt, 'getChildren').and.callFake(function (id) {
             return id === occurrenceEvt.id ? [child] : [];
         });
-        spyOn(GanttController, 'moveFactor').andCallThrough();
-        spyOn(GanttController, 'applyUpdates').andCallThrough();
+        spyOn(GanttController, 'moveFactor').and.callThrough();
+        spyOn(GanttController, 'applyUpdates').and.callThrough();
         GanttController.occurrenceEventId = occurrenceEvt.id;
 
         GanttController.updateOccurrenceEvent({occurrenceTime: start.getTime() + timeDiff});
@@ -340,8 +339,8 @@ describe('Tests for the gantt component controller', function () {
                 name: occurrenceEvt.text,
                 occurrenceTime: occurrenceEvt.start_date.getTime()
             };
-        spyOn(gantt, 'getTask').andReturn(occurrenceEvt);
-        spyOn(props, 'updateOccurrence').andCallFake(function () {
+        spyOn(gantt, 'getTask').and.returnValue(occurrenceEvt);
+        spyOn(props, 'updateOccurrence').and.callFake(function () {
             occurrence.name = 'Updated name';
             expect(GanttController.applyChangesRunning).toBeTruthy();
             GanttController.updateOccurrenceEvent(occurrence);

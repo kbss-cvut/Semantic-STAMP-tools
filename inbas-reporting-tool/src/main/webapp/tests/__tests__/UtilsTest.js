@@ -1,7 +1,5 @@
 'use strict';
 
-jest.dontMock('../../js/utils/Utils');
-
 describe('Utility functions tests', function () {
 
     var Utils = require('../../js/utils/Utils');

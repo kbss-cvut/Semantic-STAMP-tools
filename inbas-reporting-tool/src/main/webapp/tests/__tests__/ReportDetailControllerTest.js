@@ -1,9 +1,5 @@
 'use strict';
 
-jest.dontMock('../../js/components/reports/ReportDetailController');
-jest.dontMock('../../js/actions/Actions');
-jest.dontMock('../../js/utils/Routes');
-
 describe('ReportDetailController tests', function () {
 
     var React = require('react'),
@@ -25,7 +21,7 @@ describe('ReportDetailController tests', function () {
         var report = {
             initialReports: [{text: 'First Initial Report'}]
         };
-        spyOn(RouterStore, 'getTransitionPayload').andReturn(report);
+        spyOn(RouterStore, 'getTransitionPayload').and.returnValue(report);
 
         var controller = TestUtils.renderIntoDocument(<ReportDetailController params={{}}/>),
             state = controller.getInitialState();
@@ -36,7 +32,7 @@ describe('ReportDetailController tests', function () {
     });
 
     it('Loads existing report when report key is passed in path params', function () {
-        spyOn(Actions, 'findReport').andCallThrough();
+        spyOn(Actions, 'findReport').and.callThrough();
         var params = {reportKey: 12345},
             controller = TestUtils.renderIntoDocument(<ReportDetailController params={params}/>),
             state = controller.getInitialState();

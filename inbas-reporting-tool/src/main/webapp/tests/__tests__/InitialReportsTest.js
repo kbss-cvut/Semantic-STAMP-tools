@@ -1,9 +1,5 @@
 'use strict';
 
-jest.dontMock('../../js/components/initialreport/InitialReports');
-jest.dontMock('../../js/components/initialreport/InitialReport');
-jest.dontMock('../../js/components/initialreport/Steps');
-
 describe('InitialReports component tests', function () {
 
     var React = require('react'),
@@ -21,14 +17,7 @@ describe('InitialReports component tests', function () {
     });
 
     it('Adds new initial report when wizard is submitted', function () {
-        var callbacks = {
-            onAttributeChange: function () {
-            },
-            onClose: function () {
-            }
-        };
-        spyOn(callbacks, 'onAttributeChange');
-        spyOn(callbacks, 'onClose');
+        var callbacks = jasmine.createSpyObj('callbacks', ['onAttributeChange', 'onClose']);
         var reports = TestUtils.renderIntoDocument(<InitialReports report={{initialReports: []}}
                                                                    onAttributeChange={callbacks.onAttributeChange}/>),
             initialReportText = 'Test',
@@ -40,14 +29,7 @@ describe('InitialReports component tests', function () {
     });
 
     it('Updates initial reports when editing one is finished', function () {
-        var callbacks = {
-            onAttributeChange: function () {
-            },
-            onClose: function () {
-            }
-        };
-        spyOn(callbacks, 'onAttributeChange');
-        spyOn(callbacks, 'onClose');
+        var callbacks = jasmine.createSpyObj('callbacks', ['onAttributeChange', 'onClose']);
         var initialReports = [{text: 'Initial text'}];
         var reports = TestUtils.renderIntoDocument(<InitialReports report={{initialReports: initialReports}}
                                                                    onAttributeChange={callbacks.onAttributeChange}/>),
