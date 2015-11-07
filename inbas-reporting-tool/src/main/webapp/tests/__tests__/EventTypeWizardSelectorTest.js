@@ -1,9 +1,5 @@
 'use strict';
 
-jest.dontMock('../../js/components/reports/wizard/event-type/EventTypeWizardSelector');
-jest.dontMock('../../js/constants/Constants');
-jest.dontMock('../../js/components/reports/wizard/event-type/runway-incursion/Steps');
-jest.dontMock('../../js/components/reports/wizard/event-type/default/Steps');
 
 describe('EventTypeWizardSelector tests', function () {
 

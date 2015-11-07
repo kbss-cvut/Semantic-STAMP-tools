@@ -6,6 +6,9 @@
 
 jasmine.VERBOSE = true;
 
-require('jasmine-reporters');
-var reporter = new jasmine.JUnitXmlReporter("../../../target/surefire-reports/");
+var reporters = require('jasmine-reporters');
+var reporter = new reporters.JUnitXmlReporter({
+    savePath: "../../../target/surefire-reports/",
+    consolidateAll: false
+});
 jasmine.getEnv().addReporter(reporter);
