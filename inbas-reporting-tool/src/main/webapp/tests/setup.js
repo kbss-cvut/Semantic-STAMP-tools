@@ -1,5 +1,4 @@
-// this handles setup of the fake DOM when the tests are
-// run in Node
+// this handles setup of the fake DOM when the tests are run in Node
 // Based on https://github.com/robertknight/react-testing
 
 import jsdom from 'jsdom';
