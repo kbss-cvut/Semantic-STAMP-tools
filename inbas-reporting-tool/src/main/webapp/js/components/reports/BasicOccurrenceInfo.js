@@ -4,11 +4,11 @@
 'use strict';
 
 var React = require('react');
-var DateTimePicker = require('kbss-react-bootstrap-datetimepicker');
 
 var Input = require('../Input');
 var Utils = require('../../utils/Utils');
 var OccurrenceSeverity = require('./OccurrenceSeverity');
+var OccurrenceDetail = require('../occurrence/OccurrenceDetail');
 
 var BasicOccurrenceInfo = React.createClass({
 
@@ -25,29 +25,12 @@ var BasicOccurrenceInfo = React.createClass({
         return data.firstName + ' ' + data.lastName;
     },
 
-    onDateChange: function (value) {
-        this.props.onAttributeChange('occurrenceTime', new Date(Number(value)));
-    },
-
     render: function () {
         var report = this.props.report;
         return (
             <div>
-                <div className='row'>
-                    <div className='col-xs-4'>
-                        <Input type='text' name='name' value={report.name} onChange={this.props.onChange}
-                               label='Occurrence Summary' title='Short descriptive summary of the occurrence'/>
-                    </div>
-                </div>
-
-                <div className='row'>
-                    <div className='picker-container form-group form-group-sm col-xs-4'>
-                        <label className='control-label'>Occurrence Time</label>
-                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrenceTime.toString()}
-                                        onChange={this.onDateChange}
-                                        inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
-                    </div>
-                </div>
+                <OccurrenceDetail occurrence={this.props.report.occurrence}
+                                  onAttributeChange={this.props.onAttributeChange}/>
 
                 <div className='row'>
                     <div className='col-xs-4'>

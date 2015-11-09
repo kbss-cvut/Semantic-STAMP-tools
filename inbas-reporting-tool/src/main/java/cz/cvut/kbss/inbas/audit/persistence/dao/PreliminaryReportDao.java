@@ -13,6 +13,7 @@ import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -40,19 +41,44 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
     }
 
     @Override
+    protected void persist(PreliminaryReport entity, EntityManager em) {
+        if (entity.getRevision() == 1) {
+            occurrenceDao.persist(entity.getOccurrence(), em);
+        }
+        saveEventTypes(entity.getTypeAssessments(), em);
+        saveInitialReports(entity.getInitialReports(), em);
+        entity.generateKey();
+        em.persist(entity);
+    }
+
+    @Override
     public void persist(PreliminaryReport entity) {
         Objects.requireNonNull(entity);
 
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
-            if (entity.getRevision() == 1) {
-                occurrenceDao.persist(entity.getOccurrence(), em);
-            }
-            saveEventTypes(entity.getTypeAssessments(), em);
-            saveInitialReports(entity.getInitialReports(), em);
-            entity.generateKey();
-            em.persist(entity);
+            persist(entity, em);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            LOG.error("Error when persisting entity.", e);
+            throw new PersistenceException(e);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void persist(Collection<PreliminaryReport> entities) {
+        Objects.requireNonNull(entities);
+        if (entities.isEmpty()) {
+            return;
+        }
+
+        final EntityManager em = entityManager();
+        try {
+            em.getTransaction().begin();
+            entities.forEach(e -> persist(e, em));
             em.getTransaction().commit();
         } catch (Exception e) {
             LOG.error("Error when persisting entity.", e);

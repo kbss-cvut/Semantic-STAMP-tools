@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-/**
- * @author ledvima1
- */
 @RestController
 @RequestMapping("/reports")
 public class ReportController extends BaseController {

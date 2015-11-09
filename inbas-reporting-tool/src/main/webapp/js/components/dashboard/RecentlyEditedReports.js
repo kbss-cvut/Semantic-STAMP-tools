@@ -72,9 +72,9 @@ var ReportRow = React.createClass({
             <tr>
                 <td style={vAlign}>
                     <a href='javascript:void(0);' onClick={this.onOpenClick}
-                       title='Click to see report detail'><CollapsibleText text={report.name} maxLength={20}/></a>
+                       title='Click to see report detail'><CollapsibleText text={report.occurrence.name} maxLength={20}/></a>
                 </td>
-                <td style={vAlign}>{Utils.formatDate(new Date(report.occurrenceTime))}</td>
+                <td style={vAlign}>{Utils.formatDate(new Date(report.occurrence.startTime))}</td>
                 <td style={vAlign}>{Utils.formatDate(new Date(report.lastEdited))}</td>
             </tr>
         );

@@ -16,7 +16,7 @@ var OccurrenceSeverity = React.createClass({
     mixins: [Reflux.ListenerMixin],
     getInitialState: function () {
         return {
-            severity: this.props.severityAssessment ? this.props.severityAssessment.severity : null,
+            severity: this.props.severityAssessment ? this.props.severityAssessment : null,
             options: []
         };
     },
@@ -37,11 +37,10 @@ var OccurrenceSeverity = React.createClass({
         this.setState({options: options});
     },
 
-    onChange: function(e) {
+    onChange: function (e) {
         var value = e.target.value;
-        var change = {severity: value};
-        this.props.onChange('severityAssessment', change);
-        this.setState(change);
+        this.props.onChange('severityAssessment', value);
+        this.setState({severity: value});
     },
 
     render: function () {

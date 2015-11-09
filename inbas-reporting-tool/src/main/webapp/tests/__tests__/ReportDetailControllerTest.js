@@ -14,7 +14,7 @@ describe('ReportDetailController tests', function () {
             state = controller.getInitialState();
         expect(state.loading).toBeFalsy();
         expect(state.report).toBeDefined();
-        expect(state.report.occurrenceTime).toBeDefined();
+        expect(state.report.occurrence).toBeDefined();
     });
 
     it('Uses report passed from router store if it is set', function () {
@@ -28,7 +28,7 @@ describe('ReportDetailController tests', function () {
         expect(RouterStore.getTransitionPayload).toHaveBeenCalledWith(Routes.createReport.name);
         expect(state.loading).toBeFalsy();
         expect(state.report.initialReports).toEqual(report.initialReports);
-        expect(state.report.occurrenceTime).toBeDefined();
+        expect(state.report.occurrence).toBeDefined();
     });
 
     it('Loads existing report when report key is passed in path params', function () {

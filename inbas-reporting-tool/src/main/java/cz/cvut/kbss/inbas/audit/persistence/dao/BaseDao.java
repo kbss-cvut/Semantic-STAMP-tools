@@ -84,7 +84,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         if (owlClass == null) {
             throw new IllegalArgumentException("Class " + type + " is not an entity.");
         }
-        return em.createNativeQuery(query, type).setParameter("type", owlClass.iri()).getResultList();
+        return em.createNativeQuery(query, type).setParameter("type", URI.create(owlClass.iri())).getResultList();
     }
 
     @Override

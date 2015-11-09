@@ -8,6 +8,7 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var Actions = require('../../actions/Actions');
+var Constants = require('../../constants/Constants');
 var ReportDetail = require('./ReportDetail');
 var ReportsStore = require('../../stores/ReportsStore');
 var UserStore = require('../../stores/UserStore');
@@ -34,8 +35,12 @@ var ReportDetailController = React.createClass({
         if (!report) {
             report = {};
         }
-        // Round to seconds
-        report.occurrenceTime = (Date.now() / 1000) * 1000;
+        report.occurrence = {
+            // Round to seconds
+            startTime: (Date.now() / 1000) * 1000,
+            endTime: (Date.now() / 1000) * 1000,
+            reportingPhase: Constants.PRELIMINARY_REPORT_PHASE
+        };
         report.isNew = true;
         return report;
     },
