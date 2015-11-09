@@ -14,7 +14,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OrganizationDao;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessmentDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEventDto;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.PreliminaryReportDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.AircraftIntruderDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.PersonIntruderDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto;
@@ -34,7 +34,10 @@ import static org.junit.Assert.*;
  * @author ledvima1
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {RestConfig.class, ServiceConfig.class, TestPersistenceConfig.class, SecurityConfig.class})
+@ContextConfiguration(classes = {RestConfig.class,
+        ServiceConfig.class,
+        TestPersistenceConfig.class,
+        SecurityConfig.class})
 public class MappersTest {
 
     @Autowired
@@ -116,8 +119,8 @@ public class MappersTest {
 
     @Test
     public void testMapOccurrenceReportToOccurrenceReportDto() {
-        final OccurrenceReport report = initOccurrenceReport();
-        final OccurrenceReportDto result =
+        final PreliminaryReport report = initOccurrenceReport();
+        final PreliminaryReportDto result =
                 reportMapper.occurrenceReportToOccurrenceReportDto(
                         report);
         assertNotNull(result);
@@ -138,13 +141,13 @@ public class MappersTest {
         assertTrue(geFound);
     }
 
-    private OccurrenceReport initOccurrenceReport() {
-        final OccurrenceReport or = new OccurrenceReport();
+    private PreliminaryReport initOccurrenceReport() {
+        final PreliminaryReport or = new PreliminaryReport();
         or.setTypeAssessments(
                 new HashSet<>(Arrays.asList(initEventTypeAssessment(true), initEventTypeAssessment(false))));
         or.setSummary("Something happened.");
         or.setCreated(new Date());
-        or.setSeverityAssessment(new SeverityAssessment(OccurrenceSeverity.MAJOR_INCIDENT));
+        or.setSeverityAssessment(OccurrenceSeverity.MAJOR_INCIDENT);
         or.setCorrectiveMeasures(Collections.singleton(new CorrectiveMeasure("Pilot was fired.")));
         return or;
     }
@@ -195,9 +198,9 @@ public class MappersTest {
 
     @Test
     public void testOccurrenceReportDtoWithRunwayIncursionAndGeneralEventToEntity() {
-        final OccurrenceReportDto dto = initOccurrenceReportDto();
+        final PreliminaryReportDto dto = initOccurrenceReportDto();
 
-        final OccurrenceReport result = reportMapper.occurrenceReportDtoToOccurrenceReport(dto);
+        final PreliminaryReport result = reportMapper.occurrenceReportDtoToOccurrenceReport(dto);
         assertNotNull(result);
         assertEquals(dto.getSummary(), result.getSummary());
         boolean riFound = false, geFound = false;
@@ -214,8 +217,8 @@ public class MappersTest {
         assertTrue(geFound);
     }
 
-    private OccurrenceReportDto initOccurrenceReportDto() {
-        final OccurrenceReportDto dto = new OccurrenceReportDto();
+    private PreliminaryReportDto initOccurrenceReportDto() {
+        final PreliminaryReportDto dto = new PreliminaryReportDto();
         final Set<EventTypeAssessmentDto> eTypes = new HashSet<>();
         eTypes.add(initRunwayIncursionDto());
         final GeneralEventDto ge = new GeneralEventDto();

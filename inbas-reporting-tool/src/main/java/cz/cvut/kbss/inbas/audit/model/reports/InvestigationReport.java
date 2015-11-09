@@ -1,22 +1,20 @@
 package cz.cvut.kbss.inbas.audit.model.reports;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.cvut.kbss.inbas.audit.model.HasOwlKey;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
-import cz.cvut.kbss.inbas.audit.model.Resource;
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
-@OWLClass(iri = Vocabulary.OccurrenceReport)
-public class OccurrenceReport implements HasOwlKey, Serializable {
+@OWLClass(iri = Vocabulary.InvestigationReport)
+public class InvestigationReport implements HasOwlKey, Serializable, Report {
 
     @Id(generated = true)
     private URI uri;
@@ -24,23 +22,20 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
 
-    @OWLDataProperty(iri = Vocabulary.p_occurrenceTime)
-    private Date occurrenceTime;
-
     @OWLDataProperty(iri = Vocabulary.p_dateCreated)
     private Date created;
 
     @OWLDataProperty(iri = Vocabulary.p_dateLastEdited)
     private Date lastEdited;
 
-    @OWLDataProperty(iri = Vocabulary.p_label)
-    private String name;    // Simple name of the event being reported
+    @OWLDataProperty(iri = Vocabulary.p_revision)
+    private Integer revision;
+
+    @OWLDataProperty(iri = Vocabulary.p_severityLevel)
+    private OccurrenceSeverity severityAssessment;
 
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String summary;
-
-    @OWLDataProperty(iri = Vocabulary.p_factors)
-    private String factors;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER)
     private Person author;
@@ -48,20 +43,17 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
     @OWLObjectProperty(iri = Vocabulary.p_lastEditedBy, fetch = FetchType.EAGER)
     private Person lastEditedBy;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
-    private Resource resource;
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLObjectProperty(iri = Vocabulary.p_hasOccurrence, fetch = FetchType.EAGER)
+    private Occurrence occurrence;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasInitialReport, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Set<InitialReport> initialReports;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasSeverityAssessment, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private SeverityAssessment severityAssessment;
-
     @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<EventTypeAssessment> typeAssessments;
+    // Type assessments will be replaced with factors, which will have a tree structure
 
     public URI getUri() {
         return uri;
@@ -69,14 +61,6 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
 
     public void setUri(URI uri) {
         this.uri = uri;
-    }
-
-    public Date getOccurrenceTime() {
-        return occurrenceTime;
-    }
-
-    public void setOccurrenceTime(Date occurrenceTime) {
-        this.occurrenceTime = occurrenceTime;
     }
 
     public Date getCreated() {
@@ -95,28 +79,28 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
         this.lastEdited = lastEdited;
     }
 
+    public Integer getRevision() {
+        return revision;
+    }
+
+    public void setRevision(Integer revision) {
+        this.revision = revision;
+    }
+
+    public OccurrenceSeverity getSeverityAssessment() {
+        return severityAssessment;
+    }
+
+    public void setSeverityAssessment(OccurrenceSeverity severityAssessment) {
+        this.severityAssessment = severityAssessment;
+    }
+
     public String getSummary() {
         return summary;
     }
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public String getFactors() {
-        return factors;
-    }
-
-    public void setFactors(String factors) {
-        this.factors = factors;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Person getAuthor() {
@@ -135,12 +119,12 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
         this.lastEditedBy = lastEditedBy;
     }
 
-    public Resource getResource() {
-        return resource;
+    public Occurrence getOccurrence() {
+        return occurrence;
     }
 
-    public void setResource(Resource resource) {
-        this.resource = resource;
+    public void setOccurrence(Occurrence occurrence) {
+        this.occurrence = occurrence;
     }
 
     public Set<InitialReport> getInitialReports() {
@@ -151,36 +135,12 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
         this.initialReports = initialReports;
     }
 
-    public SeverityAssessment getSeverityAssessment() {
-        return severityAssessment;
-    }
-
-    public void setSeverityAssessment(SeverityAssessment severityAssessment) {
-        this.severityAssessment = severityAssessment;
-    }
-
     public Set<CorrectiveMeasure> getCorrectiveMeasures() {
         return correctiveMeasures;
     }
 
     public void setCorrectiveMeasures(Set<CorrectiveMeasure> correctiveMeasures) {
         this.correctiveMeasures = correctiveMeasures;
-    }
-
-    public Set<EventTypeAssessment> getTypeAssessments() {
-        return typeAssessments;
-    }
-
-    public void setTypeAssessments(Set<EventTypeAssessment> typeAssessments) {
-        this.typeAssessments = typeAssessments;
-    }
-
-    @JsonIgnore
-    public Collection<ReportingStatement> getStatements() {
-        final Set<ReportingStatement> statements = new HashSet<>(correctiveMeasures);
-        statements.addAll(typeAssessments);
-        statements.add(severityAssessment);
-        return statements;
     }
 
     @Override
@@ -203,11 +163,16 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
 
     @Override
     public String toString() {
-        return "OccurrenceReport{" +
+        return "InvestigationReport{" +
                 "uri=" + uri +
-                ", name=" + name +
-                ", key=" + key +
                 ", author=" + author +
+                ", revision=" + revision +
+                ", occurrence=" + occurrence +
                 '}';
+    }
+
+    @Override
+    public ReportingPhase getPhase() {
+        return ReportingPhase.INVESTIGATION;
     }
 }

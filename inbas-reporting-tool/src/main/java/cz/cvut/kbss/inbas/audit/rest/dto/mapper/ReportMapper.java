@@ -2,15 +2,15 @@ package cz.cvut.kbss.inbas.audit.rest.dto.mapper;
 
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessmentDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEventDto;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportInfo;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.PreliminaryReportDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.*;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -23,11 +23,11 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class ReportMapper {
 
-    public abstract OccurrenceReportInfo occurrenceReportToOccurrenceReportInfo(OccurrenceReport report);
+    public abstract OccurrenceReportInfo occurrenceReportToOccurrenceReportInfo(PreliminaryReport report);
 
-    public abstract OccurrenceReportDto occurrenceReportToOccurrenceReportDto(OccurrenceReport report);
+    public abstract PreliminaryReportDto occurrenceReportToOccurrenceReportDto(PreliminaryReport report);
 
-    public abstract OccurrenceReport occurrenceReportDtoToOccurrenceReport(OccurrenceReportDto dto);
+    public abstract PreliminaryReport occurrenceReportDtoToOccurrenceReport(PreliminaryReportDto dto);
 
     public EventTypeAssessmentDto eventTypeAssessmentToEventTypeAssessmentDto(EventTypeAssessment assessment) {
         final EventTypeAssessmentDto result;

@@ -1,8 +1,9 @@
 package cz.cvut.kbss.inbas.audit.service.validation;
 
-import cz.cvut.kbss.inbas.audit.exception.InvalidReportException;
+import cz.cvut.kbss.inbas.audit.exception.ValidationException;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.service.BaseServiceTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URI;
 import java.util.Date;
 
-/**
- * @author ledvima1
- */
 public class BaseReportValidatorTest extends BaseServiceTestRunner {
 
     private static final Person PERSON = initPerson();
 
     @Autowired
-    private ReportValidator validator;
+    private Validator<PreliminaryReport> validator;
 
     private static Person initPerson() {
         final Person p = new Person();
@@ -31,22 +29,32 @@ public class BaseReportValidatorTest extends BaseServiceTestRunner {
 
     @Test
     public void testValidateValid() {
-        final OccurrenceReport report = getDefaultValidReport();
-        validator.validateReport(report);
+        final PreliminaryReport report = getDefaultValidReport();
+        validator.validate(report);
     }
 
-    private OccurrenceReport getDefaultValidReport() {
-        final OccurrenceReport report = new OccurrenceReport();
+    private PreliminaryReport getDefaultValidReport() {
+        final PreliminaryReport report = new PreliminaryReport();
         report.setAuthor(PERSON);
-        report.setOccurrenceTime(new Date(System.currentTimeMillis() - 1000000));
+        final Occurrence occurrence = new Occurrence();
+        occurrence.setStartTime(new Date(System.currentTimeMillis() - 1000000));
+        occurrence.setEndTime(new Date());
+        report.setOccurrence(occurrence);
         report.setSummary("Yadayadayada");
         return report;
     }
 
-    @Test(expected = InvalidReportException.class)
+    @Test(expected = ValidationException.class)
     public void futureOccurrenceTimeThrowsException() throws Exception {
-        final OccurrenceReport report = getDefaultValidReport();
-        report.setOccurrenceTime(new Date(System.currentTimeMillis() + 10000));
-        validator.validateReport(report);
+        final PreliminaryReport report = getDefaultValidReport();
+        report.getOccurrence().setStartTime(new Date(System.currentTimeMillis() + 10000));
+        validator.validate(report);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void reportWithoutOccurrenceIsInvalid() throws Exception {
+        final PreliminaryReport report = getDefaultValidReport();
+        report.setOccurrence(null);
+        validator.validate(report);
     }
 }

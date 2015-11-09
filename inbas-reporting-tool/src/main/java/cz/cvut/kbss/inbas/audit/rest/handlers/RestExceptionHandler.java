@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.handlers;
 
-import cz.cvut.kbss.inbas.audit.exception.InvalidReportException;
 import cz.cvut.kbss.inbas.audit.exception.UsernameExistsException;
+import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,8 @@ public class RestExceptionHandler {
         return new ErrorInfo(e.getMessage(), request.getRequestURI());
     }
 
-    @ExceptionHandler(InvalidReportException.class)
-    public ResponseEntity<ErrorInfo> invalidReport(HttpServletRequest request, InvalidReportException e) {
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorInfo> invalidReport(HttpServletRequest request, ValidationException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.CONFLICT);
     }
 

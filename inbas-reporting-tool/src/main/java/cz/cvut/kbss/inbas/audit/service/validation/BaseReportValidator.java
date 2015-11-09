@@ -1,29 +1,27 @@
 package cz.cvut.kbss.inbas.audit.service.validation;
 
-import cz.cvut.kbss.inbas.audit.exception.InvalidReportException;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.exception.ValidationException;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
+import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Objects;
 
-/**
- * @author ledvima1
- */
 @Service
-public class BaseReportValidator implements ReportValidator {
+public class BaseReportValidator implements Validator<PreliminaryReport> {
+
+    @Autowired
+    private Validator<Occurrence> occurrenceValidator;
 
     @Override
-    public void validateReport(OccurrenceReport report) throws InvalidReportException {
+    public void validate(PreliminaryReport report) throws ValidationException {
         Objects.requireNonNull(report);
 
-        if (report.getOccurrenceTime() == null || report.getAuthor() == null) {
-            throw new InvalidReportException(
-                    "Occurrence report is missing one of the required attributes: occurrence time, author. " + report);
+        if (report.getOccurrence() == null || report.getAuthor() == null) {
+            throw new ValidationException(
+                    "Preliminary report is missing one of the required attributes: occurrence, author. " + report);
         }
-        final Date now = new Date();
-        if (now.compareTo(report.getOccurrenceTime()) < 0) {
-            throw new InvalidReportException("Occurrence time cannot be in the future.");
-        }
+        occurrenceValidator.validate(report.getOccurrence());
     }
 }

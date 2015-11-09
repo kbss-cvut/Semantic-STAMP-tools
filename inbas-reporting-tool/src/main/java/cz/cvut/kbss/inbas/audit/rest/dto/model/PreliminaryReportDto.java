@@ -1,40 +1,34 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model;
 
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
-import cz.cvut.kbss.inbas.audit.model.Resource;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
-import cz.cvut.kbss.inbas.audit.model.reports.SeverityAssessment;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 
 import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-public class OccurrenceReportDto {
+public class PreliminaryReportDto {
 
     private URI uri;
 
     private String key;
 
-    private Date occurrenceTime;
+    private Occurrence occurrence;
 
     private Date created;
 
     private Date lastEdited;
 
-    private String name;
-
     private String summary;
-
-    private String factors;
 
     private Person author;
 
     private Person lastEditedBy;
 
-    private Resource resource;
-
-    private SeverityAssessment severityAssessment;
+    private OccurrenceSeverity severityAssessment;
 
     private Set<InitialReport> initialReports;
 
@@ -58,12 +52,12 @@ public class OccurrenceReportDto {
         this.key = key;
     }
 
-    public Date getOccurrenceTime() {
-        return occurrenceTime;
+    public Occurrence getOccurrence() {
+        return occurrence;
     }
 
-    public void setOccurrenceTime(Date occurrenceTime) {
-        this.occurrenceTime = occurrenceTime;
+    public void setOccurrence(Occurrence occurrence) {
+        this.occurrence = occurrence;
     }
 
     public Date getCreated() {
@@ -82,28 +76,12 @@ public class OccurrenceReportDto {
         this.lastEdited = lastEdited;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getSummary() {
         return summary;
     }
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public String getFactors() {
-        return factors;
-    }
-
-    public void setFactors(String factors) {
-        this.factors = factors;
     }
 
     public Person getAuthor() {
@@ -122,14 +100,6 @@ public class OccurrenceReportDto {
         this.lastEditedBy = lastEditedBy;
     }
 
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-
     public Set<InitialReport> getInitialReports() {
         return initialReports;
     }
@@ -138,11 +108,11 @@ public class OccurrenceReportDto {
         this.initialReports = initialReports;
     }
 
-    public SeverityAssessment getSeverityAssessment() {
+    public OccurrenceSeverity getSeverityAssessment() {
         return severityAssessment;
     }
 
-    public void setSeverityAssessment(SeverityAssessment severityAssessment) {
+    public void setSeverityAssessment(OccurrenceSeverity severityAssessment) {
         this.severityAssessment = severityAssessment;
     }
 
@@ -167,7 +137,7 @@ public class OccurrenceReportDto {
         return "OccurrenceReport{" +
                 "uri=" + uri +
                 ", key='" + key + '\'' +
-                ", name='" + name + '\'' +
+                ", occurrence=" + occurrence +
                 ", summary='" + summary + '\'' +
                 '}';
     }

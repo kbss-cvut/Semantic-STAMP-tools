@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.service;
 
+import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
@@ -21,7 +22,7 @@ import static org.junit.Assert.*;
 /**
  * @author ledvima1
  */
-public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
+public class PreliminaryReportServiceTest extends BaseServiceTestRunner {
 
     private static final String USERNAME = "halsey@unsc.org";
 
@@ -31,7 +32,7 @@ public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
     private PersonService personService;
 
     @Autowired
-    private OccurrenceReportService reportService;
+    private PreliminaryReportService reportService;
 
     @Autowired
     private EntityManagerFactory emf;
@@ -51,7 +52,7 @@ public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void eventTypeAssessmentsWithRunwayIncursionAreDeletedWhenRemovedFromReport() throws Exception {
-        final OccurrenceReport reportWithIncursion = persistReportWithIncursion();
+        final PreliminaryReport reportWithIncursion = persistReportWithIncursion();
         assertNotNull(reportWithIncursion.getKey());
         final List<EventTypeAssessment> removed = new ArrayList<>();
         final Iterator<EventTypeAssessment> it = reportWithIncursion.getTypeAssessments().iterator();
@@ -65,17 +66,15 @@ public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
         reportService.update(reportWithIncursion);
 
         // Check there is no incursion and no leftovers
-        final OccurrenceReport result = reportService.findByKey(reportWithIncursion.getKey());
+        final PreliminaryReport result = reportService.findByKey(reportWithIncursion.getKey());
         assertNotNull(result);
         assertEquals(reportWithIncursion.getTypeAssessments().size(), result.getTypeAssessments().size());
         verifyStatementsDeleted(removed, Vocabulary.EventTypeAssessment);
         verifyNoIncursionLeftoversArePresent();
     }
 
-    private OccurrenceReport persistReportWithIncursion() {
-        final OccurrenceReport report = new OccurrenceReport();
-        report.setAuthor(author);
-        report.setOccurrenceTime(new Date());
+    private PreliminaryReport persistReportWithIncursion() {
+        final PreliminaryReport report = initReportWithOccurrence();
         report.setSummary("test report");
         final EventTypeAssessment one = new EventTypeAssessment();
         one.setEventType(new EventType(URI.create("http://krizik.felk.cvut.cz/ontologies/eventTypes#Incursion")));
@@ -91,6 +90,13 @@ public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
         two.setEventType(new EventType(URI.create("http://krizik.felk.cvut.cz/ontologies/eventTypes#General")));
         report.setTypeAssessments(new HashSet<>(Arrays.asList(one, two)));
         reportService.persist(report);
+        return report;
+    }
+
+    private PreliminaryReport initReportWithOccurrence() {
+        final PreliminaryReport report = new PreliminaryReport();
+        report.setAuthor(author);
+        report.setOccurrence(Generator.generateOccurrence());
         return report;
     }
 
@@ -124,7 +130,7 @@ public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void generalEventTypeAssessmentIsRemovedWhenMissingInUpdatedReport() throws Exception {
-        final OccurrenceReport report = persistReportWithIncursion();
+        final PreliminaryReport report = persistReportWithIncursion();
         final List<EventTypeAssessment> removed = new ArrayList<>();
         final Iterator<EventTypeAssessment> it = report.getTypeAssessments().iterator();
         while (it.hasNext()) {
@@ -136,7 +142,7 @@ public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
         }
         reportService.update(report);
 
-        final OccurrenceReport res = reportService.find(report.getUri());
+        final PreliminaryReport res = reportService.find(report.getUri());
         assertNotNull(res);
         assertEquals(report.getTypeAssessments().size(), res.getTypeAssessments().size());
         verifyStatementsDeleted(removed, Vocabulary.EventTypeAssessment);
@@ -144,7 +150,7 @@ public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void correctiveMeasureIsRemovedWhenMissingInUpdatedReport() throws Exception {
-        final OccurrenceReport report = persistReportWithCorrectiveMeasure();
+        final PreliminaryReport report = persistReportWithCorrectiveMeasure();
         boolean remove = false;
         final List<CorrectiveMeasure> removed = new ArrayList<>();
         final Iterator<CorrectiveMeasure> it = report.getCorrectiveMeasures().iterator();
@@ -158,16 +164,14 @@ public class OccurrenceReportServiceTest extends BaseServiceTestRunner {
         }
         reportService.update(report);
 
-        final OccurrenceReport res = reportService.find(report.getUri());
+        final PreliminaryReport res = reportService.find(report.getUri());
         assertNotNull(res);
         assertEquals(report.getCorrectiveMeasures().size(), res.getCorrectiveMeasures().size());
         verifyStatementsDeleted(removed, Vocabulary.CorrectiveMeasure);
     }
 
-    private OccurrenceReport persistReportWithCorrectiveMeasure() {
-        final OccurrenceReport report = new OccurrenceReport();
-        report.setAuthor(author);
-        report.setOccurrenceTime(new Date());
+    private PreliminaryReport persistReportWithCorrectiveMeasure() {
+        final PreliminaryReport report = initReportWithOccurrence();
         report.setSummary("test report");
         final CorrectiveMeasure mOne = new CorrectiveMeasure();
         mOne.setDescription("Corrective measure one");

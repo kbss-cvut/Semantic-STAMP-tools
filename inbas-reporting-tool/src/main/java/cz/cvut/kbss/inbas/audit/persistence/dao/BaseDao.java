@@ -61,9 +61,8 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     protected T findByKey(String key, EntityManager em) {
         try {
-            return em.createNativeQuery(
-                    "SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> \"" + key + "\"@en . }",
-                    type).getSingleResult();
+            return em.createNativeQuery("SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> ?key . }", type)
+                     .setParameter("key", key, "en").getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
@@ -80,12 +79,12 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     }
 
     protected List<T> findAll(EntityManager em) {
-        final String query = "SELECT ?x WHERE { ?x a <$type$> .}";
+        final String query = "SELECT ?x WHERE { ?x a ?type .}";
         final OWLClass owlClass = type.getDeclaredAnnotation(OWLClass.class);
         if (owlClass == null) {
             throw new IllegalArgumentException("Class " + type + " is not an entity.");
         }
-        return em.createNativeQuery(query.replace("$type$", owlClass.iri()), type).getResultList();
+        return em.createNativeQuery(query, type).setParameter("type", owlClass.iri()).getResultList();
     }
 
     @Override

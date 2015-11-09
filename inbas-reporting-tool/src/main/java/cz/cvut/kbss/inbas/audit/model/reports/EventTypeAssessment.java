@@ -22,7 +22,7 @@ public class EventTypeAssessment implements ReportingStatement, Serializable {
     private EventType eventType;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEvent, fetch = FetchType.EAGER)
-    private OccurrenceReport occurrenceReport;
+    private PreliminaryReport preliminaryReport;
 
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
@@ -49,12 +49,12 @@ public class EventTypeAssessment implements ReportingStatement, Serializable {
         this.eventType = eventType;
     }
 
-    public OccurrenceReport getOccurrenceReport() {
-        return occurrenceReport;
+    public PreliminaryReport getPreliminaryReport() {
+        return preliminaryReport;
     }
 
-    public void setOccurrenceReport(OccurrenceReport occurrenceReport) {
-        this.occurrenceReport = occurrenceReport;
+    public void setPreliminaryReport(PreliminaryReport preliminaryReport) {
+        this.preliminaryReport = preliminaryReport;
     }
 
     public String getDescription() {

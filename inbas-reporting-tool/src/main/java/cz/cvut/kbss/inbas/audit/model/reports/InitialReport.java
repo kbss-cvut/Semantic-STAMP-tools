@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.model.reports;
 
 import cz.cvut.kbss.inbas.audit.model.HasOwlKey;
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.Id;
@@ -11,7 +12,7 @@ import java.io.Serializable;
 import java.net.URI;
 
 @OWLClass(iri = Vocabulary.InitialReport)
-public class InitialReport implements HasOwlKey, Serializable {
+public class InitialReport implements HasOwlKey, Serializable, Report {
 
     @Id(generated = true)
     private URI uri;
@@ -67,5 +68,10 @@ public class InitialReport implements HasOwlKey, Serializable {
         if (key == null) {
             this.key = IdentificationUtils.generateKey();
         }
+    }
+
+    @Override
+    public ReportingPhase getPhase() {
+        return ReportingPhase.INITIAL;
     }
 }

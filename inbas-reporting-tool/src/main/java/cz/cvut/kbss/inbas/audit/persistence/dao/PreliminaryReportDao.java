@@ -1,24 +1,27 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.model.Location;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.PersistenceException;
+import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-/**
- * @author ledvima1
- */
 @Repository
-public class OccurrenceReportDao extends BaseDao<OccurrenceReport> {
+public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
+
+    @Autowired
+    private OccurrenceDao occurrenceDao;
 
     @Autowired
     private EventTypeDao eventTypeDao;
@@ -32,17 +35,20 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport> {
     @Autowired
     private InitialReportDao initialReportDao;
 
-    public OccurrenceReportDao() {
-        super(OccurrenceReport.class);
+    public PreliminaryReportDao() {
+        super(PreliminaryReport.class);
     }
 
     @Override
-    public void persist(OccurrenceReport entity) {
+    public void persist(PreliminaryReport entity) {
         Objects.requireNonNull(entity);
 
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
+            if (entity.getRevision() == 1) {
+                occurrenceDao.persist(entity.getOccurrence(), em);
+            }
             saveEventTypes(entity.getTypeAssessments(), em);
             saveInitialReports(entity.getInitialReports(), em);
             entity.generateKey();
@@ -116,7 +122,7 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport> {
     }
 
     @Override
-    public void update(OccurrenceReport entity) {
+    public void update(PreliminaryReport entity) {
         Objects.requireNonNull(entity);
 
         final EntityManager em = entityManager();
@@ -129,6 +135,25 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport> {
         } catch (Exception e) {
             LOG.error("Error when persisting entity.", e);
             throw new PersistenceException(e);
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Gets all preliminary reports for the specified occurrence.
+     *
+     * @param occurrence Occurrence to filter reports by
+     * @return List of matching reports
+     */
+    public List<PreliminaryReport> findByOccurrence(Occurrence occurrence) {
+        Objects.requireNonNull(occurrence);
+
+        final EntityManager em = entityManager();
+        try {
+            return em.createNativeQuery("SELECT ?r WHERE { ?r <" + Vocabulary.p_hasOccurrence + "> ?occurrence ;" +
+                            "rdf:type <" + Vocabulary.PreliminaryReport + "> . }",
+                    PreliminaryReport.class).setParameter("occurrence", occurrence.getUri()).getResultList();
         } finally {
             em.close();
         }

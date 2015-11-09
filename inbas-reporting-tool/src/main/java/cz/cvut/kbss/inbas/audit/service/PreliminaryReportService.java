@@ -1,28 +1,29 @@
 package cz.cvut.kbss.inbas.audit.service;
 
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
-import cz.cvut.kbss.inbas.audit.persistence.dao.*;
-import cz.cvut.kbss.inbas.audit.service.validation.ReportValidator;
+import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.persistence.dao.CorrectiveMeasureDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.EventTypeAssessmentDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
+import cz.cvut.kbss.inbas.audit.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class OccurrenceReportService extends BaseService<OccurrenceReport> {
+public class PreliminaryReportService extends BaseService<PreliminaryReport> {
 
     @Autowired
-    private ReportValidator reportValidator;
+    private Validator<PreliminaryReport> reportValidator;
 
     @Autowired
-    private OccurrenceReportDao occurrenceReportDao;
+    private PreliminaryReportDao preliminaryReportDao;
 
     @Autowired
     private EventTypeAssessmentDao eventTypeAssessmentDao;
@@ -30,46 +31,42 @@ public class OccurrenceReportService extends BaseService<OccurrenceReport> {
     @Autowired
     private CorrectiveMeasureDao correctiveMeasureDao;
 
-    @Autowired
-    private SeverityAssessmentDao severityAssessmentDao;
-
     @Override
-    protected GenericDao<OccurrenceReport> getPrimaryDao() {
-        return occurrenceReportDao;
+    protected GenericDao<PreliminaryReport> getPrimaryDao() {
+        return preliminaryReportDao;
     }
 
-    public OccurrenceReport findByKey(String key) {
-        return occurrenceReportDao.findByKey(key);
+    public PreliminaryReport findByKey(String key) {
+        return preliminaryReportDao.findByKey(key);
     }
 
     @Override
-    public void persist(OccurrenceReport report) {
-        reportValidator.validateReport(report);
+    public void persist(PreliminaryReport report) {
+        reportValidator.validate(report);
         report.setCreated(new Date());
         report.setLastEdited(new Date());
-        occurrenceReportDao.persist(report);
+        preliminaryReportDao.persist(report);
     }
 
     @Override
-    public void update(OccurrenceReport report) {
+    public void update(PreliminaryReport report) {
         if (report.getUri() == null || report.getKey() == null) {
             throw new IllegalArgumentException("Updated report missing URI or key. " + report);
         }
-        reportValidator.validateReport(report);
+        reportValidator.validate(report);
         report.setLastEdited(new Date());
-        final OccurrenceReport original = occurrenceReportDao.find(report.getUri());
+        final PreliminaryReport original = preliminaryReportDao.find(report.getUri());
         assert original != null;
         deleteObsoleteStatements(report, original);
-        occurrenceReportDao.update(report);
+        preliminaryReportDao.update(report);
     }
 
-    private void deleteObsoleteStatements(OccurrenceReport updated, OccurrenceReport original) {
+    private void deleteObsoleteStatements(PreliminaryReport updated, PreliminaryReport original) {
         removeObsoleteEventTypeAssessments(updated, original);
         removeObsoleteCorrectiveMeasures(updated, original);
-        removeObsoleteSeverityAssessment(updated, original);
     }
 
-    private void removeObsoleteEventTypeAssessments(OccurrenceReport updated, OccurrenceReport original) {
+    private void removeObsoleteEventTypeAssessments(PreliminaryReport updated, PreliminaryReport original) {
         if (original.getTypeAssessments() != null) {
             // We have to use ids, because the entities don't override equals/hashCode
             final Set<URI> updatedIds =
@@ -84,7 +81,7 @@ public class OccurrenceReportService extends BaseService<OccurrenceReport> {
         }
     }
 
-    private void removeObsoleteCorrectiveMeasures(OccurrenceReport updated, OccurrenceReport original) {
+    private void removeObsoleteCorrectiveMeasures(PreliminaryReport updated, PreliminaryReport original) {
         if (original.getCorrectiveMeasures() != null) {
             // We have to use ids, because the entities don't override equals/hashCode
             final Set<URI> updatedIds =
@@ -98,9 +95,8 @@ public class OccurrenceReportService extends BaseService<OccurrenceReport> {
         }
     }
 
-    private void removeObsoleteSeverityAssessment(OccurrenceReport updated, OccurrenceReport original) {
-        if (original.getSeverityAssessment() != null && updated.getSeverityAssessment() == null) {
-            severityAssessmentDao.remove(original.getSeverityAssessment());
-        }
+    public List<PreliminaryReport> findByOccurrence(Occurrence occurrence) {
+        Objects.requireNonNull(occurrence);
+        return preliminaryReportDao.findByOccurrence(occurrence);
     }
 }

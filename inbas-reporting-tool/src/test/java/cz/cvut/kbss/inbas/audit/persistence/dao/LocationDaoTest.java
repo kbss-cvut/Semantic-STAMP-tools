@@ -8,9 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * @author ledvima1
- */
 public class LocationDaoTest extends BaseDaoTestRunner {
 
     @Autowired
