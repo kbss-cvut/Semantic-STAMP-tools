@@ -7,6 +7,7 @@
 var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-typeahead').Typeahead;
+var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
 var ReportsStore = require('../../stores/ReportsStore');
@@ -32,21 +33,24 @@ var ReportTypeahead = React.createClass({
         Actions.loadReports();
     },
 
-    componentDidMount: function() {
+    componentDidMount: function () {
         this.refs.reportTypeahead.focus();
     },
 
     onReportsLoaded: function () {
         var options = [],
-            reports = ReportsStore.getReports();
+            reports = ReportsStore.getReports(),
+            option;
         for (var i = 0, len = reports.length; i < len; i++) {
-            options.push(reports[i].occurrence);
+            option = assign({}, reports[i].occurrence);
+            option.reportKey = reports[i].key;
+            options.push(option);
         }
         this.setState({options: options});
     },
 
     onOptionSelected: function (option) {
-        this.props.onChange(option);
+        this.props.onChange(option.reportKey);
     },
 
     render: function () {

@@ -25,9 +25,15 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     protected static final Logger LOG = LoggerFactory.getLogger(BaseDao.class);
 
     private final Class<T> type;
+    private final URI typeUri;
 
     protected BaseDao(Class<T> type) {
         this.type = type;
+        final OWLClass owlClass = type.getDeclaredAnnotation(OWLClass.class);
+        if (owlClass == null) {
+            throw new IllegalArgumentException("Class " + type + " is not an entity.");
+        }
+        this.typeUri = URI.create(owlClass.iri());
     }
 
     @Autowired
@@ -61,8 +67,9 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     protected T findByKey(String key, EntityManager em) {
         try {
-            return em.createNativeQuery("SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> ?key . }", type)
-                     .setParameter("key", key, "en").getSingleResult();
+            return em.createNativeQuery("SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> ?key ;" +
+                    "a ?type }", type)
+                     .setParameter("key", key, "en").setParameter("type", typeUri).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }

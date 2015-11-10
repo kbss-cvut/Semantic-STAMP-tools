@@ -7,15 +7,8 @@ describe('ReportDetailController tests', function () {
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
         ReportDetailController = require('../../js/components/reports/ReportDetailController'),
-        Routes = require('../../js/utils/Routes');
-
-    it('Creates new empty report when none is passed from router or in path key', function () {
-        var controller = TestUtils.renderIntoDocument(<ReportDetailController params={{}}/>),
-            state = controller.getInitialState();
-        expect(state.loading).toBeFalsy();
-        expect(state.report).toBeDefined();
-        expect(state.report.occurrence).toBeDefined();
-    });
+        Routes = require('../../js/utils/Routes'),
+        Constants = require('../../js/constants/Constants');
 
     it('Uses report passed from router store if it is set', function () {
         var report = {
@@ -39,5 +32,33 @@ describe('ReportDetailController tests', function () {
         expect(Actions.findReport).toHaveBeenCalledWith(params.reportKey);
         expect(state.loading).toBeTruthy();
         expect(state.report).toBeNull();
+    });
+
+    it('Initializes new report when no key is specified', function () {
+        var controller = TestUtils.renderIntoDocument(<ReportDetailController params={{}}/>),
+            report = controller.state.report;
+
+        expect(controller.state.loading).toBeFalsy();
+        expect(report).toBeDefined();
+        expect(report.isNew).toBeTruthy();
+        expect(report.occurrence).toBeDefined();
+        expect(report.occurrence.startTime).toBeDefined();
+        expect(report.occurrence.endTime).toBeDefined();
+        expect(report.occurrence.reportingPhase).toEqual(Constants.PRELIMINARY_REPORT_PHASE);
+    });
+
+    it('Initializes new report with imported initial report', function () {
+        var payload = {
+            initialReports: [{
+                text: 'Initial report'
+            }]
+        };
+        spyOn(RouterStore, 'getTransitionPayload').and.returnValue(payload);
+        var controller = TestUtils.renderIntoDocument(<ReportDetailController params={{}}/>),
+            report = controller.state.report;
+
+        expect(report.occurrence).toBeDefined();
+        expect(report.initialReports.length).toEqual(1);
+        expect(report.initialReports[0]).toEqual(payload.initialReports[0]);
     });
 });

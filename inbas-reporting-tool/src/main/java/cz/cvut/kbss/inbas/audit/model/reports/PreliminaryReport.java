@@ -47,7 +47,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, Report {
     private Person lastEditedBy;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_hasOccurrence, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasOccurrence, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private Occurrence occurrence;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasInitialReport, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)

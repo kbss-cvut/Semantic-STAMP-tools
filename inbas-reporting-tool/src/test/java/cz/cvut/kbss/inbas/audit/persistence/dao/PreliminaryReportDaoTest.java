@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Location;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
@@ -38,6 +39,9 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
     @Autowired
     private InitialReportDao irDao;
+
+    @Autowired
+    private OccurrenceDao occurrenceDao;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -270,5 +274,20 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
         final InitialReport result = irDao.find(updated.getUri());
         assertEquals(updatedText, result.getText());
+    }
+
+    @Test
+    public void occurrenceIsPersistedWhenReportIsPersisted() {
+        final PreliminaryReport report = new PreliminaryReport();
+        report.setOccurrence(Generator.generateOccurrence());
+        assertEquals(1, report.getRevision().intValue());
+
+        dao.persist(report);
+
+        assertNotNull(report.getOccurrence().getKey());
+        assertNotNull(report.getOccurrence().getUri());
+        final Occurrence occurrence = occurrenceDao.find(report.getOccurrence().getUri());
+        assertNotNull(occurrence);
+        assertEquals(report.getOccurrence().getName(), occurrence.getName());
     }
 }

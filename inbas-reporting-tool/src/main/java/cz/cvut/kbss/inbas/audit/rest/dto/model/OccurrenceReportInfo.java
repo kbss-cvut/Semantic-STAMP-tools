@@ -18,6 +18,8 @@ public class OccurrenceReportInfo {
 
     private Date lastEdited;
 
+    private String summary;
+
     public URI getUri() {
         return uri;
     }
@@ -48,6 +50,14 @@ public class OccurrenceReportInfo {
 
     public void setLastEdited(Date lastEdited) {
         this.lastEdited = lastEdited;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     @Override

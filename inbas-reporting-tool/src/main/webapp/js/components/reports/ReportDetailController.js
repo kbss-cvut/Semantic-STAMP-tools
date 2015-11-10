@@ -15,6 +15,7 @@ var UserStore = require('../../stores/UserStore');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var RouterStore = require('../../stores/RouterStore');
+var PreliminaryReportFactory = require('../../model/PreliminaryReportFactory');
 
 var ReportDetailController = React.createClass({
     mixins: [
@@ -31,17 +32,11 @@ var ReportDetailController = React.createClass({
     },
 
     initNewReport: function () {
-        var report = RouterStore.getTransitionPayload(Routes.createReport.name);
-        if (!report) {
-            report = {};
+        var payload = RouterStore.getTransitionPayload(Routes.createReport.name),
+            report = PreliminaryReportFactory.createReport();
+        if (payload) {
+            report.initialReports = payload.initialReports;
         }
-        report.occurrence = {
-            // Round to seconds
-            startTime: (Date.now() / 1000) * 1000,
-            endTime: (Date.now() / 1000) * 1000,
-            reportingPhase: Constants.PRELIMINARY_REPORT_PHASE
-        };
-        report.isNew = true;
         return report;
     },
 

@@ -1,6 +1,8 @@
+Implement investigation saving
+    - First create a model for the factors structure
+Implement report revisions
 Set up the Jasmine tests so that they can be run in browser and debugged
 Create proper investigation screen
-Occurrences should have start and end time
 Disable fuzzy string matching in autocomplete
         - requires writing our own string matching function
 Add loss of separation wizard
