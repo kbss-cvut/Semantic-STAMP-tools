@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Collection;
 
-/**
- * @author ledvima1
- */
 @RestController
 @RequestMapping("/persons")
 public class PersonController extends BaseController {

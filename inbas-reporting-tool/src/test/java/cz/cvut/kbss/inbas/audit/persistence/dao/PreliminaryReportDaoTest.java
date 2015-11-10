@@ -1,10 +1,7 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
-import cz.cvut.kbss.inbas.audit.model.Aircraft;
-import cz.cvut.kbss.inbas.audit.model.Location;
-import cz.cvut.kbss.inbas.audit.model.Occurrence;
-import cz.cvut.kbss.inbas.audit.model.Organization;
+import cz.cvut.kbss.inbas.audit.model.*;
 import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
@@ -14,6 +11,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +32,15 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     private static EventType eventType;
     private static Organization organization;
 
+    private Person author;
+
     @Autowired
     private PreliminaryReportDao dao;
 
     @Autowired
     private InitialReportDao irDao;
+    @Autowired
+    private PersonDao personDao;
 
     @Autowired
     private OccurrenceDao occurrenceDao;
@@ -50,6 +52,12 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         eventType.setName("Runway incursion by an aircraft");
         organization = new Organization("CSA");
         organization.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/2014/inbas/organizations#CSA"));
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        author = Generator.generatePerson();
+        personDao.persist(author);
     }
 
     @Test
@@ -77,8 +85,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     }
 
     private PreliminaryReport initOccurrenceReportWithTypeAssessment(EventType eventType) {
-        final PreliminaryReport rOne = new PreliminaryReport();
-        rOne.setOccurrence(Generator.generateOccurrence());
+        final PreliminaryReport rOne = initBasicValidReport();
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
 
         typeAssessment.setEventType(eventType);
@@ -196,8 +203,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     }
 
     private PreliminaryReport initOccurrenceReportWithLocation(Location location) {
-        final PreliminaryReport r = new PreliminaryReport();
-        r.setOccurrence(Generator.generateOccurrence());
+        final PreliminaryReport r = initBasicValidReport();
         final EventTypeAssessment type = new EventTypeAssessment();
         type.setEventType(eventType);
         final RunwayIncursion ri = new RunwayIncursion();
@@ -209,8 +215,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void initialReportsArePersistedWhenOccurrenceReportIsPersisted() {
-        final PreliminaryReport report = new PreliminaryReport();
-        report.setOccurrence(Generator.generateOccurrence());
+        final PreliminaryReport report = initBasicValidReport();
         final Set<InitialReport> initialReports = initInitialReports(report);
 
         dao.persist(report);
@@ -221,6 +226,13 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         }
         final PreliminaryReport res = dao.find(report.getUri());
         assertEquals(initialReports.size(), res.getInitialReports().size());
+    }
+
+    private PreliminaryReport initBasicValidReport() {
+        final PreliminaryReport report = new PreliminaryReport();
+        report.setOccurrence(Generator.generateOccurrence());
+        report.setAuthor(author);
+        return report;
     }
 
     private Set<InitialReport> initInitialReports(PreliminaryReport report) {
@@ -234,8 +246,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void initialReportsArePersistedWhenOccurrenceReportIsUpdated() {
-        final PreliminaryReport report = new PreliminaryReport();
-        report.setOccurrence(Generator.generateOccurrence());
+        final PreliminaryReport report = initBasicValidReport();
         final Set<InitialReport> initialReports = initInitialReports(report);
 
         dao.persist(report);
@@ -259,8 +270,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void initialReportsAreUpdatedWhenOccurrenceReportIsUpdated() {
-        final PreliminaryReport report = new PreliminaryReport();
-        report.setOccurrence(Generator.generateOccurrence());
+        final PreliminaryReport report = initBasicValidReport();
         initInitialReports(report);
 
         dao.persist(report);
@@ -278,8 +288,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void occurrenceIsPersistedWhenReportIsPersisted() {
-        final PreliminaryReport report = new PreliminaryReport();
-        report.setOccurrence(Generator.generateOccurrence());
+        final PreliminaryReport report = initBasicValidReport();
         assertEquals(1, report.getRevision().intValue());
 
         dao.persist(report);

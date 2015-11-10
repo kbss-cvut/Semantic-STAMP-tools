@@ -9,9 +9,6 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Set;
 
-/**
- * @author ledvima1
- */
 @OWLClass(iri = Vocabulary.EventTypeAssessment)
 public class EventTypeAssessment implements ReportingStatement, Serializable {
 
@@ -20,9 +17,6 @@ public class EventTypeAssessment implements ReportingStatement, Serializable {
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
     private EventType eventType;
-
-    @OWLObjectProperty(iri = Vocabulary.p_hasEvent, fetch = FetchType.EAGER)
-    private PreliminaryReport preliminaryReport;
 
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
@@ -47,14 +41,6 @@ public class EventTypeAssessment implements ReportingStatement, Serializable {
 
     public void setEventType(EventType eventType) {
         this.eventType = eventType;
-    }
-
-    public PreliminaryReport getPreliminaryReport() {
-        return preliminaryReport;
-    }
-
-    public void setPreliminaryReport(PreliminaryReport preliminaryReport) {
-        this.preliminaryReport = preliminaryReport;
     }
 
     public String getDescription() {

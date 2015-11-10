@@ -1,12 +1,8 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
-import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
-import cz.cvut.kbss.inbas.audit.model.Organization;
-import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
-import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -25,13 +21,7 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
     private OccurrenceDao occurrenceDao;
 
     @Autowired
-    private EventTypeDao eventTypeDao;
-
-    @Autowired
-    private OrganizationDao organizationDao;
-
-    @Autowired
-    private LocationDao locationDao;
+    private EventTypeAssessmentDao typeAssessmentDao;
 
     @Autowired
     private InitialReportDao initialReportDao;
@@ -45,27 +35,12 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
         if (entity.getRevision() == 1) {
             occurrenceDao.persist(entity.getOccurrence(), em);
         }
-        saveEventTypes(entity.getTypeAssessments(), em);
+        if (entity.getTypeAssessments() != null) {
+            entity.getTypeAssessments().forEach(typeAssessmentDao::persist);
+        }
         saveInitialReports(entity.getInitialReports(), em);
         entity.generateKey();
         em.persist(entity);
-    }
-
-    @Override
-    public void persist(PreliminaryReport entity) {
-        Objects.requireNonNull(entity);
-
-        final EntityManager em = entityManager();
-        try {
-            em.getTransaction().begin();
-            persist(entity, em);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.error("Error when persisting entity.", e);
-            throw new PersistenceException(e);
-        } finally {
-            em.close();
-        }
     }
 
     @Override
@@ -88,55 +63,6 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
         }
     }
 
-    private void saveEventTypes(Set<EventTypeAssessment> typeAssessments, EntityManager em) {
-        if (typeAssessments == null || typeAssessments.isEmpty()) {
-            return;
-        }
-        for (EventTypeAssessment assessment : typeAssessments) {
-            if (!eventTypeDao.exists(assessment.getEventType().getId(), em)) {
-                em.persist(assessment.getEventType());
-            }
-            if (assessment.getRunwayIncursion() != null) {
-                saveIncursionLocation(assessment.getRunwayIncursion(), em);
-                saveIncursionOrganizations(assessment.getRunwayIncursion(), em);
-            }
-        }
-    }
-
-    private void saveIncursionLocation(RunwayIncursion incursion, EntityManager em) {
-        if (incursion.getLocation() != null) {
-            final Location location = incursion.getLocation();
-            if (!locationDao.exists(location.getUri(), em)) {
-                locationDao.persist(location, em);
-            }
-        }
-    }
-
-    private void saveIncursionOrganizations(RunwayIncursion incursion, EntityManager em) {
-        if (incursion.getConflictingAircraft() != null) {
-            saveOrganizationIfNotExists(incursion.getConflictingAircraft().getOperator(), em);
-        }
-        if (incursion.getIntruder() != null) {
-            if (incursion.getIntruder().getAircraft() != null) {
-                saveOrganizationIfNotExists(incursion.getIntruder().getAircraft().getOperator(), em);
-            } else if (incursion.getIntruder().getVehicle() != null) {
-                saveOrganizationIfNotExists(incursion.getIntruder().getVehicle().getOrganization(), em);
-            } else if (incursion.getIntruder().getPerson() != null) {
-                saveOrganizationIfNotExists(incursion.getIntruder().getPerson().getOrganization(), em);
-            }
-        }
-    }
-
-    private void saveOrganizationIfNotExists(Organization organization, EntityManager em) {
-        if (organization == null) {
-            return;
-        }
-        organization.generateUri();
-        if (!organizationDao.exists(organization.getUri(), em)) {
-            em.persist(organization);
-        }
-    }
-
     private void saveInitialReports(Set<InitialReport> initialReports, EntityManager em) {
         if (initialReports == null) {
             return;
@@ -148,22 +74,14 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
     }
 
     @Override
-    public void update(PreliminaryReport entity) {
+    public void update(PreliminaryReport entity, EntityManager em) {
         Objects.requireNonNull(entity);
 
-        final EntityManager em = entityManager();
-        try {
-            em.getTransaction().begin();
-            saveEventTypes(entity.getTypeAssessments(), em);
-            saveInitialReports(entity.getInitialReports(), em);
-            em.merge(entity);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.error("Error when persisting entity.", e);
-            throw new PersistenceException(e);
-        } finally {
-            em.close();
+        if (entity.getTypeAssessments() != null) {
+            entity.getTypeAssessments().forEach(typeAssessmentDao::update);
         }
+        saveInitialReports(entity.getInitialReports(), em);
+        em.merge(entity);
     }
 
     /**

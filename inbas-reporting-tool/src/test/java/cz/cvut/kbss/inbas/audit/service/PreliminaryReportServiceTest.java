@@ -19,12 +19,8 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-/**
- * @author ledvima1
- */
 public class PreliminaryReportServiceTest extends BaseServiceTestRunner {
 
-    private static final String USERNAME = "halsey@unsc.org";
 
     private Person author;
 
@@ -39,13 +35,8 @@ public class PreliminaryReportServiceTest extends BaseServiceTestRunner {
 
     @Before
     public void setUp() {
-        this.author = new Person();
-        author.setFirstName("Catherine");
-        author.setLastName("Halsey");
-        author.setUsername("halsey@unsc.org");
-        author.setPassword("john117");
-        author.generateUri();
-        if (personService.findByUsername(USERNAME) == null) {
+        this.author = Generator.generatePerson();
+        if (personService.findByUsername(Generator.USERNAME) == null) {
             personService.persist(author);
         }
     }

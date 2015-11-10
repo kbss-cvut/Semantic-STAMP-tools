@@ -1,8 +1,5 @@
 package cz.cvut.kbss.inbas.audit.util;
 
-/**
- * @author ledvima1
- */
 public final class Constants {
 
     private Constants() {

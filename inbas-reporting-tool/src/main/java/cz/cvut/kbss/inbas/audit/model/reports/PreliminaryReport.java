@@ -40,6 +40,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, Report {
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String summary;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER)
     private Person author;
 
@@ -56,7 +57,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, Report {
     @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<EventTypeAssessment> typeAssessments;
 
     public PreliminaryReport() {

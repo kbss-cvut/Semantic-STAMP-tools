@@ -221,8 +221,8 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
             return false;
         }
         final String owlClass = type.getDeclaredAnnotation(OWLClass.class).iri();
-        return em.createNativeQuery("ASK { <" + uri.toString() + "> a <" + owlClass + "> . }", Boolean.class)
-                 .getSingleResult();
+        return em.createNativeQuery("ASK { ?individual a ?type . }", Boolean.class).setParameter("individual", uri)
+                 .setParameter("type", URI.create(owlClass)).getSingleResult();
     }
 
     protected EntityManager entityManager() {

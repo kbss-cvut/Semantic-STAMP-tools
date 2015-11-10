@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-class FileOptionsLoader {
+public class FileOptionsLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileOptionsLoader.class);
 

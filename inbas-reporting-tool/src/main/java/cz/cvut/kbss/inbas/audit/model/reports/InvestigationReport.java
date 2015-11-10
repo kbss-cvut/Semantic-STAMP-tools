@@ -37,6 +37,7 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String summary;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER)
     private Person author;
 
@@ -53,7 +54,8 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
     @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    // Type assessments will be replaced with factors, which will have a tree structure
+    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private Factor rootFactor;
 
     public URI getUri() {
         return uri;
@@ -141,6 +143,21 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
 
     public void setCorrectiveMeasures(Set<CorrectiveMeasure> correctiveMeasures) {
         this.correctiveMeasures = correctiveMeasures;
+    }
+
+    /**
+     * Root of the factors hierarchy.
+     * <p>
+     * Root represents the occurrence event itself.
+     *
+     * @return Root factor
+     */
+    public Factor getRootFactor() {
+        return rootFactor;
+    }
+
+    public void setRootFactor(Factor rootFactor) {
+        this.rootFactor = rootFactor;
     }
 
     @Override

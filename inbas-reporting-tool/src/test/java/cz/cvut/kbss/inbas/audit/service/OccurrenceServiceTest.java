@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.service;
 
+import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
@@ -48,10 +49,7 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             occurrenceDao.persist(occurrence);
         }
         if (author == null) {
-            author = new Person();
-            author.setFirstName("Catherine");
-            author.setLastName("Halsey");
-            author.setUsername("halsey@unsc.org");
+            author = Generator.generatePerson();
             personDao.persist(author);
         }
         if (data == null) {

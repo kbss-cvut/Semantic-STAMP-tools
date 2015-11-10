@@ -17,7 +17,7 @@ public class EventType implements Serializable {
     @Id
     private URI id;
 
-    @OWLDataProperty(iri = "http://www.w3.org/2000/01/rdf-schema#label")
+    @OWLDataProperty(iri = Vocabulary.p_label)
     private String name;
 
     @OWLDataProperty(iri = Vocabulary.p_dtoClass)
