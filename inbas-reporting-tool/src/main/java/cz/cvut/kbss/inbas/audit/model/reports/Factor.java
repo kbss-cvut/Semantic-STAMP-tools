@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.audit.model.reports;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -7,6 +9,10 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
+// Identity generator is used to identify factors in the causes/mitigates relationships
+// Note that every reference has to be created before it is used in an causes/mitigatingFactors array in JSON
+// See reportWithFactorsWithCauses.json in test resources
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @OWLClass(iri = Vocabulary.Factor)
 public class Factor {
 
@@ -28,7 +34,7 @@ public class Factor {
     private Set<Factor> causes;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasMitigation, fetch = FetchType.EAGER)
-    private Set<Factor> mitigationFactors;
+    private Set<Factor> mitigatingFactors;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
     @ParticipationConstraints(nonEmpty = true)
@@ -77,12 +83,12 @@ public class Factor {
         this.causes = causes;
     }
 
-    public Set<Factor> getMitigationFactors() {
-        return mitigationFactors;
+    public Set<Factor> getMitigatingFactors() {
+        return mitigatingFactors;
     }
 
-    public void setMitigationFactors(Set<Factor> mitigationFactors) {
-        this.mitigationFactors = mitigationFactors;
+    public void setMitigatingFactors(Set<Factor> mitigatingFactors) {
+        this.mitigatingFactors = mitigatingFactors;
     }
 
     public EventType getType() {

@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.Organization;
+import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -10,9 +11,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class EventTypeAssessmentDao extends BaseDao<EventTypeAssessment> {
-
-    @Autowired
-    private EventTypeDao eventTypeDao;
 
     @Autowired
     private LocationDao locationDao;
@@ -26,14 +24,19 @@ public class EventTypeAssessmentDao extends BaseDao<EventTypeAssessment> {
 
     @Override
     protected void persist(EventTypeAssessment entity, EntityManager em) {
-        if (entity.getEventType() != null && !eventTypeDao.exists(entity.getEventType().getId(), em)) {
-            em.persist(entity.getEventType());
-        }
+        persistEventTypeIfNecessary(entity, em);
         if (entity.getRunwayIncursion() != null) {
             saveIncursionLocation(entity.getRunwayIncursion(), em);
             saveIncursionOrganizations(entity.getRunwayIncursion(), em);
         }
         em.persist(entity);
+    }
+
+    private void persistEventTypeIfNecessary(EventTypeAssessment entity, EntityManager em) {
+        // Have to ask the em directly, because dao.exists uses an ASK query, which does not currently support changes in transaction
+        if (entity.getEventType() != null && em.find(EventType.class, entity.getEventType().getId()) == null) {
+            em.persist(entity.getEventType());
+        }
     }
 
     private void saveIncursionLocation(RunwayIncursion incursion, EntityManager em) {
@@ -72,9 +75,7 @@ public class EventTypeAssessmentDao extends BaseDao<EventTypeAssessment> {
 
     @Override
     protected void update(EventTypeAssessment entity, EntityManager em) {
-        if (!eventTypeDao.exists(entity.getEventType().getId(), em)) {
-            em.persist(entity.getEventType());
-        }
+        persistEventTypeIfNecessary(entity, em);
         if (entity.getRunwayIncursion() != null) {
             saveIncursionLocation(entity.getRunwayIncursion(), em);
             saveIncursionOrganizations(entity.getRunwayIncursion(), em);

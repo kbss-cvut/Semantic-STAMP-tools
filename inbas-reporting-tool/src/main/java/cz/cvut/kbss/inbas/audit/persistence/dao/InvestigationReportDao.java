@@ -1,7 +1,6 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
-import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.model.reports.Factor;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
@@ -18,7 +17,7 @@ public class InvestigationReportDao extends BaseDao<InvestigationReport> {
     @Autowired
     private EventTypeDao eventTypeDao;
     @Autowired
-    private EventTypeAssessmentDao typeAssessmentDao;
+    private FactorDao factorDao;
 
     public InvestigationReportDao() {
         super(InvestigationReport.class);
@@ -46,22 +45,34 @@ public class InvestigationReportDao extends BaseDao<InvestigationReport> {
     @Override
     protected void persist(InvestigationReport entity, EntityManager em) {
         if (entity.getRootFactor() != null) {
+            eventTypeDao.persist(entity.getRootFactor().getType(), em);
             persistFactors(entity.getRootFactor(), em);
         }
         super.persist(entity, em);
     }
 
     private void persistFactors(Factor factor, EntityManager em) {
-        if (factor.getType().getId() == null || em.find(EventType.class, factor.getType().getId()) == null) {
-            eventTypeDao.persist(factor.getType(), em);
-        }
-        if (factor.getAssessment() != null) {
-            typeAssessmentDao.persist(factor.getAssessment());
-        }
-        em.persist(factor);
+        factorDao.persist(factor, em);
         if (factor.getChildren() != null) {
             for (Factor f : factor.getChildren()) {
                 persistFactors(f, em);
+            }
+        }
+    }
+
+    @Override
+    protected void update(InvestigationReport entity, EntityManager em) {
+        if (entity.getRootFactor() != null) {
+            updateFactors(entity.getRootFactor(), em);
+        }
+        super.update(entity, em);
+    }
+
+    private void updateFactors(Factor factor, EntityManager em) {
+        factorDao.update(factor, em);
+        if (factor.getChildren() != null) {
+            for (Factor f : factor.getChildren()) {
+                updateFactors(f, em);
             }
         }
     }

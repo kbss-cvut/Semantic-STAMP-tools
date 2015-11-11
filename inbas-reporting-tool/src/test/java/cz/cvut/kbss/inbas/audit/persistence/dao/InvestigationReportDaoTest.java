@@ -2,8 +2,12 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.cvut.kbss.inbas.audit.model.reports.EventType;
+import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.Factor;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.inbas.audit.service.options.FileOptionsLoader;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -11,6 +15,11 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.net.URI;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -35,10 +44,13 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistPersistsFactorHierarchyInReport() throws Exception {
-        final InvestigationReport report = initReportWithFactorHierarchy();
-        occurrenceDao.persist(report.getOccurrence());
-        personDao.persist(report.getAuthor());
-        investigationDao.persist(report);
+        final InvestigationReport report = loadReport("test_data/reportWithFactorHierarchy.json");
+
+        persistReport(report);
+        verifyPersistedReport(report);
+    }
+
+    private void verifyPersistedReport(InvestigationReport report) {
 
         assertNotNull(report.getRootFactor().getUri());
         assertNotNull(investigationDao.findByKey(report.getKey()));
@@ -54,8 +66,14 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
         }
     }
 
-    private InvestigationReport initReportWithFactorHierarchy() throws Exception {
-        final String json = new FileOptionsLoader().load("test_data/reportWithFactorHierarchy.json");
+    private void persistReport(InvestigationReport report) {
+        occurrenceDao.persist(report.getOccurrence());
+        personDao.persist(report.getAuthor());
+        investigationDao.persist(report);
+    }
+
+    private InvestigationReport loadReport(String fileName) throws Exception {
+        final String json = new FileOptionsLoader().load(fileName);
         return objectMapper
                 .readValue(json, InvestigationReport.class);
     }
@@ -72,6 +90,12 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
                         actualRoot.getAssessment().getRunwayIncursion().getUri());
             }
         }
+        if (expectedRoot.getCauses() != null) {
+            verifyLinks(expectedRoot.getCauses(), actualRoot.getCauses());
+        }
+        if (expectedRoot.getMitigatingFactors() != null) {
+            verifyLinks(expectedRoot.getMitigatingFactors(), actualRoot.getMitigatingFactors());
+        }
         if (expectedRoot.getChildren() != null) {
             assertEquals(expectedRoot.getChildren().size(), actualRoot.getChildren().size());
             for (Factor expChild : expectedRoot.getChildren()) {
@@ -86,5 +110,61 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
                 assertTrue(found);
             }
         }
+    }
+
+    private void verifyLinks(Set<Factor> expectedLinks, Set<Factor> actualLinks) {
+        assertEquals(expectedLinks.size(), actualLinks.size());
+        for (Factor cause : expectedLinks) {
+            Factor actualCause = actualLinks.stream().filter(ac -> cause.getUri().equals(ac.getUri())).findFirst()
+                                            .get();
+            assertNotNull(actualCause);
+        }
+    }
+
+    @Test
+    public void persistReportWithFactorsWithCausesPreservesCausalityRelations() throws Exception {
+        final InvestigationReport report = loadReport("test_data/reportWithFactorsWithCauses.json");
+
+        persistReport(report);
+        verifyPersistedReport(report);
+    }
+
+    @Test
+    public void persistReportWithFactorsWithMitigatingFactorsPreservesMitigationRelations() throws Exception {
+        final InvestigationReport report = loadReport("test_data/reportWithFactorsWithMitigates.json");
+
+        persistReport(report);
+        verifyPersistedReport(report);
+    }
+
+    @Test
+    public void testPersistReportWithFactorWithBothMitigatesAndCauses() throws Exception {
+        final InvestigationReport report = loadReport("test_data/reportWithFactorsAndCausesAndMitigates.json");
+
+        persistReport(report);
+        verifyPersistedReport(report);
+    }
+
+    @Test
+    public void reportUpdateCorrectlyCascadesChangesToFactors() throws Exception {
+        final InvestigationReport report = loadReport("test_data/reportWithFactorHierarchy.json");
+        persistReport(report);
+
+        final InvestigationReport update = investigationDao.find(report.getUri());
+        final Factor added = new Factor();
+        added.setStartTime(new Date());
+        added.setEndTime(new Date());
+        final EventType et = new EventType(URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-4000000-4020000"));
+        et.setName("4020000 - Aeronautical Info Service");
+        et.setType("http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type");
+        added.setType(et);
+        final EventTypeAssessment assessment = new EventTypeAssessment();
+        assessment.setRunwayIncursion(new RunwayIncursion());
+        assessment.getRunwayIncursion().setLowVisibilityProcedure(LowVisibilityProcedure.CAT_III);
+        added.setCauses(Collections.singleton(update.getRootFactor().getChildren().iterator().next()));
+        update.getRootFactor().getChildren().add(added);
+
+        investigationDao.update(update);
+        verifyPersistedReport(update);
     }
 }
