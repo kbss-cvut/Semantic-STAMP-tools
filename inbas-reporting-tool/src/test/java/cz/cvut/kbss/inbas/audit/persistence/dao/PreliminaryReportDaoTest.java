@@ -56,7 +56,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
     @Before
     public void setUp() throws Exception {
-        author = Generator.generatePerson();
+        author = Generator.getPerson();
         personDao.persist(author);
     }
 

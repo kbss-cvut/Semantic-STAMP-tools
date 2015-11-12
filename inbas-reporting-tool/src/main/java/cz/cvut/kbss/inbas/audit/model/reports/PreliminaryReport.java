@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.audit.model.HasOwlKey;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
@@ -61,7 +62,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, Report {
     private Set<EventTypeAssessment> typeAssessments;
 
     public PreliminaryReport() {
-        this.revision = 1;
+        this.revision = Constants.INITIAL_REVISION;
     }
 
     public URI getUri() {
@@ -129,6 +130,9 @@ public class PreliminaryReport implements HasOwlKey, Serializable, Report {
     }
 
     public Set<InitialReport> getInitialReports() {
+        if (initialReports == null) {
+            this.initialReports = new HashSet<>();
+        }
         return initialReports;
     }
 
@@ -145,6 +149,9 @@ public class PreliminaryReport implements HasOwlKey, Serializable, Report {
     }
 
     public Set<CorrectiveMeasure> getCorrectiveMeasures() {
+        if (correctiveMeasures == null) {
+            this.correctiveMeasures = new HashSet<>();
+        }
         return correctiveMeasures;
     }
 

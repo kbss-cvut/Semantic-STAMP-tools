@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.audit.model.HasOwlKey;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
@@ -56,6 +57,19 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
 
     @OWLObjectProperty(iri = Vocabulary.p_hasFactor, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Factor rootFactor;
+
+    public InvestigationReport() {
+    }
+
+    public InvestigationReport(PreliminaryReport preliminaryReport) {
+        assert preliminaryReport != null;
+
+        this.occurrence = preliminaryReport.getOccurrence();
+        occurrence.transitionToPhase(getPhase());
+        this.summary = preliminaryReport.getSummary();
+        this.revision = Constants.INITIAL_REVISION;
+        this.severityAssessment = preliminaryReport.getSeverityAssessment();
+    }
 
     public URI getUri() {
         return uri;

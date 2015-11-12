@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
@@ -8,6 +9,7 @@ import cz.cvut.kbss.inbas.audit.persistence.dao.CorrectiveMeasureDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.EventTypeAssessmentDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
+import cz.cvut.kbss.inbas.audit.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.audit.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,9 @@ public class PreliminaryReportService extends BaseService<PreliminaryReport> {
     @Autowired
     private CorrectiveMeasureDao correctiveMeasureDao;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     @Override
     protected GenericDao<PreliminaryReport> getPrimaryDao() {
         return preliminaryReportDao;
@@ -42,9 +47,10 @@ public class PreliminaryReportService extends BaseService<PreliminaryReport> {
 
     @Override
     public void persist(PreliminaryReport report) {
-        reportValidator.validate(report);
+        report.setAuthor(securityUtils.getCurrentUser());
         report.setCreated(new Date());
-        report.setLastEdited(new Date());
+        reportValidator.validate(report);
+        report.getOccurrence().transitionToPhase(ReportingPhase.PRELIMINARY);
         preliminaryReportDao.persist(report);
     }
 
@@ -53,8 +59,9 @@ public class PreliminaryReportService extends BaseService<PreliminaryReport> {
         if (report.getUri() == null || report.getKey() == null) {
             throw new IllegalArgumentException("Updated report missing URI or key. " + report);
         }
-        reportValidator.validate(report);
         report.setLastEdited(new Date());
+        report.setLastEditedBy(securityUtils.getCurrentUser());
+        reportValidator.validate(report);
         final PreliminaryReport original = preliminaryReportDao.find(report.getUri());
         assert original != null;
         deleteObsoleteStatements(report, original);

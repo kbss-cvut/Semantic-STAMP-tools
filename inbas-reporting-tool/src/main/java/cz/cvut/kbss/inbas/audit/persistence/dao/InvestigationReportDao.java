@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.Factor;
+import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Repository
 public class InvestigationReportDao extends BaseDao<InvestigationReport> {
@@ -18,6 +20,8 @@ public class InvestigationReportDao extends BaseDao<InvestigationReport> {
     private EventTypeDao eventTypeDao;
     @Autowired
     private FactorDao factorDao;
+    @Autowired
+    private InitialReportDao initialReportDao;
 
     public InvestigationReportDao() {
         super(InvestigationReport.class);
@@ -48,6 +52,7 @@ public class InvestigationReportDao extends BaseDao<InvestigationReport> {
             eventTypeDao.persist(entity.getRootFactor().getType(), em);
             persistFactors(entity.getRootFactor(), em);
         }
+        persistInitialReports(entity.getInitialReports(), em);
         super.persist(entity, em);
     }
 
@@ -58,6 +63,13 @@ public class InvestigationReportDao extends BaseDao<InvestigationReport> {
                 persistFactors(f, em);
             }
         }
+    }
+
+    private void persistInitialReports(Set<InitialReport> reports, EntityManager em) {
+        if (reports == null || reports.isEmpty()) {
+            return;
+        }
+        reports.forEach(initialReport -> initialReportDao.persist(initialReport, em));
     }
 
     @Override

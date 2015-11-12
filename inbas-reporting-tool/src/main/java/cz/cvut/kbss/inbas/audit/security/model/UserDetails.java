@@ -6,9 +6,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 
-/**
- * @author ledvima1
- */
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
     private static final String DEFAULT_ROLE = "ROLE_USER";
@@ -34,7 +31,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
     }
 
     public void eraseCredentials() {
-        person.setPassword(null);
+        person.erasePassword();
     }
 
     @Override
@@ -70,5 +67,9 @@ public class UserDetails implements org.springframework.security.core.userdetail
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Person getUser() {
+        return person;
     }
 }

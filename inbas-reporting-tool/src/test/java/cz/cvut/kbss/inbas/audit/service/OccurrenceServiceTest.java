@@ -42,14 +42,11 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
     @Before
     public void setUp() throws Exception {
         if (occurrence == null) {
-            occurrence = new Occurrence();
-            occurrence.setStartTime(new Date(System.currentTimeMillis() - 100000));
-            occurrence.setEndTime(new Date());
-            occurrence.setName("Test Occurrence");
+            occurrence = Generator.generateOccurrence();
             occurrenceDao.persist(occurrence);
         }
         if (author == null) {
-            author = Generator.generatePerson();
+            author = Generator.getPerson();
             personDao.persist(author);
         }
         if (data == null) {

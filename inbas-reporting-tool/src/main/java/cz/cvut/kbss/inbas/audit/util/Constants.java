@@ -15,4 +15,9 @@ public final class Constants {
      * Base URI for Organizations in the Reporting tool.
      */
     public static final String ORGANIZATION_BASE_URI = "http://www.inbas.cz/ontologies/reporting-tool/organizations#";
+
+    /**
+     * Initial revision number for reports.
+     */
+    public static final Integer INITIAL_REVISION = 1;
 }

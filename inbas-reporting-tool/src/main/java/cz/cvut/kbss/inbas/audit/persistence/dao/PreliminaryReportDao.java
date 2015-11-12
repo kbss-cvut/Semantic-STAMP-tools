@@ -67,10 +67,8 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
         if (initialReports == null) {
             return;
         }
-        initialReports.stream().filter(ir -> !initialReportDao.exists(ir.getUri(), em)).forEach(ir -> {
-            ir.generateKey();
-            initialReportDao.persist(ir, em);
-        });
+        initialReports.stream().filter(ir -> !initialReportDao.exists(ir.getUri(), em))
+                      .forEach(ir -> initialReportDao.persist(ir, em));
     }
 
     @Override

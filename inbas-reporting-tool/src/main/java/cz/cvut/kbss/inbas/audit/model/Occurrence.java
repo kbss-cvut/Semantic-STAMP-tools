@@ -94,8 +94,29 @@ public class Occurrence implements HasOwlKey, Serializable {
         return reportingPhase;
     }
 
+    /**
+     * Setter for persistence purposes.
+     * <p>
+     * For phase transitions, use {@link #transitionToPhase(ReportingPhase)}.
+     *
+     * @param reportingPhase Phase to set
+     */
     public void setReportingPhase(ReportingPhase reportingPhase) {
         this.reportingPhase = reportingPhase;
+    }
+
+    /**
+     * Transitions to the specified target phase, if the occurrence is not already in a further phase.
+     *
+     * @param targetPhase Target reporting phase
+     */
+    public void transitionToPhase(ReportingPhase targetPhase) {
+        assert targetPhase != null;
+        if (reportingPhase == ReportingPhase.INITIAL) {
+            this.reportingPhase = targetPhase;
+        } else if (reportingPhase == ReportingPhase.PRELIMINARY && targetPhase != ReportingPhase.INITIAL) {
+            this.reportingPhase = targetPhase;
+        }
     }
 
     @Override

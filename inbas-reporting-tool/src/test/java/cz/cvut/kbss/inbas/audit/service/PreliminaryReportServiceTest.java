@@ -1,12 +1,16 @@
 package cz.cvut.kbss.inbas.audit.service;
 
+import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
+import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -21,11 +25,12 @@ import static org.junit.Assert.*;
 
 public class PreliminaryReportServiceTest extends BaseServiceTestRunner {
 
-
     private Person author;
 
     @Autowired
     private PersonService personService;
+    @Autowired
+    private OccurrenceDao occurrenceDao;
 
     @Autowired
     private PreliminaryReportService reportService;
@@ -35,10 +40,11 @@ public class PreliminaryReportServiceTest extends BaseServiceTestRunner {
 
     @Before
     public void setUp() {
-        this.author = Generator.generatePerson();
+        this.author = Generator.getPerson();
         if (personService.findByUsername(Generator.USERNAME) == null) {
             personService.persist(author);
         }
+        Environment.setCurrentUser(author);
     }
 
     @Test
@@ -86,7 +92,6 @@ public class PreliminaryReportServiceTest extends BaseServiceTestRunner {
 
     private PreliminaryReport initReportWithOccurrence() {
         final PreliminaryReport report = new PreliminaryReport();
-        report.setAuthor(author);
         report.setOccurrence(Generator.generateOccurrence());
         return report;
     }
@@ -171,5 +176,46 @@ public class PreliminaryReportServiceTest extends BaseServiceTestRunner {
         report.setCorrectiveMeasures(new HashSet<>(Arrays.asList(mOne, mTwo)));
         reportService.persist(report);
         return report;
+    }
+
+    @Test
+    public void persistSetsAuthorAndCreatedDateOfReport() throws Exception {
+        final PreliminaryReport report = initReportWithOccurrence();
+        assertNull(report.getAuthor());
+        assertNull(report.getCreated());
+        reportService.persist(report);
+
+        final PreliminaryReport result = reportService.find(report.getUri());
+        assertNotNull(result);
+        assertNotNull(result.getAuthor());
+        assertEquals(author.getUri(), result.getAuthor().getUri());
+        assertNotNull(report.getCreated());
+    }
+
+    @Test
+    public void updateSetsLastEditedAndLastEditedByOfReport() throws Exception {
+        final PreliminaryReport report = initReportWithOccurrence();
+        reportService.persist(report);
+        final PreliminaryReport toUpdate = reportService.find(report.getUri());
+        assertNull(toUpdate.getLastEdited());
+        assertNull(toUpdate.getLastEditedBy());
+        toUpdate.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
+        reportService.update(toUpdate);
+
+        final PreliminaryReport result = reportService.find(report.getUri());
+        assertNotNull(result.getLastEdited());
+        assertNotNull(result.getLastEditedBy());
+        assertEquals(author.getUri(), result.getLastEditedBy().getUri());
+    }
+
+    @Test
+    public void persistUpdatesOccurrencePhaseFromInitialToPreliminary() throws Exception {
+        final PreliminaryReport report = initReportWithOccurrence();
+        report.getOccurrence().setReportingPhase(ReportingPhase.INITIAL);
+        reportService.persist(report);
+
+        final Occurrence occurrence = occurrenceDao.find(report.getOccurrence().getUri());
+        assertNotNull(occurrence);
+        assertEquals(ReportingPhase.PRELIMINARY, occurrence.getReportingPhase());
     }
 }

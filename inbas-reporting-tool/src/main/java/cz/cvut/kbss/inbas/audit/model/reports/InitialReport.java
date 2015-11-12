@@ -30,6 +30,18 @@ public class InitialReport implements HasOwlKey, Serializable, Report {
         this.text = text;
     }
 
+    /**
+     * Copy constructor.
+     * <p>
+     * Uses only text of the other report, key and uri are not copied.
+     *
+     * @param other The other report
+     */
+    public InitialReport(InitialReport other) {
+        assert other != null;
+        this.text = other.text;
+    }
+
     public URI getUri() {
         return uri;
     }

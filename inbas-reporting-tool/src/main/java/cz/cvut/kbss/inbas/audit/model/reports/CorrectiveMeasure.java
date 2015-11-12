@@ -1,16 +1,13 @@
 package cz.cvut.kbss.inbas.audit.model.reports;
 
-import cz.cvut.kbss.inbas.audit.model.Resource;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
-import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.jopa.model.annotations.Id;
+import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Set;
 
-/**
- * @author ledvima1
- */
 @OWLClass(iri = Vocabulary.CorrectiveMeasure)
 public class CorrectiveMeasure implements ReportingStatement, Serializable {
 
@@ -20,14 +17,23 @@ public class CorrectiveMeasure implements ReportingStatement, Serializable {
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasResource, cascade = CascadeType.ALL)
-    private Set<Resource> resources;
-
     public CorrectiveMeasure() {
     }
 
     public CorrectiveMeasure(String description) {
         this.description = description;
+    }
+
+    /**
+     * Copy constructor.
+     * <p>
+     * It uses only the description from the other corrective measure, URI is not copied.
+     *
+     * @param other The other corrective measure
+     */
+    public CorrectiveMeasure(CorrectiveMeasure other) {
+        assert other != null;
+        this.description = other.description;
     }
 
     public URI getUri() {
@@ -44,15 +50,6 @@ public class CorrectiveMeasure implements ReportingStatement, Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Override
-    public Set<Resource> getResources() {
-        return resources;
-    }
-
-    public void setResources(Set<Resource> resources) {
-        this.resources = resources;
     }
 
     @Override
