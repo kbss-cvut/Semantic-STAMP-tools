@@ -35,23 +35,17 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
     @Autowired
     private OccurrenceService occurrenceService;
 
-    private static Person author;
-    private static Occurrence occurrence;
-    private static Map<ReportingPhase, Set<? extends Report>> data;
+    private Person author;
+    private Occurrence occurrence;
+    private Map<ReportingPhase, Set<? extends Report>> data;
 
     @Before
     public void setUp() throws Exception {
-        if (occurrence == null) {
-            occurrence = Generator.generateOccurrence();
-            occurrenceDao.persist(occurrence);
-        }
-        if (author == null) {
-            author = Generator.getPerson();
-            personDao.persist(author);
-        }
-        if (data == null) {
-            data = persistTestData();
-        }
+        this.occurrence = Generator.generateOccurrence();
+        occurrenceDao.persist(occurrence);
+        this.author = Generator.getPerson();
+        personDao.persist(author);
+        this.data = persistTestData();
     }
 
     private Map<ReportingPhase, Set<? extends Report>> persistTestData() {
