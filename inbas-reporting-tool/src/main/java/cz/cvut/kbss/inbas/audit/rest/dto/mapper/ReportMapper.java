@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.mapper;
 
-import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.AircraftEvent;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
@@ -77,7 +77,7 @@ public abstract class ReportMapper {
             return null;
         }
         switch (dto.getIntruderType()) {
-            case Aircraft.INTRUDER_TYPE:
+            case AircraftEvent.INTRUDER_TYPE:
                 intruder.setAircraft(aircraftIntruderToAircraft((AircraftIntruderDto) dto));
                 break;
             case Vehicle.INTRUDER_TYPE:
@@ -92,10 +92,10 @@ public abstract class ReportMapper {
         return intruder;
     }
 
-    @Mapping(target = "intruderType", constant = Aircraft.INTRUDER_TYPE)
-    public abstract AircraftIntruderDto aircraftToAircraftIntruder(Aircraft aircraft);
+    @Mapping(target = "intruderType", constant = AircraftEvent.INTRUDER_TYPE)
+    public abstract AircraftIntruderDto aircraftToAircraftIntruder(AircraftEvent aircraftEvent);
 
-    public abstract Aircraft aircraftIntruderToAircraft(AircraftIntruderDto intruder);
+    public abstract AircraftEvent aircraftIntruderToAircraft(AircraftIntruderDto intruder);
 
     @Mappings({@Mapping(target = "intruderType", constant = PersonIntruder.INTRUDER_TYPE),
                @Mapping(target = "wasDoing", source = "whatWasDoing"),

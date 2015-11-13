@@ -39,6 +39,18 @@ public class Vehicle implements Serializable {
     @OWLObjectProperty(iri = Vocabulary.p_memberOf)
     private Organization organization;
 
+    public Vehicle() {
+    }
+
+    public Vehicle(Vehicle other) {
+        this.vehicleType = other.vehicleType;
+        this.callSign = other.callSign;
+        this.isAtsUnit = other.isAtsUnit;
+        this.hasRadio = other.hasRadio;
+        this.whatWasDoing = other.whatWasDoing;
+        this.organization = other.organization;
+    }
+
     public URI getUri() {
         return uri;
     }

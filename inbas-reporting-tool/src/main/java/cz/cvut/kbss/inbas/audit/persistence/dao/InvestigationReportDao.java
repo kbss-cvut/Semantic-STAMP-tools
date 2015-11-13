@@ -17,8 +17,6 @@ import java.util.Set;
 public class InvestigationReportDao extends BaseDao<InvestigationReport> {
 
     @Autowired
-    private EventTypeDao eventTypeDao;
-    @Autowired
     private FactorDao factorDao;
     @Autowired
     private InitialReportDao initialReportDao;
@@ -49,7 +47,6 @@ public class InvestigationReportDao extends BaseDao<InvestigationReport> {
     @Override
     protected void persist(InvestigationReport entity, EntityManager em) {
         if (entity.getRootFactor() != null) {
-            eventTypeDao.persist(entity.getRootFactor().getType(), em);
             persistFactors(entity.getRootFactor(), em);
         }
         persistInitialReports(entity.getInitialReports(), em);

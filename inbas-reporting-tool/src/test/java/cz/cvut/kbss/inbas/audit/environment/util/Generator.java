@@ -1,16 +1,13 @@
 package cz.cvut.kbss.inbas.audit.environment.util;
 
-import cz.cvut.kbss.inbas.audit.model.Occurrence;
-import cz.cvut.kbss.inbas.audit.model.Person;
-import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
-import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
-import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.model.reports.*;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
+import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.UUID;
+import java.net.URI;
+import java.util.*;
 
 public class Generator {
 
@@ -39,13 +36,15 @@ public class Generator {
     }
 
     public enum ReportType {
-        WITHOUT_TYPE_ASSESSMENTS
+        WITHOUT_TYPE_ASSESSMENTS, WITH_TYPE_ASSESSMENTS
     }
 
     public static PreliminaryReport generatePreliminaryReport(ReportType type) {
         switch (type) {
             case WITHOUT_TYPE_ASSESSMENTS:
                 return reportWithoutTypeAssessments();
+            case WITH_TYPE_ASSESSMENTS:
+                return reportWithTypeAssessments();
             default:
                 throw new IllegalArgumentException();
         }
@@ -65,6 +64,37 @@ public class Generator {
         final CorrectiveMeasure crTwo = new CorrectiveMeasure("Test corrective measure two.");
         report.setCorrectiveMeasures(new HashSet<>(Arrays.asList(crOne, crTwo)));
         report.setSummary("Test preliminary report summary.");
+        return report;
+    }
+
+    private static PreliminaryReport reportWithTypeAssessments() {
+        final PreliminaryReport report = reportWithoutTypeAssessments();
+        final Set<EventTypeAssessment> typeAssessments = new HashSet<>();
+        final EventTypeAssessment etAOne = new EventTypeAssessment();
+        etAOne.setDescription("Event type");
+        etAOne.setEventType(new EventType(URI.create(
+                "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110"),
+                "2200110 - Incursions generally"));
+        typeAssessments.add(etAOne);
+        final EventTypeAssessment etATwo = new EventTypeAssessment();
+        etATwo.setEventType(new EventType(URI.create(
+                "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200100"),
+                "2200100 - Runway incursions"));
+        final RunwayIncursion rwi = new RunwayIncursion();
+        rwi.setLowVisibilityProcedure(LowVisibilityProcedure.CAT_I);
+        rwi.setLocation(new Location("LKPR31"));
+        final Intruder intruder = new Intruder();
+        final AircraftEvent aircraftEvent = new AircraftEvent();
+        aircraftEvent.setCallSign("OK123-32");
+        final Aircraft aircraft = new Aircraft();
+        aircraft.setRegistration("OK123");
+        aircraft.setStateOfRegistry("CZ");
+        aircraftEvent.setAircraft(aircraft);
+        intruder.setAircraft(aircraftEvent);
+        rwi.setIntruder(intruder);
+        etATwo.setRunwayIncursion(rwi);
+        typeAssessments.add(etATwo);
+        report.setTypeAssessments(typeAssessments);
         return report;
     }
 }

@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.model.reports.incursions;
 
-import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.AircraftEvent;
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
@@ -8,9 +8,6 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 
-/**
- * @author ledvima1
- */
 @OWLClass(iri = Vocabulary.RunwayIncursion)
 public class RunwayIncursion implements Serializable {
 
@@ -24,10 +21,24 @@ public class RunwayIncursion implements Serializable {
     private Location location;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasClearedAircraft, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Aircraft conflictingAircraft;
+    private AircraftEvent conflictingAircraft;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_hasIntruder, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Intruder intruder;
+
+    public RunwayIncursion() {
+    }
+
+    public RunwayIncursion(RunwayIncursion other) {
+        this.location = other.location;
+        this.lowVisibilityProcedure = other.lowVisibilityProcedure;
+        if (other.conflictingAircraft != null) {
+            this.conflictingAircraft = new AircraftEvent(other.conflictingAircraft);
+        }
+        assert other.intruder != null;
+        this.intruder = new Intruder(other.intruder);
+    }
 
     public URI getUri() {
         return uri;
@@ -53,11 +64,11 @@ public class RunwayIncursion implements Serializable {
         this.location = location;
     }
 
-    public Aircraft getConflictingAircraft() {
+    public AircraftEvent getConflictingAircraft() {
         return conflictingAircraft;
     }
 
-    public void setConflictingAircraft(Aircraft conflictingAircraft) {
+    public void setConflictingAircraft(AircraftEvent conflictingAircraft) {
         this.conflictingAircraft = conflictingAircraft;
     }
 

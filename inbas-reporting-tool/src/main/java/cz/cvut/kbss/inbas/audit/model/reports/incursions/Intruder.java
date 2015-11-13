@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.model.reports.incursions;
 
-import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.AircraftEvent;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -16,8 +16,8 @@ public class Intruder implements Serializable {
     @Id(generated = true)
     private URI uri;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasAircraft, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Aircraft aircraft;
+    @OWLObjectProperty(iri = Vocabulary.p_hasAircraftEvent, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private AircraftEvent aircraft;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasVehicle, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Vehicle vehicle;
@@ -28,7 +28,7 @@ public class Intruder implements Serializable {
     public Intruder() {
     }
 
-    public Intruder(Aircraft aircraft) {
+    public Intruder(AircraftEvent aircraft) {
         this.aircraft = aircraft;
     }
 
@@ -40,6 +40,16 @@ public class Intruder implements Serializable {
         this.person = person;
     }
 
+    public Intruder(Intruder other) {
+        if (other.aircraft != null) {
+            this.aircraft = new AircraftEvent(other.aircraft);
+        } else if (other.vehicle != null) {
+            this.vehicle = new Vehicle(other.vehicle);
+        } else if (other.person != null) {
+            this.person = new PersonIntruder(other.person);
+        }
+    }
+
     public URI getUri() {
         return uri;
     }
@@ -48,11 +58,11 @@ public class Intruder implements Serializable {
         this.uri = uri;
     }
 
-    public Aircraft getAircraft() {
+    public AircraftEvent getAircraft() {
         return aircraft;
     }
 
-    public void setAircraft(Aircraft aircraft) {
+    public void setAircraft(AircraftEvent aircraft) {
         this.aircraft = aircraft;
     }
 

@@ -2,7 +2,7 @@ package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
-import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.AircraftEvent;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
@@ -76,7 +76,7 @@ public class PreliminaryReportServiceTest extends BaseServiceTestRunner {
         final EventTypeAssessment one = new EventTypeAssessment();
         one.setEventType(new EventType(URI.create("http://krizik.felk.cvut.cz/ontologies/eventTypes#Incursion")));
         final RunwayIncursion incursion = new RunwayIncursion();
-        final Aircraft cleared = new Aircraft();
+        final AircraftEvent cleared = new AircraftEvent();
         cleared.setCallSign("test");
         incursion.setConflictingAircraft(cleared);
         final Intruder intruder = new Intruder(new PersonIntruder());

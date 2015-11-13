@@ -7,9 +7,6 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 
-/**
- * @author ledvima1
- */
 @OWLClass(iri = Vocabulary.PersonIntruder)
 public class PersonIntruder implements Serializable {
 
@@ -26,6 +23,15 @@ public class PersonIntruder implements Serializable {
 
     @OWLObjectProperty(iri = Vocabulary.p_memberOf, fetch = FetchType.EAGER)
     private Organization organization;
+
+    public PersonIntruder() {
+    }
+
+    public PersonIntruder(PersonIntruder other) {
+        this.category = other.category;
+        this.whatWasDoing = other.whatWasDoing;
+        this.organization = other.organization;
+    }
 
     public URI getUri() {
         return uri;

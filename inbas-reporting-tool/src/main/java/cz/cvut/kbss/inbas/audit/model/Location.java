@@ -22,6 +22,13 @@ public class Location implements HasDerivableUri, Serializable {
     @OWLDataProperty(iri = Vocabulary.p_label)
     private String name;
 
+    public Location() {
+    }
+
+    public Location(String name) {
+        this.name = name;
+    }
+
     public URI getUri() {
         return uri;
     }

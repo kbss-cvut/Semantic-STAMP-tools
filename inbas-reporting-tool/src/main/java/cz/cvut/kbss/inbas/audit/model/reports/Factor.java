@@ -7,6 +7,7 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 // Identity generator is used to identify factors in the causes/mitigates relationships
@@ -36,12 +37,15 @@ public class Factor {
     @OWLObjectProperty(iri = Vocabulary.p_hasMitigation, fetch = FetchType.EAGER)
     private Set<Factor> mitigatingFactors;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
-    @ParticipationConstraints(nonEmpty = true)
-    private EventType type;
-
     @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private EventTypeAssessment assessment;
+
+    public Factor() {
+    }
+
+    public Factor(EventTypeAssessment typeAssessment) {
+        this.assessment = new EventTypeAssessment(typeAssessment);
+    }
 
     public URI getUri() {
         return uri;
@@ -71,6 +75,13 @@ public class Factor {
         return children;
     }
 
+    public void addChild(Factor child) {
+        if (children == null) {
+            this.children = new HashSet<>();
+        }
+        children.add(child);
+    }
+
     public void setChildren(Set<Factor> children) {
         this.children = children;
     }
@@ -91,14 +102,6 @@ public class Factor {
         this.mitigatingFactors = mitigatingFactors;
     }
 
-    public EventType getType() {
-        return type;
-    }
-
-    public void setType(EventType type) {
-        this.type = type;
-    }
-
     public EventTypeAssessment getAssessment() {
         return assessment;
     }
@@ -112,7 +115,7 @@ public class Factor {
         return "Factor{" +
                 "startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", type=" + type +
+                ", assessment=" + assessment +
                 '}';
     }
 }

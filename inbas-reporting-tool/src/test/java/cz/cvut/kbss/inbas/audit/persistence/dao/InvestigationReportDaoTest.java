@@ -2,7 +2,6 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.Factor;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
@@ -16,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
@@ -154,10 +152,6 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
         final Factor added = new Factor();
         added.setStartTime(new Date());
         added.setEndTime(new Date());
-        final EventType et = new EventType(URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-4000000-4020000"));
-        et.setName("4020000 - Aeronautical Info Service");
-        et.setType("http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type");
-        added.setType(et);
         final EventTypeAssessment assessment = new EventTypeAssessment();
         assessment.setRunwayIncursion(new RunwayIncursion());
         assessment.getRunwayIncursion().setLowVisibilityProcedure(LowVisibilityProcedure.CAT_III);

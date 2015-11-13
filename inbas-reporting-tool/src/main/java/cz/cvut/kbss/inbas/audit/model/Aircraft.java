@@ -6,13 +6,8 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 
-/**
- * @author ledvima1
- */
 @OWLClass(iri = Vocabulary.Aircraft)
 public class Aircraft implements Serializable {
-
-    public static final String INTRUDER_TYPE = "aircraft";
 
     @Id(generated = true)
     private URI uri;
@@ -22,24 +17,6 @@ public class Aircraft implements Serializable {
 
     @OWLDataProperty(iri = Vocabulary.p_stateOfRegistry)
     private String stateOfRegistry;
-
-    @OWLDataProperty(iri = Vocabulary.p_flightNumber)
-    private String flightNumber;
-
-    @OWLDataProperty(iri = Vocabulary.p_callSign)
-    private String callSign;
-
-    @OWLDataProperty(iri = Vocabulary.p_flightPhase)
-    private String flightPhase;
-
-    @OWLDataProperty(iri = Vocabulary.p_operationType)
-    private String operationType;
-
-    @OWLDataProperty(iri = Vocabulary.p_lastDeparturePoint)
-    private String lastDeparturePoint;
-
-    @OWLDataProperty(iri = Vocabulary.p_plannedDestination)
-    private String plannedDestination;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasOperator, fetch = FetchType.EAGER)
     private Organization operator;
@@ -68,59 +45,20 @@ public class Aircraft implements Serializable {
         this.stateOfRegistry = stateOfRegistry;
     }
 
-    public String getFlightNumber() {
-        return flightNumber;
-    }
-
-    public void setFlightNumber(String flightNumber) {
-        this.flightNumber = flightNumber;
-    }
-
-    public String getCallSign() {
-        return callSign;
-    }
-
-    public void setCallSign(String callSign) {
-        this.callSign = callSign;
-    }
-
-    public String getFlightPhase() {
-        return flightPhase;
-    }
-
-    public void setFlightPhase(String flightPhase) {
-        this.flightPhase = flightPhase;
-    }
-
-    public String getOperationType() {
-        return operationType;
-    }
-
-    public void setOperationType(String operationType) {
-        this.operationType = operationType;
-    }
-
-    public String getLastDeparturePoint() {
-        return lastDeparturePoint;
-    }
-
-    public void setLastDeparturePoint(String lastDeparturePoint) {
-        this.lastDeparturePoint = lastDeparturePoint;
-    }
-
-    public String getPlannedDestination() {
-        return plannedDestination;
-    }
-
-    public void setPlannedDestination(String plannedDestination) {
-        this.plannedDestination = plannedDestination;
-    }
-
     public Organization getOperator() {
         return operator;
     }
 
     public void setOperator(Organization operator) {
         this.operator = operator;
+    }
+
+    @Override
+    public String toString() {
+        return "Aircraft{" +
+                "registration='" + registration + '\'' +
+                ", stateOfRegistry='" + stateOfRegistry + '\'' +
+                ", operator=" + operator +
+                '}';
     }
 }

@@ -26,33 +26,28 @@
   "rootFactor": {
     "startTime": 1447144734937,
     "endTime": 1447144800937,
-    "type": {
-      "id": "http://www.inbas.cz/ontologies/reporting-tool/IncursionOne",
-      "name": "Runway incursion",
-      "type": "http://onto.fel.cvut.cz/ontologies/eccairs/model/occurrence-event"
-    },
     "children": [
       {
         "startTime": 1447144734937,
         "endTime": 1447144800937,
-        "type": {
-          "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200100",
-          "name": "2200100 - Runway incursions",
-          "type": "http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type"
-        },
         "assessment": {
+          "eventType": {
+            "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110",
+            "name": "2200110 - Incursions generally",
+            "type": "http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type"
+          },
           "description": "Event type assessment with description only."
         },
         "children": [
           {
             "startTime": 1447144734937,
             "endTime": 1447144800937,
-            "type": {
-              "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200100",
-              "name": "2200100 - Runway incursions",
-              "type": "http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type"
-            },
             "assessment": {
+              "eventType": {
+                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110",
+                "name": "2200110 - Incursions generally",
+                "type": "http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type"
+              },
               "description": "Event type assessment with description only."
             }
           }
@@ -61,11 +56,6 @@
       {
         "startTime": 1447144734937,
         "endTime": 1447144800937,
-        "type": {
-          "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200100",
-          "name": "2200100 - Runway incursions",
-          "type": "http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type"
-        },
         "assessment": {
           "eventType": {
             "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200100",
@@ -86,14 +76,16 @@
             "intruder": {
               "aircraft": {
                 "uri": "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Aircraft_instance994092607",
-                "registration": "OK123",
-                "stateOfRegistry": "CZ",
-                "callSign": "OK123",
-                "operator": {
-                  "uri": "http://www.inbas.cz/ontologies/reporting-tool/organizations#CSA",
-                  "code": "CSA",
-                  "name": "Czech Airlines"
+                "aircraft": {
+                  "registration": "OK123",
+                  "stateOfRegistry": "CZ",
+                  "operator": {
+                    "uri": "http://www.inbas.cz/ontologies/reporting-tool/organizations#CSA",
+                    "code": "CSA",
+                    "name": "Czech Airlines"
+                  }
                 },
+                "callSign": "OK123",
                 "flightNumber": "1234",
                 "flightPhase": "taxi_to_runway",
                 "operationType": "passenger",

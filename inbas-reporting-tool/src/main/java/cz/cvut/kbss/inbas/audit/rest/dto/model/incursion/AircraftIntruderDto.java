@@ -1,19 +1,14 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
-import cz.cvut.kbss.inbas.audit.model.Organization;
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
 
 /**
  * @author ledvima1
  */
 public class AircraftIntruderDto extends RunwayIntruderDto {
 
-    private String registration;
-
-    private String stateOfRegistry;
 
     private String callSign;
-
-    private Organization operator;
 
     private String flightNumber;
 
@@ -25,21 +20,7 @@ public class AircraftIntruderDto extends RunwayIntruderDto {
 
     private String plannedDestination;
 
-    public String getRegistration() {
-        return registration;
-    }
-
-    public void setRegistration(String registration) {
-        this.registration = registration;
-    }
-
-    public String getStateOfRegistry() {
-        return stateOfRegistry;
-    }
-
-    public void setStateOfRegistry(String stateOfRegistry) {
-        this.stateOfRegistry = stateOfRegistry;
-    }
+    private Aircraft aircraft;
 
     public String getCallSign() {
         return callSign;
@@ -47,14 +28,6 @@ public class AircraftIntruderDto extends RunwayIntruderDto {
 
     public void setCallSign(String callSign) {
         this.callSign = callSign;
-    }
-
-    public Organization getOperator() {
-        return operator;
-    }
-
-    public void setOperator(Organization operator) {
-        this.operator = operator;
     }
 
     public String getFlightNumber() {
@@ -97,12 +70,20 @@ public class AircraftIntruderDto extends RunwayIntruderDto {
         this.plannedDestination = plannedDestination;
     }
 
+    public Aircraft getAircraft() {
+        return aircraft;
+    }
+
+    public void setAircraft(Aircraft aircraft) {
+        this.aircraft = aircraft;
+    }
+
     @Override
     public String toString() {
         return "AircraftIntruder{" +
                 "flightNumber='" + flightNumber + '\'' +
                 ", callSign='" + callSign + '\'' +
-                ", operator='" + operator + '\'' +
+                ", aircraft='" + aircraft + '\'' +
                 "} " + super.toString();
     }
 }

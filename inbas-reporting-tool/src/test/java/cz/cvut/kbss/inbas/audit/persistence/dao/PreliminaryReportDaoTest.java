@@ -108,8 +108,8 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
         final PreliminaryReport resOne = dao.find(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
-        final Aircraft aircraft = typeOne.getRunwayIncursion().getConflictingAircraft();
-        final Organization org = aircraft.getOperator();
+        final AircraftEvent aircraftEvent = typeOne.getRunwayIncursion().getConflictingAircraft();
+        final Organization org = aircraftEvent.getAircraft().getOperator();
         assertEquals(organization, org);
         final PreliminaryReport resTwo = dao.find(rTwo.getUri());
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
@@ -120,11 +120,14 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     private PreliminaryReport persistReportWithConflictingAircraftAndOrganization() {
         final PreliminaryReport rOne = initOccurrenceReportWithTypeAssessment(eventType);
         final EventTypeAssessment ass = rOne.getTypeAssessments().iterator().next();
-        final Aircraft cleared = new Aircraft();
-        cleared.setOperator(organization);
+        final AircraftEvent cleared = new AircraftEvent();
+        final Aircraft aircraft = new Aircraft();
+        aircraft.setOperator(organization);
+        cleared.setAircraft(aircraft);
         cleared.setOperationType("passenger");
         final RunwayIncursion incursion = new RunwayIncursion();
         incursion.setConflictingAircraft(cleared);
+        incursion.setIntruder(new Intruder(new PersonIntruder()));
         ass.setRunwayIncursion(incursion);
         dao.persist(rOne);
         return rOne;
@@ -145,8 +148,8 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
         final PreliminaryReport resOne = dao.find(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
-        final Aircraft aircraft = typeOne.getRunwayIncursion().getConflictingAircraft();
-        final Organization org = aircraft.getOperator();
+        final AircraftEvent aircraftEvent = typeOne.getRunwayIncursion().getConflictingAircraft();
+        final Organization org = aircraftEvent.getAircraft().getOperator();
         assertEquals(organization, org);
         final PreliminaryReport resTwo = dao.find(rTwo.getUri());
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
@@ -161,21 +164,23 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         final PreliminaryReport rTwo = initOccurrenceReportWithTypeAssessment(eventType);
         final EventTypeAssessment assTwo = rTwo.getTypeAssessments().iterator().next();
         final RunwayIncursion incursionTwo = new RunwayIncursion();
-        final Aircraft intruder = new Aircraft();
-        intruder.setOperator(organization);
+        final AircraftEvent intruder = new AircraftEvent();
+        final Aircraft aircraft = new Aircraft();
+        aircraft.setOperator(organization);
+        intruder.setAircraft(aircraft);
         incursionTwo.setIntruder(new Intruder(intruder));
         assTwo.setRunwayIncursion(incursionTwo);
         dao.persist(rTwo);
 
         final PreliminaryReport resOne = dao.find(rOne.getUri());
         final EventTypeAssessment typeOne = resOne.getTypeAssessments().iterator().next();
-        final Aircraft clearedAircraft = typeOne.getRunwayIncursion().getConflictingAircraft();
-        final Organization org = clearedAircraft.getOperator();
+        final AircraftEvent clearedAircraftEvent = typeOne.getRunwayIncursion().getConflictingAircraft();
+        final Organization org = clearedAircraftEvent.getAircraft().getOperator();
         assertEquals(organization, org);
         final PreliminaryReport resTwo = dao.find(rTwo.getUri());
         final EventTypeAssessment typeTwo = resTwo.getTypeAssessments().iterator().next();
-        final Aircraft aircraft = typeTwo.getRunwayIncursion().getIntruder().getAircraft();
-        assertEquals(organization, aircraft.getOperator());
+        final AircraftEvent aircraftEvent = typeTwo.getRunwayIncursion().getIntruder().getAircraft();
+        assertEquals(organization, aircraftEvent.getAircraft().getOperator());
     }
 
     @Test
@@ -208,6 +213,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         type.setEventType(eventType);
         final RunwayIncursion ri = new RunwayIncursion();
         ri.setLocation(location);
+        ri.setIntruder(new Intruder(new PersonIntruder()));
         type.setRunwayIncursion(ri);
         r.setTypeAssessments(Collections.singleton(type));
         return r;

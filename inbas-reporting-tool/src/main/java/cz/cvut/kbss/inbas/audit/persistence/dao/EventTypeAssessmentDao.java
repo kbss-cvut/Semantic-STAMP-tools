@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.model.reports.EventType;
@@ -14,6 +15,9 @@ public class EventTypeAssessmentDao extends BaseDao<EventTypeAssessment> {
 
     @Autowired
     private LocationDao locationDao;
+
+    @Autowired
+    private AircraftDao aircraftDao;
 
     @Autowired
     private OrganizationDao organizationDao;
@@ -50,16 +54,25 @@ public class EventTypeAssessmentDao extends BaseDao<EventTypeAssessment> {
 
     private void saveIncursionOrganizations(RunwayIncursion incursion, EntityManager em) {
         if (incursion.getConflictingAircraft() != null) {
-            saveOrganizationIfNotExists(incursion.getConflictingAircraft().getOperator(), em);
+            saveAircraftIfNotExists(incursion.getConflictingAircraft().getAircraft(), em);
         }
         if (incursion.getIntruder() != null) {
             if (incursion.getIntruder().getAircraft() != null) {
-                saveOrganizationIfNotExists(incursion.getIntruder().getAircraft().getOperator(), em);
+                saveAircraftIfNotExists(incursion.getIntruder().getAircraft().getAircraft(), em);
             } else if (incursion.getIntruder().getVehicle() != null) {
                 saveOrganizationIfNotExists(incursion.getIntruder().getVehicle().getOrganization(), em);
             } else if (incursion.getIntruder().getPerson() != null) {
                 saveOrganizationIfNotExists(incursion.getIntruder().getPerson().getOrganization(), em);
             }
+        }
+    }
+
+    private void saveAircraftIfNotExists(Aircraft aircraft, EntityManager em) {
+        if (aircraft == null) {
+            return;
+        }
+        if (!aircraftDao.exists(aircraft.getUri(), em)) {
+            aircraftDao.persist(aircraft, em);
         }
     }
 

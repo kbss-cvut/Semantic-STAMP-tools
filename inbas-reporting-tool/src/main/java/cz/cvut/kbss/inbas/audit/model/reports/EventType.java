@@ -8,9 +8,6 @@ import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import java.io.Serializable;
 import java.net.URI;
 
-/**
- * @author ledvima1
- */
 @OWLClass(iri = Vocabulary.EventType)
 public class EventType implements Serializable {
 
@@ -31,6 +28,11 @@ public class EventType implements Serializable {
 
     public EventType(URI id) {
         this.id = id;
+    }
+
+    public EventType(URI id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public URI getId() {
@@ -90,5 +92,9 @@ public class EventType implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public void generateUri(String identification) {
+        this.id = URI.create(Vocabulary.EventType + "_" + identification);
     }
 }

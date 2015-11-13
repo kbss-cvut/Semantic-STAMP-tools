@@ -22,6 +22,17 @@ public class EventTypeAssessment implements ReportingStatement, Serializable {
     @OWLObjectProperty(iri = Vocabulary.p_hasIncursion, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private RunwayIncursion runwayIncursion;
 
+    public EventTypeAssessment() {
+    }
+
+    public EventTypeAssessment(EventTypeAssessment other) {
+        this.eventType = other.eventType;
+        this.description = other.description;
+        if (other.runwayIncursion != null) {
+            this.runwayIncursion = new RunwayIncursion(other.runwayIncursion);
+        }
+    }
+
     public URI getUri() {
         return uri;
     }

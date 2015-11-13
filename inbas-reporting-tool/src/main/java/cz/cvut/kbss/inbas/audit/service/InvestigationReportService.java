@@ -1,9 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service;
 
-import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
-import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
-import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
-import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
+import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.service.security.SecurityUtils;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -59,7 +58,10 @@ public class InvestigationReportService extends BaseService<InvestigationReport>
         initBasicInfo(investigation);
         copyInitialReports(preliminaryReport, investigation);
         copyCorrectiveMeasures(preliminaryReport, investigation);
-        // TODO
+        if (preliminaryReport.getTypeAssessments() != null && !preliminaryReport.getTypeAssessments().isEmpty()) {
+            investigation.setRootFactor(
+                    generateFactors(investigation.getOccurrence(), preliminaryReport.getTypeAssessments()));
+        }
         investigationReportDao.persist(investigation);
         return investigation;
     }
@@ -85,5 +87,19 @@ public class InvestigationReportService extends BaseService<InvestigationReport>
 
     private <T> Set<T> copy(Set<T> source, Function<T, T> copyFunction) {
         return source.stream().map(copyFunction).collect(Collectors.toSet());
+    }
+
+    private Factor generateFactors(Occurrence occurrence, Set<EventTypeAssessment> etas) {
+        final Factor root = new Factor();
+        root.setStartTime(occurrence.getStartTime());
+        root.setEndTime(occurrence.getEndTime());
+        root.setChildren(new HashSet<>(etas.size()));
+        for (EventTypeAssessment eta : etas) {
+            final Factor child = new Factor(eta);
+            child.setStartTime(root.getStartTime());
+            child.setEndTime(root.getEndTime());
+            root.addChild(child);
+        }
+        return root;
     }
 }
