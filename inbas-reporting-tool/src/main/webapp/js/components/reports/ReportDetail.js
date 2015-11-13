@@ -46,9 +46,7 @@ var ReportDetail = React.createClass({
         var report = this.props.report;
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
-        report.lastEditedBy = this.props.user;
         if (report.isNew) {
-            report.author = this.props.user;
             Actions.createReport(report, this.props.onSuccess, this.onSubmitError);
         }
         else {
@@ -68,6 +66,7 @@ var ReportDetail = React.createClass({
     },
 
     investigate: function () {
+        Actions.createInvestigation(this.props.report.key);
         Routing.transitionTo(Routes.editInvestigation, {
             params: {reportKey: this.props.report.key},
             handlers: {onCancel: Routes.investigations}
@@ -125,7 +124,6 @@ var ReportDetail = React.createClass({
                                 ref='submit'
                                 onClick={this.onSubmit}>{loading ? 'Saving...' : 'Save'}</Button>
                         <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
-                        {this.renderInvestigationButton()}
                     </ButtonToolbar>
 
                     {this.renderError()}
@@ -143,14 +141,6 @@ var ReportDetail = React.createClass({
                 </Alert>
             </div>
         ) : null;
-    },
-
-    renderInvestigationButton: function () {
-        if (this.props.report.isNew) {
-            return null;
-        }
-        return (<Button bsStyle='primary' bsSize='small' onClick={this.investigate}
-                        title='Start investigation based on this report'>Investigate</Button>);
     }
 });
 

@@ -39,9 +39,13 @@ var ReportRow = React.createClass({
         this.onCloseModal();
     },
     onInvestigate: function () {
+        Actions.createInvestigation(this.props.report.key, this.onOpenInvestigation);
+    },
+
+    onOpenInvestigation: function(key) {
         Routing.transitionTo(Routes.editInvestigation, {
-            params: {reportKey: this.props.report.key},
-            handlers: {onCancel: Routes.investigations}
+            params: {reportKey: key},
+            handlers: {onCancel: Routes.reports}
         });
     },
 

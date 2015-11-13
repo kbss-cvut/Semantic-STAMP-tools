@@ -9,15 +9,16 @@ var Reflux = require('reflux');
 var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
+var Constants = require('../../constants/Constants');
 var Investigation = require('./Investigation');
-var ReportsStore = require('../../stores/ReportsStore');
+var InvestigationStore = require('../../stores/InvestigationStore');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var RouterStore = require('../../stores/RouterStore');
 
 var InvestigationController = React.createClass({
     mixins: [
-        Reflux.listenTo(ReportsStore, 'onReportLoaded')
+        Reflux.listenTo(InvestigationStore, 'onReportLoaded')
     ],
 
     getInitialState: function () {
@@ -30,7 +31,7 @@ var InvestigationController = React.createClass({
     componentWillMount: function () {
         if (this.props.params.reportKey) {
             // Find the report by key
-            Actions.findReport(this.props.params.reportKey);
+            Actions.findInvestigation(this.props.params.reportKey);
         }
     },
 
@@ -42,10 +43,16 @@ var InvestigationController = React.createClass({
         }
     },
 
+    onSuccess: function () {
+        Actions.findInvestigation(this.state.investigation.key);
+    },
+
     onCancel: function () {
         var handlers = RouterStore.getViewHandlers(Routes.editInvestigation.name);
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
+        } else {
+            Routing.transitionTo(Constants.HOME_ROUTE);
         }
     },
 
@@ -57,7 +64,7 @@ var InvestigationController = React.createClass({
     render: function () {
         return (
             <Investigation investigation={this.state.investigation} loading={this.state.loading}
-                           onChange={this.onChange} onCancel={this.onCancel}/>
+                           onChange={this.onChange} onSuccess={this.onSuccess} onCancel={this.onCancel}/>
         );
     }
 });

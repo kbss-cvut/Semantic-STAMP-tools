@@ -2,15 +2,14 @@ package cz.cvut.kbss.inbas.audit.rest.dto.mapper;
 
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
+import cz.cvut.kbss.inbas.audit.model.reports.Factor;
+import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessmentDto;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEventDto;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.OccurrenceReportInfo;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.PreliminaryReportDto;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.*;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.*;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
@@ -27,6 +26,14 @@ public abstract class ReportMapper {
     public abstract PreliminaryReportDto occurrenceReportToOccurrenceReportDto(PreliminaryReport report);
 
     public abstract PreliminaryReport occurrenceReportDtoToOccurrenceReport(PreliminaryReportDto dto);
+
+    public abstract InvestigationReportDto investigationReportToInvestigationReportDto(InvestigationReport report);
+
+    public abstract InvestigationReport investigationReportDtoToInvestigationReport(InvestigationReportDto dto);
+
+    public abstract FactorDto factorToFactorDto(Factor factor);
+
+    public abstract Factor factorDtoToFactor(FactorDto dto);
 
     public EventTypeAssessmentDto eventTypeAssessmentToEventTypeAssessmentDto(EventTypeAssessment assessment) {
         if (assessment == null) {

@@ -11,8 +11,9 @@ var Panel = require('react-bootstrap').Panel;
 var Alert = require('react-bootstrap').Alert;
 var assign = require('object-assign');
 
-var Factors = require('./Factors');
+var Actions = require('../../actions/Actions');
 var BasicOccurrenceInfo = require('../reports/BasicOccurrenceInfo');
+var Factors = require('./Factors');
 var InitialReports = require('../initialreport/InitialReports');
 var ReportSummary = require('../reports/ReportSummary');
 var ReportStatements = require('../reports/ReportStatements');
@@ -37,9 +38,10 @@ var Investigation = React.createClass({
     },
 
     onSubmit: function (e) {
+        var investigation = this.props.investigation;
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
-        this.props.investigation.lastEditedBy = this.props.user;
+        Actions.updateInvestigation(investigation, this.props.onSuccess, this.onSubmitError);
     },
 
     onSubmitError: function (error) {
@@ -95,7 +97,7 @@ var Investigation = React.createClass({
                     <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
                         <Button bsStyle='success' bsSize='small' disabled={loading}
                                 ref='submit'
-                                onClick={this.onSubmit}>{loading ? 'Submitting...' : 'Submit'}</Button>
+                                onClick={this.onSubmit}>{loading ? 'Saving...' : 'Save'}</Button>
                         <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
                     </ButtonToolbar>
 

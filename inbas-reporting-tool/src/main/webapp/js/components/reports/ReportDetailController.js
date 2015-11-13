@@ -75,6 +75,8 @@ var ReportDetailController = React.createClass({
         var handlers = RouterStore.getViewHandlers(this.state.report.isNew ? Routes.createReport.name : Routes.editReport.name);
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
+        } else {
+            Routing.transitionTo(Constants.HOME_ROUTE);
         }
     },
 

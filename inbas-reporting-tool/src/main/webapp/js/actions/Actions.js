@@ -7,7 +7,8 @@ var Actions = Reflux.createActions([
     'loadReports', 'findReport', 'createReport', 'updateReport', 'deleteReport',
     'loadInvestigations',
     'loadEventTypes', 'loadLvpOptions', 'loadOccurrenceSeverityOptions', 'loadLocations', 'loadOperators',
-    'setTransitionPayload'
+    'setTransitionPayload',
+    'createInvestigation', 'findInvestigation', 'updateInvestigation'
 ]);
 
 module.exports = Actions;
