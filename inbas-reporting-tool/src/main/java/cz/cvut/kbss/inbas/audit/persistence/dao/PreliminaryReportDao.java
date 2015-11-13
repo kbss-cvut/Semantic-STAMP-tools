@@ -76,7 +76,13 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
         Objects.requireNonNull(entity);
 
         if (entity.getTypeAssessments() != null) {
-            entity.getTypeAssessments().forEach(typeAssessmentDao::update);
+            entity.getTypeAssessments().forEach(eta -> {
+                if (eta.getUri() == null) {
+                    typeAssessmentDao.persist(eta, em);
+                } else {
+                    typeAssessmentDao.update(eta, em);
+                }
+            });
         }
         saveInitialReports(entity.getInitialReports(), em);
         em.merge(entity);

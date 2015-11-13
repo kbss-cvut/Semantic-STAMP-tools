@@ -336,3 +336,8 @@ img.factor-descriptive-factor {
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
+
+.notice-small {
+    font-size: 86%;
+    font-style: italic;
+}

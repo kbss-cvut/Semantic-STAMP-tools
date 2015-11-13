@@ -20,13 +20,18 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class ReportMapper {
 
-    public abstract OccurrenceReportInfo occurrenceReportToOccurrenceReportInfo(PreliminaryReport report);
+    public OccurrenceReportInfo occurrenceReportToOccurrenceReportInfo(PreliminaryReport report) {
+        return new OccurrenceReportInfo(report);
+    }
 
     public abstract PreliminaryReportDto occurrenceReportToOccurrenceReportDto(PreliminaryReport report);
 
     public abstract PreliminaryReport occurrenceReportDtoToOccurrenceReport(PreliminaryReportDto dto);
 
     public EventTypeAssessmentDto eventTypeAssessmentToEventTypeAssessmentDto(EventTypeAssessment assessment) {
+        if (assessment == null) {
+            return null;
+        }
         final EventTypeAssessmentDto result;
         if (assessment.getRunwayIncursion() != null) {
             result = runwayIncursionToRunwayIncursionDto(assessment.getRunwayIncursion());
@@ -95,8 +100,8 @@ public abstract class ReportMapper {
     public abstract Aircraft aircraftIntruderToAircraft(AircraftIntruderDto intruder);
 
     @Mappings({@Mapping(target = "intruderType", constant = PersonIntruder.INTRUDER_TYPE),
-               @Mapping(target = "wasDoing", source = "whatWasDoing"),
-               @Mapping(target = "organization", source = "organization.name")})
+            @Mapping(target = "wasDoing", source = "whatWasDoing"),
+            @Mapping(target = "organization", source = "organization.name")})
     public abstract PersonIntruderDto personIntruderToPersonIntruderDto(
             cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder personIntruder);
 
@@ -105,8 +110,8 @@ public abstract class ReportMapper {
             PersonIntruderDto intruder);
 
     @Mappings({@Mapping(target = "intruderType", constant = Vehicle.INTRUDER_TYPE),
-               @Mapping(target = "wasDoing", source = "whatWasDoing"),
-               @Mapping(target = "organization", source = "organization.name")})
+            @Mapping(target = "wasDoing", source = "whatWasDoing"),
+            @Mapping(target = "organization", source = "organization.name")})
     public abstract VehicleIntruderDto vehicleToVehicleIntruder(Vehicle vehicle);
 
     @Mapping(target = "whatWasDoing", source = "wasDoing")

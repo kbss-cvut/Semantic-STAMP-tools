@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
+import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 
 import java.net.URI;
 import java.util.Date;
@@ -19,6 +20,17 @@ public class OccurrenceReportInfo {
     private Date lastEdited;
 
     private String summary;
+
+    public OccurrenceReportInfo() {
+    }
+
+    public OccurrenceReportInfo(PreliminaryReport report) {
+        this.uri = report.getUri();
+        this.key = report.getKey();
+        this.occurrence = report.getOccurrence();
+        this.lastEdited = report.getLastEdited() != null ? report.getLastEdited() : report.getCreated();
+        this.summary = report.getSummary();
+    }
 
     public URI getUri() {
         return uri;

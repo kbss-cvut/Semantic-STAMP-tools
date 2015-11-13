@@ -16,7 +16,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration(classes = {WebAppConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @WebAppConfiguration
-public class BaseControllerTest {
+public abstract class BaseControllerTest {
 
     @Autowired
     protected WebApplicationContext webApplicationContext;

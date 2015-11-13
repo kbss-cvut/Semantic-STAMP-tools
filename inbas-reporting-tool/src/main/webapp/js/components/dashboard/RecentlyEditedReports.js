@@ -18,7 +18,9 @@ var RecentlyEditedReports = React.createClass({
     filterRecentReports: function () {
         var reports = this.props.reports.slice();
         reports.sort(function (a, b) {
-            return b.lastEdited - a.lastEdited;
+            var aEdited = a.lastEdited ? a.lastEdited : a.created,
+                bEdited = b.lastEdited ? b.lastEdited : b.created;
+            return bEdited - aEdited;
         });
         return reports.slice(0, RECENTLY_EDITED_COUNT);
     },
@@ -66,16 +68,18 @@ var ReportRow = React.createClass({
     },
 
     render: function () {
-        var report = this.props.report;
-        var vAlign = {verticalAlign: 'middle'};
+        var report = this.props.report,
+            vAlign = {verticalAlign: 'middle'},
+            dateEdited = report.lastEdited ? report.lastEdited : report.created;
         return (
             <tr>
                 <td style={vAlign}>
                     <a href='javascript:void(0);' onClick={this.onOpenClick}
-                       title='Click to see report detail'><CollapsibleText text={report.occurrence.name} maxLength={20}/></a>
+                       title='Click to see report detail'><CollapsibleText text={report.occurrence.name}
+                                                                           maxLength={20}/></a>
                 </td>
                 <td style={vAlign}>{Utils.formatDate(new Date(report.occurrence.startTime))}</td>
-                <td style={vAlign}>{Utils.formatDate(new Date(report.lastEdited))}</td>
+                <td style={vAlign}>{Utils.formatDate(new Date(dateEdited))}</td>
             </tr>
         );
     }

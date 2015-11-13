@@ -59,13 +59,13 @@ var BasicOccurrenceInfo = React.createClass({
 
     renderLastEdited: function () {
         var report = this.props.report;
-        if (report.isNew) {
+        if (report.isNew || !report.lastEdited) {
             return null;
         }
         var formattedDate = Utils.formatDate(new Date(report.lastEdited));
         var text = 'Last edited on ' + formattedDate + ' by ' + this.getFullName(report.lastEditedBy) + '.';
         return (
-            <div className='form-group italics'>
+            <div className='form-group notice-small'>
                 {text}
             </div>
         );

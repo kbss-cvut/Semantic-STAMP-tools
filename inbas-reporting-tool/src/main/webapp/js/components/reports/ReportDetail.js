@@ -123,7 +123,7 @@ var ReportDetail = React.createClass({
                     <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
                         <Button bsStyle='success' bsSize='small' disabled={loading}
                                 ref='submit'
-                                onClick={this.onSubmit}>{loading ? 'Submitting...' : 'Submit'}</Button>
+                                onClick={this.onSubmit}>{loading ? 'Saving...' : 'Save'}</Button>
                         <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
                         {this.renderInvestigationButton()}
                     </ButtonToolbar>
