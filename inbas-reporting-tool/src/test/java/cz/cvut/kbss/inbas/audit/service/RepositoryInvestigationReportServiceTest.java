@@ -8,13 +8,14 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
+import cz.cvut.kbss.inbas.audit.service.repository.RepositoryInvestigationReportService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.*;
 
-public class InvestigationReportServiceTest extends BaseServiceTestRunner {
+public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private PersonDao personDao;
@@ -22,7 +23,7 @@ public class InvestigationReportServiceTest extends BaseServiceTestRunner {
     private PreliminaryReportDao preliminaryReportDao;
 
     @Autowired
-    private InvestigationReportService service;
+    private RepositoryInvestigationReportService service;
 
     @Before
     public void setUp() throws Exception {

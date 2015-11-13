@@ -1,39 +1,21 @@
 package cz.cvut.kbss.inbas.audit.service;
 
-import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
-
 import java.net.URI;
 import java.util.Collection;
 
-public abstract class BaseService<T> {
+public interface BaseService<T> {
 
-    protected abstract GenericDao<T> getPrimaryDao();
+    Collection<T> findAll();
 
-    public Collection<T> findAll() {
-        return getPrimaryDao().findAll();
-    }
+    T find(URI uri);
 
-    public T find(URI uri) {
-        return getPrimaryDao().find(uri);
-    }
+    void persist(T instance);
 
-    public void persist(T instance) {
-        getPrimaryDao().persist(instance);
-    }
+    void persist(Collection<T> instances);
 
-    public void persist(Collection<T> instances) {
-        getPrimaryDao().persist(instances);
-    }
+    void update(T instance);
 
-    public void update(T instance) {
-        getPrimaryDao().update(instance);
-    }
+    void remove(T instance);
 
-    public void remove(T instance) {
-        getPrimaryDao().remove(instance);
-    }
-
-    public void remove(Collection<T> instances) {
-        getPrimaryDao().remove(instances);
-    }
+    void remove(Collection<T> instances);
 }

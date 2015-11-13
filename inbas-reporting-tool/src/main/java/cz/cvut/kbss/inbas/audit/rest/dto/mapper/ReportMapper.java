@@ -17,9 +17,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
-/**
- * @author ledvima1
- */
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class ReportMapper {
 
