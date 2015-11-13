@@ -76,14 +76,12 @@
             "intruder": {
               "aircraft": {
                 "uri": "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Aircraft_instance994092607",
-                "aircraft": {
-                  "registration": "OK123",
-                  "stateOfRegistry": "CZ",
-                  "operator": {
-                    "uri": "http://www.inbas.cz/ontologies/reporting-tool/organizations#CSA",
-                    "code": "CSA",
-                    "name": "Czech Airlines"
-                  }
+                "registration": "OK123",
+                "stateOfRegistry": "CZ",
+                "operator": {
+                  "uri": "http://www.inbas.cz/ontologies/reporting-tool/organizations#CSA",
+                  "code": "CSA",
+                  "name": "Czech Airlines"
                 },
                 "callSign": "OK123",
                 "flightNumber": "1234",

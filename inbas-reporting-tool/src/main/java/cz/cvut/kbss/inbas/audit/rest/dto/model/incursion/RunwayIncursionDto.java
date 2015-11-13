@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
-import cz.cvut.kbss.inbas.audit.model.AircraftEvent;
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessmentDto;
@@ -14,7 +14,7 @@ public class RunwayIncursionDto extends EventTypeAssessmentDto {
 
     private Location location;
 
-    private AircraftEvent conflictingAircraft;
+    private Aircraft conflictingAircraft;
 
     private RunwayIntruderDto intruder;
 
@@ -34,11 +34,11 @@ public class RunwayIncursionDto extends EventTypeAssessmentDto {
         this.location = location;
     }
 
-    public AircraftEvent getConflictingAircraft() {
+    public Aircraft getConflictingAircraft() {
         return conflictingAircraft;
     }
 
-    public void setConflictingAircraft(AircraftEvent conflictingAircraft) {
+    public void setConflictingAircraft(Aircraft conflictingAircraft) {
         this.conflictingAircraft = conflictingAircraft;
     }
 

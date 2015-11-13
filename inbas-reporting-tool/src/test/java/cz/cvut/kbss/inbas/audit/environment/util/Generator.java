@@ -1,6 +1,9 @@
 package cz.cvut.kbss.inbas.audit.environment.util;
 
-import cz.cvut.kbss.inbas.audit.model.*;
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
+import cz.cvut.kbss.inbas.audit.model.Location;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
+import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
@@ -84,13 +87,11 @@ public class Generator {
         rwi.setLowVisibilityProcedure(LowVisibilityProcedure.CAT_I);
         rwi.setLocation(new Location("LKPR31"));
         final Intruder intruder = new Intruder();
-        final AircraftEvent aircraftEvent = new AircraftEvent();
-        aircraftEvent.setCallSign("OK123-32");
         final Aircraft aircraft = new Aircraft();
+        aircraft.setCallSign("OK123-32");
         aircraft.setRegistration("OK123");
         aircraft.setStateOfRegistry("CZ");
-        aircraftEvent.setAircraft(aircraft);
-        intruder.setAircraft(aircraftEvent);
+        intruder.setAircraft(aircraft);
         rwi.setIntruder(intruder);
         etATwo.setRunwayIncursion(rwi);
         typeAssessments.add(etATwo);

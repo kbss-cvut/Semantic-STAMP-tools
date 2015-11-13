@@ -4,7 +4,6 @@ import cz.cvut.kbss.inbas.audit.config.RestConfig;
 import cz.cvut.kbss.inbas.audit.config.SecurityConfig;
 import cz.cvut.kbss.inbas.audit.config.ServiceConfig;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
-import cz.cvut.kbss.inbas.audit.model.AircraftEvent;
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.Organization;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
@@ -46,28 +45,26 @@ public class MappersTest {
 
     @Test
     public void testMapAircraftToAircraftIntruder() {
-        final AircraftEvent aircraftEvent = initAircraft();
-        final AircraftIntruderDto result = reportMapper.aircraftToAircraftIntruder(aircraftEvent);
+        final Aircraft aircraft = initAircraft();
+        final AircraftIntruderDto result = reportMapper.aircraftToAircraftIntruder(aircraft);
         assertNotNull(result);
-        assertEquals(aircraftEvent.getUri(), result.getUri());
-        assertEquals(aircraftEvent.getCallSign(), result.getCallSign());
-        assertEquals(aircraftEvent.getOperationType(), result.getOperationType());
-        assertEquals(aircraftEvent.getAircraft().getOperator(), result.getAircraft().getOperator());
-        assertEquals(aircraftEvent.getAircraft().getStateOfRegistry(), result.getAircraft().getStateOfRegistry());
-        assertEquals(aircraftEvent.getAircraft().getRegistration(), result.getAircraft().getRegistration());
+        assertEquals(aircraft.getUri(), result.getUri());
+        assertEquals(aircraft.getCallSign(), result.getCallSign());
+        assertEquals(aircraft.getOperationType(), result.getOperationType());
+        assertEquals(aircraft.getOperator(), result.getOperator());
+        assertEquals(aircraft.getStateOfRegistry(), result.getStateOfRegistry());
+        assertEquals(aircraft.getRegistration(), result.getRegistration());
     }
 
-    private AircraftEvent initAircraft() {
-        final AircraftEvent aircraftEvent = new AircraftEvent();
-        aircraftEvent.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas#aircraftTest"));
-        aircraftEvent.setCallSign("OK12345");
-        aircraftEvent.setOperationType("passenger flight");
+    private Aircraft initAircraft() {
         final Aircraft aircraft = new Aircraft();
+        aircraft.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas#aircraftTest"));
+        aircraft.setCallSign("OK12345");
+        aircraft.setOperationType("passenger flight");
         aircraft.setOperator(new Organization("CSA"));
         aircraft.setStateOfRegistry("CZ");
         aircraft.setRegistration("OK-123");
-        aircraftEvent.setAircraft(aircraft);
-        return aircraftEvent;
+        return aircraft;
     }
 
     @Test

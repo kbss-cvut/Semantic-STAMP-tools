@@ -62,7 +62,7 @@ var RecentlyEditedReports = React.createClass({
 var ReportRow = React.createClass({
     onOpenClick: function (e) {
         e.preventDefault();
-        this.props.onOpenReport(this.props.report);
+        this.props.onOpenReport(this.props.report.key);
     },
 
     render: function () {

@@ -107,8 +107,6 @@ public class InvestigationReportServiceTest extends BaseServiceTestRunner {
         if (expIntruder.getAircraft() != null) {
             assertNotNull(actIntruder.getAircraft());
             assertNotEquals(expIntruder.getAircraft().getUri(), actIntruder.getAircraft().getUri());
-            assertEquals(expIntruder.getAircraft().getAircraft().getUri(),
-                    actIntruder.getAircraft().getAircraft().getUri());
         } else if (expIntruder.getVehicle() != null) {
             assertNotNull(actIntruder.getVehicle());
             assertNotEquals(expIntruder.getVehicle().getUri(), actIntruder.getVehicle().getUri());

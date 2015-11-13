@@ -2,7 +2,7 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import cz.cvut.kbss.inbas.audit.model.AircraftEvent;
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 
 import java.net.URI;
@@ -12,7 +12,7 @@ import java.net.URI;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "intruderType", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = AircraftIntruderDto.class, name = AircraftEvent.INTRUDER_TYPE),
+        @JsonSubTypes.Type(value = AircraftIntruderDto.class, name = Aircraft.INTRUDER_TYPE),
         @JsonSubTypes.Type(value = VehicleIntruderDto.class, name = Vehicle.INTRUDER_TYPE),
         @JsonSubTypes.Type(value = PersonIntruderDto.class, name = cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder.INTRUDER_TYPE)
 })

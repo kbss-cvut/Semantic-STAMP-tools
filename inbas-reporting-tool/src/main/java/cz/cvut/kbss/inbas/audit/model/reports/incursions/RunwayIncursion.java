@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.audit.model.reports.incursions;
 
-import cz.cvut.kbss.inbas.audit.model.AircraftEvent;
+import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
@@ -21,7 +21,7 @@ public class RunwayIncursion implements Serializable {
     private Location location;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasClearedAircraft, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private AircraftEvent conflictingAircraft;
+    private Aircraft conflictingAircraft;
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_hasIntruder, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -34,7 +34,7 @@ public class RunwayIncursion implements Serializable {
         this.location = other.location;
         this.lowVisibilityProcedure = other.lowVisibilityProcedure;
         if (other.conflictingAircraft != null) {
-            this.conflictingAircraft = new AircraftEvent(other.conflictingAircraft);
+            this.conflictingAircraft = new Aircraft(other.conflictingAircraft);
         }
         assert other.intruder != null;
         this.intruder = new Intruder(other.intruder);
@@ -64,11 +64,11 @@ public class RunwayIncursion implements Serializable {
         this.location = location;
     }
 
-    public AircraftEvent getConflictingAircraft() {
+    public Aircraft getConflictingAircraft() {
         return conflictingAircraft;
     }
 
-    public void setConflictingAircraft(AircraftEvent conflictingAircraft) {
+    public void setConflictingAircraft(Aircraft conflictingAircraft) {
         this.conflictingAircraft = conflictingAircraft;
     }
 
