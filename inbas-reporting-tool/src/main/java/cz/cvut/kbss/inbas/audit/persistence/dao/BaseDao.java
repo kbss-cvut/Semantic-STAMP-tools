@@ -129,7 +129,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
         final EntityManager em = entityManager();
         try {
             em.getTransaction().begin();
-            entities.forEach(em::persist);
+            entities.forEach(e -> persist(e, em));
             em.getTransaction().commit();
         } catch (Exception e) {
             LOG.error("Error when persisting entities.", e);

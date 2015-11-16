@@ -15,9 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -157,6 +155,19 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
         assessment.getRunwayIncursion().setLowVisibilityProcedure(LowVisibilityProcedure.CAT_III);
         added.setCauses(Collections.singleton(update.getRootFactor().getChildren().iterator().next()));
         update.getRootFactor().getChildren().add(added);
+
+        investigationDao.update(update);
+        verifyPersistedReport(update);
+    }
+
+    @Test
+    public void reportUpdateCascadesChangesToCauseAndMitigationLinks() throws Exception {
+        final InvestigationReport report = loadReport("test_data/reportWithFactorHierarchy.json");
+        persistReport(report);
+
+        final InvestigationReport update = investigationDao.find(report.getUri());
+        final List<Factor> children = new ArrayList<>(update.getRootFactor().getChildren());
+        children.get(1).setCauses(Collections.singleton(children.get(0)));
 
         investigationDao.update(update);
         verifyPersistedReport(update);

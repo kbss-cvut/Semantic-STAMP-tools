@@ -3,13 +3,11 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
-import cz.cvut.kbss.inbas.audit.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -43,32 +41,12 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
         em.persist(entity);
     }
 
-    @Override
-    public void persist(Collection<PreliminaryReport> entities) {
-        Objects.requireNonNull(entities);
-        if (entities.isEmpty()) {
-            return;
-        }
-
-        final EntityManager em = entityManager();
-        try {
-            em.getTransaction().begin();
-            entities.forEach(e -> persist(e, em));
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            LOG.error("Error when persisting entity.", e);
-            throw new PersistenceException(e);
-        } finally {
-            em.close();
-        }
-    }
-
     private void saveInitialReports(Set<InitialReport> initialReports, EntityManager em) {
         if (initialReports == null) {
             return;
         }
         initialReports.stream().filter(ir -> !initialReportDao.exists(ir.getUri(), em))
-                      .forEach(ir -> initialReportDao.persist(ir, em));
+                .forEach(ir -> initialReportDao.persist(ir, em));
     }
 
     @Override

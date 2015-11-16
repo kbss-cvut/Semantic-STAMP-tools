@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/reports")
-public class ReportController extends BaseController {
+public class PreliminaryReportController extends BaseController {
 
     @Autowired
     private PreliminaryReportService preliminaryReportService;

@@ -51,8 +51,6 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         return investigationReportDao.findByKey(key);
     }
 
-    // Add update
-
     @Override
     public InvestigationReport createFromPreliminaryReport(PreliminaryReport preliminaryReport) {
         preliminaryReportValidator.validate(preliminaryReport);
