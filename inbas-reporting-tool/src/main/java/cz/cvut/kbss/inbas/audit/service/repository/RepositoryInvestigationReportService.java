@@ -60,10 +60,8 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         initBasicInfo(investigation);
         copyInitialReports(preliminaryReport, investigation);
         copyCorrectiveMeasures(preliminaryReport, investigation);
-        if (preliminaryReport.getTypeAssessments() != null && !preliminaryReport.getTypeAssessments().isEmpty()) {
-            investigation.setRootFactor(
-                    generateFactors(investigation.getOccurrence(), preliminaryReport.getTypeAssessments()));
-        }
+        investigation.setRootFactor(
+                generateFactors(investigation.getOccurrence(), preliminaryReport.getTypeAssessments()));
         investigationReportDao.persist(investigation);
         return investigation;
     }
@@ -95,12 +93,14 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         final Factor root = new Factor();
         root.setStartTime(occurrence.getStartTime());
         root.setEndTime(occurrence.getEndTime());
-        root.setChildren(new HashSet<>(etas.size()));
-        for (EventTypeAssessment eta : etas) {
-            final Factor child = new Factor(eta);
-            child.setStartTime(root.getStartTime());
-            child.setEndTime(root.getEndTime());
-            root.addChild(child);
+        if (etas != null) {
+            root.setChildren(new HashSet<>(etas.size()));
+            for (EventTypeAssessment eta : etas) {
+                final Factor child = new Factor(eta);
+                child.setStartTime(root.getStartTime());
+                child.setEndTime(root.getEndTime());
+                root.addChild(child);
+            }
         }
         return root;
     }

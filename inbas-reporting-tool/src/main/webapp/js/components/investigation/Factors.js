@@ -12,12 +12,13 @@ var Input = require('../Input');
 var Select = require('../Select');
 
 var FactorDetail = require('./FactorDetail');
+var FactorRenderer = require('./FactorRenderer');
 var GanttController = require('./GanttController');
 
 var Factors = React.createClass({
 
     propTypes: {
-        occurrence: React.PropTypes.object.isRequired
+        investigation: React.PropTypes.object.isRequired
     },
 
     ganttController: null,
@@ -36,7 +37,7 @@ var Factors = React.createClass({
     },
 
     componentDidUpdate: function () {
-        this.ganttController.updateOccurrenceEvent(this.props.occurrence);
+        this.ganttController.updateOccurrenceEvent(this.props.investigation);
     },
 
     componentDidMount: function () {
@@ -53,37 +54,8 @@ var Factors = React.createClass({
     },
 
     addEvents: function () {
-        this.addOccurrenceEvent();
-        var eventAssessments = this.props.occurrence.typeAssessments,
-            occEventId = this.ganttController.occurrenceEventId,
-            startDate = this.ganttController.getFactor(occEventId).start_date;
-        if (!eventAssessments) {
-            return;
-        }
-        for (var i = 0, len = eventAssessments.length; i < len; i++) {
-            var evt = eventAssessments[i];
-            this.ganttController.addFactor({
-                text: evt.eventType.name,
-                start_date: startDate,
-                duration: 1,
-                parent: occEventId,
-                statement: evt
-            }, occEventId);
-        }
-        this.ganttController.expandSubtree(occEventId);
-    },
-
-    addOccurrenceEvent: function () {
-        var occurrence = this.props.occurrence,
-            id = Date.now();
-        this.ganttController.setOccurrenceEventId(id);
-        this.ganttController.addFactor({
-            id: id,
-            text: occurrence.name,
-            start_date: new Date(occurrence.occurrenceTime),
-            duration: 1,
-            readonly: true
-        }, null);
+        FactorRenderer.renderFactors(this.props.investigation);
+        this.ganttController.expandSubtree(this.ganttController.occurrenceEventId);
     },
 
     onLinkAdded: function (link) {
@@ -155,8 +127,11 @@ var Factors = React.createClass({
     },
 
     onUpdateOccurrence: function (startTime, endTime) {
+        var occurrence = this.props.investigation.occurrence;
+        occurrence.startTime = startTime;
+        occurrence.endTime = endTime;
         // End time is not supported by occurrences, yet
-        this.props.onAttributeChange('occurrenceTime', startTime);
+        this.props.onAttributeChange('occurrence', occurrence);
     },
 
 

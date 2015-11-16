@@ -116,4 +116,16 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
             assertNotEquals(expIntruder.getPerson().getUri(), actIntruder.getPerson().getUri());
         }
     }
+
+    @Test
+    public void createInvestigationFromPreliminaryReportWithoutTypeAssessmentsCreatesRootFactor() throws Exception {
+        final PreliminaryReport report = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        preliminaryReportDao.persist(report);
+        final InvestigationReport result = service.createFromPreliminaryReport(report);
+        assertNotNull(result);
+        assertNotNull(result.getRootFactor());
+        assertEquals(report.getOccurrence().getStartTime(), result.getRootFactor().getStartTime());
+        assertEquals(report.getOccurrence().getEndTime(), result.getRootFactor().getEndTime());
+    }
 }

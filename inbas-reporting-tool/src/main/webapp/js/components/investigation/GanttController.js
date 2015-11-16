@@ -356,6 +356,7 @@ var GanttController = {
     },
 
     addFactor: function (factor, parentId) {
+        factor.duration = gantt.calculateDuration(factor.start_date, factor.end_date);
         return gantt.addTask(factor, parentId);
     },
 

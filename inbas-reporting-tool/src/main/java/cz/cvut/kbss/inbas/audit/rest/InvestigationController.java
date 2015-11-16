@@ -46,7 +46,7 @@ public class InvestigationController extends BaseController {
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{key}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateInvestigationReport(@PathVariable("key") String key, InvestigationReportDto data) {
+    public void updateInvestigationReport(@PathVariable("key") String key, @RequestBody InvestigationReportDto data) {
         final InvestigationReport orig = getReport(key);
         validateReportForUpdate(orig, data);
         final InvestigationReport update = reportMapper.investigationReportDtoToInvestigationReport(data);
