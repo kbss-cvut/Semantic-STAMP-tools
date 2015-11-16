@@ -30,7 +30,7 @@ var FactorRenderer = {
     addChild: function (factor, parentId) {
         factor = this.resolveFactorFromJsonId(factor);
         var id = this.ganttController.addFactor({
-            text: factor.eventType.name,
+            text: factor.assessment.eventType.name,
             start_date: new Date(factor.startTime),
             end_date: new Date(factor.endTime),
             parent: parentId,
@@ -50,7 +50,7 @@ var FactorRenderer = {
      * @returns {*} Corresponding factor object
      */
     resolveFactorFromJsonId: function (factor) {
-        if (typeof factor !== object) {
+        if (typeof factor !== 'object') {
             factor = this.jsonObjectMap[factor];
         } else {
             this.jsonObjectMap[factor['@id']] = factor;
