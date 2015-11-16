@@ -7,7 +7,7 @@ var FactorRenderer = {
 
     jsonObjectMap: {},
 
-    renderFactors(investigation) {
+    renderFactors: function (investigation) {
         var root = investigation.rootFactor,
             id = Date.now();
         this.ganttController.setOccurrenceEventId(id);

@@ -141,4 +141,21 @@ describe('FactorRenderer tests', function () {
         verifyNode(investigation.rootFactor.children[0].children[0], firstChildFirstChild, childIds[0]);
         verifyNode(investigation.rootFactor.children[0].children[1], firstChildSecondChild, childIds[0]);
     });
+
+    xit('Renders factors with causality relationships using references', function() {
+        var rootId = null, childIds = [];
+        investigation.rootFactor.children = initChildren();
+        investigation.rootFactor.children[0].children = initChildren();
+        investigation.rootFactor.children[0].children[0]['@id'] = 1;
+        investigation.rootFactor.children[0].children[1].causes = [1];
+        GanttController.addFactor.and.callFake(function(item, parentId) {
+            var id = Date.now();
+            if (parentId === rootId) {
+                childIds.push(id);
+            }
+            return id;
+        });
+        GanttController.setOccurrenceEventId.and.callFake(function(id) {rootId = id});
+
+    });
 });
