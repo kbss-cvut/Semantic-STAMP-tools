@@ -41,7 +41,12 @@ var Investigation = React.createClass({
         var investigation = this.props.investigation;
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
-        Actions.updateInvestigation(investigation, this.props.onSuccess, this.onSubmitError);
+        Actions.updateInvestigation(investigation, this.onSubmitSuccess, this.onSubmitError);
+    },
+
+    onSubmitSuccess: function() {
+        this.setState({submitting: false});
+        this.props.onSuccess();
     },
 
     onSubmitError: function (error) {

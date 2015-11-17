@@ -41,10 +41,10 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: factor.statement ? factor.statement.eventType : null,
+            eventType: factor.statement ? factor.statement.assessment.eventType : null,
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
-            statement: factor.statement,
+            assessment: factor.statement ? factor.statement.assessment : null,
 
             isWizardOpen: false,
             wizardProperties: null
@@ -89,8 +89,8 @@ var FactorDetail = React.createClass({
     },
 
     onOpenDetails: function () {
-        var wizardProps = !this.state.statement ? EventTypeWizardSelector.getWizardSettings(this.state.eventType)
-            : EventTypeWizardSelector.getWizardSettingsForStatement(this.state.statement);
+        var wizardProps = !this.state.assessment ? EventTypeWizardSelector.getWizardSettings(this.state.eventType)
+            : EventTypeWizardSelector.getWizardSettingsForStatement(this.state.assessment);
         wizardProps.onFinish = this.onUpdateFactorDetails;
         this.openDetailsWizard(wizardProps);
     },
@@ -107,15 +107,16 @@ var FactorDetail = React.createClass({
     },
 
     onUpdateFactorDetails: function (data, closeCallback) {
-        var statement = data.statement;
-        this.setState({statement: statement});
+        var assessment = data.statement;
+        this.setState({assessment: assessment});
         closeCallback();
     },
 
     onSave: function () {
         var factor = this.props.factor;
-        factor.statement = this.state.statement ? this.state.statement : {};
-        factor.statement.eventType = this.state.eventType;
+        factor.statement = {};
+        factor.statement.assessment = this.state.assessment ? this.state.assessment : {};
+        factor.statement.assessment.eventType = this.state.eventType;
         factor.text = this.state.eventType.name;
         factor.start_date = new Date(this.state.startDate);
         factor.end_date = gantt.calculateEndDate(factor.start_date, this.state.duration, gantt.config.duration_unit);

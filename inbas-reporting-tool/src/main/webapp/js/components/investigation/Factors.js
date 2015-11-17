@@ -37,7 +37,7 @@ var Factors = React.createClass({
     },
 
     componentDidUpdate: function () {
-        this.ganttController.updateOccurrenceEvent(this.props.investigation);
+        this.ganttController.updateOccurrenceEvent(this.props.investigation.occurrence);
     },
 
     componentDidMount: function () {

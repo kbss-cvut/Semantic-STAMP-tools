@@ -125,7 +125,7 @@ var GanttController = {
             if (!task.statement) {
                 return 'factor-occurrence-event';
             }
-            eventType = task.statement.eventType;
+            eventType = task.statement.assessment.eventType;
             return FactorStyleInfo.getStyleInfo(eventType.type).cls;
         };
         gantt.templates.tooltip_date_format = function (date) {
@@ -135,7 +135,7 @@ var GanttController = {
         gantt.templates.tooltip_text = function (start, end, task) {
             var tooltip = '<b>' + task.text + '</b><br/>';
             if (task.statement) {
-                tooltip += task.statement.eventType.type + '<br/>';
+                tooltip += task.statement.assessment.eventType.type + '<br/>';
             }
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
                 '<br/><b>End date:</b> ' + gantt.templates.tooltip_date_format(end);
@@ -330,10 +330,16 @@ var GanttController = {
             occurrenceEvt.text = occurrence.name;
             changes.push(this.occurrenceEventId);
         }
-        if (occurrenceEvt.start_date.getTime() !== occurrence.occurrenceTime) {
+        if (occurrenceEvt.start_date.getTime() !== occurrence.startTime) {
             changes.push(this.occurrenceEventId);
-            var timeDiff = occurrence.occurrenceTime - occurrenceEvt.start_date.getTime();
+            var timeDiff = occurrence.startTime - occurrenceEvt.start_date.getTime();
             this.moveFactor(occurrenceEvt.id, timeDiff, changes);
+        }
+        if (occurrenceEvt.end_date.getTime() !== occurrence.endTime) {
+            changes.push(this.occurrenceEventId);
+            occurrenceEvt.end_date = new Date(occurrence.endTime);
+            occurrenceEvt.duration = gantt.calculateDuration(occurrenceEvt.start_date, occurrenceEvt.end_date);
+
         }
         if (changes.length > 0) {
             this.applyUpdates(changes, true);

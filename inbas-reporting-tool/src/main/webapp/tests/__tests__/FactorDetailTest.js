@@ -72,6 +72,7 @@ describe('Tests of the factor dialog', function () {
         expect(factor).toEqual(origFactor);
         detail.onSave();
         expect(factor.end_date).toBeDefined();
-        expect(factor.statement).toEqual(details);
+        expect(factor.statement).toBeDefined();
+        expect(factor.statement.assessment).toEqual(details);
     });
 });
