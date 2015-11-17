@@ -6,18 +6,17 @@ var FactorRenderer = {
     ganttController: GanttController,
 
     jsonObjectMap: {},
+    factorsToIds: {}, // Maps factor objects to the ids assigned by the GanttController
 
     renderFactors: function (investigation) {
         var root = investigation.rootFactor,
             id = Date.now();
         this.ganttController.setOccurrenceEventId(id);
-        var startDate = new Date(root.startTime),
-            endDate = new Date(root.endTime);
         this.ganttController.addFactor({
             id: id,
             text: investigation.occurrence.name,
-            start_date: startDate,
-            end_date: endDate,
+            start_date: new Date(root.startTime),
+            end_date: new Date(root.endTime),
             readonly: true
         }, null);
         if (root.children) {
@@ -25,6 +24,7 @@ var FactorRenderer = {
                 this.addChild(root.children[i], id);
             }
         }
+        this.renderLinks(root);
     },
 
     addChild: function (factor, parentId) {
@@ -36,6 +36,7 @@ var FactorRenderer = {
             parent: parentId,
             statement: factor
         }, parentId);
+        this.factorsToIds[factor] = id;
         if (factor.children) {
             for (var i = 0, len = factor.children.length; i < len; i++) {
                 this.addChild(factor.children[i], id);
@@ -56,6 +57,42 @@ var FactorRenderer = {
             this.jsonObjectMap[factor['@id']] = factor;
         }
         return factor;
+    },
+
+    renderLinks: function (factor) {
+        factor = this.resolveFactorFromJsonId(factor);
+        if (factor.causes) {
+            this.renderCauses(factor);
+        }
+        if (factor.mitigatingFactors) {
+            this.renderMitigatingFactors(factor);
+        }
+        if (factor.children) {
+            for (var i = 0, len = factor.children.length; i < len; i++) {
+                this.renderLinks(factor.children[i]);
+            }
+        }
+    },
+
+    renderCauses: function (factor) {
+        this.addLinks(factor, 'causes', 'cause');
+    },
+
+    addLinks: function(factor, linksField, linkType) {
+        var linkStart, linkStartId;
+        for (var i = 0, len = factor[linksField].length; i < len; i++) {
+            linkStart = this.resolveFactorFromJsonId(factor[linksField][i]);
+            linkStartId = this.factorsToIds[linkStart];
+            this.ganttController.addLink({
+                from: linkStartId,
+                to: this.factorsToIds[factor],
+                factorType: linkType
+            });
+        }
+    },
+
+    renderMitigatingFactors: function(factor) {
+        this.addLinks(factor, 'mitigatingFactors', 'mitigate');
     }
 };
 

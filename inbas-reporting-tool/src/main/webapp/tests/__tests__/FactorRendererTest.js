@@ -142,8 +142,8 @@ describe('FactorRenderer tests', function () {
         verifyNode(investigation.rootFactor.children[0].children[1], firstChildSecondChild, childIds[0]);
     });
 
-    xit('Renders factors with causality relationships using references', function() {
-        var rootId = null, childIds = [];
+    it('Renders factors with causality relationships using references', function() {
+        var rootId = null, childIds = [], ids = {};
         investigation.rootFactor.children = initChildren();
         investigation.rootFactor.children[0].children = initChildren();
         investigation.rootFactor.children[0].children[0]['@id'] = 1;
@@ -153,9 +153,46 @@ describe('FactorRenderer tests', function () {
             if (parentId === rootId) {
                 childIds.push(id);
             }
+            ids[item.statement] = id;
             return id;
         });
         GanttController.setOccurrenceEventId.and.callFake(function(id) {rootId = id});
+        FactorRenderer.renderFactors(investigation);
 
+        expect(GanttController.addLink).toHaveBeenCalled();
+        var arg = GanttController.addLink.calls.argsFor(0)[0];
+        expect(arg.from).toEqual(ids[investigation.rootFactor.children[0].children[0]]);
+        expect(arg.to).toEqual(ids[investigation.rootFactor.children[0].children[1]]);
+        expect(arg.factorType).toEqual('cause');
+    });
+
+    it('Renders factors with mitigation relationships using references', function() {
+        var rootId = null, childIds = [], ids = {};
+        investigation.rootFactor.children = initChildren();
+        investigation.rootFactor.children[0]['@id'] = 1;
+        investigation.rootFactor.children[0].mitigatingFactors = [1];
+        investigation.rootFactor.children[0].children = initChildren();
+        investigation.rootFactor.children[0].children[0]['@id'] = 2;
+        investigation.rootFactor.children[0].children[1].mitigatingFactors = [2];
+        GanttController.addFactor.and.callFake(function(item, parentId) {
+            var id = Date.now();
+            if (parentId === rootId) {
+                childIds.push(id);
+            }
+            ids[item.statement] = id;
+            return id;
+        });
+        GanttController.setOccurrenceEventId.and.callFake(function(id) {rootId = id});
+        FactorRenderer.renderFactors(investigation);
+
+        expect(GanttController.addLink.calls.count()).toEqual(2);
+        var linkOne = GanttController.addLink.calls.argsFor(0)[0],
+            linkTwo = GanttController.addLink.calls.argsFor(1)[0];
+        expect(linkOne.from).toEqual(ids[investigation.rootFactor.children[0]]);
+        expect(linkOne.to).toEqual(ids[investigation.rootFactor.children[1]]);
+        expect(linkOne.factorType).toEqual('mitigate');
+        expect(linkTwo.from).toEqual(ids[investigation.rootFactor.children[0].children[0]]);
+        expect(linkTwo.to).toEqual(ids[investigation.rootFactor.children[0].children[1]]);
+        expect(linkTwo.factorType).toEqual('mitigate');
     });
 });
