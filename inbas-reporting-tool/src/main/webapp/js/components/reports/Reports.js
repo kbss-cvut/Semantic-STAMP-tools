@@ -10,6 +10,7 @@ var Button = require('react-bootstrap').Button;
 
 var ReportsTable = require('./ReportsTable');
 var ReportDetail = require('./ReportDetail');
+var ReportRow = require('./ReportRow');
 var Mask = require('./../Mask');
 
 var Reports = React.createClass({
@@ -38,7 +39,8 @@ var Reports = React.createClass({
         } else {
             return (
                 <div>
-                    <ReportsTable reports={reports} onEditReport={this.props.edit.onEditReport}/>
+                    <ReportsTable reports={reports} onEditReport={this.props.edit.onEditReport}
+                                  rowComponent={ReportRow}/>
 
                     <div className='float-right'>
                         <Button bsStyle='primary' bsSize='small' onClick={this.props.edit.onCreateReport}>Create

@@ -64,7 +64,12 @@ var EventTypeWizardSelect = {
     },
 
     getWizardSettingsForStatement: function (statement) {
-        var wizardProperties = this._getWizardPropertiesByDtoClass(statement.dtoClass);
+        var wizardProperties;
+        if (statement.dtoClass) {
+            wizardProperties = this._getWizardPropertiesByDtoClass(statement.dtoClass);
+        } else {
+            wizardProperties = this._getWizardProperties(statement.eventType);
+        }
         if (wizardProperties) {
             if (statement.conflictingAircraft) {
                 wizardProperties.steps.push({

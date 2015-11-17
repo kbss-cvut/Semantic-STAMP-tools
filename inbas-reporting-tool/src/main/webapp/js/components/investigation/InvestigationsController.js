@@ -8,60 +8,50 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var Actions = require('../../actions/Actions');
-var ReportsStore = require('../../stores/ReportsStore');
+var InvestigationStore = require('../../stores/InvestigationStore');
 var Investigations = require('./Investigations');
 var ReportsTable = require('./../reports/ReportsTable');
 var Mask = require('../Mask');
 
+var Routing = require('../../utils/Routing');
+var Routes = require('../../utils/Routes');
+
 var InvestigationsController = React.createClass({
     mixins: [
-        Reflux.listenTo(ReportsStore, 'onReportsLoaded')
+        Reflux.listenTo(InvestigationStore, 'onInvestigationsLoaded')
     ],
 
     getInitialState: function () {
         return {
-            reports: null,
-            investigations: []
+            investigations: null
         }
     },
 
     componentWillMount: function () {
         Actions.loadInvestigations();
-        Actions.loadReports();
     },
 
-    onReportsLoaded: function (data) {
-        this.setState({reports: data.reports});
+    onInvestigationsLoaded: function (data) {
+        this.setState({investigations: data});
     },
 
-    /**
-     * Gets reports for investigation, i.e. those which are not already being investigated.
-     */
-    getReportsToInvestigate: function () {
-        var reports = this.state.reports;
-        var investigations = this.state.investigations;
-        var len = investigations.length;
-        return reports.filter(function (report) {
-            for (var i = 0; i < len; i++) {
-                if (investigations[i].report.key === report.key) {
-                    return false;
-                }
-            }
-            return true;
+    onEditInvestigation: function (investigation) {
+        Routing.transitionTo(Routes.editInvestigation, {
+            params: {reportKey: investigation.key},
+            handlers: {onCancel: Routes.investigations}
         });
     },
 
     render: function () {
-        if (!this.state.reports) {
+        if (!this.state.investigations) {
             return (
-                <Mask text='Loading reports and investigations'/>
+                <Mask text='Loading investigations'/>
             );
         }
-        var style = {height: '40vh'};
         return (
             <div>
-                <Investigations investigations={this.state.investigations} style={style}/>
-                <ReportsTable reports={this.getReportsToInvestigate()} style={style}/>
+                <Investigations investigations={this.state.investigations}
+                                onEditInvestigation={this.onEditInvestigation}/>
             </div>
         );
     }

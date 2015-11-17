@@ -4,12 +4,25 @@ var Reflux = require('reflux');
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
 
+var investigations = [];
+
 var InvestigationStore = Reflux.createStore({
     listenables: [Actions],
 
     handleError: function (err) {
         var error = JSON.parse(err.response.text);
         console.log(err.status, error.message, error.requestUri);
+    },
+
+    onLoadInvestigations: function () {
+        Ajax.get('rest/investigations').end(function (err, res) {
+            if (err) {
+                this.handleError(err);
+            } else {
+                investigations = res.body;
+                this.trigger(investigations);
+            }
+        }.bind(this));
     },
 
     onCreateInvestigation: function (key, successHandler) {

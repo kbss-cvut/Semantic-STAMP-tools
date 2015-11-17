@@ -3,7 +3,6 @@ package cz.cvut.kbss.inbas.audit.rest.dto.model;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
-import cz.cvut.kbss.inbas.audit.model.reports.Factor;
 import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 
@@ -37,7 +36,7 @@ public class InvestigationReportDto {
 
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    private Factor rootFactor;
+    private FactorDto rootFactor;
 
     public URI getUri() {
         return uri;
@@ -136,11 +135,11 @@ public class InvestigationReportDto {
         this.correctiveMeasures = correctiveMeasures;
     }
 
-    public Factor getRootFactor() {
+    public FactorDto getRootFactor() {
         return rootFactor;
     }
 
-    public void setRootFactor(Factor rootFactor) {
+    public void setRootFactor(FactorDto rootFactor) {
         this.rootFactor = rootFactor;
     }
 

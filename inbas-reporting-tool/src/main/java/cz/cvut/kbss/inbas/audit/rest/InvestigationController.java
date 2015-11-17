@@ -16,6 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/investigations")
 public class InvestigationController extends BaseController {
@@ -28,6 +31,13 @@ public class InvestigationController extends BaseController {
 
     @Autowired
     private ReportMapper reportMapper;
+
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Collection<InvestigationReportDto> getInvestigationReports() {
+        final Collection<InvestigationReport> reports = investigationReportService.findAll();
+        return reports.stream().map(reportMapper::investigationReportToInvestigationReportDto)
+                      .collect(Collectors.toList());
+    }
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)

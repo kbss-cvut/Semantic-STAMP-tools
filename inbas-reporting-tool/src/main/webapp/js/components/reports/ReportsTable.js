@@ -8,11 +8,15 @@ var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 
-var ReportRow = require('./ReportRow');
-
 var ReportsTable = React.createClass({
+
+    propTypes: {
+        reports: React.PropTypes.array.isRequired,
+        rowComponent: React.PropTypes.object.isRequired     // A react component
+    },
+
     render: function () {
-        var title = <h3>Occurrence Reports</h3>;
+        var title = <h3>{this.props.title ? this.props.title : 'Preliminary reports'}</h3>;
         var reports = this.prepareReports();
         return (<div>
             <Panel header={title} bsStyle='primary' {...this.props}>
@@ -32,12 +36,16 @@ var ReportsTable = React.createClass({
             </Panel>
         </div>)
     },
+
     prepareReports: function () {
         var result = [];
         var len = this.props.reports.length;
         for (var i = 0; i < len; i++) {
-            result.push(<ReportRow report={this.props.reports[i]} key={this.props.reports[i].uri}
-                                   onEditReport={this.props.onEditReport}/>);
+            result.push(React.createElement(this.props.rowComponent, {
+                report: this.props.reports[i],
+                key: this.props.reports[i].uri,
+                onEditReport: this.props.onEditReport
+            }));
         }
         return result;
     }
