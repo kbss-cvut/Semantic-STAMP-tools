@@ -176,7 +176,6 @@ var GanttController = {
     onFactorAdded: function (id, factor) {
         var updates = [];
         if (id !== this.occurrenceEventId && !factor.parent) {
-            console.log('Setting parent to occurrence event.');
             factor.parent = this.occurrenceEventId;
         }
         this.extendAncestorsIfNecessary(factor, updates);
