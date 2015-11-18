@@ -1,5 +1,6 @@
 Implement investigation saving
-    - First create a model for the factors structure
+    - Remove obsolete corrective measures on investigation update
+    - Implement cause/mitigation saving
 Implement report revisions
 Set up the Jasmine tests so that they can be run in browser and debugged
 Create proper investigation screen

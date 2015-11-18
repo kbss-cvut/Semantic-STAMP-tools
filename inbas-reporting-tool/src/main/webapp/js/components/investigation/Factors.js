@@ -102,14 +102,19 @@ var Factors = React.createClass({
     },
 
     onDeleteFactor: function () {
-        var factor = this.state.currentFactor;
+        var factor = this.state.currentFactor,
+            parentId = factor.parent;
         this.ganttController.deleteFactor(factor.id);
-        this.removeChildFactorFromParent(factor);
+        this.removeChildFactorFromParent(factor, parentId);
         this.onCloseFactorDialog();
     },
 
-    removeChildFactorFromParent: function(child) {
-        // TODO
+    removeChildFactorFromParent: function(child, parentId) {
+        var parent = this.ganttController.getFactor(parentId),
+            parentFactor = parent.statement,
+            factor = child.statement;
+        var childIndex = parentFactor.children.indexOf(factor);
+        parentFactor.children.splice(childIndex, 1);
     },
 
     onCloseFactorDialog: function () {

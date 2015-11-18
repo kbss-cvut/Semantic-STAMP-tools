@@ -28,7 +28,7 @@ public class Factor {
     @ParticipationConstraints(nonEmpty = true)
     private Date endTime;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasChild, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasChild, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Factor> children;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasCause, fetch = FetchType.EAGER)
@@ -37,7 +37,8 @@ public class Factor {
     @OWLObjectProperty(iri = Vocabulary.p_hasMitigation, fetch = FetchType.EAGER)
     private Set<Factor> mitigatingFactors;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = {CascadeType.REMOVE,
+            CascadeType.MERGE}, fetch = FetchType.EAGER)
     private EventTypeAssessment assessment;
 
     public Factor() {
@@ -72,14 +73,14 @@ public class Factor {
     }
 
     public Set<Factor> getChildren() {
+        if (children == null) {
+            this.children = new HashSet<>();
+        }
         return children;
     }
 
     public void addChild(Factor child) {
-        if (children == null) {
-            this.children = new HashSet<>();
-        }
-        children.add(child);
+        getChildren().add(child);
     }
 
     public void setChildren(Set<Factor> children) {

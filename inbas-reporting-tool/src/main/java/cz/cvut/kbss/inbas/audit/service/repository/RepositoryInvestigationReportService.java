@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.service.repository;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
+import cz.cvut.kbss.inbas.audit.persistence.dao.FactorDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;
@@ -10,10 +11,8 @@ import cz.cvut.kbss.inbas.audit.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.net.URI;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -26,6 +25,8 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
     @Autowired
     private Validator<PreliminaryReport> preliminaryReportValidator;
 
+    @Autowired
+    private FactorDao factorDao;
     @Autowired
     private InvestigationReportDao investigationReportDao;
 
@@ -101,5 +102,35 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
             }
         }
         return root;
+    }
+
+    @Override
+    public void update(InvestigationReport instance) {
+        instance.setLastEdited(new Date());
+        instance.setLastEditedBy(securityUtils.getCurrentUser());
+        final InvestigationReport original = find(instance.getUri());
+        final Collection<Factor> factorsToRemove = new HashSet<>();
+        removeObsoleteFactors(original.getRootFactor(), instance.getRootFactor(), factorsToRemove);
+        super.update(instance);
+        if (!factorsToRemove.isEmpty()) {
+            factorDao.remove(factorsToRemove);
+        }
+    }
+
+    private void removeObsoleteFactors(Factor originalRoot, Factor root, Collection<Factor> toRemove) {
+        if (originalRoot.getChildren().isEmpty()) {
+            return;
+        }
+        final Map<URI, Factor> updated = new HashMap<>(root.getChildren().size());
+        for (Factor orig : root.getChildren()) {
+            updated.put(orig.getUri(), orig);
+        }
+        for (Factor child : originalRoot.getChildren()) {
+            if (!updated.containsKey(child.getUri())) {
+                toRemove.add(child);
+            } else {
+                removeObsoleteFactors(child, updated.get(child.getUri()), toRemove);
+            }
+        }
     }
 }

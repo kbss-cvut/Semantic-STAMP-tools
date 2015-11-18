@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class Environment {
 
+    private static Person currentUser;
+
     private Environment() {
         throw new AssertionError();
     }
@@ -19,9 +21,14 @@ public class Environment {
      * @param user User to set as currently authenticated
      */
     public static void setCurrentUser(Person user) {
+        currentUser = user;
         final UserDetails userDetails = new UserDetails(user);
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(new AuthenticationToken(userDetails.getAuthorities(), userDetails));
         SecurityContextHolder.setContext(context);
+    }
+
+    public static Person getCurrentUser() {
+        return currentUser;
     }
 }

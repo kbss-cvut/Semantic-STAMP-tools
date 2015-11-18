@@ -9,9 +9,15 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
 import cz.cvut.kbss.inbas.audit.service.repository.RepositoryInvestigationReportService;
+import cz.cvut.kbss.inbas.audit.util.Vocabulary;
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.net.URI;
+import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
@@ -24,6 +30,9 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
 
     @Autowired
     private RepositoryInvestigationReportService service;
+
+    @Autowired
+    private EntityManagerFactory emf;
 
     @Before
     public void setUp() throws Exception {
@@ -127,5 +136,70 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         assertNotNull(result.getRootFactor());
         assertEquals(report.getOccurrence().getStartTime(), result.getRootFactor().getStartTime());
         assertEquals(report.getOccurrence().getEndTime(), result.getRootFactor().getEndTime());
+    }
+
+    @Test
+    public void updateSetsLastEditedAndLastEditedByFields() throws Exception {
+        final InvestigationReport toUpdate = createInvestigation(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        assertNull(toUpdate.getLastEditedBy());
+        assertNull(toUpdate.getLastEdited());
+        toUpdate.getOccurrence().setName("Updated name");
+
+        service.update(toUpdate);
+        final InvestigationReport result = service.find(toUpdate.getUri());
+        assertNotNull(result);
+        assertNotNull(result.getLastEdited());
+        assertNotNull(result.getLastEditedBy());
+        assertTrue(Environment.getCurrentUser().valueEquals(result.getLastEditedBy()));
+        assertEquals(toUpdate.getOccurrence().getName(), result.getOccurrence().getName());
+    }
+
+    private InvestigationReport createInvestigation(Generator.ReportType type) {
+        final PreliminaryReport report = Generator
+                .generatePreliminaryReport(type);
+        preliminaryReportDao.persist(report);
+        return service.createFromPreliminaryReport(report);
+    }
+
+    @Test
+    public void removesObsoleteFactorsOnUpdate() throws Exception {
+        final InvestigationReport toUpdate = createInvestigation(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        boolean remove = true;
+        final Iterator<Factor> it = toUpdate.getRootFactor().getChildren().iterator();
+        while (it.hasNext()) {
+            it.next();
+            if (remove) {
+                it.remove();
+                remove = false;
+            } else {
+                remove = true;
+            }
+        }
+        service.update(toUpdate);
+        final InvestigationReport result = service.find(toUpdate.getUri());
+        assertEquals(toUpdate.getRootFactor().getChildren().size(), result.getRootFactor().getChildren().size());
+        final int factorCount = countFactorsInHierarchy(toUpdate.getRootFactor());
+        final int factorsInRepo = countFactorsInRepo();
+        assertEquals(factorCount, factorsInRepo);
+    }
+
+    private int countFactorsInHierarchy(Factor root) {
+        int count = 1;
+        if (root.getChildren() != null) {
+            for (Factor f : root.getChildren()) {
+                count += (countFactorsInHierarchy(f));
+            }
+        }
+        return count;
+    }
+
+    private int countFactorsInRepo() {
+        final EntityManager em = emf.createEntityManager();
+        try {
+            return em.createNativeQuery("SELECT ?x WHERE { ?x a ?type . }").setParameter("type",
+                    URI.create(Vocabulary.Factor)).getResultList().size();
+        } finally {
+            em.close();
+        }
     }
 }
