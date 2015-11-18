@@ -74,19 +74,19 @@ var AircraftIntruder = React.createClass({
                 <Panel header='Aircraft Event'>
                     <div className='row'>
                         <div className='col-xs-6'>
-                            <Input type='text' label='Call Sign' name='callSign' value={intruder.callSign}
+                            <Input type='text' label='Call Sign' name='callSign' tabIndex='3' value={intruder.callSign}
                                    onChange={this.props.onChange}/>
                         </div>
                         <div className='col-xs-6'>
-                            <OperatorTypeahead name='operator' value={operator}
+                            <OperatorTypeahead name='operator' value={operator} tabIndex='4'
                                                onChange={this.onOperatorChange}/>
                         </div>
                     </div>
                     <div>
-                        <Input type='radio' label='Flight' value='flight'
+                        <Input type='radio' label='Flight' value='flight' tabIndex='5'
                                checked={intruder.aircraftEventType === 'flight'}
                                onChange={this.onAircraftEventTypeSelect} wrapperClassName='col-xs-2'/>
-                        <Input type='radio' label='Non Flight' value='nonflight'
+                        <Input type='radio' label='Non Flight' value='nonflight' tabIndex='6'
                                checked={intruder.aircraftEventType === 'nonflight'}
                                onChange={this.onAircraftEventTypeSelect} wrapperClassName='col-xs-2'/>
                     </div>
@@ -134,13 +134,13 @@ var AircraftIntruder = React.createClass({
             <Panel header='Aviation Operation'>
                 <div className='row'>
                     <div className='col-xs-6'>
-                        <Input type='text' label='Flight Number' name='flightNumber'
+                        <Input type='text' label='Flight Number' name='flightNumber' tabIndex='7'
                                value={intruder.flightNumber} onChange={this.props.onChange}/>
                     </div>
                 </div>
                 <div className='row'>
                     <div className='col-xs-6'>
-                        <Select label='Phase' value={intruder.flightPhase} onChange={this.onPhaseChange}
+                        <Select label='Phase' value={intruder.flightPhase} onChange={this.onPhaseChange} tabIndex='8'
                                 title='What was the aircraft doing?' options={phaseOptions}/>
                     </div>
                     <div className='col-xs-6'>

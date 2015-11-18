@@ -38,12 +38,12 @@ var AircraftRegistration = React.createClass({
                     <Panel ref='panel'>
                         <div className='row'>
                             <div className='col-xs-6'>
-                                <Input type='text' label={registrationLabel} name='registration'
+                                <Input type='text' label={registrationLabel} name='registration' tabIndex='1'
                                        value={this.props.registration} onChange={this.props.onChange}
                                        title='Aircraft registration'/>
                             </div>
                             <div className='col-xs-6'>
-                                <Input type='text' label={stateLabel} name='stateOfRegistry'
+                                <Input type='text' label={stateLabel} name='stateOfRegistry' tabIndex='2'
                                        value={this.props.stateOfRegistry} onChange={this.props.onChange}
                                        title='Aircraft state of registry'/>
                             </div>
