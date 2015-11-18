@@ -12,6 +12,7 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.InvestigationReport)
@@ -152,6 +153,9 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
     }
 
     public Set<CorrectiveMeasure> getCorrectiveMeasures() {
+        if (correctiveMeasures == null) {
+            this.correctiveMeasures = new HashSet<>();
+        }
         return correctiveMeasures;
     }
 

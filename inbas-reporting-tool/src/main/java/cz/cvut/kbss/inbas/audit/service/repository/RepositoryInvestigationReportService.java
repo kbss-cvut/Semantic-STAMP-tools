@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.service.repository;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
+import cz.cvut.kbss.inbas.audit.persistence.dao.CorrectiveMeasureDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.FactorDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
@@ -25,6 +26,8 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
     @Autowired
     private Validator<PreliminaryReport> preliminaryReportValidator;
 
+    @Autowired
+    private CorrectiveMeasureDao correctiveMeasureDao;
     @Autowired
     private FactorDao factorDao;
     @Autowired
@@ -109,15 +112,20 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         instance.setLastEdited(new Date());
         instance.setLastEditedBy(securityUtils.getCurrentUser());
         final InvestigationReport original = find(instance.getUri());
-        final Collection<Factor> factorsToRemove = new HashSet<>();
-        removeObsoleteFactors(original.getRootFactor(), instance.getRootFactor(), factorsToRemove);
         super.update(instance);
+        removeObsoleteFactors(original, instance);
+        removeObsoleteCorrectiveMeasures(original, instance);
+    }
+
+    private void removeObsoleteFactors(InvestigationReport original, InvestigationReport update) {
+        final Collection<Factor> factorsToRemove = new HashSet<>();
+        getFactorsToRemove(original.getRootFactor(), update.getRootFactor(), factorsToRemove);
         if (!factorsToRemove.isEmpty()) {
             factorDao.remove(factorsToRemove);
         }
     }
 
-    private void removeObsoleteFactors(Factor originalRoot, Factor root, Collection<Factor> toRemove) {
+    private void getFactorsToRemove(Factor originalRoot, Factor root, Collection<Factor> toRemove) {
         if (originalRoot.getChildren().isEmpty()) {
             return;
         }
@@ -129,8 +137,20 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
             if (!updated.containsKey(child.getUri())) {
                 toRemove.add(child);
             } else {
-                removeObsoleteFactors(child, updated.get(child.getUri()), toRemove);
+                getFactorsToRemove(child, updated.get(child.getUri()), toRemove);
             }
         }
+    }
+
+    private void removeObsoleteCorrectiveMeasures(InvestigationReport original, InvestigationReport update) {
+        if (original.getCorrectiveMeasures().isEmpty()) {
+            return;
+        }
+        final Set<CorrectiveMeasure> toRemove = new HashSet<>();
+        final Set<URI> uris = update.getCorrectiveMeasures().stream().map(CorrectiveMeasure::getUri)
+                                    .collect(Collectors.toSet());
+        toRemove.addAll(original.getCorrectiveMeasures().stream().filter(cm -> !uris.contains(cm.getUri())).collect(
+                Collectors.toList()));
+        correctiveMeasureDao.remove(toRemove);
     }
 }

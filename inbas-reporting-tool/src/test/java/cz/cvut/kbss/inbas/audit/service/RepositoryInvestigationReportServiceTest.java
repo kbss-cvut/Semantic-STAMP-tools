@@ -164,8 +164,18 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
     @Test
     public void removesObsoleteFactorsOnUpdate() throws Exception {
         final InvestigationReport toUpdate = createInvestigation(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
-        boolean remove = true;
         final Iterator<Factor> it = toUpdate.getRootFactor().getChildren().iterator();
+        removeEveryOther(it);
+        service.update(toUpdate);
+        final InvestigationReport result = service.find(toUpdate.getUri());
+        assertEquals(toUpdate.getRootFactor().getChildren().size(), result.getRootFactor().getChildren().size());
+        final int factorCount = countFactorsInHierarchy(toUpdate.getRootFactor());
+        final int factorsInRepo = countInstancesInRepo(URI.create(Vocabulary.Factor));
+        assertEquals(factorCount, factorsInRepo);
+    }
+
+    private void removeEveryOther(Iterator<?> it) {
+        boolean remove = true;
         while (it.hasNext()) {
             it.next();
             if (remove) {
@@ -175,12 +185,6 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
                 remove = true;
             }
         }
-        service.update(toUpdate);
-        final InvestigationReport result = service.find(toUpdate.getUri());
-        assertEquals(toUpdate.getRootFactor().getChildren().size(), result.getRootFactor().getChildren().size());
-        final int factorCount = countFactorsInHierarchy(toUpdate.getRootFactor());
-        final int factorsInRepo = countFactorsInRepo();
-        assertEquals(factorCount, factorsInRepo);
     }
 
     private int countFactorsInHierarchy(Factor root) {
@@ -193,13 +197,47 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         return count;
     }
 
-    private int countFactorsInRepo() {
+    private int countInstancesInRepo(URI type) {
         final EntityManager em = emf.createEntityManager();
         try {
-            return em.createNativeQuery("SELECT ?x WHERE { ?x a ?type . }").setParameter("type",
-                    URI.create(Vocabulary.Factor)).getResultList().size();
+            return em.createNativeQuery("SELECT ?x WHERE { ?x a ?type . }").setParameter("type", type).getResultList()
+                     .size();
         } finally {
             em.close();
         }
+    }
+
+    @Test
+    public void updateRemovesObsoleteCorrectiveMeasures() throws Exception {
+        final InvestigationReport toUpdate = createInvestigation(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        final Iterator<CorrectiveMeasure> it = toUpdate.getCorrectiveMeasures().iterator();
+        removeEveryOther(it);
+        service.update(toUpdate);
+
+        final InvestigationReport result = service.find(toUpdate.getUri());
+        assertEquals(toUpdate.getCorrectiveMeasures().size(), result.getCorrectiveMeasures().size());
+        assertEquals(toUpdate.getCorrectiveMeasures().size(), countCorrectiveMeasures(result));
+    }
+
+    private int countCorrectiveMeasures(InvestigationReport owner) {
+        final EntityManager em = emf.createEntityManager();
+        try {
+            return em.createNativeQuery("SELECT ?x WHERE { ?owner <" + Vocabulary.p_hasCorrectiveMeasure + "> ?x . }")
+                     .setParameter("owner", owner.getUri()).getResultList()
+                     .size();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void updatePersistsNewlyAddedCorrectiveMeasures() throws Exception {
+        final InvestigationReport toUpdate = createInvestigation(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        toUpdate.getCorrectiveMeasures().add(new CorrectiveMeasure("Added corrective measure number 1."));
+        toUpdate.getCorrectiveMeasures().add(new CorrectiveMeasure("Added corrective measure number 2."));
+
+        service.update(toUpdate);
+        final InvestigationReport result = service.find(toUpdate.getUri());
+        assertEquals(toUpdate.getCorrectiveMeasures().size(), result.getCorrectiveMeasures().size());
     }
 }
