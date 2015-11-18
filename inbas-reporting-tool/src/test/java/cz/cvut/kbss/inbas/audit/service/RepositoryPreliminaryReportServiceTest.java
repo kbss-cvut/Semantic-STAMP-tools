@@ -23,7 +23,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class PreliminaryReportServiceTest extends BaseServiceTestRunner {
+public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunner {
 
     private Person author;
 

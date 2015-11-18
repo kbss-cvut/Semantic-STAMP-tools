@@ -56,7 +56,8 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
     @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, cascade = {CascadeType.MERGE,
+            CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Factor rootFactor;
 
     public InvestigationReport() {
@@ -203,6 +204,7 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
                 ", author=" + author +
                 ", revision=" + revision +
                 ", occurrence=" + occurrence +
+                ", summary=" + summary +
                 '}';
     }
 

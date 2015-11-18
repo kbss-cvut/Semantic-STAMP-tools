@@ -62,7 +62,7 @@ public class InvestigationController extends BaseController {
         final InvestigationReport update = reportMapper.investigationReportDtoToInvestigationReport(data);
         investigationReportService.update(update);
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Updated investigation report " + update);
+            LOG.trace("Updated investigation report {}", update);
         }
     }
 
@@ -93,5 +93,13 @@ public class InvestigationController extends BaseController {
         final HttpHeaders headers = RestUtils.createLocationHeader("/{key}", investigation.getKey());
         LOG.debug("Investigation successfully created. URI: {}", investigation.getUri());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{key}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeInvestigation(@PathVariable("key") String key) {
+        final InvestigationReport toRemove = getReport(key);
+        investigationReportService.remove(toRemove);
+        LOG.debug("Investigation removed: {}", toRemove);
     }
 }

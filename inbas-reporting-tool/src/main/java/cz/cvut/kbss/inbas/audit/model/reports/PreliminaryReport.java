@@ -199,6 +199,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, Report {
                 ", author=" + author +
                 ", revision=" + revision +
                 ", occurrence=" + occurrence +
+                ", summary=" + summary +
                 '}';
     }
 

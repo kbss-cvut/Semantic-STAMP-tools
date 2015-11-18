@@ -240,4 +240,19 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         final InvestigationReport result = service.find(toUpdate.getUri());
         assertEquals(toUpdate.getCorrectiveMeasures().size(), result.getCorrectiveMeasures().size());
     }
+
+    @Test
+    public void removeDeletesAllFactorsAndCleansUpAfterInvestigation() throws Exception {
+        final InvestigationReport toRemove = createInvestigation(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+
+        service.remove(toRemove);
+        final EntityManager em = emf.createEntityManager();
+        try {
+            final boolean res = em.createNativeQuery("ASK WHERE { ?instance ?x ?y . }", Boolean.class)
+                                  .setParameter("instance", toRemove.getUri()).getSingleResult();
+            assertFalse(res);
+        } finally {
+            em.close();
+        }
+    }
 }
