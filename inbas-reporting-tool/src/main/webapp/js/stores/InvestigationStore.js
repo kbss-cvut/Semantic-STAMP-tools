@@ -60,6 +60,16 @@ var InvestigationStore = Reflux.createStore({
                 successHandler();
             }
         }.bind(this));
+    },
+
+    onDeleteInvestigation: function(investigation) {
+        Ajax.del('rest/investigations/' + investigation.key).end(function(err) {
+            if (err) {
+                this.handleError(err);
+            } else {
+                this.onLoadInvestigations();
+            }
+        }.bind(this));
     }
 });
 

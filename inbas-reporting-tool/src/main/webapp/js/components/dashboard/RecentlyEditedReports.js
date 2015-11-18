@@ -26,7 +26,7 @@ var RecentlyEditedReports = React.createClass({
     },
 
     render: function () {
-        var title = (<h5>Recently Edited/Added Reports</h5>),
+        var title = (<h5>Recently Edited/Added Preliminary Reports</h5>),
             recentReports = this.renderRecentReports(this.filterRecentReports()),
             content = null;
         if (recentReports.length > 0) {

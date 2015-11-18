@@ -28,7 +28,7 @@ public class Factor {
     @ParticipationConstraints(nonEmpty = true)
     private Date endTime;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasChild, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasChild, cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Set<Factor> children;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasCause, fetch = FetchType.EAGER)

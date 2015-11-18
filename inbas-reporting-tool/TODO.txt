@@ -1,5 +1,6 @@
 Implement investigation saving
     - Implement cause/mitigation saving
+    - Prevent cycles in cause/mitigation relationships
 Implement report revisions
 Set up the Jasmine tests so that they can be run in browser and debugged
 Create proper investigation screen

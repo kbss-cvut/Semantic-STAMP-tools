@@ -10,7 +10,6 @@ var Reflux = require('reflux');
 var Actions = require('../../actions/Actions');
 var InvestigationStore = require('../../stores/InvestigationStore');
 var Investigations = require('./Investigations');
-var ReportsTable = require('./../reports/ReportsTable');
 var Mask = require('../Mask');
 
 var Routing = require('../../utils/Routing');
