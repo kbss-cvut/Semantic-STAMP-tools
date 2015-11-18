@@ -146,7 +146,7 @@ public class EventTypeJsonLdTransformer {
     }
 
     private void endArray(JsonGenerator generator) throws IOException {
-        if (currentKey.equals(TYPE_KEY)) {
+        if (currentKey != null && currentKey.equals(TYPE_KEY)) {
             this.inArray = false;
             if (arrayValues.isEmpty()) {
                 return;

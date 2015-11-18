@@ -45,6 +45,7 @@ class EventTypeOptionsService implements OptionsService {
         headers.set("Accept", "application/ld+json");
         final HttpEntity<Object> entity = new HttpEntity<>(null, headers);
         final RestTemplate restTemplate = new RestTemplate();
+        LOG.debug("Using query {}", urlWithQuery.toString());
         try {
             final ResponseEntity<String> result = restTemplate.exchange(urlWithQuery, HttpMethod.GET, entity,
                     String.class);
