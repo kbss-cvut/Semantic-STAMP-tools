@@ -12,7 +12,7 @@ var ReportsTable = React.createClass({
 
     propTypes: {
         reports: React.PropTypes.array.isRequired,
-        rowComponent: React.PropTypes.object.isRequired     // A react component
+        rowComponent: React.PropTypes.func.isRequired     // A react component
     },
 
     render: function () {

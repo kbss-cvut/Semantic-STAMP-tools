@@ -73,8 +73,9 @@ public class MappersTest {
         final EventTypeAssessmentDto result = reportMapper
                 .eventTypeAssessmentToEventTypeAssessmentDto(assessment);
         assertNotNull(result);
-        assertEquals(assessment.getRunwayIncursion().getUri(), result.getUri());
+        assertEquals(assessment.getUri(), result.getUri());
         assertTrue(result instanceof RunwayIncursionDto);
+        assertEquals(assessment.getRunwayIncursion().getUri(), ((RunwayIncursionDto) result).getIncursionUri());
         final RunwayIncursionDto ri =
                 (RunwayIncursionDto) result;
         assertEquals(assessment.getEventType().getId(), ri.getEventType().getId());

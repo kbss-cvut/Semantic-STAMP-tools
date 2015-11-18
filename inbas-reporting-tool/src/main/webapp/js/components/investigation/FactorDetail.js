@@ -120,6 +120,8 @@ var FactorDetail = React.createClass({
         factor.text = this.state.eventType.name;
         factor.start_date = new Date(this.state.startDate);
         factor.end_date = gantt.calculateEndDate(factor.start_date, this.state.duration, gantt.config.duration_unit);
+        factor.statement.startTime = this.state.startDate;
+        factor.statement.endTime = factor.end_date.getTime();
         this.props.onSave();
     },
 

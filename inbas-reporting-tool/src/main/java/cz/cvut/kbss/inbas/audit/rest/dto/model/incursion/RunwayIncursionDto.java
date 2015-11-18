@@ -5,10 +5,12 @@ import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessmentDto;
 
-/**
- * @author ledvima1
- */
+import java.net.URI;
+
 public class RunwayIncursionDto extends EventTypeAssessmentDto {
+
+    // Store incursion URI, so that new type assessments are not stored on every update
+    private URI incursionUri;
 
     private LowVisibilityProcedure lvp;
 
@@ -17,6 +19,14 @@ public class RunwayIncursionDto extends EventTypeAssessmentDto {
     private Aircraft conflictingAircraft;
 
     private RunwayIntruderDto intruder;
+
+    public URI getIncursionUri() {
+        return incursionUri;
+    }
+
+    public void setIncursionUri(URI incursionUri) {
+        this.incursionUri = incursionUri;
+    }
 
     public LowVisibilityProcedure getLvp() {
         return lvp;

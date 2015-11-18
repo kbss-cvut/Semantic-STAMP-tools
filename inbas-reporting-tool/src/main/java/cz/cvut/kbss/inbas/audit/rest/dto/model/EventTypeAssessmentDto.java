@@ -5,9 +5,6 @@ import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 
 import java.net.URI;
 
-/**
- * @author ledvima1
- */
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "dtoClass", defaultImpl = GeneralEventDto.class)
 public class EventTypeAssessmentDto {
 

@@ -42,6 +42,7 @@ public abstract class ReportMapper {
         final EventTypeAssessmentDto result;
         if (assessment.getRunwayIncursion() != null) {
             result = runwayIncursionToRunwayIncursionDto(assessment.getRunwayIncursion());
+            result.setUri(assessment.getUri());
             result.setEventType(assessment.getEventType());
         } else {
             result = new GeneralEventDto(assessment);
@@ -54,6 +55,7 @@ public abstract class ReportMapper {
             return generalEventDtoToEventTypeAssessment((GeneralEventDto) dto);
         } else if (dto instanceof RunwayIncursionDto) {
             final EventTypeAssessment eta = new EventTypeAssessment();
+            eta.setUri(dto.getUri());
             eta.setRunwayIncursion(runwayIncursionDtoToRunwayIncursion((RunwayIncursionDto) dto));
             eta.setEventType(dto.getEventType());
             return eta;
@@ -63,7 +65,10 @@ public abstract class ReportMapper {
 
     public abstract EventTypeAssessment generalEventDtoToEventTypeAssessment(GeneralEventDto dto);
 
-    @Mapping(target = "lvp", source = "lowVisibilityProcedure")
+    @Mappings({
+            @Mapping(target = "lvp", source = "lowVisibilityProcedure"),
+            @Mapping(target = "incursionUri", source = "uri")
+    })
     public abstract RunwayIncursionDto runwayIncursionToRunwayIncursionDto(RunwayIncursion incursion);
 
     @InheritInverseConfiguration

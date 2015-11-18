@@ -85,6 +85,7 @@ var Factors = React.createClass({
         var factor = this.state.currentFactor;
         if (factor.isNew) {
             delete factor.isNew;
+            this.addChildFactorToParent(factor);
             this.ganttController.addFactor(factor);
         } else {
             this.ganttController.updateFactor(factor);
@@ -92,10 +93,23 @@ var Factors = React.createClass({
         this.onCloseFactorDialog();
     },
 
+    addChildFactorToParent: function(child) {
+        var parent = this.ganttController.getFactor(child.parent);
+        if (!parent.statement.children) {
+            parent.statement.children = [];
+        }
+        parent.statement.children.push(child.statement);
+    },
+
     onDeleteFactor: function () {
         var factor = this.state.currentFactor;
         this.ganttController.deleteFactor(factor.id);
+        this.removeChildFactorFromParent(factor);
         this.onCloseFactorDialog();
+    },
+
+    removeChildFactorFromParent: function(child) {
+        // TODO
     },
 
     onCloseFactorDialog: function () {
@@ -130,8 +144,24 @@ var Factors = React.createClass({
         var occurrence = this.props.investigation.occurrence;
         occurrence.startTime = startTime;
         occurrence.endTime = endTime;
-        // End time is not supported by occurrences, yet
         this.props.onAttributeChange('occurrence', occurrence);
+    },
+
+    getFactorHierarchy: function() {
+        var root = this.ganttController.getFactor(this.ganttController.occurrenceEventId).statement;
+        root.children = this._getChildren(this.ganttController.occurrenceEventId);
+        return root;
+    },
+
+    _getChildren: function(parentId) {
+        var childFactors = this.ganttController.getChildren(parentId),
+            children = [];
+        for (var i = 0, len = childFactors.length; i < len; i++) {
+            var statement = childFactors[i].statement;
+            statement.children = this._getChildren(childFactors[i].id);
+            children.push(statement);
+        }
+        return children;
     },
 
 

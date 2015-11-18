@@ -26,7 +26,11 @@ public class FactorDao extends BaseDao<Factor> {
     @Override
     protected void update(Factor factor, EntityManager em) {
         if (factor.getAssessment() != null) {
-            typeAssessmentDao.update(factor.getAssessment(), em);
+            if (factor.getAssessment().getUri() == null) {
+                typeAssessmentDao.persist(factor.getAssessment(), em);
+            } else {
+                typeAssessmentDao.update(factor.getAssessment(), em);
+            }
         }
         em.merge(factor);
     }

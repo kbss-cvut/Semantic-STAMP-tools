@@ -122,7 +122,7 @@ var GanttController = {
         };
         gantt.templates.task_class = function (start, end, task) {
             var eventType;
-            if (!task.statement) {
+            if (!task.statement.assessment) {
                 return 'factor-occurrence-event';
             }
             eventType = task.statement.assessment.eventType;
@@ -134,7 +134,7 @@ var GanttController = {
         };
         gantt.templates.tooltip_text = function (start, end, task) {
             var tooltip = '<b>' + task.text + '</b><br/>';
-            if (task.statement) {
+            if (task.statement.assessment) {
                 tooltip += task.statement.assessment.eventType.type + '<br/>';
             }
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
@@ -176,6 +176,7 @@ var GanttController = {
     onFactorAdded: function (id, factor) {
         var updates = [];
         if (id !== this.occurrenceEventId && !factor.parent) {
+            console.log('Setting parent to occurrence event.');
             factor.parent = this.occurrenceEventId;
         }
         this.extendAncestorsIfNecessary(factor, updates);
@@ -377,6 +378,18 @@ var GanttController = {
 
     getFactor: function (factorId) {
         return gantt.getTask(factorId);
+    },
+
+    getChildren: function(factorId) {
+        var childIds = gantt.getChildren(factorId);
+        var children = [];
+        for (var i = 0, len = childIds.length; i < len; i++) {
+            var task = gantt.getTask(childIds[i]);
+            task.statement.startTime = task.start_date.getTime();
+            task.statement.endTime = task.end_date.getTime();
+            children.push(task);
+        }
+        return children;
     },
 
     expandSubtree: function (rootId) {

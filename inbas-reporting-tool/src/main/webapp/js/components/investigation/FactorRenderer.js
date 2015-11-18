@@ -17,6 +17,7 @@ var FactorRenderer = {
             text: investigation.occurrence.name,
             start_date: new Date(root.startTime),
             end_date: new Date(root.endTime),
+            statement: root,
             readonly: true
         }, null);
         if (root.children) {

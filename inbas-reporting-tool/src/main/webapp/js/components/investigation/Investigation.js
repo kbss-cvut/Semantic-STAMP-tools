@@ -41,6 +41,7 @@ var Investigation = React.createClass({
         var investigation = this.props.investigation;
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
+        investigation.rootFactor = this.refs.factors.getFactorHierarchy();
         Actions.updateInvestigation(investigation, this.onSubmitSuccess, this.onSubmitError);
     },
 
@@ -86,7 +87,7 @@ var Investigation = React.createClass({
                     </div>
 
                     <div>
-                        <Factors investigation={investigation} onAttributeChange={this.onAttributeChange}/>
+                        <Factors ref='factors' investigation={investigation} onAttributeChange={this.onAttributeChange}/>
                     </div>
 
                     <div className='form-group'>
