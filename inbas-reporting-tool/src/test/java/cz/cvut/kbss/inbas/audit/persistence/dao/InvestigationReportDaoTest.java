@@ -8,7 +8,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
-import cz.cvut.kbss.inbas.audit.service.options.FileOptionsLoader;
+import cz.cvut.kbss.inbas.audit.util.FileDataLoader;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Before;
@@ -69,7 +69,7 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
     }
 
     private InvestigationReport loadReport(String fileName) throws Exception {
-        final String json = new FileOptionsLoader().load(fileName);
+        final String json = new FileDataLoader().load(fileName);
         return objectMapper
                 .readValue(json, InvestigationReport.class);
     }

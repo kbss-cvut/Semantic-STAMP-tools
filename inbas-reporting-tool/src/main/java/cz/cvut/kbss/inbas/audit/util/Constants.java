@@ -20,4 +20,16 @@ public final class Constants {
      * Initial revision number for reports.
      */
     public static final Integer INITIAL_REVISION = 1;
+
+    /**
+     * UTF-8 encoding identifier.
+     */
+    public static final String UTF_8_ENCODING = "UTF-8";
+
+    // Query files
+
+    /**
+     * File with a query for getting event types.
+     */
+    public static final String EVENT_TYPE_QUERY_FILE = "query/eventType.sparql";
 }

@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service.options;
 
 import cz.cvut.kbss.inbas.audit.rest.dto.model.RawJson;
+import cz.cvut.kbss.inbas.audit.util.FileDataLoader;
 import org.springframework.stereotype.Service;
 
 @Service("operator")
@@ -17,6 +18,6 @@ class OperatorsOptionsService implements OptionsService {
     }
 
     private void loadOperators() {
-        this.operators = new FileOptionsLoader().load("operators.json");
+        this.operators = new FileDataLoader().load("operators.json");
     }
 }
