@@ -242,7 +242,22 @@ var GanttController = {
 
     ensureNonZeroDuration: function (event) {
         if (gantt.calculateDuration(event.start_date, event.end_date) < 1) {
-            event.end_date = gantt.calculateEndDate(event.start_date, 1, gantt.config.scale_unit);
+            var parentId = event.parent;
+            if (!parentId) {
+                event.end_date = gantt.calculateEndDate(event.start_date, 1, gantt.config.scale_unit);
+            }
+            var parent = gantt.getTask(parentId);
+            if (event.start_date === parent.start_date) {
+                event.end_date = gantt.calculateEndDate(event.start_date, 1, gantt.config.scale_unit);
+            } else {
+                var start = parent.end_date,
+                    end = gantt.calculateEndDate(start, 1, gantt.config.scale_unit);
+                // Calculate length of one unit
+                // And then move the event so that its end is the same as its parent's
+                event.start_date = new Date(start.getTime() - (end.getTime() - start.getTime()));
+                event.end_date = start;
+            }
+
         }
     },
 
@@ -325,24 +340,20 @@ var GanttController = {
             return;
         }
         var occurrenceEvt = gantt.getTask(this.occurrenceEventId),
-            changes = [];
+            updates = [];
         if (occurrenceEvt.text !== occurrence.name) {
             occurrenceEvt.text = occurrence.name;
-            changes.push(this.occurrenceEventId);
+            updates.push(this.occurrenceEventId);
         }
-        if (occurrenceEvt.start_date.getTime() !== occurrence.startTime) {
-            changes.push(this.occurrenceEventId);
-            var timeDiff = occurrence.startTime - occurrenceEvt.start_date.getTime();
-            this.moveFactor(occurrenceEvt.id, timeDiff, changes);
-        }
-        if (occurrenceEvt.end_date.getTime() !== occurrence.endTime) {
-            changes.push(this.occurrenceEventId);
+        if (occurrenceEvt.start_date.getTime() !== occurrence.startTime || occurrenceEvt.end_date.getTime() !== occurrence.endTime) {
+            occurrenceEvt.start_date = new Date(occurrence.startTime);
             occurrenceEvt.end_date = new Date(occurrence.endTime);
             occurrenceEvt.duration = gantt.calculateDuration(occurrenceEvt.start_date, occurrenceEvt.end_date);
-
+            this.ensureNonZeroDuration(occurrenceEvt);
+            this.updateDescendantsTimeInterval(occurrenceEvt, updates);
         }
-        if (changes.length > 0) {
-            this.applyUpdates(changes, true);
+        if (updates.length > 0) {
+            this.applyUpdates(updates, true);
         }
     },
 
@@ -379,7 +390,7 @@ var GanttController = {
         return gantt.getTask(factorId);
     },
 
-    getChildren: function(factorId) {
+    getChildren: function (factorId) {
         var childIds = gantt.getChildren(factorId);
         var children = [];
         for (var i = 0, len = childIds.length; i < len; i++) {
@@ -393,6 +404,10 @@ var GanttController = {
 
     expandSubtree: function (rootId) {
         gantt.open(rootId);
+        var children = gantt.getChildren(rootId);
+        for (var i = 0, len = children.length; i < len; i++) {
+            this.expandSubtree(children[i]);
+        }
     },
 
     deleteLink: function (linkId) {
