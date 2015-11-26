@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.Factor;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
@@ -11,7 +11,6 @@ import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.inbas.audit.util.FileDataLoader;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +20,7 @@ import static org.junit.Assert.*;
 
 public class InvestigationReportDaoTest extends BaseDaoTestRunner {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = Environment.getObjectMapper();
 
     @Autowired
     private PersonDao personDao;
@@ -32,11 +31,6 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
 
     @Autowired
     private EntityManagerFactory emf;
-
-    @Before
-    public void setUp() throws Exception {
-        objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
-    }
 
     @Test
     public void persistPersistsFactorHierarchyInReport() throws Exception {

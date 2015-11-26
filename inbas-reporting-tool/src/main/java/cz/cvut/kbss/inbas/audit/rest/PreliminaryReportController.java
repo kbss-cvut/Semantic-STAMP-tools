@@ -33,7 +33,7 @@ public class PreliminaryReportController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
     public PreliminaryReportDto getReport(@PathVariable("key") String key) {
-        return reportMapper.occurrenceReportToOccurrenceReportDto(getOccurrenceReport(key));
+        return reportMapper.preliminaryReportToPreliminaryReportDto(getOccurrenceReport(key));
     }
 
     private PreliminaryReport getOccurrenceReport(String key) {
@@ -47,7 +47,7 @@ public class PreliminaryReportController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void createReport(@RequestBody PreliminaryReportDto report) {
-        final PreliminaryReport preliminaryReport = reportMapper.occurrenceReportDtoToOccurrenceReport(report);
+        final PreliminaryReport preliminaryReport = reportMapper.preliminaryReportDtoToPreliminaryReport(report);
         assert preliminaryReport != null;
         preliminaryReportService.persist(preliminaryReport);
         if (LOG.isTraceEnabled()) {
@@ -59,7 +59,7 @@ public class PreliminaryReportController extends BaseController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateReport(@PathVariable("key") String key, @RequestBody PreliminaryReportDto report) {
         final PreliminaryReport original = getOccurrenceReport(key);
-        final PreliminaryReport update = reportMapper.occurrenceReportDtoToOccurrenceReport(report);
+        final PreliminaryReport update = reportMapper.preliminaryReportDtoToPreliminaryReport(report);
         validateReportForUpdate(original, update);
         preliminaryReportService.update(update);
         if (LOG.isTraceEnabled()) {

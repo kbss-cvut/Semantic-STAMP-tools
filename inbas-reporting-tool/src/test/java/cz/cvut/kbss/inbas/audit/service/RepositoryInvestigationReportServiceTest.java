@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
 import java.util.Iterator;
+import java.util.logging.LogManager;
 
 import static org.junit.Assert.*;
 
@@ -33,6 +34,11 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
 
     @Autowired
     private EntityManagerFactory emf;
+
+    public static void setUpBeforeClass() throws Exception {
+        LogManager.getLogManager().readConfiguration(
+                RepositoryInvestigationReportServiceTest.class.getResourceAsStream("/logging.properties"));
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -244,7 +250,7 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
     @Test
     public void removeDeletesAllFactorsAndCleansUpAfterInvestigation() throws Exception {
         final InvestigationReport toRemove = createInvestigation(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
-
+        assertNotNull(emf.createEntityManager().find(Factor.class, toRemove.getRootFactor().getUri()));
         service.remove(toRemove);
         final EntityManager em = emf.createEntityManager();
         try {

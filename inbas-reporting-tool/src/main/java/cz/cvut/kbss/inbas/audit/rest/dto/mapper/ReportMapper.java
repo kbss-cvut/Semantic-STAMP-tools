@@ -16,22 +16,143 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.SplittableRandom;
+
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class ReportMapper {
+
+    private final SplittableRandom random = new SplittableRandom();
 
     public OccurrenceReportInfo occurrenceReportToOccurrenceReportInfo(PreliminaryReport report) {
         return new OccurrenceReportInfo(report);
     }
 
-    public abstract PreliminaryReportDto occurrenceReportToOccurrenceReportDto(PreliminaryReport report);
+    public abstract PreliminaryReportDto preliminaryReportToPreliminaryReportDto(PreliminaryReport report);
 
-    public abstract PreliminaryReport occurrenceReportDtoToOccurrenceReport(PreliminaryReportDto dto);
+    public abstract PreliminaryReport preliminaryReportDtoToPreliminaryReport(PreliminaryReportDto dto);
 
-    public abstract InvestigationReportDto investigationReportToInvestigationReportDto(InvestigationReport report);
+    public InvestigationReportDto investigationReportToInvestigationReportDto(InvestigationReport report) {
+        if (report == null) {
+            return null;
+        }
+        final InvestigationReportDto dto = new InvestigationReportDto();
+        dto.setUri(report.getUri());
+        dto.setKey(report.getKey());
+        dto.setOccurrence(report.getOccurrence());
+        dto.setAuthor(report.getAuthor());
+        dto.setCreated(report.getCreated());
+        dto.setLastEditedBy(report.getLastEditedBy());
+        dto.setLastEdited(report.getLastEdited());
+        dto.setRevision(report.getRevision());
+        dto.setSummary(report.getSummary());
+        dto.setCorrectiveMeasures(report.getCorrectiveMeasures());
+        dto.setInitialReports(report.getInitialReports());
+        dto.setSeverityAssessment(report.getSeverityAssessment());
+        dto.setRootFactor(factorToFactorDto(report.getRootFactor()));
+        dto.setLinks(createLinks(dto.getRootFactor(), report.getRootFactor()));
+        return dto;
+    }
 
-    public abstract InvestigationReport investigationReportDtoToInvestigationReport(InvestigationReportDto dto);
+    private Links createLinks(FactorDto root, Factor factor) {
+        if (root == null) {
+            return null;
+        }
+        final Map<URI, FactorDto> dtos = new HashMap<>();
+        mapFactors(root, dtos);
+        final Links links = new Links();
+        addLinks(factor, links, dtos);
+        return links;
+    }
 
-    public abstract FactorDto factorToFactorDto(Factor factor);
+    private void mapFactors(FactorDto root, Map<URI, FactorDto> map) {
+        map.put(root.getUri(), root);
+        if (root.getChildren() != null) {
+            root.getChildren().forEach(child -> mapFactors(child, map));
+        }
+    }
+
+    private void addLinks(Factor root, Links links, Map<URI, FactorDto> dtos) {
+        final FactorDto rootDto = dtos.get(root.getUri());
+        assert rootDto != null;
+
+        if (!root.getCauses().isEmpty()) {
+            root.getCauses().forEach(cause -> {
+                final FactorDto causeDto = dtos.get(cause.getUri());
+                links.addCause(new Link(causeDto, rootDto));
+            });
+        }
+        if (!root.getMitigatingFactors().isEmpty()) {
+            root.getMitigatingFactors().forEach(mitigation -> {
+                final FactorDto mitigationDto = dtos.get(mitigation.getUri());
+                links.addMitigates(new Link(mitigationDto, rootDto));
+            });
+        }
+        root.getChildren().forEach(child -> addLinks(child, links, dtos));
+    }
+
+    public InvestigationReport investigationReportDtoToInvestigationReport(InvestigationReportDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        final InvestigationReport report = new InvestigationReport();
+        report.setUri(dto.getUri());
+        report.setKey(dto.getKey());
+        report.setOccurrence(dto.getOccurrence());
+        report.setAuthor(dto.getAuthor());
+        report.setCreated(dto.getCreated());
+        report.setLastEdited(dto.getLastEdited());
+        report.setLastEditedBy(dto.getLastEditedBy());
+        report.setRevision(dto.getRevision());
+        report.setSummary(dto.getSummary());
+        report.setCorrectiveMeasures(dto.getCorrectiveMeasures());
+        report.setInitialReports(dto.getInitialReports());
+        report.setSeverityAssessment(dto.getSeverityAssessment());
+        report.setRootFactor(factorDtoToFactor(dto.getRootFactor()));
+        resolveLinks(dto, report);
+        return report;
+    }
+
+    private void resolveLinks(InvestigationReportDto dto, InvestigationReport report) {
+        if (report.getRootFactor() == null || report.getRootFactor().getChildren().isEmpty() ||
+                dto.getLinks() == null) {
+            return;
+        }
+        final Map<Integer, Factor> factors = new HashMap<>();
+        identifyFactors(report.getRootFactor(), factors);
+        for (Link cause : dto.getLinks().getCauses()) {
+            final Factor target = factors.get(cause.getTo().getReferenceId());
+            target.addCause(factors.get(cause.getFrom().getReferenceId()));
+        }
+        for (Link mitigation : dto.getLinks().getMitigates()) {
+            final Factor target = factors.get(mitigation.getTo().getReferenceId());
+            target.addMitigatingFactor(factors.get(mitigation.getFrom().getReferenceId()));
+        }
+    }
+
+    private void identifyFactors(Factor factor, Map<Integer, Factor> factorMap) {
+        factorMap.put(factor.getReferenceId(), factor);
+        for (Factor child : factor.getChildren()) {
+            identifyFactors(child, factorMap);
+        }
+    }
+
+    public FactorDto factorToFactorDto(Factor factor) {
+        final FactorDto dto = new FactorDto();
+        dto.setUri(factor.getUri());
+        dto.setAssessment(eventTypeAssessmentToEventTypeAssessmentDto(factor.getAssessment()));
+        dto.setStartTime(factor.getStartTime());
+        dto.setEndTime(factor.getEndTime());
+        if (!factor.getChildren().isEmpty()) {
+            dto.setChildren(new HashSet<>(factor.getChildren().size()));
+            factor.getChildren().forEach(child -> dto.getChildren().add(factorToFactorDto(child)));
+        }
+        dto.setReferenceId(random.nextInt());
+        return dto;
+    }
 
     public abstract Factor factorDtoToFactor(FactorDto dto);
 

@@ -38,6 +38,8 @@ public class InvestigationReportDto {
 
     private FactorDto rootFactor;
 
+    private Links links;
+
     public URI getUri() {
         return uri;
     }
@@ -141,6 +143,14 @@ public class InvestigationReportDto {
 
     public void setRootFactor(FactorDto rootFactor) {
         this.rootFactor = rootFactor;
+    }
+
+    public Links getLinks() {
+        return links;
+    }
+
+    public void setLinks(Links links) {
+        this.links = links;
     }
 
     @Override

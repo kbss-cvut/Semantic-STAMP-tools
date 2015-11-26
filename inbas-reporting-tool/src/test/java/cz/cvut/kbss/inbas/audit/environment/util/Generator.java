@@ -98,4 +98,46 @@ public class Generator {
         report.setTypeAssessments(typeAssessments);
         return report;
     }
+
+    public static InvestigationReport generateInvestigationWithCausesAndMitigatingFactors() throws Exception {
+        final InvestigationReport report = new InvestigationReport();
+        report.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Investigation_instance319360066"));
+        report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
+        final Date start = new Date(System.currentTimeMillis() - 10000);
+        final Date end = new Date();
+
+        final Factor root = new Factor();
+        root.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance0"));
+        root.setStartTime(start);
+        root.setEndTime(end);
+        report.setRootFactor(root);
+
+        final Factor childOne = new Factor();
+        childOne.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance1"));
+        childOne.setStartTime(start);
+        childOne.setEndTime(end);
+        root.addChild(childOne);
+
+        final Factor childTwo = new Factor();
+        childTwo.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance2"));
+        childTwo.setStartTime(start);
+        childTwo.setEndTime(end);
+        root.addChild(childTwo);
+        childTwo.addCause(childOne);    // childOne causes childTwo
+
+        final Factor childOneOne = new Factor();
+        childOneOne.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance11"));
+        childOneOne.setStartTime(start);
+        childOneOne.setEndTime(end);
+        childOne.addChild(childOneOne);
+
+        final Factor childTwoOne = new Factor();
+        childTwoOne.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance21"));
+        childTwoOne.setStartTime(start);
+        childTwoOne.setEndTime(end);
+        childTwo.addChild(childTwoOne);
+        childOneOne.addMitigatingFactor(childTwoOne);   // childTwoOne mitigates childOneOne
+
+        return report;
+    }
 }

@@ -7,7 +7,10 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
+// Identity generator is used to identify factors in the causes/mitigates relationships
+// Note that every reference has to be created before it is used in an causes/mitigatingFactors array in JSON
+// See reportWithFactorsWithCauses.json in test resources
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "referenceId")
 public class FactorDto {
 
     private URI uri;
@@ -18,11 +21,9 @@ public class FactorDto {
 
     private Set<FactorDto> children;
 
-    private Set<FactorDto> causes;
-
-    private Set<FactorDto> mitigatingFactors;
-
     private EventTypeAssessmentDto assessment;
+
+    private Integer referenceId;
 
     public URI getUri() {
         return uri;
@@ -56,27 +57,19 @@ public class FactorDto {
         this.children = children;
     }
 
-    public Set<FactorDto> getCauses() {
-        return causes;
-    }
-
-    public void setCauses(Set<FactorDto> causes) {
-        this.causes = causes;
-    }
-
-    public Set<FactorDto> getMitigatingFactors() {
-        return mitigatingFactors;
-    }
-
-    public void setMitigatingFactors(Set<FactorDto> mitigatingFactors) {
-        this.mitigatingFactors = mitigatingFactors;
-    }
-
     public EventTypeAssessmentDto getAssessment() {
         return assessment;
     }
 
     public void setAssessment(EventTypeAssessmentDto assessment) {
         this.assessment = assessment;
+    }
+
+    public Integer getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(Integer referenceId) {
+        this.referenceId = referenceId;
     }
 }

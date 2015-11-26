@@ -3,6 +3,8 @@ package cz.cvut.kbss.inbas.audit.rest.dto.mapper;
 import cz.cvut.kbss.inbas.audit.config.RestConfig;
 import cz.cvut.kbss.inbas.audit.config.SecurityConfig;
 import cz.cvut.kbss.inbas.audit.config.ServiceConfig;
+import cz.cvut.kbss.inbas.audit.environment.util.Environment;
+import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.Organization;
@@ -12,13 +14,12 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OrganizationDao;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessmentDto;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.GeneralEventDto;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.PreliminaryReportDto;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.*;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.AircraftIntruderDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.PersonIntruderDto;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto;
 import cz.cvut.kbss.inbas.audit.test.config.TestPersistenceConfig;
+import cz.cvut.kbss.inbas.audit.util.FileDataLoader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +120,7 @@ public class MappersTest {
     public void testMapOccurrenceReportToOccurrenceReportDto() {
         final PreliminaryReport report = initOccurrenceReport();
         final PreliminaryReportDto result =
-                reportMapper.occurrenceReportToOccurrenceReportDto(
+                reportMapper.preliminaryReportToPreliminaryReportDto(
                         report);
         assertNotNull(result);
         assertEquals(report.getSummary(), result.getSummary());
@@ -198,7 +199,7 @@ public class MappersTest {
     public void testOccurrenceReportDtoWithRunwayIncursionAndGeneralEventToEntity() {
         final PreliminaryReportDto dto = initOccurrenceReportDto();
 
-        final PreliminaryReport result = reportMapper.occurrenceReportDtoToOccurrenceReport(dto);
+        final PreliminaryReport result = reportMapper.preliminaryReportDtoToPreliminaryReport(dto);
         assertNotNull(result);
         assertEquals(dto.getSummary(), result.getSummary());
         boolean riFound = false, geFound = false;
@@ -227,5 +228,117 @@ public class MappersTest {
         dto.setTypeAssessments(eTypes);
         dto.setSummary("Does not really matter, its a simple string.");
         return dto;
+    }
+
+    @Test
+    public void assignsRandomReferenceIdsToFactorDtos() throws Exception {
+        final String json = new FileDataLoader().load("test_data/reportWithFactorHierarchy.json");
+        final InvestigationReport report = Environment.getObjectMapper().readValue(json, InvestigationReport.class);
+
+        final FactorDto dto = reportMapper.factorToFactorDto(report.getRootFactor());
+        verifyFactorsHaveReferenceIds(dto);
+    }
+
+    private void verifyFactorsHaveReferenceIds(FactorDto root) {
+        assertNotNull(root.getReferenceId());
+        if (root.getChildren() != null) {
+            root.getChildren().forEach(this::verifyFactorsHaveReferenceIds);
+        }
+    }
+
+    @Test
+    public void testInvestigationReportDtoWithLinksToInvestigationReport() throws Exception {
+        final String json = new FileDataLoader().load("test_data/reportDtoFactorsCauseMitigate.json");
+        final InvestigationReportDto dto = Environment.getObjectMapper().readValue(json, InvestigationReportDto.class);
+
+        final InvestigationReport result = reportMapper.investigationReportDtoToInvestigationReport(dto);
+        assertSame(dto.getOccurrence(), result.getOccurrence());
+        assertNotNull(result.getRootFactor());
+        verifyLinks(dto.getLinks().getCauses(), result, "cause");
+        verifyLinks(dto.getLinks().getMitigates(), result, "mitigatingFactor");
+    }
+
+    private void verifyLinks(Set<Link> links, InvestigationReport result, String linkType) {
+        for (Link link : links) {
+            final Factor linkFrom = findFactor(link.getFrom().getUri(), result.getRootFactor());
+            assertNotNull(linkFrom);
+            final Factor linkTo = findFactor(link.getTo().getUri(), result.getRootFactor());
+            assertNotNull(linkTo);
+            boolean found = false;
+            final Set<Factor> factors = linkType.equals("cause") ? linkTo.getCauses() : linkTo.getMitigatingFactors();
+            for (Factor c : factors) {
+                if (c.getUri().equals(linkFrom.getUri())) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue(found);
+        }
+    }
+
+    private Factor findFactor(URI uri, Factor root) {
+        if (root.getUri().equals(uri)) {
+            return root;
+        }
+        if (root.getChildren() != null) {
+            Factor factor;
+            for (Factor f : root.getChildren()) {
+                factor = findFactor(uri, f);
+                if (factor != null) {
+                    return factor;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Test
+    public void testInvestigationReportWithCausesAndMitigatesToInvestigationReportDtoWithLinks() throws Exception {
+        final InvestigationReport report = Generator.generateInvestigationWithCausesAndMitigatingFactors();
+
+        final InvestigationReportDto result = reportMapper.investigationReportToInvestigationReportDto(report);
+        assertNotNull(result);
+        assertEquals(report.getUri(), result.getUri());
+        final Map<URI, FactorDto> factorDtos = new HashMap<>();
+        mapFactorDtoTree(result.getRootFactor(), factorDtos);
+        verifyLinksExistence(report.getRootFactor(), result.getLinks(), factorDtos);
+    }
+
+    private void mapFactorDtoTree(FactorDto dto, Map<URI, FactorDto> map) {
+        map.put(dto.getUri(), dto);
+        if (dto.getChildren() != null && !dto.getChildren().isEmpty()) {
+            dto.getChildren().forEach(child -> mapFactorDtoTree(child, map));
+        }
+    }
+
+    private void verifyLinksExistence(Factor root, Links links, Map<URI, FactorDto> dtoTree) {
+        final FactorDto rootDto = dtoTree.get(root.getUri());
+        assertNotNull(rootDto);
+        if (!root.getCauses().isEmpty()) {
+            for (Factor cause : root.getCauses()) {
+                final FactorDto causeDto = dtoTree.get(cause.getUri());
+                assertNotNull(causeDto);
+                assertTrue(linkExists(links.getCauses(), causeDto, rootDto));
+            }
+        }
+        if (!root.getMitigatingFactors().isEmpty()) {
+            for (Factor mitigation : root.getMitigatingFactors()) {
+                final FactorDto mitigationDto = dtoTree.get(mitigation.getUri());
+                assertNotNull(mitigationDto);
+                assertTrue(linkExists(links.getMitigates(), mitigationDto, rootDto));
+            }
+        }
+        if (!root.getChildren().isEmpty()) {
+            root.getChildren().forEach(child -> verifyLinksExistence(child, links, dtoTree));
+        }
+    }
+
+    private boolean linkExists(Set<Link> links, FactorDto from, FactorDto to) {
+        for (Link link : links) {
+            if (link.getFrom().equals(from) && link.getTo().equals(to)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

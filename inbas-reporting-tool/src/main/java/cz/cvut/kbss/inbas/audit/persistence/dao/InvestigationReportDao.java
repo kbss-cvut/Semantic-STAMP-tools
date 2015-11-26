@@ -85,4 +85,10 @@ public class InvestigationReportDao extends BaseDao<InvestigationReport> {
             }
         }
     }
+
+    @Override
+    protected void remove(InvestigationReport entity, EntityManager em) {
+        final InvestigationReport ir = em.merge(entity);
+        em.remove(ir);
+    }
 }

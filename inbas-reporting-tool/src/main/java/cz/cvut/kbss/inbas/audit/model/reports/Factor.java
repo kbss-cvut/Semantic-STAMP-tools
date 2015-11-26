@@ -5,17 +5,15 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-// Identity generator is used to identify factors in the causes/mitigates relationships
-// Note that every reference has to be created before it is used in an causes/mitigatingFactors array in JSON
-// See reportWithFactorsWithCauses.json in test resources
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id")
 @OWLClass(iri = Vocabulary.Factor)
-public class Factor {
+public class Factor implements Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -28,7 +26,8 @@ public class Factor {
     @ParticipationConstraints(nonEmpty = true)
     private Date endTime;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasChild, cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasChild, cascade = {CascadeType.MERGE,
+            CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Set<Factor> children;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasCause, fetch = FetchType.EAGER)
@@ -40,6 +39,9 @@ public class Factor {
     @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = {CascadeType.REMOVE,
             CascadeType.MERGE}, fetch = FetchType.EAGER)
     private EventTypeAssessment assessment;
+
+    // Used for link mapping (causes and mitigatingFactors)
+    private transient Integer referenceId;
 
     public Factor() {
     }
@@ -88,6 +90,9 @@ public class Factor {
     }
 
     public Set<Factor> getCauses() {
+        if (causes == null) {
+            this.causes = new HashSet<>();
+        }
         return causes;
     }
 
@@ -95,12 +100,31 @@ public class Factor {
         this.causes = causes;
     }
 
+    public void addCause(Factor cause) {
+        assert cause != null;
+        if (causes == null) {
+            this.causes = new HashSet<>();
+        }
+        causes.add(cause);
+    }
+
     public Set<Factor> getMitigatingFactors() {
+        if (mitigatingFactors == null) {
+            this.mitigatingFactors = new HashSet<>();
+        }
         return mitigatingFactors;
     }
 
     public void setMitigatingFactors(Set<Factor> mitigatingFactors) {
         this.mitigatingFactors = mitigatingFactors;
+    }
+
+    public void addMitigatingFactor(Factor mitigation) {
+        assert mitigation != null;
+        if (mitigatingFactors == null) {
+            this.mitigatingFactors = new HashSet<>();
+        }
+        mitigatingFactors.add(mitigation);
     }
 
     public EventTypeAssessment getAssessment() {
@@ -109,6 +133,14 @@ public class Factor {
 
     public void setAssessment(EventTypeAssessment assessment) {
         this.assessment = assessment;
+    }
+
+    public Integer getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(Integer referenceId) {
+        this.referenceId = referenceId;
     }
 
     @Override

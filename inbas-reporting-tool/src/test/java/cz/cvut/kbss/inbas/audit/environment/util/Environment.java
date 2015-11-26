@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.audit.environment.util;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
@@ -10,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextImpl;
 public class Environment {
 
     private static Person currentUser;
+
+    private static ObjectMapper objectMapper;
 
     private Environment() {
         throw new AssertionError();
@@ -30,5 +34,18 @@ public class Environment {
 
     public static Person getCurrentUser() {
         return currentUser;
+    }
+
+    /**
+     * Gets a Jackson object mapper for mapping JSON to Java and vice versa.
+     *
+     * @return Object mapper
+     */
+    public static ObjectMapper getObjectMapper() {
+        if (objectMapper == null) {
+            objectMapper = new ObjectMapper();
+            objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
+        }
+        return objectMapper;
     }
 }
