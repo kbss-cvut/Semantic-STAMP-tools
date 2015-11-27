@@ -32,7 +32,7 @@ describe('Factors component tests', function () {
     });
 
     it('Initializes gantt with minute scale on component mount', function () {
-        var factors = TestUtils.renderIntoDocument(<Factors investigation={investigation}/>);
+        TestUtils.renderIntoDocument(<Factors investigation={investigation}/>);
         expect(GanttController.init).toHaveBeenCalled();
         expect(GanttController.setScale).toHaveBeenCalledWith('minute');
     });
@@ -54,5 +54,29 @@ describe('Factors component tests', function () {
             factors = TestUtils.renderIntoDocument(<Factors investigation={investigation}/>);
         factors.onScaleChange(evt);
         expect(GanttController.setScale).toHaveBeenCalledWith('second');
+    });
+
+    it('Assigns reference id to new factors', function () {
+        var newFactor = {
+                isNew: true,
+                text: 'Test',
+                statement: {},
+                parent: 1
+            }, parent = {
+                id: 1,
+                statement: investigation.rootFactor
+            },
+            referenceId = 117,
+            component;
+        investigation.rootFactor.referenceId = referenceId;
+        GanttController.getFactor.and.returnValue(investigation.rootFactor);
+        component = TestUtils.renderIntoDocument(<Factors investigation={investigation}/>);
+        component.setState({
+            currentFactor: newFactor
+        });
+        component.onSaveFactor();
+
+        expect(newFactor.statement.referenceId).toEqual(referenceId + 1);
+        expect(GanttController.addFactor).toHaveBeenCalledWith(newFactor);
     });
 });

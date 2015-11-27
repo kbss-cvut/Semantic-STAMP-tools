@@ -6,6 +6,7 @@
   "helpers": [
     "../node_modules/babel-core/register.js",
     "./setup.js",
-    "./setup-jasmine-env.js"
+    "./setup-jasmine-env.js",
+    "./environment/Generators.js"
   ]
 }

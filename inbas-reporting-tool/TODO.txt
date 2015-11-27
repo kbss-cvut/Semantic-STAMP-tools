@@ -1,6 +1,7 @@
 Implement investigation saving
     - Implement cause/mitigation saving
     - Prevent cycles in cause/mitigation relationships
+Add a lightweight object for getting basic report info, so that the whole graph for each instance doesn't have to be loaded and serialized
 Implement report revisions
 Set up the Jasmine tests so that they can be run in browser and debugged
 Create proper investigation screen

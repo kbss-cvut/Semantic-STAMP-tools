@@ -387,7 +387,7 @@ var GanttController = {
     },
 
     getFactor: function (factorId) {
-        return gantt.getTask(factorId);
+        return gantt.getTask(factorId).statement;
     },
 
     getChildren: function (factorId) {
@@ -416,6 +416,10 @@ var GanttController = {
 
     deleteFactor: function (factorId) {
         gantt.deleteTask(factorId);
+    },
+
+    getLinks: function() {
+        return gantt.getLinks();
     }
 };
 

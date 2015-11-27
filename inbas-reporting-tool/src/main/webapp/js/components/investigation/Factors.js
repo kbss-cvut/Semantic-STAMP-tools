@@ -15,6 +15,7 @@ var FactorDetail = require('./FactorDetail');
 var FactorRenderer = require('./FactorRenderer');
 var GanttController = require('./GanttController');
 var FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
+var Constants = require('../../constants/Constants');
 
 var Factors = React.createClass({
 
@@ -23,6 +24,7 @@ var Factors = React.createClass({
     },
 
     ganttController: null,
+    factorReferenceIdCounter: 0,
 
     getInitialState: function () {
         return {
@@ -51,10 +53,11 @@ var Factors = React.createClass({
             onDeleteLink: this.onDeleteLink
         });
         this.ganttController.setScale(this.state.scale);
-        this.addEvents();
+        this.renderFactors();
+        this.factorReferenceIdCounter = FactorRenderer.greatestReferenceId;
     },
 
-    addEvents: function () {
+    renderFactors: function () {
         FactorRenderer.renderFactors(this.props.investigation);
         this.ganttController.expandSubtree(this.ganttController.occurrenceEventId);
     },
@@ -87,6 +90,7 @@ var Factors = React.createClass({
         if (factor.isNew) {
             delete factor.isNew;
             this.addChildFactorToParent(factor);
+            factor.statement.referenceId = ++this.factorReferenceIdCounter;
             this.ganttController.addFactor(factor);
         } else {
             this.ganttController.updateFactor(factor);
@@ -94,12 +98,12 @@ var Factors = React.createClass({
         this.onCloseFactorDialog();
     },
 
-    addChildFactorToParent: function(child) {
+    addChildFactorToParent: function (child) {
         var parent = this.ganttController.getFactor(child.parent);
-        if (!parent.statement.children) {
-            parent.statement.children = [];
+        if (!parent.children) {
+            parent.children = [];
         }
-        parent.statement.children.push(child.statement);
+        parent.children.push(child.statement);
     },
 
     onDeleteFactor: function () {
@@ -110,9 +114,8 @@ var Factors = React.createClass({
         this.onCloseFactorDialog();
     },
 
-    removeChildFactorFromParent: function(child, parentId) {
-        var parent = this.ganttController.getFactor(parentId),
-            parentFactor = parent.statement,
+    removeChildFactorFromParent: function (child, parentId) {
+        var parentFactor = this.ganttController.getFactor(parentId),
             factor = child.statement;
         var childIndex = parentFactor.children.indexOf(factor);
         parentFactor.children.splice(childIndex, 1);
@@ -153,7 +156,7 @@ var Factors = React.createClass({
         this.props.onAttributeChange('occurrence', occurrence);
     },
 
-    getFactorHierarchy: function() {
+    getFactorHierarchy: function () {
         FactorJsonSerializer.setGanttController(this.ganttController);
         return FactorJsonSerializer.getFactorHierarchy();
     },
@@ -218,8 +221,8 @@ var Factors = React.createClass({
 
     renderLinkTypeDialog: function () {
         var options = [
-            {value: 'cause', label: 'Causes'},
-            {value: 'mitigate', label: 'Mitigates'}
+            {value: Constants.LINK_TYPES.CAUSE, label: 'Causes'},
+            {value: Constants.LINK_TYPES.MITIGATE, label: 'Mitigates'}
         ];
         return (
             <Modal show={this.state.showLinkTypeDialog} bsSize='small' onHide={this.onCloseLinkTypeDialog}>
