@@ -100,15 +100,18 @@ var Generator = {
         if (!parent.children) {
             return;
         }
-        var children = parent.children;
-        parentToChildren[parent.referenceId] = children;
+        var children = parent.children,
+            childTasks = [];
         for (var i = 0, len = children.length; i < len; i++) {
-            idToTask[children[i].referenceId] = {
+            var task = {
                 id: children[i].referenceId,
                 statement: children[i]
             };
+            idToTask[children[i].referenceId] = task;
+            childTasks.push(task);
             this._generateTasks(children[i], idToTask, parentToChildren, ganttController);
         }
+        parentToChildren[parent.referenceId] = childTasks;
     },
 
     /**
@@ -140,6 +143,23 @@ var Generator = {
         });
         this._generateLink(factor.children[0], links, Constants.LINK_TYPES.CAUSE);
         this._generateLink(factor.children[1], links, Constants.LINK_TYPES.MITIGATE);
+    },
+
+    /**
+     * Gets an investigation object with occurrence and root factor.
+     */
+    generateInvestigation: function () {
+        return {
+            occurrence: {
+                name: 'TestOccurrence',
+                startTime: Date.now() - 10000,
+                endTime: Date.now()
+            },
+            rootFactor: {
+                startTime: Date.now() - 10000,
+                endTime: Date.now()
+            }
+        };
     }
 };
 

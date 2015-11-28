@@ -22,6 +22,8 @@ public class PreliminaryReportDto {
 
     private Date lastEdited;
 
+    private Integer revision;
+
     private String summary;
 
     private Person author;
@@ -74,6 +76,14 @@ public class PreliminaryReportDto {
 
     public void setLastEdited(Date lastEdited) {
         this.lastEdited = lastEdited;
+    }
+
+    public Integer getRevision() {
+        return revision;
+    }
+
+    public void setRevision(Integer revision) {
+        this.revision = revision;
     }
 
     public String getSummary() {

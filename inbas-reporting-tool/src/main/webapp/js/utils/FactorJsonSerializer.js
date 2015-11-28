@@ -30,7 +30,7 @@ var FactorJsonSerializer = {
         for (var i = 0, len = childFactors.length; i < len; i++) {
             var factor = childFactors[i];
             factor.children = this._getChildren(childFactors[i].id);
-            children.push(factor);
+            children.push(factor.statement);
         }
         return children;
     },

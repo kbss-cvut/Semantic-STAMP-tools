@@ -42,6 +42,7 @@ var Investigation = React.createClass({
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
         investigation.rootFactor = this.refs.factors.getFactorHierarchy();
+        investigation.links = this.refs.factors.getLinks();
         Actions.updateInvestigation(investigation, this.onSubmitSuccess, this.onSubmitError);
     },
 
