@@ -141,6 +141,9 @@ public abstract class ReportMapper {
     }
 
     public FactorDto factorToFactorDto(Factor factor) {
+        if (factor == null) {
+            return null;
+        }
         final FactorDto dto = new FactorDto();
         dto.setUri(factor.getUri());
         dto.setAssessment(eventTypeAssessmentToEventTypeAssessmentDto(factor.getAssessment()));
