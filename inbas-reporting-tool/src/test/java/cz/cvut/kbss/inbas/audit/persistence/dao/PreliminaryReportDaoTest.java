@@ -12,6 +12,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.inbas.audit.util.Constants;
+import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -312,5 +313,31 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
         assertNotNull(report.getRevision());
         assertEquals(Constants.INITIAL_REVISION, report.getRevision());
+    }
+
+    @Test
+    public void addsReportToPreliminaryReportsTypesOnPersist() throws Exception {
+        final PreliminaryReport report = initBasicValidReport();
+
+        dao.persist(report);
+        assertTrue(report.getTypes().contains(Vocabulary.Report));
+
+        final PreliminaryReport result = dao.find(report.getUri());
+        assertTrue(result.getTypes().contains(Vocabulary.Report));
+    }
+
+    @Test
+    public void ensuresReportIsPresentInPreliminaryReportsTypesOnUpdate() throws Exception {
+        final PreliminaryReport report = initBasicValidReport();
+
+        dao.persist(report);
+        assertTrue(report.getTypes().contains(Vocabulary.Report));
+
+        final PreliminaryReport toUpdate = dao.find(report.getUri());
+        toUpdate.setTypes(new HashSet<>());
+        dao.update(toUpdate);
+
+        final PreliminaryReport result = dao.find(report.getUri());
+        assertTrue(result.getTypes().contains(Vocabulary.Report));
     }
 }

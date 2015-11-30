@@ -4,12 +4,13 @@ import cz.cvut.kbss.inbas.audit.model.HasOwlKey;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
-import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
+import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @OWLClass(iri = Vocabulary.InitialReport)
 public class InitialReport implements HasOwlKey, Serializable, Report {
@@ -22,6 +23,9 @@ public class InitialReport implements HasOwlKey, Serializable, Report {
 
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
+
+    @Types(fetchType = FetchType.EAGER)
+    private Set<String> types;
 
     public InitialReport() {
     }
@@ -56,6 +60,22 @@ public class InitialReport implements HasOwlKey, Serializable, Report {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Set<String> getTypes() {
+        if (types == null) {
+            this.types = new HashSet<>(2);
+        }
+        return types;
+    }
+
+    public void setTypes(Set<String> types) {
+        this.types = types;
+    }
+
+    public void addType(String type) {
+        Objects.requireNonNull(type);
+        getTypes().add(type);
     }
 
     @Override

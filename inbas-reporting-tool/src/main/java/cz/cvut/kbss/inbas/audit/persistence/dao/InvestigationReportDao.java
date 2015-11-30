@@ -50,6 +50,7 @@ public class InvestigationReportDao extends BaseDao<InvestigationReport> {
             persistFactors(entity.getRootFactor(), em);
         }
         persistInitialReports(entity.getInitialReports(), em);
+        entity.addType(Vocabulary.Report);
         super.persist(entity, em);
     }
 
@@ -74,6 +75,7 @@ public class InvestigationReportDao extends BaseDao<InvestigationReport> {
         if (entity.getRootFactor() != null) {
             updateFactors(entity.getRootFactor(), em);
         }
+        entity.addType(Vocabulary.Report);
         super.update(entity, em);
     }
 

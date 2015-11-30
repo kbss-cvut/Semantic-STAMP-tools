@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.InvestigationReport)
@@ -59,6 +60,9 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
     @OWLObjectProperty(iri = Vocabulary.p_hasFactor, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Factor rootFactor;
+
+    @Types(fetchType = FetchType.EAGER)
+    private Set<String> types;
 
     public InvestigationReport() {
     }
@@ -177,6 +181,22 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
 
     public void setRootFactor(Factor rootFactor) {
         this.rootFactor = rootFactor;
+    }
+
+    public Set<String> getTypes() {
+        if (types == null) {
+            this.types = new HashSet<>(2);
+        }
+        return types;
+    }
+
+    public void setTypes(Set<String> types) {
+        this.types = types;
+    }
+
+    public void addType(String type) {
+        Objects.requireNonNull(type);
+        getTypes().add(type);
     }
 
     @Override

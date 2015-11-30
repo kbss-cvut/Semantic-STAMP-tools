@@ -12,10 +12,7 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @OWLClass(iri = Vocabulary.PreliminaryReport)
 public class PreliminaryReport implements HasOwlKey, Serializable, Report {
@@ -60,6 +57,9 @@ public class PreliminaryReport implements HasOwlKey, Serializable, Report {
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<EventTypeAssessment> typeAssessments;
+
+    @Types(fetchType = FetchType.EAGER)
+    private Set<String> types;
 
     public PreliminaryReport() {
         this.revision = Constants.INITIAL_REVISION;
@@ -172,6 +172,22 @@ public class PreliminaryReport implements HasOwlKey, Serializable, Report {
         final Set<ReportingStatement> statements = new HashSet<>(correctiveMeasures);
         statements.addAll(typeAssessments);
         return statements;
+    }
+
+    public Set<String> getTypes() {
+        if (types == null) {
+            this.types = new HashSet<>(2);
+        }
+        return types;
+    }
+
+    public void setTypes(Set<String> types) {
+        this.types = types;
+    }
+
+    public void addType(String type) {
+        Objects.requireNonNull(type);
+        getTypes().add(type);
     }
 
     @Override

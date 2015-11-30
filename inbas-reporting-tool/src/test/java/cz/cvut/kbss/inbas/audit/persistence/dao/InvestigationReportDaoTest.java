@@ -9,6 +9,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.inbas.audit.util.FileDataLoader;
+import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Test;
@@ -165,5 +166,29 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
 
         investigationDao.update(update);
         verifyPersistedReport(update);
+    }
+
+    @Test
+    public void addsReportTypeToInvestigationsTypes() throws Exception {
+        final InvestigationReport report = loadReport("test_data/reportWithFactorHierarchy.json");
+        persistReport(report);
+        assertTrue(report.getTypes().contains(Vocabulary.Report));
+
+        final InvestigationReport result = investigationDao.find(report.getUri());
+        assertTrue(result.getTypes().contains(Vocabulary.Report));
+    }
+
+    @Test
+    public void ensuresReportIsPresentInInvestigationsTypesOnUpdate() throws Exception {
+        final InvestigationReport report = loadReport("test_data/reportWithFactorHierarchy.json");
+        persistReport(report);
+        assertTrue(report.getTypes().contains(Vocabulary.Report));
+
+        final InvestigationReport toUpdate = investigationDao.find(report.getUri());
+        toUpdate.setTypes(new HashSet<>());
+        investigationDao.update(toUpdate);
+
+        final InvestigationReport result = investigationDao.find(report.getUri());
+        assertTrue(result.getTypes().contains(Vocabulary.Report));
     }
 }

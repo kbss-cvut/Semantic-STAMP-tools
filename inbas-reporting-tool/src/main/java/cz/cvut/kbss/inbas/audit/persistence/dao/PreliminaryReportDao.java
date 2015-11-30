@@ -40,6 +40,7 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
         if (entity.getTypeAssessments() != null) {
             entity.getTypeAssessments().forEach(typeAssessmentDao::persist);
         }
+        entity.addType(Vocabulary.Report);
         saveInitialReports(entity.getInitialReports(), em);
         entity.generateKey();
         em.persist(entity);
@@ -66,6 +67,7 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
                 }
             });
         }
+        entity.addType(Vocabulary.Report);
         saveInitialReports(entity.getInitialReports(), em);
         em.merge(entity);
     }
