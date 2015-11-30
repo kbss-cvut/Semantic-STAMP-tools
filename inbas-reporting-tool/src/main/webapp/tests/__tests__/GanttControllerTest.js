@@ -248,13 +248,13 @@ describe('Tests for the gantt component controller', function () {
         var invalidLink = {
                 id: 2,
                 source: 1,
-                target: 1,
+                target: 2,
                 type: '1'
             },
             validLink = {
                 id: 3,
                 source: 1,
-                target: 1,
+                target: 2,
                 type: '0'
             };
         GanttController.onLinkAdded(invalidLink.id, invalidLink);
@@ -452,4 +452,18 @@ describe('Tests for the gantt component controller', function () {
         expect(args[1][0]).toEqual(2);
         expect(args[2][0]).toEqual(3);
     });
+
+    it('Prevents creation of self-referencing links', function () {
+        var linkId = 1,
+            link = {
+                id: linkId,
+                source: 1,
+                target: 1,
+                type: gantt.config.links.finish_to_start,
+                factorType: 'cause'
+            };
+        var res = GanttController.onLinkAdded(linkId, link);
+        expect(res).toEqual(false);
+        expect(props.onLinkAdded).not.toHaveBeenCalled();
+    })
 });

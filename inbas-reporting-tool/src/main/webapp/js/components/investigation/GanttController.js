@@ -321,6 +321,9 @@ var GanttController = {
         if (link.type !== linkTypes.finish_to_start) {
             return false;
         }
+        if (link.source === link.target) {
+            return false;   // Self-referencing links are not allowed
+        }
         if (link.factorType) {
             return true;
         }
@@ -419,7 +422,7 @@ var GanttController = {
         gantt.deleteTask(factorId);
     },
 
-    getLinks: function() {
+    getLinks: function () {
         return gantt.getLinks();
     }
 };
