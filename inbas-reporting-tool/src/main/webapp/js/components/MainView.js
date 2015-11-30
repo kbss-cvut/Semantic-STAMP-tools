@@ -46,7 +46,7 @@ var MainView = React.createClass({
                         <NavBrand>INBAS Reporting Tool</NavBrand>
                         <Nav>
                             <LinkContainer to='dashboard'><NavItem>Dashboard</NavItem></LinkContainer>
-                            <LinkContainer to='reports'><NavItem>Reports</NavItem></LinkContainer>
+                            <LinkContainer to='reports'><NavItem>Preliminary Reports</NavItem></LinkContainer>
                             <LinkContainer to='investigations'><NavItem>Investigations</NavItem></LinkContainer>
                         </Nav>
                         <Nav right style={{margin: '0 -15px 0 0'}}>
