@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,10 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
 
     @Override
     protected void persist(PreliminaryReport entity, EntityManager em) {
-        if (entity.getRevision() == 1) {
+        if (entity.getRevision() == null) {
+            entity.setRevision(Constants.INITIAL_REVISION);
+        }
+        if (entity.getRevision().equals(Constants.INITIAL_REVISION)) {
             occurrenceDao.persist(entity.getOccurrence(), em);
         }
         if (entity.getTypeAssessments() != null) {
@@ -46,7 +50,7 @@ public class PreliminaryReportDao extends BaseDao<PreliminaryReport> {
             return;
         }
         initialReports.stream().filter(ir -> !initialReportDao.exists(ir.getUri(), em))
-                .forEach(ir -> initialReportDao.persist(ir, em));
+                      .forEach(ir -> initialReportDao.persist(ir, em));
     }
 
     @Override

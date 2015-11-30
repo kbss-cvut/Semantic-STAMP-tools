@@ -11,6 +11,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -291,7 +292,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     @Test
     public void occurrenceIsPersistedWhenReportIsPersisted() {
         final PreliminaryReport report = initBasicValidReport();
-        assertEquals(1, report.getRevision().intValue());
+        assertEquals(Constants.INITIAL_REVISION, report.getRevision());
 
         dao.persist(report);
 
@@ -300,5 +301,16 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         final Occurrence occurrence = occurrenceDao.find(report.getOccurrence().getUri());
         assertNotNull(occurrence);
         assertEquals(report.getOccurrence().getName(), occurrence.getName());
+    }
+
+    @Test
+    public void setsReportRevisionToInitialWhenItIsMissing() {
+        final PreliminaryReport report = initBasicValidReport();
+        report.setRevision(null);
+
+        dao.persist(report);
+
+        assertNotNull(report.getRevision());
+        assertEquals(Constants.INITIAL_REVISION, report.getRevision());
     }
 }
