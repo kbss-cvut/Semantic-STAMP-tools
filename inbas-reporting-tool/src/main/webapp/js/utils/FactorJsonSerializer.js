@@ -5,8 +5,6 @@ var Constants = require('../constants/Constants');
 var FactorJsonSerializer = {
     ganttController: null,
 
-    definedFactors: {},
-
     setGanttController: function (controller) {
         this.ganttController = controller;
     },

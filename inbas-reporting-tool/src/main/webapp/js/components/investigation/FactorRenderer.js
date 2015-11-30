@@ -5,14 +5,14 @@ var GanttController = require('./GanttController');
 var FactorRenderer = {
     ganttController: GanttController,
 
-    jsonObjectMap: {},
-    factorsToIds: {}, // Maps factor objects to the ids assigned by the GanttController
+    referenceIdsToGanttIds: {},     // JSON reference IDs to task IDs assigned by the GanttController
     greatestReferenceId: Number.MIN_VALUE,
 
     renderFactors: function (investigation) {
         var root = investigation.rootFactor,
             id = Date.now();
         this.ganttController.setOccurrenceEventId(id);
+        this.referenceIdsToGanttIds[root.referenceId] = id;
         this.greatestReferenceId = root.referenceId;
         this.ganttController.addFactor({
             id: id,
@@ -31,7 +31,6 @@ var FactorRenderer = {
     },
 
     addChild: function (factor, parentId) {
-        factor = this.resolveFactorFromJsonId(factor);
         if (factor.referenceId > this.greatestReferenceId) {
             this.greatestReferenceId = factor.referenceId;
         }
@@ -42,27 +41,12 @@ var FactorRenderer = {
             parent: parentId,
             statement: factor
         }, parentId);
-        this.factorsToIds[factor] = id;
+        this.referenceIdsToGanttIds[factor.referenceId] = id;
         if (factor.children) {
             for (var i = 0, len = factor.children.length; i < len; i++) {
                 this.addChild(factor.children[i], id);
             }
         }
-    },
-
-    /**
-     * This function deals with JSON id used by Jackson, which prevents object duplicates by using references to objects
-     * in the JSON.
-     * @param factor Possibly a JSON reference
-     * @returns {*} Corresponding factor object
-     */
-    resolveFactorFromJsonId: function (factor) {
-        if (typeof factor !== 'object') {
-            factor = this.jsonObjectMap[factor];
-        } else {
-            this.jsonObjectMap[factor.referenceId] = factor;
-        }
-        return factor;
     },
 
     renderLinks: function (investigation) {
@@ -79,11 +63,11 @@ var FactorRenderer = {
         }
         var from, to;
         for (var i = 0, len = links.length; i < len; i++) {
-            from = this.resolveFactorFromJsonId(links[i].from);
-            to = this.resolveFactorFromJsonId(links[i].to);
+            from = links[i].from;
+            to = links[i].to;
             this.ganttController.addLink({
-                from: this.factorsToIds[from],
-                to: this.factorsToIds[to],
+                source: this.referenceIdsToGanttIds[from],
+                target: this.referenceIdsToGanttIds[to],
                 factorType: linkType
             });
         }

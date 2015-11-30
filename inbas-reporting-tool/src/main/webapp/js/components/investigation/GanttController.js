@@ -378,6 +378,7 @@ var GanttController = {
     },
 
     addLink: function (link) {
+        link.type = gantt.config.links.finish_to_start;
         gantt.addLink(link);
     },
 

@@ -114,14 +114,7 @@ describe('FactorRenderer tests', function () {
         var rootId = null, childIds = [], ids = {};
         investigation.rootFactor = Generator.generateFactors(investigation.occurrence.startTime, investigation.occurrence.endTime, 2);
         investigation.links.causes = [{from: 3, to: 4}];
-        GanttController.addFactor.and.callFake(function (item, parentId) {
-            var id = Date.now();
-            if (parentId === rootId) {
-                childIds.push(id);
-            }
-            ids[item.statement] = id;
-            return id;
-        });
+        initAddFactorMock(rootId, childIds, ids);
         GanttController.setOccurrenceEventId.and.callFake(function (id) {
             rootId = id
         });
@@ -129,23 +122,27 @@ describe('FactorRenderer tests', function () {
 
         expect(GanttController.addLink).toHaveBeenCalled();
         var arg = GanttController.addLink.calls.argsFor(0)[0];
-        expect(arg.from).toEqual(ids[investigation.rootFactor.children[0].children[0]]);
-        expect(arg.to).toEqual(ids[investigation.rootFactor.children[0].children[1]]);
+        expect(arg.source).toEqual(ids[investigation.rootFactor.children[0].children[0].referenceId]);
+        expect(arg.target).toEqual(ids[investigation.rootFactor.children[0].children[1].referenceId]);
         expect(arg.factorType).toEqual('cause');
     });
+
+    function initAddFactorMock(rootId, childIds, ids) {
+        GanttController.addFactor.and.callFake(function (item, parentId) {
+            var id = Date.now() * 1000 + Math.floor((Math.random() * 1000) + 1);
+            if (parentId === rootId) {
+                childIds.push(id);
+            }
+            ids[item.statement.referenceId] = id;
+            return id;
+        });
+    }
 
     it('Renders factors with mitigation relationships using references', function () {
         var rootId = null, childIds = [], ids = {};
         investigation.rootFactor = Generator.generateFactors(investigation.occurrence.startTime, investigation.occurrence.endTime, 2);
         investigation.links.mitigates = [{from: 1, to: 2}, {from: 3, to: 4}];
-        GanttController.addFactor.and.callFake(function (item, parentId) {
-            var id = Date.now();
-            if (parentId === rootId) {
-                childIds.push(id);
-            }
-            ids[item.statement] = id;
-            return id;
-        });
+        initAddFactorMock(rootId, childIds, ids);
         GanttController.setOccurrenceEventId.and.callFake(function (id) {
             rootId = id
         });
@@ -154,11 +151,11 @@ describe('FactorRenderer tests', function () {
         expect(GanttController.addLink.calls.count()).toEqual(2);
         var linkOne = GanttController.addLink.calls.argsFor(0)[0],
             linkTwo = GanttController.addLink.calls.argsFor(1)[0];
-        expect(linkOne.from).toEqual(ids[investigation.rootFactor.children[0]]);
-        expect(linkOne.to).toEqual(ids[investigation.rootFactor.children[1]]);
+        expect(linkOne.source).toEqual(ids[investigation.rootFactor.children[0].referenceId]);
+        expect(linkOne.target).toEqual(ids[investigation.rootFactor.children[1].referenceId]);
         expect(linkOne.factorType).toEqual('mitigate');
-        expect(linkTwo.from).toEqual(ids[investigation.rootFactor.children[0].children[0]]);
-        expect(linkTwo.to).toEqual(ids[investigation.rootFactor.children[0].children[1]]);
+        expect(linkTwo.source).toEqual(ids[investigation.rootFactor.children[0].children[0].referenceId]);
+        expect(linkTwo.target).toEqual(ids[investigation.rootFactor.children[0].children[1].referenceId]);
         expect(linkTwo.factorType).toEqual('mitigate');
     });
 
@@ -170,7 +167,7 @@ describe('FactorRenderer tests', function () {
             if (parentId === rootId) {
                 childIds.push(id);
             }
-            ids[item.statement] = id;
+            ids[item.statement.referenceId] = id;
             return id;
         });
         GanttController.setOccurrenceEventId.and.callFake(function (id) {
