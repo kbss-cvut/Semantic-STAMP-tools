@@ -35,6 +35,14 @@ public class RepositoryOccurrenceReportService extends BaseRepositoryService<Occ
     }
 
     @Override
+    public Collection<OccurrenceReport> findAll(String type) {
+        if (type == null) {
+            return findAll();
+        }
+        return occurrenceReportDao.findAll(type);
+    }
+
+    @Override
     public OccurrenceReport findByKey(String key) {
         Objects.requireNonNull(key);
         return occurrenceReportDao.findByKey(key);

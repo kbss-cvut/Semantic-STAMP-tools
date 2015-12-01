@@ -2,13 +2,16 @@ package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.InvestigationReportDto;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;
+import cz.cvut.kbss.inbas.audit.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
+import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/investigations")
@@ -25,18 +27,17 @@ public class InvestigationController extends BaseController {
 
     @Autowired
     private PreliminaryReportService preliminaryReportService;
-
     @Autowired
     private InvestigationReportService investigationReportService;
+    @Autowired
+    private OccurrenceReportService occurrenceReportService;
 
     @Autowired
     private ReportMapper reportMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<InvestigationReportDto> getInvestigationReports() {
-        final Collection<InvestigationReport> reports = investigationReportService.findAll();
-        return reports.stream().map(reportMapper::investigationReportToInvestigationReportDto)
-                      .collect(Collectors.toList());
+    public Collection<OccurrenceReport> getInvestigationReports() {
+        return occurrenceReportService.findAll(Vocabulary.InvestigationReport);
     }
 
 

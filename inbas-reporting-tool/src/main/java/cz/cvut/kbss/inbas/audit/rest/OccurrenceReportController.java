@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.rest.exceptions.BadRequestException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.service.OccurrenceReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,12 @@ public class OccurrenceReportController extends BaseController {
     private OccurrenceReportService reportService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<OccurrenceReport> getAllReports() {
-        return reportService.findAll();
+    public Collection<OccurrenceReport> getAllReports(@RequestParam(value = "type", required = false) String type) {
+        try {
+            return reportService.findAll(type);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e);
+        }
     }
 
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

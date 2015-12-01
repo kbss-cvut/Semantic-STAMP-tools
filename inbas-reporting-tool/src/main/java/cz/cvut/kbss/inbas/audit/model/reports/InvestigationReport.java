@@ -65,6 +65,7 @@ public class InvestigationReport implements HasOwlKey, Serializable, Report {
     private Set<String> types;
 
     public InvestigationReport() {
+        this.revision = Constants.INITIAL_REVISION;
     }
 
     public InvestigationReport(PreliminaryReport preliminaryReport) {
