@@ -41,6 +41,11 @@ public class MockServiceConfig {
     }
 
     @Bean
+    public OccurrenceReportService occurrenceReportService() {
+        return mock(OccurrenceReportService.class);
+    }
+
+    @Bean
     public UserDetailsService userDetailsService() {
         return mock(UserDetailsService.class);
     }

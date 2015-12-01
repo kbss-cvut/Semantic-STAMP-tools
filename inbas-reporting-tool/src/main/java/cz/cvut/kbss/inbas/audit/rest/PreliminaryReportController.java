@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/reports")
+@RequestMapping("/preliminaryReports")
 public class PreliminaryReportController extends BaseController {
 
     @Autowired

@@ -9,7 +9,7 @@ var reports = null;
 var loaded = false;
 
 function loadReports() {
-    Ajax.get('rest/reports').end(function (err, resp) {
+    Ajax.get('rest/preliminaryReports').end(function (err, resp) {
         if (err) {
             console.log(err.status, err.response);
             return;
@@ -19,7 +19,7 @@ function loadReports() {
 }
 
 function findReport(key) {
-    Ajax.get('rest/reports/' + key).end(function (err, resp) {
+    Ajax.get('rest/preliminaryReports/' + key).end(function (err, resp) {
         if (err) {
             if (err.status !== 404) {
                 console.log(err.status, err.response);
@@ -55,7 +55,7 @@ var ReportsStore = Reflux.createStore({
         findReport(key);
     },
     onCreateReport: function (report, onSuccess, onError) {
-        Ajax.post('rest/reports', report).end(function (err, res) {
+        Ajax.post('rest/preliminaryReports', report).end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
                 onError ? onError(error) : this.handleError(err);
@@ -72,7 +72,7 @@ var ReportsStore = Reflux.createStore({
         console.log(err.status, error.message, error.requestUri);
     },
     onUpdateReport: function (report, onSuccess, onError) {
-        Ajax.put('rest/reports/' + report.key, report).end(function (err, res) {
+        Ajax.put('rest/preliminaryReports/' + report.key, report).end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
                 onError ? onError(error) : this.handleError(err);
@@ -85,7 +85,7 @@ var ReportsStore = Reflux.createStore({
         }.bind(this));
     },
     onDeleteReport: function (report, onSuccess, onError) {
-        Ajax.del('rest/reports/' + report.key).end(function (err, res) {
+        Ajax.del('rest/preliminaryReports/' + report.key).end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
                 onError ? onError(error) : this.handleError(err);
