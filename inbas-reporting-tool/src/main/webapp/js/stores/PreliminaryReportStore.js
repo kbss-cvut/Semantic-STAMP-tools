@@ -1,9 +1,10 @@
 'use strict';
 
 var Reflux = require('reflux');
-var Actions = require('../actions/Actions');
 
+var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
+var ErrorHandlingMixin = require('./mixin/ErrorHandlingMixin');
 
 var reports = null;
 var loaded = false;
@@ -14,7 +15,7 @@ function loadReports() {
             console.log(err.status, err.response);
             return;
         }
-        ReportsStore.onReportsLoaded(resp.body);
+        PreliminaryReportStore.onReportsLoaded(resp.body);
     });
 }
 
@@ -24,14 +25,15 @@ function findReport(key) {
             if (err.status !== 404) {
                 console.log(err.status, err.response);
             }
-            ReportsStore.onReportLoaded(null);
+            PreliminaryReportStore.onReportLoaded(null);
         }
-        ReportsStore.onReportLoaded(resp.body);
+        PreliminaryReportStore.onReportLoaded(resp.body);
     });
 }
 
-var ReportsStore = Reflux.createStore({
+var PreliminaryReportStore = Reflux.createStore({
     listenables: [Actions],
+    mixins: [ErrorHandlingMixin],
     getCurrentState: function () {
         return {
             reports: reports
@@ -67,10 +69,6 @@ var ReportsStore = Reflux.createStore({
             }
         }.bind(this));
     },
-    handleError: function (err) {
-        var error = JSON.parse(err.response.text);
-        console.log(err.status, error.message, error.requestUri);
-    },
     onUpdateReport: function (report, onSuccess, onError) {
         Ajax.put('rest/preliminaryReports/' + report.key, report).end(function (err, res) {
             if (err) {
@@ -102,4 +100,4 @@ var ReportsStore = Reflux.createStore({
     }
 });
 
-module.exports = ReportsStore;
+module.exports = PreliminaryReportStore;

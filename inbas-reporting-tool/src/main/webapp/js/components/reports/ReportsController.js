@@ -1,66 +1,33 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
 var Reflux = require('reflux');
-var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
-var ReportsStore = require('../../stores/ReportsStore');
+var ReportStore = require('../../stores/ReportStore');
 var Reports = require('./Reports');
 
-var Routing = require('../../utils/Routing');
-var Routes = require('../../utils/Routes');
 
 var ReportsController = React.createClass({
-    mixins: [
-        Reflux.listenTo(ReportsStore, 'onReportsChange')
-    ],
-    getInitialState: function () {
+    mixins: [Reflux.listenTo(ReportStore, 'onReportsLoaded')],
+
+    getInitialState: function() {
         return {
-            reports: ReportsStore.getReports(),
-            editedReport: null,
-            editing: false
+            reports: null
         };
     },
-    componentWillMount: function () {
-        Actions.loadReports();
-    },
-    onReportsChange: function (newState) {
-        newState.editing = false;
-        newState.editedReport = null;
-        this.setState(assign({}, this.state, newState));
-    },
-    onCreateReport: function () {
-        Routing.transitionTo(Routes.createReport, {handlers: {onSuccess: Routes.reports, onCancel: Routes.reports}});
-    },
-    onEditReport: function (report) {
-        Routing.transitionTo(Routes.editReport, {
-            params: {reportKey: report.key},
-            handlers: {onSuccess: Routes.reports, onCancel: Routes.reports}
-        });
-    },
-    onEditCancel: function () {
-        this.setState(assign({}, this.state, {
-            editing: false,
-            editedReport: null
-        }));
+
+    componentDidMount: function() {
+        Actions.loadAllReports();
     },
 
+    onReportsLoaded: function(reports) {
+        this.setState({reports: reports});
+    },
 
-    render: function () {
-        var edit = {
-            editing: this.state.editing,
-            editedReport: this.state.editedReport,
-            onCreateReport: this.onCreateReport,
-            onEditReport: this.onEditReport,
-            onCancelEdit: this.onEditCancel
-        };
+    render: function() {
         return (
-            <Reports reports={this.state.reports} edit={edit}/>
+            <Reports reports={this.state.reports} />
         );
     }
 });

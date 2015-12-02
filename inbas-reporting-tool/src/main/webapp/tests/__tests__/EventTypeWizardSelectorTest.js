@@ -15,7 +15,7 @@ describe('EventTypeWizardSelector tests', function () {
         return true;
     }
 
-    var WizardSelector = require('../../js/components/reports/wizard/event-type/EventTypeWizardSelector'),
+    var WizardSelector = require('../../js/components/preliminary/wizard/event-type/EventTypeWizardSelector'),
         Constants = require('../../js/constants/Constants');
 
     it('Returns RI wizard properties for Runway Incursion related event', function () {
@@ -28,7 +28,7 @@ describe('EventTypeWizardSelector tests', function () {
             },
             result = WizardSelector.getWizardSettings(eventType);
         expect(result.statement).toBeDefined();
-        expect(areStepsEqual(require('../../js/components/reports/wizard/event-type/runway-incursion/Steps'), result.steps)).toBeTruthy();
+        expect(areStepsEqual(require('../../js/components/preliminary/wizard/event-type/runway-incursion/Steps'), result.steps)).toBeTruthy();
     });
 
     it('Returns default wizard properties for unmatched event type', function () {
@@ -40,7 +40,7 @@ describe('EventTypeWizardSelector tests', function () {
             },
             result = WizardSelector.getWizardSettings(eventType);
         expect(result.statement).toBeDefined();
-        expect(areStepsEqual(require('../../js/components/reports/wizard/event-type/default/Steps'), result.steps)).toBeTruthy();
+        expect(areStepsEqual(require('../../js/components/preliminary/wizard/event-type/default/Steps'), result.steps)).toBeTruthy();
     });
 
     it('Returns wizard properties including conflicting aircraft step when it is present in existing statement', function () {

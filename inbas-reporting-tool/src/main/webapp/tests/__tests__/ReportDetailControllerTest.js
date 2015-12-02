@@ -6,7 +6,7 @@ describe('ReportDetailController tests', function () {
         TestUtils = require('react-addons-test-utils'),
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
-        ReportDetailController = require('../../js/components/reports/ReportDetailController'),
+        ReportDetailController = require('../../js/components/preliminary/ReportDetailController'),
         Routes = require('../../js/utils/Routes'),
         Constants = require('../../js/constants/Constants');
 

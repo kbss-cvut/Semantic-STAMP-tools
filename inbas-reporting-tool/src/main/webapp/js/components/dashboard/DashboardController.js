@@ -11,26 +11,27 @@ var Actions = require('../../actions/Actions');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var UserStore = require('../../stores/UserStore');
-var ReportsStore = require('../../stores/ReportsStore');
+var ReportStore = require('../../stores/ReportStore');
 var Dashboard = require('./Dashboard');
 var WizardWindow = require('./../wizard/WizardWindow');
 var InitialReportImportSteps = require('../initialreport/Steps');
+var ReportType = require('../../model/ReportType');
 
 var DashboardController = React.createClass({
     mixins: [
         Reflux.listenTo(UserStore, 'onUserLoaded'),
-        Reflux.listenTo(ReportsStore, 'onReportsLoaded')
+        Reflux.listenTo(ReportStore, 'onReportsLoaded')
     ],
     getInitialState: function () {
         return {
             firstName: UserStore.getCurrentUser() ? UserStore.getCurrentUser().firstName : '',
-            reports: ReportsStore.getReports() ? ReportsStore.getReports() : [],
+            reports: ReportStore.getReports() ? ReportStore.getReports() : [],
             initialReportImportOpen: false
         }
     },
 
     componentWillMount: function () {
-        Actions.loadReports();
+        Actions.loadAllReports();
     },
 
     onUserLoaded: function (user) {
@@ -38,11 +39,16 @@ var DashboardController = React.createClass({
     },
 
     onReportsLoaded: function () {
-        this.setState({reports: ReportsStore.getReports()});
+        this.setState({reports: ReportStore.getReports()});
     },
 
     createEmptyReport: function () {
-        Routing.transitionTo(Routes.createReport, {handlers: {onSuccess: Routes.reports, onCancel: Routes.dashboard}});
+        Routing.transitionTo(Routes.createReport, {
+            handlers: {
+                onSuccess: Routes.preliminary,
+                onCancel: Routes.dashboard
+            }
+        });
     },
 
     cancelInitialReportImport: function () {
@@ -56,15 +62,16 @@ var DashboardController = React.createClass({
     importInitialReport: function (data, closeCallback) {
         Routing.transitionTo(Routes.createReport, {
             payload: {initialReports: [data.initialReport]},
-            handlers: {onSuccess: Routes.reports, onCancel: Routes.dashboard}
+            handlers: {onSuccess: Routes.preliminary, onCancel: Routes.dashboard}
         });
         closeCallback();
     },
 
-    openReport: function (reportKey) {
-        Routing.transitionTo(Routes.editReport, {
-            params: {reportKey: reportKey},
-            handlers: {onSuccess: Routes.reports, onCancel: Routes.dashboard}
+    openReport: function (report) {
+        var route = ReportType.getDetailRoute(report);
+        Routing.transitionTo(route, {
+            params: {reportKey: report.key},
+            handlers: {onCancel: Routes.dashboard}
         });
     },
 

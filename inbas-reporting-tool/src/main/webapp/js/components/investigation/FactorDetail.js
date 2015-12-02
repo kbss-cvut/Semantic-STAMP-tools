@@ -14,7 +14,7 @@ var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
 var Utils = require('../../utils/Utils');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 
-var EventTypeWizardSelector = require('../reports/wizard/event-type/EventTypeWizardSelector');
+var EventTypeWizardSelector = require('../preliminary/wizard/event-type/EventTypeWizardSelector');
 var WizardWindow = require('../wizard/WizardWindow');
 
 var scaleUnits = {

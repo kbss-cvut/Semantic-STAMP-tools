@@ -10,7 +10,8 @@ var Typeahead = require('react-typeahead').Typeahead;
 var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
-var ReportsStore = require('../../stores/ReportsStore');
+var ReportStore = require('../../stores/ReportStore');
+var ReportType = require('../../model/ReportType');
 var TypeaheadResultList = require('./TypeaheadResultList');
 var Utils = require('../../utils/Utils');
 
@@ -29,28 +30,29 @@ var ReportTypeahead = React.createClass({
     },
 
     componentWillMount: function () {
-        this.listenTo(ReportsStore, this.onReportsLoaded);
-        Actions.loadReports();
+        this.listenTo(ReportStore, this.onReportsLoaded);
+        Actions.loadAllReports();
     },
 
     componentDidMount: function () {
         this.refs.reportTypeahead.focus();
     },
 
-    onReportsLoaded: function () {
+    onReportsLoaded: function (reports) {
         var options = [],
-            reports = ReportsStore.getReports(),
             option;
         for (var i = 0, len = reports.length; i < len; i++) {
             option = assign({}, reports[i].occurrence);
-            option.reportKey = reports[i].key;
+            option.key = reports[i].key;
+            option.types = reports[i].types;
+            option.type = ReportType.asString(reports[i]);
             options.push(option);
         }
         this.setState({options: options});
     },
 
     onOptionSelected: function (option) {
-        this.props.onChange(option.reportKey);
+        this.props.onChange(option);
     },
 
     render: function () {
@@ -59,7 +61,7 @@ var ReportTypeahead = React.createClass({
             results: 'dashboard-report-search-results'
         };
         var optionLabel = function (option) {
-            return option.name + ' (' + Utils.formatDate(new Date(option.startTime)) + ')';
+            return option.name + ' (' + Utils.formatDate(new Date(option.startTime)) + ' - ' + option.type + ')';
         };
         return (
             <Typeahead ref='reportTypeahead' className='form-group form-group-sm' name={this.props.name}

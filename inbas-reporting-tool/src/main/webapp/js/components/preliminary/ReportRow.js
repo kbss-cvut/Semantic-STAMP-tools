@@ -13,7 +13,6 @@ var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
-var ReportType = require('../../model/ReportType');
 
 var ReportRow = React.createClass({
 
@@ -27,7 +26,9 @@ var ReportRow = React.createClass({
         this.onEditClick();
     },
     onEditClick: function () {
-        this.props.onEdit(this.props.report);
+        if (this.props.onEditReport) {
+            this.props.onEditReport(this.props.report);
+        }
     },
     onDeleteClick: function () {
         this.setState({modalOpen: true});
@@ -39,6 +40,7 @@ var ReportRow = React.createClass({
         Actions.deleteReport(this.props.report);
         this.onCloseModal();
     },
+    
 
     render: function () {
         var report = this.props.report;
@@ -52,19 +54,18 @@ var ReportRow = React.createClass({
                                              title='Click to see report detail'>{report.occurrence.name}</a></td>
                 <td style={verticalAlign}>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.summary}/></td>
-                <td style={verticalAlign}>{ReportType.asString(report)}</td>
                 <td style={verticalAlign} className='actions'>
                     <Button bsStyle='primary' bsSize='small' title='Edit this occurrence report'
                             onClick={this.onEditClick}>Edit</Button>
                     <Button bsStyle='warning' bsSize='small' title='Delete this occurrence report'
                             onClick={this.onDeleteClick}>Delete</Button>
-                    {this.renderDeleteDialog()}
+                    {this.renderModal()}
                 </td>
             </tr>
         );
     },
 
-    renderDeleteDialog: function () {
+    renderModal: function () {
         return (<Modal show={this.state.modalOpen} onHide={this.onCloseModal}>
             <Modal.Header closeButton>
                 <Modal.Title>Delete Occurrence Report?</Modal.Title>

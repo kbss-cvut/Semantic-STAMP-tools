@@ -10,5 +10,8 @@ module.exports = {
     LINK_TYPES: {
         CAUSE: 'cause',
         MITIGATE: 'mitigate'
-    }
+    },
+
+    PRELIMINARY_REPORT_TYPE: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#PreliminaryReport',
+    INVESTIGATION_REPORT_TYPE: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#InvestigationReport'
 };

@@ -6,7 +6,7 @@
 
 var React = require('react');
 
-var ReportsTable = require('../reports/ReportsTable');
+var ReportsTable = require('../preliminary/ReportsTable');
 var InvestigationRow = require('./InvestigationRow');
 
 var Investigations = React.createClass({

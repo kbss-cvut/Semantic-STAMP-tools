@@ -16,7 +16,7 @@ var ReportsTable = React.createClass({
     },
 
     render: function () {
-        var title = <h3>{this.props.title ? this.props.title : 'Occurrence reports'}</h3>;
+        var title = <h3>{this.props.title ? this.props.title : 'Preliminary reports'}</h3>;
         var reports = this.prepareReports();
         return (<div>
             <Panel header={title} bsStyle='primary' {...this.props}>
@@ -25,8 +25,7 @@ var ReportsTable = React.createClass({
                     <tr>
                         <th className='col-xs-2'>Occurrence name</th>
                         <th className='col-xs-2'>Occurrence date</th>
-                        <th className='col-xs-5'>Description</th>
-                        <th className='col-xs-1'>Type</th>
+                        <th className='col-xs-6'>Description</th>
                         <th className='col-xs-2'>Actions</th>
                     </tr>
                     </thead>
@@ -45,7 +44,7 @@ var ReportsTable = React.createClass({
             result.push(React.createElement(this.props.rowComponent, {
                 report: this.props.reports[i],
                 key: this.props.reports[i].uri,
-                onEdit: this.props.onEdit
+                onEditReport: this.props.onEditReport
             }));
         }
         return result;

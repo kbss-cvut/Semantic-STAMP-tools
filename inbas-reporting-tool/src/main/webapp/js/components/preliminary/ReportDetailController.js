@@ -6,11 +6,12 @@
 
 var React = require('react');
 var Reflux = require('reflux');
+var Alert = require('react-bootstrap').Alert;
 
 var Actions = require('../../actions/Actions');
 var Constants = require('../../constants/Constants');
 var ReportDetail = require('./ReportDetail');
-var ReportsStore = require('../../stores/ReportsStore');
+var ReportsStore = require('../../stores/PreliminaryReportStore');
 var UserStore = require('../../stores/UserStore');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
@@ -65,9 +66,11 @@ var ReportDetailController = React.createClass({
     },
 
     onSuccess: function () {
-        var handlers = RouterStore.getViewHandlers(this.state.report.isNew ? Routes.createReport.name : Routes.editReport.name);
-        if (handlers) {
-            Routing.transitionTo(handlers.onSuccess);
+        if (this.state.report.isNew) {
+            Routing.transitionTo(Routes.preliminary);
+        } else {
+            Actions.findReport(this.state.report.key);
+            this.setState({message: 'Report successfully updated.'});
         }
     },
 
@@ -80,12 +83,29 @@ var ReportDetailController = React.createClass({
         }
     },
 
+    dismissMessage: function () {
+        this.setState({message: null});
+    },
+
 
     render: function () {
         return (
-            <ReportDetail report={this.state.report} loading={this.state.loading} user={this.state.user}
-                          onCancel={this.onCancel} onSuccess={this.onSuccess} onChange={this.onChange}/>
+            <div>
+                <ReportDetail report={this.state.report} loading={this.state.loading} user={this.state.user}
+                              onCancel={this.onCancel} onSuccess={this.onSuccess} onChange={this.onChange}/>
+                {this.renderMessage()}
+            </div>
         );
+    },
+
+    renderMessage: function () {
+        return this.state.message ? (
+            <div className='form-group'>
+                <Alert bsStyle='success' onDismiss={this.dismissMessage} dismissAfter={5000}>
+                    <p>{this.state.message}</p>
+                </Alert>
+            </div>
+        ) : null;
     }
 });
 

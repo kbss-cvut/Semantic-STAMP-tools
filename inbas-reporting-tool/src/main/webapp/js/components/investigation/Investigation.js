@@ -12,11 +12,11 @@ var Alert = require('react-bootstrap').Alert;
 var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
-var BasicOccurrenceInfo = require('../reports/BasicOccurrenceInfo');
+var BasicOccurrenceInfo = require('../preliminary/BasicOccurrenceInfo');
 var Factors = require('./Factors');
 var InitialReports = require('../initialreport/InitialReports');
-var ReportSummary = require('../reports/ReportSummary');
-var ReportStatements = require('../reports/ReportStatements');
+var ReportSummary = require('../preliminary/ReportSummary');
+var ReportStatements = require('../preliminary/ReportStatements');
 var Mask = require('../Mask');
 
 var Investigation = React.createClass({
