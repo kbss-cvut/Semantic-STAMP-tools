@@ -6,7 +6,6 @@
 
 var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
-var Button = require('react-bootstrap').Button;
 
 var ReportsTable = require('./ReportsTable');
 var ReportRow = require('./ReportRow');

@@ -11,8 +11,6 @@ var Modal = require('react-bootstrap').Modal;
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
-var Routing = require('../../utils/Routing');
-var Routes = require('../../utils/Routes');
 var ReportType = require('../../model/ReportType');
 
 var ReportRow = React.createClass({
