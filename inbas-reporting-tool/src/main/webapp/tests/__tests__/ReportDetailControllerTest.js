@@ -25,11 +25,11 @@ describe('ReportDetailController tests', function () {
     });
 
     it('Loads existing report when report key is passed in path params', function () {
-        spyOn(Actions, 'findReport').and.callThrough();
+        spyOn(Actions, 'findPreliminary').and.callThrough();
         var params = {reportKey: 12345},
             controller = TestUtils.renderIntoDocument(<ReportDetailController params={params}/>),
             state = controller.getInitialState();
-        expect(Actions.findReport).toHaveBeenCalledWith(params.reportKey);
+        expect(Actions.findPreliminary).toHaveBeenCalledWith(params.reportKey);
         expect(state.loading).toBeTruthy();
         expect(state.report).toBeNull();
     });

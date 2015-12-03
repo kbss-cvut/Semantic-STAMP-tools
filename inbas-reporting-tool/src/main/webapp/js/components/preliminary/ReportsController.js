@@ -6,11 +6,11 @@
 
 var React = require('react');
 var Reflux = require('reflux');
-var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
 var ReportsStore = require('../../stores/PreliminaryReportStore');
-var Reports = require('./Reports');
+var Reports = require('../reports/Reports');
+var ReportRow = require('./ReportRow');
 
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
@@ -19,48 +19,77 @@ var ReportsController = React.createClass({
     mixins: [
         Reflux.listenTo(ReportsStore, 'onReportsChange')
     ],
+
     getInitialState: function () {
         return {
-            reports: ReportsStore.getReports(),
-            editedReport: null,
-            editing: false
+            reports: ReportsStore.getReports()
         };
     },
+
     componentWillMount: function () {
-        Actions.loadReports();
+        Actions.loadPreliminaries();
     },
-    onReportsChange: function (newState) {
-        newState.editing = false;
-        newState.editedReport = null;
-        this.setState(assign({}, this.state, newState));
+
+    onReportsChange: function (reports) {
+        this.setState({reports: reports});
     },
+
     onCreateReport: function () {
-        Routing.transitionTo(Routes.createReport, {handlers: {onSuccess: Routes.preliminary, onCancel: Routes.preliminary}});
+        Routing.transitionTo(Routes.createReport, {
+            handlers: {
+                onSuccess: Routes.preliminary,
+                onCancel: Routes.preliminary
+            }
+        });
     },
+
     onEditReport: function (report) {
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
             handlers: {onSuccess: Routes.preliminary, onCancel: Routes.preliminary}
         });
     },
-    onEditCancel: function () {
-        this.setState(assign({}, this.state, {
-            editing: false,
-            editedReport: null
-        }));
+
+    onRemoveReport: function (report) {
+        Actions.deletePreliminary(report);
+    },
+
+    onCreateInvestigation: function (report) {
+        Actions.createInvestigation(report.key, this.onOpenInvestigation);
+    },
+
+    onOpenInvestigation: function (key) {
+        Routing.transitionTo(Routes.editInvestigation, {
+            params: {reportKey: key},
+            handlers: {onCancel: Routes.investigations}
+        });
     },
 
 
     render: function () {
-        var edit = {
-            editing: this.state.editing,
-            editedReport: this.state.editedReport,
-            onCreateReport: this.onCreateReport,
-            onEditReport: this.onEditReport,
-            onCancelEdit: this.onEditCancel
+        var actions = {
+            onEdit: this.onEditReport,
+            onRemove: this.onRemoveReport,
+            onInvestigate: this.onCreateInvestigation
         };
         return (
-            <Reports reports={this.state.reports} edit={edit}/>
+            <div>
+                <Reports title='Preliminary reports' reports={this.state.reports} actions={actions}
+                         rowComponent={ReportRow} tableHeader={this.renderTableHeader()}/>
+            </div>
+        );
+    },
+
+    renderTableHeader: function () {
+        return (
+            <thead>
+            <tr>
+                <th className='col-xs-2'>Occurrence name</th>
+                <th className='col-xs-2'>Occurrence date</th>
+                <th className='col-xs-6'>Description</th>
+                <th className='col-xs-2'>Actions</th>
+            </tr>
+            </thead>
         );
     }
 });

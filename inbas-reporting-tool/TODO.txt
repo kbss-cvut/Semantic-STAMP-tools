@@ -1,4 +1,4 @@
-Add a lightweight object for getting basic report info, so that the whole graph for each instance doesn't have to be loaded and serialized
+Add a mixin for showing info and error messages
 Implement report revisions
 Set up the Jasmine tests so that they can be run in browser and debugged
 Create proper investigation screen

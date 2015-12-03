@@ -26,7 +26,7 @@ var RecentlyEditedReports = React.createClass({
     },
 
     render: function () {
-        var title = (<h5>Recently Edited/Added Preliminary Reports</h5>),
+        var title = (<h5>Recently Edited/Added Reports</h5>),
             recentReports = this.renderRecentReports(this.filterRecentReports()),
             content = null;
         if (recentReports.length > 0) {
@@ -64,7 +64,7 @@ var RecentlyEditedReports = React.createClass({
 var ReportRow = React.createClass({
     onOpenClick: function (e) {
         e.preventDefault();
-        this.props.onOpenReport(this.props.report.key);
+        this.props.onOpenReport(this.props.report);
     },
 
     render: function () {

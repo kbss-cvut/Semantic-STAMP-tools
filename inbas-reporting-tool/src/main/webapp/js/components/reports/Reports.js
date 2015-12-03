@@ -8,7 +8,6 @@ var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 
 var ReportsTable = require('./ReportsTable');
-var ReportRow = require('./ReportRow');
 var Mask = require('./../Mask');
 
 var Reports = React.createClass({
@@ -16,7 +15,8 @@ var Reports = React.createClass({
     propTypes: {
         reports: React.PropTypes.array,
         rowComponent: React.PropTypes.func,     // A react component
-        onEdit: React.PropTypes.func
+        onEdit: React.PropTypes.func,
+        onRemove: React.PropTypes.func
     },
 
     render: function () {
@@ -32,17 +32,12 @@ var Reports = React.createClass({
                     <Jumbotron>
                         <h2>INBAS Reporting</h2>
 
-                        <p>There are no occurrence reports, yet.</p>
+                        <p>There are no reports here, yet.</p>
                     </Jumbotron>
                 </div>
             );
         } else {
-            var rowComponent = this.props.rowComponent ? this.props.rowComponent : ReportRow;
-            return (
-                <div>
-                    <ReportsTable {...this.props} rowComponent={rowComponent}/>
-                </div>
-            );
+            return (<ReportsTable {...this.props}/>);
         }
 
     }

@@ -44,7 +44,7 @@ var ReportDetailController = React.createClass({
     componentWillMount: function () {
         if (this.props.params.reportKey) {
             // Find the report by key
-            Actions.findReport(this.props.params.reportKey);
+            Actions.findPreliminary(this.props.params.reportKey);
         }
     },
 
@@ -69,7 +69,7 @@ var ReportDetailController = React.createClass({
         if (this.state.report.isNew) {
             Routing.transitionTo(Routes.preliminary);
         } else {
-            Actions.findReport(this.state.report.key);
+            Actions.findPreliminary(this.state.report.key);
             this.setState({message: 'Report successfully updated.'});
         }
     },

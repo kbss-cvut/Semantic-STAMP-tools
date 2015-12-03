@@ -6,11 +6,10 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-var Modal = require('react-bootstrap').Modal;
 
-var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
+var DeleteReportDialog = require('../DeleteReportDialog');
 
 var ReportRow = React.createClass({
 
@@ -24,9 +23,7 @@ var ReportRow = React.createClass({
         this.onEditClick();
     },
     onEditClick: function () {
-        if (this.props.onEditReport) {
-            this.props.onEditReport(this.props.report);
-        }
+        this.props.actions.onEdit(this.props.report);
     },
     onDeleteClick: function () {
         this.setState({modalOpen: true});
@@ -35,10 +32,13 @@ var ReportRow = React.createClass({
         this.setState({modalOpen: false});
     },
     removeReport: function () {
-        Actions.deleteReport(this.props.report);
+        this.props.actions.onRemove(this.props.report);
         this.onCloseModal();
     },
-    
+    onInvestigate: function () {
+        this.props.actions.onInvestigate(this.props.report);
+    },
+
 
     render: function () {
         var report = this.props.report;
@@ -57,25 +57,15 @@ var ReportRow = React.createClass({
                             onClick={this.onEditClick}>Edit</Button>
                     <Button bsStyle='warning' bsSize='small' title='Delete this occurrence report'
                             onClick={this.onDeleteClick}>Delete</Button>
-                    {this.renderModal()}
+                    <Button bsStyle='primary' bsSize='small' title='Investigate this occurrence'
+                            onClick={this.onInvestigate}>Investigate
+                    </Button>
+
+                    <DeleteReportDialog show={this.state.modalOpen} onClose={this.onCloseModal}
+                                        onSubmit={this.removeReport} reportType={'Preliminary'}/>
                 </td>
             </tr>
         );
-    },
-
-    renderModal: function () {
-        return (<Modal show={this.state.modalOpen} onHide={this.onCloseModal}>
-            <Modal.Header closeButton>
-                <Modal.Title>Delete Occurrence Report?</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                Are you sure you want to remove this report?
-            </Modal.Body>
-            <Modal.Footer>
-                <Button bsStyle='warning' bsSize='small' onClick={this.removeReport}>Delete</Button>
-                <Button bsSize='small' onClick={this.onCloseModal}>Cancel</Button>
-            </Modal.Footer>
-        </Modal>);
     }
 });
 

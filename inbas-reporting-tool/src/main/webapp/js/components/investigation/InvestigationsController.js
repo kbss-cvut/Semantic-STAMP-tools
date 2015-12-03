@@ -8,9 +8,9 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var Actions = require('../../actions/Actions');
+var InvestigationRow = require('./InvestigationRow');
 var InvestigationStore = require('../../stores/InvestigationStore');
-var Investigations = require('./Investigations');
-var Mask = require('../Mask');
+var Reports = require('../reports/Reports');
 
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
@@ -41,17 +41,33 @@ var InvestigationsController = React.createClass({
         });
     },
 
+    onRemoveInvestigation: function (investigation) {
+        Actions.deleteInvestigation(investigation);
+    },
+
     render: function () {
-        if (!this.state.investigations) {
-            return (
-                <Mask text='Loading investigations'/>
-            );
-        }
+        var actions = {
+            onEdit: this.onEditInvestigation,
+            onRemove: this.onRemoveInvestigation
+        };
         return (
             <div>
-                <Investigations investigations={this.state.investigations}
-                                onEditInvestigation={this.onEditInvestigation}/>
+                <Reports title='Investigation reports' reports={this.state.investigations} actions={actions}
+                         rowComponent={InvestigationRow} tableHeader={this.renderTableHeader()}/>
             </div>
+        );
+    },
+
+    renderTableHeader: function () {
+        return (
+            <thead>
+            <tr>
+                <th className='col-xs-2'>Occurrence name</th>
+                <th className='col-xs-2'>Occurrence date</th>
+                <th className='col-xs-6'>Description</th>
+                <th className='col-xs-2'>Actions</th>
+            </tr>
+            </thead>
         );
     }
 });

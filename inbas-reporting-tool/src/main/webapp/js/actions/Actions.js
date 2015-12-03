@@ -4,12 +4,11 @@ var Reflux = require('reflux');
 
 var Actions = Reflux.createActions([
     'loadUser',
-    'loadAllReports',
-    'loadReports', 'findReport', 'createReport', 'updateReport', 'deleteReport',
-    'loadInvestigations',
+    'loadAllReports', 'deleteReport',
+    'loadPreliminaries', 'findPreliminary', 'createPreliminary', 'updatePreliminary', 'deletePreliminary',
+    'loadInvestigations', 'createInvestigation', 'findInvestigation', 'updateInvestigation', 'deleteInvestigation',
     'loadEventTypes', 'loadLvpOptions', 'loadOccurrenceSeverityOptions', 'loadLocations', 'loadOperators',
-    'setTransitionPayload',
-    'createInvestigation', 'findInvestigation', 'updateInvestigation', 'deleteInvestigation'
+    'setTransitionPayload'
 ]);
 
 module.exports = Actions;

@@ -16,6 +16,7 @@ var ReportStore = Reflux.createStore({
 
     init: function () {
         this.listenTo(Actions.loadAllReports, this.loadReports);
+        this.listenTo(Actions.deleteReport, this.deleteReport);
     },
 
     loadReports: function () {
@@ -25,6 +26,23 @@ var ReportStore = Reflux.createStore({
             } else {
                 this._reports = response.body;
                 this.trigger(this._reports);
+            }
+        }.bind(this));
+    },
+
+    deleteReport: function (report, onSuccess, onError) {
+        Ajax.del('rest/reports/' + report.key).end(function (err) {
+            if (err) {
+                if (onError) {
+                    onError(JSON.parse(err.response.text));
+                } else {
+                    this.handleError(err);
+                }
+            } else {
+                if (onSuccess) {
+                    onSuccess();
+                }
+                this.loadReports();
             }
         }.bind(this));
     },

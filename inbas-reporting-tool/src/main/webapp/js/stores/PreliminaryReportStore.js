@@ -34,29 +34,24 @@ function findReport(key) {
 var PreliminaryReportStore = Reflux.createStore({
     listenables: [Actions],
     mixins: [ErrorHandlingMixin],
-    getCurrentState: function () {
-        return {
-            reports: reports
-        };
-    },
     getReports: function () {
         return reports;
     },
-    onLoadReports: function () {
+    onLoadPreliminaries: function () {
         loadReports();
     },
     onReportsLoaded: function (data) {
         reports = data;
         loaded = true;
-        this.trigger(this.getCurrentState());
+        this.trigger(reports);
     },
     onReportLoaded: function (report) {
         this.trigger(report);
     },
-    onFindReport: function (key) {
+    onFindPreliminary: function (key) {
         findReport(key);
     },
-    onCreateReport: function (report, onSuccess, onError) {
+    onCreatePreliminary: function (report, onSuccess, onError) {
         Ajax.post('rest/preliminaryReports', report).end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
@@ -69,7 +64,7 @@ var PreliminaryReportStore = Reflux.createStore({
             }
         }.bind(this));
     },
-    onUpdateReport: function (report, onSuccess, onError) {
+    onUpdatePreliminary: function (report, onSuccess, onError) {
         Ajax.put('rest/preliminaryReports/' + report.key, report).end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
@@ -82,7 +77,7 @@ var PreliminaryReportStore = Reflux.createStore({
             }
         }.bind(this));
     },
-    onDeleteReport: function (report, onSuccess, onError) {
+    onDeletePreliminary: function (report, onSuccess, onError) {
         Ajax.del('rest/preliminaryReports/' + report.key).end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
