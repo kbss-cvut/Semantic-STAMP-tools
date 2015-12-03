@@ -82,9 +82,9 @@ var ReportsController = React.createClass({
         return (
             <thead>
             <tr>
-                <th className='col-xs-2'>Occurrence name</th>
+                <th className='col-xs-2'>Occurrence headline</th>
                 <th className='col-xs-2'>Occurrence date</th>
-                <th className='col-xs-6'>Description</th>
+                <th className='col-xs-6'>Narrative</th>
                 <th className='col-xs-2'>Actions</th>
             </tr>
             </thead>

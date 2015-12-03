@@ -14,10 +14,10 @@ var ReportSummary = React.createClass({
     },
 
     render: function() {
-        return <Input type='textarea' rows='8' label='Report Summary' name='summary'
-                      placeholder='Report summary'
+        return <Input type='textarea' rows='8' label='Narrative' name='summary'
+                      placeholder='Narrative'
                       value={this.props.report.summary} onChange={this.props.onChange}
-                      title='Report summary'/>;
+                      title='Narrative'/>;
     }
 });
 

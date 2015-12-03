@@ -51,9 +51,9 @@ var ReportsTable = React.createClass({
         return this.props.tableHeader ? this.props.tableHeader : (
             <thead>
             <tr>
-                <th className='col-xs-2'>Occurrence name</th>
+                <th className='col-xs-2'>Headline</th>
                 <th className='col-xs-2'>Occurrence date</th>
-                <th className='col-xs-5'>Description</th>
+                <th className='col-xs-5'>Narrative</th>
                 <th className='col-xs-1'>Type</th>
                 <th className='col-xs-2'>Actions</th>
             </tr>

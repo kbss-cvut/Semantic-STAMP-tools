@@ -44,7 +44,7 @@ var OccurrenceDetail = React.createClass({
                 <div className='row'>
                     <div className='col-xs-4'>
                         <Input type='text' name='name' value={occurrence.name} onChange={this.onChange}
-                               label='Occurrence Summary' title='Short descriptive summary of the occurrence'/>
+                               label='Headline' title='Short descriptive summary of the occurrence'/>
                     </div>
                 </div>
 

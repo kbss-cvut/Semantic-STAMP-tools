@@ -33,7 +33,7 @@ var RecentlyEditedReports = React.createClass({
             content = (<Table striped bordered condensed hover>
                 <thead>
                 <tr>
-                    <th className='col-xs-4'>Occurrence summary</th>
+                    <th className='col-xs-4'>Occurrence headline</th>
                     <th className='col-xs-4'>Occurrence date</th>
                     <th className='col-xs-4'>Last edited</th>
                 </tr>
