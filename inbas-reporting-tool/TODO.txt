@@ -1,4 +1,3 @@
-Add a mixin for showing info and error messages
 Implement report revisions
 Set up the Jasmine tests so that they can be run in browser and debugged
 Create proper investigation screen
