@@ -1,3 +1,4 @@
+Add client side validation - submit button should be disabled until report is valid
 Implement report revisions
 Set up the Jasmine tests so that they can be run in browser and debugged
 Create proper investigation screen

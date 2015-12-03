@@ -20,7 +20,10 @@ public class BaseReportValidator implements Validator<ValidatableReport> {
 
         if (report.getOccurrence() == null || report.getAuthor() == null) {
             throw new ValidationException(
-                    "Preliminary report is missing one of the required attributes: occurrence, author. " + report);
+                    "Report is missing one of the required attributes: occurrence, author. " + report);
+        }
+        if (report.getSummary() == null || report.getSummary().isEmpty()) {
+            throw new ValidationException("Report is missing narrative.");
         }
         occurrenceValidator.validate(report.getOccurrence());
     }

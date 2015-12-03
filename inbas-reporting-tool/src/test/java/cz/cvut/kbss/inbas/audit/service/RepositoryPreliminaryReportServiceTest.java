@@ -93,6 +93,7 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
     private PreliminaryReport initReportWithOccurrence() {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(Generator.generateOccurrence());
+        report.setSummary("Narrative");
         return report;
     }
 

@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.model.reports.ValidatableReport;
 import cz.cvut.kbss.inbas.audit.service.BaseServiceTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class BaseReportValidatorTest extends BaseServiceTestRunner {
     private static final Person PERSON = initPerson();
 
     @Autowired
-    private Validator<PreliminaryReport> validator;
+    private Validator<ValidatableReport> validator;
 
     private static Person initPerson() {
         final Person p = new Person();
@@ -37,6 +38,7 @@ public class BaseReportValidatorTest extends BaseServiceTestRunner {
         final PreliminaryReport report = new PreliminaryReport();
         report.setAuthor(PERSON);
         final Occurrence occurrence = new Occurrence();
+        occurrence.setName("TestOccurrence");
         occurrence.setStartTime(new Date(System.currentTimeMillis() - 1000000));
         occurrence.setEndTime(new Date());
         report.setOccurrence(occurrence);
@@ -55,6 +57,13 @@ public class BaseReportValidatorTest extends BaseServiceTestRunner {
     public void reportWithoutOccurrenceIsInvalid() throws Exception {
         final PreliminaryReport report = getDefaultValidReport();
         report.setOccurrence(null);
+        validator.validate(report);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void reportWithoutSummaryIsInvalid() throws Exception {
+        final PreliminaryReport report = getDefaultValidReport();
+        report.setSummary("");
         validator.validate(report);
     }
 }
