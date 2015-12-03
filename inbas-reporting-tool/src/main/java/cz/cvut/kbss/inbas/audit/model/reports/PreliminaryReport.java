@@ -15,7 +15,7 @@ import java.net.URI;
 import java.util.*;
 
 @OWLClass(iri = Vocabulary.PreliminaryReport)
-public class PreliminaryReport implements HasOwlKey, Serializable, Report {
+public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableReport {
 
     @Id(generated = true)
     private URI uri;

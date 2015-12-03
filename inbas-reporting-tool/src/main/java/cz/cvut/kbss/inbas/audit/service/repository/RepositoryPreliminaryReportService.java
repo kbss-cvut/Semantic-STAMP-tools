@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.model.reports.ValidatableReport;
 import cz.cvut.kbss.inbas.audit.persistence.dao.CorrectiveMeasureDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.EventTypeAssessmentDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
@@ -24,7 +25,7 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
         implements PreliminaryReportService {
 
     @Autowired
-    private Validator<PreliminaryReport> reportValidator;
+    private Validator<ValidatableReport> reportValidator;
 
     @Autowired
     private PreliminaryReportDao preliminaryReportDao;

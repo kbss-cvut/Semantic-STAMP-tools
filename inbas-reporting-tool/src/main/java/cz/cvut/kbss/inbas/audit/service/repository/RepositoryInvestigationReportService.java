@@ -24,7 +24,7 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
     @Autowired
     private SecurityUtils securityUtils;
     @Autowired
-    private Validator<PreliminaryReport> preliminaryReportValidator;
+    private Validator<ValidatableReport> reportValidator;
 
     @Autowired
     private CorrectiveMeasureDao correctiveMeasureDao;
@@ -57,7 +57,7 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
 
     @Override
     public InvestigationReport createFromPreliminaryReport(PreliminaryReport preliminaryReport) {
-        preliminaryReportValidator.validate(preliminaryReport);
+        reportValidator.validate(preliminaryReport);
         final InvestigationReport investigation = new InvestigationReport(preliminaryReport);
         initBasicInfo(investigation);
         copyInitialReports(preliminaryReport, investigation);
@@ -111,6 +111,7 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
     public void update(InvestigationReport instance) {
         instance.setLastEdited(new Date());
         instance.setLastEditedBy(securityUtils.getCurrentUser());
+        reportValidator.validate(instance);
         final InvestigationReport original = find(instance.getUri());
         super.update(instance);
         removeObsoleteFactors(original, instance);

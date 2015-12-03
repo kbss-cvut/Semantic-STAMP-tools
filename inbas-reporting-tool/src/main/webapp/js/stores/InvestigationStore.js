@@ -3,16 +3,13 @@
 var Reflux = require('reflux');
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
+var ErrorHandlingMixin = require('./mixin/ErrorHandlingMixin');
 
 var investigations = [];
 
 var InvestigationStore = Reflux.createStore({
     listenables: [Actions],
-
-    handleError: function (err) {
-        var error = JSON.parse(err.response.text);
-        console.log(err.status, error.message, error.requestUri);
-    },
+    mixins: [ErrorHandlingMixin],
 
     onLoadInvestigations: function () {
         Ajax.get('rest/investigations').end(function (err, res) {
@@ -41,6 +38,7 @@ var InvestigationStore = Reflux.createStore({
         Ajax.get('rest/investigations/' + key).end(function (err, res) {
             if (err) {
                 this.handleError(err);
+                this.trigger(null);
             } else {
                 this.trigger(res.body);
             }
@@ -62,8 +60,8 @@ var InvestigationStore = Reflux.createStore({
         }.bind(this));
     },
 
-    onDeleteInvestigation: function(investigation) {
-        Ajax.del('rest/investigations/' + investigation.key).end(function(err) {
+    onDeleteInvestigation: function (investigation) {
+        Ajax.del('rest/investigations/' + investigation.key).end(function (err) {
             if (err) {
                 this.handleError(err);
             } else {

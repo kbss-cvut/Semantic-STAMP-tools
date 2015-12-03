@@ -51,10 +51,8 @@ var InvestigationsController = React.createClass({
             onRemove: this.onRemoveInvestigation
         };
         return (
-            <div>
-                <Reports title='Investigation reports' reports={this.state.investigations} actions={actions}
-                         rowComponent={InvestigationRow} tableHeader={this.renderTableHeader()}/>
-            </div>
+            <Reports panelTitle='Investigation reports' reports={this.state.investigations} actions={actions}
+                     rowComponent={InvestigationRow} tableHeader={this.renderTableHeader()}/>
         );
     },
 

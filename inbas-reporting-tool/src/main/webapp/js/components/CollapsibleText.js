@@ -43,7 +43,7 @@ var CollapsibleText = React.createClass({
 
     render: function () {
         var style = this.state.expanded ? {whiteSpace: 'pre-wrap'} : {};
-        var title = this.isShortened(this.props.text) ? 'Click to see full text' : null;
+        var title = this.isShortened(this.props.text) ? 'Click to see full text' : this.props.text;
         return (
             <div title={title} onClick={this.onToggle} style={style}>
                 {this.getText()}

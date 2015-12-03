@@ -6,7 +6,6 @@
 
 var React = require('react');
 var Reflux = require('reflux');
-var Alert = require('react-bootstrap').Alert;
 
 var Actions = require('../../actions/Actions');
 var Constants = require('../../constants/Constants');
@@ -21,7 +20,8 @@ var PreliminaryReportFactory = require('../../model/PreliminaryReportFactory');
 var ReportDetailController = React.createClass({
     mixins: [
         Reflux.listenTo(ReportsStore, 'onReportsChange'),
-        Reflux.listenTo(UserStore, 'onUserChange')],
+        Reflux.listenTo(UserStore, 'onUserChange')
+    ],
 
     getInitialState: function () {
         var isNew = !this.props.params.reportKey;
@@ -70,7 +70,6 @@ var ReportDetailController = React.createClass({
             Routing.transitionTo(Routes.preliminary);
         } else {
             Actions.findPreliminary(this.state.report.key);
-            this.setState({message: 'Report successfully updated.'});
         }
     },
 
@@ -83,29 +82,12 @@ var ReportDetailController = React.createClass({
         }
     },
 
-    dismissMessage: function () {
-        this.setState({message: null});
-    },
-
 
     render: function () {
         return (
-            <div>
-                <ReportDetail report={this.state.report} loading={this.state.loading} user={this.state.user}
-                              onCancel={this.onCancel} onSuccess={this.onSuccess} onChange={this.onChange}/>
-                {this.renderMessage()}
-            </div>
+            <ReportDetail report={this.state.report} loading={this.state.loading} user={this.state.user}
+                          onCancel={this.onCancel} onSuccess={this.onSuccess} onChange={this.onChange}/>
         );
-    },
-
-    renderMessage: function () {
-        return this.state.message ? (
-            <div className='form-group'>
-                <Alert bsStyle='success' onDismiss={this.dismissMessage} dismissAfter={5000}>
-                    <p>{this.state.message}</p>
-                </Alert>
-            </div>
-        ) : null;
     }
 });
 

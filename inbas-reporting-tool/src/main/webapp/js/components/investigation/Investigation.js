@@ -8,7 +8,6 @@ var React = require('react');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
-var Alert = require('react-bootstrap').Alert;
 var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
@@ -18,12 +17,15 @@ var InitialReports = require('../initialreport/InitialReports');
 var ReportSummary = require('../preliminary/ReportSummary');
 var ReportStatements = require('../preliminary/ReportStatements');
 var Mask = require('../Mask');
+var MessageMixin = require('../mixin/MessageMixin');
+var ResourceNotFound = require('../ResourceNotFound');
 
 var Investigation = React.createClass({
+    mixins: [MessageMixin],
+
     getInitialState: function () {
         return {
-            submitting: false,
-            error: null
+            submitting: false
         };
     },
 
@@ -46,20 +48,15 @@ var Investigation = React.createClass({
         Actions.updateInvestigation(investigation, this.onSubmitSuccess, this.onSubmitError);
     },
 
-    onSubmitSuccess: function() {
+    onSubmitSuccess: function () {
         this.setState({submitting: false});
         this.props.onSuccess();
+        this.showSuccessMessage('Investigation successfully updated.');
     },
 
     onSubmitError: function (error) {
-        this.setState(assign({}, this.state, {
-            error: error,
-            submitting: false
-        }));
-    },
-
-    handleAlertDismiss: function () {
-        this.setState(assign({}, this.state, {error: null}));
+        this.setState({submitting: false});
+        this.showErrorMessage('Unable to save investigation. Server responded with message: ' + error.message);
     },
 
 
@@ -69,6 +66,9 @@ var Investigation = React.createClass({
                 <Mask text='Loading report for investigation...'/>
             );
         }
+        if (!this.props.investigation) {
+            return (<ResourceNotFound resource='Investigation' />);
+        }
         return this.renderDetail();
     },
 
@@ -76,53 +76,45 @@ var Investigation = React.createClass({
         var investigation = this.props.investigation,
             loading = this.state.submitting;
         return (
-            <Panel header='Occurrence Investigation'>
-                <form>
-                    <BasicOccurrenceInfo report={investigation} onChange={this.onChange}
-                                         onAttributeChange={this.onAttributeChange}/>
+            <div>
+                <Panel header='Occurrence Investigation'>
+                    <form>
+                        <BasicOccurrenceInfo report={investigation} onChange={this.onChange}
+                                             onAttributeChange={this.onAttributeChange}/>
 
-                    <div className='row'>
-                        <div className='col-xs-12'>
-                            <InitialReports report={investigation} onAttributeChange={this.onAttributeChange}/>
+                        <div className='row'>
+                            <div className='col-xs-12'>
+                                <InitialReports report={investigation} onAttributeChange={this.onAttributeChange}/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div>
-                        <Factors ref='factors' investigation={investigation} onAttributeChange={this.onAttributeChange}/>
-                    </div>
-
-                    <div className='form-group'>
-                        <ReportStatements report={investigation} onChange={this.props.onChange} show={['correctiveMeasures']}/>
-                    </div>
-
-                    <div className='row'>
-                        <div className='col-xs-12'>
-                            <ReportSummary report={investigation} onChange={this.onChange}/>
+                        <div>
+                            <Factors ref='factors' investigation={investigation}
+                                     onAttributeChange={this.onAttributeChange}/>
                         </div>
-                    </div>
 
-                    <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
-                        <Button bsStyle='success' bsSize='small' disabled={loading}
-                                ref='submit'
-                                onClick={this.onSubmit}>{loading ? 'Saving...' : 'Save'}</Button>
-                        <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
-                    </ButtonToolbar>
+                        <div className='form-group'>
+                            <ReportStatements report={investigation} onChange={this.props.onChange}
+                                              show={['correctiveMeasures']}/>
+                        </div>
 
-                    {this.renderError()}
+                        <div className='row'>
+                            <div className='col-xs-12'>
+                                <ReportSummary report={investigation} onChange={this.onChange}/>
+                            </div>
+                        </div>
 
-                </form>
-            </Panel>
-        );
-    },
-
-    renderError: function () {
-        return this.state.error ? (
-            <div className='form-group'>
-                <Alert bsStyle='danger' onDismiss={this.handleAlertDismiss} dismissAfter={10000}>
-                    <p>Unable to submit investigation. Server responded with message: {this.state.error.message}</p>
-                </Alert>
+                        <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
+                            <Button bsStyle='success' bsSize='small' disabled={loading}
+                                    ref='submit'
+                                    onClick={this.onSubmit}>{loading ? 'Saving...' : 'Save'}</Button>
+                            <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
+                        </ButtonToolbar>
+                    </form>
+                </Panel>
+                {this.renderMessage()}
             </div>
-        ) : null;
+        );
     }
 });
 

@@ -14,12 +14,13 @@ var ReportsTable = React.createClass({
 
     propTypes: {
         reports: React.PropTypes.array.isRequired,
+        panelTitle: React.PropTypes.string, // Panel title (header), optional
         tableHead: React.PropTypes.object,   // Table header, optional
         rowComponent: React.PropTypes.func     // A react component, optional
     },
 
     render: function () {
-        var title = <h3>{this.props.title ? this.props.title : 'Occurrence reports'}</h3>;
+        var title = <h3>{this.props.panelTitle ? this.props.panelTitle : 'Occurrence reports'}</h3>;
         return (<div>
             <Panel header={title} bsStyle='primary' {...this.props}>
                 <Table striped bordered condensed hover>

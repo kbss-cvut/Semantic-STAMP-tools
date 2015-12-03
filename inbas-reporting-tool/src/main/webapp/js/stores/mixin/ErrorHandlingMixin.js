@@ -1,5 +1,7 @@
 'use strict';
 
+var Logger = require('../../utils/Logger');
+
 /**
  * Mixin for error handling in stores.
  *
@@ -8,10 +10,15 @@
 var ErrorHandlingMixin = {
     handleError: function (err) {
         try {
-            var error = JSON.parse(err.response.text);
-            console.log(error.requestUri + ' - Status ' + err.status + ': ' + error.message);
+            var error = JSON.parse(err.response.text),
+                msg = error.requestUri + ' - Status ' + err.status + ': ' + error.message;
+            if (err.status === 404) {
+                Logger.warn(msg);
+            } else {
+                Logger.error(msg);
+            }
         } catch (err) {
-            console.error('AJAX error: ' + err.response.text);
+            Logger.error('AJAX error: ' + err.response.text);
         }
     }
 };

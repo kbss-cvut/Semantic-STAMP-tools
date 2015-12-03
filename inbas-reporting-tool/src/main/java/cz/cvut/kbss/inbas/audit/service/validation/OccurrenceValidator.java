@@ -14,6 +14,10 @@ public class OccurrenceValidator implements Validator<Occurrence> {
     public void validate(Occurrence instance) throws ValidationException {
         Objects.requireNonNull(instance);
 
+        if (instance.getName() == null || instance.getName().isEmpty()) {
+            throw new ValidationException("Occurrence name cannot be empty.");
+        }
+
         if (instance.getStartTime() == null || instance.getEndTime() == null) {
             throw new ValidationException("Occurrence is missing start or end time.");
         }

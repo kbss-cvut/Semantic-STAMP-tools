@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.InvestigationReport)
-public class InvestigationReport implements HasOwlKey, Serializable, Report {
+public class InvestigationReport implements HasOwlKey, Serializable, ValidatableReport {
 
     @Id(generated = true)
     private URI uri;

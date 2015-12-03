@@ -7,7 +7,6 @@
 var React = require('react');
 var Reflux = require('reflux');
 var assign = require('object-assign');
-var Alert = require('react-bootstrap').Alert;
 
 var Actions = require('../../actions/Actions');
 var Constants = require('../../constants/Constants');
@@ -45,12 +44,7 @@ var InvestigationController = React.createClass({
     },
 
     onSuccess: function () {
-        this.setState({message: 'Investigation successfully updated.'});
         Actions.findInvestigation(this.state.investigation.key);
-    },
-
-    dismissMessage: function () {
-        this.setState({message: null});
     },
 
     onCancel: function () {
@@ -69,22 +63,9 @@ var InvestigationController = React.createClass({
 
     render: function () {
         return (
-            <div>
-                <Investigation investigation={this.state.investigation} loading={this.state.loading}
-                               onChange={this.onChange} onSuccess={this.onSuccess} onCancel={this.onCancel}/>
-                {this.renderMessage()}
-            </div>
+            <Investigation investigation={this.state.investigation} loading={this.state.loading}
+                           onChange={this.onChange} onSuccess={this.onSuccess} onCancel={this.onCancel}/>
         );
-    },
-
-    renderMessage: function () {
-        return this.state.message ? (
-            <div className='form-group'>
-                <Alert bsStyle='success' onDismiss={this.dismissMessage} dismissAfter={5000}>
-                    <p>{this.state.message}</p>
-                </Alert>
-            </div>
-        ) : null;
     }
 });
 

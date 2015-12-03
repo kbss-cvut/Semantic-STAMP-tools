@@ -73,10 +73,8 @@ var ReportsController = React.createClass({
             onInvestigate: this.onCreateInvestigation
         };
         return (
-            <div>
-                <Reports title='Preliminary reports' reports={this.state.reports} actions={actions}
-                         rowComponent={ReportRow} tableHeader={this.renderTableHeader()}/>
-            </div>
+            <Reports panelTitle='Preliminary reports' reports={this.state.reports} actions={actions}
+                     rowComponent={ReportRow} tableHeader={this.renderTableHeader()}/>
         );
     },
 
