@@ -10,7 +10,7 @@
     "keymirror": "~0.1.0",
     "object-assign": "~4.0.1",
     "superagent": "~1.2.0",
-    "react-router": "~1.0.0-rc4",
+    "react-router": "~1.0.0",
     "history": "~1.13.1",
     "react-bootstrap": "~0.27.3",
     "react-router-bootstrap": "~0.19.3",
@@ -22,7 +22,8 @@
     "react-typeahead": "~1.1.5",
     "remarkable": "~1.6.0",
     "js-cookie": "~2.0.3",
-    "halogen": "~0.1.10"
+    "halogen": "~0.1.10",
+    "react-intl": "~1.2.2"
   },
   "devDependencies": {
     "browserify": "^12.0.1",
@@ -30,6 +31,7 @@
     "reactify": "^0.15.2",
     "uglify-js": "^2.4.15",
     "watchify": "^2.1.1",
+    "babelify": "^7.2.0",
     "clean-css": "^3.4.3",
     "jasmine": "^2.3.2",
     "jasmine-core": "^2.3.4",

@@ -11,11 +11,16 @@ var Grid = require('react-bootstrap').Grid;
 var Col = require('react-bootstrap').Col;
 var Row = require('react-bootstrap').Row;
 
+var IntlMixin = require('react-intl').IntlMixin;
+var FormattedMessage = require('react-intl').FormattedMessage;
+
 var Tile = require('./DashboardTile');
 var ReportTypeahead = require('../typeahead/ReportTypeahead');
 var RecentlyEdited = require('./RecentlyEditedReports');
 
 var Dashboard = React.createClass({
+    mixins: [IntlMixin],
+
     propTypes: {
         userFirstName: React.PropTypes.string,
         createEmptyReport: React.PropTypes.func.isRequired,
@@ -67,11 +72,13 @@ var Dashboard = React.createClass({
 
     renderTitle: function () {
         if (this.state.dashboard === 'main') {
-            return (
-                <h3>Hello <span className='bold'>{this.props.userFirstName}</span>, Welcome to the INBAS Reporting Tool.
-                </h3>);
+            // TODO This does not work now, bug in FormatJS
+            //return (<h3><FormattedMessage message={this.getIntlMessage('dashboard.welcome')}
+            //                              name={<span className='bold'>{this.props.userFirstName}</span>}/></h3>);
+            var msg = this.getIntlMessage('dashboard.welcome');
+            return <h3>{msg.replace('{name}', this.props.userFirstName)}</h3>;
         } else {
-            return (<h3>Create Occurrence Report</h3>);
+            return (<h3>{this.getIntlMessage('dashboard.create-tile')}</h3>);
         }
     },
 
@@ -90,13 +97,14 @@ var Dashboard = React.createClass({
             <Grid fluid={true}>
                 <Row>
                     <Col xs={4} className='dashboard-sector'>
-                        <Tile onClick={this.createReport}>Create Occurrence Report</Tile>
+                        <Tile onClick={this.createReport}>{this.getIntlMessage('dashboard.create-tile')}</Tile>
                     </Col>
                     <Col xs={4} className='dashboard-sector'>
-                        <Tile onClick={this.toggleSearch}>Search for Occurrence Case</Tile>
+                        <Tile onClick={this.toggleSearch}>{this.getIntlMessage('dashboard.search-tile')}</Tile>
                     </Col>
                     <Col xs={4} className='dashboard-sector'>
-                        <Tile onClick={this.props.showAllReports}>View All Occurrences</Tile>
+                        <Tile
+                            onClick={this.props.showAllReports}>{this.getIntlMessage('dashboard.view-all-tile')}</Tile>
                     </Col>
                 </Row>
                 <Row>
@@ -114,15 +122,18 @@ var Dashboard = React.createClass({
             <Grid fluid={true}>
                 <Row>
                     <Col xs={6} className='dashboard-sector left'>
-                        <Tile onClick={this.props.createEmptyReport}>Start With Empty Report</Tile>
+                        <Tile
+                            onClick={this.props.createEmptyReport}>{this.getIntlMessage('dashboard.create-empty-tile')}</Tile>
                     </Col>
                     <Col xs={6} className='dashboard-sector right'>
-                        <Tile onClick={this.props.importInitialReport}>Import Initial Report</Tile>
+                        <Tile onClick={this.props.importInitialReport}
+                              disabled={true}>{this.getIntlMessage('dashboard.create-import-tile')}</Tile>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={6}>
-                        <Button bsSize='large' bsStyle='default' onClick={this.goBack}>Go Back</Button>
+                        <Button bsSize='large' bsStyle='default'
+                                onClick={this.goBack}>{this.getIntlMessage('back')}</Button>
                     </Col>
                 </Row>
             </Grid>

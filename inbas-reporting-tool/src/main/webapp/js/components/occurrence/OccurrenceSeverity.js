@@ -45,8 +45,8 @@ var OccurrenceSeverity = React.createClass({
 
     render: function () {
         return (
-            <Select label='Occurrence Severity Assessment' value={this.state.severity} options={this.state.options}
-                    onChange={this.onChange}/>
+            <Select label='Occurrence class*' title='Occurrence class - this field is required'
+                    value={this.state.severity} options={this.state.options} onChange={this.onChange}/>
         )
     }
 });

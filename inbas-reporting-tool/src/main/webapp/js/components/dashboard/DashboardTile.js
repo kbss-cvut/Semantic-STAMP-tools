@@ -19,7 +19,7 @@ var DashboardTile = React.createClass({
     render: function () {
         return (
             <button className='dashboard-tile btn-primary btn'
-                    onClick={this.props.onClick}>{this.props.children}</button>
+                    onClick={this.props.onClick} disabled={this.props.disabled}>{this.props.children}</button>
         )
     }
 });

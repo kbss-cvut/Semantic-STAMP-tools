@@ -6,6 +6,7 @@
 
 var React = require('react');
 var Reflux = require('reflux');
+var IntlMixin = require('react-intl').IntlMixin;
 
 var Nav = require('react-bootstrap').Nav;
 var Navbar = require('react-bootstrap').Navbar;
@@ -20,7 +21,8 @@ var UserStore = require('../stores/UserStore');
 
 var MainView = React.createClass({
     mixins: [
-        Reflux.listenTo(UserStore, 'onUserLoaded')
+        Reflux.listenTo(UserStore, 'onUserLoaded'),
+        IntlMixin
     ],
 
     getInitialState: function () {
@@ -45,13 +47,15 @@ var MainView = React.createClass({
                     <Navbar fluid={true}>
                         <NavBrand>INBAS Reporting Tool</NavBrand>
                         <Nav>
-                            <LinkContainer to='dashboard'><NavItem>Dashboard</NavItem></LinkContainer>
-                            <LinkContainer to='preliminary'><NavItem>Preliminary Reports</NavItem></LinkContainer>
-                            <LinkContainer to='investigations'><NavItem>Investigations</NavItem></LinkContainer>
+                            <LinkContainer to='dashboard'><NavItem>{this.getIntlMessage('main.dashboard-nav')}</NavItem></LinkContainer>
+                            <LinkContainer
+                                to='preliminary'><NavItem>{this.getIntlMessage('main.preliminary-nav')}</NavItem></LinkContainer>
+                            <LinkContainer
+                                to='investigations'><NavItem>{this.getIntlMessage('main.investigations-nav')}</NavItem></LinkContainer>
                         </Nav>
                         <Nav right style={{margin: '0 -15px 0 0'}}>
                             <NavDropdown id='logout' title={name}>
-                                <MenuItem href='#' onClick={Authentication.logout}>Logout</MenuItem>
+                                <MenuItem href='#' onClick={Authentication.logout}>{this.getIntlMessage('main.logout')}</MenuItem>
                             </NavDropdown>
                         </Nav>
                     </Navbar>

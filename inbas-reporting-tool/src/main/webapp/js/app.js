@@ -9,6 +9,7 @@ var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var IndexRoute = require('react-router').IndexRoute;
+var IntlMixin = require('react-intl').IntlMixin;
 
 var history = require('./utils/Routing').history;
 var Routes = require('./utils/Routes');
@@ -24,22 +25,31 @@ var PreliminaryReportController = require('./components/preliminary/ReportDetail
 var InvestigationsController = require('./components/investigation/InvestigationsController');
 var InvestigationController = require('./components/investigation/InvestigationController');
 
+var intlData = require('./i18n/cs');    // TODO Determine language pack from browser setting
+
+// Wrapping router in a React component to allow Intl to initialize
+var App = React.createClass({
+    mixins: [IntlMixin],
+
+    render: function () {
+        return (<Router history={history}>
+            <Route path='/' component={MainView}>
+                <IndexRoute component={DashboardController}/>
+                <Route path={Routes.login.path} component={Login}/>
+                <Route path={Routes.register.path} component={Register}/>
+                <Route path={Routes.dashboard.path} component={DashboardController}/>
+                <Route path={Routes.reports.path} component={ReportsController}/>
+                <Route path={Routes.preliminary.path} component={PreliminaryReportsController}/>
+                <Route path={Routes.createReport.path} component={PreliminaryReportController}/>
+                <Route path={Routes.editReport.path} component={PreliminaryReportController}/>
+                <Route path={Routes.investigations.path} component={InvestigationsController}/>
+                <Route path={Routes.editInvestigation.path} component={InvestigationController}/>
+            </Route>
+        </Router>);
+    }
+});
 
 Actions.loadUser();
 
-ReactDOM.render((
-    <Router history={history}>
-        <Route path='/' component={MainView}>
-            <IndexRoute component={DashboardController}/>
-            <Route path={Routes.login.path} component={Login}/>
-            <Route path={Routes.register.path} component={Register}/>
-            <Route path={Routes.dashboard.path} component={DashboardController}/>
-            <Route path={Routes.reports.path} component={ReportsController}/>
-            <Route path={Routes.preliminary.path} component={PreliminaryReportsController}/>
-            <Route path={Routes.createReport.path} component={PreliminaryReportController}/>
-            <Route path={Routes.editReport.path} component={PreliminaryReportController}/>
-            <Route path={Routes.investigations.path} component={InvestigationsController}/>
-            <Route path={Routes.editInvestigation.path} component={InvestigationController}/>
-        </Route>
-    </Router>
-), document.getElementById('content'));
+// Pass intl data to the top-level component
+ReactDOM.render((<App {...intlData}/>), document.getElementById('content'));
