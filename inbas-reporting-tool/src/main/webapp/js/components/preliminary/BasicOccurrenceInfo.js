@@ -7,7 +7,7 @@ var React = require('react');
 
 var Input = require('../Input');
 var Utils = require('../../utils/Utils');
-var OccurrenceSeverity = require('./OccurrenceSeverity');
+var OccurrenceSeverity = require('../occurrence/OccurrenceSeverity');
 var OccurrenceDetail = require('../occurrence/OccurrenceDetail');
 
 var BasicOccurrenceInfo = React.createClass({

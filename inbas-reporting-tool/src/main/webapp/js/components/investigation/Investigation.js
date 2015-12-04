@@ -19,6 +19,7 @@ var ReportStatements = require('../preliminary/ReportStatements');
 var Mask = require('../Mask');
 var MessageMixin = require('../mixin/MessageMixin');
 var ResourceNotFound = require('../ResourceNotFound');
+var ReportValidator = require('../../validation/ReportValidator');
 
 var Investigation = React.createClass({
     mixins: [MessageMixin],
@@ -67,14 +68,22 @@ var Investigation = React.createClass({
             );
         }
         if (!this.props.investigation) {
-            return (<ResourceNotFound resource='Investigation' />);
+            return (<ResourceNotFound resource='Investigation'/>);
         }
         return this.renderDetail();
     },
 
     renderDetail: function () {
         var investigation = this.props.investigation,
-            loading = this.state.submitting;
+            loading = this.state.submitting,
+            submitDisabled = !ReportValidator.isValid(investigation) || loading,
+            submitTitle = 'Save changes';
+        if (loading) {
+            submitTitle = 'Saving...';
+        } else if (submitDisabled) {
+            submitTitle = 'Some of the required values are missing'
+        }
+
         return (
             <div>
                 <Panel header='Occurrence Investigation'>
@@ -105,8 +114,8 @@ var Investigation = React.createClass({
                         </div>
 
                         <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
-                            <Button bsStyle='success' bsSize='small' disabled={loading}
-                                    ref='submit'
+                            <Button bsStyle='success' bsSize='small' disabled={submitDisabled}
+                                    ref='submit' title={submitTitle}
                                     onClick={this.onSubmit}>{loading ? 'Saving...' : 'Save'}</Button>
                             <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
                         </ButtonToolbar>

@@ -1,7 +1,3 @@
-/**
- * Created by kidney on 7/7/15.
- */
-
 'use strict';
 
 var EventTypeStatement = require('./EventTypeStatement');

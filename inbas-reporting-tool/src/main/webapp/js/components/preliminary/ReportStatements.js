@@ -177,7 +177,8 @@ var ReportStatements = React.createClass({
                                            onTypeSelect={this.onEventTypeSelect}/>);
         var buttonCls = component ? 'float-right' : '';
         return (
-            <Panel header={<h5>Event Type Assessments</h5>} bsStyle='info' key='typeAssessments'>
+            <Panel header={<h5 title='At least one event type is required'>Event Type Assessments*</h5>} bsStyle='info'
+                   key='typeAssessments'>
                 {component}
                 <div className={buttonCls}>
                     <Button bsStyle='primary' bsSize='small' title='Add new Event Type Assessment'

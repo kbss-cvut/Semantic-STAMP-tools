@@ -20,6 +20,7 @@ var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var MessageMixin = require('../mixin/MessageMixin');
 var ResourceNotFound = require('../ResourceNotFound');
+var ReportValidator = require('../../validation/ReportValidator');
 
 var ReportDetail = React.createClass({
     mixins: [MessageMixin],
@@ -90,7 +91,15 @@ var ReportDetail = React.createClass({
 
     renderDetail: function () {
         var report = this.props.report,
-            loading = this.state.submitting;
+            loading = this.state.submitting,
+            submitDisabled = !ReportValidator.isValid(report) || loading,
+            submitTitle = 'Save changes';
+        if (loading) {
+            submitTitle = 'Saving...';
+        } else if (submitDisabled) {
+            submitTitle = 'Some of the required values are missing'
+        }
+
         return (
             <div>
                 <Panel header={<h2>Preliminary Occurrence Report</h2>} bsStyle='primary'>
@@ -115,8 +124,8 @@ var ReportDetail = React.createClass({
                         </div>
 
                         <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
-                            <Button bsStyle='success' bsSize='small' disabled={loading}
-                                    ref='submit'
+                            <Button bsStyle='success' bsSize='small' disabled={submitDisabled}
+                                    ref='submit' title={submitTitle}
                                     onClick={this.onSubmit}>{loading ? 'Saving...' : 'Save'}</Button>
                             <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
                         </ButtonToolbar>

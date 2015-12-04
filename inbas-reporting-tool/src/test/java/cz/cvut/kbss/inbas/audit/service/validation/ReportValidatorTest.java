@@ -3,21 +3,23 @@ package cz.cvut.kbss.inbas.audit.service.validation;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.model.reports.EventType;
+import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
-import cz.cvut.kbss.inbas.audit.model.reports.ValidatableReport;
 import cz.cvut.kbss.inbas.audit.service.BaseServiceTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.Date;
 
-public class BaseReportValidatorTest extends BaseServiceTestRunner {
+public class ReportValidatorTest extends BaseServiceTestRunner {
 
     private static final Person PERSON = initPerson();
 
     @Autowired
-    private Validator<ValidatableReport> validator;
+    private PreliminaryReportValidator validator;
 
     private static Person initPerson() {
         final Person p = new Person();
@@ -43,6 +45,12 @@ public class BaseReportValidatorTest extends BaseServiceTestRunner {
         occurrence.setEndTime(new Date());
         report.setOccurrence(occurrence);
         report.setSummary("Yadayadayada");
+        final EventTypeAssessment typeAssessment = new EventTypeAssessment();
+        typeAssessment.setDescription("Event type assessment.");
+        typeAssessment.setEventType(new EventType(URI.create(
+                "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200100"),
+                "2200100 - Runway incursions"));
+        report.setTypeAssessments(Collections.singleton(typeAssessment));
         return report;
     }
 
@@ -64,6 +72,13 @@ public class BaseReportValidatorTest extends BaseServiceTestRunner {
     public void reportWithoutSummaryIsInvalid() throws Exception {
         final PreliminaryReport report = getDefaultValidReport();
         report.setSummary("");
+        validator.validate(report);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void reportWithoutTypeAssessmentsIsInvalid() throws Exception {
+        final PreliminaryReport report = getDefaultValidReport();
+        report.setTypeAssessments(null);
         validator.validate(report);
     }
 }
