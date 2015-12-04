@@ -25,7 +25,18 @@ var PreliminaryReportController = require('./components/preliminary/ReportDetail
 var InvestigationsController = require('./components/investigation/InvestigationsController');
 var InvestigationController = require('./components/investigation/InvestigationController');
 
-var intlData = require('./i18n/cs');    // TODO Determine language pack from browser setting
+var intlData = null;
+
+function selectLocalization() {
+    var lang = navigator.language;
+    if (lang && lang === 'cs' || lang === 'cs-CZ' || lang === 'sk' || lang === 'sk-SK') {
+        intlData = require('./i18n/cs');
+    } else {
+        intlData = require('./i18n/en');
+    }
+}
+
+selectLocalization();
 
 // Wrapping router in a React component to allow Intl to initialize
 var App = React.createClass({

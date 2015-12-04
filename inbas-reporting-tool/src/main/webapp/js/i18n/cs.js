@@ -5,6 +5,27 @@ module.exports = {
     'locales': ['cs'],
 
     'messages': {
+        'back': 'Zpět',
+        'login': {
+            'title': 'INBAS Reporting Tool - Přihlášení',
+            'username': 'Uživatelské jméno',
+            'password': 'Heslo',
+            'submit': 'Přihlásit',
+            'register': 'Registrace',
+            'error': 'Přihlášení se nezdařilo.'
+        },
+        'register': {
+            'title': 'INBAS Reporting Tool - Nový uživatel',
+            'first-name': 'Jméno',
+            'last-name': 'Příjmení',
+            'username': 'Uživatelské jméno',
+            'password': 'Heslo',
+            'password-confirm': 'Potvrzení hesla',
+            'passwords-not-matching-tooltip': 'Heslo a jeho potvrzení se neshodují',
+            'submit': 'Registrovat',
+            'cancel': 'Zrušit',
+            'mask': 'Registruji...'
+        },
         'main': {
             'dashboard-nav': 'Hlavní strana',
             'preliminary-nav': 'Předběžná hlášení',

@@ -6,6 +6,26 @@ module.exports = {
 
     'messages': {
         'back': 'Go Back',
+        'login': {
+            'title': 'INBAS Reporting Tool - Login',
+            'username': 'Username',
+            'password': 'Password',
+            'submit': 'Login',
+            'register': 'Register',
+            'error': 'Authentication failed.'
+        },
+        'register': {
+            'title': 'INBAS Reporting Tool - Registration',
+            'first-name': 'First name',
+            'last-name': 'Last name',
+            'username': 'Username',
+            'password': 'Password',
+            'password-confirm': 'Confirm password',
+            'passwords-not-matching-tooltip': 'Passwords don\'t match',
+            'submit': 'Register',
+            'cancel': 'Cancel',
+            'mask': 'Registering...'
+        },
         'main': {
             'dashboard-nav': 'Dashboard',
             'preliminary-nav': 'Preliminary Reports',

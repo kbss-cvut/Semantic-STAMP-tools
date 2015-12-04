@@ -9,6 +9,8 @@ var Panel = require('react-bootstrap').Panel;
 var Button = require('react-bootstrap').Button;
 var Alert = require('react-bootstrap').Alert;
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var Mask = require('../Mask');
 var Input = require('../Input');
 var Routing = require('../../utils/Routing');
@@ -16,9 +18,8 @@ var Routes = require('../../utils/Routes');
 var Authentication = require('../../utils/Authentication');
 
 
-var title = (<h3>INBAS Reporting Tool - Login</h3>);
-
 var Login = React.createClass({
+    mixins: [IntlMixin],
 
     getInitialState: function () {
         return {
@@ -61,26 +62,26 @@ var Login = React.createClass({
 
 
     render: function () {
-        var panelCls = this.state.alertVisible ? 'login-panel expanded' : 'login-panel';
-        var mask = this.state.mask ? (<Mask text='Logging in...'/>) : null;
+        var panelCls = this.state.alertVisible ? 'login-panel expanded' : 'login-panel',
+            mask = this.state.mask ? (<Mask text='Logging in...'/>) : null;
         return (
-            <Panel header={title} bsStyle='info' className={panelCls}>
+            <Panel header={<h3>{this.getIntlMessage('login.title')}</h3>} bsStyle='info' className={panelCls}>
                 {mask}
                 <form className='form-horizontal'>
                     {this.renderAlert()}
-                    <Input type='text' name='username' ref='usernameField' label='Username' value={this.state.username}
+                    <Input type='text' name='username' ref='usernameField' label={this.getIntlMessage('login.username')} value={this.state.username}
                            onChange={this.onChange} labelClassName='col-xs-3' onKeyPress={this.onKeyPress}
                            wrapperClassName='col-xs-9'/>
-                    <Input type='password' name='password' label='Password' value={this.state.password}
+                    <Input type='password' name='password' label={this.getIntlMessage('login.password')} value={this.state.password}
                            onChange={this.onChange} labelClassName='col-xs-3' onKeyPress={this.onKeyPress}
                            wrapperClassName='col-xs-9'/>
 
                     <div className='col-xs-3'>&nbsp;</div>
                     <div className='col-xs-9' style={{padding: '0 0 0 7px'}}>
                         <Button bsStyle='success' bsSize='small' onClick={this.login}
-                                disabled={this.state.mask}>Login</Button>
+                                disabled={this.state.mask}>{this.getIntlMessage('login.submit')}</Button>
                         <Button bsStyle='link' bsSize='small' onClick={this.register} style={{padding: '0 0 0 15px'}}
-                                disabled={this.state.mask}>Register</Button>
+                                disabled={this.state.mask}>{this.getIntlMessage('login.register')}</Button>
                     </div>
                 </form>
             </Panel>
@@ -90,7 +91,7 @@ var Login = React.createClass({
     renderAlert: function () {
         return this.state.alertVisible ? (
             <Alert bsStyle='danger' bsSize='small'>
-                <div>Authentication failed.</div>
+                <div>{this.getIntlMessage('login.error')}</div>
             </Alert>
         ) : null;
     }

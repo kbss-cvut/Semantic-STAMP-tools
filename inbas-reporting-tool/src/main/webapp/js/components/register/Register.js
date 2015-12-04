@@ -5,10 +5,12 @@
 'use strict';
 
 var React = require('react');
-var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var Panel = require('react-bootstrap').Panel;
 var Button = require('react-bootstrap').Button;
 var Alert = require('react-bootstrap').Alert;
+
+var LinkedStateMixin = require('react-addons-linked-state-mixin');
+var IntlMixin = require('react-intl').IntlMixin;
 
 var Input = require('../Input');
 var Mask = require('../Mask');
@@ -20,7 +22,7 @@ var Actions = require('../../actions/Actions');
 var title = (<h3>INBAS Reporting Tool - Registration</h3>);
 
 var Register = React.createClass({
-    mixins: [LinkedStateMixin],
+    mixins: [LinkedStateMixin, IntlMixin],
     getInitialState: function () {
         return {
             firstName: '',
@@ -110,31 +112,35 @@ var Register = React.createClass({
 
     render: function () {
         var panelCls = this.state.alertVisible ? 'register-panel expanded' : 'register-panel';
-        var mask = this.state.mask ? (<Mask text='Registering...'/>) : null;
+        var mask = this.state.mask ? (<Mask text={this.getIntlMessage('register.mask')}/>) : null;
         return (
-            <Panel header={title} bsStyle='info' className={panelCls}>
+            <Panel header={<h3>{this.getIntlMessage('register.title')}</h3>} bsStyle='info' className={panelCls}>
                 {mask}
                 <form className='form-horizontal' style={{margin: '0.5em 0 0 0'}}>
                     {this.renderAlert()}
                     <div className='row'>
                         <div className='col-xs-6'>
-                            <Input type='text' name='firstName' label='First name' labelClassName='col-xs-4'
+                            <Input type='text' name='firstName' label={this.getIntlMessage('register.first-name')}
+                                   labelClassName='col-xs-4'
                                    valueLink={this.linkState('firstName')} wrapperClassName='col-xs-8'/>
                         </div>
                         <div className='col-xs-6'>
-                            <Input type='text' name='lastName' label='Last name' labelClassName='col-xs-4'
+                            <Input type='text' name='lastName' label={this.getIntlMessage('register.last-name')}
+                                   labelClassName='col-xs-4'
                                    valueLink={this.linkState('lastName')} wrapperClassName='col-xs-8'/>
                         </div>
                     </div>
                     <div className='row'>
                         <div className='col-xs-6'>
-                            <Input type='text' name='username' label='Username' labelClassName='col-xs-4'
+                            <Input type='text' name='username' label={this.getIntlMessage('register.username')}
+                                   labelClassName='col-xs-4'
                                    valueLink={this.linkState('username')} wrapperClassName='col-xs-8'/>
                         </div>
                     </div>
                     <div className='row'>
                         <div className='col-xs-6'>
-                            <Input type='password' name='password' label='Password' labelClassName='col-xs-4'
+                            <Input type='password' name='password' label={this.getIntlMessage('register.password')}
+                                   labelClassName='col-xs-4'
                                    onChange={this.onPasswordChange} value={this.state.password}
                                    wrapperClassName='col-xs-8'/>
                         </div>
@@ -144,9 +150,10 @@ var Register = React.createClass({
                     </div>
                     <div style={{margin: '1em 0em 0em 0em', textAlign: 'center'}}>
                         <Button bsStyle='success' bsSize='small' ref='submit'
-                                disabled={!this.isValid() || this.state.mask} onClick={this.register}>Register</Button>
+                                disabled={!this.isValid() || this.state.mask}
+                                onClick={this.register}>{this.getIntlMessage('register.submit')}</Button>
                         <Button bsSize='small' onClick={this.cancel} style={{margin: '0 0 0 3.2em'}}
-                                disabled={this.state.mask}>Cancel</Button>
+                                disabled={this.state.mask}>{this.getIntlMessage('register.cancel')}</Button>
                     </div>
                 </form>
             </Panel>
@@ -163,14 +170,18 @@ var Register = React.createClass({
 
     renderPasswordConfirm: function () {
         if (this.state.passwordMatch) {
-            return (<Input type='password' name='passwordConfirm' label='Confirm password' labelClassName='col-xs-4'
-                           wrapperClassName='col-xs-8' onChange={this.onPasswordChange} onKeyDown={this.onKeyDown}
-                           value={this.state.passwordConfirm}/>);
+            return (
+                <Input type='password' name='passwordConfirm' label={this.getIntlMessage('register.password-confirm')}
+                       labelClassName='col-xs-4'
+                       wrapperClassName='col-xs-8' onChange={this.onPasswordChange} onKeyDown={this.onKeyDown}
+                       value={this.state.passwordConfirm}/>);
         } else {
-            return (<Input type='password' name='passwordConfirm' label='Confirm password' labelClassName='col-xs-4'
-                           wrapperClassName='col-xs-8' onChange={this.onPasswordChange} onKeyDown={this.onKeyDown}
-                           value={this.state.passwordConfirm} bsStyle='error'
-                           hasFeedback/>);
+            return (
+                <Input type='password' name='passwordConfirm' label={this.getIntlMessage('register.password-confirm')}
+                       labelClassName='col-xs-4'
+                       wrapperClassName='col-xs-8' onChange={this.onPasswordChange} onKeyDown={this.onKeyDown}
+                       value={this.state.passwordConfirm} bsStyle='error'
+                       title={this.getIntlMessage('register.passwords-not-matching-tooltip')} hasFeedback/>);
         }
     }
 });
