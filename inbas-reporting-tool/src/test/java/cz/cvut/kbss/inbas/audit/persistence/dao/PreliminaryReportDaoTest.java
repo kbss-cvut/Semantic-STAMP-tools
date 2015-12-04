@@ -2,10 +2,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.*;
-import cz.cvut.kbss.inbas.audit.model.reports.EventType;
-import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
-import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
-import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
@@ -235,6 +232,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     private PreliminaryReport initBasicValidReport() {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(Generator.generateOccurrence());
+        report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setAuthor(author);
         return report;
     }

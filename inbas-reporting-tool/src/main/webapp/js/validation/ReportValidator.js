@@ -17,6 +17,9 @@ var ReportValidator = {
         if (!report.occurrence.startTime) {
             return false;   // Don't expect this to happen, but just to be sure
         }
+        if (!report.severityAssessment) {
+            return false;
+        }
         if (!report.summary || report.summary.length === 0) {
             return false;
         }

@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.Report;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
@@ -56,6 +57,7 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             r.setOccurrence(occurrence);
             r.setRevision(2);
             r.setAuthor(author);
+            r.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
             preliminaryReports.add(r);
         }
         preliminaryReportDao.persist(preliminaryReports);

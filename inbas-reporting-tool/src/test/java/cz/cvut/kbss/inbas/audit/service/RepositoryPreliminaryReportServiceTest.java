@@ -93,6 +93,7 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
     private PreliminaryReport initReportWithOccurrence() {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(Generator.generateOccurrence());
+        report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setSummary("Narrative");
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
         typeAssessment.setDescription("Event type assessment.");

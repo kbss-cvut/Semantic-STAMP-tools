@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import org.junit.Before;
@@ -37,6 +38,7 @@ public class BaseDaoTest extends BaseDaoTestRunner {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(Generator.generateOccurrence());
         report.setAuthor(author);
+        report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         dao.persist(report);
         assertNotNull(report.getUri());
         assertTrue(dao.exists(report.getUri()));
@@ -48,10 +50,12 @@ public class BaseDaoTest extends BaseDaoTestRunner {
         final PreliminaryReport r1 = new PreliminaryReport();
         r1.setAuthor(author);
         r1.setOccurrence(Generator.generateOccurrence());
+        r1.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r1);
         final PreliminaryReport r2 = new PreliminaryReport();
         r2.setAuthor(author);
         r2.setOccurrence(Generator.generateOccurrence());
+        r2.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r2);
         dao.persist(reports);
 

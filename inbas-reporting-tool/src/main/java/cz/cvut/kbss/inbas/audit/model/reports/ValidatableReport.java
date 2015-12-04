@@ -12,5 +12,7 @@ public interface ValidatableReport extends Report {
 
     Person getAuthor();
 
+    OccurrenceSeverity getSeverityAssessment();
+
     String getSummary();
 }

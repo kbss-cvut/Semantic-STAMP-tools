@@ -22,6 +22,9 @@ public class BaseReportValidator implements Validator<ValidatableReport> {
             throw new ValidationException(
                     "Report is missing one of the required attributes: occurrence, author. " + report);
         }
+        if (report.getSeverityAssessment() == null) {
+            throw new ValidationException("Report is missing occurrence class.");
+        }
         if (report.getSummary() == null || report.getSummary().isEmpty()) {
             throw new ValidationException("Report is missing narrative.");
         }

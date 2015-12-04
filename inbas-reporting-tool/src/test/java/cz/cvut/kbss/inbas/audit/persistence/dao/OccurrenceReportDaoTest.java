@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.inbas.audit.util.Constants;
@@ -61,6 +62,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final PreliminaryReport pr = Generator.generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
         pr.setOccurrence(occurrence);
         pr.setAuthor(author);
+        pr.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         preliminaryReportDao.persist(pr);
         return pr;
     }
@@ -111,11 +113,13 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         r1.setAuthor(author);
         r1.setRevision(Constants.INITIAL_REVISION + 1);
         r1.setOccurrence(o1);
+        r1.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r1);
         final PreliminaryReport r2 = new PreliminaryReport();
         r2.setAuthor(author);
         r2.setRevision(Constants.INITIAL_REVISION);
         r2.setOccurrence(o1);
+        r2.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r2);
         final Occurrence o2 = new Occurrence();
         o2.setName("OccurrenceTwo");
@@ -125,10 +129,12 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         r3.setOccurrence(o2);
         r3.setAuthor(author);
         r3.setRevision(Constants.INITIAL_REVISION + 1);
+        r3.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r3);
         final PreliminaryReport r4 = new PreliminaryReport();
         r4.setOccurrence(o2);
         r4.setAuthor(author);
+        r4.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r4);
         // The set messes the order a little, to verify our ordering implementation
         preliminaryReportDao.persist(new HashSet<>(reports));

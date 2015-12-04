@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.service.BaseServiceTestRunner;
 import org.junit.Test;
@@ -45,6 +46,7 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
         occurrence.setEndTime(new Date());
         report.setOccurrence(occurrence);
         report.setSummary("Yadayadayada");
+        report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
         typeAssessment.setDescription("Event type assessment.");
         typeAssessment.setEventType(new EventType(URI.create(
@@ -79,6 +81,13 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
     public void reportWithoutTypeAssessmentsIsInvalid() throws Exception {
         final PreliminaryReport report = getDefaultValidReport();
         report.setTypeAssessments(null);
+        validator.validate(report);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void reportWithoutOccurrenceClassIsInvalid() throws Exception {
+        final PreliminaryReport report = getDefaultValidReport();
+        report.setSeverityAssessment(null);
         validator.validate(report);
     }
 }

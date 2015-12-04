@@ -32,6 +32,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
     @OWLDataProperty(iri = Vocabulary.p_revision)
     private Integer revision;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_severityLevel)
     private OccurrenceSeverity severityAssessment;
 

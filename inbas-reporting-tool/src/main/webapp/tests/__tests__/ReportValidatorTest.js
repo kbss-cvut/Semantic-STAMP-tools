@@ -12,6 +12,7 @@ describe('Report validator', function() {
                 startTime: Date.now() - 1000,
                 endTime: Date.now()
             },
+            severityAssessment: 'INCIDENT',
             summary: 'Report narrative',
             typeAssessments: [{
                  eventType: {
@@ -38,6 +39,11 @@ describe('Report validator', function() {
 
     it('marks report without type assessments as invalid', function() {
         delete report.typeAssessments;
+        expect(ReportValidator.isValid(report)).toBeFalsy();
+    });
+
+    it('marks report without occurrence class as invalid', function() {
+        delete report.severityAssessment;
         expect(ReportValidator.isValid(report)).toBeFalsy();
     });
 });
