@@ -354,6 +354,7 @@ var GanttController = {
             occurrenceEvt.duration = gantt.calculateDuration(occurrenceEvt.start_date, occurrenceEvt.end_date);
             this.ensureNonZeroDuration(occurrenceEvt);
             this.updateDescendantsTimeInterval(occurrenceEvt, updates);
+            updates.push(this.occurrenceEventId);
         }
         if (updates.length > 0) {
             this.applyUpdates(updates, true);

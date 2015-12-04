@@ -70,18 +70,38 @@ describe('Tests for the gantt component controller', function () {
         expect(factor.durationUnit).toEqual('minute');
     });
 
-    it('Updates occurrence event when updated occurrence is passed in', function () {
+    it('Updates occurrence event when occurrence name is updated', function () {
         var occurrence = investigation.occurrence, occurrenceEvent = {
             start_date: new Date(occurrence.startTime),
             end_date: new Date(occurrence.endTime),
             text: 'Test'
         };
         spyOn(gantt, 'getTask').and.returnValue(occurrenceEvent);
+        spyOn(GanttController, 'applyUpdates').and.callThrough();
         occurrence.name = 'Updated text';
         GanttController.updateOccurrenceEvent(occurrence);
 
         expect(occurrenceEvent.text).toEqual(occurrence.name);
         expect(occurrenceEvent.start_date.getTime()).toEqual(occurrence.startTime);
+        expect(GanttController.applyUpdates).toHaveBeenCalled();
+    });
+
+    it('Updates occurrence event when occurrence time is updated', function() {
+        var occurrence = investigation.occurrence, occurrenceEvent = {
+            start_date: new Date(occurrence.startTime),
+            end_date: new Date(occurrence.endTime),
+            text: occurrence.name
+        };
+        spyOn(gantt, 'getTask').and.returnValue(occurrenceEvent);
+        gantt.getChildren.and.returnValue([]);
+        spyOn(GanttController, 'applyUpdates').and.callThrough();
+        occurrence.endTime = Date.now() + 100000;
+        GanttController.updateOccurrenceEvent(occurrence);
+
+        expect(occurrenceEvent.text).toEqual(occurrence.name);
+        expect(occurrenceEvent.start_date.getTime()).toEqual(occurrence.startTime);
+        expect(occurrenceEvent.end_date.getTime()).toEqual(occurrence.endTime);
+        expect(GanttController.applyUpdates).toHaveBeenCalled();
     });
 
     it('Ensures that the occurrence event has never a duration less than 1 time unit', function () {

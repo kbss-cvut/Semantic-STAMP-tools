@@ -1,4 +1,3 @@
-Fix - investigation screen - change to occurrence end time does not update factors
 Implement report revisions
 Set up the Jasmine tests so that they can be run in browser and debugged
 Disable fuzzy string matching in autocomplete
