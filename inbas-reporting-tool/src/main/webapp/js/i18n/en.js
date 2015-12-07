@@ -8,9 +8,20 @@ module.exports = {
     'locales': ['en'],
 
     'messages': {
+        'add': 'Add',
         'back': 'Go Back',
         'cancel': 'Cancel',
+        'cancel-tooltip': 'Discard changes',
+        'save': 'Save',
+        'delete': 'Delete',
+        'headline': 'Headline',
+        'narrative': 'Narrative',
         'table-actions': 'Actions',
+        'table-edit': 'Edit',
+        'save-success-message': 'Report successfully saved.',
+        'save-failed-message': 'Unable to save report. Server responded with message: ',
+        'author': 'Author',
+        'author-title': 'Report author',
         'login': {
             'title': Constants.APP_NAME + ' - Login',
             'username': 'Username',
@@ -57,15 +68,41 @@ module.exports = {
             'delete-tooltip': 'Delete this occurrence report',
             'loading-mask': 'Loading reports...',
             'panel-title': 'Occurrence reports',
-            'table-headline': 'Headline',
             'table-date': 'Occurrence date',
-            'table-narrative': 'Narrative',
             'table-type': 'Type'
         },
-        'delete': {
+        'delete-dialog': {
             'title': 'Delete {type} Report?',
-            'content': 'Are you sure you want to remove this report?',
-            'submit': 'Delete'
+            'content': 'Are you sure you want to remove this report?'
+        },
+        'occurrence': {
+            'headline-tooltip': 'Short descriptive summary of the occurrence - this field is required',
+            'start-time': 'Occurrence start',
+            'start-time-tooltip': 'Date and time when the event occurred',
+            'end-time': 'Occurrence end',
+            'end-time-tooltip': 'Date and time when the event ended',
+            'class': 'Occurrence class',
+            'class-tooltip': 'Occurrence class - this field is required'
+        },
+        'initial': {
+            'panel-title': 'Initial reports',
+            'table-report': 'Report',
+            'wizard-add-title': 'Add initial report',
+            'wizard-edit-title': 'Edit initial report'
+        },
+        'preliminary': {
+            'panel-title': 'Preliminary reports',
+            'table-investigate': 'Investigate',
+            'table-investigate-tooltip': 'Investigate this occurrence',
+            'detail': {
+                'loading-mask': 'Loading report...',
+                'panel-title': 'Preliminary occurrence report',
+                'save-tooltip': 'Save changes',
+                'saving': 'Saving...',
+                'invalid-tooltip': 'Some of the required values are missing',
+                'last-edited-msg': 'Last edited {date} by {name}.',
+                'narrative-tooltip': 'Narrative - this field is required'
+            }
         }
     }
 };

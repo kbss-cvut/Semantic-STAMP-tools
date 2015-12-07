@@ -8,9 +8,20 @@ module.exports = {
     'locales': ['cs'],
 
     'messages': {
+        'add': 'Přidat',
         'back': 'Zpět',
         'cancel': 'Zrušit',
+        'cancel-tooltip': 'Zrušit a zahodit změny',
+        'save': 'Uložit',
+        'delete': 'Smazat',
+        'headline': 'Název',
+        'narrative': 'Popis',
         'table-actions': 'Akce',
+        'table-edit': 'Editovat',
+        'save-success-message': 'Hlášení úspěšně uloženo.',
+        'save-failed-message': 'Hlášení nelze uložit. Odpověď serveru: ',
+        'author': 'Autor',
+        'author-title': 'Autor hlášení',
         'login': {
             'title': Constants.APP_NAME + ' - Přihlášení',
             'username': 'Uživatelské jméno',
@@ -57,15 +68,42 @@ module.exports = {
             'delete-tooltip': 'Smazat toto hlášení',
             'loading-mask': 'Nahrávám hlášení...',
             'panel-title': 'Hlášení událostí',
-            'table-headline': 'Název',
             'table-date': 'Datum a čas události',
-            'table-narrative': 'Popis',
             'table-type': 'Typ'
         },
-        'delete': {
+        'delete-dialog': {
             'title': 'Smazat hlášení?',
-            'content': 'Určitě chcete smazat toto hlášení?',
-            'submit': 'Smazat',
+            'content': 'Skutečně chcete smazat toto hlášení?',
+            'submit': 'Smazat'
+        },
+        'occurrence': {
+            'headline-tooltip': 'Krátké pojmenování události - pole je povinné',
+            'start-time': 'Počátek události',
+            'start-time-tooltip': 'Datum a čas kdy k události došlo',
+            'end-time': 'Konec události',
+            'end-time-tooltip': 'Datum a čas kdy událost skončila',
+            'class': 'Třída závažnosti',
+            'class-tooltip': 'Třída závažnosti - pole je povinné'
+        },
+        'initial': {
+            'panel-title': 'Prvotní hlášení',
+            'table-report': 'Hlášení',
+            'wizard-add-title': 'Přidat prvotní hlášení',
+            'wizard-edit-title': 'Editovat prvotní hlášení'
+        },
+        'preliminary': {
+            'panel-title': 'Předběžná hlášení',
+            'table-investigate': 'Šetřit',
+            'table-investigate-tooltip': 'Zahájit šetření události',
+            'detail': {
+                'loading-mask': 'Načítám hlášení...',
+                'panel-title': 'Předběžné hlášení o události',
+                'save-tooltip': 'Uložit změny',
+                'saving': 'Ukládám...',
+                'invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
+                'last-edited-msg': 'Naposledy upravil(a) {name} {date}.',
+                'narrative-tooltip': 'Popis - pole je povinné'
+            }
         }
     }
 };

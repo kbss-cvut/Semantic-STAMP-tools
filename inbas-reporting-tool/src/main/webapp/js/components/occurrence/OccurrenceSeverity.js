@@ -7,13 +7,15 @@
 var React = require('react');
 var Reflux = require('reflux');
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var Select = require('../Select');
 var Actions = require('../../actions/Actions');
 var OptionsStore = require('../../stores/OptionsStore');
 var Utils = require('../../utils/Utils');
 
 var OccurrenceSeverity = React.createClass({
-    mixins: [Reflux.ListenerMixin],
+    mixins: [Reflux.ListenerMixin, IntlMixin],
     getInitialState: function () {
         return {
             severity: this.props.severityAssessment ? this.props.severityAssessment : null,
@@ -45,7 +47,8 @@ var OccurrenceSeverity = React.createClass({
 
     render: function () {
         return (
-            <Select label='Occurrence class*' title='Occurrence class - this field is required'
+            <Select label={this.getIntlMessage('occurrence.class') + '*'}
+                    title={this.getIntlMessage('occurrence.class-tooltip')}
                     value={this.state.severity} options={this.state.options} onChange={this.onChange}/>
         )
     }

@@ -10,6 +10,8 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var Actions = require('../../actions/Actions');
 var InitialReports = require('./../initialreport/InitialReports');
 var ReportStatements = require('./ReportStatements');
@@ -23,7 +25,7 @@ var ResourceNotFound = require('../ResourceNotFound');
 var ReportValidator = require('../../validation/ReportValidator');
 
 var ReportDetail = React.createClass({
-    mixins: [MessageMixin],
+    mixins: [MessageMixin, IntlMixin],
 
     getInitialState: function () {
         return {
@@ -60,12 +62,12 @@ var ReportDetail = React.createClass({
     onSuccess: function () {
         this.setState({submitting: false});
         this.props.onSuccess();
-        this.showSuccessMessage('Report successfully saved.');
+        this.showSuccessMessage(this.getIntlMessage('save-success-message'));
     },
 
     onSubmitError: function (error) {
         this.setState({submitting: false});
-        this.showErrorMessage('Unable to save report. Server responded with message: ' + error.message);
+        this.showErrorMessage(this.getIntlMessage('save-failed-message') + error.message);
     },
 
     investigate: function () {
@@ -80,11 +82,11 @@ var ReportDetail = React.createClass({
     render: function () {
         if (this.props.loading) {
             return (
-                <Mask text='Loading report...'/>
+                <Mask text={this.getIntlMessage('preliminary.detail.loading-mask')}/>
             );
         }
         if (!this.props.report) {
-            return (<ResourceNotFound resource='Preliminary report'/>);
+            return (<ResourceNotFound resource={this.getIntlMessage('preliminary.detail.panel-title')}/>);
         }
         return this.renderDetail();
     },
@@ -93,16 +95,17 @@ var ReportDetail = React.createClass({
         var report = this.props.report,
             loading = this.state.submitting,
             submitDisabled = !ReportValidator.isValid(report) || loading,
-            submitTitle = 'Save changes';
+            submitTitle = this.getIntlMessage('preliminary.detail.save-tooltip'),
+            submitLabel = this.getIntlMessage(loading ? 'preliminary.detail.saving' : 'save');
         if (loading) {
-            submitTitle = 'Saving...';
+            submitTitle = this.getIntlMessage('preliminary.detail.saving');
         } else if (submitDisabled) {
-            submitTitle = 'Some of the required values are missing'
+            submitTitle = this.getIntlMessage('preliminary.detail.invalid-tooltip');
         }
 
         return (
             <div>
-                <Panel header={<h2>Preliminary Occurrence Report</h2>} bsStyle='primary'>
+                <Panel header={<h2>{this.getIntlMessage('preliminary.detail.panel-title')}</h2>} bsStyle='primary'>
                     <form>
                         <BasicOccurrenceInfo report={report} onChange={this.onChange}
                                              onAttributeChange={this.onAttributeChange}/>
@@ -126,8 +129,9 @@ var ReportDetail = React.createClass({
                         <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
                             <Button bsStyle='success' bsSize='small' disabled={submitDisabled}
                                     ref='submit' title={submitTitle}
-                                    onClick={this.onSubmit}>{loading ? 'Saving...' : 'Save'}</Button>
-                            <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
+                                    onClick={this.onSubmit}>{submitLabel}</Button>
+                            <Button bsStyle='link' bsSize='small' title={this.getIntlMessage('cancel-tooltip')}
+                                    onClick={this.props.onCancel}>{this.getIntlMessage('cancel')}</Button>
                         </ButtonToolbar>
                     </form>
                 </Panel>

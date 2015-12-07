@@ -28,11 +28,11 @@ var DeleteReportDialog = React.createClass({
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {this.getIntlMessage('delete.content')}
+                    {this.getIntlMessage('delete-dialog.content')}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button bsStyle='warning' bsSize='small'
-                            onClick={this.props.onSubmit}>{this.getIntlMessage('delete.submit')}</Button>
+                            onClick={this.props.onSubmit}>{this.getIntlMessage('delete')}</Button>
                     <Button bsSize='small' onClick={this.props.onClose}>{this.getIntlMessage('cancel')}</Button>
                 </Modal.Footer>
             </Modal>

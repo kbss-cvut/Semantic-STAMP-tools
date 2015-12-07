@@ -41,11 +41,11 @@ var ReportRow = React.createClass({
     },
 
     render: function () {
-        var report = this.props.report;
-        var date = new Date(report.occurrence.startTime);
-        var formattedDate = Utils.formatDate(date);
+        var report = this.props.report,
+            date = new Date(report.occurrence.startTime),
+            formattedDate = Utils.formatDate(date),
         // Have to set style directly, class style is overridden by the bootstrap styling
-        var verticalAlign = {verticalAlign: 'middle'};
+            verticalAlign = {verticalAlign: 'middle'};
         return (
             <tr onDoubleClick={this.onDoubleClick}>
                 <td style={verticalAlign}><a href='javascript:void(0);' onClick={this.onEditClick}
@@ -56,9 +56,9 @@ var ReportRow = React.createClass({
                 <td style={verticalAlign}>{ReportType.asString(report)}</td>
                 <td style={verticalAlign} className='actions'>
                     <Button bsStyle='primary' bsSize='small' title={this.getIntlMessage('reports.edit-tooltip')}
-                            onClick={this.onEditClick}>Edit</Button>
+                            onClick={this.onEditClick}>{this.getIntlMessage('table-edit')}</Button>
                     <Button bsStyle='warning' bsSize='small' title={this.getIntlMessage('reports.delete-tooltip')}
-                            onClick={this.onDeleteClick}>Delete</Button>
+                            onClick={this.onDeleteClick}>{this.getIntlMessage('delete')}</Button>
 
                     <DeleteReportDialog show={this.state.modalOpen} onClose={this.onCloseModal}
                                         onSubmit={this.removeReport}/>

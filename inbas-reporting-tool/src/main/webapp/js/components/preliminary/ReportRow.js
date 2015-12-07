@@ -7,11 +7,14 @@
 var React = require('react');
 var Button = require('react-bootstrap').Button;
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
 var DeleteReportDialog = require('../DeleteReportDialog');
 
 var ReportRow = React.createClass({
+    mixins: [IntlMixin],
 
     getInitialState: function () {
         return {
@@ -49,16 +52,18 @@ var ReportRow = React.createClass({
         return (
             <tr onDoubleClick={this.onDoubleClick}>
                 <td style={verticalAlign}><a href='javascript:void(0);' onClick={this.onEditClick}
-                                             title='Click to see report detail'>{report.occurrence.name}</a></td>
+                                             title={this.getIntlMessage('reports.open-tooltip')}>{report.occurrence.name}</a>
+                </td>
                 <td style={verticalAlign}>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.summary}/></td>
                 <td style={verticalAlign} className='actions'>
-                    <Button bsStyle='primary' bsSize='small' title='Edit this occurrence report'
-                            onClick={this.onEditClick}>Edit</Button>
-                    <Button bsStyle='warning' bsSize='small' title='Delete this occurrence report'
-                            onClick={this.onDeleteClick}>Delete</Button>
-                    <Button bsStyle='primary' bsSize='small' title='Investigate this occurrence'
-                            onClick={this.onInvestigate}>Investigate
+                    <Button bsStyle='primary' bsSize='small' title={this.getIntlMessage('reports.edit-tooltip')}
+                            onClick={this.onEditClick}>{this.getIntlMessage('table-edit')}</Button>
+                    <Button bsStyle='warning' bsSize='small' title={this.getIntlMessage('reports.delete-tooltip')}
+                            onClick={this.onDeleteClick}>{this.getIntlMessage('delete')}</Button>
+                    <Button bsStyle='primary' bsSize='small'
+                            title={this.getIntlMessage('preliminary.table-investigate-tooltip')}
+                            onClick={this.onInvestigate}>{this.getIntlMessage('reports.table-investigate-tooltip')}
                     </Button>
 
                     <DeleteReportDialog show={this.state.modalOpen} onClose={this.onCloseModal}

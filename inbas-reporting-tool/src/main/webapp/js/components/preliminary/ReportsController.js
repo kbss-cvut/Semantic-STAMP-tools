@@ -7,6 +7,8 @@
 var React = require('react');
 var Reflux = require('reflux');
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var Actions = require('../../actions/Actions');
 var ReportsStore = require('../../stores/PreliminaryReportStore');
 var Reports = require('../reports/Reports');
@@ -73,7 +75,7 @@ var ReportsController = React.createClass({
             onInvestigate: this.onCreateInvestigation
         };
         return (
-            <Reports panelTitle='Preliminary reports' reports={this.state.reports} actions={actions}
+            <Reports panelTitle={this.getIntlMessage('preliminary.panel-title')} reports={this.state.reports} actions={actions}
                      rowComponent={ReportRow} tableHeader={this.renderTableHeader()}/>
         );
     },
@@ -82,10 +84,10 @@ var ReportsController = React.createClass({
         return (
             <thead>
             <tr>
-                <th className='col-xs-2'>Occurrence headline</th>
-                <th className='col-xs-2'>Occurrence date</th>
-                <th className='col-xs-6'>Narrative</th>
-                <th className='col-xs-2'>Actions</th>
+                <th className='col-xs-2'>{this.getIntlMessage('headline')}</th>
+                <th className='col-xs-2'>{this.getIntlMessage('reports.table-date')}</th>
+                <th className='col-xs-6'>{this.getIntlMessage('narrative')}</th>
+                <th className='col-xs-2'>{this.getIntlMessage('table-actions')}</th>
             </tr>
             </thead>
         );

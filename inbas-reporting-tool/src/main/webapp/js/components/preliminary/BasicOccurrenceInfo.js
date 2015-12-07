@@ -5,12 +5,15 @@
 
 var React = require('react');
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var Input = require('../Input');
 var Utils = require('../../utils/Utils');
 var OccurrenceSeverity = require('../occurrence/OccurrenceSeverity');
 var OccurrenceDetail = require('../occurrence/OccurrenceDetail');
 
 var BasicOccurrenceInfo = React.createClass({
+    mixins: [IntlMixin],
 
     propTypes: {
         report: React.PropTypes.object.isRequired,
@@ -51,7 +54,8 @@ var BasicOccurrenceInfo = React.createClass({
         return report.isNew ? null : (
             <div className='row'>
                 <div className='col-xs-4'>
-                    <Input type='text' value={this.getFullName(report.author)} label='Author' title='Report author'
+                    <Input type='text' value={this.getFullName(report.author)} label={this.getIntlMessage('author')}
+                           title={this.getIntlMessage('author-title')}
                            disabled/>
                 </div>
             </div>);
@@ -62,8 +66,10 @@ var BasicOccurrenceInfo = React.createClass({
         if (report.isNew || !report.lastEdited) {
             return null;
         }
-        var formattedDate = Utils.formatDate(new Date(report.lastEdited));
-        var text = 'Last edited on ' + formattedDate + ' by ' + this.getFullName(report.lastEditedBy) + '.';
+        var formattedDate = Utils.formatDate(new Date(report.lastEdited)),
+            text = this.getIntlMessage('preliminary.detail.last-edited-msg');
+        // TODO Use formatted message
+        text = text.replace('{date}', formattedDate).replace('{name}', this.getFullName(report.lastEditedBy));
         return (
             <div className='form-group notice-small'>
                 {text}

@@ -54,9 +54,9 @@ var ReportsTable = React.createClass({
         return this.props.tableHeader ? this.props.tableHeader : (
             <thead>
             <tr>
-                <th className='col-xs-2'>{this.getIntlMessage('reports.table-headline')}</th>
+                <th className='col-xs-2'>{this.getIntlMessage('headline')}</th>
                 <th className='col-xs-2'>{this.getIntlMessage('reports.table-date')}</th>
-                <th className='col-xs-5'>{this.getIntlMessage('reports.table-narrative')}</th>
+                <th className='col-xs-5'>{this.getIntlMessage('narrative')}</th>
                 <th className='col-xs-1'>{this.getIntlMessage('reports.table-type')}</th>
                 <th className='col-xs-2'>{this.getIntlMessage('table-actions')}</th>
             </tr>
