@@ -17,6 +17,7 @@ var MenuItem = require('react-bootstrap').MenuItem;
 var LinkContainer = require('react-router-bootstrap').LinkContainer;
 
 var Authentication = require('../utils/Authentication');
+var Constants = require('../constants/Constants');
 var UserStore = require('../stores/UserStore');
 
 var MainView = React.createClass({
@@ -45,7 +46,7 @@ var MainView = React.createClass({
             <div>
                 <header>
                     <Navbar fluid={true}>
-                        <NavBrand>INBAS Reporting Tool</NavBrand>
+                        <NavBrand>{Constants.APP_NAME}</NavBrand>
                         <Nav>
                             <LinkContainer to='dashboard'><NavItem>{this.getIntlMessage('main.dashboard-nav')}</NavItem></LinkContainer>
                             <LinkContainer
