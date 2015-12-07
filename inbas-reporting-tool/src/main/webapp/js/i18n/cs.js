@@ -1,6 +1,9 @@
 /**
  * Czech localization.
  */
+
+var Constants = require('../constants/Constants');
+
 module.exports = {
     'locales': ['cs'],
 
@@ -9,7 +12,7 @@ module.exports = {
         'cancel': 'Zrušit',
         'table-actions': 'Akce',
         'login': {
-            'title': 'INBAS Reporting Tool - Přihlášení',
+            'title': Constants.APP_NAME + ' - Přihlášení',
             'username': 'Uživatelské jméno',
             'password': 'Heslo',
             'submit': 'Přihlásit',
@@ -17,7 +20,7 @@ module.exports = {
             'error': 'Přihlášení se nezdařilo.'
         },
         'register': {
-            'title': 'INBAS Reporting Tool - Nový uživatel',
+            'title': Constants.APP_NAME + ' - Nový uživatel',
             'first-name': 'Jméno',
             'last-name': 'Příjmení',
             'username': 'Uživatelské jméno',
@@ -34,7 +37,7 @@ module.exports = {
             'logout': 'Odhlásit se'
         },
         'dashboard': {
-            'welcome': 'Dobrý den, {name}, vítejte v INBAS Reporting Tool.',
+            'welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',
             'create-tile': 'Vytvořit hlášení o události',
             'search-tile': 'Hledat hlášení',
             'search-placeholder': 'Název hlášení',

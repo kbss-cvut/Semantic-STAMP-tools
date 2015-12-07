@@ -1,6 +1,9 @@
 /**
  * English localization.
  */
+
+var Constants = require('../constants/Constants');
+
 module.exports = {
     'locales': ['en'],
 
@@ -9,7 +12,7 @@ module.exports = {
         'cancel': 'Cancel',
         'table-actions': 'Actions',
         'login': {
-            'title': 'INBAS Reporting Tool - Login',
+            'title': Constants.APP_NAME + ' - Login',
             'username': 'Username',
             'password': 'Password',
             'submit': 'Login',
@@ -17,7 +20,7 @@ module.exports = {
             'error': 'Authentication failed.'
         },
         'register': {
-            'title': 'INBAS Reporting Tool - Registration',
+            'title': Constants.APP_NAME + ' - Registration',
             'first-name': 'First name',
             'last-name': 'Last name',
             'username': 'Username',
@@ -34,7 +37,7 @@ module.exports = {
             'logout': 'Logout'
         },
         'dashboard': {
-            'welcome': 'Hello {name}, Welcome to the INBAS Reporting Tool.',
+            'welcome': 'Hello {name}, Welcome to the ' + Constants.APP_NAME + '.',
             'create-tile': 'Create Occurrence Report',
             'search-tile': 'Search for Occurrence Case',
             'search-placeholder': 'Occurrence headline',
