@@ -7,10 +7,13 @@
 var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var ReportsTable = require('./ReportsTable');
 var Mask = require('./../Mask');
 
 var Reports = React.createClass({
+    mixins: [IntlMixin],
 
     propTypes: {
         reports: React.PropTypes.array,
@@ -23,7 +26,7 @@ var Reports = React.createClass({
         var reports = this.props.reports;
         if (reports === null) {
             return (
-                <Mask text='Loading reports...'/>
+                <Mask text={this.getIntlMessage('reports.loading-mask')}/>
             );
         }
         if (reports.length === 0) {
@@ -32,7 +35,7 @@ var Reports = React.createClass({
                     <Jumbotron>
                         <h2>INBAS Reporting</h2>
 
-                        <p>There are no reports here, yet.</p>
+                        <p>{this.getIntlMessage('reports.no-reports')}</p>
                     </Jumbotron>
                 </div>
             );

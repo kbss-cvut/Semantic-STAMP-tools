@@ -153,7 +153,7 @@ var Register = React.createClass({
                                 disabled={!this.isValid() || this.state.mask}
                                 onClick={this.register}>{this.getIntlMessage('register.submit')}</Button>
                         <Button bsSize='small' onClick={this.cancel} style={{margin: '0 0 0 3.2em'}}
-                                disabled={this.state.mask}>{this.getIntlMessage('register.cancel')}</Button>
+                                disabled={this.state.mask}>{this.getIntlMessage('cancel')}</Button>
                     </div>
                 </form>
             </Panel>

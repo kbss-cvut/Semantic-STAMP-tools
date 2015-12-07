@@ -7,7 +7,10 @@ var React = require('react');
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var DeleteReportDialog = React.createClass({
+    mixins: [IntlMixin],
 
     propTypes: {
         onClose: React.PropTypes.func.isRequired,
@@ -17,6 +20,7 @@ var DeleteReportDialog = React.createClass({
     },
 
     render: function () {
+        // TODO Use formatted message when Intl is fixed
         var title = this.props.reportType ? 'Delete ' + this.props.reportType + ' Report?' : 'Delete Report?';
         return (
             <Modal show={this.props.show} onHide={this.props.onClose}>
@@ -24,11 +28,12 @@ var DeleteReportDialog = React.createClass({
                     <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to remove this report?
+                    {this.getIntlMessage('delete.content')}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button bsStyle='warning' bsSize='small' onClick={this.props.onSubmit}>Delete</Button>
-                    <Button bsSize='small' onClick={this.props.onClose}>Cancel</Button>
+                    <Button bsStyle='warning' bsSize='small'
+                            onClick={this.props.onSubmit}>{this.getIntlMessage('delete.submit')}</Button>
+                    <Button bsSize='small' onClick={this.props.onClose}>{this.getIntlMessage('cancel')}</Button>
                 </Modal.Footer>
             </Modal>
         );

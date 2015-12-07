@@ -6,6 +6,8 @@ module.exports = {
 
     'messages': {
         'back': 'Go Back',
+        'cancel': 'Cancel',
+        'table-actions': 'Actions',
         'login': {
             'title': 'INBAS Reporting Tool - Login',
             'username': 'Username',
@@ -23,7 +25,6 @@ module.exports = {
             'password-confirm': 'Confirm password',
             'passwords-not-matching-tooltip': 'Passwords don\'t match',
             'submit': 'Register',
-            'cancel': 'Cancel',
             'mask': 'Registering...'
         },
         'main': {
@@ -36,6 +37,7 @@ module.exports = {
             'welcome': 'Hello {name}, Welcome to the INBAS Reporting Tool.',
             'create-tile': 'Create Occurrence Report',
             'search-tile': 'Search for Occurrence Case',
+            'search-placeholder': 'Occurrence headline',
             'view-all-tile': 'View All Occurrences',
             'create-empty-tile': 'Start with Empty Report',
             'create-import-tile': 'Import Initial Report',
@@ -46,7 +48,21 @@ module.exports = {
         },
         'reports': {
             'no-occurrence-reports': 'There are no occurrence reports, yet.',
-            'open-tooltip': 'Click to see report detail'
+            'no-reports': 'There are no reports here, yet.',
+            'open-tooltip': 'Click to see report detail',
+            'edit-tooltip': 'Edit this occurrence report',
+            'delete-tooltip': 'Delete this occurrence report',
+            'loading-mask': 'Loading reports...',
+            'panel-title': 'Occurrence reports',
+            'table-headline': 'Headline',
+            'table-date': 'Occurrence date',
+            'table-narrative': 'Narrative',
+            'table-type': 'Type'
+        },
+        'delete': {
+            'title': 'Delete {type} Report?',
+            'content': 'Are you sure you want to remove this report?',
+            'submit': 'Delete'
         }
     }
 };

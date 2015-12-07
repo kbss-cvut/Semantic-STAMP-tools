@@ -8,9 +8,12 @@ var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var ReportRow = require('./ReportRow');
 
 var ReportsTable = React.createClass({
+    mixins: [IntlMixin],
 
     propTypes: {
         reports: React.PropTypes.array.isRequired,
@@ -20,7 +23,7 @@ var ReportsTable = React.createClass({
     },
 
     render: function () {
-        var title = <h3>{this.props.panelTitle ? this.props.panelTitle : 'Occurrence reports'}</h3>;
+        var title = <h3>{this.props.panelTitle ? this.props.panelTitle : this.getIntlMessage('reports.panel-title')}</h3>;
         return (<div>
             <Panel header={title} bsStyle='primary' {...this.props}>
                 <Table striped bordered condensed hover>
@@ -51,11 +54,11 @@ var ReportsTable = React.createClass({
         return this.props.tableHeader ? this.props.tableHeader : (
             <thead>
             <tr>
-                <th className='col-xs-2'>Headline</th>
-                <th className='col-xs-2'>Occurrence date</th>
-                <th className='col-xs-5'>Narrative</th>
-                <th className='col-xs-1'>Type</th>
-                <th className='col-xs-2'>Actions</th>
+                <th className='col-xs-2'>{this.getIntlMessage('reports.table-headline')}</th>
+                <th className='col-xs-2'>{this.getIntlMessage('reports.table-date')}</th>
+                <th className='col-xs-5'>{this.getIntlMessage('reports.table-narrative')}</th>
+                <th className='col-xs-1'>{this.getIntlMessage('reports.table-type')}</th>
+                <th className='col-xs-2'>{this.getIntlMessage('table-actions')}</th>
             </tr>
             </thead>
         );

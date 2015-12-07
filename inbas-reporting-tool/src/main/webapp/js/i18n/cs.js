@@ -6,6 +6,8 @@ module.exports = {
 
     'messages': {
         'back': 'Zpět',
+        'cancel': 'Zrušit',
+        'table-actions': 'Akce',
         'login': {
             'title': 'INBAS Reporting Tool - Přihlášení',
             'username': 'Uživatelské jméno',
@@ -23,7 +25,6 @@ module.exports = {
             'password-confirm': 'Potvrzení hesla',
             'passwords-not-matching-tooltip': 'Heslo a jeho potvrzení se neshodují',
             'submit': 'Registrovat',
-            'cancel': 'Zrušit',
             'mask': 'Registruji...'
         },
         'main': {
@@ -36,6 +37,7 @@ module.exports = {
             'welcome': 'Dobrý den, {name}, vítejte v INBAS Reporting Tool.',
             'create-tile': 'Vytvořit hlášení o události',
             'search-tile': 'Hledat hlášení',
+            'search-placeholder': 'Název hlášení',
             'view-all-tile': 'Prohlížet všechna hlášení',
             'create-empty-tile': 'Začít s prázdným hlášením',
             'create-import-tile': 'Importovat počáteční hlášení',
@@ -46,7 +48,21 @@ module.exports = {
         },
         'reports': {
             'no-occurrence-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
-            'open-tooltip': 'Kliknutím otevřete detail hlášení'
+            'no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
+            'open-tooltip': 'Kliknutím zobrazíte detail hlášení',
+            'edit-tooltip': 'Editovat toto hlášení',
+            'delete-tooltip': 'Smazat toto hlášení',
+            'loading-mask': 'Nahrávám hlášení...',
+            'panel-title': 'Hlášení událostí',
+            'table-headline': 'Název',
+            'table-date': 'Datum a čas události',
+            'table-narrative': 'Popis',
+            'table-type': 'Typ'
+        },
+        'delete': {
+            'title': 'Smazat hlášení?',
+            'content': 'Určitě chcete smazat toto hlášení?',
+            'submit': 'Smazat',
         }
     }
 };
