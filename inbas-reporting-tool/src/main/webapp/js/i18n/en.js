@@ -37,7 +37,7 @@ module.exports = {
             'logout': 'Logout'
         },
         'dashboard': {
-            'welcome': 'Hello {name}, Welcome to the ' + Constants.APP_NAME + '.',
+            'welcome': 'Hello {name}, welcome to ' + Constants.APP_NAME + '.',
             'create-tile': 'Create Occurrence Report',
             'search-tile': 'Search for Occurrence Case',
             'search-placeholder': 'Occurrence headline',
