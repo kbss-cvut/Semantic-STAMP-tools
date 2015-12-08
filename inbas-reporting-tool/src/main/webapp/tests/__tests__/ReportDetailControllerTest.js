@@ -3,7 +3,7 @@
 describe('ReportDetailController tests', function () {
 
     var React = require('react'),
-        TestUtils = require('react-addons-test-utils'),
+        Environment = require('../environment/Environment'),
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
         ReportDetailController = require('../../js/components/preliminary/ReportDetailController'),
@@ -16,7 +16,7 @@ describe('ReportDetailController tests', function () {
         };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue(report);
 
-        var controller = TestUtils.renderIntoDocument(<ReportDetailController params={{}}/>),
+        var controller = Environment.render(<ReportDetailController params={{}}/>),
             state = controller.getInitialState();
         expect(RouterStore.getTransitionPayload).toHaveBeenCalledWith(Routes.createReport.name);
         expect(state.loading).toBeFalsy();
@@ -27,7 +27,7 @@ describe('ReportDetailController tests', function () {
     it('Loads existing report when report key is passed in path params', function () {
         spyOn(Actions, 'findPreliminary').and.callThrough();
         var params = {reportKey: 12345},
-            controller = TestUtils.renderIntoDocument(<ReportDetailController params={params}/>),
+            controller = Environment.render(<ReportDetailController params={params}/>),
             state = controller.getInitialState();
         expect(Actions.findPreliminary).toHaveBeenCalledWith(params.reportKey);
         expect(state.loading).toBeTruthy();
@@ -35,7 +35,7 @@ describe('ReportDetailController tests', function () {
     });
 
     it('Initializes new report when no key is specified', function () {
-        var controller = TestUtils.renderIntoDocument(<ReportDetailController params={{}}/>),
+        var controller = Environment.render(<ReportDetailController params={{}}/>),
             report = controller.state.report;
 
         expect(controller.state.loading).toBeFalsy();
@@ -54,7 +54,7 @@ describe('ReportDetailController tests', function () {
             }]
         };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue(payload);
-        var controller = TestUtils.renderIntoDocument(<ReportDetailController params={{}}/>),
+        var controller = Environment.render(<ReportDetailController params={{}}/>),
             report = controller.state.report;
 
         expect(report.occurrence).toBeDefined();

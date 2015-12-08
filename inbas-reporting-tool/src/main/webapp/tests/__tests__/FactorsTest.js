@@ -3,8 +3,8 @@
 describe('Factors component tests', function () {
 
     var React = require('react'),
-        TestUtils = require('react-addons-test-utils'),
         rewire = require('rewire'),
+        Environment = require('../environment/Environment'),
         Factors = rewire('../../js/components/investigation/Factors'),
         FactorRenderer = rewire('../../js/components/investigation/FactorRenderer'),
         GanttController = null,
@@ -32,7 +32,7 @@ describe('Factors component tests', function () {
     });
 
     it('Initializes gantt with minute scale on component mount', function () {
-        TestUtils.renderIntoDocument(<Factors investigation={investigation}/>);
+        Environment.render(<Factors investigation={investigation}/>);
         expect(GanttController.init).toHaveBeenCalled();
         expect(GanttController.setScale).toHaveBeenCalledWith('minute');
     });
@@ -42,7 +42,7 @@ describe('Factors component tests', function () {
         GanttController.addFactor.and.callFake(function (arg) {
             factor = arg;
         });
-        TestUtils.renderIntoDocument(<Factors investigation={investigation}/>);
+        Environment.render(<Factors investigation={investigation}/>);
         expect(GanttController.addFactor).toHaveBeenCalled();
         expect(factor).toBeDefined();
         expect(factor.text).toEqual(investigation.occurrence.name);
@@ -51,7 +51,7 @@ describe('Factors component tests', function () {
 
     it('Sets scale to seconds when seconds are selected', function () {
         var evt = {target: {value: 'second'}},
-            factors = TestUtils.renderIntoDocument(<Factors investigation={investigation}/>);
+            factors = Environment.render(<Factors investigation={investigation}/>);
         factors.onScaleChange(evt);
         expect(GanttController.setScale).toHaveBeenCalledWith('second');
     });
@@ -70,7 +70,7 @@ describe('Factors component tests', function () {
             component;
         investigation.rootFactor.referenceId = referenceId;
         GanttController.getFactor.and.returnValue(investigation.rootFactor);
-        component = TestUtils.renderIntoDocument(<Factors investigation={investigation}/>);
+        component = Environment.render(<Factors investigation={investigation}/>);
         component.setState({
             currentFactor: newFactor
         });
