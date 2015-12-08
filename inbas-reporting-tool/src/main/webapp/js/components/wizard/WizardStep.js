@@ -9,8 +9,10 @@ var Alert = require('react-bootstrap').Alert;
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
+var IntlMixin = require('react-intl').IntlMixin;
 
 var WizardStep = React.createClass({
+    mixins: [IntlMixin],
 
     propTypes: {
         onClose: React.PropTypes.func,
@@ -80,10 +82,12 @@ var WizardStep = React.createClass({
     render: function () {
         var previousButton;
         if (!this.props.isFirstStep) {
-            previousButton = (<Button onClick={this.onPrevious} disabled={this.state.retreatDisabled} bsStyle='primary' bsSize='small'>Previous</Button>);
+            previousButton = (<Button onClick={this.onPrevious} disabled={this.state.retreatDisabled} bsStyle='primary'
+                                      bsSize='small'>{this.getIntlMessage('wizard.previous')}</Button>);
         }
         var advanceButton = this.renderAdvanceButton();
-        var cancelButton = (<Button onClick={this.props.onClose} bsStyle='primary' bsSize='small'>Cancel</Button>);
+        var cancelButton = (<Button onClick={this.props.onClose} bsStyle='primary'
+                                    bsSize='small'>{this.getIntlMessage('cancel')}</Button>);
         var error = null;
         if (this.state.currentError) {
             error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);
@@ -105,20 +109,21 @@ var WizardStep = React.createClass({
     },
 
     renderAdvanceButton: function () {
-        var disabledTitle = this.state.advanceDisabled ? 'Some required values are missing' : null;
+        var disabledTitle = this.state.advanceDisabled ? this.getIntlMessage('wizard.advance-disabled-tooltip') : null;
         var button;
         if (!this.props.isLastStep) {
             button = (
                 <Button onClick={this.onNext} disabled={this.state.advanceDisabled} bsStyle='primary' bsSize='small'
-                        title={disabledTitle}>Next</Button>);
+                        title={disabledTitle}>{this.getIntlMessage('wizard.next')}</Button>);
         } else {
-            button = (<Button onClick={this.onFinish} disabled={this.state.advanceDisabled} bsStyle='primary' bsSize='small'
-                              title={disabledTitle}>Finish</Button>);
+            button = (
+                <Button onClick={this.onFinish} disabled={this.state.advanceDisabled} bsStyle='primary' bsSize='small'
+                        title={disabledTitle}>{this.getIntlMessage('wizard.finish')}</Button>);
         }
         return button;
     },
 
-    renderComponent: function() {
+    renderComponent: function () {
         return React.createElement(this.props.component, {
             data: this.props.data,
             enableNext: this.enableNext,

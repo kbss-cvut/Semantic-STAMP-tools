@@ -6,8 +6,11 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
+var IntlMixin = require('react-intl').IntlMixin;
 
 var ReportStatementRow = React.createClass({
+    mixins: [IntlMixin],
+
     propTypes: {
         onRemove: React.PropTypes.func
     },
@@ -28,11 +31,13 @@ var ReportStatementRow = React.createClass({
         }
         cells.push(
             <td key='cell_actions' style={{verticalAlign: 'middle'}} className='actions'>
-                <Button onClick={this.onEdit} title='Edit statement' bsSize='small' bsStyle='primary'>
-                    Edit
+                <Button onClick={this.onEdit} title={this.getIntlMessage('preliminary.detail.table-edit-tooltip')}
+                        bsSize='small' bsStyle='primary'>
+                    {this.getIntlMessage('table-edit')}
                 </Button>
-                <Button onClick={this.onRemove} title='Remove statement' bsSize='small' bsStyle='warning'>
-                    Delete
+                <Button onClick={this.onRemove} title={this.getIntlMessage('preliminary.detail.table-delete-tooltip')}
+                        bsSize='small' bsStyle='warning'>
+                    {this.getIntlMessage('delete')}
                 </Button>
             </td>);
         return (

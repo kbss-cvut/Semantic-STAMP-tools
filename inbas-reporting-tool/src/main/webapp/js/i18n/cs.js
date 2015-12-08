@@ -22,6 +22,7 @@ module.exports = {
         'save-failed-message': 'Hlášení nelze uložit. Odpověď serveru: ',
         'author': 'Autor',
         'author-title': 'Autor hlášení',
+        'description': 'Popis',
         'login': {
             'title': Constants.APP_NAME + ' - Přihlášení',
             'username': 'Uživatelské jméno',
@@ -102,8 +103,24 @@ module.exports = {
                 'saving': 'Ukládám...',
                 'invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
                 'last-edited-msg': 'Naposledy upravil(a) {name} {date}.',
-                'narrative-tooltip': 'Popis - pole je povinné'
+                'narrative-tooltip': 'Popis - pole je povinné',
+                'table-edit-tooltip': 'Editovat položku',
+                'table-delete-tooltip': 'Smazat položku',
+                'corrective': {
+                    'panel-title': 'Nápravná opatření',
+                    'table-description': 'Opatření',
+                    'description-placeholder': 'Popis nápravného opatření',
+                    'add-tooltip': 'Přida popis nápravného opatření',
+                    'wizard-title': 'Průvodce nápravným opatřením',
+                    'wizard-step-title': 'Popis nápravného opatření'
+                }
             }
+        },
+        'wizard': {
+            'finish': 'Dokončit',
+            'next': 'Další',
+            'previous': 'Předchozí',
+            'advance-disabled-tooltip': 'Některá povinná pole nejsou vyplněna'
         }
     }
 };

@@ -5,9 +5,13 @@
 'use strict';
 
 var React = require('react');
+var IntlMixin = require('react-intl').IntlMixin;
+
 var Input = require('../../../Input');
 
 var Description = React.createClass({
+    mixins: [IntlMixin],
+
     getInitialState: function () {
         var description = this.props.data.statement.description;
         return {
@@ -23,7 +27,8 @@ var Description = React.createClass({
     render: function () {
         return (
             <div>
-                <Input type='textarea' rows='8' label='Description' placeholder='Corrective measure description'
+                <Input type='textarea' rows='8' label={this.getIntlMessage('description')}
+                       placeholder={this.getIntlMessage('preliminary.detail.corrective.description-placeholder')}
                        value={this.state.description} onChange={this.onChange}/>
             </div>
         );

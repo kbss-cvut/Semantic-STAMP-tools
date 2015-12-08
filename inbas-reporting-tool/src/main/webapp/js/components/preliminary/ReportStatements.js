@@ -10,6 +10,8 @@ var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
 var Panel = require('react-bootstrap').Panel;
 
+var IntlMixin = require('react-intl').IntlMixin;
+
 var ReportStatementsTable = require('./ReportStatementsTable');
 var WizardWindow = require('../wizard/WizardWindow');
 var EventTypeDialog = require('./wizard/event-type/EventTypeDialog');
@@ -18,6 +20,7 @@ var EventTypeWizardSelector = require('./wizard/event-type/EventTypeWizardSelect
 var EventTypeFactory = require('../../model/EventTypeFactory');
 
 var ReportStatements = React.createClass({
+    mixins: [IntlMixin],
 
     propTypes: {
         report: React.PropTypes.object,
@@ -94,12 +97,16 @@ var ReportStatements = React.createClass({
 
     // Corrective Measures
 
-    openCorrectiveMeasureWizard: function () {
+    onAddCorrectiveMeasure: function() {
+        this.openCorrectiveMeasureWizard({}, this.addCorrectiveMeasure);
+    },
+
+    openCorrectiveMeasureWizard: function (statement, onFinish) {
         var properties = {
             steps: CorrectiveMeasureWizardSteps,
-            title: 'Corrective Measure Wizard',
-            statement: {},
-            onFinish: this.addCorrectiveMeasure
+            title: this.getIntlMessage('preliminary.detail.corrective.wizard-title'),
+            statement: statement,
+            onFinish: onFinish
         };
         this.openWizard(properties);
     },
@@ -129,15 +136,9 @@ var ReportStatements = React.createClass({
     },
 
     onEditCorrectiveMeasure: function (index) {
-        var measure = assign({}, this.props.report.correctiveMeasures[index]),
-            wizardProperties = {
-                steps: CorrectiveMeasureWizardSteps,
-                title: 'Corrective Measure Wizard',
-                statement: measure,
-                onFinish: this.updateCorrectiveMeasure
-            };
+        var measure = assign({}, this.props.report.correctiveMeasures[index]);
         measure.index = index;
-        this.openWizard(wizardProperties);
+        this.openCorrectiveMeasureWizard(measure, this.updateCorrectiveMeasure);
     },
 
 
@@ -230,7 +231,7 @@ var ReportStatements = React.createClass({
             var header = [{
                 flex: 11,
                 attribute: 'description',
-                name: 'Description'
+                name: this.getIntlMessage('preliminary.detail.corrective.table-description')
             }];
             var handlers = {
                 onRemove: this.onRemoveCorrectiveMeasure,
@@ -240,13 +241,14 @@ var ReportStatements = React.createClass({
         }
         var buttonCls = component ? 'float-right' : '';
         return (
-            <Panel header={<h5>Corrective Measures</h5>} bsStyle='info' key='correctiveMeasures'>
+            <Panel header={<h5>{this.getIntlMessage('preliminary.detail.corrective.panel-title')}</h5>} bsStyle='info'
+                   key='correctiveMeasures'>
                 {component}
                 <div className={buttonCls}>
-                    <Button bsStyle='primary' bsSize='small' title='Add new Corrective Measure'
-                            onClick={this.openCorrectiveMeasureWizard}>
+                    <Button bsStyle='primary' bsSize='small' onClick={this.onAddCorrectiveMeasure}
+                            title={this.getIntlMessage('preliminary.detail.corrective.add-tooltip')}>
                         <Glyphicon glyph='plus' style={{margin: '0 5px 0 0'}}/>
-                        Add
+                        {this.getIntlMessage('add')}
                     </Button>
                 </div>
             </Panel>

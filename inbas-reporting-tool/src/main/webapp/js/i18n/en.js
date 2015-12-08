@@ -22,6 +22,7 @@ module.exports = {
         'save-failed-message': 'Unable to save report. Server responded with message: ',
         'author': 'Author',
         'author-title': 'Report author',
+        'description': 'Description',
         'login': {
             'title': Constants.APP_NAME + ' - Login',
             'username': 'Username',
@@ -101,8 +102,24 @@ module.exports = {
                 'saving': 'Saving...',
                 'invalid-tooltip': 'Some of the required values are missing',
                 'last-edited-msg': 'Last edited {date} by {name}.',
-                'narrative-tooltip': 'Narrative - this field is required'
+                'narrative-tooltip': 'Narrative - this field is required',
+                'table-edit-tooltip': 'Edit statement',
+                'table-delete-tooltip': 'Delete statement',
+                'corrective': {
+                    'panel-title': 'Corrective Measures',
+                    'table-description': 'Corrective Measure',
+                    'description-placeholder': 'Corrective measure description',
+                    'add-tooltip': 'Add a corrective measure',
+                    'wizard-title': 'Corrective Measure Wizard',
+                    'wizard-step-title': 'Corrective Measure Assessment'
+                }
             }
+        },
+        'wizard': {
+            'finish': 'Finish',
+            'next': 'Next',
+            'previous': 'Previous',
+            'advance-disabled-tooltip': 'Some required values are missing'
         }
     }
 };
