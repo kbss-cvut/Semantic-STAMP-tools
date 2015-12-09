@@ -9,7 +9,8 @@ var ReactDOM = require('react-dom');
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var IndexRoute = require('react-router').IndexRoute;
-var IntlMixin = require('react-intl').IntlMixin;
+var IntlProvider = require('react-intl').IntlProvider;
+var addLocaleData = require('react-intl').addLocaleData;
 
 var history = require('./utils/Routing').history;
 var Routes = require('./utils/Routes');
@@ -28,6 +29,12 @@ var InvestigationController = require('./components/investigation/InvestigationC
 var intlData = null;
 
 function selectLocalization() {
+    // Load react-intl locales
+    if ('ReactIntlLocaleData' in window) {
+        Object.keys(ReactIntlLocaleData).forEach((lang) => {
+            addLocaleData(ReactIntlLocaleData[lang]);
+        });
+    }
     var lang = navigator.language;
     if (lang && lang === 'cs' || lang === 'cs-CZ' || lang === 'sk' || lang === 'sk-SK') {
         intlData = require('./i18n/cs');
@@ -40,7 +47,6 @@ selectLocalization();
 
 // Wrapping router in a React component to allow Intl to initialize
 var App = React.createClass({
-    mixins: [IntlMixin],
 
     render: function () {
         return (<Router history={history}>
@@ -63,4 +69,8 @@ var App = React.createClass({
 Actions.loadUser();
 
 // Pass intl data to the top-level component
-ReactDOM.render((<App {...intlData}/>), document.getElementById('content'));
+ReactDOM.render((
+    <IntlProvider {...intlData}>
+        <App {...intlData}/>
+    </IntlProvider>
+), document.getElementById('content'));

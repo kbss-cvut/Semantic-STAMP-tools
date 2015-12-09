@@ -8,22 +8,10 @@ var en = require('../../js/i18n/en');
  */
 var TestApp = React.createClass({
 
-    childContextTypes: {
-        locales: React.PropTypes.array,
-        messages: React.PropTypes.object
-    },
-
-    getChildContext: function () {
-        return {
-            locales: en.locales,
-            messages: en.messages
-        }
-    },
-
     render: function () {
-        return <div>
+        return <IntlProvider {...en}>
             {this.props.children}
-        </div>
+        </IntlProvider>
     }
 });
 
