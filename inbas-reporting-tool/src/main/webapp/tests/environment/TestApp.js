@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var IntlProvider = require('react-intl').IntlProvider;
 var en = require('../../js/i18n/en');
 
 /**

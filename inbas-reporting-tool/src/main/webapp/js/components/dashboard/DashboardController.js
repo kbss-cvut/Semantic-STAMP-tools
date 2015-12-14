@@ -7,6 +7,8 @@
 var React = require('react');
 var Reflux = require('reflux');
 
+var injectIntl = require('react-intl').injectIntl;
+
 var Actions = require('../../actions/Actions');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
@@ -16,11 +18,13 @@ var Dashboard = require('./Dashboard');
 var WizardWindow = require('./../wizard/WizardWindow');
 var InitialReportImportSteps = require('../initialreport/Steps');
 var ReportType = require('../../model/ReportType');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var DashboardController = React.createClass({
     mixins: [
         Reflux.listenTo(UserStore, 'onUserLoaded'),
-        Reflux.listenTo(ReportStore, 'onReportsLoaded')
+        Reflux.listenTo(ReportStore, 'onReportsLoaded'),
+        I18nMixin
     ],
     getInitialState: function () {
         return {
@@ -84,7 +88,7 @@ var DashboardController = React.createClass({
         var wizardProperties = {
             steps: InitialReportImportSteps,
             initialReport: {},
-            title: 'Import Initial Report',
+            title: this.i18n('initial.wizard-add-title'),
             onFinish: this.importInitialReport
         };
         return (
@@ -99,4 +103,4 @@ var DashboardController = React.createClass({
     }
 });
 
-module.exports = DashboardController;
+module.exports = injectIntl(DashboardController);

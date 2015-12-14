@@ -84,6 +84,7 @@ module.exports = {
         'initial.table-report': 'Report',
         'initial.wizard-add-title': 'Add initial report',
         'initial.wizard-edit-title': 'Edit initial report',
+        'initial.label': 'Initial report',
 
         'preliminary.panel-title': 'Preliminary reports',
         'preliminary.table-investigate': 'Investigate',

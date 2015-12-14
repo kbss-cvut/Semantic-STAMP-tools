@@ -11,14 +11,15 @@ var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
 var assign = require('object-assign');
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('react-intl').injectIntl;
 
 var InitialReportSteps = require('./Steps');
 var CollapsibleText = require('../CollapsibleText');
 var WizardWindow = require('../wizard/WizardWindow');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var InitialReports = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     propTypes: {
         report: React.PropTypes.object.isRequired,
@@ -39,7 +40,7 @@ var InitialReports = React.createClass({
             wizardProperties: {
                 steps: InitialReportSteps,
                 initialReport: {},
-                title: this.getIntlMessage('initial.wizard-add-title'),
+                title: this.i18n('initial.wizard-add-title'),
                 onFinish: this.saveNewInitialReport
             }
         });
@@ -55,7 +56,7 @@ var InitialReports = React.createClass({
             wizardProperties: {
                 steps: InitialReportSteps,
                 initialReport: assign({}, this.props.report.initialReports[index]), // Edit a copy
-                title: this.getIntlMessage('initial.wizard-edit-title'),
+                title: this.i18n('initial.wizard-edit-title'),
                 onFinish: this.saveInitialReport
             }
         });
@@ -97,7 +98,7 @@ var InitialReports = React.createClass({
                         <Button ref='addInitialReport' bsStyle='primary' bsSize='small'
                                 onClick={this.addInitialReport}>
                             <Glyphicon glyph='plus' style={{margin: '0 5px 0 0'}}/>
-                            {this.getIntlMessage('add')}
+                            {this.i18n('add')}
                         </Button>
                     </div>
                 </Panel>
@@ -107,7 +108,7 @@ var InitialReports = React.createClass({
 
     renderHeader: function () {
         return (
-            <h5>{this.getIntlMessage('initial.panel-title')}</h5>
+            <h5>{this.i18n('initial.panel-title')}</h5>
         );
     },
 
@@ -119,8 +120,8 @@ var InitialReports = React.createClass({
                 <Table striped bordered condensed hover>
                     <thead>
                     <tr>
-                        <th>{this.getIntlMessage('initial.table-report')}</th>
-                        <th>{this.getIntlMessage('table-actions')}</th>
+                        <th>{this.i18n('initial.table-report')}</th>
+                        <th>{this.i18n('table-actions')}</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -146,7 +147,7 @@ var InitialReports = React.createClass({
                     </td>
                     <td className='col-xs-1' style={{verticalAlign: 'middle', textAlign: 'center'}}>
                         <Button id={'editInitial_' + i} bsStyle='primary' bsSize='small'
-                                onClick={this.editInitialReport}>{this.getIntlMessage('table-edit')}</Button>
+                                onClick={this.editInitialReport}>{this.i18n('table-edit')}</Button>
                     </td>
                 </tr>);
         }
@@ -154,4 +155,4 @@ var InitialReports = React.createClass({
     }
 });
 
-module.exports = InitialReports;
+module.exports = injectIntl(InitialReports);

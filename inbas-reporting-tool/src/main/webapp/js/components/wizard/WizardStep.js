@@ -9,10 +9,12 @@ var Alert = require('react-bootstrap').Alert;
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('react-intl').injectIntl;
+
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var WizardStep = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     propTypes: {
         onClose: React.PropTypes.func,
@@ -83,11 +85,11 @@ var WizardStep = React.createClass({
         var previousButton;
         if (!this.props.isFirstStep) {
             previousButton = (<Button onClick={this.onPrevious} disabled={this.state.retreatDisabled} bsStyle='primary'
-                                      bsSize='small'>{this.getIntlMessage('wizard.previous')}</Button>);
+                                      bsSize='small'>{this.i18n('wizard.previous')}</Button>);
         }
         var advanceButton = this.renderAdvanceButton();
         var cancelButton = (<Button onClick={this.props.onClose} bsStyle='primary'
-                                    bsSize='small'>{this.getIntlMessage('cancel')}</Button>);
+                                    bsSize='small'>{this.i18n('cancel')}</Button>);
         var error = null;
         if (this.state.currentError) {
             error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);
@@ -109,16 +111,16 @@ var WizardStep = React.createClass({
     },
 
     renderAdvanceButton: function () {
-        var disabledTitle = this.state.advanceDisabled ? this.getIntlMessage('wizard.advance-disabled-tooltip') : null;
+        var disabledTitle = this.state.advanceDisabled ? this.i18n('wizard.advance-disabled-tooltip') : null;
         var button;
         if (!this.props.isLastStep) {
             button = (
                 <Button onClick={this.onNext} disabled={this.state.advanceDisabled} bsStyle='primary' bsSize='small'
-                        title={disabledTitle}>{this.getIntlMessage('wizard.next')}</Button>);
+                        title={disabledTitle}>{this.i18n('wizard.next')}</Button>);
         } else {
             button = (
                 <Button onClick={this.onFinish} disabled={this.state.advanceDisabled} bsStyle='primary' bsSize='small'
-                        title={disabledTitle}>{this.getIntlMessage('wizard.finish')}</Button>);
+                        title={disabledTitle}>{this.i18n('wizard.finish')}</Button>);
         }
         return button;
     },
@@ -138,4 +140,4 @@ var WizardStep = React.createClass({
     }
 });
 
-module.exports = WizardStep;
+module.exports = injectIntl(WizardStep);

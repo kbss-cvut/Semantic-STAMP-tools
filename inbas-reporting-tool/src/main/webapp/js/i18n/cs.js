@@ -53,7 +53,7 @@ module.exports = {
         'dashboard.search-placeholder': 'Název hlášení',
         'dashboard.view-all-tile': 'Prohlížet všechna hlášení',
         'dashboard.create-empty-tile': 'Začít s prázdným hlášením',
-        'dashboard.create-import-tile': 'Importovat počáteční hlášení',
+        'dashboard.create-import-tile': 'Importovat prvotní hlášení',
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
         'dashboard.recent-table-headline': 'Název hlášení',
         'dashboard.recent-table-date': 'Datum události',
@@ -85,6 +85,7 @@ module.exports = {
         'initial.table-report': 'Hlášení',
         'initial.wizard-add-title': 'Přidat prvotní hlášení',
         'initial.wizard-edit-title': 'Editovat prvotní hlášení',
+        'initial.label': 'Prvotní hlášení',
 
         'preliminary.panel-title': 'Předběžná hlášení',
         'preliminary.table-investigate': 'Šetřit',

@@ -8,12 +8,13 @@ var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('react-intl').injectIntl;
 
 var ReportRow = require('./ReportRow');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportsTable = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     propTypes: {
         reports: React.PropTypes.array.isRequired,
@@ -23,7 +24,7 @@ var ReportsTable = React.createClass({
     },
 
     render: function () {
-        var title = <h3>{this.props.panelTitle ? this.props.panelTitle : this.getIntlMessage('reports.panel-title')}</h3>;
+        var title = <h3>{this.props.panelTitle ? this.props.panelTitle : this.i18n('reports.panel-title')}</h3>;
         return (<div>
             <Panel header={title} bsStyle='primary' {...this.props}>
                 <Table striped bordered condensed hover>
@@ -54,15 +55,15 @@ var ReportsTable = React.createClass({
         return this.props.tableHeader ? this.props.tableHeader : (
             <thead>
             <tr>
-                <th className='col-xs-2'>{this.getIntlMessage('headline')}</th>
-                <th className='col-xs-2'>{this.getIntlMessage('reports.table-date')}</th>
-                <th className='col-xs-5'>{this.getIntlMessage('narrative')}</th>
-                <th className='col-xs-1'>{this.getIntlMessage('reports.table-type')}</th>
-                <th className='col-xs-2'>{this.getIntlMessage('table-actions')}</th>
+                <th className='col-xs-2'>{this.i18n('headline')}</th>
+                <th className='col-xs-2'>{this.i18n('reports.table-date')}</th>
+                <th className='col-xs-5'>{this.i18n('narrative')}</th>
+                <th className='col-xs-1'>{this.i18n('reports.table-type')}</th>
+                <th className='col-xs-2'>{this.i18n('table-actions')}</th>
             </tr>
             </thead>
         );
     }
 });
 
-module.exports = ReportsTable;
+module.exports = injectIntl(ReportsTable);
