@@ -5,9 +5,13 @@
 'use strict';
 
 var React = require('react');
+var injectIntl = require('react-intl').injectIntl;
+
 var Input = require('./Input');
+var I18nMixin = require('../i18n/I18nMixin');
 
 var Select = React.createClass({
+    mixins: [I18nMixin],
 
     propTypes: {
         options: React.PropTypes.array,
@@ -17,7 +21,7 @@ var Select = React.createClass({
         onChange: React.PropTypes.func
     },
 
-    focus: function() {
+    focus: function () {
         this.refs.select.focus();
     },
 
@@ -37,11 +41,12 @@ var Select = React.createClass({
         return (
             <Input ref='select' type='select' name={this.props.name} title={this.props.title} label={this.props.label}
                    defaultValue='' value={this.props.value} onChange={this.props.onChange}>
-                <option key='opt_default' value='' disabled defaultValue style={{display: 'none'}}> -- Select --</option>
+                <option key='opt_default' value='' disabled defaultValue
+                        style={{display: 'none'}}>{this.i18n('select.default')}</option>
                 {options}
             </Input>
         );
     }
 });
 
-module.exports = Select;
+module.exports = injectIntl(Select);

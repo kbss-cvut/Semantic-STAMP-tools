@@ -10,7 +10,7 @@ var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
 var Panel = require('react-bootstrap').Panel;
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('react-intl').injectIntl;
 
 var ReportStatementsTable = require('./ReportStatementsTable');
 var WizardWindow = require('../wizard/WizardWindow');
@@ -18,9 +18,10 @@ var EventTypeDialog = require('./wizard/event-type/EventTypeDialog');
 var CorrectiveMeasureWizardSteps = require('./wizard/corrective-measure/Steps');
 var EventTypeWizardSelector = require('./wizard/event-type/EventTypeWizardSelector');
 var EventTypeFactory = require('../../model/EventTypeFactory');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportStatements = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     propTypes: {
         report: React.PropTypes.object,
@@ -97,14 +98,14 @@ var ReportStatements = React.createClass({
 
     // Corrective Measures
 
-    onAddCorrectiveMeasure: function() {
+    onAddCorrectiveMeasure: function () {
         this.openCorrectiveMeasureWizard({}, this.addCorrectiveMeasure);
     },
 
     openCorrectiveMeasureWizard: function (statement, onFinish) {
         var properties = {
             steps: CorrectiveMeasureWizardSteps,
-            title: this.getIntlMessage('preliminary.detail.corrective.wizard-title'),
+            title: this.i18n('preliminary.detail.corrective.wizard-title'),
             statement: statement,
             onFinish: onFinish
         };
@@ -178,11 +179,16 @@ var ReportStatements = React.createClass({
                                            onTypeSelect={this.onEventTypeSelect}/>);
         var buttonCls = component ? 'float-right' : '';
         return (
-            <Panel header={<h5 title='At least one event type is required'>Event Type Assessments*</h5>} bsStyle='info'
-                   key='typeAssessments'>
+            <Panel
+                header={<h5 title={this.i18n('preliminary.detail.eventtype.panel-title-tooltip')}>
+                {this.i18n('preliminary.detail.eventtype.panel-title') + '*'}
+                </h5>}
+                bsStyle='info'
+                key='typeAssessments'>
                 {component}
                 <div className={buttonCls}>
-                    <Button bsStyle='primary' bsSize='small' title='Add new Event Type Assessment'
+                    <Button bsStyle='primary' bsSize='small'
+                            title={this.i18n('preliminary.detail.eventtype.add-tooltip')}
                             onClick={this.openEventTypeDialog}>
                         <Glyphicon glyph='plus' style={{margin: '0 5px 0 0'}}/>
                         Add
@@ -207,11 +213,11 @@ var ReportStatements = React.createClass({
             }
             var header = [{
                 attribute: 'eventType',
-                name: 'Event Type',
+                name: this.i18n('preliminary.detail.eventtype.table-type'),
                 flex: 3
             }, {
                 attribute: 'summary',
-                name: 'Summary',
+                name: this.i18n('preliminary.detail.eventtype.table-summary'),
                 flex: 8
             }];
             var handlers = {
@@ -231,7 +237,7 @@ var ReportStatements = React.createClass({
             var header = [{
                 flex: 11,
                 attribute: 'description',
-                name: this.getIntlMessage('preliminary.detail.corrective.table-description')
+                name: this.i18n('preliminary.detail.corrective.table-description')
             }];
             var handlers = {
                 onRemove: this.onRemoveCorrectiveMeasure,
@@ -241,14 +247,14 @@ var ReportStatements = React.createClass({
         }
         var buttonCls = component ? 'float-right' : '';
         return (
-            <Panel header={<h5>{this.getIntlMessage('preliminary.detail.corrective.panel-title')}</h5>} bsStyle='info'
+            <Panel header={<h5>{this.i18n('preliminary.detail.corrective.panel-title')}</h5>} bsStyle='info'
                    key='correctiveMeasures'>
                 {component}
                 <div className={buttonCls}>
                     <Button bsStyle='primary' bsSize='small' onClick={this.onAddCorrectiveMeasure}
-                            title={this.getIntlMessage('preliminary.detail.corrective.add-tooltip')}>
+                            title={this.i18n('preliminary.detail.corrective.add-tooltip')}>
                         <Glyphicon glyph='plus' style={{margin: '0 5px 0 0'}}/>
-                        {this.getIntlMessage('add')}
+                        {this.i18n('add')}
                     </Button>
                 </div>
             </Panel>
@@ -256,4 +262,4 @@ var ReportStatements = React.createClass({
     }
 });
 
-module.exports = ReportStatements;
+module.exports = injectIntl(ReportStatements);

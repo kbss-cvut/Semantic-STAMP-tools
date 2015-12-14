@@ -5,30 +5,32 @@
 'use strict';
 
 var React = require('react');
+var injectIntl = require('react-intl').injectIntl;
 
 var Select = require('../../Select');
+var I18nMixin = require('../../../i18n/I18nMixin');
 
 var FlightOperationType = React.createClass({
+    mixins: [I18nMixin],
+
     render: function () {
         var options = [
             {
                 value: 'passenger',
-                label: 'Passenger Flight',
-                title: 'A flight carrying one or more revenue passengers. This includes flights which carry, in addition' +
-                ' to passengers, mail or cargo.'
+                label: this.i18n('flight.operation-type.passenger'),
+                title: this.i18n('flight.operation-type.passenger.tooltip')
             },
             {
                 value: 'cargo',
-                label: 'Cargo Flight',
-                title: 'This is to be used for all-freight services only. Cargo includes freight, unaccompanied baggage ' +
-                'and mail.'
+                label: this.i18n('flight.operation-type.cargo'),
+                title: this.i18n('flight.operation-type.cargo.tooltip')
             }
         ];
         return (
-            <Select label='Operation Type' name='operationType' value={this.props.operationType}
+            <Select label={this.i18n('flight.operation-type')} name='operationType' value={this.props.operationType}
                     onChange={this.props.onChange} options={options}/>
         );
     }
 });
 
-module.exports = FlightOperationType;
+module.exports = injectIntl(FlightOperationType);

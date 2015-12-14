@@ -23,6 +23,7 @@ module.exports = {
         'author': 'Autor',
         'author-title': 'Autor hlášení',
         'description': 'Popis',
+        'select.default': '--- Vybrat ---',
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
         'login.username': 'Uživatelské jméno',
@@ -105,10 +106,34 @@ module.exports = {
         'preliminary.detail.corrective.add-tooltip': 'Přida popis nápravného opatření',
         'preliminary.detail.corrective.wizard-title': 'Průvodce nápravným opatřením',
         'preliminary.detail.corrective.wizard-step-title': 'Popis nápravného opatření',
+        'preliminary.detail.eventtype.panel-title': 'Popis typu události',
+        'preliminary.detail.eventtype.panel-title-tooltip': 'Alespoň jedna klasifikace události je vyžadována',
+        'preliminary.detail.eventtype.table-type': 'Typ události',
+        'preliminary.detail.eventtype.table-summary': 'Popis',
+        'preliminary.detail.eventtype.add-tooltip': 'Přidat popis typu události',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',
         'wizard.previous': 'Předchozí',
-        'wizard.advance-disabled-tooltip': 'Některá povinná pole nejsou vyplněna'
+        'wizard.advance-disabled-tooltip': 'Některá povinná pole nejsou vyplněna',
+
+        'aircraft.registration': 'Registrace letadla',
+        'aircraft.state-of-registry': 'Stát registrace',
+        'flight.departure': 'Poslední místo odletu',
+        'flight.destination': 'Plánovaný cíl',
+        'flight.operation-type': 'Typ operace',
+        'flight.operation-type.passenger': 'Civilní let',
+        'flight.operation-type.passenger.tooltip': 'Let přepravující platící cestující. Zahrnuje též lety, které kromě pasažérů' +
+        ' přepravují i náklad či poštu.',
+        'flight.operation-type.cargo': 'Nákladní let',
+        'flight.operation-type.cargo.tooltip': 'Pouze pro nákladní lety. Tyto zahrnují přepravu nákladu, samostatných zavazadel ' +
+        'či pošty.',
+
+        'eventtype.title': 'Typ události',
+        'eventtype.default.description': 'Popis',
+        'eventtype.default.description-placeholder': 'Popis události',
+        'eventtype.default.description-missing': 'Popis události je povinný',
+        'eventtype.incursion.lvp.label': 'Status nízké viditelnosti',
+        'eventtype.incursion.location.label': 'Poloha'
     }
 };

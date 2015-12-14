@@ -7,19 +7,21 @@
 var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-typeahead').Typeahead;
+var injectIntl = require('react-intl').injectIntl;
 
 var Actions = require('../../actions/Actions');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var TypeaheadResultList = require('./TypeaheadResultList');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var LocationTypeahead = React.createClass({
+    mixins: [Reflux.ListenerMixin, I18nMixin],
+
     propTypes: {
         name: React.PropTypes.string,
         value: React.PropTypes.string,
         onChange: React.PropTypes.func
     },
-
-    mixins: [Reflux.ListenerMixin],
 
     getInitialState: function () {
         return {
@@ -53,9 +55,9 @@ var LocationTypeahead = React.createClass({
         };
         return (
             <div>
-                <label className='control-label'>Location</label>
+                <label className='control-label'>{this.i18n('eventtype.incursion.location.label')}</label>
                 <Typeahead ref='locationSelect' className='form-group form-group-sm' name={this.props.name}
-                           formInputOption='id' placeholder='Location'
+                           formInputOption='id' placeholder={this.i18n('eventtype.incursion.location.label')}
                            onOptionSelected={this.onOptionSelected} filterOption='name' displayOption='name'
                            value={this.props.value ? this.props.value : null}
                            options={this.state.options} customClasses={classes}
@@ -65,4 +67,4 @@ var LocationTypeahead = React.createClass({
     }
 });
 
-module.exports = LocationTypeahead;
+module.exports = injectIntl(LocationTypeahead);

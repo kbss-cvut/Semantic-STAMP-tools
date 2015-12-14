@@ -6,18 +6,20 @@
 var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-typeahead').Typeahead;
+var injectIntl = require('react-intl').injectIntl;
 
 var Actions = require('../../actions/Actions');
 var TypeaheadResultList = require('./EventTypeTypeaheadResultList');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var EventTypeTypeahead = React.createClass({
+    mixins: [Reflux.ListenerMixin, I18nMixin],
 
     propTypes: {
         onSelect: React.PropTypes.func.isRequired
     },
 
-    mixins: [Reflux.ListenerMixin],
     getInitialState: function () {
         return {
             options: []
@@ -45,7 +47,7 @@ var EventTypeTypeahead = React.createClass({
         };
         var label = this.props.label ? (<label className='control-label'>{this.props.label}</label>) : null,
             value = this.props.value ? this.props.value : null,
-            placeholder = this.props.placeholder ? this.props.placeholder : 'Event Type';
+            placeholder = this.props.placeholder ? this.props.placeholder : this.i18n('eventtype.title');
         return (
             <div>
                 {label}
@@ -57,4 +59,4 @@ var EventTypeTypeahead = React.createClass({
     }
 });
 
-module.exports = EventTypeTypeahead;
+module.exports = injectIntl(EventTypeTypeahead);

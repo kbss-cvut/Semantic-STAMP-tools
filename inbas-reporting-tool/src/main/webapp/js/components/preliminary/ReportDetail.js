@@ -10,7 +10,7 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('react-intl').injectIntl;
 
 var Actions = require('../../actions/Actions');
 var InitialReports = require('./../initialreport/InitialReports');
@@ -23,9 +23,10 @@ var Routes = require('../../utils/Routes');
 var MessageMixin = require('../mixin/MessageMixin');
 var ResourceNotFound = require('../ResourceNotFound');
 var ReportValidator = require('../../validation/ReportValidator');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportDetail = React.createClass({
-    mixins: [MessageMixin, IntlMixin],
+    mixins: [MessageMixin, I18nMixin],
 
     getInitialState: function () {
         return {
@@ -62,12 +63,12 @@ var ReportDetail = React.createClass({
     onSuccess: function () {
         this.setState({submitting: false});
         this.props.onSuccess();
-        this.showSuccessMessage(this.getIntlMessage('save-success-message'));
+        this.showSuccessMessage(this.i18n('save-success-message'));
     },
 
     onSubmitError: function (error) {
         this.setState({submitting: false});
-        this.showErrorMessage(this.getIntlMessage('save-failed-message') + error.message);
+        this.showErrorMessage(this.i18n('save-failed-message') + error.message);
     },
 
     investigate: function () {
@@ -82,11 +83,11 @@ var ReportDetail = React.createClass({
     render: function () {
         if (this.props.loading) {
             return (
-                <Mask text={this.getIntlMessage('preliminary.detail.loading-mask')}/>
+                <Mask text={this.i18n('preliminary.detail.loading-mask')}/>
             );
         }
         if (!this.props.report) {
-            return (<ResourceNotFound resource={this.getIntlMessage('preliminary.detail.panel-title')}/>);
+            return (<ResourceNotFound resource={this.i18n('preliminary.detail.panel-title')}/>);
         }
         return this.renderDetail();
     },
@@ -95,17 +96,17 @@ var ReportDetail = React.createClass({
         var report = this.props.report,
             loading = this.state.submitting,
             submitDisabled = !ReportValidator.isValid(report) || loading,
-            submitTitle = this.getIntlMessage('preliminary.detail.save-tooltip'),
-            submitLabel = this.getIntlMessage(loading ? 'preliminary.detail.saving' : 'save');
+            submitTitle = this.i18n('preliminary.detail.save-tooltip'),
+            submitLabel = this.i18n(loading ? 'preliminary.detail.saving' : 'save');
         if (loading) {
-            submitTitle = this.getIntlMessage('preliminary.detail.saving');
+            submitTitle = this.i18n('preliminary.detail.saving');
         } else if (submitDisabled) {
-            submitTitle = this.getIntlMessage('preliminary.detail.invalid-tooltip');
+            submitTitle = this.i18n('preliminary.detail.invalid-tooltip');
         }
 
         return (
             <div>
-                <Panel header={<h2>{this.getIntlMessage('preliminary.detail.panel-title')}</h2>} bsStyle='primary'>
+                <Panel header={<h2>{this.i18n('preliminary.detail.panel-title')}</h2>} bsStyle='primary'>
                     <form>
                         <BasicOccurrenceInfo report={report} onChange={this.onChange}
                                              onAttributeChange={this.onAttributeChange}/>
@@ -130,8 +131,8 @@ var ReportDetail = React.createClass({
                             <Button bsStyle='success' bsSize='small' disabled={submitDisabled}
                                     ref='submit' title={submitTitle}
                                     onClick={this.onSubmit}>{submitLabel}</Button>
-                            <Button bsStyle='link' bsSize='small' title={this.getIntlMessage('cancel-tooltip')}
-                                    onClick={this.props.onCancel}>{this.getIntlMessage('cancel')}</Button>
+                            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                                    onClick={this.props.onCancel}>{this.i18n('cancel')}</Button>
                         </ButtonToolbar>
                     </form>
                 </Panel>
@@ -141,4 +142,4 @@ var ReportDetail = React.createClass({
     }
 });
 
-module.exports = ReportDetail;
+module.exports = injectIntl(ReportDetail);

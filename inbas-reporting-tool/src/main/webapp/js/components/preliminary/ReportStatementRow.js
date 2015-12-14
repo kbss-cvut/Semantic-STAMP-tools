@@ -6,10 +6,12 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('react-intl').injectIntl;
+
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportStatementRow = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     propTypes: {
         onRemove: React.PropTypes.func
@@ -31,13 +33,13 @@ var ReportStatementRow = React.createClass({
         }
         cells.push(
             <td key='cell_actions' style={{verticalAlign: 'middle'}} className='actions'>
-                <Button onClick={this.onEdit} title={this.getIntlMessage('preliminary.detail.table-edit-tooltip')}
+                <Button onClick={this.onEdit} title={this.i18n('preliminary.detail.table-edit-tooltip')}
                         bsSize='small' bsStyle='primary'>
-                    {this.getIntlMessage('table-edit')}
+                    {this.i18n('table-edit')}
                 </Button>
-                <Button onClick={this.onRemove} title={this.getIntlMessage('preliminary.detail.table-delete-tooltip')}
+                <Button onClick={this.onRemove} title={this.i18n('preliminary.detail.table-delete-tooltip')}
                         bsSize='small' bsStyle='warning'>
-                    {this.getIntlMessage('delete')}
+                    {this.i18n('delete')}
                 </Button>
             </td>);
         return (
@@ -48,4 +50,4 @@ var ReportStatementRow = React.createClass({
     }
 });
 
-module.exports = ReportStatementRow;
+module.exports = injectIntl(ReportStatementRow);

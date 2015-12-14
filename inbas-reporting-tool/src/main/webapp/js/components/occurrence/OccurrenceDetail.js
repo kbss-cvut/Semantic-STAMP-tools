@@ -7,12 +7,13 @@ var React = require('react');
 var DateTimePicker = require('kbss-react-bootstrap-datetimepicker');
 var assign = require('object-assign');
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('react-intl').injectIntl;
 
 var Input = require('../Input');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var OccurrenceDetail = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     propTypes: {
         occurrence: React.PropTypes.object.isRequired,
@@ -40,23 +41,23 @@ var OccurrenceDetail = React.createClass({
                 <div className='row'>
                     <div className='col-xs-4'>
                         <Input type='text' name='name' value={occurrence.name} onChange={this.onChange}
-                               label={this.getIntlMessage('headline') + '*'}
-                               title={this.getIntlMessage('occurrence.headline-tooltip')}/>
+                               label={this.i18n('headline') + '*'}
+                               title={this.i18n('occurrence.headline-tooltip')}/>
                     </div>
                 </div>
 
                 <div className='row'>
                     <div className='picker-container form-group form-group-sm col-xs-4'>
-                        <label className='control-label'>{this.getIntlMessage('occurrence.start-time')}</label>
+                        <label className='control-label'>{this.i18n('occurrence.start-time')}</label>
                         <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={occurrence.startTime.toString()}
                                         onChange={this.onStartChange}
-                                        inputProps={{title: this.getIntlMessage('occurrence.start-time-tooltip'), bsSize: 'small'}}/>
+                                        inputProps={{title: this.i18n('occurrence.start-time-tooltip'), bsSize: 'small'}}/>
                     </div>
                     <div className='picker-container form-group form-group-sm col-xs-4'>
-                        <label className='control-label'>{this.getIntlMessage('occurrence.end-time')}</label>
+                        <label className='control-label'>{this.i18n('occurrence.end-time')}</label>
                         <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={occurrence.endTime.toString()}
                                         onChange={this.onEndChange}
-                                        inputProps={{title: this.getIntlMessage('occurrence.end-time-tooltip'), bsSize: 'small'}}/>
+                                        inputProps={{title: this.i18n('occurrence.end-time-tooltip'), bsSize: 'small'}}/>
                     </div>
                 </div>
             </div>
@@ -64,4 +65,4 @@ var OccurrenceDetail = React.createClass({
     }
 });
 
-module.exports = OccurrenceDetail;
+module.exports = injectIntl(OccurrenceDetail);

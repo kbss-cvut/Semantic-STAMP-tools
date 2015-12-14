@@ -23,6 +23,7 @@ module.exports = {
         'author': 'Author',
         'author-title': 'Report author',
         'description': 'Description',
+        'select.default': '--- Select ---',
 
         'login.title': Constants.APP_NAME + ' - Login',
         'login.username': 'Username',
@@ -98,16 +99,40 @@ module.exports = {
         'preliminary.detail.narrative-tooltip': 'Narrative - this field is required',
         'preliminary.detail.table-edit-tooltip': 'Edit statement',
         'preliminary.detail.table-delete-tooltip': 'Delete statement',
-        'preliminary.detail.corrective.panel-title': 'Corrective Measures',
-        'preliminary.detail.corrective.table-description': 'Corrective Measure',
+        'preliminary.detail.corrective.panel-title': 'Corrective measures',
+        'preliminary.detail.corrective.table-description': 'Corrective measure',
         'preliminary.detail.corrective.description-placeholder': 'Corrective measure description',
         'preliminary.detail.corrective.add-tooltip': 'Add a corrective measure',
         'preliminary.detail.corrective.wizard-title': 'Corrective Measure Wizard',
         'preliminary.detail.corrective.wizard-step-title': 'Corrective Measure Assessment',
+        'preliminary.detail.eventtype.panel-title': 'Event type assessments',
+        'preliminary.detail.eventtype.panel-title-tooltip': 'At least one event type is required',
+        'preliminary.detail.eventtype.table-type': 'Event type',
+        'preliminary.detail.eventtype.table-summary': 'Summary',
+        'preliminary.detail.eventtype.add-tooltip': 'Add an event type assessment',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',
         'wizard.previous': 'Previous',
-        'wizard.advance-disabled-tooltip': 'Some required values are missing'
+        'wizard.advance-disabled-tooltip': 'Some required values are missing',
+
+        'aircraft.registration': 'Aircraft registration',
+        'aircraft.state-of-registry': 'State of registry',
+        'flight.departure': 'Last departure point',
+        'flight.destination': 'Planned destination',
+        'flight.operation-type': 'Operation type',
+        'flight.operation-type.passenger': 'Passenger Flight',
+        'flight.operation-type.passenger.tooltip': 'A flight carrying one or more revenue passengers. This includes flights ' +
+        'which carry, in addition to passengers, mail or cargo.',
+        'flight.operation-type.cargo': 'Cargo Flight',
+        'flight.operation-type.cargo.tooltip': 'This is to be used for all-freight services only. Cargo includes freight, ' +
+        'unaccompanied baggage and mail.',
+
+        'eventtype.title': 'Event type',
+        'eventtype.default.description': 'Description',
+        'eventtype.default.description-placeholder': 'Event description',
+        'eventtype.default.description-missing': 'Event description is required',
+        'eventtype.incursion.lvp.label': 'Low visibility procedure',
+        'eventtype.incursion.location.label': 'Location'
     }
 };

@@ -7,9 +7,10 @@
 var React = require('react');
 var Table = require('react-bootstrap').Table;
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('react-intl').injectIntl;
 
 var ReportStatementRow = require('./ReportStatementRow');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 
 /**
@@ -17,7 +18,7 @@ var ReportStatementRow = require('./ReportStatementRow');
  * available to the sum of passed flex values.
  */
 var ReportStatementsTable = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     propTypes: {
         data: React.PropTypes.array,
@@ -60,7 +61,7 @@ var ReportStatementsTable = React.createClass({
             var cls = header[i].flex ? 'col-xs-' + header[i].flex : null;
             tableHeader.push(<th key={'col_' + header[i].name} className={cls}>{header[i].name}</th>);
         }
-        tableHeader.push(<th key='col_actions' className='col-xs-1'>{this.getIntlMessage('table-actions')}</th>);
+        tableHeader.push(<th key='col_actions' className='col-xs-1'>{this.i18n('table-actions')}</th>);
         return (
             <tr key={this.props.keyBase + 'header'}>
                 {tableHeader}
@@ -69,4 +70,4 @@ var ReportStatementsTable = React.createClass({
     }
 });
 
-module.exports = ReportStatementsTable;
+module.exports = injectIntl(ReportStatementsTable);
