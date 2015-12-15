@@ -6,13 +6,17 @@
 
 var React = require('react');
 var assign = require('object-assign');
+var injectIntl = require('react-intl').injectIntl;
 
 var AircraftIntruder = require('./AircraftIntruder');
 var PersonIntruder = require('./PersonIntruder');
 var VehicleIntruder = require('./VehicleIntruder');
 var Input = require('../../../../Input');
+var I18nMixin = require('../../../../../i18n/I18nMixin');
 
 var RunwayIntruderStep = React.createClass({
+    mixins: [I18nMixin],
+
     getInitialState: function () {
         var statement = this.props.data.statement;
         if (!statement.intruder) {
@@ -22,17 +26,20 @@ var RunwayIntruderStep = React.createClass({
             statement: statement
         };
     },
+
     componentDidMount: function () {
         if (this.state.statement.intruder.intruderType) {
             this.props.enableNext();
         }
     },
+
     onChange: function (e) {
         var value = e.target.value;
         var attributeName = e.target.name;
         this.state.statement.intruder[attributeName] = value;
         this.setState({statement: this.state.statement});
     },
+
     onIntruderTypeSelect: function (e) {
         // Delete old values if present
         assign(this.state.statement, {intruder: {}});
@@ -47,12 +54,14 @@ var RunwayIntruderStep = React.createClass({
         return (
             <div>
                 <div>
-                    <Input type='radio' label='Aircraft' value='aircraft'
+                    <Input type='radio' label={this.i18n('eventtype.incursion.intruder.aircraft')} value='aircraft'
                            checked={intruderType === 'aircraft'} onChange={this.onIntruderTypeSelect}
                            wrapperClassName='col-xs-2'/>
-                    <Input type='radio' label='Vehicle' value='vehicle' checked={intruderType === 'vehicle'}
+                    <Input type='radio' label={this.i18n('eventtype.incursion.intruder.vehicle')} value='vehicle'
+                           checked={intruderType === 'vehicle'}
                            onChange={this.onIntruderTypeSelect} wrapperClassName='col-xs-2'/>
-                    <Input type='radio' label='Person' value='person' checked={intruderType === 'person'}
+                    <Input type='radio' label={this.i18n('eventtype.incursion.intruder.person')} value='person'
+                           checked={intruderType === 'person'}
                            onChange={this.onIntruderTypeSelect} wrapperClassName='col-xs-2'/>
                 </div>
                 <div style={{clear: 'both'}}/>
@@ -74,4 +83,4 @@ var RunwayIntruderStep = React.createClass({
     }
 });
 
-module.exports = RunwayIntruderStep;
+module.exports = injectIntl(RunwayIntruderStep);
