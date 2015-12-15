@@ -96,12 +96,12 @@ var ReportDetail = React.createClass({
         var report = this.props.report,
             loading = this.state.submitting,
             submitDisabled = !ReportValidator.isValid(report) || loading,
-            submitTitle = this.i18n('preliminary.detail.save-tooltip'),
-            submitLabel = this.i18n(loading ? 'preliminary.detail.saving' : 'save');
+            submitTitle = this.i18n('detail.save-tooltip'),
+            submitLabel = this.i18n(loading ? 'detail.saving' : 'save');
         if (loading) {
-            submitTitle = this.i18n('preliminary.detail.saving');
+            submitTitle = this.i18n('detail.saving');
         } else if (submitDisabled) {
-            submitTitle = this.i18n('preliminary.detail.invalid-tooltip');
+            submitTitle = this.i18n('detail.invalid-tooltip');
         }
 
         return (

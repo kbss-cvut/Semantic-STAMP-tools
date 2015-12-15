@@ -9,6 +9,7 @@ var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
+var injectIntl = require('react-intl').injectIntl;
 
 var Actions = require('../../actions/Actions');
 var BasicOccurrenceInfo = require('../preliminary/BasicOccurrenceInfo');
@@ -19,10 +20,11 @@ var ReportStatements = require('../preliminary/ReportStatements');
 var Mask = require('../Mask');
 var MessageMixin = require('../mixin/MessageMixin');
 var ResourceNotFound = require('../ResourceNotFound');
-var ReportValidator = require('../../validation/ReportValidator');
+var InvestigationValidator = require('../../validation/InvestigationValidator');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var Investigation = React.createClass({
-    mixins: [MessageMixin],
+    mixins: [MessageMixin, I18nMixin],
 
     getInitialState: function () {
         return {
@@ -52,19 +54,19 @@ var Investigation = React.createClass({
     onSubmitSuccess: function () {
         this.setState({submitting: false});
         this.props.onSuccess();
-        this.showSuccessMessage('Investigation successfully updated.');
+        this.showSuccessMessage(this.i18n('save-success-message'));
     },
 
     onSubmitError: function (error) {
         this.setState({submitting: false});
-        this.showErrorMessage('Unable to save investigation. Server responded with message: ' + error.message);
+        this.showErrorMessage(this.i18n('save-failed-message') + error.message);
     },
 
 
     render: function () {
         if (this.props.loading) {
             return (
-                <Mask text='Loading report for investigation...'/>
+                <Mask text={this.i18n('investigation.detail.loading')}/>
             );
         }
         if (!this.props.investigation) {
@@ -76,17 +78,18 @@ var Investigation = React.createClass({
     renderDetail: function () {
         var investigation = this.props.investigation,
             loading = this.state.submitting,
-            submitDisabled = !ReportValidator.isValid(investigation) || loading,
-            submitTitle = 'Save changes';
+            submitDisabled = !InvestigationValidator.isValid(investigation) || loading,
+            submitTitle = this.i18n('detail.save-tooltip'),
+            submitLabel = this.i18n(loading ? 'detail.saving' : 'save');
         if (loading) {
-            submitTitle = 'Saving...';
+            submitTitle = this.i18n('detail.saving');
         } else if (submitDisabled) {
-            submitTitle = 'Some of the required values are missing'
+            submitTitle = this.i18n('detail.invalid-tooltip');
         }
 
         return (
             <div>
-                <Panel header='Occurrence Investigation'>
+                <Panel header={this.i18n('investigation.detail.panel-title')}>
                     <form>
                         <BasicOccurrenceInfo report={investigation} onChange={this.onChange}
                                              onAttributeChange={this.onAttributeChange}/>
@@ -116,8 +119,9 @@ var Investigation = React.createClass({
                         <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
                             <Button bsStyle='success' bsSize='small' disabled={submitDisabled}
                                     ref='submit' title={submitTitle}
-                                    onClick={this.onSubmit}>{loading ? 'Saving...' : 'Save'}</Button>
-                            <Button bsStyle='link' bsSize='small' title='Discard changes' onClick={this.props.onCancel}>Cancel</Button>
+                                    onClick={this.onSubmit}>{submitLabel}</Button>
+                            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                                    onClick={this.props.onCancel}>{this.i18n('cancel')}</Button>
                         </ButtonToolbar>
                     </form>
                 </Panel>
@@ -127,4 +131,4 @@ var Investigation = React.createClass({
     }
 });
 
-module.exports = Investigation;
+module.exports = injectIntl(Investigation);

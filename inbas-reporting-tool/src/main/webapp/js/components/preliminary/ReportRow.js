@@ -64,7 +64,7 @@ var ReportRow = React.createClass({
                             onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>
                     <Button bsStyle='primary' bsSize='small'
                             title={this.i18n('preliminary.table-investigate-tooltip')}
-                            onClick={this.onInvestigate}>{this.i18n('reports.table-investigate-tooltip')}
+                            onClick={this.onInvestigate}>{this.i18n('preliminary.table-investigate')}
                     </Button>
 
                     <DeleteReportDialog show={this.state.modalOpen} onClose={this.onCloseModal}

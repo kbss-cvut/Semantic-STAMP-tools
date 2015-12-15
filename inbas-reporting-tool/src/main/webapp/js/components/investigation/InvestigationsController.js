@@ -6,6 +6,7 @@
 
 var React = require('react');
 var Reflux = require('reflux');
+var injectIntl = require('react-intl').injectIntl;
 
 var Actions = require('../../actions/Actions');
 var InvestigationRow = require('./InvestigationRow');
@@ -14,10 +15,12 @@ var Reports = require('../reports/Reports');
 
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var InvestigationsController = React.createClass({
     mixins: [
-        Reflux.listenTo(InvestigationStore, 'onInvestigationsLoaded')
+        Reflux.listenTo(InvestigationStore, 'onInvestigationsLoaded'),
+        I18nMixin
     ],
 
     getInitialState: function () {
@@ -51,7 +54,8 @@ var InvestigationsController = React.createClass({
             onRemove: this.onRemoveInvestigation
         };
         return (
-            <Reports panelTitle='Investigation reports' reports={this.state.investigations} actions={actions}
+            <Reports panelTitle={this.i18n('investigation.panel-title')} reports={this.state.investigations}
+                     actions={actions}
                      rowComponent={InvestigationRow} tableHeader={this.renderTableHeader()}/>
         );
     },
@@ -60,14 +64,14 @@ var InvestigationsController = React.createClass({
         return (
             <thead>
             <tr>
-                <th className='col-xs-2'>Occurrence headline</th>
-                <th className='col-xs-2'>Occurrence date</th>
-                <th className='col-xs-6'>Narrative</th>
-                <th className='col-xs-2'>Actions</th>
+                <th className='col-xs-2'>{this.i18n('headline')}</th>
+                <th className='col-xs-2'>{this.i18n('reports.table-date')}</th>
+                <th className='col-xs-6'>{this.i18n('narrative')}</th>
+                <th className='col-xs-2'>{this.i18n('actions')}</th>
             </tr>
             </thead>
         );
     }
 });
 
-module.exports = InvestigationsController;
+module.exports = injectIntl(InvestigationsController);

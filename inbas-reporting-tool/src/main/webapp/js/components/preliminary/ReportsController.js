@@ -97,4 +97,4 @@ var ReportsController = React.createClass({
     }
 });
 
-module.exports = ReportsController;
+module.exports = injectIntl(ReportsController);

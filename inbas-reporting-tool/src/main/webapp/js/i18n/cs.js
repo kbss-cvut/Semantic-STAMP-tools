@@ -28,6 +28,11 @@ module.exports = {
         'no': 'Ne',
         'unknown': 'Neznámé',
 
+        'detail.save-tooltip': 'Uložit změny',
+        'detail.saving': 'Ukládám...',
+        'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
+
+
         'login.title': Constants.APP_NAME + ' - Přihlášení',
         'login.username': 'Uživatelské jméno',
         'login.password': 'Heslo',
@@ -96,9 +101,6 @@ module.exports = {
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
         'preliminary.detail.loading-mask': 'Načítám hlášení...',
         'preliminary.detail.panel-title': 'Předběžné hlášení o události',
-        'preliminary.detail.save-tooltip': 'Uložit změny',
-        'preliminary.detail.saving': 'Ukládám...',
-        'preliminary.detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
         'preliminary.detail.last-edited-msg': 'Naposledy upravil(a) {name} {date}.',
         'preliminary.detail.narrative-tooltip': 'Popis - pole je povinné',
         'preliminary.detail.table-edit-tooltip': 'Editovat položku',
@@ -184,6 +186,40 @@ module.exports = {
         'eventtype.incursion.conflicting.phase.approach': 'Přiblížení',
         'eventtype.incursion.conflicting.phase.approach-tooltip': 'Letadlo se blížilo k ranveji',
         'eventtype.incursion.conflicting.phase.landing': 'Přistání',
-        'eventtype.incursion.conflicting.phase.landing-tooltip': 'Letadlo přistávalo'
+        'eventtype.incursion.conflicting.phase.landing-tooltip': 'Letadlo přistávalo',
+
+        'investigation.panel-title': 'Hlášení o šetření',
+        'investigation.open-tooltip': 'Kliknutím zobrazíte detail šetření',
+        'investigation.edit-tooltip': 'Editovat toto šetření',
+        'investigation.delete-tooltip': 'Smazat toto šetření',
+        'investigation.detail.loading': 'Nahrávám šetření...',
+        'investigation.detail.panel-title': 'Hlášení o šetření',
+
+        'factors.panel-title': 'Faktory',
+        'factors.scale': 'Měřítko',
+        'factors.scale-tooltip': 'Kliknutím vyberete měřítko: ',
+        'factors.scale.second': 'Sekundy',
+        'factors.scale.minute': 'Minuty',
+        'factors.scale.hour': 'Hodiny',
+        'factors.scale.relative': 'Relativní',
+        'factors.scale.relative-tooltip': 'Kliknutím vyberete relativní měřítko',
+        'factors.causes': 'Způsobuje',
+        'factors.mitigates': 'Zmírňuje',
+        'factors.link-type-select': 'Typ vztahu mezi faktory?',
+        'factors.link-type-select-tooltip': 'Vyberte typ vztahu',
+        'factors.link.delete.title': 'Smazat link?',
+        'factors.link.delete.text': 'Určitě chcete smazat spojení vedoucí z faktoru {source} do faktoru {target}?',
+        'factors.detail.title': 'Faktor události',
+        'factors.detail.type': 'Typ faktoru',
+        'factors.detail.type-placeholder': 'Typ faktoru',
+        'factors.detail.time-period': 'Specifikace času',
+        'factors.detail.start': 'Faktor nastal',
+        'factors.detail.duration': 'Trvání',
+        'factors.duration.second': '{duration, plural, =0 {sekund} one {sekunda} few {sekundy} other {sekund}}',
+        'factors.duration.minute': '{duration, plural, =0 {minut} one {minuta} few {minuty} other {minut}}',
+        'factors.duration.hour': '{duration, plural, =0 {hodin} one {hodina} few {hodiny} other {hodin}}',
+        'factors.detail.details': 'Detail faktoru',
+        'factors.detail.delete.title': 'Smazat faktor?',
+        'factors.detail.delete.text': 'Určitě chcete smazat tento faktor?'
     }
 };
