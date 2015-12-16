@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.rest.handlers;
 
 import cz.cvut.kbss.inbas.audit.exception.UsernameExistsException;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
+import cz.cvut.kbss.inbas.audit.exception.WebServiceIntegrationException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,5 +40,11 @@ public class RestExceptionHandler {
     @ExceptionHandler(UsernameExistsException.class)
     public ResponseEntity<ErrorInfo> usernameExistsException(HttpServletRequest request, UsernameExistsException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(WebServiceIntegrationException.class)
+    public ResponseEntity<ErrorInfo> webServiceIntegrationException(HttpServletRequest request,
+                                                                    WebServiceIntegrationException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

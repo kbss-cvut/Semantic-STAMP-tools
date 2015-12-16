@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service.options;
 
 import cz.cvut.kbss.inbas.audit.exception.ApplicationInitializationException;
+import cz.cvut.kbss.inbas.audit.exception.WebServiceIntegrationException;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.audit.service.ConfigReader;
 import cz.cvut.kbss.inbas.audit.util.ConfigParam;
@@ -53,8 +54,8 @@ class EventTypeOptionsService implements OptionsService {
                     String.class);
             return new RawJson(eventTypeTransformer.transform(result.getBody()));
         } catch (Exception e) {
-            LOG.error("Error when requesting event types.", e);
-            throw e;
+            LOG.error("Error when requesting event types, url: " + urlWithQuery.toString(), e);
+            throw new WebServiceIntegrationException("Unable to fetch event types.", e);
         }
     }
 
