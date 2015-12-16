@@ -26,7 +26,7 @@ var WasConflictingAircraft = React.createClass({
             this.props.data.statement.conflictingAircraft = {};
             this.setState({hasConflictingAircraft: true});
             this.props.insertStepAfterCurrent({
-                name: 'Conflicting Aircraft',
+                name: this.i18n('eventtype.incursion.conflicting.step-title'),
                 component: ConflictingAircraftStep,
                 id: Constants.CONFLICTING_AIRCRAFT_STEP_ID
             });

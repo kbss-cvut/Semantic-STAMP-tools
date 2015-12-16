@@ -105,7 +105,7 @@ var ReportStatements = React.createClass({
     openCorrectiveMeasureWizard: function (statement, onFinish) {
         var properties = {
             steps: CorrectiveMeasureWizardSteps,
-            title: this.i18n('preliminary.detail.corrective.wizard-title'),
+            title: this.i18n('preliminary.detail.corrective.wizard.title'),
             statement: statement,
             onFinish: onFinish
         };

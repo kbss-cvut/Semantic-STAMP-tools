@@ -1,10 +1,11 @@
 'use strict';
 
 var EventDescription = require('./EventDescription');
+var I18nStore = require('../../../../../stores/I18nStore');
 
 module.exports = [
     {
-        name: 'Event Description',
+        name: I18nStore.i18n('eventtype.default.description-placeholder'),
         component: EventDescription,
         defaultNextDisabled: true
     }

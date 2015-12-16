@@ -40,7 +40,7 @@ var InitialReports = React.createClass({
             wizardProperties: {
                 steps: InitialReportSteps,
                 initialReport: {},
-                title: this.i18n('initial.wizard-add-title'),
+                title: this.i18n('initial.wizard.add-title'),
                 onFinish: this.saveNewInitialReport
             }
         });
@@ -56,7 +56,7 @@ var InitialReports = React.createClass({
             wizardProperties: {
                 steps: InitialReportSteps,
                 initialReport: assign({}, this.props.report.initialReports[index]), // Edit a copy
-                title: this.i18n('initial.wizard-edit-title'),
+                title: this.i18n('initial.wizard.edit-title'),
                 onFinish: this.saveInitialReport
             }
         });
