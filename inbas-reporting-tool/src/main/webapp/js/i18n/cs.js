@@ -11,6 +11,7 @@ module.exports = {
         'add': 'Přidat',
         'back': 'Zpět',
         'cancel': 'Zrušit',
+        'close': 'Zavřít',
         'cancel-tooltip': 'Zrušit a zahodit změny',
         'save': 'Uložit',
         'delete': 'Smazat',
@@ -224,6 +225,10 @@ module.exports = {
         'factors.duration.hour': '{duration, plural, =0 {hodin} one {hodina} few {hodiny} other {hodin}}',
         'factors.detail.details': 'Detail faktoru',
         'factors.detail.delete.title': 'Smazat faktor?',
-        'factors.detail.delete.text': 'Určitě chcete smazat tento faktor?'
+        'factors.detail.delete.text': 'Určitě chcete smazat tento faktor?',
+
+        'notfound.title': 'Nenalezeno',
+        'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',
+        'notfound.msg': 'Záznam \'{resource}\' nenalezen.'
     }
 };

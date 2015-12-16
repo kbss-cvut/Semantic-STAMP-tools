@@ -11,6 +11,7 @@ module.exports = {
         'add': 'Add',
         'back': 'Go Back',
         'cancel': 'Cancel',
+        'close': 'Close',
         'cancel-tooltip': 'Discard changes',
         'save': 'Save',
         'delete': 'Delete',
@@ -222,6 +223,10 @@ module.exports = {
         'factors.duration.hour': '{duration, plural, one {hour} other {hours}}',
         'factors.detail.details': 'Details',
         'factors.detail.delete.title': 'Delete factor?',
-        'factors.detail.delete.text': 'Are you sure you want to remove this factor?'
+        'factors.detail.delete.text': 'Are you sure you want to remove this factor?',
+
+        'notfound.title': 'Not found',
+        'notfound.msg-with-id': '{resource} with id {identifier} not found.',
+        'notfound.msg': '{resource} not found.'
     }
 };

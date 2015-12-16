@@ -71,7 +71,7 @@ var Investigation = React.createClass({
             );
         }
         if (!this.props.investigation) {
-            return (<ResourceNotFound resource='Investigation'/>);
+            return (<ResourceNotFound resource={this.i18n('investigation.detail.panel-title')}/>);
         }
         return this.renderDetail();
     },
