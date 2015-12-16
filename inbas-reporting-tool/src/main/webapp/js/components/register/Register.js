@@ -20,8 +20,6 @@ var Ajax = require('../../utils/Ajax');
 var Actions = require('../../actions/Actions');
 var I18nMixin = require('../../i18n/I18nMixin');
 
-var title = (<h3>INBAS Reporting Tool - Registration</h3>);
-
 var Register = React.createClass({
     mixins: [LinkedStateMixin, I18nMixin],
     getInitialState: function () {

@@ -1,6 +1,4 @@
-Upgrade to react-intl 2
 Implement report revisions
-Finish localization
 Set up the Jasmine tests so that they can be run in browser and debugged
 Disable fuzzy string matching in autocomplete
         - requires writing our own string matching function

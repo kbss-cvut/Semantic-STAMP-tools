@@ -12,7 +12,7 @@ var intlData = null;
 function selectLocalization() {
     // Load react-intl locales
     if ('ReactIntlLocaleData' in window) {
-        Object.keys(ReactIntlLocaleData).forEach((lang) => {
+        Object.keys(ReactIntlLocaleData).forEach(function (lang) {
             addLocaleData(ReactIntlLocaleData[lang]);
         });
     }
