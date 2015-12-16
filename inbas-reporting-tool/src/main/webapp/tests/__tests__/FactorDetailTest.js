@@ -42,7 +42,6 @@ describe('Tests of the factor dialog', function () {
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
         detail.onSave();
-
         expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, 'minute');
         expect(factor.end_date).toBeDefined();
         expect(callbacks.onSave).toHaveBeenCalled();

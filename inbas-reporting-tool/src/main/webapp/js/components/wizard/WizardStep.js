@@ -9,7 +9,7 @@ var Alert = require('react-bootstrap').Alert;
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var I18nMixin = require('../../i18n/I18nMixin');
 

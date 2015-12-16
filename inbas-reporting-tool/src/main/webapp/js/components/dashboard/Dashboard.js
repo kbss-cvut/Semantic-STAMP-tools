@@ -11,7 +11,7 @@ var Grid = require('react-bootstrap').Grid;
 var Col = require('react-bootstrap').Col;
 var Row = require('react-bootstrap').Row;
 
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Tile = require('./DashboardTile');

@@ -6,7 +6,7 @@
 
 var React = require('react');
 var assign = require('object-assign');
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../../../../utils/injectIntl');
 
 var AircraftIntruder = require('./AircraftIntruder');
 var PersonIntruder = require('./PersonIntruder');

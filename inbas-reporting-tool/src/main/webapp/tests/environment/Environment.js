@@ -15,7 +15,13 @@ module.exports = {
      */
     render: function (component) {
         var type = component.type,
-            result = TestUtils.renderIntoDocument(<TestApp>{component}</TestApp>);
-        return TestUtils.findRenderedComponentWithType(result, type);
+            result = TestUtils.renderIntoDocument(<TestApp>{component}</TestApp>),
+            renderedComponent = TestUtils.findRenderedComponentWithType(result, type);
+        //console.log(renderedComponent);
+        if (renderedComponent.refs && renderedComponent.refs.wrappedElement) {
+            return renderedComponent.refs.wrappedElement;
+        } else {
+            return renderedComponent;
+        }
     }
 };

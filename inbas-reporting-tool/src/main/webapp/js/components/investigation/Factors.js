@@ -8,7 +8,7 @@ var React = require('react');
 var Button = require('react-bootstrap').Button;
 var Modal = require('react-bootstrap').Modal;
 var Panel = require('react-bootstrap').Panel;
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Input = require('../Input');

@@ -11,7 +11,7 @@ var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
 var assign = require('object-assign');
 
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var InitialReportSteps = require('./Steps');
 var CollapsibleText = require('../CollapsibleText');

@@ -8,7 +8,7 @@ var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var Utils = require('../../utils/Utils');
 var CollapsibleText = require('../CollapsibleText');

@@ -6,7 +6,7 @@
 
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../../../../utils/injectIntl');
 
 var ConflictingAircraftStep = require('./ConflictingAircraftStep');
 var Constants = require('../../../../../constants/Constants');

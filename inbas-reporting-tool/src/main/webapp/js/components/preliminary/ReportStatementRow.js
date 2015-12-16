@@ -6,7 +6,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var I18nMixin = require('../../i18n/I18nMixin');
 

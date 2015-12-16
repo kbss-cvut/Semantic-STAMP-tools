@@ -14,7 +14,7 @@ var NavItem = require('react-bootstrap').NavItem;
 var NavDropdown = require('react-bootstrap').NavDropdown;
 var MenuItem = require('react-bootstrap').MenuItem;
 var LinkContainer = require('react-router-bootstrap').LinkContainer;
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../utils/injectIntl');
 
 var Constants = require('../constants/Constants');
 var I18nMixin = require('../i18n/I18nMixin');

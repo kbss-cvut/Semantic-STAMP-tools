@@ -9,7 +9,7 @@ var Reflux = require('reflux');
 var Typeahead = require('react-typeahead').Typeahead;
 var assign = require('object-assign');
 
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var Actions = require('../../actions/Actions');
 var ReportStore = require('../../stores/ReportStore');

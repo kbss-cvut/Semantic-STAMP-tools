@@ -7,7 +7,7 @@
 var React = require('react');
 var Modal = require('react-bootstrap').Modal;
 var Panel = require('react-bootstrap').Panel;
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../../../utils/injectIntl');
 
 var EventTypeTypeahead = require('../../../typeahead/EventTypeTypeahead');
 var I18nMixin = require('../../../../i18n/I18nMixin');

@@ -10,7 +10,7 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
 
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var Actions = require('../../actions/Actions');
 var InitialReports = require('./../initialreport/InitialReports');

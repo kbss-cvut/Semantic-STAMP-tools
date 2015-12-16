@@ -8,7 +8,7 @@ var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 
 var FormattedMessage = require('react-intl').FormattedMessage;
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../utils/injectIntl');
 var I18nMixin = require('../i18n/I18nMixin');
 
 var DeleteReportDialog = React.createClass({

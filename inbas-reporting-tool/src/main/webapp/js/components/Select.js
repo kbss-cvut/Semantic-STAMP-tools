@@ -5,7 +5,7 @@
 'use strict';
 
 var React = require('react');
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../utils/injectIntl');
 
 var Input = require('./Input');
 var I18nMixin = require('../i18n/I18nMixin');

@@ -10,7 +10,7 @@ var Button = require('react-bootstrap').Button;
 var Alert = require('react-bootstrap').Alert;
 
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var Input = require('../Input');
 var Mask = require('../Mask');

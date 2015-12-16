@@ -6,7 +6,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');

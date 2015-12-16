@@ -7,7 +7,7 @@
 var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var ReportsTable = require('./ReportsTable');
 var Mask = require('./../Mask');

@@ -7,7 +7,7 @@
 var React = require('react');
 var Reflux = require('reflux');
 var assign = require('object-assign');
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../../../../utils/injectIntl');
 
 var Select = require('../../../../Select');
 var Actions = require('../../../../../actions/Actions');

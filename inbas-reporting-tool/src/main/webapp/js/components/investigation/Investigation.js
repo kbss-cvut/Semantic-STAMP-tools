@@ -9,7 +9,7 @@ var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var Actions = require('../../actions/Actions');
 var BasicOccurrenceInfo = require('../preliminary/BasicOccurrenceInfo');
@@ -43,11 +43,12 @@ var Investigation = React.createClass({
     },
 
     onSubmit: function (e) {
-        var investigation = this.props.investigation;
+        var investigation = this.props.investigation,
+            factors = this.refs.factors.getWrappedElement();
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
-        investigation.rootFactor = this.refs.factors.getFactorHierarchy();
-        investigation.links = this.refs.factors.getLinks();
+        investigation.rootFactor = factors.getFactorHierarchy();
+        investigation.links = factors.getLinks();
         Actions.updateInvestigation(investigation, this.onSubmitSuccess, this.onSubmitError);
     },
 

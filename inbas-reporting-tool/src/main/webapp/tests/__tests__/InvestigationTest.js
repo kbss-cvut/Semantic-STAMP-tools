@@ -31,7 +31,6 @@ describe('Investigation', function () {
                 preventDefault: function () {
                 }
             };
-
         component.onSubmit(submitEvent);
         expect(FactorJsonSerializer.getFactorHierarchy).toHaveBeenCalled();
         expect(FactorJsonSerializer.getLinks).toHaveBeenCalled();

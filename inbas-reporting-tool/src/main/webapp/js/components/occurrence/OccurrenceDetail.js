@@ -7,7 +7,7 @@ var React = require('react');
 var DateTimePicker = require('kbss-react-bootstrap-datetimepicker');
 var assign = require('object-assign');
 
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 
 var Input = require('../Input');
 var I18nMixin = require('../../i18n/I18nMixin');

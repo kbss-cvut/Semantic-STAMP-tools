@@ -5,7 +5,7 @@
 
 var React = require('react');
 
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Input = require('../Input');

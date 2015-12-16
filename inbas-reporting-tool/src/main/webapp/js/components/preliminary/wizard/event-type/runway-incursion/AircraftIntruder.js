@@ -7,7 +7,7 @@
 var React = require('react');
 var assign = require('object-assign');
 var Panel = require('react-bootstrap').Panel;
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../../../../utils/injectIntl');
 
 var AircraftRegistration = require('../../AircraftRegistration');
 var FlightInfo = require('../../FlightInfo');

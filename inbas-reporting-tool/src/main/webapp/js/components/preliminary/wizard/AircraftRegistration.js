@@ -9,7 +9,7 @@ var Button = require('react-bootstrap').Button;
 var Panel = require('react-bootstrap').Panel;
 var Fade = require('react-bootstrap').Fade;
 
-var injectIntl = require('react-intl').injectIntl;
+var injectIntl = require('../../../utils/injectIntl');
 
 var Input = require('../../Input');
 var EccairsLink = require('../../EccairsLink');
