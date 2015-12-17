@@ -11,15 +11,16 @@ var Grid = require('react-bootstrap').Grid;
 var Col = require('react-bootstrap').Col;
 var Row = require('react-bootstrap').Row;
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Tile = require('./DashboardTile');
 var ReportTypeahead = require('../typeahead/ReportTypeahead');
 var RecentlyEdited = require('./RecentlyEditedReports');
+var I18n = require('../../i18n/I18nMixin');
 
 var Dashboard = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18n],
 
     propTypes: {
         userFirstName: React.PropTypes.string,
@@ -72,13 +73,11 @@ var Dashboard = React.createClass({
 
     renderTitle: function () {
         if (this.state.dashboard === 'main') {
-            // TODO This does not work now, bug in FormatJS
-            //return (<h3><FormattedMessage message={this.getIntlMessage('dashboard.welcome')}
-            //                              name={<span className='bold'>{this.props.userFirstName}</span>}/></h3>);
-            var msg = this.getIntlMessage('dashboard.welcome');
-            return <h3>{msg.replace('{name}', this.props.userFirstName)}</h3>;
+            return (<h3><FormattedMessage id='dashboard.welcome'
+                                          values={{name: <span className='bold'>{this.props.userFirstName}</span>}}/>
+            </h3>);
         } else {
-            return (<h3>{this.getIntlMessage('dashboard.create-tile')}</h3>);
+            return (<h3>{this.i18n('dashboard.create-tile')}</h3>);
         }
     },
 
@@ -97,14 +96,14 @@ var Dashboard = React.createClass({
             <Grid fluid={true}>
                 <Row>
                     <Col xs={4} className='dashboard-sector'>
-                        <Tile onClick={this.createReport}>{this.getIntlMessage('dashboard.create-tile')}</Tile>
+                        <Tile onClick={this.createReport}>{this.i18n('dashboard.create-tile')}</Tile>
                     </Col>
                     <Col xs={4} className='dashboard-sector'>
-                        <Tile onClick={this.toggleSearch}>{this.getIntlMessage('dashboard.search-tile')}</Tile>
+                        <Tile onClick={this.toggleSearch}>{this.i18n('dashboard.search-tile')}</Tile>
                     </Col>
                     <Col xs={4} className='dashboard-sector'>
                         <Tile
-                            onClick={this.props.showAllReports}>{this.getIntlMessage('dashboard.view-all-tile')}</Tile>
+                            onClick={this.props.showAllReports}>{this.i18n('dashboard.view-all-tile')}</Tile>
                     </Col>
                 </Row>
                 <Row>
@@ -123,17 +122,17 @@ var Dashboard = React.createClass({
                 <Row>
                     <Col xs={6} className='dashboard-sector left'>
                         <Tile
-                            onClick={this.props.createEmptyReport}>{this.getIntlMessage('dashboard.create-empty-tile')}</Tile>
+                            onClick={this.props.createEmptyReport}>{this.i18n('dashboard.create-empty-tile')}</Tile>
                     </Col>
                     <Col xs={6} className='dashboard-sector right'>
                         <Tile onClick={this.props.importInitialReport}
-                              disabled={true}>{this.getIntlMessage('dashboard.create-import-tile')}</Tile>
+                              >{this.i18n('dashboard.create-import-tile')}</Tile>
                     </Col>
                 </Row>
                 <Row>
                     <Col xs={6}>
                         <Button bsSize='large' bsStyle='default'
-                                onClick={this.goBack}>{this.getIntlMessage('back')}</Button>
+                                onClick={this.goBack}>{this.i18n('back')}</Button>
                     </Col>
                 </Row>
             </Grid>
@@ -141,4 +140,4 @@ var Dashboard = React.createClass({
     }
 });
 
-module.exports = Dashboard;
+module.exports = injectIntl(Dashboard);

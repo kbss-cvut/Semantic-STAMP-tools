@@ -5,12 +5,17 @@
 
 var React = require('react');
 
+var injectIntl = require('../../utils/injectIntl');
+var FormattedMessage = require('react-intl').FormattedMessage;
+
 var Input = require('../Input');
 var Utils = require('../../utils/Utils');
 var OccurrenceSeverity = require('../occurrence/OccurrenceSeverity');
 var OccurrenceDetail = require('../occurrence/OccurrenceDetail');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var BasicOccurrenceInfo = React.createClass({
+    mixins: [I18nMixin],
 
     propTypes: {
         report: React.PropTypes.object.isRequired,
@@ -51,7 +56,8 @@ var BasicOccurrenceInfo = React.createClass({
         return report.isNew ? null : (
             <div className='row'>
                 <div className='col-xs-4'>
-                    <Input type='text' value={this.getFullName(report.author)} label='Author' title='Report author'
+                    <Input type='text' value={this.getFullName(report.author)} label={this.i18n('author')}
+                           title={this.i18n('author-title')}
                            disabled/>
                 </div>
             </div>);
@@ -63,13 +69,13 @@ var BasicOccurrenceInfo = React.createClass({
             return null;
         }
         var formattedDate = Utils.formatDate(new Date(report.lastEdited));
-        var text = 'Last edited on ' + formattedDate + ' by ' + this.getFullName(report.lastEditedBy) + '.';
         return (
             <div className='form-group notice-small'>
-                {text}
+                <FormattedMessage id='preliminary.detail.last-edited-msg'
+                                  values={{date: formattedDate, name: this.getFullName(report.lastEditedBy)}}/>
             </div>
         );
     }
 });
 
-module.exports = BasicOccurrenceInfo;
+module.exports = injectIntl(BasicOccurrenceInfo);

@@ -6,12 +6,15 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
+var injectIntl = require('../../utils/injectIntl');
 
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
 var DeleteReportDialog = require('../DeleteReportDialog');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var InvestigationRow = React.createClass({
+    mixins: [I18nMixin],
 
     getInitialState: function () {
         return {
@@ -46,15 +49,15 @@ var InvestigationRow = React.createClass({
         return (
             <tr onDoubleClick={this.onDoubleClick}>
                 <td style={verticalAlign}><a href='javascript:void(0);' onClick={this.onEditClick}
-                                             title='Click to see investigation detail'>{investigation.occurrence.name}</a>
+                                             title={this.i18n('investigation.open-tooltip')}>{investigation.occurrence.name}</a>
                 </td>
                 <td style={verticalAlign}>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={investigation.summary}/></td>
                 <td style={verticalAlign} className='actions'>
-                    <Button bsStyle='primary' bsSize='small' title='Edit this investigation report'
-                            onClick={this.onEditClick}>Edit</Button>
-                    <Button bsStyle='warning' bsSize='small' title='Delete this investigation report'
-                            onClick={this.onDeleteClick}>Delete</Button>
+                    <Button bsStyle='primary' bsSize='small' title={this.i18n('investigation.edit-tooltip')}
+                            onClick={this.onEditClick}>{this.i18n('table-edit')}</Button>
+                    <Button bsStyle='warning' bsSize='small' title={this.i18n('investigation.delete-tooltip')}
+                            onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>
                     <DeleteReportDialog show={this.state.modalOpen} onClose={this.onCloseModal}
                                         onSubmit={this.removeReport} reportType={'Investigation'}/>
                 </td>
@@ -63,4 +66,4 @@ var InvestigationRow = React.createClass({
     }
 });
 
-module.exports = InvestigationRow;
+module.exports = injectIntl(InvestigationRow);

@@ -7,15 +7,16 @@
 var React = require('react');
 var Button = require('react-bootstrap').Button;
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('../../utils/injectIntl');
 
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
 var ReportType = require('../../model/ReportType');
 var DeleteReportDialog = require('../DeleteReportDialog');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportRow = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     getInitialState: function () {
         return {
@@ -41,24 +42,24 @@ var ReportRow = React.createClass({
     },
 
     render: function () {
-        var report = this.props.report;
-        var date = new Date(report.occurrence.startTime);
-        var formattedDate = Utils.formatDate(date);
+        var report = this.props.report,
+            date = new Date(report.occurrence.startTime),
+            formattedDate = Utils.formatDate(date),
         // Have to set style directly, class style is overridden by the bootstrap styling
-        var verticalAlign = {verticalAlign: 'middle'};
+            verticalAlign = {verticalAlign: 'middle'};
         return (
             <tr onDoubleClick={this.onDoubleClick}>
                 <td style={verticalAlign}><a href='javascript:void(0);' onClick={this.onEditClick}
-                                             title={this.getIntlMessage('reports.open-tooltip')}>{report.occurrence.name}</a>
+                                             title={this.i18n('reports.open-tooltip')}>{report.occurrence.name}</a>
                 </td>
                 <td style={verticalAlign}>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.summary}/></td>
                 <td style={verticalAlign}>{ReportType.asString(report)}</td>
                 <td style={verticalAlign} className='actions'>
-                    <Button bsStyle='primary' bsSize='small' title={this.getIntlMessage('reports.edit-tooltip')}
-                            onClick={this.onEditClick}>Edit</Button>
-                    <Button bsStyle='warning' bsSize='small' title={this.getIntlMessage('reports.delete-tooltip')}
-                            onClick={this.onDeleteClick}>Delete</Button>
+                    <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.edit-tooltip')}
+                            onClick={this.onEditClick}>{this.i18n('table-edit')}</Button>
+                    <Button bsStyle='warning' bsSize='small' title={this.i18n('reports.delete-tooltip')}
+                            onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>
 
                     <DeleteReportDialog show={this.state.modalOpen} onClose={this.onCloseModal}
                                         onSubmit={this.removeReport}/>
@@ -68,4 +69,4 @@ var ReportRow = React.createClass({
     }
 });
 
-module.exports = ReportRow;
+module.exports = injectIntl(ReportRow);

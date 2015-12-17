@@ -11,7 +11,8 @@ var ErrorHandlingMixin = {
     handleError: function (err) {
         try {
             var error = JSON.parse(err.response.text),
-                msg = error.requestUri + ' - Status ' + err.status + ': ' + error.message;
+                method = err.response.req.method,
+                msg = method + ' ' + error.requestUri + ' - Status ' + err.status + ': ' + error.message;
             if (err.status === 404) {
                 Logger.warn(msg);
             } else {

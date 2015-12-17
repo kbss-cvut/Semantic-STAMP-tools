@@ -7,17 +7,22 @@
 var React = require('react');
 var Reflux = require('reflux');
 
+var injectIntl = require('../../utils/injectIntl');
+
 var Actions = require('../../actions/Actions');
 var ReportsStore = require('../../stores/PreliminaryReportStore');
 var Reports = require('../reports/Reports');
 var ReportRow = require('./ReportRow');
+
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 
 var ReportsController = React.createClass({
     mixins: [
-        Reflux.listenTo(ReportsStore, 'onReportsChange')
+        Reflux.listenTo(ReportsStore, 'onReportsChange'),
+        I18nMixin
     ],
 
     getInitialState: function () {
@@ -73,7 +78,7 @@ var ReportsController = React.createClass({
             onInvestigate: this.onCreateInvestigation
         };
         return (
-            <Reports panelTitle='Preliminary reports' reports={this.state.reports} actions={actions}
+            <Reports panelTitle={this.i18n('preliminary.panel-title')} reports={this.state.reports} actions={actions}
                      rowComponent={ReportRow} tableHeader={this.renderTableHeader()}/>
         );
     },
@@ -82,14 +87,14 @@ var ReportsController = React.createClass({
         return (
             <thead>
             <tr>
-                <th className='col-xs-2'>Occurrence headline</th>
-                <th className='col-xs-2'>Occurrence date</th>
-                <th className='col-xs-6'>Narrative</th>
-                <th className='col-xs-2'>Actions</th>
+                <th className='col-xs-2'>{this.i18n('headline')}</th>
+                <th className='col-xs-2'>{this.i18n('reports.table-date')}</th>
+                <th className='col-xs-6'>{this.i18n('narrative')}</th>
+                <th className='col-xs-2'>{this.i18n('table-actions')}</th>
             </tr>
             </thead>
         );
     }
 });
 
-module.exports = ReportsController;
+module.exports = injectIntl(ReportsController);

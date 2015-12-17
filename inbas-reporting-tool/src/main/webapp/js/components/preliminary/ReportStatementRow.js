@@ -6,8 +6,13 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
+var injectIntl = require('../../utils/injectIntl');
+
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportStatementRow = React.createClass({
+    mixins: [I18nMixin],
+
     propTypes: {
         onRemove: React.PropTypes.func
     },
@@ -28,11 +33,13 @@ var ReportStatementRow = React.createClass({
         }
         cells.push(
             <td key='cell_actions' style={{verticalAlign: 'middle'}} className='actions'>
-                <Button onClick={this.onEdit} title='Edit statement' bsSize='small' bsStyle='primary'>
-                    Edit
+                <Button onClick={this.onEdit} title={this.i18n('preliminary.detail.table-edit-tooltip')}
+                        bsSize='small' bsStyle='primary'>
+                    {this.i18n('table-edit')}
                 </Button>
-                <Button onClick={this.onRemove} title='Remove statement' bsSize='small' bsStyle='warning'>
-                    Delete
+                <Button onClick={this.onRemove} title={this.i18n('preliminary.detail.table-delete-tooltip')}
+                        bsSize='small' bsStyle='warning'>
+                    {this.i18n('delete')}
                 </Button>
             </td>);
         return (
@@ -43,4 +50,4 @@ var ReportStatementRow = React.createClass({
     }
 });
 
-module.exports = ReportStatementRow;
+module.exports = injectIntl(ReportStatementRow);

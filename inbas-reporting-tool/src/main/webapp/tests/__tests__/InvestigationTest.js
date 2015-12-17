@@ -3,8 +3,8 @@
 describe('Investigation', function () {
 
     var React = require('react'),
-        TestUtils = require('react-addons-test-utils'),
         rewire = require('rewire'),
+        Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator'),
         Investigation = rewire('../../js/components/investigation/Investigation'),
         Factors = rewire('../../js/components/investigation/Factors'),
@@ -26,12 +26,11 @@ describe('Investigation', function () {
     });
 
     it('Gets factor hierarchy and links on submit', function () {
-        var component = TestUtils.renderIntoDocument(<Investigation investigation={investigation}/>),
+        var component = Environment.render(<Investigation investigation={investigation}/>),
             submitEvent = {
                 preventDefault: function () {
                 }
             };
-
         component.onSubmit(submitEvent);
         expect(FactorJsonSerializer.getFactorHierarchy).toHaveBeenCalled();
         expect(FactorJsonSerializer.getLinks).toHaveBeenCalled();

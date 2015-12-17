@@ -7,10 +7,12 @@ var React = require('react');
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 
-var IntlMixin = require('react-intl').IntlMixin;
+var FormattedMessage = require('react-intl').FormattedMessage;
+var injectIntl = require('../utils/injectIntl');
+var I18nMixin = require('../i18n/I18nMixin');
 
 var DeleteReportDialog = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     propTypes: {
         onClose: React.PropTypes.func.isRequired,
@@ -20,24 +22,24 @@ var DeleteReportDialog = React.createClass({
     },
 
     render: function () {
-        // TODO Use formatted message when Intl is fixed
-        var title = this.props.reportType ? 'Delete ' + this.props.reportType + ' Report?' : 'Delete Report?';
         return (
             <Modal show={this.props.show} onHide={this.props.onClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{title}</Modal.Title>
+                    <Modal.Title>
+                        <FormattedMessage id='delete-dialog.title' values={{type: this.props.reportType}}/>
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {this.getIntlMessage('delete.content')}
+                    {this.i18n('delete-dialog.content')}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button bsStyle='warning' bsSize='small'
-                            onClick={this.props.onSubmit}>{this.getIntlMessage('delete.submit')}</Button>
-                    <Button bsSize='small' onClick={this.props.onClose}>{this.getIntlMessage('cancel')}</Button>
+                            onClick={this.props.onSubmit}>{this.i18n('delete')}</Button>
+                    <Button bsSize='small' onClick={this.props.onClose}>{this.i18n('cancel')}</Button>
                 </Modal.Footer>
             </Modal>
         );
     }
 });
 
-module.exports = DeleteReportDialog;
+module.exports = injectIntl(DeleteReportDialog);

@@ -1,8 +1,9 @@
 'use strict';
 
 var InitialReport = require('./InitialReport');
+var I18nStore = require('../../stores/I18nStore');
 
 module.exports = [{
     component: InitialReport,
-    name: 'Initial Report'
+    name: I18nStore.i18n('initial.label')
 }];

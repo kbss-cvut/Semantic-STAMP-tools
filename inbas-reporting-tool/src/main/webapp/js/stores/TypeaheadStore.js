@@ -8,6 +8,7 @@ var Reflux = require('reflux');
 
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
+var ErrorHandlingMixin = require('./mixin/ErrorHandlingMixin');
 
 var URL = 'rest/typeahead/options?type=';
 
@@ -16,6 +17,8 @@ var locations = [];
 var operators = [];
 
 var TypeaheadStore = Reflux.createStore({
+    mixins: [ErrorHandlingMixin],
+
     init: function () {
         this.listenTo(Actions.loadEventTypes, this.onLoadEventTypes);
         this.listenTo(Actions.loadLocations, this.onLoadLocations);
@@ -35,7 +38,7 @@ var TypeaheadStore = Reflux.createStore({
         }
         Ajax.get(URL + type).end(function (err, resp) {
             if (err) {
-                console.log('Unable to load ' + resourceName + '. Got status ' + err.status);
+                this.handleError(err);
             } else {
                 success(resp.body);
             }

@@ -6,7 +6,6 @@
 
 var React = require('react');
 var Reflux = require('reflux');
-var IntlMixin = require('react-intl').IntlMixin;
 
 var Nav = require('react-bootstrap').Nav;
 var Navbar = require('react-bootstrap').Navbar;
@@ -15,6 +14,10 @@ var NavItem = require('react-bootstrap').NavItem;
 var NavDropdown = require('react-bootstrap').NavDropdown;
 var MenuItem = require('react-bootstrap').MenuItem;
 var LinkContainer = require('react-router-bootstrap').LinkContainer;
+var injectIntl = require('../utils/injectIntl');
+
+var Constants = require('../constants/Constants');
+var I18nMixin = require('../i18n/I18nMixin');
 
 var Authentication = require('../utils/Authentication');
 var Constants = require('../constants/Constants');
@@ -23,7 +26,7 @@ var UserStore = require('../stores/UserStore');
 var MainView = React.createClass({
     mixins: [
         Reflux.listenTo(UserStore, 'onUserLoaded'),
-        IntlMixin
+        I18nMixin
     ],
 
     getInitialState: function () {
@@ -48,15 +51,16 @@ var MainView = React.createClass({
                     <Navbar fluid={true}>
                         <NavBrand>{Constants.APP_NAME}</NavBrand>
                         <Nav>
-                            <LinkContainer to='dashboard'><NavItem>{this.getIntlMessage('main.dashboard-nav')}</NavItem></LinkContainer>
                             <LinkContainer
-                                to='preliminary'><NavItem>{this.getIntlMessage('main.preliminary-nav')}</NavItem></LinkContainer>
+                                to='dashboard'><NavItem>{this.i18n('main.dashboard-nav')}</NavItem></LinkContainer>
                             <LinkContainer
-                                to='investigations'><NavItem>{this.getIntlMessage('main.investigations-nav')}</NavItem></LinkContainer>
+                                to='preliminary'><NavItem>{this.i18n('main.preliminary-nav')}</NavItem></LinkContainer>
+                            <LinkContainer
+                                to='investigations'><NavItem>{this.i18n('main.investigations-nav')}</NavItem></LinkContainer>
                         </Nav>
                         <Nav right style={{margin: '0 -15px 0 0'}}>
                             <NavDropdown id='logout' title={name}>
-                                <MenuItem href='#' onClick={Authentication.logout}>{this.getIntlMessage('main.logout')}</MenuItem>
+                                <MenuItem href='#' onClick={Authentication.logout}>{this.i18n('main.logout')}</MenuItem>
                             </NavDropdown>
                         </Nav>
                     </Navbar>
@@ -69,4 +73,4 @@ var MainView = React.createClass({
     }
 });
 
-module.exports = MainView;
+module.exports = injectIntl(MainView);

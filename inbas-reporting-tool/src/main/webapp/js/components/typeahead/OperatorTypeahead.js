@@ -7,19 +7,21 @@
 var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-typeahead').Typeahead;
+var injectIntl = require('../../utils/injectIntl');
 
 var Actions = require('../../actions/Actions');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var TypeaheadResultList = require('./TypeaheadResultList');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var OperatorTypeahead = React.createClass({
+    mixins: [Reflux.ListenerMixin, I18nMixin],
+
     propTypes: {
         name: React.PropTypes.string,
         value: React.PropTypes.string,
         onChange: React.PropTypes.func
     },
-
-    mixins: [Reflux.ListenerMixin],
 
     getInitialState: function () {
         return {
@@ -54,7 +56,7 @@ var OperatorTypeahead = React.createClass({
         };
         return (
             <div className='form-group'>
-                <label className='control-label'>Operator</label>
+                <label className='control-label'>{this.i18n('eventtype.incursion.intruder.aircraft.operator')}</label>
                 <Typeahead ref='operatorSelect' className='form-group form-group-sm' name={this.props.name}
                            formInputOption='code' placeholder='Operator'
                            onOptionSelected={this.onOptionSelected} filterOption='label' displayOption='label'
@@ -66,4 +68,4 @@ var OperatorTypeahead = React.createClass({
     }
 });
 
-module.exports = OperatorTypeahead;
+module.exports = injectIntl(OperatorTypeahead);

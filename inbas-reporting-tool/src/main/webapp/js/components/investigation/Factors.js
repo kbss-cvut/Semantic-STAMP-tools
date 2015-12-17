@@ -8,6 +8,9 @@ var React = require('react');
 var Button = require('react-bootstrap').Button;
 var Modal = require('react-bootstrap').Modal;
 var Panel = require('react-bootstrap').Panel;
+var injectIntl = require('../../utils/injectIntl');
+var FormattedMessage = require('react-intl').FormattedMessage;
+
 var Input = require('../Input');
 var Select = require('../Select');
 
@@ -16,8 +19,10 @@ var FactorRenderer = require('./FactorRenderer');
 var GanttController = require('./GanttController');
 var FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
 var Constants = require('../../constants/Constants');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var Factors = React.createClass({
+    mixins: [I18nMixin],
 
     propTypes: {
         investigation: React.PropTypes.object.isRequired
@@ -161,38 +166,42 @@ var Factors = React.createClass({
         return FactorJsonSerializer.getFactorHierarchy();
     },
 
-    getLinks: function() {
+    getLinks: function () {
         FactorJsonSerializer.setGanttController(this.ganttController);
         return FactorJsonSerializer.getLinks();
     },
 
 
     render: function () {
+        var scaleTooltip = this.i18n('factors.scale-tooltip');
         return (
-            <Panel header={<h5>Factors</h5>} bsStyle='info'>
+            <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
                 {this.renderFactorDetailDialog()}
                 {this.renderLinkTypeDialog()}
                 {this.renderDeleteLinkDialog()}
                 <div id='factors_gantt' className='factors-gantt'/>
                 <div className='gantt-zoom'>
                     <div className='col-xs-5'>
-                        <div className='col-xs-2 gantt-zoom-label bold'>Scale:</div>
+                        <div className='col-xs-2 gantt-zoom-label bold'>{this.i18n('factors.scale')}:</div>
                         <div className='col-xs-2'>
-                            <Input type='radio' label='Seconds' value='second' title='Click to select scale in seconds'
-                                   checked={this.state.scale === 'second'}
+                            <Input type='radio' label={this.i18n('factors.scale.second')} value='second'
+                                   title={scaleTooltip + 'seconds'} checked={this.state.scale === 'second'}
                                    onChange={this.onScaleChange}/>
                         </div>
                         <div className='col-xs-2'>
-                            <Input type='radio' label='Minutes' value='minute' title='Click to select scale in minutes'
+                            <Input type='radio' label={this.i18n('factors.scale.minute')} value='minute'
+                                   title={scaleTooltip + 'minutes'}
                                    checked={this.state.scale === 'minute'}
                                    onChange={this.onScaleChange}/>
                         </div>
                         <div className='col-xs-2'>
-                            <Input type='radio' label='Hours' value='hour' title='Click to select scale in hours'
+                            <Input type='radio' label={this.i18n('factors.scale.hour')} value='hour'
+                                   title={scaleTooltip + 'hours'}
                                    checked={this.state.scale === 'hour'} onChange={this.onScaleChange}/>
                         </div>
                         <div className='col-xs-2'>
-                            <Input type='radio' label='Relative' value='relative' title='Click to select relative scale'
+                            <Input type='radio' label={this.i18n('factors.scale.relative')} value='relative'
+                                   title={this.i18n('factors.scale.relative-tooltip')}
                                    checked={this.state.scale === 'relative'} onChange={this.onScaleChange}/>
                         </div>
                     </div>
@@ -203,12 +212,12 @@ var Factors = React.createClass({
                         <div className='col-xs-6' style={{verticalAlign: 'middle'}}>
                             <div className='gantt-link-causes'
                                  style={{height: '4px', width: '2em', float: 'left', margin: '8px'}}/>
-                            <div style={{float: 'left'}}>Causes</div>
+                            <div style={{float: 'left'}}>{this.i18n('factors.causes')}</div>
                         </div>
                         <div className='col-xs-6'>
                             <div className='gantt-link-mitigates'
                                  style={{height: '4px', width: '2em', float: 'left', margin: '8px'}}/>
-                            <div style={{float: 'left'}}>Mitigates</div>
+                            <div style={{float: 'left'}}>{this.i18n('factors.mitigates')}</div>
                         </div>
                     </div>
                 </div>
@@ -226,16 +235,17 @@ var Factors = React.createClass({
 
     renderLinkTypeDialog: function () {
         var options = [
-            {value: Constants.LINK_TYPES.CAUSE, label: 'Causes'},
-            {value: Constants.LINK_TYPES.MITIGATE, label: 'Mitigates'}
+            {value: Constants.LINK_TYPES.CAUSE, label: this.i18n('factors.causes')},
+            {value: Constants.LINK_TYPES.MITIGATE, label: this.i18n('factors.mitigates')}
         ];
         return (
             <Modal show={this.state.showLinkTypeDialog} bsSize='small' onHide={this.onCloseLinkTypeDialog}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Connection type?</Modal.Title>
+                    <Modal.Title>{this.i18n('factors.link-type-select')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Select ref='linkType' title='Select link type' onChange={this.onLinkTypeSelect} options={options}/>
+                    <Select ref='linkType' title={this.i18n('factors.link-type-select-tooltip')}
+                            onChange={this.onLinkTypeSelect} options={options}/>
                 </Modal.Body>
             </Modal>
         );
@@ -247,22 +257,19 @@ var Factors = React.createClass({
         return (
             <Modal show={this.state.showDeleteLinkDialog} bsSize='small' onHide={this.onCloseDeleteLinkDialog}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete link?</Modal.Title>
+                    <Modal.Title>{this.i18n('factors.link.delete.title')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to delete the link from&nbsp;
-                    <span className='bold'>{source}</span>
-                    &nbsp;event to&nbsp;
-                    <span className='bold'>{target}</span>
-                    &nbsp;event?
+                    <FormattedMessage id='factors.link.delete.text'
+                                      values={{source: <span className='bold'>{source}</span>, target: <span className='bold'>{target}</span>}}/>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button bsStyle='warning' bsSize='small' onClick={this.deleteLink}>Delete</Button>
-                    <Button bsSize='small' onClick={this.onCloseDeleteLinkDialog}>Cancel</Button>
+                    <Button bsStyle='warning' bsSize='small' onClick={this.deleteLink}>{this.i18n('delete')}</Button>
+                    <Button bsSize='small' onClick={this.onCloseDeleteLinkDialog}>{this.i18n('cancel')}</Button>
                 </Modal.Footer>
             </Modal>
         );
     }
 });
 
-module.exports = Factors;
+module.exports = injectIntl(Factors);

@@ -4,7 +4,7 @@
 describe('Tests of the factor dialog', function () {
 
     var React = require('react'),
-        TestUtils = require('react-addons-test-utils'),
+        Environment = require('../environment/Environment'),
         FactorDetail = require('../../js/components/investigation/FactorDetail'),
         assign = require('object-assign'),
         callbacks,
@@ -36,13 +36,12 @@ describe('Tests of the factor dialog', function () {
                 id: 'http://incursion'
             };
         spyOn(gantt, 'calculateEndDate').and.callThrough();
-        detail = TestUtils.renderIntoDocument(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
-                                                            onClose={callbacks.onClose}
-                                                            onDelete={callbacks.onDelete}/>);
+        detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
+                                                  onClose={callbacks.onClose}
+                                                  onDelete={callbacks.onDelete}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
         detail.onSave();
-
         expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, 'minute');
         expect(factor.end_date).toBeDefined();
         expect(callbacks.onSave).toHaveBeenCalled();
@@ -61,9 +60,9 @@ describe('Tests of the factor dialog', function () {
                 lvp: 'none',
                 location: 'LKPR31'
             };
-        detail = TestUtils.renderIntoDocument(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
-                                                            onClose={callbacks.onClose}
-                                                            onDelete={callbacks.onDelete}/>);
+        detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
+                                                  onClose={callbacks.onClose}
+                                                  onDelete={callbacks.onDelete}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
         detail.onUpdateFactorDetails({statement: details}, function () {

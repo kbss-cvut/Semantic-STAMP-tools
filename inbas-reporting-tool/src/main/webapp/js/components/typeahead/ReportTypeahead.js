@@ -9,13 +9,14 @@ var Reflux = require('reflux');
 var Typeahead = require('react-typeahead').Typeahead;
 var assign = require('object-assign');
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('../../utils/injectIntl');
 
 var Actions = require('../../actions/Actions');
 var ReportStore = require('../../stores/ReportStore');
 var ReportType = require('../../model/ReportType');
 var TypeaheadResultList = require('./TypeaheadResultList');
 var Utils = require('../../utils/Utils');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportTypeahead = React.createClass({
     propTypes: {
@@ -23,7 +24,7 @@ var ReportTypeahead = React.createClass({
         onChange: React.PropTypes.func
     },
 
-    mixins: [Reflux.ListenerMixin, IntlMixin],
+    mixins: [Reflux.ListenerMixin, I18nMixin],
 
     getInitialState: function () {
         return {
@@ -67,7 +68,7 @@ var ReportTypeahead = React.createClass({
         };
         return (
             <Typeahead ref='reportTypeahead' className='form-group form-group-sm' name={this.props.name}
-                       formInputOption='id' placeholder={this.getIntlMessage('dashboard.search-placeholder')}
+                       formInputOption='id' placeholder={this.i18n('dashboard.search-placeholder')}
                        onOptionSelected={this.onOptionSelected} filterOption='name' displayOption={optionLabel}
                        options={this.state.options} customClasses={classes}
                        customListComponent={TypeaheadResultList}/>
@@ -75,4 +76,4 @@ var ReportTypeahead = React.createClass({
     }
 });
 
-module.exports = ReportTypeahead;
+module.exports = injectIntl(ReportTypeahead);

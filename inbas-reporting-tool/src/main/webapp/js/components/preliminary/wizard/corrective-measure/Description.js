@@ -5,9 +5,14 @@
 'use strict';
 
 var React = require('react');
+var injectIntl = require('../../../../utils/injectIntl');
+
 var Input = require('../../../Input');
+var I18nMixin = require('../../../../i18n/I18nMixin');
 
 var Description = React.createClass({
+    mixins: [I18nMixin],
+
     getInitialState: function () {
         var description = this.props.data.statement.description;
         return {
@@ -23,11 +28,12 @@ var Description = React.createClass({
     render: function () {
         return (
             <div>
-                <Input type='textarea' rows='8' label='Description' placeholder='Corrective measure description'
+                <Input type='textarea' rows='8' label={this.i18n('description')}
+                       placeholder={this.i18n('preliminary.detail.corrective.description-placeholder')}
                        value={this.state.description} onChange={this.onChange}/>
             </div>
         );
     }
 });
 
-module.exports = Description;
+module.exports = injectIntl(Description);

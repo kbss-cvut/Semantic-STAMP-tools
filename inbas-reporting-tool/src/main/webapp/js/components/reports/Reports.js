@@ -7,13 +7,14 @@
 var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('../../utils/injectIntl');
 
 var ReportsTable = require('./ReportsTable');
 var Mask = require('./../Mask');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var Reports = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     propTypes: {
         reports: React.PropTypes.array,
@@ -26,7 +27,7 @@ var Reports = React.createClass({
         var reports = this.props.reports;
         if (reports === null) {
             return (
-                <Mask text={this.getIntlMessage('reports.loading-mask')}/>
+                <Mask text={this.i18n('reports.loading-mask')}/>
             );
         }
         if (reports.length === 0) {
@@ -35,7 +36,7 @@ var Reports = React.createClass({
                     <Jumbotron>
                         <h2>INBAS Reporting</h2>
 
-                        <p>{this.getIntlMessage('reports.no-reports')}</p>
+                        <p>{this.i18n('reports.no-reports')}</p>
                     </Jumbotron>
                 </div>
             );
@@ -46,4 +47,4 @@ var Reports = React.createClass({
     }
 });
 
-module.exports = Reports;
+module.exports = injectIntl(Reports);

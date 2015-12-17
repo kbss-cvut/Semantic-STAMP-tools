@@ -6,13 +6,17 @@
 
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
+var injectIntl = require('../../../../../utils/injectIntl');
 
 var ConflictingAircraftStep = require('./ConflictingAircraftStep');
 var Constants = require('../../../../../constants/Constants');
 var Input = require('../../../../Input');
+var I18nMixin = require('../../../../../i18n/I18nMixin');
 
 var WasConflictingAircraft = React.createClass({
-    getInitialState: function() {
+    mixins: [I18nMixin],
+
+    getInitialState: function () {
         return {
             hasConflictingAircraft: this.props.data.statement.conflictingAircraft != null
         }
@@ -22,7 +26,7 @@ var WasConflictingAircraft = React.createClass({
             this.props.data.statement.conflictingAircraft = {};
             this.setState({hasConflictingAircraft: true});
             this.props.insertStepAfterCurrent({
-                name: 'Conflicting Aircraft',
+                name: this.i18n('eventtype.incursion.conflicting.step-title'),
                 component: ConflictingAircraftStep,
                 id: Constants.CONFLICTING_AIRCRAFT_STEP_ID
             });
@@ -38,15 +42,16 @@ var WasConflictingAircraft = React.createClass({
     },
 
     render: function () {
-        var title = (<h3>Was Conflicting Aircraft</h3>);
+        var title = (<h3>{this.i18n('eventtype.incursion.wasconflicting.panel-title')}</h3>);
         return (
             <Panel title={title}>
-                <h5>Was there a conflicting aircraft?</h5>
+                <h5>{this.i18n('eventtype.incursion.wasconflicting.text')}</h5>
 
                 <div>
-                    <Input type='radio' label='Yes' value='yes'
+                    <Input type='radio' label={this.i18n('yes')} value='yes'
                            checked={this.state.hasConflictingAircraft} onChange={this.onChange}/>
-                    <Input type='radio' label='No' value='no' checked={!this.state.hasConflictingAircraft}
+                    <Input type='radio' label={this.i18n('no')} value='no'
+                           checked={!this.state.hasConflictingAircraft}
                            onChange={this.onChange}/>
                 </div>
             </Panel>
@@ -54,4 +59,4 @@ var WasConflictingAircraft = React.createClass({
     }
 });
 
-module.exports = WasConflictingAircraft;
+module.exports = injectIntl(WasConflictingAircraft);

@@ -9,10 +9,14 @@ var Button = require('react-bootstrap').Button;
 var Panel = require('react-bootstrap').Panel;
 var Fade = require('react-bootstrap').Fade;
 
+var injectIntl = require('../../../utils/injectIntl');
+
 var Input = require('../../Input');
 var EccairsLink = require('../../EccairsLink');
+var I18nMixin = require('../../../i18n/I18nMixin');
 
 var AircraftRegistration = React.createClass({
+    mixins: [I18nMixin],
 
     getInitialState: function () {
         return {
@@ -27,12 +31,12 @@ var AircraftRegistration = React.createClass({
 
 
     render: function () {
-        var registrationLabel = (<span>Aircraft Registration (<EccairsLink text='244'/>)</span>);
-        var stateLabel = (<span>State of Registry (<EccairsLink text='281'/>)</span>);
+        var registrationLabel = (<span>{this.i18n('aircraft.registration')} (<EccairsLink text='244'/>)</span>);
+        var stateLabel = (<span>{this.i18n('aircraft.state-of-registry')} (<EccairsLink text='281'/>)</span>);
         return (
             <div>
                 <div className='form-group'>
-                    <Button bsStyle='link' onClick={this.onToggleCollapsible}>Aircraft Registration</Button>
+                    <Button bsStyle='link' onClick={this.onToggleCollapsible}>{this.i18n('aircraft.registration')}</Button>
                 </div>
                 <Fade in={this.state.expanded} unmountOnExit={true} timeout={100}>
                     <Panel ref='panel'>
@@ -40,12 +44,12 @@ var AircraftRegistration = React.createClass({
                             <div className='col-xs-6'>
                                 <Input type='text' label={registrationLabel} name='registration' tabIndex='1'
                                        value={this.props.registration} onChange={this.props.onChange}
-                                       title='Aircraft registration'/>
+                                       title={this.i18n('aircraft.registration')}/>
                             </div>
                             <div className='col-xs-6'>
                                 <Input type='text' label={stateLabel} name='stateOfRegistry' tabIndex='2'
                                        value={this.props.stateOfRegistry} onChange={this.props.onChange}
-                                       title='Aircraft state of registry'/>
+                                       title={this.i18n('aircraft.state-of-registry')}/>
                             </div>
                         </div>
                     </Panel>
@@ -55,4 +59,4 @@ var AircraftRegistration = React.createClass({
     }
 });
 
-module.exports = AircraftRegistration;
+module.exports = injectIntl(AircraftRegistration);

@@ -8,15 +8,16 @@ var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 
-var IntlMixin = require('react-intl').IntlMixin;
+var injectIntl = require('../../utils/injectIntl');
 
 var Utils = require('../../utils/Utils');
 var CollapsibleText = require('../CollapsibleText');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var RECENTLY_EDITED_COUNT = 10;
 
 var RecentlyEditedReports = React.createClass({
-    mixins: [IntlMixin],
+    mixins: [I18nMixin],
 
     filterRecentReports: function () {
         var reports = this.props.reports.slice();
@@ -29,16 +30,16 @@ var RecentlyEditedReports = React.createClass({
     },
 
     render: function () {
-        var title = (<h5>{this.getIntlMessage('dashboard.recent-panel-heading')}</h5>),
+        var title = (<h5>{this.i18n('dashboard.recent-panel-heading')}</h5>),
             recentReports = this.renderRecentReports(this.filterRecentReports()),
             content = null;
         if (recentReports.length > 0) {
             content = (<Table striped bordered condensed hover>
                 <thead>
                 <tr>
-                    <th className='col-xs-4'>{this.getIntlMessage('dashboard.recent-table-headline')}</th>
-                    <th className='col-xs-4'>{this.getIntlMessage('dashboard.recent-table-date')}</th>
-                    <th className='col-xs-4'>{this.getIntlMessage('dashboard.recent-table-last-edited')}</th>
+                    <th className='col-xs-4'>{this.i18n('dashboard.recent-table-headline')}</th>
+                    <th className='col-xs-4'>{this.i18n('dashboard.recent-table-date')}</th>
+                    <th className='col-xs-4'>{this.i18n('dashboard.recent-table-last-edited')}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -46,7 +47,7 @@ var RecentlyEditedReports = React.createClass({
                 </tbody>
             </Table>);
         } else {
-            content = (<div>{this.getIntlMessage('reports.no-occurrence-reports')}</div>);
+            content = (<div>{this.i18n('reports.no-occurrence-reports')}</div>);
         }
         return (
             <Panel header={title} bsStyle='info' style={{height: '100%'}}>
@@ -64,8 +65,8 @@ var RecentlyEditedReports = React.createClass({
     }
 });
 
-var ReportRow = React.createClass({
-    mixins: [IntlMixin],
+var ReportRow = injectIntl(React.createClass({
+    mixins: [I18nMixin],
 
     onOpenClick: function (e) {
         e.preventDefault();
@@ -80,7 +81,7 @@ var ReportRow = React.createClass({
             <tr>
                 <td style={vAlign}>
                     <a href='javascript:void(0);' onClick={this.onOpenClick}
-                       title={this.getIntlMessage('reports.open-tooltip')}><CollapsibleText
+                       title={this.i18n('reports.open-tooltip')}><CollapsibleText
                         text={report.occurrence.name}
                         maxLength={20}/></a>
                 </td>
@@ -89,6 +90,6 @@ var ReportRow = React.createClass({
             </tr>
         );
     }
-});
+}));
 
-module.exports = RecentlyEditedReports;
+module.exports = injectIntl(RecentlyEditedReports);

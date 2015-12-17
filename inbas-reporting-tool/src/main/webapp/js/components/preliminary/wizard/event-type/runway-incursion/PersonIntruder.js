@@ -6,31 +6,40 @@
 
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
+var injectIntl = require('../../../../../utils/injectIntl');
 
 var Input = require('../../../../Input');
+var I18nMixin = require('../../../../../i18n/I18nMixin');
 
 var PersonIntruder = React.createClass({
+    mixins: [I18nMixin],
+
     render: function () {
         var statement = this.props.statement;
         return (
-            <Panel header='Person Event' style={{margin: '15px 0px 0px 0px'}}>
+            <Panel header={this.i18n('eventtype.incursion.intruder.person.panel-title')}
+                   style={{margin: '15px 0px 0px 0px'}}>
                 <div className='row'>
                     <div className='col-xs-6'>
-                        <Input type='text' label='Personnel Category' name='category'
+                        <Input type='text' label={this.i18n('eventtype.incursion.intruder.person.category')}
+                               name='category'
                                value={statement.intruder.category}
-                               onChange={this.props.onChange} title='Personnel on the ground category'/>
+                               onChange={this.props.onChange}
+                               title={this.i18n('eventtype.incursion.intruder.person.category-tooltip')}/>
                     </div>
                     <div className='col-xs-6'>
-                        <Input type='text' label='Organization/Aerodrome Department' name='organization'
-                               value={statement.intruder.organization} onChange={this.props.onChange}
-                               title='Person Organization/Aerodrome Department'/>
+                        <Input type='text' label={this.i18n('eventtype.incursion.intruder.organization')}
+                               name='organization' value={statement.intruder.organization}
+                               onChange={this.props.onChange}
+                               title={this.i18n('eventtype.incursion.intruder.person.organization-tooltip')}/>
                     </div>
                 </div>
                 <div className='row'>
                     <div className='col-xs-12'>
-                        <Input type='textarea' label='What was the person doing on the Runway?' name='wasDoing'
+                        <Input type='textarea' label={this.i18n('eventtype.incursion.intruder.person.wasdoing')}
+                               name='wasDoing'
                                value={statement.intruder.wasDoing} onChange={this.props.onChange}
-                               title='What was the person doing on the Runway?'/>
+                               title={this.i18n('eventtype.incursion.intruder.person.wasdoing')}/>
                     </div>
                 </div>
             </Panel>
@@ -38,4 +47,4 @@ var PersonIntruder = React.createClass({
     }
 });
 
-module.exports = PersonIntruder;
+module.exports = injectIntl(PersonIntruder);

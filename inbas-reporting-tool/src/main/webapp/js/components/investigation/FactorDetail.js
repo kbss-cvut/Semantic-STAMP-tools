@@ -8,6 +8,8 @@ var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
 var DateTimePicker = require('kbss-react-bootstrap-datetimepicker');
+var injectIntl = require('../../utils/injectIntl');
+var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Input = require('../Input');
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
@@ -16,12 +18,8 @@ var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 
 var EventTypeWizardSelector = require('../preliminary/wizard/event-type/EventTypeWizardSelector');
 var WizardWindow = require('../wizard/WizardWindow');
+var I18nMixin = require('../../i18n/I18nMixin');
 
-var scaleUnits = {
-    'second': 'Seconds',
-    'minute': 'Minutes',
-    'hour': 'Hours'
-};
 
 function convertDurationToCurrentUnit(factor) {
     var targetUnit = gantt.config.duration_unit;
@@ -29,6 +27,8 @@ function convertDurationToCurrentUnit(factor) {
 }
 
 var FactorDetail = React.createClass({
+    mixins: [I18nMixin],
+
     propTypes: {
         onSave: React.PropTypes.func.isRequired,
         onClose: React.PropTypes.func.isRequired,
@@ -138,14 +138,16 @@ var FactorDetail = React.createClass({
                                                                onHide={this.onCloseDetails} enableForwardSkip={true}/>
                 <Modal show={this.props.show} onHide={this.props.onClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Occurrence Factor</Modal.Title>
+                        <Modal.Title>{this.i18n('factors.detail.title')}</Modal.Title>
                     </Modal.Header>
 
                     <Modal.Body>
                         {this.renderDeleteDialog()}
                         <div className='form-group row'>
                             <div className='col-xs-11'>
-                                <EventTypeTypeahead label='Type' placeholder='Factor Type' value={eventTypeLabel}
+                                <EventTypeTypeahead label={this.i18n('factors.detail.type')}
+                                                    placeholder={this.i18n('factors.detail.type-placeholder')}
+                                                    value={eventTypeLabel}
                                                     onSelect={this.onEventTypeChange} focus={true}/>
                             </div>
                             <div className='col-xs-1'>
@@ -154,25 +156,27 @@ var FactorDetail = React.createClass({
                         </div>
                         <div>
                             <div>
-                                <label className='control-label'>Time period</label>
+                                <label className='control-label'>{this.i18n('factors.detail.time-period')}</label>
                             </div>
                             <div className='row'>
-                                <div className='col-xs-2 bold' style={{padding: '7px 0 7px 15px'}}>Start time</div>
+                                <div className='col-xs-2 bold'
+                                     style={{padding: '7px 0 7px 15px'}}>{this.i18n('factors.detail.start')}</div>
                                 <div className='col-xs-4 picker-container form-group-sm'
                                      style={{padding: '0 15px 0 0'}}>
                                     <DateTimePicker inputFormat='DD-MM-YY HH:mm'
                                                     dateTime={this.state.startDate.toString()}
                                                     onChange={this.onDateChange}
-                                                    inputProps={{title: 'Date and time when the event occurred', bsSize: 'small'}}/>
+                                                    inputProps={{title: this.i18n('occurrence.start-time-tooltip'), bsSize: 'small'}}/>
                                 </div>
-                                <div className='col-xs-2 bold' style={{padding: '7px 0 7px 15px'}}>Duration</div>
+                                <div className='col-xs-2 bold'
+                                     style={{padding: '7px 0 7px 15px'}}>{this.i18n('factors.detail.duration')}</div>
                                 <div className='col-xs-4' style={{padding: '0 15px 0 0'}}>
                                     <div className='col-xs-7' style={{padding: '0'}}>
                                         <Input type='text' buttonBefore={durationMinus} buttonAfter={durationPlus}
                                                value={this.state.duration} onChange={this.onDurationSet}/>
                                     </div>
                                     <div className='col-xs-5' style={{padding: '7px 15px'}}>
-                                        {scaleUnits[this.props.scale]}
+                                        {this.renderDuration()}
                                     </div>
                                 </div>
                             </div>
@@ -181,8 +185,8 @@ var FactorDetail = React.createClass({
 
                     <Modal.Footer>
                         <Button bsSize='small' bsStyle='success' onClick={this.onSave}
-                                disabled={!this.state.eventType}>Save</Button>
-                        <Button bsSize='small' onClick={this.props.onClose}>Cancel</Button>
+                                disabled={!this.state.eventType}>{this.i18n('save')}</Button>
+                        <Button bsSize='small' onClick={this.props.onClose}>{this.i18n('cancel')}</Button>
                         {this.renderDeleteButton()}
                         {this.renderWizardButton()}
                     </Modal.Footer>
@@ -198,18 +202,29 @@ var FactorDetail = React.createClass({
             return null;
         }
         styleInfo = FactorStyleInfo.getStyleInfo(type.type);
-        return (<img src={styleInfo.icon} className={styleInfo.cls} title={styleInfo.title} style={{margin: '28px 15px 0 -10px', width: '24px', height: '24px'}}/>);
+        return (<img src={styleInfo.icon} className={styleInfo.cls} title={styleInfo.title}
+                     style={{margin: '28px 15px 0 -10px', width: '24px', height: '24px'}}/>);
+    },
+
+    renderDuration: function () {
+        var durations = {
+            'second': <FormattedMessage id='factors.duration.second' values={{duration: this.state.duration}}/>,
+            'minute': <FormattedMessage id='factors.duration.minute' values={{duration: this.state.duration}}/>,
+            'hour': <FormattedMessage id='factors.duration.hour' values={{duration: this.state.duration}}/>
+        };
+        return durations[this.props.scale];
     },
 
     renderDeleteButton: function () {
         return this.props.factor.isNew ? null : (
-            <Button bsSize='small' bsStyle='warning' onClick={this.onDeleteClick}>Delete</Button>);
+            <Button bsSize='small' bsStyle='warning' onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>);
     },
 
     renderWizardButton: function () {
         return (
             <div style={{float: 'left'}}>
-                <Button bsStyle='primary' bsSize='small' onClick={this.onOpenDetails} disabled={!this.state.eventType}>Details</Button>
+                <Button bsStyle='primary' bsSize='small' onClick={this.onOpenDetails}
+                        disabled={!this.state.eventType}>{this.i18n('factors.detail.details')}</Button>
             </div>
         )
     },
@@ -218,18 +233,19 @@ var FactorDetail = React.createClass({
         return (
             <Modal show={this.state.showDeleteDialog} onHide={this.onCancelDelete}>
                 <Modal.Header>
-                    <Modal.Title>Delete factor?</Modal.Title>
+                    <Modal.Title>{this.i18n('factors.detail.delete.title')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    Are you sure you want to remove this factor?
+                    {this.i18n('factors.detail.delete.text')}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button bsSize='small' bsStyle='warning' onClick={this.onDeleteFactor}>Delete</Button>
-                    <Button bsSize='small' onClick={this.onCancelDelete}>Cancel</Button>
+                    <Button bsSize='small' bsStyle='warning'
+                            onClick={this.onDeleteFactor}>{this.i18n('delete')}</Button>
+                    <Button bsSize='small' onClick={this.onCancelDelete}>{this.i18n('cancel')}</Button>
                 </Modal.Footer>
             </Modal>
         );
     }
 });
 
-module.exports = FactorDetail;
+module.exports = injectIntl(FactorDetail);

@@ -6,8 +6,11 @@
 var React = require('react');
 var Alert = require('react-bootstrap').Alert;
 var Button = require('react-bootstrap').Button;
+var injectIntl = require('../utils/injectIntl');
+var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Routing = require('../utils/Routing');
+var I18nMixin = require('../i18n/I18nMixin');
 
 /**
  * Shows alert with message informing that a resource could not be found.
@@ -15,6 +18,7 @@ var Routing = require('../utils/Routing');
  * Closing the alert transitions the user to the application's home.
  */
 var ResourceNotFound = React.createClass({
+    mixins: [I18nMixin],
 
     propTypes: {
         resource: React.PropTypes.string.isRequired,
@@ -28,20 +32,21 @@ var ResourceNotFound = React.createClass({
     render: function () {
         var text;
         if (this.props.identifier) {
-            text = this.props.resource + ' with id ' + this.props.identifier + ' not found.';
+            text = <FormattedMessage id='notfound.msg-with-id'
+                                     values={{resource: this.props.resource, identifier: this.props.identifier}}/>;
         } else {
-            text = this.props.resource + ' not found.';
+            text = <FormattedMessage id='notfound.msg' values={{resource: this.props.resource}}/>;
         }
         return (<Alert bsStyle='danger' onDismiss={this.onClose}>
-            <h4>Not Found</h4>
+            <h4>{this.i18n('notfound.title')}</h4>
 
             <p>{text}</p>
 
             <p>
-                <Button onClick={this.onClose}>Close</Button>
+                <Button onClick={this.onClose}>{this.i18n('close')}</Button>
             </p>
         </Alert>);
     }
 });
 
-module.exports = ResourceNotFound;
+module.exports = injectIntl(ResourceNotFound);
