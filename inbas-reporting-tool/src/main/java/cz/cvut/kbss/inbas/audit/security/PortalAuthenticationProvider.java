@@ -115,6 +115,9 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     private String getCompanyId() {
         String companyId = null;
         final HttpServletRequest request = getCurrentRequest();
+        if (request.getCookies() == null) {
+            throw new AuthenticationServiceException("Portal is not available.");
+        }
         for (Cookie cookie : request.getCookies()) {
             if (cookie.getName().equals(COMPANY_ID_COOKIE)) {
                 companyId = cookie.getValue();
