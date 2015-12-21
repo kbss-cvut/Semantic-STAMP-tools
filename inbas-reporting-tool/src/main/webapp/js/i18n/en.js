@@ -105,6 +105,7 @@ module.exports = {
         'preliminary.detail.narrative-tooltip': 'Narrative - this field is required',
         'preliminary.detail.table-edit-tooltip': 'Edit statement',
         'preliminary.detail.table-delete-tooltip': 'Delete statement',
+        'preliminary.detail.cannot-modify': 'Preliminary report cannot be modified, because it is already in the investigation phase.',
         'preliminary.detail.corrective.panel-title': 'Corrective measures',
         'preliminary.detail.corrective.table-description': 'Corrective measure',
         'preliminary.detail.corrective.description-placeholder': 'Corrective measure description',

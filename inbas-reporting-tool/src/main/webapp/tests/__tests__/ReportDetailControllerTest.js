@@ -3,10 +3,12 @@
 describe('ReportDetailController tests', function () {
 
     var React = require('react'),
+        TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
         ReportDetailController = require('../../js/components/preliminary/ReportDetailController'),
+        ReportDetail = require('../../js/components/preliminary/ReportDetail'),
         Routes = require('../../js/utils/Routes'),
         Constants = require('../../js/constants/Constants');
 
@@ -61,4 +63,6 @@ describe('ReportDetailController tests', function () {
         expect(report.initialReports.length).toEqual(1);
         expect(report.initialReports[0]).toEqual(payload.initialReports[0]);
     });
+
+
 });

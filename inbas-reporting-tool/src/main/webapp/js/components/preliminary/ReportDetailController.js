@@ -82,11 +82,27 @@ var ReportDetailController = React.createClass({
         }
     },
 
+    onInvestigate: function () {
+        Actions.createInvestigation(this.state.report.key, this.openInvestigation);
+    },
+
+    openInvestigation: function (key) {
+        Routing.transitionTo(Routes.editInvestigation, {
+            params: {reportKey: key},
+            handlers: {onCancel: Routes.investigations}
+        });
+    },
+
 
     render: function () {
+        var handlers = {
+            onCancel: this.onCancel,
+            onSuccess: this.onSuccess,
+            onInvestigate: this.onInvestigate,
+            onChange: this.onChange
+        };
         return (
-            <ReportDetail report={this.state.report} loading={this.state.loading} user={this.state.user}
-                          onCancel={this.onCancel} onSuccess={this.onSuccess} onChange={this.onChange}/>
+            <ReportDetail report={this.state.report} loading={this.state.loading} handlers={handlers}/>
         );
     }
 });

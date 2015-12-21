@@ -107,6 +107,7 @@ module.exports = {
         'preliminary.detail.narrative-tooltip': 'Popis - pole je povinné',
         'preliminary.detail.table-edit-tooltip': 'Editovat položku',
         'preliminary.detail.table-delete-tooltip': 'Smazat položku',
+        'preliminary.detail.cannot-modify': 'Předběžné hlášení nelze upravovat, protože událost je již ve fázi šetření.',
         'preliminary.detail.corrective.panel-title': 'Nápravná opatření',
         'preliminary.detail.corrective.table-description': 'Opatření',
         'preliminary.detail.corrective.description-placeholder': 'Popis nápravného opatření',
