@@ -74,6 +74,10 @@ body {
     margin-right: auto;
 }
 
+.content-center {
+    text-align: center;
+}
+
 ul.autocomplete-results {
     padding: 0.3em 0.5em 0.5em 0.5em;
     position: absolute;
@@ -340,4 +344,9 @@ img.factor-descriptive-factor {
 .notice-small {
     font-size: 86%;
     font-style: italic;
+}
+
+.report-type-icon {
+    width: 24px;
+    height: 24px;
 }

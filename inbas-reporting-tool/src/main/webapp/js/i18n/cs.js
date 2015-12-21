@@ -97,6 +97,7 @@ module.exports = {
         'initial.wizard.edit-title': 'Editovat prvotní hlášení',
         'initial.label': 'Prvotní hlášení',
 
+        'preliminary.type': 'Předběžné',
         'preliminary.panel-title': 'Předběžná hlášení',
         'preliminary.table-investigate': 'Šetřit',
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
@@ -193,6 +194,7 @@ module.exports = {
         'eventtype.incursion.conflicting.phase.landing': 'Přistání',
         'eventtype.incursion.conflicting.phase.landing-tooltip': 'Letadlo přistávalo',
 
+        'investigation.type': 'Šetření',
         'investigation.panel-title': 'Hlášení o šetření',
         'investigation.open-tooltip': 'Kliknutím zobrazíte detail šetření',
         'investigation.edit-tooltip': 'Editovat toto šetření',

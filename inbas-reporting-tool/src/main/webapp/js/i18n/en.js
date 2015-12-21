@@ -64,7 +64,7 @@ module.exports = {
         'dashboard.create-empty-tile': 'Start with Empty Report',
         'dashboard.create-import-tile': 'Import Initial Report',
         'dashboard.recent-panel-heading': 'Recently Edited/Added Reports',
-        'dashboard.recent-table-headline': 'Occurrence headline',
+        'dashboard.recent-table-headline': 'Headline',
         'dashboard.recent-table-date': 'Occurrence date',
         'dashboard.recent-table-last-edited': 'Last edited',
 
@@ -95,6 +95,7 @@ module.exports = {
         'initial.wizard.edit-title': 'Edit initial report',
         'initial.label': 'Initial report',
 
+        'preliminary.type': 'Preliminary',
         'preliminary.panel-title': 'Preliminary reports',
         'preliminary.table-investigate': 'Investigate',
         'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
@@ -191,6 +192,7 @@ module.exports = {
         'eventtype.incursion.conflicting.phase.landing': 'Landing',
         'eventtype.incursion.conflicting.phase.landing-tooltip': 'Plane landing',
 
+        'investigation.type': 'Investigation',
         'investigation.panel-title': 'Investigation reports',
         'investigation.open-tooltip': 'Click to see investigation detail',
         'investigation.edit-tooltip': 'Edit this investigation report',

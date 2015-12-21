@@ -12,6 +12,7 @@ var injectIntl = require('../../utils/injectIntl');
 
 var Utils = require('../../utils/Utils');
 var CollapsibleText = require('../CollapsibleText');
+var ReportType = require('../../model/ReportType');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var RECENTLY_EDITED_COUNT = 10;
@@ -37,9 +38,11 @@ var RecentlyEditedReports = React.createClass({
             content = (<Table striped bordered condensed hover>
                 <thead>
                 <tr>
-                    <th className='col-xs-4'>{this.i18n('dashboard.recent-table-headline')}</th>
-                    <th className='col-xs-4'>{this.i18n('dashboard.recent-table-date')}</th>
-                    <th className='col-xs-4'>{this.i18n('dashboard.recent-table-last-edited')}</th>
+                    <th className='col-xs-5'>{this.i18n('dashboard.recent-table-headline')}</th>
+                    <th className='col-xs-3' className='content-center'>{this.i18n('dashboard.recent-table-date')}</th>
+                    <th className='col-xs-3'
+                        className='content-center'>{this.i18n('dashboard.recent-table-last-edited')}</th>
+                    <th className='col-xs-1' className='content-center'>{this.i18n('reports.table-type')}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -76,6 +79,7 @@ var ReportRow = injectIntl(React.createClass({
     render: function () {
         var report = this.props.report,
             vAlign = {verticalAlign: 'middle'},
+            type = ReportType.asString(report),
             dateEdited = report.lastEdited ? report.lastEdited : report.created;
         return (
             <tr>
@@ -85,8 +89,13 @@ var ReportRow = injectIntl(React.createClass({
                         text={report.occurrence.name}
                         maxLength={20}/></a>
                 </td>
-                <td style={vAlign}>{Utils.formatDate(new Date(report.occurrence.startTime))}</td>
-                <td style={vAlign}>{Utils.formatDate(new Date(dateEdited))}</td>
+                <td style={vAlign}
+                    className='content-center'>{Utils.formatDate(new Date(report.occurrence.startTime))}</td>
+                <td style={vAlign} className='content-center'>{Utils.formatDate(new Date(dateEdited))}</td>
+                <td style={vAlign} className='content-center'>
+                    <img className='report-type-icon centered' src={ReportType.getIconSrc(report)} alt={type}
+                         title={type}/>
+                </td>
             </tr>
         );
     }
