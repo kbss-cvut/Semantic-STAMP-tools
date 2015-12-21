@@ -2,10 +2,7 @@ package cz.cvut.kbss.inbas.audit.service.repository;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
-import cz.cvut.kbss.inbas.audit.persistence.dao.CorrectiveMeasureDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.FactorDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.*;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;
 import cz.cvut.kbss.inbas.audit.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.audit.service.validation.Validator;
@@ -26,6 +23,8 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
     @Autowired
     private Validator<ValidatableReport> reportValidator;
 
+    @Autowired
+    private OccurrenceDao occurrenceDao;
     @Autowired
     private CorrectiveMeasureDao correctiveMeasureDao;
     @Autowired
@@ -65,6 +64,7 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         investigation.setRootFactor(
                 generateFactors(investigation.getOccurrence(), preliminaryReport.getTypeAssessments()));
         investigationReportDao.persist(investigation);
+        occurrenceDao.update(investigation.getOccurrence());
         return investigation;
     }
 

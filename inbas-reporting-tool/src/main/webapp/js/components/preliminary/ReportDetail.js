@@ -115,7 +115,7 @@ var ReportDetail = React.createClass({
                         </div>
 
                         <div className='form-group'>
-                            <ReportStatements report={report} onChange={this.props.onChange}/>
+                            <ReportStatements report={report} onChange={this.props.handlers.onChange}/>
                         </div>
 
                         <div className='row'>

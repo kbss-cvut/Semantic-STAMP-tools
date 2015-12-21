@@ -1,9 +1,6 @@
 package cz.cvut.kbss.inbas.audit.environment.util;
 
-import cz.cvut.kbss.inbas.audit.model.Aircraft;
-import cz.cvut.kbss.inbas.audit.model.Location;
-import cz.cvut.kbss.inbas.audit.model.Occurrence;
-import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.model.*;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
@@ -56,6 +53,7 @@ public class Generator {
     private static PreliminaryReport reportWithoutTypeAssessments() {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(generateOccurrence());
+        report.getOccurrence().transitionToPhase(ReportingPhase.PRELIMINARY);
         report.setAuthor(getPerson());
         report.setLastEdited(new Date());
         report.setLastEditedBy(getPerson());

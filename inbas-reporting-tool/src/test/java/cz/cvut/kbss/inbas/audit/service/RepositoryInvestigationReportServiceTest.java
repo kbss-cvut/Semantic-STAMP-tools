@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.service;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
@@ -260,5 +261,18 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         } finally {
             em.close();
         }
+    }
+
+    @Test
+    public void creatingInvestigationFromPreliminarySetsOccurrencePhaseToInvestigation() {
+        final PreliminaryReport report = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        preliminaryReportDao.persist(report);
+        final InvestigationReport created = service.createFromPreliminaryReport(report);
+        assertNotNull(created);
+        emf.getCache().evictAll();
+
+        final InvestigationReport result = service.find(created.getUri());
+        assertEquals(ReportingPhase.INVESTIGATION, result.getOccurrence().getReportingPhase());
     }
 }
