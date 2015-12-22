@@ -1,12 +1,9 @@
-/**
- * @author ledvima1
- */
-
 'use strict';
 
 var Actions = require('../actions/Actions');
 var Ajax = require('./Ajax');
 var Routing = require('./Routing');
+var Logger = require('./Logger');
 
 var Authentication = {
 
@@ -24,15 +21,17 @@ var Authentication = {
                     return;
                 }
                 Actions.loadUser();
-                console.log('User successfully authenticated.');
+                Logger.log('User successfully authenticated.');
                 Routing.transitionToOriginalTarget();
             }.bind(this));
     },
 
     logout: function () {
-        Ajax.post('j_spring_security_logout').end(function (err, resp) {
+        Ajax.post('j_spring_security_logout').end(function (err) {
             if (err) {
-                console.log('Logout failed. Status: ' + err.status);
+                Logger.error('Logout failed. Status: ' + err.status);
+            } else {
+                Logger.log('User successfully logged out.');
             }
             window.location.reload();
         });

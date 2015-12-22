@@ -15,5 +15,7 @@ module.exports = {
     },
 
     PRELIMINARY_REPORT_TYPE: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#PreliminaryReport',
-    INVESTIGATION_REPORT_TYPE: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#InvestigationReport'
+    INVESTIGATION_REPORT_TYPE: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#InvestigationReport',
+
+    UNAUTHORIZED_USER: {name: 'unauthorized'}
 };
