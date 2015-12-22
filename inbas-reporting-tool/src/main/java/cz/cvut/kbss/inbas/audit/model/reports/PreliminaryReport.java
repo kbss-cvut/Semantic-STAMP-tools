@@ -13,6 +13,7 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @OWLClass(iri = Vocabulary.PreliminaryReport)
 public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableReport {
@@ -64,6 +65,29 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
 
     public PreliminaryReport() {
         this.revision = Constants.INITIAL_REVISION;
+    }
+
+    /**
+     * Copy constructor.
+     */
+    public PreliminaryReport(PreliminaryReport other) {
+        this.severityAssessment = other.severityAssessment;
+        this.summary = other.summary;
+        this.occurrence = new Occurrence(other.occurrence);
+        if (other.types != null) {
+            new HashSet<>(other.types);
+        }
+        if (other.initialReports != null) {
+            this.initialReports = other.initialReports.stream().map(InitialReport::new).collect(Collectors.toSet());
+        }
+        if (other.correctiveMeasures != null) {
+            this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasure::new)
+                                                              .collect(Collectors.toSet());
+        }
+        if (other.typeAssessments != null) {
+            this.typeAssessments = other.typeAssessments.stream().map(EventTypeAssessment::new)
+                                                        .collect(Collectors.toSet());
+        }
     }
 
     public URI getUri() {

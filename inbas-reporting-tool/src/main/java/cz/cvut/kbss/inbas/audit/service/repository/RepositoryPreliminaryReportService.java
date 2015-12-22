@@ -9,6 +9,7 @@ import cz.cvut.kbss.inbas.audit.persistence.dao.CorrectiveMeasureDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.EventTypeAssessmentDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
+import cz.cvut.kbss.inbas.audit.service.OccurrenceService;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
 import cz.cvut.kbss.inbas.audit.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.audit.service.validation.PreliminaryReportValidator;
@@ -34,6 +35,9 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
 
     @Autowired
     private CorrectiveMeasureDao correctiveMeasureDao;
+
+    @Autowired
+    private OccurrenceService occurrenceService;
 
     @Autowired
     private SecurityUtils securityUtils;
@@ -108,5 +112,16 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
     public List<PreliminaryReport> findByOccurrence(Occurrence occurrence) {
         Objects.requireNonNull(occurrence);
         return preliminaryReportDao.findByOccurrence(occurrence);
+    }
+
+    @Override
+    public PreliminaryReport createNewRevision(PreliminaryReport report) {
+        Objects.requireNonNull(report);
+        // TODO We need to somehow force the DAO to persist the new occurrence as well
+        final PreliminaryReport newRevision = new PreliminaryReport(report);
+        newRevision.setRevision(report.getRevision() + 1);
+        occurrenceService.persist(newRevision.getOccurrence());
+        persist(newRevision);
+        return newRevision;
     }
 }

@@ -226,4 +226,31 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         assertNotNull(occurrence);
         assertEquals(ReportingPhase.PRELIMINARY, occurrence.getReportingPhase());
     }
+
+    @Test
+    public void createNewRevisionSetsRevisionNumberAuthorAndDateCreated() throws Exception {
+        final PreliminaryReport report = initReportWithOccurrence();
+        reportService.persist(report);
+        assertNotNull(report.getCreated());
+
+        final Person revisionAuthor = initRevisionAuthor();
+        final PreliminaryReport newRevision = reportService.createNewRevision(report);
+        assertNotNull(newRevision);
+        assertTrue(newRevision.getCreated().compareTo(report.getCreated()) > 0);
+        assertEquals(report.getRevision() + 1, newRevision.getRevision().intValue());
+        assertTrue(revisionAuthor.valueEquals(newRevision.getAuthor()));
+        assertNotNull(reportService.find(newRevision.getUri()));
+    }
+
+    private Person initRevisionAuthor() {
+        final Person hitGirl = new Person();
+        hitGirl.setFirstName("Mindy");
+        hitGirl.setLastName("McGrady");
+        hitGirl.setUsername("hitgirl");
+        hitGirl.setPassword("hitgirl");
+        hitGirl.generateUri();
+        personService.persist(hitGirl);
+        Environment.setCurrentUser(hitGirl);
+        return hitGirl;
+    }
 }

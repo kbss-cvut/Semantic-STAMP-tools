@@ -10,6 +10,7 @@ import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
+import java.util.Objects;
 
 @OWLClass(iri = Vocabulary.Occurrence)
 public class Occurrence implements HasOwlKey, Serializable {
@@ -38,6 +39,14 @@ public class Occurrence implements HasOwlKey, Serializable {
 
     public Occurrence() {
         this.reportingPhase = ReportingPhase.INITIAL;
+    }
+
+    public Occurrence(Occurrence other) {
+        Objects.requireNonNull(other);
+        this.name = other.name;
+        this.startTime = other.startTime;
+        this.endTime = other.endTime;
+        this.reportingPhase = other.reportingPhase;
     }
 
     @Override

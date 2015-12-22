@@ -25,6 +25,9 @@ public class EventTypeAssessment implements ReportingStatement, Serializable {
     public EventTypeAssessment() {
     }
 
+    /**
+     * Copy constructor.
+     */
     public EventTypeAssessment(EventTypeAssessment other) {
         this.eventType = other.eventType;
         this.description = other.description;
