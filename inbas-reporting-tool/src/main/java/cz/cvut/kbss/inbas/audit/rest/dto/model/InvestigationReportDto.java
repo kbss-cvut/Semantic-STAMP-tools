@@ -16,6 +16,10 @@ public class InvestigationReportDto {
 
     private String key;
 
+    private Date occurrenceStart;
+
+    private Date occurrenceEnd;
+
     private Date created;
 
     private Date lastEdited;
@@ -54,6 +58,22 @@ public class InvestigationReportDto {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public Date getOccurrenceStart() {
+        return occurrenceStart;
+    }
+
+    public void setOccurrenceStart(Date occurrenceStart) {
+        this.occurrenceStart = occurrenceStart;
+    }
+
+    public Date getOccurrenceEnd() {
+        return occurrenceEnd;
+    }
+
+    public void setOccurrenceEnd(Date occurrenceEnd) {
+        this.occurrenceEnd = occurrenceEnd;
     }
 
     public Date getCreated() {

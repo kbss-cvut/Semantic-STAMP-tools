@@ -53,8 +53,8 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
         return em.createNativeQuery(
                 "SELECT ?x WHERE { ?x a ?type ;" +
                         "?hasRevision ?revision ;" +
-                        "?hasOccurrence ?occurrence ." +
-                        "?occurrence ?hasStartTime ?startTime . } ORDER BY DESC(?startTime) DESC(?revision)",
+                        "?hasStartTime ?startTime ;" +
+                        "?hasOccurrence ?occurrence . } ORDER BY DESC(?startTime) DESC(?revision)",
                 OccurrenceReport.class)
                  .setParameter("type", typeIri)
                  .setParameter("hasRevision", URI.create(
@@ -70,8 +70,8 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
                     "SELECT ?x WHERE { ?x a ?type ;" +
                             "a ?reportType ;" +
                             "?hasRevision ?revision ;" +
-                            "?hasOccurrence ?occurrence ." +
-                            "?occurrence ?hasStartTime ?startTime . } ORDER BY DESC(?startTime) DESC(?revision)",
+                            "?hasStartTime ?startTime ;" +
+                            "?hasOccurrence ?occurrence . } ORDER BY DESC(?startTime) DESC(?revision)",
                     OccurrenceReport.class)
                      .setParameter("type", typeIri).setParameter("reportType", URI.create(type))
                      .setParameter("hasRevision", URI.create(

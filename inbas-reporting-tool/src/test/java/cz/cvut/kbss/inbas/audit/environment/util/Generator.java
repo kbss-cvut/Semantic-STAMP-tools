@@ -20,8 +20,6 @@ public class Generator {
     public static Occurrence generateOccurrence() {
         final Occurrence occurrence = new Occurrence();
         occurrence.setName(UUID.randomUUID().toString());
-        occurrence.setStartTime(new Date(System.currentTimeMillis() - 10000));
-        occurrence.setEndTime(new Date());
         return occurrence;
     }
 
@@ -54,6 +52,8 @@ public class Generator {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(generateOccurrence());
         report.getOccurrence().transitionToPhase(ReportingPhase.PRELIMINARY);
+        report.setOccurrenceStart(new Date(System.currentTimeMillis() - 10000));
+        report.setOccurrenceEnd(new Date());
         report.setAuthor(getPerson());
         report.setLastEdited(new Date());
         report.setLastEditedBy(getPerson());
@@ -103,7 +103,9 @@ public class Generator {
         report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         report.setOccurrence(generateOccurrence());
         final Date start = new Date(System.currentTimeMillis() - 10000);
+        report.setOccurrenceStart(start);
         final Date end = new Date();
+        report.setOccurrenceEnd(end);
 
         final Factor root = new Factor();
         root.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance0"));

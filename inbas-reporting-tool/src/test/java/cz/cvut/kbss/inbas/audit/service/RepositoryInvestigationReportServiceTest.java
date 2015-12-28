@@ -57,6 +57,8 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         preliminaryReportDao.persist(report);
         final InvestigationReport result = service.createFromPreliminaryReport(report);
         assertNotNull(result);
+        assertEquals(report.getOccurrenceStart(), result.getOccurrenceStart());
+        assertEquals(report.getOccurrenceEnd(), result.getOccurrenceEnd());
         assertEquals(report.getSeverityAssessment(), result.getSeverityAssessment());
         assertEquals(report.getCorrectiveMeasures().size(), result.getCorrectiveMeasures().size());
         boolean found;
@@ -141,8 +143,8 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         final InvestigationReport result = service.createFromPreliminaryReport(report);
         assertNotNull(result);
         assertNotNull(result.getRootFactor());
-        assertEquals(report.getOccurrence().getStartTime(), result.getRootFactor().getStartTime());
-        assertEquals(report.getOccurrence().getEndTime(), result.getRootFactor().getEndTime());
+        assertEquals(report.getOccurrenceStart(), result.getRootFactor().getStartTime());
+        assertEquals(report.getOccurrenceEnd(), result.getRootFactor().getEndTime());
     }
 
     @Test
@@ -261,6 +263,16 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         } finally {
             em.close();
         }
+    }
+
+    @Test
+    public void investigationCreatedFromPreliminaryReportReusesOccurrenceInstance() {
+        final PreliminaryReport report = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        preliminaryReportDao.persist(report);
+        final InvestigationReport created = service.createFromPreliminaryReport(report);
+        assertNotNull(created);
+        assertEquals(report.getOccurrence().getUri(), created.getOccurrence().getUri());
     }
 
     @Test

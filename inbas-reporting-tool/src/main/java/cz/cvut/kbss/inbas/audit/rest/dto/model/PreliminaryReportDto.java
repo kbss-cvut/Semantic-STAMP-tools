@@ -18,6 +18,10 @@ public class PreliminaryReportDto {
 
     private Occurrence occurrence;
 
+    private Date occurrenceStart;
+
+    private Date occurrenceEnd;
+
     private Date created;
 
     private Date lastEdited;
@@ -60,6 +64,22 @@ public class PreliminaryReportDto {
 
     public void setOccurrence(Occurrence occurrence) {
         this.occurrence = occurrence;
+    }
+
+    public Date getOccurrenceStart() {
+        return occurrenceStart;
+    }
+
+    public void setOccurrenceStart(Date occurrenceStart) {
+        this.occurrenceStart = occurrenceStart;
+    }
+
+    public Date getOccurrenceEnd() {
+        return occurrenceEnd;
+    }
+
+    public void setOccurrenceEnd(Date occurrenceEnd) {
+        this.occurrenceEnd = occurrenceEnd;
     }
 
     public Date getCreated() {

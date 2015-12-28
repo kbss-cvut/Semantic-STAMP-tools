@@ -29,6 +29,14 @@ public class OccurrenceReport implements Serializable {
     @OWLDataProperty(iri = Vocabulary.p_revision, readOnly = true)
     private Integer revision;
 
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_startTime)
+    private Date occurrenceStart;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_endTime)
+    private Date occurrenceEnd;
+
     @OWLDataProperty(iri = Vocabulary.p_dateCreated, readOnly = true)
     private Date created;
 
@@ -67,6 +75,22 @@ public class OccurrenceReport implements Serializable {
 
     public void setRevision(Integer revision) {
         this.revision = revision;
+    }
+
+    public Date getOccurrenceStart() {
+        return occurrenceStart;
+    }
+
+    public void setOccurrenceStart(Date occurrenceStart) {
+        this.occurrenceStart = occurrenceStart;
+    }
+
+    public Date getOccurrenceEnd() {
+        return occurrenceEnd;
+    }
+
+    public void setOccurrenceEnd(Date occurrenceEnd) {
+        this.occurrenceEnd = occurrenceEnd;
     }
 
     public Date getCreated() {

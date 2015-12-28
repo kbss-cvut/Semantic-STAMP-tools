@@ -92,6 +92,8 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
 
     private PreliminaryReport initReportWithOccurrence() {
         final PreliminaryReport report = new PreliminaryReport();
+        report.setOccurrenceStart(new Date(System.currentTimeMillis() - 10000));
+        report.setOccurrenceEnd(new Date());
         report.setOccurrence(Generator.generateOccurrence());
         report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setSummary("Narrative");
@@ -255,8 +257,21 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
     }
 
     @Test
+    public void newRevisionReusesOccurrenceInstance() throws Exception {
+        final PreliminaryReport report = initReportWithOccurrence();
+        reportService.persist(report);
+        assertNotNull(report.getCreated());
+
+        initRevisionAuthor();
+        final PreliminaryReport newRevision = reportService.createNewRevision(report);
+        assertNotNull(newRevision);
+        assertEquals(report.getOccurrence().getUri(), newRevision.getOccurrence().getUri());
+    }
+
+    @Test
     public void newRevisionIsIndependentOfOriginalReport() throws Exception {
-        final PreliminaryReport report = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        final PreliminaryReport report =
+                Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
         reportService.persist(report);
         assertNotNull(report.getCreated());
 
@@ -266,7 +281,6 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
     }
 
     private void verifyRevisionIndependence(PreliminaryReport report, PreliminaryReport newRevision) {
-        assertNotEquals(report.getOccurrence().getUri(), newRevision.getOccurrence().getUri());
         boolean found;
         for (InitialReport newIr : newRevision.getInitialReports()) {
             found = false;
@@ -281,7 +295,7 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         }
         for (EventTypeAssessment newEta : newRevision.getTypeAssessments()) {
             found = false;
-            for(EventTypeAssessment eta : report.getTypeAssessments()) {
+            for (EventTypeAssessment eta : report.getTypeAssessments()) {
                 if (newEta.getEventType().getId().equals(eta.getEventType().getId())) {
                     found = true;
                     verifyTypeAssessmentsAreIndependent(eta, newEta);
@@ -313,7 +327,8 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
 
     @Test
     public void newRevisionOfNewRevisionCanBeCreated() throws Exception {
-        final PreliminaryReport report = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        final PreliminaryReport report =
+                Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
         reportService.persist(report);
         assertNotNull(report.getCreated());
 

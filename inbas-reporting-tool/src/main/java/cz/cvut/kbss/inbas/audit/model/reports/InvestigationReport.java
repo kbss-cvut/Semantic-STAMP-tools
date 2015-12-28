@@ -25,6 +25,14 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
 
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_startTime)
+    private Date occurrenceStart;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_endTime)
+    private Date occurrenceEnd;
+
     @OWLDataProperty(iri = Vocabulary.p_dateCreated)
     private Date created;
 
@@ -73,6 +81,8 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
 
         this.occurrence = preliminaryReport.getOccurrence();
         occurrence.transitionToPhase(getPhase());
+        this.occurrenceStart = preliminaryReport.getOccurrenceStart();
+        this.occurrenceEnd = preliminaryReport.getOccurrenceEnd();
         this.summary = preliminaryReport.getSummary();
         this.revision = Constants.INITIAL_REVISION;
         this.severityAssessment = preliminaryReport.getSeverityAssessment();
@@ -84,6 +94,22 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public Date getOccurrenceStart() {
+        return occurrenceStart;
+    }
+
+    public void setOccurrenceStart(Date occurrenceStart) {
+        this.occurrenceStart = occurrenceStart;
+    }
+
+    public Date getOccurrenceEnd() {
+        return occurrenceEnd;
+    }
+
+    public void setOccurrenceEnd(Date occurrenceEnd) {
+        this.occurrenceEnd = occurrenceEnd;
     }
 
     public Date getCreated() {

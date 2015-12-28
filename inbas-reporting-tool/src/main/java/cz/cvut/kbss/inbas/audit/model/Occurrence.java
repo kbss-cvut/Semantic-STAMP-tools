@@ -9,7 +9,6 @@ import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Date;
 import java.util.Objects;
 
 @OWLClass(iri = Vocabulary.Occurrence)
@@ -26,14 +25,6 @@ public class Occurrence implements HasOwlKey, Serializable {
     private String name;    // Simple name of the event being reported
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_startTime)
-    private Date startTime;
-
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_endTime)
-    private Date endTime;
-
-    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_reportingPhase)
     private ReportingPhase reportingPhase;
 
@@ -44,8 +35,6 @@ public class Occurrence implements HasOwlKey, Serializable {
     public Occurrence(Occurrence other) {
         Objects.requireNonNull(other);
         this.name = other.name;
-        this.startTime = other.startTime;
-        this.endTime = other.endTime;
         this.reportingPhase = other.reportingPhase;
     }
 
@@ -81,22 +70,6 @@ public class Occurrence implements HasOwlKey, Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
     }
 
     public ReportingPhase getReportingPhase() {

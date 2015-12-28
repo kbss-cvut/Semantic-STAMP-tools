@@ -104,36 +104,44 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     private List<PreliminaryReport> generateReports() {
+        Date startTime = new Date(System.currentTimeMillis() - 5000);
+        final Date endTime = new Date();
         final List<PreliminaryReport> reports = new ArrayList<>();
         final Occurrence o1 = new Occurrence();
         o1.setName("SomeOccurrence");
-        o1.setStartTime(new Date(System.currentTimeMillis() - 5000));
-        o1.setEndTime(new Date());
         final PreliminaryReport r1 = new PreliminaryReport();
         r1.setAuthor(author);
         r1.setRevision(Constants.INITIAL_REVISION + 1);
+        r1.setOccurrenceStart(startTime);
+        r1.setOccurrenceEnd(endTime);
         r1.setOccurrence(o1);
         r1.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r1);
         final PreliminaryReport r2 = new PreliminaryReport();
         r2.setAuthor(author);
         r2.setRevision(Constants.INITIAL_REVISION);
+        r2.setOccurrenceStart(startTime);
+        r2.setOccurrenceEnd(endTime);
         r2.setOccurrence(o1);
         r2.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r2);
         final Occurrence o2 = new Occurrence();
         o2.setName("OccurrenceTwo");
-        o2.setStartTime(new Date(System.currentTimeMillis() - 12000));
-        o2.setEndTime(new Date());
+        // The other occurrence happened before the first one
+        startTime = new Date(startTime.getTime() - 7000);
         final PreliminaryReport r3 = new PreliminaryReport();
         r3.setOccurrence(o2);
         r3.setAuthor(author);
+        r3.setOccurrenceStart(startTime);
+        r3.setOccurrenceEnd(endTime);
         r3.setRevision(Constants.INITIAL_REVISION + 1);
         r3.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r3);
         final PreliminaryReport r4 = new PreliminaryReport();
         r4.setOccurrence(o2);
         r4.setAuthor(author);
+        r4.setOccurrenceStart(startTime);
+        r4.setOccurrenceEnd(endTime);
         r4.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r4);
         // The set messes the order a little, to verify our ordering implementation

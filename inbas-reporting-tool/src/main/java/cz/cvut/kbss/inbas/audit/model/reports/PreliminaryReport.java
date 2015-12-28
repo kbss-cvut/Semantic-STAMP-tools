@@ -24,6 +24,14 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
 
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_startTime)
+    private Date occurrenceStart;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_endTime)
+    private Date occurrenceEnd;
+
     @OWLDataProperty(iri = Vocabulary.p_dateCreated)
     private Date created;
 
@@ -71,9 +79,11 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
      * Copy constructor.
      */
     public PreliminaryReport(PreliminaryReport other) {
+        this.occurrenceStart = other.occurrenceStart;
+        this.occurrenceEnd = other.occurrenceEnd;
         this.severityAssessment = other.severityAssessment;
         this.summary = other.summary;
-        this.occurrence = new Occurrence(other.occurrence);
+        this.occurrence = other.occurrence;
         if (other.types != null) {
             new HashSet<>(other.types);
         }
@@ -96,6 +106,22 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public Date getOccurrenceStart() {
+        return occurrenceStart;
+    }
+
+    public void setOccurrenceStart(Date occurrenceStart) {
+        this.occurrenceStart = occurrenceStart;
+    }
+
+    public Date getOccurrenceEnd() {
+        return occurrenceEnd;
+    }
+
+    public void setOccurrenceEnd(Date occurrenceEnd) {
+        this.occurrenceEnd = occurrenceEnd;
     }
 
     public Date getCreated() {

@@ -3,10 +3,10 @@
     "uri": "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Occurrence_instance319360066",
     "key": "25857640490956897",
     "name": "Runway incursion",
-    "startTime": 1447144734937,
-    "endTime": 1447144800937,
     "reportingPhase": "INVESTIGATION"
   },
+  "occurrenceStart": 1447144734937,
+  "occurrenceEnd": 1447144800937,
   "created": 1447144867175,
   "lastEdited": 1447147087897,
   "summary": "Short report summary.",

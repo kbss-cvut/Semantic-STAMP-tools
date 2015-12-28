@@ -17,16 +17,5 @@ public class OccurrenceValidator implements Validator<Occurrence> {
         if (instance.getName() == null || instance.getName().isEmpty()) {
             throw new ValidationException("Occurrence name cannot be empty.");
         }
-
-        if (instance.getStartTime() == null || instance.getEndTime() == null) {
-            throw new ValidationException("Occurrence is missing start or end time.");
-        }
-        if (instance.getStartTime().compareTo(instance.getEndTime()) > 0) {
-            throw new ValidationException("Occurrence start time cannot be greater than its end time.");
-        }
-        final Date now = new Date();
-        if (now.compareTo(instance.getStartTime()) < 0) {
-            throw new ValidationException("Occurrence time cannot be in the future.");
-        }
     }
 }

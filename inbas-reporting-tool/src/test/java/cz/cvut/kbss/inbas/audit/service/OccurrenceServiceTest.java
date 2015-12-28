@@ -52,10 +52,14 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
     private Map<ReportingPhase, Set<? extends Report>> persistTestData() {
         final Map<ReportingPhase, Set<? extends Report>> data = new HashMap<>();
         final Set<PreliminaryReport> preliminaryReports = new HashSet<>();
+        final Date startTime = new Date(System.currentTimeMillis() - 10000);
+        final Date endTime = new Date();
         for (int i = 0; i < 5; i++) {
             final PreliminaryReport r = new PreliminaryReport();
             r.setOccurrence(occurrence);
             r.setRevision(2);
+            r.setOccurrenceStart(startTime);
+            r.setOccurrenceEnd(endTime);
             r.setAuthor(author);
             r.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
             preliminaryReports.add(r);
@@ -67,6 +71,8 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             final InvestigationReport r = new InvestigationReport();
             r.setOccurrence(occurrence);
             r.setRevision(2);
+            r.setOccurrenceStart(startTime);
+            r.setOccurrenceEnd(endTime);
             r.setAuthor(author);
             investigationReports.add(r);
         }

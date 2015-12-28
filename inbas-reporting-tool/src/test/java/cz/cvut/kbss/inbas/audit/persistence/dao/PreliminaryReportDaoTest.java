@@ -16,10 +16,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -232,6 +229,8 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     private PreliminaryReport initBasicValidReport() {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(Generator.generateOccurrence());
+        report.setOccurrenceStart(new Date(System.currentTimeMillis() - 10000));
+        report.setOccurrenceEnd(new Date());
         report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setAuthor(author);
         return report;

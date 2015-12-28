@@ -42,9 +42,9 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
         report.setAuthor(PERSON);
         final Occurrence occurrence = new Occurrence();
         occurrence.setName("TestOccurrence");
-        occurrence.setStartTime(new Date(System.currentTimeMillis() - 1000000));
-        occurrence.setEndTime(new Date());
         report.setOccurrence(occurrence);
+        report.setOccurrenceStart(new Date(System.currentTimeMillis() - 1000000));
+        report.setOccurrenceEnd(new Date());
         report.setSummary("Yadayadayada");
         report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
@@ -59,7 +59,7 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
     @Test(expected = ValidationException.class)
     public void futureOccurrenceTimeThrowsException() throws Exception {
         final PreliminaryReport report = getDefaultValidReport();
-        report.getOccurrence().setStartTime(new Date(System.currentTimeMillis() + 10000));
+        report.setOccurrenceStart(new Date(System.currentTimeMillis() + 10000));
         validator.validate(report);
     }
 
