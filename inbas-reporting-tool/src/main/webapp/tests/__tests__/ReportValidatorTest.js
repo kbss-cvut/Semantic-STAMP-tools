@@ -8,10 +8,10 @@ describe('Report validator', function() {
     beforeEach(function() {
         report = {
             occurrence: {
-                name: 'TestReport',
-                startTime: Date.now() - 1000,
-                endTime: Date.now()
+                name: 'TestReport'
             },
+            occurrenceStart: Date.now() - 1000,
+            occurrenceEnd: Date.now(),
             severityAssessment: 'INCIDENT',
             summary: 'Report narrative',
             typeAssessments: [{

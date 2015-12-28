@@ -56,9 +56,9 @@ var InvestigationController = React.createClass({
         }
     },
 
-    onChange: function (attribute, value) {
-        this.state.investigation[attribute] = value;   // Using [] notation because the att name is in variable
-        this.setState({investigation: this.state.investigation}); // Force update
+    onChange: function (values) {
+        var investigation = assign(this.state.investigation, values);
+        this.setState({investigation: investigation}); // Force update
     },
 
     render: function () {

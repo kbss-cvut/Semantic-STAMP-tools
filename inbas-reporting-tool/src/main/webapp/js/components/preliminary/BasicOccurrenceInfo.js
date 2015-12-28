@@ -34,7 +34,7 @@ var BasicOccurrenceInfo = React.createClass({
         var report = this.props.report;
         return (
             <div>
-                <OccurrenceDetail occurrence={this.props.report.occurrence}
+                <OccurrenceDetail report={this.props.report}
                                   onAttributeChange={this.props.onAttributeChange}/>
 
                 <div className='row'>

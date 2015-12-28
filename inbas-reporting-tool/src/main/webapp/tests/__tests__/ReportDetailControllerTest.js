@@ -14,7 +14,9 @@ describe('ReportDetailController tests', function () {
 
     it('Uses report passed from router store if it is set', function () {
         var report = {
-            initialReports: [{text: 'First Initial Report'}]
+            initialReports: [{text: 'First Initial Report'}],
+            occurrenceStart: Date.now() - 10000,
+            occurrenceEnd: Date.now()
         };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue(report);
 
@@ -42,10 +44,10 @@ describe('ReportDetailController tests', function () {
 
         expect(controller.state.loading).toBeFalsy();
         expect(report).toBeDefined();
+        expect(report.occurrenceStart).toBeDefined();
+        expect(report.occurrenceEnd).toBeDefined();
         expect(report.isNew).toBeTruthy();
         expect(report.occurrence).toBeDefined();
-        expect(report.occurrence.startTime).toBeDefined();
-        expect(report.occurrence.endTime).toBeDefined();
         expect(report.occurrence.reportingPhase).toEqual(Constants.PRELIMINARY_REPORT_PHASE);
     });
 

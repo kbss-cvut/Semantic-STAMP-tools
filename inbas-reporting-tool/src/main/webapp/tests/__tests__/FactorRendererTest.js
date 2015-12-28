@@ -16,10 +16,10 @@ describe('FactorRenderer tests', function () {
                 uri: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#Occurrence_instance319360066',
                 key: '25857640490956897',
                 name: 'Runway incursion',
-                startTime: 1447144734937,
-                endTime: 1447144800937,
                 reportingPhase: 'INVESTIGATION'
             },
+            occurrenceStart: 1447144734937,
+            occurrenceEnd: 1447144800937,
             created: 1447144867175,
             lastEdited: 1447147087897,
             summary: 'Short report summary.',
@@ -55,7 +55,7 @@ describe('FactorRenderer tests', function () {
 
     it('Renders factors from new investigation report - it does not contain deeper hierarchy or cause/mitigation links', function () {
         var rootId = null;
-        investigation.rootFactor = Generator.generateFactors(investigation.occurrence.startTime, investigation.occurrence.endTime, 1);
+        investigation.rootFactor = Generator.generateFactors(investigation.occurrenceStart, investigation.occurrenceEnd, 1);
         GanttController.addFactor.and.returnValue(Date.now());
         GanttController.setOccurrenceEventId.and.callFake(function (id) {
             rootId = id
@@ -80,7 +80,7 @@ describe('FactorRenderer tests', function () {
 
     it('Renders root factor with deeper descendant hierarchy', function () {
         var rootId = null, childIds = [];
-        investigation.rootFactor = Generator.generateFactors(investigation.occurrence.startTime, investigation.occurrence.endTime, 2);
+        investigation.rootFactor = Generator.generateFactors(investigation.occurrenceStart, investigation.occurrenceEnd, 2);
         GanttController.addFactor.and.callFake(function (item, parentId) {
             var id = Date.now();
             if (parentId === rootId) {
@@ -112,7 +112,7 @@ describe('FactorRenderer tests', function () {
 
     it('Renders factors with causality relationships using references', function () {
         var rootId = null, childIds = [], ids = {};
-        investigation.rootFactor = Generator.generateFactors(investigation.occurrence.startTime, investigation.occurrence.endTime, 2);
+        investigation.rootFactor = Generator.generateFactors(investigation.occurrenceStart, investigation.occurrenceEnd, 2);
         investigation.links.causes = [{from: 3, to: 4}];
         initAddFactorMock(rootId, childIds, ids);
         GanttController.setOccurrenceEventId.and.callFake(function (id) {
@@ -140,7 +140,7 @@ describe('FactorRenderer tests', function () {
 
     it('Renders factors with mitigation relationships using references', function () {
         var rootId = null, childIds = [], ids = {};
-        investigation.rootFactor = Generator.generateFactors(investigation.occurrence.startTime, investigation.occurrence.endTime, 2);
+        investigation.rootFactor = Generator.generateFactors(investigation.occurrenceStart, investigation.occurrenceEnd, 2);
         investigation.links.mitigates = [{from: 1, to: 2}, {from: 3, to: 4}];
         initAddFactorMock(rootId, childIds, ids);
         GanttController.setOccurrenceEventId.and.callFake(function (id) {
@@ -161,7 +161,7 @@ describe('FactorRenderer tests', function () {
 
     it('Stores highest reference id', function () {
         var rootId = null, childIds = [], ids = {};
-        investigation.rootFactor = Generator.generateFactors(investigation.occurrence.startTime, investigation.occurrence.endTime, 2);
+        investigation.rootFactor = Generator.generateFactors(investigation.occurrenceStart, investigation.occurrenceEnd, 2);
         GanttController.addFactor.and.callFake(function (item, parentId) {
             var id = Date.now();
             if (parentId === rootId) {

@@ -45,7 +45,7 @@ var Factors = React.createClass({
     },
 
     componentDidUpdate: function () {
-        this.ganttController.updateOccurrenceEvent(this.props.investigation.occurrence);
+        this.ganttController.updateOccurrenceEvent(this.props.investigation);
     },
 
     componentDidMount: function () {
@@ -155,10 +155,10 @@ var Factors = React.createClass({
     },
 
     onUpdateOccurrence: function (startTime, endTime) {
-        var occurrence = this.props.investigation.occurrence;
-        occurrence.startTime = startTime;
-        occurrence.endTime = endTime;
-        this.props.onAttributeChange('occurrence', occurrence);
+        this.props.onChanges({
+            occurrenceStart: startTime,
+            occurrenceEnd: endTime
+        });
     },
 
     getFactorHierarchy: function () {

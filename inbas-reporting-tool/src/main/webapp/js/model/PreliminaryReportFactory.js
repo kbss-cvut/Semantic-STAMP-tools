@@ -3,16 +3,16 @@
 var Constants = require('../constants/Constants');
 
 var Factory = {
-    createReport: function() {
-        var report = {};
-        report.occurrence = {
+    createReport: function () {
+        return {
             // Round the time to whole seconds
-            startTime: (Date.now() / 1000) * 1000,
-            endTime: (Date.now() / 1000) * 1000,
-            reportingPhase: Constants.PRELIMINARY_REPORT_PHASE
+            occurrenceStart: (Date.now() / 1000) * 1000,
+            occurrenceEnd: (Date.now() / 1000) * 1000,
+            occurrence: {
+                reportingPhase: Constants.PRELIMINARY_REPORT_PHASE
+            },
+            isNew: true
         };
-        report.isNew = true;
-        return report;
     }
 };
 

@@ -16,10 +16,10 @@ describe('ReportDetail component', function () {
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onInvestigate', 'onChange']);
         report = {
             occurrence: {
-                name: 'Test',
-                startTime: Date.now(),
-                endTime: Date.now()
-            }
+                name: 'Test'
+            },
+            occurrenceStart: Date.now(),
+            occurrenceEnd: Date.now()
         };
     });
 
