@@ -245,12 +245,84 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
     private Person initRevisionAuthor() {
         final Person hitGirl = new Person();
         hitGirl.setFirstName("Mindy");
-        hitGirl.setLastName("McGrady");
+        hitGirl.setLastName("McCready");
         hitGirl.setUsername("hitgirl");
         hitGirl.setPassword("hitgirl");
         hitGirl.generateUri();
         personService.persist(hitGirl);
         Environment.setCurrentUser(hitGirl);
         return hitGirl;
+    }
+
+    @Test
+    public void newRevisionIsIndependentOfOriginalReport() throws Exception {
+        final PreliminaryReport report = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        reportService.persist(report);
+        assertNotNull(report.getCreated());
+
+        initRevisionAuthor();
+        final PreliminaryReport newRevision = reportService.createNewRevision(report);
+        verifyRevisionIndependence(report, newRevision);
+    }
+
+    private void verifyRevisionIndependence(PreliminaryReport report, PreliminaryReport newRevision) {
+        assertNotEquals(report.getOccurrence().getUri(), newRevision.getOccurrence().getUri());
+        boolean found;
+        for (InitialReport newIr : newRevision.getInitialReports()) {
+            found = false;
+            for (InitialReport ir : report.getInitialReports()) {
+                if (newIr.getText().equals(ir.getText())) {
+                    found = true;
+                    assertNotEquals(ir.getUri(), newIr.getUri());
+                    break;
+                }
+            }
+            assertTrue(found);
+        }
+        for (EventTypeAssessment newEta : newRevision.getTypeAssessments()) {
+            found = false;
+            for(EventTypeAssessment eta : report.getTypeAssessments()) {
+                if (newEta.getEventType().getId().equals(eta.getEventType().getId())) {
+                    found = true;
+                    verifyTypeAssessmentsAreIndependent(eta, newEta);
+                    break;
+                }
+            }
+            assertTrue(found);
+        }
+    }
+
+    private void verifyTypeAssessmentsAreIndependent(EventTypeAssessment eta, EventTypeAssessment newEta) {
+        assertNotEquals(eta.getUri(), newEta.getUri());
+        if (eta.getRunwayIncursion() == null) {
+            assertEquals(eta.getDescription(), newEta.getDescription());
+        } else {
+            assertNotEquals(eta.getRunwayIncursion().getUri(), newEta.getRunwayIncursion().getUri());
+            final Intruder i = eta.getRunwayIncursion().getIntruder();
+            final Intruder newI = newEta.getRunwayIncursion().getIntruder();
+            assertNotEquals(i.getUri(), newI.getUri());
+            if (i.getAircraft() != null) {
+                assertNotEquals(i.getAircraft().getUri(), newI.getAircraft().getUri());
+            } else if (i.getVehicle() != null) {
+                assertNotEquals(i.getVehicle().getUri(), newI.getVehicle().getUri());
+            } else {
+                assertNotEquals(i.getPerson().getUri(), newI.getPerson().getUri());
+            }
+        }
+    }
+
+    @Test
+    public void newRevisionOfNewRevisionCanBeCreated() throws Exception {
+        final PreliminaryReport report = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        reportService.persist(report);
+        assertNotNull(report.getCreated());
+
+        initRevisionAuthor();
+        final PreliminaryReport newRevision = reportService.createNewRevision(report);
+        final PreliminaryReport anotherRevision = reportService.createNewRevision(newRevision);
+        assertTrue(report.getRevision() < newRevision.getRevision());
+        assertTrue(newRevision.getRevision() < anotherRevision.getRevision());
+        verifyRevisionIndependence(report, newRevision);
+        verifyRevisionIndependence(newRevision, anotherRevision);
     }
 }
