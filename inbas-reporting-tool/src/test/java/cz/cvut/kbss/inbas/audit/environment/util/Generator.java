@@ -141,4 +141,21 @@ public class Generator {
 
         return report;
     }
+
+    public static InvestigationReport generateMinimalInvestigation() {
+        final InvestigationReport report = new InvestigationReport();
+        report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
+        report.setOccurrence(generateOccurrence());
+        final Date start = new Date(System.currentTimeMillis() - 10000);
+        report.setOccurrenceStart(start);
+        final Date end = new Date();
+        report.setOccurrenceEnd(end);
+        report.setAuthor(getPerson());
+
+        final Factor root = new Factor();
+        root.setStartTime(start);
+        root.setEndTime(end);
+        report.setRootFactor(root);
+        return report;
+    }
 }

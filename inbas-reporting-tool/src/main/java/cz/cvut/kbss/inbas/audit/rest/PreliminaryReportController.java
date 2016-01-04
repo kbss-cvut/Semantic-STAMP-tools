@@ -6,12 +6,15 @@ import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.PreliminaryReportDto;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
+import cz.cvut.kbss.inbas.audit.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.audit.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -91,5 +94,18 @@ public class PreliminaryReportController extends BaseController {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Deleted report {}.", report.getUri());
         }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{key}/revision")
+    public ResponseEntity<Void> createNewRevision(@PathVariable("key") String key) {
+        final PreliminaryReport report = getOccurrenceReport(key);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Creating new revision of report {}", report);
+        }
+        final PreliminaryReport newRevision = preliminaryReportService.createNewRevision(report);
+        final HttpHeaders headers = RestUtils.createLocationHeader("{key}", newRevision.getKey());
+        final String location = headers.getLocation().toString();
+        headers.set(HttpHeaders.LOCATION, location.replace(key + "/revision", ""));
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 }

@@ -20,9 +20,6 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-/**
- * @author ledvima1
- */
 public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
     private static EventType eventType;
@@ -64,10 +61,10 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistingReportsWithSameEventTypeSavesItFirstTimeAndReusesLater() throws Exception {
-        final PreliminaryReport rOne = initOccurrenceReportWithTypeAssessment(eventType);
+        final PreliminaryReport rOne = initPreliminaryReportWithTypeAssessment(eventType);
         dao.persist(rOne);
 
-        final PreliminaryReport rTwo = initOccurrenceReportWithTypeAssessment(eventType);
+        final PreliminaryReport rTwo = initPreliminaryReportWithTypeAssessment(eventType);
         dao.persist(rTwo);
 
         final PreliminaryReport resOne = dao.find(rOne.getUri());
@@ -80,7 +77,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
                 resTwo.getTypeAssessments().iterator().next().getEventType());
     }
 
-    private PreliminaryReport initOccurrenceReportWithTypeAssessment(EventType eventType) {
+    private PreliminaryReport initPreliminaryReportWithTypeAssessment(EventType eventType) {
         final PreliminaryReport rOne = initBasicValidReport();
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
 
@@ -93,7 +90,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     public void persistingPersonIntruderFromExistingOrganizationUsesTheExistingOne() throws Exception {
         PreliminaryReport rOne = persistReportWithConflictingAircraftAndOrganization();
 
-        final PreliminaryReport rTwo = initOccurrenceReportWithTypeAssessment(eventType);
+        final PreliminaryReport rTwo = initPreliminaryReportWithTypeAssessment(eventType);
         final EventTypeAssessment assTwo = rTwo.getTypeAssessments().iterator().next();
         final RunwayIncursion incursionTwo = new RunwayIncursion();
         final PersonIntruder intruder = new PersonIntruder();
@@ -114,7 +111,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     }
 
     private PreliminaryReport persistReportWithConflictingAircraftAndOrganization() {
-        final PreliminaryReport rOne = initOccurrenceReportWithTypeAssessment(eventType);
+        final PreliminaryReport rOne = initPreliminaryReportWithTypeAssessment(eventType);
         final EventTypeAssessment ass = rOne.getTypeAssessments().iterator().next();
         final Aircraft cleared = new Aircraft();
         cleared.setOperator(organization);
@@ -131,7 +128,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     public void persistingVehicleIntruderFromExistingOrganizationUsesTheExistingOne() {
         PreliminaryReport rOne = persistReportWithConflictingAircraftAndOrganization();
 
-        final PreliminaryReport rTwo = initOccurrenceReportWithTypeAssessment(eventType);
+        final PreliminaryReport rTwo = initPreliminaryReportWithTypeAssessment(eventType);
         final EventTypeAssessment assTwo = rTwo.getTypeAssessments().iterator().next();
         final RunwayIncursion incursionTwo = new RunwayIncursion();
         final Vehicle intruder = new Vehicle();
@@ -155,7 +152,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     public void persistingAircraftIntruderFromExistingOrganizationUsesTheExistingOne() {
         PreliminaryReport rOne = persistReportWithConflictingAircraftAndOrganization();
 
-        final PreliminaryReport rTwo = initOccurrenceReportWithTypeAssessment(eventType);
+        final PreliminaryReport rTwo = initPreliminaryReportWithTypeAssessment(eventType);
         final EventTypeAssessment assTwo = rTwo.getTypeAssessments().iterator().next();
         final RunwayIncursion incursionTwo = new RunwayIncursion();
         final Aircraft intruder = new Aircraft();
@@ -336,5 +333,81 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
         final PreliminaryReport result = dao.find(report.getUri());
         assertTrue(result.getTypes().contains(Vocabulary.Report));
+    }
+
+    @Test
+    public void findAllReturnsOnlyLatestRevisionsOfReports() throws Exception {
+        final List<PreliminaryReport> latestRevisions = persistReportsWithRevisions();
+
+        final List<PreliminaryReport> result = dao.findAll();
+        assertEquals(latestRevisions.size(), result.size());
+        boolean found;
+        for (PreliminaryReport res : result) {
+            found = false;
+            for (PreliminaryReport latestRevision : latestRevisions) {
+                if (res.getUri().equals(latestRevision.getUri())) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue(found);
+        }
+    }
+
+    private List<PreliminaryReport> persistReportsWithRevisions() {
+        final List<PreliminaryReport> result = new ArrayList<>(2);
+        final PreliminaryReport repOneRevOne = initPreliminaryReportWithTypeAssessment(eventType);
+        repOneRevOne.setRevision(Constants.INITIAL_REVISION);
+        final PreliminaryReport repOneRevTwo = new PreliminaryReport(repOneRevOne);
+        repOneRevTwo.setRevision(repOneRevOne.getRevision() + 1);
+        repOneRevTwo.setAuthor(author);
+        result.add(repOneRevTwo);
+
+        dao.persist(repOneRevOne);
+        dao.persist(repOneRevTwo);
+
+        final PreliminaryReport repTwoRevOne = initBasicValidReport();
+        repTwoRevOne.setRevision(Constants.INITIAL_REVISION);
+        final PreliminaryReport repTwoRevTwo = new PreliminaryReport(repTwoRevOne);
+        repTwoRevTwo.setRevision(repTwoRevOne.getRevision() + 1);
+        repTwoRevTwo.setAuthor(author);
+        result.add(repTwoRevTwo);
+
+        dao.persist(repTwoRevOne);
+        dao.persist(repTwoRevTwo);
+
+        return result;
+    }
+
+    @Test
+    public void findByOccurrenceReturnsAllReportsForOccurrenceOrderedByRevision() {
+        final List<PreliminaryReport> reports = persistReportsForOccurrence();
+
+        final List<PreliminaryReport> result = dao.findByOccurrence(reports.get(0).getOccurrence());
+        assertEquals(reports.size(), result.size());
+        for (int i = 0; i < reports.size(); i++) {
+            assertEquals(reports.get(i).getUri(), result.get(i).getUri());
+            assertEquals(reports.get(i).getRevision(), result.get(i).getRevision());
+        }
+    }
+
+    private List<PreliminaryReport> persistReportsForOccurrence() {
+        final List<PreliminaryReport> reports = new ArrayList<>();
+        final PreliminaryReport rOne = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        rOne.setAuthor(author);
+        reports.add(rOne);
+        dao.persist(rOne);
+        final PreliminaryReport rTwo = new PreliminaryReport(rOne);
+        rTwo.setRevision(Constants.INITIAL_REVISION + 1);
+        rTwo.setAuthor(author);
+        reports.add(rTwo);
+        dao.persist(rTwo);
+        final PreliminaryReport rThree = new PreliminaryReport(rTwo);
+        rThree.setRevision(rTwo.getRevision() + 1);
+        rThree.setAuthor(author);
+        reports.add(rThree);
+        dao.persist(rThree);
+        return reports;
     }
 }
