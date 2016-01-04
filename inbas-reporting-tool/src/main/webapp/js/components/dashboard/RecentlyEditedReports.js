@@ -90,7 +90,7 @@ var ReportRow = injectIntl(React.createClass({
                         maxLength={20}/></a>
                 </td>
                 <td style={vAlign}
-                    className='content-center'>{Utils.formatDate(new Date(report.occurrence.startTime))}</td>
+                    className='content-center'>{Utils.formatDate(new Date(report.occurrenceStart))}</td>
                 <td style={vAlign} className='content-center'>{Utils.formatDate(new Date(dateEdited))}</td>
                 <td style={vAlign} className='content-center'>
                     <img className='report-type-icon centered' src={ReportType.getIconSrc(report)} alt={type}
