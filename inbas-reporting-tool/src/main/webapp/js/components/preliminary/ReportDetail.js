@@ -43,19 +43,15 @@ var ReportDetail = React.createClass({
         this.props.handlers.onChange(attribute, value);
     },
 
-    onDateChange: function (value) {
-        this.onAttributeChange('occurrenceTime', new Date(Number(value)));
-    },
-
-    onSubmit: function (e) {
+    onSave: function (e) {
         var report = this.props.report;
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
         if (report.isNew) {
-            Actions.createPreliminary(report, this.onSuccess, this.onSubmitError);
+            Actions.createPreliminary(report, this.onSuccess, this.onSaveError);
         }
         else {
-            Actions.updatePreliminary(report, this.onSuccess, this.onSubmitError);
+            Actions.updatePreliminary(report, this.onSuccess, this.onSaveError);
         }
     },
 
@@ -65,9 +61,24 @@ var ReportDetail = React.createClass({
         this.showSuccessMessage(this.i18n('save-success-message'));
     },
 
-    onSubmitError: function (error) {
+    onSaveError: function (error) {
         this.setState({submitting: false});
         this.showErrorMessage(this.i18n('save-failed-message') + error.message);
+    },
+
+    onSubmit: function () {
+        this.setState({submitting: true});
+        Actions.submitPreliminary(this.props.report, this.onSubmitSuccess, this.onSubmitError);
+    },
+
+    onSubmitSuccess: function (key) {
+        this.showSuccessMessage(this.i18n('detail.submit-success-message'));
+        this.props.handlers.onSuccess(key);
+    },
+
+    onSubmitError: function (error) {
+        this.setState({submitting: false});
+        this.showErrorMessage(this.i18n('detail.submit-failed-message') + error.message);
     },
 
     _canEdit: function () {
@@ -90,13 +101,13 @@ var ReportDetail = React.createClass({
     renderDetail: function () {
         var report = this.props.report,
             loading = this.state.submitting,
-            submitDisabled = !ReportValidator.isValid(report) || loading || !this._canEdit(),
-            submitTitle = this.i18n('detail.save-tooltip'),
-            submitLabel = this.i18n(loading ? 'detail.saving' : 'save');
+            saveDisabled = !ReportValidator.isValid(report) || loading || !this._canEdit(),
+            saveTitle = this.i18n('detail.save-tooltip'),
+            saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
         if (loading) {
-            submitTitle = this.i18n('detail.saving');
-        } else if (submitDisabled) {
-            submitTitle = !this._canEdit() ? this.i18n('preliminary.detail.cannot-modify') : this.i18n('detail.invalid-tooltip');
+            saveTitle = this.i18n('detail.saving');
+        } else if (saveDisabled) {
+            saveTitle = !this._canEdit() ? this.i18n('preliminary.detail.cannot-modify') : this.i18n('detail.invalid-tooltip');
         }
 
         return (
@@ -123,11 +134,12 @@ var ReportDetail = React.createClass({
                         </div>
 
                         <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
-                            <Button bsStyle='success' bsSize='small' disabled={submitDisabled}
-                                    ref='submit' title={submitTitle}
-                                    onClick={this.onSubmit}>{submitLabel}</Button>
+                            <Button bsStyle='success' bsSize='small' disabled={saveDisabled}
+                                    ref='submit' title={saveTitle}
+                                    onClick={this.onSave}>{saveLabel}</Button>
                             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+                            {this.renderSubmitButton()}
                             {this.renderInvestigateButton()}
                         </ButtonToolbar>
 
@@ -142,10 +154,22 @@ var ReportDetail = React.createClass({
     },
 
     renderInvestigateButton: function () {
-        var canInvestigate = this.props.report && !this.props.report.isNew;
+        if (!this.props.report || this.props.report.isNew) {
+            return null;
+        }
         return (<Button bsStyle='primary' bsSize='small' title={this.i18n('preliminary.table-investigate-tooltip')}
-                        onClick={this.props.handlers.onInvestigate}
-                        disabled={!canInvestigate}>{this.i18n('preliminary.table-investigate')}</Button>);
+                        onClick={this.props.handlers.onInvestigate}>{this.i18n('preliminary.table-investigate')}</Button>);
+    },
+
+    renderSubmitButton: function () {
+        if (!this.props.report || this.props.report.isNew) {
+            return null;
+        }
+        return (
+            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')}
+                    onClick={this.onSubmit}>
+                {this.i18n('detail.submit')}
+            </Button>);
     },
 
     renderCannotModifyMessage: function () {

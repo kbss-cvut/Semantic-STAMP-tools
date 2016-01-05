@@ -12,6 +12,10 @@ describe('ReportDetailController tests', function () {
         Routes = require('../../js/utils/Routes'),
         Constants = require('../../js/constants/Constants');
 
+    beforeEach(function() {
+        spyOn(Actions, 'loadOccurrenceSeverityOptions');
+    });
+
     it('Uses report passed from router store if it is set', function () {
         var report = {
             initialReports: [{text: 'First Initial Report'}],
@@ -29,7 +33,7 @@ describe('ReportDetailController tests', function () {
     });
 
     it('Loads existing report when report key is passed in path params', function () {
-        spyOn(Actions, 'findPreliminary').and.callThrough();
+        spyOn(Actions, 'findPreliminary');
         var params = {reportKey: 12345},
             controller = Environment.render(<ReportDetailController params={params}/>),
             state = controller.getInitialState();

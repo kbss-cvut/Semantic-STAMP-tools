@@ -6,14 +6,15 @@ describe('Investigation', function () {
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator'),
+        Actions = require('../../js/actions/Actions'),
         Investigation = rewire('../../js/components/investigation/Investigation'),
         Factors = rewire('../../js/components/investigation/Factors'),
         GanttController, FactorRenderer, FactorJsonSerializer,
-        Actions,
         investigation;
 
     beforeEach(function () {
-        Actions = jasmine.createSpyObj('Actions', ['updateInvestigation']);
+        spyOn(Actions, 'updateInvestigation');
+        spyOn(Actions, 'loadOccurrenceSeverityOptions');
         GanttController = jasmine.createSpyObj('GanttController', ['init', 'setScale', 'expandSubtree', 'updateOccurrenceEvent']);
         FactorRenderer = jasmine.createSpyObj('FactorRenderer', ['renderFactors']);
         FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorHierarchy', 'getLinks', 'setGanttController']);

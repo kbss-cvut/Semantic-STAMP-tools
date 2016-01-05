@@ -65,11 +65,12 @@ var ReportDetailController = React.createClass({
         this.setState({report: this.state.report}); // Force update
     },
 
-    onSuccess: function () {
+    onSuccess: function (reportKey) {
         if (this.state.report.isNew) {
             Routing.transitionTo(Routes.preliminary);
         } else {
-            Actions.findPreliminary(this.state.report.key);
+            this.setState({loading: true});
+            Actions.findPreliminary(reportKey ? reportKey : this.state.report.key);
         }
     },
 

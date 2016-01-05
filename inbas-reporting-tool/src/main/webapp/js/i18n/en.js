@@ -32,6 +32,10 @@ module.exports = {
         'detail.save-tooltip': 'Save changes',
         'detail.saving': 'Saving...',
         'detail.invalid-tooltip': 'Some of the required values are missing',
+        'detail.submit': 'Submit to authority',
+        'detail.submit-tooltip': 'Submit the current revision to authority',
+        'detail.submit-success-message': 'Report successfully submitted.',
+        'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
 
         'login.title': Constants.APP_NAME + ' - Login',
         'login.username': 'Username',
