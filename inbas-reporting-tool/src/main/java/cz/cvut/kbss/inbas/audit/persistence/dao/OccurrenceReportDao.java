@@ -54,7 +54,11 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
                 "SELECT ?x WHERE { ?x a ?type ;" +
                         "?hasRevision ?revision ;" +
                         "?hasStartTime ?startTime ;" +
-                        "?hasOccurrence ?occurrence . } ORDER BY DESC(?startTime) DESC(?revision)",
+                        "?hasOccurrence ?occurrence . " +
+                        // Use only the max revision report for each occurrence
+                        "{ SELECT (MAX(?rev) AS ?maxRev) WHERE { ?y ?hasOccurrence ?occurrence ; ?hasRevision ?rev . } }" +
+                        "FILTER (?revision = ?maxRev)" +
+                        "} ORDER BY DESC(?startTime) DESC(?revision)",
                 OccurrenceReport.class)
                  .setParameter("type", typeIri)
                  .setParameter("hasRevision", URI.create(
@@ -71,7 +75,11 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
                             "a ?reportType ;" +
                             "?hasRevision ?revision ;" +
                             "?hasStartTime ?startTime ;" +
-                            "?hasOccurrence ?occurrence . } ORDER BY DESC(?startTime) DESC(?revision)",
+                            "?hasOccurrence ?occurrence . " +
+                            // Use only the max revision report for each occurrence
+                            "{ SELECT (MAX(?rev) AS ?maxRev) WHERE { ?y ?hasOccurrence ?occurrence ; ?hasRevision ?rev . } }" +
+                            "FILTER (?revision = ?maxRev)" +
+                            "} ORDER BY DESC(?startTime) DESC(?revision)",
                     OccurrenceReport.class)
                      .setParameter("type", typeIri).setParameter("reportType", URI.create(type))
                      .setParameter("hasRevision", URI.create(
