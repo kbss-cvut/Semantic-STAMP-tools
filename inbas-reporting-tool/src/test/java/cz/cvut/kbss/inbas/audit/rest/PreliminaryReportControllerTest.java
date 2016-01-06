@@ -46,7 +46,7 @@ public class PreliminaryReportControllerTest extends BaseControllerTestRunner {
         when(preliminaryReportServiceMock.findByKey(rOneKey)).thenReturn(revisionOne);
         when(preliminaryReportServiceMock.createNewRevision(revisionOne)).thenReturn(revisionTwo);
 
-        final MvcResult result = mockMvc.perform(post("/preliminaryReports/" + rOneKey + "/revision")).andReturn();
+        final MvcResult result = mockMvc.perform(post("/preliminaryReports/" + rOneKey + "/revisions")).andReturn();
         assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
         final String locationHeader = result.getResponse().getHeader(HttpHeaders.LOCATION);
         assertEquals("http://localhost/preliminaryReports/" + rTwoKey, locationHeader);

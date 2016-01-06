@@ -13,7 +13,7 @@ var EventTypeWizardSelect = {
         {
             steps: RunwayIncursionSteps,
             title: 'Runway Incursion Wizard',
-            dtoClass: 'cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.RunwayIncursionDto',
+            dtoClass: 'cz.cvut.kbss.inbas.audit.dto.incursion.RunwayIncursionDto',
             keywords: ['incursion']
         }
     ],

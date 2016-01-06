@@ -1,9 +1,9 @@
-package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
+package cz.cvut.kbss.inbas.audit.dto.incursion;
 
+import cz.cvut.kbss.inbas.audit.dto.EventTypeAssessmentDto;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.Location;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.EventTypeAssessmentDto;
 
 import java.net.URI;
 

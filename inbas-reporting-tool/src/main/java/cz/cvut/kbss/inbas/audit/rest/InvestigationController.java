@@ -1,11 +1,11 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
+import cz.cvut.kbss.inbas.audit.dto.InvestigationReportDto;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.InvestigationReportDto;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;

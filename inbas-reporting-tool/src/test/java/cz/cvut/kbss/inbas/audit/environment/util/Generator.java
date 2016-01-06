@@ -13,6 +13,8 @@ public class Generator {
 
     public static final String USERNAME = "halsey@unsc.org";
 
+    private static Random random = new Random();
+
     private Generator() {
         throw new AssertionError();
     }
@@ -157,5 +159,13 @@ public class Generator {
         root.setEndTime(end);
         report.setRootFactor(root);
         return report;
+    }
+
+    public static int randomInt(int upperBound) {
+        int rand;
+        do {
+            rand = random.nextInt(upperBound);
+        } while (rand == 0);
+        return rand;
     }
 }

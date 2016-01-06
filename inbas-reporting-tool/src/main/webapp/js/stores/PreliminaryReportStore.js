@@ -99,7 +99,7 @@ var PreliminaryReportStore = Reflux.createStore({
     },
 
     onSubmitPreliminary: function (report, onSuccess, onError) {
-        Ajax.post('rest/preliminaryReports/' + report.key + '/revision').end(function (err, res) {
+        Ajax.post('rest/preliminaryReports/' + report.key + '/revisions').end(function (err, res) {
             if (err) {
                 var error = JSON.parse(err.response.text);
                 onError ? onError(error) : this.handleError(err);

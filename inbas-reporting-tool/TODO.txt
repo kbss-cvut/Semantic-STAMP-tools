@@ -1,4 +1,5 @@
 Implement report revisions
+Modularize the application so that queries and repository (the one for getting options and event types) can be specified at runtime
 Localization
     - Use portal language setting when available
     - Add support for language switching in the app, save language setting in cookies

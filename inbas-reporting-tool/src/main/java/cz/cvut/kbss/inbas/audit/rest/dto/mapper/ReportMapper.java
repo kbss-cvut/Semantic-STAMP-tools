@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest.dto.mapper;
 
+import cz.cvut.kbss.inbas.audit.dto.*;
+import cz.cvut.kbss.inbas.audit.dto.incursion.*;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.Factor;
@@ -9,8 +11,6 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.*;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.incursion.*;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

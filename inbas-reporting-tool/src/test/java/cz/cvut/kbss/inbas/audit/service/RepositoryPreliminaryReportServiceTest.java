@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.service;
 
+import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
@@ -11,6 +12,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -339,5 +341,37 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         assertTrue(newRevision.getRevision() < anotherRevision.getRevision());
         verifyRevisionIndependence(report, newRevision);
         verifyRevisionIndependence(newRevision, anotherRevision);
+    }
+
+    @Test
+    public void getRevisionsForOccurrenceReturnsListOfReportRevisionsForOccurrence() throws Exception {
+        final List<PreliminaryReport> reports = initReportRevisions();
+
+        final List<ReportRevisionInfo> result = reportService.getRevisionsForOccurrence(reports.get(0).getOccurrence());
+        assertEquals(reports.size(), result.size());
+        Collections.sort(reports, (rOne, rTwo) -> rTwo.getRevision() - rOne.getRevision());
+        for (int i = 0; i < reports.size(); i++) {
+            assertEquals(reports.get(i).getUri(), result.get(i).getUri());
+            assertEquals(reports.get(i).getRevision(), result.get(i).getRevision());
+            assertEquals(reports.get(i).getLastEdited(), result.get(i).getLastEdited());
+        }
+    }
+
+    private List<PreliminaryReport> initReportRevisions() {
+        final int count = Generator.randomInt(10);
+        assertTrue(count > 0);
+        final List<PreliminaryReport> revisions = new ArrayList<>(count);
+        final PreliminaryReport revisionOne = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        revisions.add(revisionOne);
+        for (int i = 0; i < count; i++) {
+            final PreliminaryReport revision = new PreliminaryReport(revisionOne);
+            revision.setAuthor(author);
+            revision.setRevision(Constants.INITIAL_REVISION + i + 1);
+            revision.setLastEdited(new Date());
+            revisions.add(revision);
+        }
+        reportService.persist(revisions);
+        return revisions;
     }
 }

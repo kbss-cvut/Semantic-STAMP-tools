@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.security;
 
 import cz.cvut.kbss.inbas.audit.model.Person;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.portal.PortalUser;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.PortalUser;
 import cz.cvut.kbss.inbas.audit.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
 import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpoint;

@@ -13,6 +13,7 @@ public class EventTypeAssessment implements ReportingStatement, Serializable {
     @Id(generated = true)
     private URI uri;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
     private EventType eventType;
 

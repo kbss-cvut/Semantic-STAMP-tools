@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.rest.dto.model.portal;
+package cz.cvut.kbss.inbas.audit.rest.dto.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import cz.cvut.kbss.inbas.audit.model.Person;
