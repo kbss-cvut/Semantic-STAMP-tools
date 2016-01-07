@@ -99,16 +99,7 @@ var ReportDetail = React.createClass({
     },
 
     renderDetail: function () {
-        var report = this.props.report,
-            loading = this.state.submitting,
-            saveDisabled = !ReportValidator.isValid(report) || loading || !this._canEdit(),
-            saveTitle = this.i18n('detail.save-tooltip'),
-            saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
-        if (loading) {
-            saveTitle = this.i18n('detail.saving');
-        } else if (saveDisabled) {
-            saveTitle = !this._canEdit() ? this.i18n('preliminary.detail.cannot-modify') : this.i18n('detail.invalid-tooltip');
-        }
+        var report = this.props.report;
 
         return (
             <div>
@@ -133,15 +124,7 @@ var ReportDetail = React.createClass({
                             </div>
                         </div>
 
-                        <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
-                            <Button bsStyle='success' bsSize='small' disabled={saveDisabled}
-                                    ref='submit' title={saveTitle}
-                                    onClick={this.onSave}>{saveLabel}</Button>
-                            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
-                                    onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-                            {this.renderSubmitButton()}
-                            {this.renderInvestigateButton()}
-                        </ButtonToolbar>
+                        {this.renderButtons()}
 
                         <div style={{clear: 'both'}}/>
 
@@ -150,6 +133,43 @@ var ReportDetail = React.createClass({
                 </Panel>
                 {this.renderMessage()}
             </div>
+        );
+    },
+
+    renderButtons: function () {
+        if (this.props.readOnly) {
+            return (
+                <div>
+                    <div className='float-right'>
+                        <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                                onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+                    </div>
+                    <div style={{clear: 'both'}}/>
+                    <div className='notice-small float-right'>
+                        {this.i18n('revisions.readonly-notice')}
+                    </div>
+                </div>);
+        }
+        var report = this.props.report,
+            loading = this.state.submitting,
+            saveDisabled = !ReportValidator.isValid(report) || loading || !this._canEdit(),
+            saveTitle = this.i18n('detail.save-tooltip'),
+            saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
+        if (loading) {
+            saveTitle = this.i18n('detail.saving');
+        } else if (saveDisabled) {
+            saveTitle = !this._canEdit() ? this.i18n('preliminary.detail.cannot-modify') : this.i18n('detail.invalid-tooltip');
+        }
+        return (
+            <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
+                <Button bsStyle='success' bsSize='small' disabled={saveDisabled}
+                        ref='submit' title={saveTitle}
+                        onClick={this.onSave}>{saveLabel}</Button>
+                <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                        onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+                {this.renderSubmitButton()}
+                {this.renderInvestigateButton()}
+            </ButtonToolbar>
         );
     },
 

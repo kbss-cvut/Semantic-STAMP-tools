@@ -3,16 +3,15 @@
 describe('ReportDetailController tests', function () {
 
     var React = require('react'),
-        TestUtils = require('react-addons-test-utils'),
+        Button = require('react-bootstrap').Button,
         Environment = require('../environment/Environment'),
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
         ReportDetailController = require('../../js/components/preliminary/ReportDetailController'),
-        ReportDetail = require('../../js/components/preliminary/ReportDetail'),
         Routes = require('../../js/utils/Routes'),
         Constants = require('../../js/constants/Constants');
 
-    beforeEach(function() {
+    beforeEach(function () {
         spyOn(Actions, 'loadOccurrenceSeverityOptions');
     });
 
@@ -70,5 +69,36 @@ describe('ReportDetailController tests', function () {
         expect(report.initialReports[0]).toEqual(payload.initialReports[0]);
     });
 
+    it('Show only cancel button for older revisions of a report', function () {
+        var report = {
+            key: '123455',
+            occurrence: {key: '554321'},
+            initialReports: [{text: 'First Initial Report'}],
+            occurrenceStart: Date.now() - 10000,
+            occurrenceEnd: Date.now(),
+            revision: 1
+        }, revisions = [
+            {revision: 2, key: '123456'},
+            {revision: 1, key: '123455'}
+        ];
+        spyOn(Actions, 'findPreliminary');
+        spyOn(Actions, 'loadPreliminaryRevisions');
+        var controller = Environment.render(<ReportDetailController params={{reportKey: '123455'}}/>),
+            expectedButtons = ['Cancel'],
+            hiddenButtons = ['Save', 'Submit to authority', 'Investigate'],
+            i;
+        controller.onReportStoreTrigger({action: Actions.findPreliminary, report: report});
+        controller.onReportStoreTrigger({action: Actions.loadPreliminaryRevisions, revisions: revisions});
 
+        for (i = 0; i < expectedButtons.length; i++) {
+            expect(getButton(controller, expectedButtons[i])).not.toBeNull();
+        }
+        for (i = 0; i < hiddenButtons.length; i++) {
+            expect(getButton(controller, hiddenButtons[i])).toBeNull();
+        }
+    });
+
+    function getButton(root, text) {
+        return Environment.getComponentByText(root, Button, text);
+    }
 });

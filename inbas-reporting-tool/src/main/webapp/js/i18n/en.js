@@ -238,6 +238,7 @@ module.exports = {
 
         'revisions.label': 'Revisions',
         'revisions.created': 'Created',
-        'revisions.show-tooltip': 'Show this revision'
+        'revisions.show-tooltip': 'Show this revision',
+        'revisions.readonly-notice': 'Older revisions are read-only.'
     }
 };

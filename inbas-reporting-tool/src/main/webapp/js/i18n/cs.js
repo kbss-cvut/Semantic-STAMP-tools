@@ -240,6 +240,7 @@ module.exports = {
 
         'revisions.label': 'Revize zprávy',
         'revisions.created': 'Vytvořeno',
-        'revisions.show-tooltip': 'Zobrazit tuto revizi'
+        'revisions.show-tooltip': 'Zobrazit tuto revizi',
+        'revisions.readonly-notice': 'Starší revize jsou pouze ke čtení.'
     }
 };
