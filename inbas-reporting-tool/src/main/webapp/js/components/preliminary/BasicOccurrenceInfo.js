@@ -44,7 +44,12 @@ var BasicOccurrenceInfo = React.createClass({
                     </div>
                 </div>
 
-                {this.renderAuthor()}
+                <div className='row'>
+                    {this.renderAuthor()}
+                    <div className='col-xs-4'>
+                        {this.props.revisions}
+                    </div>
+                </div>
 
                 {this.renderLastEdited()}
             </div>
@@ -54,12 +59,10 @@ var BasicOccurrenceInfo = React.createClass({
     renderAuthor: function () {
         var report = this.props.report;
         return report.isNew ? null : (
-            <div className='row'>
-                <div className='col-xs-4'>
-                    <Input type='text' value={this.getFullName(report.author)} label={this.i18n('author')}
-                           title={this.i18n('author-title')}
-                           disabled/>
-                </div>
+            <div className='col-xs-4'>
+                <Input type='text' value={this.getFullName(report.author)} label={this.i18n('author')}
+                       title={this.i18n('author-title')}
+                       disabled/>
             </div>);
     },
 

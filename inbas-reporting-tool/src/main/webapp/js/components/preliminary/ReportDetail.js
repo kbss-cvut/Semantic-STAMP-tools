@@ -114,7 +114,7 @@ var ReportDetail = React.createClass({
             <div>
                 <Panel header={<h2>{this.i18n('preliminary.detail.panel-title')}</h2>} bsStyle='primary'>
                     <form>
-                        <BasicOccurrenceInfo report={report} onChange={this.onChange}
+                        <BasicOccurrenceInfo report={report} onChange={this.onChange} revisions={this.props.revisions}
                                              onAttributeChange={this.onAttributeChange}/>
 
                         <div className='row'>

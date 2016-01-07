@@ -51,11 +51,24 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
 
     @Override
     public void persist(PreliminaryReport report) {
+        prepareReportForPersist(report);
+        preliminaryReportDao.persist(report);
+    }
+
+    private void prepareReportForPersist(PreliminaryReport report) {
         report.setAuthor(securityUtils.getCurrentUser());
         report.setCreated(new Date());
         reportValidator.validate(report);
         report.getOccurrence().transitionToPhase(ReportingPhase.PRELIMINARY);
-        preliminaryReportDao.persist(report);
+    }
+
+    @Override
+    public void persist(Collection<PreliminaryReport> reports) {
+        if (reports == null || reports.isEmpty()) {
+            return;
+        }
+        reports.forEach(this::prepareReportForPersist);
+        preliminaryReportDao.persist(reports);
     }
 
     @Override

@@ -16,10 +16,11 @@ var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var RouterStore = require('../../stores/RouterStore');
 var PreliminaryReportFactory = require('../../model/PreliminaryReportFactory');
+var RevisionInfo = require('../reports/RevisionInfo');
 
 var ReportDetailController = React.createClass({
     mixins: [
-        Reflux.listenTo(ReportsStore, 'onReportsChange'),
+        Reflux.listenTo(ReportsStore, 'onReportStoreTrigger'),
         Reflux.listenTo(UserStore, 'onUserChange')
     ],
 
@@ -28,6 +29,7 @@ var ReportDetailController = React.createClass({
         return {
             user: UserStore.getCurrentUser(),
             report: isNew ? this.initNewReport() : null,
+            revisions: null,
             loading: !isNew
         }
     },
@@ -48,12 +50,36 @@ var ReportDetailController = React.createClass({
         }
     },
 
-    onReportsChange: function (report) {
+    onReportStoreTrigger: function (data) {
+        if (data.action === Actions.findPreliminary) {
+            this.onReportLoaded(data.report);
+        } else if (data.action === Actions.loadPreliminaryRevisions) {
+            this.setState({revisions: data.revisions});
+        }
+    },
+
+    onReportLoaded: function (report) {
         if (report === null) {
             this.setState({loading: false});
-        } else if (report.key && report.key === this.props.params.reportKey) {
+        } else {
+            if (this.shouldLoadRevisions()) {
+                Actions.loadPreliminaryRevisions(report.occurrence.key);
+            }
             this.setState({report: report, loading: false});
         }
+    },
+
+    shouldLoadRevisions: function () {
+        var revisions = this.state.revisions;
+        if (!revisions) {
+            return true;
+        }
+        for (var i = 0, len = revisions.length; i < len; i++) {
+            if (revisions[i].key === this.state.report.key) {
+                return false;
+            }
+        }
+        return true;
     },
 
     onUserChange: function () {
@@ -94,6 +120,11 @@ var ReportDetailController = React.createClass({
         });
     },
 
+    onRevisionSelected: function (revision) {
+        this.setState({loading: true});
+        Actions.findPreliminary(revision.key);
+    },
+
 
     render: function () {
         var handlers = {
@@ -103,8 +134,20 @@ var ReportDetailController = React.createClass({
             onChange: this.onChange
         };
         return (
-            <ReportDetail report={this.state.report} loading={this.state.loading} handlers={handlers}/>
+            <ReportDetail report={this.state.report} loading={this.state.loading} handlers={handlers}
+                          revisions={this.renderRevisionInfo()}/>
         );
+    },
+
+    renderRevisionInfo: function () {
+        // Revisions not loaded yet or the report is new and has no revisions, yet
+        if (!this.state.revisions || this.state.revisions.length === 0) {
+            return null;
+        }
+        var revisions = this.state.revisions,
+            selectedRevision = this.state.report.revision;
+        return <RevisionInfo revisions={revisions} selectedRevision={selectedRevision}
+                             onSelect={this.onRevisionSelected}/>;
     }
 });
 

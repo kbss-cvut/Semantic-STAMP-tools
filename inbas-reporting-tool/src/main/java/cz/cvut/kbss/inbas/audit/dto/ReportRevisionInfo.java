@@ -11,19 +11,9 @@ public class ReportRevisionInfo {
     // Report key
     private String key;
 
-    private Date lastEdited;
+    private Date created;
 
     private Integer revision;
-
-    public ReportRevisionInfo() {
-    }
-
-    public ReportRevisionInfo(URI uri, String key, Date lastEdited, Integer revision) {
-        this.uri = uri;
-        this.key = key;
-        this.lastEdited = lastEdited;
-        this.revision = revision;
-    }
 
     public URI getUri() {
         return uri;
@@ -41,12 +31,12 @@ public class ReportRevisionInfo {
         this.key = key;
     }
 
-    public Date getLastEdited() {
-        return lastEdited;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setLastEdited(Date lastEdited) {
-        this.lastEdited = lastEdited;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     public Integer getRevision() {

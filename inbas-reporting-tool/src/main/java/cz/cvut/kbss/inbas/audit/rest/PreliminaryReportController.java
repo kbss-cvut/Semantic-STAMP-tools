@@ -122,7 +122,7 @@ public class PreliminaryReportController extends BaseController {
      * @param occurrenceKey Occurrence key
      * @return List of occurrence reports
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/revisions/{key}")
+    @RequestMapping(method = RequestMethod.GET, value = "/revisions/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReportRevisionInfo> getOccurrenceReportRevisions(@PathVariable("key") String occurrenceKey) {
         final Occurrence occurrence = occurrenceService.findByKey(occurrenceKey);
         if (occurrence == null) {

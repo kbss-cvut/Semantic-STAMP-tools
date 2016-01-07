@@ -236,6 +236,10 @@ module.exports = {
 
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',
-        'notfound.msg': 'Záznam \'{resource}\' nenalezen.'
+        'notfound.msg': 'Záznam \'{resource}\' nenalezen.',
+
+        'revisions.label': 'Revize zprávy',
+        'revisions.created': 'Vytvořeno',
+        'revisions.show-tooltip': 'Zobrazit tuto revizi'
     }
 };

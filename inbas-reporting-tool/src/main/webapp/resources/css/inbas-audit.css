@@ -35,6 +35,10 @@ body {
     font-weight: bold;
 }
 
+.underline {
+    text-decoration: underline;
+}
+
 .container-fluid .text-muted {
     margin: 20px 0 20px 15px;
     vertical-align: middle;
@@ -349,4 +353,10 @@ img.factor-descriptive-factor {
 .report-type-icon {
     width: 24px;
     height: 24px;
+}
+
+.selected-revision {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #337ab7;
 }

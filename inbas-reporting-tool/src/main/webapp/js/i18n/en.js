@@ -234,6 +234,10 @@ module.exports = {
 
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',
-        'notfound.msg': '{resource} not found.'
+        'notfound.msg': '{resource} not found.',
+
+        'revisions.label': 'Revisions',
+        'revisions.created': 'Created',
+        'revisions.show-tooltip': 'Show this revision'
     }
 };

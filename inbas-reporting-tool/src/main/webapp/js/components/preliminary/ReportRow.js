@@ -11,7 +11,7 @@ var injectIntl = require('../../utils/injectIntl');
 
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
-var DeleteReportDialog = require('../DeleteReportDialog');
+var DeleteReportDialog = require('../reports/DeleteReportDialog');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportRow = React.createClass({

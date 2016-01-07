@@ -349,11 +349,10 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
 
         final List<ReportRevisionInfo> result = reportService.getRevisionsForOccurrence(reports.get(0).getOccurrence());
         assertEquals(reports.size(), result.size());
-        Collections.sort(reports, (rOne, rTwo) -> rTwo.getRevision() - rOne.getRevision());
         for (int i = 0; i < reports.size(); i++) {
             assertEquals(reports.get(i).getUri(), result.get(i).getUri());
             assertEquals(reports.get(i).getRevision(), result.get(i).getRevision());
-            assertEquals(reports.get(i).getLastEdited(), result.get(i).getLastEdited());
+            assertEquals(reports.get(i).getCreated(), result.get(i).getCreated());
         }
     }
 
@@ -362,16 +361,19 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         assertTrue(count > 0);
         final List<PreliminaryReport> revisions = new ArrayList<>(count);
         final PreliminaryReport revisionOne = Generator
-                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+                .generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
         revisions.add(revisionOne);
         for (int i = 0; i < count; i++) {
             final PreliminaryReport revision = new PreliminaryReport(revisionOne);
             revision.setAuthor(author);
             revision.setRevision(Constants.INITIAL_REVISION + i + 1);
-            revision.setLastEdited(new Date());
+            if (i % 2 == 0) {   // Set last edited only for every even index
+                revision.setLastEdited(new Date(System.currentTimeMillis() + 100000));
+            }
             revisions.add(revision);
         }
         reportService.persist(revisions);
+        Collections.sort(revisions, (rOne, rTwo) -> rTwo.getRevision() - rOne.getRevision());
         return revisions;
     }
 }

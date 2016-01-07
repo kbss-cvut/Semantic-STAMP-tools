@@ -21,7 +21,7 @@ var Routes = require('../../utils/Routes');
 
 var ReportsController = React.createClass({
     mixins: [
-        Reflux.listenTo(ReportsStore, 'onReportsChange'),
+        Reflux.listenTo(ReportsStore, 'onReportLoaded'),
         I18nMixin
     ],
 

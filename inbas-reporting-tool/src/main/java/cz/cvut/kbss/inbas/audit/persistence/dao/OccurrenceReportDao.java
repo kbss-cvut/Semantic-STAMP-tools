@@ -100,17 +100,17 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
         final EntityManager em = entityManager();
         try {
             final List rows = em.createNativeQuery(
-                    "SELECT ?x ?revision ?key ?lastEdited WHERE { ?x a ?reportType ;" +
+                    "SELECT ?x ?revision ?key ?created WHERE { ?x a ?reportType ;" +
                             "?hasRevision ?revision ; " +
                             "?hasOccurrence ?occurrence ; " +
+                            "?wasCreated ?created ;" +
                             "?hasKey ?key ." +
-                            "OPTIONAL { ?x ?wasLastEdited ?lastEdited . }" +
                             "} ORDER BY DESC(?revision)")
                                 .setParameter("reportType", URI.create(reportType))
                                 .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
                                 .setParameter("hasOccurrence", URI.create(Vocabulary.p_hasOccurrence))
                                 .setParameter("occurrence", occurrence.getUri())
-                                .setParameter("wasLastEdited", URI.create(Vocabulary.p_dateLastEdited))
+                                .setParameter("wasCreated", URI.create(Vocabulary.p_dateCreated))
                                 .setParameter("hasKey", URI.create(Vocabulary.p_hasKey))
                                 .getResultList();
             final List<ReportRevisionInfo> result = new ArrayList<>(rows.size());
@@ -120,7 +120,7 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
                 info.setUri((URI) rowArr[0]);
                 info.setRevision((Integer) rowArr[1]);
                 info.setKey((String) rowArr[2]);
-                info.setLastEdited((Date) rowArr[3]);
+                info.setCreated((Date) rowArr[3]);
                 result.add(info);
             }
             return result;
