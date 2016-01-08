@@ -6,6 +6,8 @@ import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.stereotype.Repository;
 
+import java.net.URI;
+
 /**
  * @author ledvima1
  */
@@ -20,8 +22,9 @@ public class PersonDao extends BaseDao<Person> {
         final EntityManager em = entityManager();
         try {
             return em.createNativeQuery(
-                    "SELECT ?x WHERE { ?x <" + Vocabulary.p_username + "> \"" + username + "\"@en . }",
-                    Person.class).getSingleResult();
+                    "SELECT ?x WHERE { ?x ?hasUsername ?username . }", Person.class).setParameter("hasUsername",
+                    URI.create(Vocabulary.p_username)).setParameter("username", username, "en")
+                     .getSingleResult();
         } catch (NoResultException e) {
             return null;
         } finally {

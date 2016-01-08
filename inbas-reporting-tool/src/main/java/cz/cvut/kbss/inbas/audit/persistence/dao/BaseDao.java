@@ -25,7 +25,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     protected static final Logger LOG = LoggerFactory.getLogger(BaseDao.class);
 
     private final Class<T> type;
-    private final URI typeUri;
+    protected final URI typeUri;
 
     protected BaseDao(Class<T> type) {
         this.type = type;
@@ -86,12 +86,8 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     }
 
     protected List<T> findAll(EntityManager em) {
-        final String query = "SELECT ?x WHERE { ?x a ?type .}";
-        final OWLClass owlClass = type.getDeclaredAnnotation(OWLClass.class);
-        if (owlClass == null) {
-            throw new IllegalArgumentException("Class " + type + " is not an entity.");
-        }
-        return em.createNativeQuery(query, type).setParameter("type", URI.create(owlClass.iri())).getResultList();
+        return em.createNativeQuery("SELECT ?x WHERE { ?x a ?type . }", type).setParameter("type", typeUri)
+                 .getResultList();
     }
 
     @Override

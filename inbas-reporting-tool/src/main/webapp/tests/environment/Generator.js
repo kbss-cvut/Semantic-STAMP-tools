@@ -150,10 +150,10 @@ var Generator = {
      */
     generateInvestigation: function () {
         return {
+            occurrenceStart: Date.now() - 10000,
+            occurrenceEnd: Date.now(),
             occurrence: {
-                name: 'TestOccurrence',
-                startTime: Date.now() - 10000,
-                endTime: Date.now()
+                name: 'TestOccurrence'
             },
             rootFactor: {
                 startTime: Date.now() - 10000,

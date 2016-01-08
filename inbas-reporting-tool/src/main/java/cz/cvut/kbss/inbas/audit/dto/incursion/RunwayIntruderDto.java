@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.rest.dto.model.incursion;
+package cz.cvut.kbss.inbas.audit.dto.incursion;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

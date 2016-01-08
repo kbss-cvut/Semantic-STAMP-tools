@@ -33,13 +33,18 @@ var Investigation = React.createClass({
     },
 
     onChange: function (e) {
-        var value = e.target.value;
-        var attributeName = e.target.name;
-        this.props.onChange(attributeName, value);
+        var attributeName = e.target.name,
+            change = {};
+        change[attributeName] = e.target.value;
+        this.props.onChange(change);
+    },
+
+    onChanges: function (changes) {
+        this.props.onChange(changes);
     },
 
     onAttributeChange: function (attribute, value) {
-        this.props.onChange(attribute, value);
+        this.props.onChange({attribute: value});
     },
 
     onSubmit: function (e) {
@@ -102,8 +107,7 @@ var Investigation = React.createClass({
                         </div>
 
                         <div>
-                            <Factors ref='factors' investigation={investigation}
-                                     onAttributeChange={this.onAttributeChange}/>
+                            <Factors ref='factors' investigation={investigation} onChange={this.onChanges}/>
                         </div>
 
                         <div className='form-group'>

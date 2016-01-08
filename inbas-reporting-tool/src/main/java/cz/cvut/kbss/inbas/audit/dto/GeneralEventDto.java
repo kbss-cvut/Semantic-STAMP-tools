@@ -1,8 +1,5 @@
-package cz.cvut.kbss.inbas.audit.rest.dto.model;
+package cz.cvut.kbss.inbas.audit.dto;
 
-/**
- * @author ledvima1
- */
 public class GeneralEventDto extends EventTypeAssessmentDto {
 
     private String description;

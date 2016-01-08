@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.rest.dto.model;
+package cz.cvut.kbss.inbas.audit.dto;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.cvut.kbss.inbas.audit.model.reports.EventType;

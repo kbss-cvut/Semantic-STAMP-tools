@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.portal.PortalUser;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.PortalUser;
 import cz.cvut.kbss.inbas.audit.security.model.LoginStatus;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
 import org.slf4j.Logger;

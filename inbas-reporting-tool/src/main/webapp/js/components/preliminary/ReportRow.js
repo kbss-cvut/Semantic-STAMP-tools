@@ -11,7 +11,7 @@ var injectIntl = require('../../utils/injectIntl');
 
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
-var DeleteReportDialog = require('../DeleteReportDialog');
+var DeleteReportDialog = require('../reports/DeleteReportDialog');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportRow = React.createClass({
@@ -46,7 +46,7 @@ var ReportRow = React.createClass({
 
     render: function () {
         var report = this.props.report;
-        var date = new Date(report.occurrence.startTime);
+        var date = new Date(report.occurrenceStart);
         var formattedDate = Utils.formatDate(date);
         // Have to set style directly, class style is overridden by the bootstrap styling
         var verticalAlign = {verticalAlign: 'middle'};

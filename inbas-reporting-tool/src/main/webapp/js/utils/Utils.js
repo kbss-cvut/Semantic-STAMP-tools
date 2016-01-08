@@ -89,6 +89,19 @@ var Utils = {
             default:
                 return value;
         }
+    },
+
+    /**
+     * Extracts report key from location header in the specified Ajax response.
+     * @param response Ajax response
+     * @return {string} Report key as string
+     */
+    extractKeyFromLocationHeader: function (response) {
+        var location = response.headers['location'];
+        if (!location) {
+            return '';
+        }
+        return location.substring(location.lastIndexOf('/') + 1);
     }
 };
 

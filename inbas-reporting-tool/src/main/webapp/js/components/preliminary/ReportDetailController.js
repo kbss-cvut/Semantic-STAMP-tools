@@ -16,10 +16,11 @@ var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var RouterStore = require('../../stores/RouterStore');
 var PreliminaryReportFactory = require('../../model/PreliminaryReportFactory');
+var RevisionInfo = require('../reports/RevisionInfo');
 
 var ReportDetailController = React.createClass({
     mixins: [
-        Reflux.listenTo(ReportsStore, 'onReportsChange'),
+        Reflux.listenTo(ReportsStore, 'onReportStoreTrigger'),
         Reflux.listenTo(UserStore, 'onUserChange')
     ],
 
@@ -28,6 +29,7 @@ var ReportDetailController = React.createClass({
         return {
             user: UserStore.getCurrentUser(),
             report: isNew ? this.initNewReport() : null,
+            revisions: null,
             loading: !isNew
         }
     },
@@ -48,10 +50,19 @@ var ReportDetailController = React.createClass({
         }
     },
 
-    onReportsChange: function (report) {
+    onReportStoreTrigger: function (data) {
+        if (data.action === Actions.findPreliminary) {
+            this.onReportLoaded(data.report);
+        } else if (data.action === Actions.loadPreliminaryRevisions) {
+            this.setState({revisions: data.revisions});
+        }
+    },
+
+    onReportLoaded: function (report) {
         if (report === null) {
             this.setState({loading: false});
-        } else if (report.key && report.key === this.props.params.reportKey) {
+        } else {
+            Actions.loadPreliminaryRevisions(report.occurrence.key);
             this.setState({report: report, loading: false});
         }
     },
@@ -65,11 +76,12 @@ var ReportDetailController = React.createClass({
         this.setState({report: this.state.report}); // Force update
     },
 
-    onSuccess: function () {
+    onSuccess: function (reportKey) {
         if (this.state.report.isNew) {
             Routing.transitionTo(Routes.preliminary);
         } else {
-            Actions.findPreliminary(this.state.report.key);
+            this.setState({loading: true});
+            Actions.findPreliminary(reportKey ? reportKey : this.state.report.key);
         }
     },
 
@@ -82,12 +94,57 @@ var ReportDetailController = React.createClass({
         }
     },
 
+    onInvestigate: function () {
+        Actions.createInvestigation(this.state.report.key, this.openInvestigation);
+    },
+
+    openInvestigation: function (key) {
+        Routing.transitionTo(Routes.editInvestigation, {
+            params: {reportKey: key},
+            handlers: {onCancel: Routes.investigations}
+        });
+    },
+
+    onRevisionSelected: function (revision) {
+        this.setState({loading: true});
+        Routing.transitionTo(Routes.editReport, {
+            params: {reportKey: revision.key},
+            handlers: {onCancel: Routes.reports}
+        });
+        Actions.findPreliminary(revision.key);
+    },
+
+    isLatestRevision: function () {
+        var revisions = this.state.revisions;
+        if (revisions == null) {
+            return true;
+        }
+        return revisions[0].revision === this.state.report.revision;
+    },
+
 
     render: function () {
+        var handlers = {
+            onCancel: this.onCancel,
+            onSuccess: this.onSuccess,
+            onInvestigate: this.onInvestigate,
+            onChange: this.onChange
+        };
         return (
-            <ReportDetail report={this.state.report} loading={this.state.loading} user={this.state.user}
-                          onCancel={this.onCancel} onSuccess={this.onSuccess} onChange={this.onChange}/>
+            <ReportDetail report={this.state.report} loading={this.state.loading} handlers={handlers}
+                          revisions={this.renderRevisionInfo()} readOnly={!this.isLatestRevision()}/>
         );
+    },
+
+    renderRevisionInfo: function () {
+        // Revisions not loaded yet or the report is new and has no revisions, yet
+        if (!this.state.report || !this.state.revisions || this.state.revisions.length === 0) {
+            return null;
+        }
+        var revisions = this.state.revisions,
+            selectedRevision = this.state.report.revision;
+        return <RevisionInfo revisions={revisions} selectedRevision={selectedRevision}
+                             onSelect={this.onRevisionSelected} readOnly={!this.isLatestRevision()}/>;
     }
 });
 

@@ -13,6 +13,7 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @OWLClass(iri = Vocabulary.PreliminaryReport)
 public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableReport {
@@ -22,6 +23,14 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
 
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_startTime)
+    private Date occurrenceStart;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_endTime)
+    private Date occurrenceEnd;
 
     @OWLDataProperty(iri = Vocabulary.p_dateCreated)
     private Date created;
@@ -56,6 +65,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
     @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasure> correctiveMeasures;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<EventTypeAssessment> typeAssessments;
 
@@ -66,12 +76,53 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
         this.revision = Constants.INITIAL_REVISION;
     }
 
+    /**
+     * Copy constructor.
+     */
+    public PreliminaryReport(PreliminaryReport other) {
+        this.occurrenceStart = other.occurrenceStart;
+        this.occurrenceEnd = other.occurrenceEnd;
+        this.severityAssessment = other.severityAssessment;
+        this.summary = other.summary;
+        this.occurrence = other.occurrence;
+        if (other.types != null) {
+            new HashSet<>(other.types);
+        }
+        if (other.initialReports != null) {
+            this.initialReports = other.initialReports.stream().map(InitialReport::new).collect(Collectors.toSet());
+        }
+        if (other.correctiveMeasures != null) {
+            this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasure::new)
+                                                              .collect(Collectors.toSet());
+        }
+        if (other.typeAssessments != null) {
+            this.typeAssessments = other.typeAssessments.stream().map(EventTypeAssessment::new)
+                                                        .collect(Collectors.toSet());
+        }
+    }
+
     public URI getUri() {
         return uri;
     }
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public Date getOccurrenceStart() {
+        return occurrenceStart;
+    }
+
+    public void setOccurrenceStart(Date occurrenceStart) {
+        this.occurrenceStart = occurrenceStart;
+    }
+
+    public Date getOccurrenceEnd() {
+        return occurrenceEnd;
+    }
+
+    public void setOccurrenceEnd(Date occurrenceEnd) {
+        this.occurrenceEnd = occurrenceEnd;
     }
 
     public Date getCreated() {

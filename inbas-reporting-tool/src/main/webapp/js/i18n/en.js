@@ -32,6 +32,10 @@ module.exports = {
         'detail.save-tooltip': 'Save changes',
         'detail.saving': 'Saving...',
         'detail.invalid-tooltip': 'Some of the required values are missing',
+        'detail.submit': 'Submit to authority',
+        'detail.submit-tooltip': 'Submit the current revision to authority',
+        'detail.submit-success-message': 'Report successfully submitted.',
+        'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
 
         'login.title': Constants.APP_NAME + ' - Login',
         'login.username': 'Username',
@@ -64,7 +68,7 @@ module.exports = {
         'dashboard.create-empty-tile': 'Start with Empty Report',
         'dashboard.create-import-tile': 'Import Initial Report',
         'dashboard.recent-panel-heading': 'Recently Edited/Added Reports',
-        'dashboard.recent-table-headline': 'Occurrence headline',
+        'dashboard.recent-table-headline': 'Headline',
         'dashboard.recent-table-date': 'Occurrence date',
         'dashboard.recent-table-last-edited': 'Last edited',
 
@@ -95,6 +99,7 @@ module.exports = {
         'initial.wizard.edit-title': 'Edit initial report',
         'initial.label': 'Initial report',
 
+        'preliminary.type': 'Preliminary',
         'preliminary.panel-title': 'Preliminary reports',
         'preliminary.table-investigate': 'Investigate',
         'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
@@ -104,6 +109,7 @@ module.exports = {
         'preliminary.detail.narrative-tooltip': 'Narrative - this field is required',
         'preliminary.detail.table-edit-tooltip': 'Edit statement',
         'preliminary.detail.table-delete-tooltip': 'Delete statement',
+        'preliminary.detail.cannot-modify': 'Preliminary report cannot be modified, because it is already in the investigation phase.',
         'preliminary.detail.corrective.panel-title': 'Corrective measures',
         'preliminary.detail.corrective.table-description': 'Corrective measure',
         'preliminary.detail.corrective.description-placeholder': 'Corrective measure description',
@@ -191,6 +197,7 @@ module.exports = {
         'eventtype.incursion.conflicting.phase.landing': 'Landing',
         'eventtype.incursion.conflicting.phase.landing-tooltip': 'Plane landing',
 
+        'investigation.type': 'Investigation',
         'investigation.panel-title': 'Investigation reports',
         'investigation.open-tooltip': 'Click to see investigation detail',
         'investigation.edit-tooltip': 'Edit this investigation report',
@@ -227,6 +234,11 @@ module.exports = {
 
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',
-        'notfound.msg': '{resource} not found.'
+        'notfound.msg': '{resource} not found.',
+
+        'revisions.label': 'Revisions',
+        'revisions.created': 'Created',
+        'revisions.show-tooltip': 'Show this revision',
+        'revisions.readonly-notice': 'Older revisions are read-only.'
     }
 };

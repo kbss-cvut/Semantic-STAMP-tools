@@ -1,9 +1,6 @@
 package cz.cvut.kbss.inbas.audit.environment.util;
 
-import cz.cvut.kbss.inbas.audit.model.Aircraft;
-import cz.cvut.kbss.inbas.audit.model.Location;
-import cz.cvut.kbss.inbas.audit.model.Occurrence;
-import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.model.*;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
@@ -16,6 +13,8 @@ public class Generator {
 
     public static final String USERNAME = "halsey@unsc.org";
 
+    private static Random random = new Random();
+
     private Generator() {
         throw new AssertionError();
     }
@@ -23,8 +22,6 @@ public class Generator {
     public static Occurrence generateOccurrence() {
         final Occurrence occurrence = new Occurrence();
         occurrence.setName(UUID.randomUUID().toString());
-        occurrence.setStartTime(new Date(System.currentTimeMillis() - 10000));
-        occurrence.setEndTime(new Date());
         return occurrence;
     }
 
@@ -56,6 +53,9 @@ public class Generator {
     private static PreliminaryReport reportWithoutTypeAssessments() {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(generateOccurrence());
+        report.getOccurrence().transitionToPhase(ReportingPhase.PRELIMINARY);
+        report.setOccurrenceStart(new Date(System.currentTimeMillis() - 10000));
+        report.setOccurrenceEnd(new Date());
         report.setAuthor(getPerson());
         report.setLastEdited(new Date());
         report.setLastEditedBy(getPerson());
@@ -105,7 +105,9 @@ public class Generator {
         report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         report.setOccurrence(generateOccurrence());
         final Date start = new Date(System.currentTimeMillis() - 10000);
+        report.setOccurrenceStart(start);
         final Date end = new Date();
+        report.setOccurrenceEnd(end);
 
         final Factor root = new Factor();
         root.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance0"));
@@ -140,5 +142,30 @@ public class Generator {
         childOneOne.addMitigatingFactor(childTwoOne);   // childTwoOne mitigates childOneOne
 
         return report;
+    }
+
+    public static InvestigationReport generateMinimalInvestigation() {
+        final InvestigationReport report = new InvestigationReport();
+        report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
+        report.setOccurrence(generateOccurrence());
+        final Date start = new Date(System.currentTimeMillis() - 10000);
+        report.setOccurrenceStart(start);
+        final Date end = new Date();
+        report.setOccurrenceEnd(end);
+        report.setAuthor(getPerson());
+
+        final Factor root = new Factor();
+        root.setStartTime(start);
+        root.setEndTime(end);
+        report.setRootFactor(root);
+        return report;
+    }
+
+    public static int randomInt(int upperBound) {
+        int rand;
+        do {
+            rand = random.nextInt(upperBound);
+        } while (rand == 0);
+        return rand;
     }
 }

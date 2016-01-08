@@ -1,7 +1,6 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
-import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
@@ -25,20 +24,15 @@ public class BaseDaoTest extends BaseDaoTestRunner {
     @Autowired
     private PreliminaryReportDao dao;  // We're using one of the DAO implementations for the basic tests
 
-    private Person author;
-
     @Before
     public void setUp() throws Exception {
-        author = Generator.getPerson();
-        personDao.persist(author);
+        personDao.persist(Generator.getPerson());
     }
 
     @Test
     public void existsForExistingInstanceReturnsTrue() throws Exception {
-        final PreliminaryReport report = new PreliminaryReport();
-        report.setOccurrence(Generator.generateOccurrence());
-        report.setAuthor(author);
-        report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
+        final PreliminaryReport report =
+                Generator.generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
         dao.persist(report);
         assertNotNull(report.getUri());
         assertTrue(dao.exists(report.getUri()));
@@ -47,15 +41,10 @@ public class BaseDaoTest extends BaseDaoTestRunner {
     @Test
     public void findAllReturnsAllExistingInstances() {
         final List<PreliminaryReport> reports = new ArrayList<>();
-        final PreliminaryReport r1 = new PreliminaryReport();
-        r1.setAuthor(author);
-        r1.setOccurrence(Generator.generateOccurrence());
-        r1.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
+        final PreliminaryReport r1 = Generator.generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
         reports.add(r1);
-        final PreliminaryReport r2 = new PreliminaryReport();
-        r2.setAuthor(author);
-        r2.setOccurrence(Generator.generateOccurrence());
-        r2.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
+        final PreliminaryReport r2 = Generator.generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        r2.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         reports.add(r2);
         dao.persist(reports);
 

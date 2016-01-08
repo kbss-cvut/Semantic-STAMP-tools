@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.service;
 
+import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
@@ -11,6 +12,7 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -92,6 +94,8 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
 
     private PreliminaryReport initReportWithOccurrence() {
         final PreliminaryReport report = new PreliminaryReport();
+        report.setOccurrenceStart(new Date(System.currentTimeMillis() - 10000));
+        report.setOccurrenceEnd(new Date());
         report.setOccurrence(Generator.generateOccurrence());
         report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setSummary("Narrative");
@@ -225,5 +229,151 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         final Occurrence occurrence = occurrenceDao.find(report.getOccurrence().getUri());
         assertNotNull(occurrence);
         assertEquals(ReportingPhase.PRELIMINARY, occurrence.getReportingPhase());
+    }
+
+    @Test
+    public void createNewRevisionSetsRevisionNumberAuthorAndDateCreated() throws Exception {
+        final PreliminaryReport report = initReportWithOccurrence();
+        reportService.persist(report);
+        assertNotNull(report.getCreated());
+
+        final Person revisionAuthor = initRevisionAuthor();
+        final PreliminaryReport newRevision = reportService.createNewRevision(report);
+        assertNotNull(newRevision);
+        assertTrue(newRevision.getCreated().compareTo(report.getCreated()) > 0);
+        assertEquals(report.getRevision() + 1, newRevision.getRevision().intValue());
+        assertTrue(revisionAuthor.valueEquals(newRevision.getAuthor()));
+        assertNotNull(reportService.find(newRevision.getUri()));
+    }
+
+    private Person initRevisionAuthor() {
+        final Person hitGirl = new Person();
+        hitGirl.setFirstName("Mindy");
+        hitGirl.setLastName("McCready");
+        hitGirl.setUsername("hitgirl");
+        hitGirl.setPassword("hitgirl");
+        hitGirl.generateUri();
+        personService.persist(hitGirl);
+        Environment.setCurrentUser(hitGirl);
+        return hitGirl;
+    }
+
+    @Test
+    public void newRevisionReusesOccurrenceInstance() throws Exception {
+        final PreliminaryReport report = initReportWithOccurrence();
+        reportService.persist(report);
+        assertNotNull(report.getCreated());
+
+        initRevisionAuthor();
+        final PreliminaryReport newRevision = reportService.createNewRevision(report);
+        assertNotNull(newRevision);
+        assertEquals(report.getOccurrence().getUri(), newRevision.getOccurrence().getUri());
+    }
+
+    @Test
+    public void newRevisionIsIndependentOfOriginalReport() throws Exception {
+        final PreliminaryReport report =
+                Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        reportService.persist(report);
+        assertNotNull(report.getCreated());
+
+        initRevisionAuthor();
+        final PreliminaryReport newRevision = reportService.createNewRevision(report);
+        verifyRevisionIndependence(report, newRevision);
+    }
+
+    private void verifyRevisionIndependence(PreliminaryReport report, PreliminaryReport newRevision) {
+        boolean found;
+        for (InitialReport newIr : newRevision.getInitialReports()) {
+            found = false;
+            for (InitialReport ir : report.getInitialReports()) {
+                if (newIr.getText().equals(ir.getText())) {
+                    found = true;
+                    assertNotEquals(ir.getUri(), newIr.getUri());
+                    break;
+                }
+            }
+            assertTrue(found);
+        }
+        for (EventTypeAssessment newEta : newRevision.getTypeAssessments()) {
+            found = false;
+            for (EventTypeAssessment eta : report.getTypeAssessments()) {
+                if (newEta.getEventType().getId().equals(eta.getEventType().getId())) {
+                    found = true;
+                    verifyTypeAssessmentsAreIndependent(eta, newEta);
+                    break;
+                }
+            }
+            assertTrue(found);
+        }
+    }
+
+    private void verifyTypeAssessmentsAreIndependent(EventTypeAssessment eta, EventTypeAssessment newEta) {
+        assertNotEquals(eta.getUri(), newEta.getUri());
+        if (eta.getRunwayIncursion() == null) {
+            assertEquals(eta.getDescription(), newEta.getDescription());
+        } else {
+            assertNotEquals(eta.getRunwayIncursion().getUri(), newEta.getRunwayIncursion().getUri());
+            final Intruder i = eta.getRunwayIncursion().getIntruder();
+            final Intruder newI = newEta.getRunwayIncursion().getIntruder();
+            assertNotEquals(i.getUri(), newI.getUri());
+            if (i.getAircraft() != null) {
+                assertNotEquals(i.getAircraft().getUri(), newI.getAircraft().getUri());
+            } else if (i.getVehicle() != null) {
+                assertNotEquals(i.getVehicle().getUri(), newI.getVehicle().getUri());
+            } else {
+                assertNotEquals(i.getPerson().getUri(), newI.getPerson().getUri());
+            }
+        }
+    }
+
+    @Test
+    public void newRevisionOfNewRevisionCanBeCreated() throws Exception {
+        final PreliminaryReport report =
+                Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        reportService.persist(report);
+        assertNotNull(report.getCreated());
+
+        initRevisionAuthor();
+        final PreliminaryReport newRevision = reportService.createNewRevision(report);
+        final PreliminaryReport anotherRevision = reportService.createNewRevision(newRevision);
+        assertTrue(report.getRevision() < newRevision.getRevision());
+        assertTrue(newRevision.getRevision() < anotherRevision.getRevision());
+        verifyRevisionIndependence(report, newRevision);
+        verifyRevisionIndependence(newRevision, anotherRevision);
+    }
+
+    @Test
+    public void getRevisionsForOccurrenceReturnsListOfReportRevisionsForOccurrence() throws Exception {
+        final List<PreliminaryReport> reports = initReportRevisions();
+
+        final List<ReportRevisionInfo> result = reportService.getRevisionsForOccurrence(reports.get(0).getOccurrence());
+        assertEquals(reports.size(), result.size());
+        for (int i = 0; i < reports.size(); i++) {
+            assertEquals(reports.get(i).getUri(), result.get(i).getUri());
+            assertEquals(reports.get(i).getRevision(), result.get(i).getRevision());
+            assertEquals(reports.get(i).getCreated(), result.get(i).getCreated());
+        }
+    }
+
+    private List<PreliminaryReport> initReportRevisions() {
+        final int count = Generator.randomInt(10);
+        assertTrue(count > 0);
+        final List<PreliminaryReport> revisions = new ArrayList<>(count);
+        final PreliminaryReport revisionOne = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        revisions.add(revisionOne);
+        for (int i = 0; i < count; i++) {
+            final PreliminaryReport revision = new PreliminaryReport(revisionOne);
+            revision.setAuthor(author);
+            revision.setRevision(Constants.INITIAL_REVISION + i + 1);
+            if (i % 2 == 0) {   // Set last edited only for every even index
+                revision.setLastEdited(new Date(System.currentTimeMillis() + 100000));
+            }
+            revisions.add(revision);
+        }
+        reportService.persist(revisions);
+        Collections.sort(revisions, (rOne, rTwo) -> rTwo.getRevision() - rOne.getRevision());
+        return revisions;
     }
 }

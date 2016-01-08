@@ -36,8 +36,8 @@ public class Vocabulary {
     public static final String p_password = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#password";
     public static final String p_username = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#username";
     public static final String p_hasEventType = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasEventType";
-    public static final String p_startTime = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#startTime";
-    public static final String p_endTime = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#endTime";
+    public static final String p_startTime = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#occurrenceStartTime";
+    public static final String p_endTime = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#occurrenceEndTime";
     public static final String p_reportingPhase = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#reportingPhase";
     public static final String p_dateCreated = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#dateCreated";
     public static final String p_dateLastEdited = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#dateLastEdited";

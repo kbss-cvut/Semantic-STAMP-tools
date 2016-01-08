@@ -4,6 +4,7 @@ var Reflux = require('reflux');
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
 var ErrorHandlingMixin = require('./mixin/ErrorHandlingMixin');
+var Utils = require('../utils/Utils');
 
 var investigations = [];
 
@@ -27,8 +28,7 @@ var InvestigationStore = Reflux.createStore({
             if (err) {
                 this.handleError(err);
             } else {
-                var location = res.headers['location'],
-                    key = location.substring(location.lastIndexOf('/') + 1);
+                var key = Utils.extractKeyFromLocationHeader(res);
                 successHandler(key);
             }
         }.bind(this));

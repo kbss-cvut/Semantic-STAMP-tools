@@ -10,10 +10,10 @@ describe('Factors component tests', function () {
         GanttController = null,
         investigation = {
             occurrence: {
-                name: 'TestOccurrence',
-                startTime: Date.now() - 10000,
-                endTime: Date.now()
+                name: 'TestOccurrence'
             },
+            occurrenceStart: Date.now() - 10000,
+            occurrenceEnd: Date.now(),
             rootFactor: {
                 startTime: Date.now() - 10000,
                 endTime: Date.now()

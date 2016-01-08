@@ -35,6 +35,10 @@ body {
     font-weight: bold;
 }
 
+.underline {
+    text-decoration: underline;
+}
+
 .container-fluid .text-muted {
     margin: 20px 0 20px 15px;
     vertical-align: middle;
@@ -72,6 +76,10 @@ body {
 .centered {
     margin-left: auto;
     margin-right: auto;
+}
+
+.content-center {
+    text-align: center;
 }
 
 ul.autocomplete-results {
@@ -340,4 +348,15 @@ img.factor-descriptive-factor {
 .notice-small {
     font-size: 86%;
     font-style: italic;
+}
+
+.report-type-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.selected-revision {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #337ab7;
 }

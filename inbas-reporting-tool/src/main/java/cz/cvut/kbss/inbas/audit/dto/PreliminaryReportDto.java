@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.rest.dto.model;
+package cz.cvut.kbss.inbas.audit.dto;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
@@ -10,11 +10,17 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-public class InvestigationReportDto {
+public class PreliminaryReportDto {
 
     private URI uri;
 
     private String key;
+
+    private Occurrence occurrence;
+
+    private Date occurrenceStart;
+
+    private Date occurrenceEnd;
 
     private Date created;
 
@@ -22,23 +28,19 @@ public class InvestigationReportDto {
 
     private Integer revision;
 
-    private OccurrenceSeverity severityAssessment;
-
     private String summary;
 
     private Person author;
 
     private Person lastEditedBy;
 
-    private Occurrence occurrence;
+    private OccurrenceSeverity severityAssessment;
 
     private Set<InitialReport> initialReports;
 
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    private FactorDto rootFactor;
-
-    private Links links;
+    private Set<EventTypeAssessmentDto> typeAssessments;
 
     public URI getUri() {
         return uri;
@@ -54,6 +56,30 @@ public class InvestigationReportDto {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public Occurrence getOccurrence() {
+        return occurrence;
+    }
+
+    public void setOccurrence(Occurrence occurrence) {
+        this.occurrence = occurrence;
+    }
+
+    public Date getOccurrenceStart() {
+        return occurrenceStart;
+    }
+
+    public void setOccurrenceStart(Date occurrenceStart) {
+        this.occurrenceStart = occurrenceStart;
+    }
+
+    public Date getOccurrenceEnd() {
+        return occurrenceEnd;
+    }
+
+    public void setOccurrenceEnd(Date occurrenceEnd) {
+        this.occurrenceEnd = occurrenceEnd;
     }
 
     public Date getCreated() {
@@ -80,14 +106,6 @@ public class InvestigationReportDto {
         this.revision = revision;
     }
 
-    public OccurrenceSeverity getSeverityAssessment() {
-        return severityAssessment;
-    }
-
-    public void setSeverityAssessment(OccurrenceSeverity severityAssessment) {
-        this.severityAssessment = severityAssessment;
-    }
-
     public String getSummary() {
         return summary;
     }
@@ -112,14 +130,6 @@ public class InvestigationReportDto {
         this.lastEditedBy = lastEditedBy;
     }
 
-    public Occurrence getOccurrence() {
-        return occurrence;
-    }
-
-    public void setOccurrence(Occurrence occurrence) {
-        this.occurrence = occurrence;
-    }
-
     public Set<InitialReport> getInitialReports() {
         return initialReports;
     }
@@ -128,38 +138,37 @@ public class InvestigationReportDto {
         this.initialReports = initialReports;
     }
 
+    public OccurrenceSeverity getSeverityAssessment() {
+        return severityAssessment;
+    }
+
+    public void setSeverityAssessment(OccurrenceSeverity severityAssessment) {
+        this.severityAssessment = severityAssessment;
+    }
+
     public Set<CorrectiveMeasure> getCorrectiveMeasures() {
         return correctiveMeasures;
     }
 
-    public void setCorrectiveMeasures(
-            Set<CorrectiveMeasure> correctiveMeasures) {
+    public void setCorrectiveMeasures(Set<CorrectiveMeasure> correctiveMeasures) {
         this.correctiveMeasures = correctiveMeasures;
     }
 
-    public FactorDto getRootFactor() {
-        return rootFactor;
+    public Set<EventTypeAssessmentDto> getTypeAssessments() {
+        return typeAssessments;
     }
 
-    public void setRootFactor(FactorDto rootFactor) {
-        this.rootFactor = rootFactor;
-    }
-
-    public Links getLinks() {
-        return links;
-    }
-
-    public void setLinks(Links links) {
-        this.links = links;
+    public void setTypeAssessments(Set<EventTypeAssessmentDto> typeAssessments) {
+        this.typeAssessments = typeAssessments;
     }
 
     @Override
     public String toString() {
-        return "InvestigationReportDto{" +
+        return "OccurrenceReport{" +
                 "uri=" + uri +
                 ", key='" + key + '\'' +
-                ", summary='" + summary + '\'' +
                 ", occurrence=" + occurrence +
+                ", summary='" + summary + '\'' +
                 '}';
     }
 }

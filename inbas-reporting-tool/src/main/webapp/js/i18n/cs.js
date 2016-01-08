@@ -32,6 +32,10 @@ module.exports = {
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',
         'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
+        'detail.submit': 'Odeslat úřadu',
+        'detail.submit-tooltip': 'Odeslat současnou revizi zprávy úřadu',
+        'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
+        'detail.submit-failed-message': 'Hlášení se nepodařilo odeslat. Odpověď serveru: ',
 
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
@@ -97,6 +101,7 @@ module.exports = {
         'initial.wizard.edit-title': 'Editovat prvotní hlášení',
         'initial.label': 'Prvotní hlášení',
 
+        'preliminary.type': 'Předběžné',
         'preliminary.panel-title': 'Předběžná hlášení',
         'preliminary.table-investigate': 'Šetřit',
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
@@ -106,6 +111,7 @@ module.exports = {
         'preliminary.detail.narrative-tooltip': 'Popis - pole je povinné',
         'preliminary.detail.table-edit-tooltip': 'Editovat položku',
         'preliminary.detail.table-delete-tooltip': 'Smazat položku',
+        'preliminary.detail.cannot-modify': 'Předběžné hlášení nelze upravovat, protože událost je již ve fázi šetření.',
         'preliminary.detail.corrective.panel-title': 'Nápravná opatření',
         'preliminary.detail.corrective.table-description': 'Opatření',
         'preliminary.detail.corrective.description-placeholder': 'Popis nápravného opatření',
@@ -193,6 +199,7 @@ module.exports = {
         'eventtype.incursion.conflicting.phase.landing': 'Přistání',
         'eventtype.incursion.conflicting.phase.landing-tooltip': 'Letadlo přistávalo',
 
+        'investigation.type': 'Šetření',
         'investigation.panel-title': 'Hlášení o šetření',
         'investigation.open-tooltip': 'Kliknutím zobrazíte detail šetření',
         'investigation.edit-tooltip': 'Editovat toto šetření',
@@ -229,6 +236,11 @@ module.exports = {
 
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',
-        'notfound.msg': 'Záznam \'{resource}\' nenalezen.'
+        'notfound.msg': 'Záznam \'{resource}\' nenalezen.',
+
+        'revisions.label': 'Revize zprávy',
+        'revisions.created': 'Vytvořeno',
+        'revisions.show-tooltip': 'Zobrazit tuto revizi',
+        'revisions.readonly-notice': 'Starší revize jsou pouze ke čtení.'
     }
 };

@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.security;
 
 import cz.cvut.kbss.inbas.audit.model.Person;
-import cz.cvut.kbss.inbas.audit.rest.dto.model.portal.PortalUser;
+import cz.cvut.kbss.inbas.audit.rest.dto.model.PortalUser;
 import cz.cvut.kbss.inbas.audit.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
 import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpoint;
@@ -115,6 +115,9 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     private String getCompanyId() {
         String companyId = null;
         final HttpServletRequest request = getCurrentRequest();
+        if (request.getCookies() == null) {
+            throw new AuthenticationServiceException("Portal is not available.");
+        }
         for (Cookie cookie : request.getCookies()) {
             if (cookie.getName().equals(COMPANY_ID_COOKIE)) {
                 companyId = cookie.getValue();

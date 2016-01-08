@@ -1,11 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service.repository;
 
-import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
-import cz.cvut.kbss.inbas.audit.persistence.dao.CorrectiveMeasureDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.FactorDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.*;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;
 import cz.cvut.kbss.inbas.audit.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.audit.service.validation.Validator;
@@ -26,6 +22,8 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
     @Autowired
     private Validator<ValidatableReport> reportValidator;
 
+    @Autowired
+    private OccurrenceDao occurrenceDao;
     @Autowired
     private CorrectiveMeasureDao correctiveMeasureDao;
     @Autowired
@@ -62,9 +60,9 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         initBasicInfo(investigation);
         copyInitialReports(preliminaryReport, investigation);
         copyCorrectiveMeasures(preliminaryReport, investigation);
-        investigation.setRootFactor(
-                generateFactors(investigation.getOccurrence(), preliminaryReport.getTypeAssessments()));
+        investigation.setRootFactor(generateFactors(investigation, preliminaryReport.getTypeAssessments()));
         investigationReportDao.persist(investigation);
+        occurrenceDao.update(investigation.getOccurrence());
         return investigation;
     }
 
@@ -91,10 +89,10 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         return source.stream().map(copyFunction).collect(Collectors.toSet());
     }
 
-    private Factor generateFactors(Occurrence occurrence, Set<EventTypeAssessment> etas) {
+    private Factor generateFactors(InvestigationReport report, Set<EventTypeAssessment> etas) {
         final Factor root = new Factor();
-        root.setStartTime(occurrence.getStartTime());
-        root.setEndTime(occurrence.getEndTime());
+        root.setStartTime(report.getOccurrenceStart());
+        root.setEndTime(report.getOccurrenceEnd());
         if (etas != null) {
             root.setChildren(new HashSet<>(etas.size()));
             for (EventTypeAssessment eta : etas) {

@@ -126,7 +126,7 @@ var Dashboard = React.createClass({
                     </Col>
                     <Col xs={6} className='dashboard-sector right'>
                         <Tile onClick={this.props.importInitialReport}
-                              >{this.i18n('dashboard.create-import-tile')}</Tile>
+                              disabled={true}>{this.i18n('dashboard.create-import-tile')}</Tile>
                     </Col>
                 </Row>
                 <Row>

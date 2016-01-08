@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.rest.dto.model;
+package cz.cvut.kbss.inbas.audit.dto;
 
 import java.util.HashSet;
 import java.util.Set;

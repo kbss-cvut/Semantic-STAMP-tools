@@ -14,7 +14,7 @@ var InvestigationValidator = {
         if (!report.occurrence.name || report.occurrence.name.length === 0) {
             return false;
         }
-        if (!report.occurrence.startTime) {
+        if (!report.occurrenceStart) {
             return false;   // Don't expect this to happen, but just to be sure
         }
         if (!report.severityAssessment) {

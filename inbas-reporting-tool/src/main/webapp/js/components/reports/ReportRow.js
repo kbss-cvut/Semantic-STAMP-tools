@@ -12,7 +12,7 @@ var injectIntl = require('../../utils/injectIntl');
 var Utils = require('../../utils/Utils.js');
 var CollapsibleText = require('../CollapsibleText');
 var ReportType = require('../../model/ReportType');
-var DeleteReportDialog = require('../DeleteReportDialog');
+var DeleteReportDialog = require('./DeleteReportDialog');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportRow = React.createClass({
@@ -43,7 +43,7 @@ var ReportRow = React.createClass({
 
     render: function () {
         var report = this.props.report,
-            date = new Date(report.occurrence.startTime),
+            date = new Date(report.occurrenceStart),
             formattedDate = Utils.formatDate(date),
         // Have to set style directly, class style is overridden by the bootstrap styling
             verticalAlign = {verticalAlign: 'middle'};
@@ -54,7 +54,7 @@ var ReportRow = React.createClass({
                 </td>
                 <td style={verticalAlign}>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.summary}/></td>
-                <td style={verticalAlign}>{ReportType.asString(report)}</td>
+                <td style={verticalAlign} className='content-center'>{ReportType.asString(report)}</td>
                 <td style={verticalAlign} className='actions'>
                     <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.edit-tooltip')}
                             onClick={this.onEditClick}>{this.i18n('table-edit')}</Button>
