@@ -1,10 +1,13 @@
 package cz.cvut.kbss.inbas.audit.service.repository;
 
+import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.persistence.dao.*;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;
 import cz.cvut.kbss.inbas.audit.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.audit.service.validation.Validator;
+import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +33,8 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
     private FactorDao factorDao;
     @Autowired
     private InvestigationReportDao investigationReportDao;
+    @Autowired
+    private OccurrenceReportDao reportDao;
 
     @Override
     protected GenericDao<InvestigationReport> getPrimaryDao() {
@@ -151,5 +156,54 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         toRemove.addAll(original.getCorrectiveMeasures().stream().filter(cm -> !uris.contains(cm.getUri())).collect(
                 Collectors.toList()));
         correctiveMeasureDao.remove(toRemove);
+    }
+
+    @Override
+    public InvestigationReport createNewRevision(InvestigationReport report) {
+        Objects.requireNonNull(report);
+
+        final InvestigationReport newRevision = new InvestigationReport(report);
+        newRevision.setAuthor(securityUtils.getCurrentUser());
+        newRevision.setCreated(new Date());
+        newRevision.setRevision(report.getRevision() + 1);
+        copyFactors(report, newRevision);
+        investigationReportDao.persist(newRevision);
+        return newRevision;
+    }
+
+    private void copyFactors(InvestigationReport orig, InvestigationReport copy) {
+        final Map<Factor, Factor> factorMapping = new HashMap<>();
+        final Factor rootCopy = copyFactorHierarchy(orig.getRootFactor(), factorMapping);
+        copyCausesAndMitigates(orig.getRootFactor(), rootCopy, factorMapping);
+        copy.setRootFactor(rootCopy);
+    }
+
+    private Factor copyFactorHierarchy(Factor root, Map<Factor, Factor> factorMapping) {
+        final Factor copy = new Factor(root);
+        if (root.getChildren() != null) {
+            root.getChildren().forEach(child -> copy.addChild(copyFactorHierarchy(child, factorMapping)));
+        }
+        factorMapping.put(root, copy);
+        return copy;
+    }
+
+    private void copyCausesAndMitigates(Factor root, Factor rootCopy, Map<Factor, Factor> factorMapping) {
+        if (root.getCauses() != null) {
+            root.getCauses().forEach(cause -> rootCopy.addCause(factorMapping.get(cause)));
+        }
+        if (root.getMitigatingFactors() != null) {
+            root.getMitigatingFactors()
+                .forEach(mitigation -> rootCopy.addMitigatingFactor(factorMapping.get(mitigation)));
+        }
+        if (root.getChildren() != null) {
+            root.getChildren().forEach(child -> copyCausesAndMitigates(child, factorMapping.get(child), factorMapping));
+        }
+    }
+
+    @Override
+    public List<ReportRevisionInfo> getRevisionsForOccurrence(Occurrence occurrence) {
+        Objects.requireNonNull(occurrence);
+
+        return reportDao.getRevisionsForOccurrence(occurrence, Vocabulary.InvestigationReport);
     }
 }
