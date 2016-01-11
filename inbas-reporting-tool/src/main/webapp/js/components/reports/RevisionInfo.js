@@ -42,13 +42,12 @@ var RevisionInfo = React.createClass({
     renderOptions: function () {
         var revisions = this.props.revisions,
             options = [],
-            formattedDate;
+            formattedDate, label;
         for (var i = 0, len = revisions.length; i < len; i++) {
             formattedDate = Utils.formatDate(new Date(revisions[i].created));
+            label = revisions[i].revision + ' - ' + this.i18n('revisions.created') + ': ' + formattedDate;
             options.push(<option key={'rev_' + revisions[i].revision} value={revisions[i].revision}
-                                 title={this.i18n('revisions.show-tooltip')}
-                                 label={revisions[i].revision + ' - ' + this.i18n('revisions.created') + ': ' +
-     formattedDate}/>);
+                                 title={this.i18n('revisions.show-tooltip')}>{label}</option>);
         }
         return options;
     }
