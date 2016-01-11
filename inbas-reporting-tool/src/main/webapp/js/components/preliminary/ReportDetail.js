@@ -72,6 +72,7 @@ var ReportDetail = React.createClass({
     },
 
     onSubmitSuccess: function (key) {
+        this.setState({submitting: false});
         this.showSuccessMessage(this.i18n('detail.submit-success-message'));
         this.props.handlers.onSuccess(key);
     },

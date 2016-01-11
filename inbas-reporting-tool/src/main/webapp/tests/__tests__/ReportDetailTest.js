@@ -64,4 +64,13 @@ describe('ReportDetail component', function () {
         expect(handlers.onSuccess).toHaveBeenCalledWith(key);
         expect(detail.showSuccessMessage).toHaveBeenCalled();
     });
+
+    it('Enables save button on submit success', function () {
+        var detail = Environment.render(<ReportDetail report={report} loading={false} handlers={handlers}/>),
+            key = '12345';
+        spyOn(Actions, 'submitPreliminary');
+        detail.onSubmit();
+        detail.onSubmitSuccess(key);
+        expect(detail.state.submitting).toBeFalsy();
+    });
 });
