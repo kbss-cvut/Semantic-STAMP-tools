@@ -56,4 +56,22 @@ public class InvestigationControllerTest extends BaseControllerTestRunner {
         assertEquals("http://localhost/investigations/" + investigationKey, locationHeader);
         verify(investigationReportServiceMock).createFromPreliminaryReport(pr);
     }
+
+    @Test
+    public void createNewRevisionReturnsLocationHeaderForNewRevision() throws Exception {
+        final String oldRevisionKey = "12345";
+        final String newRevisionKey = "54321";
+        final InvestigationReport oldRevision = new InvestigationReport();
+        oldRevision.setKey(oldRevisionKey);
+        final InvestigationReport newRevision = new InvestigationReport();
+        newRevision.setKey(newRevisionKey);
+        when(investigationReportServiceMock.findByKey(oldRevisionKey)).thenReturn(oldRevision);
+        when(investigationReportServiceMock.createNewRevision(oldRevision)).thenReturn(newRevision);
+
+        final MvcResult result = mockMvc.perform(post("/investigations/" + oldRevisionKey + "/revisions")).andReturn();
+        assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
+        final String locationHeader = result.getResponse().getHeader(HttpHeaders.LOCATION);
+        assertEquals("http://localhost/investigations/" + newRevisionKey, locationHeader);
+        verify(investigationReportServiceMock).createNewRevision(oldRevision);
+    }
 }
