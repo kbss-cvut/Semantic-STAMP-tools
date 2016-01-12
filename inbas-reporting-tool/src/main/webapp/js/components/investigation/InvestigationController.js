@@ -62,9 +62,13 @@ var InvestigationController = React.createClass({
     },
 
     render: function () {
+        var handlers = {
+            onChange: this.onChange,
+            onSuccess: this.onSuccess,
+            onCancel: this.onCancel
+        };
         return (
-            <Investigation investigation={this.state.investigation} loading={this.state.loading}
-                           onChange={this.onChange} onSuccess={this.onSuccess} onCancel={this.onCancel}/>
+            <Investigation investigation={this.state.investigation} loading={this.state.loading} handlers={handlers}/>
         );
     }
 });

@@ -143,8 +143,7 @@ var ReportDetailController = React.createClass({
         }
         var revisions = this.state.revisions,
             selectedRevision = this.state.report.revision;
-        return <RevisionInfo revisions={revisions} selectedRevision={selectedRevision}
-                             onSelect={this.onRevisionSelected} readOnly={!this.isLatestRevision()}/>;
+        return <RevisionInfo revisions={revisions} selectedRevision={selectedRevision} onSelect={this.onRevisionSelected}/>;
     }
 });
 

@@ -24,6 +24,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     @Autowired
     private OccurrenceReportDao occurrenceReportDao;
 
+
     @Autowired
     private PreliminaryReportDao preliminaryReportDao;
     @Autowired
@@ -91,7 +92,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findAllReturnsReportsOrderedByOccurrenceStartTime() throws Exception {
-        generateReports();
+        generateReports(false);
 
         final List<OccurrenceReport> result = occurrenceReportDao.findAll();
         assertFalse(result.isEmpty());
@@ -102,7 +103,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         }
     }
 
-    private List<PreliminaryReport> generateReports() {
+    private List<PreliminaryReport> generateReports(boolean lastRevisionsOnly) {
         Date startTime = new Date(System.currentTimeMillis() - 5000);
         final Date endTime = new Date();
         final List<PreliminaryReport> reports = new ArrayList<>();
@@ -141,31 +142,38 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         r4.setAuthor(author);
         r4.setOccurrenceStart(startTime);
         r4.setOccurrenceEnd(endTime);
-        r4.setRevision(Constants.INITIAL_REVISION + 1);
+        r4.setRevision(Constants.INITIAL_REVISION + 5);
         r4.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r4);
         // The set messes the order a little, to verify our ordering implementation
         preliminaryReportDao.persist(new HashSet<>(reports));
-        // Remove reports with old revision number from results
-        reports.remove(r1);
-        reports.remove(r3);
+        if (lastRevisionsOnly) {
+            // Remove reports with old revision number from results
+            reports.remove(r1);
+            reports.remove(r3);
+        }
         return reports;
     }
 
     @Test
-    public void findAllReturnsOnlyLatestRevisions() throws Exception {
-        final List<PreliminaryReport> reports = generateReports();
+    public void findAllReturnsAllReportsOrderedByStartTimeAndRevision() throws Exception {
+        final List<PreliminaryReport> reports = generateReports(false);
 
         final List<OccurrenceReport> result = occurrenceReportDao.findAll();
         assertEquals(reports.size(), result.size());
-        for (int i = 0; i < reports.size(); i++) {
-            assertEquals(reports.get(i).getUri(), result.get(i).getUri());
+        for (int i = 1; i < reports.size(); i++) {
+            final Date previousStart = result.get(i - 1).getOccurrenceStart();
+            final Date currentStart = result.get(i).getOccurrenceStart();
+            assertTrue(previousStart.compareTo(currentStart) >= 0);
+            if (previousStart.equals(currentStart)) {
+                assertTrue(result.get(i - 1).getRevision().compareTo(result.get(i).getRevision()) >= 0);
+            }
         }
     }
 
     @Test
     public void findAllByTypeReturnsReportsOrderedByOccurrenceTime() throws Exception {
-        generateReports();
+        generateReports(true);
 
         final List<OccurrenceReport> result = occurrenceReportDao.findAll(Vocabulary.PreliminaryReport);
         assertFalse(result.isEmpty());
@@ -178,7 +186,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findAllByTypeReturnsOnlyLatestRevisions() throws Exception {
-        final List<PreliminaryReport> reports = generateReports();
+        final List<PreliminaryReport> reports = generateReports(true);
 
         final List<OccurrenceReport> result = occurrenceReportDao.findAll(Vocabulary.PreliminaryReport);
         assertEquals(reports.size(), result.size());

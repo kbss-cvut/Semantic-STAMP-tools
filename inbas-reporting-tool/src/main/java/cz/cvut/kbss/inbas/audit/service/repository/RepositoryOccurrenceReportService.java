@@ -35,6 +35,13 @@ public class RepositoryOccurrenceReportService extends BaseRepositoryService<Occ
     }
 
     @Override
+    public Collection<OccurrenceReport> findAll() {
+        final Collection<OccurrenceReport> reports = occurrenceReportDao.findAll(Vocabulary.PreliminaryReport);
+        reports.addAll(occurrenceReportDao.findAll(Vocabulary.InvestigationReport));
+        return reports;
+    }
+
+    @Override
     public Collection<OccurrenceReport> findAll(String type) {
         if (type == null) {
             return findAll();

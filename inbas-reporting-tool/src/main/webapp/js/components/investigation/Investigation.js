@@ -26,6 +26,12 @@ var I18nMixin = require('../../i18n/I18nMixin');
 var Investigation = React.createClass({
     mixins: [MessageMixin, I18nMixin],
 
+    propTypes: {
+        handlers: React.PropTypes.object,
+        investigation: React.PropTypes.object,
+        loading: React.PropTypes.bool
+    },
+
     getInitialState: function () {
         return {
             submitting: false
@@ -33,37 +39,37 @@ var Investigation = React.createClass({
     },
 
     onChange: function (e) {
-        var attributeName = e.target.name,
-            change = {};
-        change[attributeName] = e.target.value;
-        this.props.onChange(change);
-    },
-
-    onChanges: function (changes) {
-        this.props.onChange(changes);
+        var attributeName = e.target.name;
+        this.onAttributeChange(attributeName, e.target.value);
     },
 
     onAttributeChange: function (attribute, value) {
-        this.props.onChange({attribute: value});
+        var change = {};
+        change[attribute] = value;
+        this.onChanges({attribute: value});
     },
 
-    onSubmit: function (e) {
+    onChanges: function (changes) {
+        this.props.handlers.onChange(changes);
+    },
+
+    onSave: function (e) {
         var investigation = this.props.investigation,
             factors = this.refs.factors.getWrappedElement();
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
         investigation.rootFactor = factors.getFactorHierarchy();
         investigation.links = factors.getLinks();
-        Actions.updateInvestigation(investigation, this.onSubmitSuccess, this.onSubmitError);
+        Actions.updateInvestigation(investigation, this.onSaveSuccess, this.onSaveError);
     },
 
-    onSubmitSuccess: function () {
+    onSaveSuccess: function () {
         this.setState({submitting: false});
-        this.props.onSuccess();
+        this.props.handlers.onSuccess();
         this.showSuccessMessage(this.i18n('save-success-message'));
     },
 
-    onSubmitError: function (error) {
+    onSaveError: function (error) {
         this.setState({submitting: false});
         this.showErrorMessage(this.i18n('save-failed-message') + error.message);
     },
@@ -82,16 +88,7 @@ var Investigation = React.createClass({
     },
 
     renderDetail: function () {
-        var investigation = this.props.investigation,
-            loading = this.state.submitting,
-            submitDisabled = !InvestigationValidator.isValid(investigation) || loading,
-            submitTitle = this.i18n('detail.save-tooltip'),
-            submitLabel = this.i18n(loading ? 'detail.saving' : 'save');
-        if (loading) {
-            submitTitle = this.i18n('detail.saving');
-        } else if (submitDisabled) {
-            submitTitle = this.i18n('detail.invalid-tooltip');
-        }
+        var investigation = this.props.investigation;
 
         return (
             <div>
@@ -121,18 +118,41 @@ var Investigation = React.createClass({
                             </div>
                         </div>
 
-                        <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
-                            <Button bsStyle='success' bsSize='small' disabled={submitDisabled}
-                                    ref='submit' title={submitTitle}
-                                    onClick={this.onSubmit}>{submitLabel}</Button>
-                            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
-                                    onClick={this.props.onCancel}>{this.i18n('cancel')}</Button>
-                        </ButtonToolbar>
+                        {this.renderButtons()}
                     </form>
                 </Panel>
                 {this.renderMessage()}
             </div>
         );
+    },
+
+    renderButtons: function () {
+        var loading = this.state.submitting,
+            submitDisabled = !InvestigationValidator.isValid(this.props.investigation) || loading,
+            submitTitle = this.i18n('detail.save-tooltip'),
+            submitLabel = this.i18n(loading ? 'detail.saving' : 'save');
+        if (loading) {
+            submitTitle = this.i18n('detail.saving');
+        } else if (submitDisabled) {
+            submitTitle = this.i18n('detail.invalid-tooltip');
+        }
+
+        return (<ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
+            <Button bsStyle='success' bsSize='small' disabled={submitDisabled}
+                    ref='submit' title={submitTitle}
+                    onClick={this.onSave}>{submitLabel}</Button>
+            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                    onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+            {this.renderSubmitButton()}
+        </ButtonToolbar>);
+    },
+
+    renderSubmitButton: function () {
+        return (
+            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')}
+                    onClick={this.onSubmit}>
+                {this.i18n('detail.submit')}
+            </Button>);
     }
 });
 

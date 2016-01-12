@@ -428,7 +428,7 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
 
     @Test
     public void getRevisionsForOccurrenceReturnsListOfReportRevisionsOrderedByRevisionNumberDesc() throws Exception {
-        final List<InvestigationReport> reports = initRevisions();
+        final List<InvestigationReport> reports = initRevisions(-1);
 
         final List<ReportRevisionInfo> revisions = service.getRevisionsForOccurrence(reports.get(0).getOccurrence());
         assertEquals(reports.size(), revisions.size());
@@ -440,8 +440,8 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         }
     }
 
-    private List<InvestigationReport> initRevisions() {
-        final int count = Generator.randomInt(10);
+    private List<InvestigationReport> initRevisions(int count) {
+        count = count < 0 ? Generator.randomInt(10) : count;
         assertTrue(count > 0);
         final List<InvestigationReport> revisions = new ArrayList<>(count);
         final InvestigationReport revisionOne = Generator.generateMinimalInvestigation();
@@ -460,5 +460,23 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         investigationDao.persist(revisions);
         Collections.sort(revisions, (rOne, rTwo) -> rTwo.getRevision() - rOne.getRevision());
         return revisions;
+    }
+
+    @Test
+    public void getInvestigationReportsReturnsLatestRevisionsOfInvestigations() {
+        final PreliminaryReport pr = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        pr.setRevision(Constants.INITIAL_REVISION + 1);
+        occurrenceDao.persist(pr.getOccurrence());
+        preliminaryReportDao.persist(pr);
+        final InvestigationReport irOne = service.createFromPreliminaryReport(pr);
+        final List<InvestigationReport> revisions = initRevisions(2);
+        final InvestigationReport irTwo = revisions.get(0);
+
+        final Collection<InvestigationReport> result = service.findAll();
+        assertEquals(2, result.size());
+        for (InvestigationReport report : result) {
+            assertTrue(irOne.getUri().equals(report.getUri()) || irTwo.getUri().equals(report.getUri()));
+        }
+
     }
 }
