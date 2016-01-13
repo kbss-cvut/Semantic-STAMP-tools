@@ -23,9 +23,10 @@ var MessageMixin = require('../mixin/MessageMixin');
 var ResourceNotFound = require('../ResourceNotFound');
 var ReportValidator = require('../../validation/ReportValidator');
 var I18nMixin = require('../../i18n/I18nMixin');
+var ReportDetailMixin = require('../mixin/ReportDetailMixin');
 
 var ReportDetail = React.createClass({
-    mixins: [MessageMixin, I18nMixin],
+    mixins: [MessageMixin, I18nMixin, ReportDetailMixin],
 
     getInitialState: function () {
         return {
@@ -33,14 +34,10 @@ var ReportDetail = React.createClass({
         };
     },
 
-    onChange: function (e) {
-        var value = e.target.value;
-        var attributeName = e.target.name;
-        this.onAttributeChange(attributeName, value);
-    },
-
     onAttributeChange: function (attribute, value) {
-        this.props.handlers.onChange(attribute, value);
+        var change = {};
+        change[attribute] = value;
+        this.props.handlers.onChange(change);
     },
 
     onSave: function (e) {
@@ -48,38 +45,16 @@ var ReportDetail = React.createClass({
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
         if (report.isNew) {
-            Actions.createPreliminary(report, this.onSuccess, this.onSaveError);
+            Actions.createPreliminary(report, this.onSaveSuccess, this.onSaveError);
         }
         else {
-            Actions.updatePreliminary(report, this.onSuccess, this.onSaveError);
+            Actions.updatePreliminary(report, this.onSaveSuccess, this.onSaveError);
         }
-    },
-
-    onSuccess: function () {
-        this.setState({submitting: false});
-        this.props.handlers.onSuccess();
-        this.showSuccessMessage(this.i18n('save-success-message'));
-    },
-
-    onSaveError: function (error) {
-        this.setState({submitting: false});
-        this.showErrorMessage(this.i18n('save-failed-message') + error.message);
     },
 
     onSubmit: function () {
         this.setState({submitting: true});
         Actions.submitPreliminary(this.props.report, this.onSubmitSuccess, this.onSubmitError);
-    },
-
-    onSubmitSuccess: function (key) {
-        this.setState({submitting: false});
-        this.showSuccessMessage(this.i18n('detail.submit-success-message'));
-        this.props.handlers.onSuccess(key);
-    },
-
-    onSubmitError: function (error) {
-        this.setState({submitting: false});
-        this.showErrorMessage(this.i18n('detail.submit-failed-message') + error.message);
     },
 
     _canEdit: function () {
@@ -162,20 +137,6 @@ var ReportDetail = React.createClass({
                 {this.renderInvestigateButton()}
             </ButtonToolbar>
         );
-    },
-
-    renderReadOnlyButtons: function () {
-        return (
-            <div>
-                <div className='float-right'>
-                    <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
-                            onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-                </div>
-                <div style={{clear: 'both'}}/>
-                <div className='notice-small float-right'>
-                    {this.i18n('revisions.readonly-notice')}
-                </div>
-            </div>);
     },
 
     renderInvestigateButton: function () {

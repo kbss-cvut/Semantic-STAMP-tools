@@ -6,6 +6,7 @@ describe('Investigation controller', function () {
         Button = require('react-bootstrap').Button,
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
+        Generator = require('../environment/Generator'),
         InvestigationController = rewire('../../js/components/investigation/InvestigationController'),
         Investigation = rewire('../../js/components/investigation/Investigation'),
         Actions = require('../../js/actions/Actions');
@@ -17,22 +18,15 @@ describe('Investigation controller', function () {
     });
 
     it('shows only Cancel button if the displayed report is not the latest revision.', function () {
-        var investigation = {
-                key: 12345,
-                revision: 1,
-                occurrence: {
-                    key: 117
-                },
-                occurrenceStart: Date.now() - 10000,
-                occurrenceEnd: Date.now()
-            }, revisions = [
+        var investigation = Generator.generateInvestigation(),
+            revisions = [
                 {
                     revision: 2,
                     key: 54321
                 },
                 {
-                    revision: 1,
-                    key: 12345
+                    revision: investigation.revision,
+                    key: investigation.key
                 }
             ],
             expectedButtons = ['Cancel'],
@@ -55,4 +49,29 @@ describe('Investigation controller', function () {
     function getButton(root, text) {
         return Environment.getComponentByText(root, Button, text);
     }
+
+    it('updates report state when onChange is called.', function () {
+        var investigation = Generator.generateInvestigation(),
+            newSummary = 'New investigation summary.';
+        spyOn(Actions, 'findInvestigation');
+        spyOn(Actions, 'loadInvestigationRevisions');
+        var result = Environment.render(<InvestigationController params={{}}/>);
+        result.onInvestigationStoreTrigger({action: Actions.findInvestigation, investigation: investigation});
+
+        result.onChange({summary: newSummary});
+        expect(result.state.report.summary).toEqual(newSummary);
+    });
+
+    it('calls loadReport when revision is selected.', function () {
+        var investigation = Generator.generateInvestigation(),
+            selectedRevision = {revision: 2, key: '111222333'};
+        spyOn(Actions, 'findInvestigation');
+        spyOn(Actions, 'loadInvestigationRevisions');
+        var result = Environment.render(<InvestigationController params={{}}/>);
+        result.onInvestigationStoreTrigger({action: Actions.findInvestigation, investigation: investigation});
+        spyOn(result, 'loadReport');
+
+        result.onRevisionSelected(selectedRevision);
+        expect(result.loadReport).toHaveBeenCalledWith(selectedRevision.key);
+    });
 });
