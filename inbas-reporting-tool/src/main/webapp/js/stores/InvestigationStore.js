@@ -3,71 +3,41 @@
 var Reflux = require('reflux');
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
-var ErrorHandlingMixin = require('./mixin/ErrorHandlingMixin');
 var Utils = require('../utils/Utils');
 
 var investigations = [];
 
 var InvestigationStore = Reflux.createStore({
     listenables: [Actions],
-    mixins: [ErrorHandlingMixin],
 
     onLoadInvestigations: function () {
-        Ajax.get('rest/investigations').end(function (err, res) {
-            if (err) {
-                this.handleError(err);
-            } else {
-                investigations = res.body;
-                this.trigger(investigations);
-            }
+        Ajax.get('rest/investigations').end(function (data) {
+            investigations = data;
+            this.trigger(investigations);
         }.bind(this));
     },
 
     onCreateInvestigation: function (key, successHandler) {
-        Ajax.post('rest/investigations?key=' + key).end(function (err, res) {
-            if (err) {
-                this.handleError(err);
-            } else {
-                var key = Utils.extractKeyFromLocationHeader(res);
-                successHandler(key);
-            }
-        }.bind(this));
+        Ajax.post('rest/investigations?key=' + key).end(function (data, resp) {
+            var key = Utils.extractKeyFromLocationHeader(resp);
+            successHandler(key);
+        });
     },
 
     onFindInvestigation: function (key) {
-        Ajax.get('rest/investigations/' + key).end(function (err, res) {
-            if (err) {
-                this.handleError(err);
-                this.trigger(null);
-            } else {
-                this.trigger(res.body);
-            }
+        Ajax.get('rest/investigations/' + key).end(function (data) {
+            this.trigger(data);
+        }.bind(this), function () {
+            this.trigger(null);
         }.bind(this));
     },
 
     onUpdateInvestigation: function (investigation, successHandler, errorHandler) {
-        Ajax.put('rest/investigations/' + investigation.key, investigation).end(function (err) {
-            if (err) {
-                if (errorHandler) {
-                    var error = JSON.parse(err.response.text);
-                    errorHandler(error);
-                } else {
-                    this.handleError(err);
-                }
-            } else {
-                successHandler();
-            }
-        }.bind(this));
+        Ajax.put('rest/investigations/' + investigation.key, investigation).end(successHandler, errorHandler);
     },
 
     onDeleteInvestigation: function (investigation) {
-        Ajax.del('rest/investigations/' + investigation.key).end(function (err) {
-            if (err) {
-                this.handleError(err);
-            } else {
-                this.onLoadInvestigations();
-            }
-        }.bind(this));
+        Ajax.del('rest/investigations/' + investigation.key).end(this.onLoadInvestigations);
     }
 });
 

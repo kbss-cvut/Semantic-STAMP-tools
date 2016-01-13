@@ -1,14 +1,9 @@
-/**
- * @author ledvima1
- */
-
 'use strict';
 
 var Reflux = require('reflux');
 
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
-var ErrorHandlingMixin = require('./mixin/ErrorHandlingMixin');
 
 var URL = 'rest/typeahead/options?type=';
 
@@ -17,7 +12,6 @@ var locations = [];
 var operators = [];
 
 var TypeaheadStore = Reflux.createStore({
-    mixins: [ErrorHandlingMixin],
 
     init: function () {
         this.listenTo(Actions.loadEventTypes, this.onLoadEventTypes);
@@ -36,12 +30,10 @@ var TypeaheadStore = Reflux.createStore({
             this.trigger();
             return;
         }
-        Ajax.get(URL + type).end(function (err, resp) {
-            if (err) {
-                this.handleError(err);
-            } else {
-                success(resp.body);
-            }
+        Ajax.get(URL + type).end(function (data) {
+            success(data);
+            this.trigger();
+        }.bind(this), function () {
             this.trigger();
         }.bind(this));
     },

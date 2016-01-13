@@ -128,19 +128,18 @@ var Investigation = React.createClass({
 
     renderButtons: function () {
         var loading = this.state.submitting,
-            submitDisabled = !InvestigationValidator.isValid(this.props.investigation) || loading,
-            submitTitle = this.i18n('detail.save-tooltip'),
-            submitLabel = this.i18n(loading ? 'detail.saving' : 'save');
+            saveDisabled = !InvestigationValidator.isValid(this.props.investigation) || loading,
+            saveTitle = this.i18n('detail.save-tooltip'),
+            saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
         if (loading) {
-            submitTitle = this.i18n('detail.saving');
-        } else if (submitDisabled) {
-            submitTitle = this.i18n('detail.invalid-tooltip');
+            saveTitle = this.i18n('detail.saving');
+        } else if (saveDisabled) {
+            saveTitle = this.i18n('detail.invalid-tooltip');
         }
 
         return (<ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
-            <Button bsStyle='success' bsSize='small' disabled={submitDisabled}
-                    ref='submit' title={submitTitle}
-                    onClick={this.onSave}>{submitLabel}</Button>
+            <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={saveTitle}
+                    onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this.renderSubmitButton()}

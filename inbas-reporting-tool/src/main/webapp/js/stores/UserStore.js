@@ -9,9 +9,7 @@ var currentUser = null;
 var loaded = false;
 
 function loadCurrentUser() {
-    Ajax.get('rest/persons/current').end(function (err, resp) {
-        UserStore.userLoaded(resp.body);
-    });
+    Ajax.get('rest/persons/current').end(UserStore.userLoaded);
 }
 
 var UserStore = Reflux.createStore({
@@ -29,7 +27,7 @@ var UserStore = Reflux.createStore({
     getCurrentUser: function () {
         return currentUser;
     },
-    isLoaded: function() {
+    isLoaded: function () {
         return loaded;
     }
 });
