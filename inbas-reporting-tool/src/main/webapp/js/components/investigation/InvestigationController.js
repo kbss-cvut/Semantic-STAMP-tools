@@ -15,10 +15,11 @@ var InvestigationStore = require('../../stores/InvestigationStore');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var RouterStore = require('../../stores/RouterStore');
+var RevisionInfo = require('../reports/RevisionInfo');
 
 var InvestigationController = React.createClass({
     mixins: [
-        Reflux.listenTo(InvestigationStore, 'onReportLoaded')
+        Reflux.listenTo(InvestigationStore, 'onInvestigationStoreTrigger')
     ],
 
     getInitialState: function () {
@@ -35,16 +36,38 @@ var InvestigationController = React.createClass({
         }
     },
 
+    onInvestigationStoreTrigger: function (data) {
+        if (data.action === Actions.findInvestigation) {
+            this.onReportLoaded(data.investigation);
+        } else {
+            this.onRevisionsLoaded(data.revisions);
+        }
+    },
+
     onReportLoaded: function (report) {
-        if (report === null) {
+        if (!report) {
             this.setState({loading: false});
-        } else if (report.key && report.key === this.props.params.reportKey) {
+        } else {
+            Actions.loadInvestigationRevisions(report.occurrence.key);
             this.setState({investigation: assign({}, report), loading: false});
         }
     },
 
-    onSuccess: function () {
-        Actions.findInvestigation(this.state.investigation.key);
+    onRevisionsLoaded: function (revisions) {
+        this.setState({revisions: revisions});
+    },
+
+    onSuccess: function (key) {
+        this.loadInvestigation(key ? key : this.state.investigation.key);
+    },
+
+    loadInvestigation: function (key) {
+        this.setState({loading: true});
+        Routing.transitionTo(Routes.editInvestigation, {
+            params: {reportKey: key},
+            handlers: {onCancel: Routes.investigations}
+        });
+        Actions.findInvestigation(key);
     },
 
     onCancel: function () {
@@ -61,6 +84,18 @@ var InvestigationController = React.createClass({
         this.setState({investigation: investigation}); // Force update
     },
 
+    onRevisionSelected: function (revision) {
+        this.loadInvestigation(revision.key);
+    },
+
+    isLastRevision: function () {
+        if (!this.state.investigation || !this.state.revisions || this.state.revisions.length === 0) {
+            return true;
+        }
+        return this.state.investigation.revision === this.state.revisions[0].revision;
+    },
+
+
     render: function () {
         var handlers = {
             onChange: this.onChange,
@@ -68,8 +103,17 @@ var InvestigationController = React.createClass({
             onCancel: this.onCancel
         };
         return (
-            <Investigation investigation={this.state.investigation} loading={this.state.loading} handlers={handlers}/>
+            <Investigation investigation={this.state.investigation} loading={this.state.loading} handlers={handlers}
+                           revisions={this.renderRevisionInfo()} readOnly={!this.isLastRevision()}/>
         );
+    },
+
+    renderRevisionInfo: function () {
+        if (!this.state.revisions) {
+            return null;
+        }
+        return (<RevisionInfo revisions={this.state.revisions} selectedRevision={this.state.investigation.revision}
+                              onSelect={this.onRevisionSelected}/>);
     }
 });
 

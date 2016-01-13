@@ -8,22 +8,14 @@ describe('Investigation', function () {
         Generator = require('../environment/Generator'),
         Actions = require('../../js/actions/Actions'),
         Investigation = rewire('../../js/components/investigation/Investigation'),
-        Factors = rewire('../../js/components/investigation/Factors'),
-        GanttController, FactorRenderer, FactorJsonSerializer, handlers,
+        handlers,
         investigation;
 
     beforeEach(function () {
         spyOn(Actions, 'updateInvestigation');
         spyOn(Actions, 'loadOccurrenceSeverityOptions');
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
-        GanttController = jasmine.createSpyObj('GanttController', ['init', 'setScale', 'expandSubtree', 'updateOccurrenceEvent']);
-        FactorRenderer = jasmine.createSpyObj('FactorRenderer', ['renderFactors']);
-        FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorHierarchy', 'getLinks', 'setGanttController']);
-        Factors.__set__('GanttController', GanttController);
-        Factors.__set__('FactorRenderer', FactorRenderer);
-        Factors.__set__('FactorJsonSerializer', FactorJsonSerializer);
-        Investigation.__set__('Factors', Factors);
-        Investigation.__set__('Actions', Actions);
+        Environment.mockFactors(Investigation);
         investigation = Generator.generateInvestigation();
     });
 
@@ -32,7 +24,8 @@ describe('Investigation', function () {
             saveEvent = {
                 preventDefault: function () {
                 }
-            };
+            },
+            FactorJsonSerializer = Investigation.__get__('Factors').__get__('FactorJsonSerializer');
         component.onSave(saveEvent);
         expect(FactorJsonSerializer.getFactorHierarchy).toHaveBeenCalled();
         expect(FactorJsonSerializer.getLinks).toHaveBeenCalled();

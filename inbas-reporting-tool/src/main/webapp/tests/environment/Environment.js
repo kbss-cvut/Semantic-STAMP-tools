@@ -3,6 +3,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var TestUtils = require('react-addons-test-utils');
+var rewire = require('rewire');
 
 var TestApp = require('./TestApp');
 
@@ -32,7 +33,7 @@ module.exports = {
      * @param component Component class
      * @param text Component text
      */
-    getComponentByText: function(root, component, text) {
+    getComponentByText: function (root, component, text) {
         var components = TestUtils.scryRenderedComponentsWithType(root, component);
         for (var i = 0, len = components.length; i < len; i++) {
             var node = ReactDOM.findDOMNode(components[i]);
@@ -41,5 +42,16 @@ module.exports = {
             }
         }
         return null;
+    },
+
+    mockFactors: function (investigation) {
+        var Factors = rewire('../../js/components/investigation/Factors'),
+            GanttController = jasmine.createSpyObj('GanttController', ['init', 'setScale', 'expandSubtree', 'updateOccurrenceEvent']),
+            FactorRenderer = jasmine.createSpyObj('FactorRenderer', ['renderFactors']),
+            FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorHierarchy', 'getLinks', 'setGanttController']);
+        Factors.__set__('GanttController', GanttController);
+        Factors.__set__('FactorRenderer', FactorRenderer);
+        Factors.__set__('FactorJsonSerializer', FactorJsonSerializer);
+        investigation.__set__('Factors', Factors);
     }
 };

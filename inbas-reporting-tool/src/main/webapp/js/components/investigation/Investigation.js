@@ -46,7 +46,7 @@ var Investigation = React.createClass({
     onAttributeChange: function (attribute, value) {
         var change = {};
         change[attribute] = value;
-        this.onChanges({attribute: value});
+        this.onChanges(change);
     },
 
     onChanges: function (changes) {
@@ -74,6 +74,22 @@ var Investigation = React.createClass({
         this.showErrorMessage(this.i18n('save-failed-message') + error.message);
     },
 
+    onSubmit: function () {
+        this.setState({submitting: true});
+        Actions.submitInvestigation(this.props.investigation, this.onSubmitSuccess, this.onSubmitError);
+    },
+
+    onSubmitSuccess: function (key) {
+        this.setState({submitting: false});
+        this.showSuccessMessage(this.i18n('detail.submit-success-message'));
+        this.props.handlers.onSuccess(key);
+    },
+
+    onSubmitError: function (error) {
+        this.setState({submitting: false});
+        this.showErrorMessage(this.i18n('detail.submit-failed-message') + error.message);
+    },
+
 
     render: function () {
         if (this.props.loading) {
@@ -94,8 +110,8 @@ var Investigation = React.createClass({
             <div>
                 <Panel header={this.i18n('investigation.detail.panel-title')}>
                     <form>
-                        <BasicOccurrenceInfo report={investigation} onChange={this.onChange}
-                                             onAttributeChange={this.onAttributeChange}/>
+                        <BasicOccurrenceInfo report={investigation} revisions={this.props.revisions}
+                                             onChange={this.onChange} onAttributeChange={this.onAttributeChange}/>
 
                         <div className='row'>
                             <div className='col-xs-12'>
@@ -127,6 +143,9 @@ var Investigation = React.createClass({
     },
 
     renderButtons: function () {
+        if (this.props.readOnly) {
+            return this.renderReadOnlyButtons();
+        }
         var loading = this.state.submitting,
             saveDisabled = !InvestigationValidator.isValid(this.props.investigation) || loading,
             saveTitle = this.i18n('detail.save-tooltip'),
@@ -144,6 +163,20 @@ var Investigation = React.createClass({
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this.renderSubmitButton()}
         </ButtonToolbar>);
+    },
+
+    renderReadOnlyButtons: function () {
+        return (
+            <div>
+                <div className='float-right'>
+                    <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                            onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+                </div>
+                <div style={{clear: 'both'}}/>
+                <div className='notice-small float-right'>
+                    {this.i18n('revisions.readonly-notice')}
+                </div>
+            </div>);
     },
 
     renderSubmitButton: function () {

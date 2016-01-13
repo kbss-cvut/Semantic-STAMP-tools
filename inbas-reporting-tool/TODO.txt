@@ -1,4 +1,6 @@
 Implement report revisions
+Disable creation of new investigation when one already exists? - it messes up revisions
+When deleting report, should we delete all revisions?
 Modularize the application so that queries and repository (the one for getting options and event types) can be specified at runtime
 Localization
     - Use portal language setting when available

@@ -139,17 +139,7 @@ var ReportDetail = React.createClass({
 
     renderButtons: function () {
         if (this.props.readOnly) {
-            return (
-                <div>
-                    <div className='float-right'>
-                        <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
-                                onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-                    </div>
-                    <div style={{clear: 'both'}}/>
-                    <div className='notice-small float-right'>
-                        {this.i18n('revisions.readonly-notice')}
-                    </div>
-                </div>);
+            return this.renderReadOnlyButtons();
         }
         var report = this.props.report,
             loading = this.state.submitting,
@@ -172,6 +162,20 @@ var ReportDetail = React.createClass({
                 {this.renderInvestigateButton()}
             </ButtonToolbar>
         );
+    },
+
+    renderReadOnlyButtons: function () {
+        return (
+            <div>
+                <div className='float-right'>
+                    <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                            onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+                </div>
+                <div style={{clear: 'both'}}/>
+                <div className='notice-small float-right'>
+                    {this.i18n('revisions.readonly-notice')}
+                </div>
+            </div>);
     },
 
     renderInvestigateButton: function () {

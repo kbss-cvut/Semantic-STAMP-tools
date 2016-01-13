@@ -90,7 +90,7 @@ var ReportsController = React.createClass({
                 <th className='col-xs-2'>{this.i18n('headline')}</th>
                 <th className='col-xs-2'>{this.i18n('reports.table-date')}</th>
                 <th className='col-xs-6'>{this.i18n('narrative')}</th>
-                <th className='col-xs-2'>{this.i18n('table-actions')}</th>
+                <th className='col-xs-2 content-center'>{this.i18n('table-actions')}</th>
             </tr>
             </thead>
         );

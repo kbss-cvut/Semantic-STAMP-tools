@@ -80,9 +80,17 @@ var ReportDetailController = React.createClass({
         if (this.state.report.isNew) {
             Routing.transitionTo(Routes.preliminary);
         } else {
-            this.setState({loading: true});
-            Actions.findPreliminary(reportKey ? reportKey : this.state.report.key);
+            this.loadReport(reportKey ? reportKey : this.state.report.key);
         }
+    },
+
+    loadReport: function (key) {
+        this.setState({loading: true});
+        Routing.transitionTo(Routes.editReport, {
+            params: {reportKey: key},
+            handlers: {onCancel: Routes.reports}
+        });
+        Actions.findPreliminary(key);
     },
 
     onCancel: function () {
@@ -106,12 +114,7 @@ var ReportDetailController = React.createClass({
     },
 
     onRevisionSelected: function (revision) {
-        this.setState({loading: true});
-        Routing.transitionTo(Routes.editReport, {
-            params: {reportKey: revision.key},
-            handlers: {onCancel: Routes.reports}
-        });
-        Actions.findPreliminary(revision.key);
+        this.loadReport(revision.key);
     },
 
     isLatestRevision: function () {
@@ -143,7 +146,8 @@ var ReportDetailController = React.createClass({
         }
         var revisions = this.state.revisions,
             selectedRevision = this.state.report.revision;
-        return <RevisionInfo revisions={revisions} selectedRevision={selectedRevision} onSelect={this.onRevisionSelected}/>;
+        return <RevisionInfo revisions={revisions} selectedRevision={selectedRevision}
+                             onSelect={this.onRevisionSelected}/>;
     }
 });
 
