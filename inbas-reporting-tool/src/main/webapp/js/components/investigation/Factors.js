@@ -155,7 +155,7 @@ var Factors = React.createClass({
     },
 
     onUpdateOccurrence: function (startTime, endTime) {
-        this.props.onChanges({
+        this.props.onChange({
             occurrenceStart: startTime,
             occurrenceEnd: endTime
         });
