@@ -6,7 +6,7 @@ var Ajax = require('../utils/Ajax');
 var Utils = require('../utils/Utils');
 
 var BASE_URL = 'rest/investigations';
-var BASE_URL_WITH_SLASH = 'rest/investigations/'
+var BASE_URL_WITH_SLASH = 'rest/investigations/';
 
 var investigations = [];
 
