@@ -82,7 +82,7 @@ var Investigation = React.createClass({
 
         return (
             <div>
-                <Panel header={this.i18n('investigation.detail.panel-title')}>
+                <Panel header={<h2>{this.i18n('investigation.detail.panel-title')}</h2>} bsStyle='primary'>
                     <form>
                         <BasicOccurrenceInfo report={investigation} revisions={this.props.revisions}
                                              onChange={this.onChange} onAttributeChange={this.onAttributeChange}/>
