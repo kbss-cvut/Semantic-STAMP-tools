@@ -150,9 +150,12 @@ var Generator = {
      */
     generateInvestigation: function () {
         return {
+            key: 12345,
             occurrenceStart: Date.now() - 10000,
             occurrenceEnd: Date.now(),
+            revision: 1,
             occurrence: {
+                key: 117,
                 name: 'TestOccurrence'
             },
             rootFactor: {
@@ -160,6 +163,20 @@ var Generator = {
                 endTime: Date.now()
             }
         };
+    },
+
+    /**
+     * Gets a preliminary report with occurrence and an initial report.
+     */
+    generatePreliminaryReport: function () {
+        return {
+            key: '123455',
+            occurrence: {key: '554321'},
+            initialReports: [{text: 'First Initial Report'}],
+            occurrenceStart: Date.now() - 10000,
+            occurrenceEnd: Date.now(),
+            revision: 1
+        }
     }
 };
 

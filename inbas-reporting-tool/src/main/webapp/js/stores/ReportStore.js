@@ -4,13 +4,11 @@ var Reflux = require('reflux');
 
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
-var ErrorHandlingMixin = require('./mixin/ErrorHandlingMixin');
 
 /**
  * Stores overviews of all reports.
  */
 var ReportStore = Reflux.createStore({
-    mixins: [ErrorHandlingMixin],
 
     _reports: null,
 
@@ -20,31 +18,19 @@ var ReportStore = Reflux.createStore({
     },
 
     loadReports: function () {
-        Ajax.get('rest/reports').end(function (err, response) {
-            if (err) {
-                this.handleError(err);
-            } else {
-                this._reports = response.body;
-                this.trigger(this._reports);
-            }
+        Ajax.get('rest/reports').end(function (data) {
+            this._reports = data;
+            this.trigger(this._reports);
         }.bind(this));
     },
 
     deleteReport: function (report, onSuccess, onError) {
-        Ajax.del('rest/reports/' + report.key).end(function (err) {
-            if (err) {
-                if (onError) {
-                    onError(JSON.parse(err.response.text));
-                } else {
-                    this.handleError(err);
-                }
-            } else {
-                if (onSuccess) {
-                    onSuccess();
-                }
-                this.loadReports();
+        Ajax.del('rest/reports/' + report.key).end(function () {
+            if (onSuccess) {
+                onSuccess();
             }
-        }.bind(this));
+            this.loadReports();
+        }.bind(this), onError);
     },
 
     getReports: function () {

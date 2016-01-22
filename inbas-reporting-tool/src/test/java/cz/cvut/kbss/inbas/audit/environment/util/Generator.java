@@ -108,6 +108,7 @@ public class Generator {
         report.setOccurrenceStart(start);
         final Date end = new Date();
         report.setOccurrenceEnd(end);
+        report.setAuthor(getPerson());
 
         final Factor root = new Factor();
         root.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance0"));
@@ -117,26 +118,26 @@ public class Generator {
 
         final Factor childOne = new Factor();
         childOne.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance1"));
-        childOne.setStartTime(start);
+        childOne.setStartTime(new Date(start.getTime() + 100));
         childOne.setEndTime(end);
         root.addChild(childOne);
 
         final Factor childTwo = new Factor();
         childTwo.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance2"));
-        childTwo.setStartTime(start);
+        childTwo.setStartTime(new Date(start.getTime() + 200));
         childTwo.setEndTime(end);
         root.addChild(childTwo);
         childTwo.addCause(childOne);    // childOne causes childTwo
 
         final Factor childOneOne = new Factor();
         childOneOne.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance11"));
-        childOneOne.setStartTime(start);
+        childOneOne.setStartTime(new Date(start.getTime() + 100));
         childOneOne.setEndTime(end);
         childOne.addChild(childOneOne);
 
         final Factor childTwoOne = new Factor();
         childTwoOne.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Factor_instance21"));
-        childTwoOne.setStartTime(start);
+        childTwoOne.setStartTime(new Date(start.getTime() + 200));
         childTwoOne.setEndTime(end);
         childTwo.addChild(childTwoOne);
         childOneOne.addMitigatingFactor(childTwoOne);   // childTwoOne mitigates childOneOne
@@ -148,6 +149,7 @@ public class Generator {
         final InvestigationReport report = new InvestigationReport();
         report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         report.setOccurrence(generateOccurrence());
+        report.setCreated(new Date());
         final Date start = new Date(System.currentTimeMillis() - 10000);
         report.setOccurrenceStart(start);
         final Date end = new Date();
@@ -158,6 +160,36 @@ public class Generator {
         root.setStartTime(start);
         root.setEndTime(end);
         report.setRootFactor(root);
+        return report;
+    }
+
+    /**
+     * No cause/mitigate relationships, just the hierarchy.
+     */
+    public static InvestigationReport generateInvestigationWithFactorHierarchy() {
+        final InvestigationReport report = generateMinimalInvestigation();
+        final Date start = report.getOccurrenceStart();
+        final Date end = report.getOccurrenceEnd();
+
+        final Factor childOne = new Factor();
+        childOne.setStartTime(start);
+        childOne.setEndTime(end);
+        report.getRootFactor().addChild(childOne);
+
+        final Factor childTwo = new Factor();
+        childTwo.setStartTime(start);
+        childTwo.setEndTime(end);
+        report.getRootFactor().addChild(childTwo);
+
+        final Factor childOneOne = new Factor();
+        childOneOne.setStartTime(start);
+        childOneOne.setEndTime(end);
+        childOne.addChild(childOneOne);
+
+        final Factor childOneOneOne = new Factor();
+        childOneOneOne.setStartTime(start);
+        childOneOneOne.setEndTime(end);
+        childOneOne.addChild(childOneOneOne);
         return report;
     }
 

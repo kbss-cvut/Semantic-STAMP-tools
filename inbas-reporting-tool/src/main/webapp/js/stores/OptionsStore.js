@@ -23,13 +23,11 @@ var OptionsStore = Reflux.createStore({
             this.trigger('lvp', lvpOptions);
             return;
         }
-        Ajax.get('rest/options/lvp').end(function (err, resp) {
-            if (err) {
-                this.onLoadingError(err, 'Low visibility procedure');
-            } else {
-                lvpOptions = resp.body;
-            }
+        Ajax.get('rest/options/lvp').end(function (data) {
+            lvpOptions = data;
             this.trigger('lvp', lvpOptions);
+        }.bind(this), function () {
+            this.trigger(lvpOptions);
         }.bind(this));
     },
 
@@ -42,13 +40,11 @@ var OptionsStore = Reflux.createStore({
             this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
             return;
         }
-        Ajax.get('rest/options/occurrenceSeverity').end(function (err, resp) {
-            if (err) {
-                this.onLoadingError(err, 'Occurrence severity');
-            } else {
-                occurrenceSeverityOptions = resp.body;
-            }
+        Ajax.get('rest/options/occurrenceSeverity').end(function (data) {
+            occurrenceSeverityOptions = data;
             this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
+        }.bind(this), function () {
+            this.trigger(occurrenceSeverityOptions);
         }.bind(this));
     }
 });

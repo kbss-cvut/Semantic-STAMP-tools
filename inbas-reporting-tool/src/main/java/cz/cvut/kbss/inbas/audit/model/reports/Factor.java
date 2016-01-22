@@ -50,6 +50,15 @@ public class Factor implements Serializable {
         this.assessment = new EventTypeAssessment(typeAssessment);
     }
 
+    public Factor(Factor other) {
+        assert other != null;
+        if (other.assessment != null) {
+            this.assessment = new EventTypeAssessment(other.assessment);
+        }
+        this.startTime = other.startTime;
+        this.endTime = other.endTime;
+    }
+
     public URI getUri() {
         return uri;
     }
@@ -146,7 +155,8 @@ public class Factor implements Serializable {
     @Override
     public String toString() {
         return "Factor{" +
-                "startTime=" + startTime +
+                "uri=" + uri +
+                ",startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", assessment=" + assessment +
                 '}';

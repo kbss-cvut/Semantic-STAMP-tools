@@ -12,7 +12,6 @@ import static org.mockito.Mockito.mock;
 
 @Configuration
 @ComponentScan(basePackages = "cz.cvut.kbss.inbas.audit.service.options")
-
 public class MockServiceConfig {
 
     @Bean

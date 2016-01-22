@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @OWLClass(iri = Vocabulary.InvestigationReport)
 public class InvestigationReport implements HasOwlKey, Serializable, ValidatableReport {
@@ -86,6 +87,25 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
         this.summary = preliminaryReport.getSummary();
         this.revision = Constants.INITIAL_REVISION;
         this.severityAssessment = preliminaryReport.getSeverityAssessment();
+    }
+
+    /**
+     * This copy constructors skips root factor, author, last edit author, dates created and last edited.
+     */
+    public InvestigationReport(InvestigationReport other) {
+        assert other != null;
+
+        this.occurrence = other.occurrence;
+        this.occurrenceStart = other.occurrenceStart;
+        this.occurrenceEnd = other.occurrenceEnd;
+        this.severityAssessment = other.severityAssessment;
+        this.summary = other.summary;
+        if (other.initialReports != null) {
+            this.initialReports = other.initialReports.stream().map(InitialReport::new).collect(Collectors.toSet());
+        }
+        if (other.correctiveMeasures != null) {
+            this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasure::new).collect(Collectors.toSet());
+        }
     }
 
     public URI getUri() {

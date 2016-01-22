@@ -5,6 +5,7 @@ var Cookies = require('js-cookie');
 
 var Routes = require('./Routes');
 var Routing = require('./Routing');
+var Logger = require('./Logger');
 
 var csrfTokenHeader = 'X-CSRF-Token';
 
@@ -47,7 +48,14 @@ var Ajax = {
         return this;
     },
 
-    end: function (fn) {
+    /**
+     * Executes the previously configured request.
+     * @param onSuccess Success handler, it is passed data parsed from the JSON in the response (if present) and the
+     *     response itself
+     * @param onError Error handler, called when the request returns a non-2xx status. If the error response contains a
+     *     parseable JSON object, it is passed to the handler
+     */
+    end: function (onSuccess, onError) {
         this.req.set(csrfTokenHeader, this.getCsrfToken()).end(function (err, resp) {
             if (err) {
                 if (err.status === 401) {
@@ -58,9 +66,32 @@ var Ajax = {
                     }
                     return;
                 }
+                try {
+                    onError ? onError(JSON.parse(err.response.text)) : this._handleError(err);
+                } catch (ex) {
+                    // The response text is not a  parseable JSON
+                    this._handleError(err);
+                }
             }
-            fn(err, resp);
-        });
+            if (onSuccess) {
+                onSuccess(resp.body, resp);
+            }
+        }.bind(this));
+    },
+
+    _handleError: function (err) {
+        try {
+            var error = JSON.parse(err.response.text),
+                method = err.response.req.method,
+                msg = method + ' ' + error.requestUri + ' - Status ' + err.status + ': ' + error.message;
+            if (err.status === 404) {
+                Logger.warn(msg);
+            } else {
+                Logger.error(msg);
+            }
+        } catch (ex) {
+            Logger.error('AJAX error: ' + err.response.text);
+        }
     }
 };
 

@@ -52,6 +52,11 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
         throw new UnsupportedOperationException("Remove is not supported for OccurrenceReports.");
     }
 
+    /**
+     * Finds all reports.
+     * <p>
+     * The reports are returned ordered by start time and revision (descending).
+     */
     @Override
     protected List<OccurrenceReport> findAll(EntityManager em) {
         return em.createNativeQuery(
@@ -59,9 +64,6 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
                         "?hasRevision ?revision ;" +
                         "?hasStartTime ?startTime ;" +
                         "?hasOccurrence ?occurrence . " +
-                        // Use only the max revision report for each occurrence
-                        "{ SELECT (MAX(?rev) AS ?maxRev) WHERE { ?y ?hasOccurrence ?occurrence ; ?hasRevision ?rev . } }" +
-                        "FILTER (?revision = ?maxRev)" +
                         "} ORDER BY DESC(?startTime) DESC(?revision)",
                 OccurrenceReport.class)
                  .setParameter("type", typeIri)
@@ -81,8 +83,9 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
                             "?hasStartTime ?startTime ;" +
                             "?hasOccurrence ?occurrence . " +
                             // Use only the max revision report for each occurrence
-                            "{ SELECT (MAX(?rev) AS ?maxRev) WHERE { ?y ?hasOccurrence ?occurrence ; ?hasRevision ?rev . } }" +
-                            "FILTER (?revision = ?maxRev)" +
+                            "{ SELECT (MAX(?rev) AS ?maxRev) ?yOccurrence WHERE " +
+                            "{ ?y a ?type ; a ?reportType ; ?hasOccurrence ?yOccurrence ; ?hasRevision ?rev . } GROUP BY ?yOccurrence }" +
+                            "FILTER (?revision = ?maxRev && ?occurrence = ?yOccurrence)" +
                             "} ORDER BY DESC(?startTime) DESC(?revision)",
                     OccurrenceReport.class)
                      .setParameter("type", typeIri).setParameter("reportType", URI.create(type))

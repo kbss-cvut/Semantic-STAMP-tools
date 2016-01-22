@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.service;
 
+import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Person;
@@ -7,9 +8,12 @@ import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
+import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
 import cz.cvut.kbss.inbas.audit.service.repository.RepositoryInvestigationReportService;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -18,7 +22,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
-import java.util.Iterator;
+import java.util.*;
 import java.util.logging.LogManager;
 
 import static org.junit.Assert.*;
@@ -28,7 +32,11 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
     @Autowired
     private PersonDao personDao;
     @Autowired
+    private OccurrenceDao occurrenceDao;
+    @Autowired
     private PreliminaryReportDao preliminaryReportDao;
+    @Autowired
+    private InvestigationReportDao investigationDao;
 
     @Autowired
     private RepositoryInvestigationReportService service;
@@ -286,5 +294,189 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
 
         final InvestigationReport result = service.find(created.getUri());
         assertEquals(ReportingPhase.INVESTIGATION, result.getOccurrence().getReportingPhase());
+    }
+
+    @Test
+    public void newRevisionReusesOccurrenceInstance() {
+        final InvestigationReport report = Generator.generateMinimalInvestigation();
+        occurrenceDao.persist(report.getOccurrence());
+        investigationDao.persist(report);
+
+        final InvestigationReport ir = service.createNewRevision(report);
+        assertNotNull(ir);
+        assertEquals(report.getOccurrence().getUri(), ir.getOccurrence().getUri());
+        assertNotNull(ir.getAuthor());
+        assertNotNull(ir.getCreated());
+        assertEquals(report.getRevision() + 1, ir.getRevision().intValue());
+        assertNotNull(service.find(ir.getUri()));
+    }
+
+    @Test
+    public void newRevisionOfNewRevisionCanBeCreated() {
+        final InvestigationReport report = Generator.generateMinimalInvestigation();
+        occurrenceDao.persist(report.getOccurrence());
+        investigationDao.persist(report);
+
+        final InvestigationReport revisionTwo = service.createNewRevision(report);
+        assertNotNull(revisionTwo);
+        assertEquals(report.getOccurrence().getUri(), revisionTwo.getOccurrence().getUri());
+        assertNotNull(service.find(revisionTwo.getUri()));
+
+        final InvestigationReport revisionThree = service.createNewRevision(revisionTwo);
+        assertNotNull(revisionThree);
+        assertEquals(report.getOccurrence().getUri(), revisionThree.getOccurrence().getUri());
+        assertNotNull(service.find(revisionThree.getUri()));
+    }
+
+    @Test
+    public void newRevisionIsIndependentOfPreviousRevision() throws Exception {
+        final InvestigationReport report = Generator.generateInvestigationWithFactorHierarchy();
+        occurrenceDao.persist(report.getOccurrence());
+        investigationDao.persist(report);
+
+        final InvestigationReport newRevision = service.createNewRevision(report);
+        assertNotEquals(report.getUri(), newRevision.getUri());
+        verifyFactorsIndependence(report.getRootFactor(), newRevision.getRootFactor());
+    }
+
+    private void verifyFactorsIndependence(Factor original, Factor newFactor) {
+        assertNotEquals(original.getUri(), newFactor.getUri());
+        if (original.getChildren() != null) {
+            final SortedSet<Factor> sortedOriginalChildren = getSortedChildren(original.getChildren());
+            final SortedSet<Factor> sortedRevisionChildren = getSortedChildren(newFactor.getChildren());
+            final Iterator<Factor> itOriginal = sortedOriginalChildren.iterator();
+            final Iterator<Factor> itNewFactor = sortedRevisionChildren.iterator();
+            while (itOriginal.hasNext() && itNewFactor.hasNext()) {
+                verifyFactorsIndependence(itOriginal.next(), itNewFactor.next());
+            }
+        }
+    }
+
+    private SortedSet<Factor> getSortedChildren(Set<Factor> children) {
+        final SortedSet<Factor> sortedSet = new TreeSet<>(new FactorComparator());
+        sortedSet.addAll(children);
+        return sortedSet;
+    }
+
+    @Test
+    public void createNewRevisionCorrectlyReproducesCauseMitigatesRelationships() throws Exception {
+        final InvestigationReport report = Generator.generateInvestigationWithCausesAndMitigatingFactors();
+        occurrenceDao.persist(report.getOccurrence());
+        investigationDao.persist(report);
+
+        final InvestigationReport newRevision = service.createNewRevision(report);
+        final Map<URI, URI> factorMapping = mapOldFactorsToNewOnes(report.getRootFactor(), newRevision.getRootFactor());
+        verifyFactorCausesAndMitigates(report.getRootFactor(), newRevision.getRootFactor(), factorMapping);
+    }
+
+    private Map<URI, URI> mapOldFactorsToNewOnes(Factor orig, Factor newRevision) {
+        final Map<URI, URI> m = new HashMap<>();
+        m.put(orig.getUri(), newRevision.getUri());
+        m.put(newRevision.getUri(), orig.getUri());
+        if (orig.getChildren() != null) {
+            final SortedSet<Factor> sortedOriginalChildren = getSortedChildren(orig.getChildren());
+            final SortedSet<Factor> sortedRevisionChildren = getSortedChildren(newRevision.getChildren());
+            final Iterator<Factor> itOriginal = sortedOriginalChildren.iterator();
+            final Iterator<Factor> itNewFactor = sortedRevisionChildren.iterator();
+            while (itOriginal.hasNext() && itNewFactor.hasNext()) {
+                m.putAll(mapOldFactorsToNewOnes(itOriginal.next(), itNewFactor.next()));
+            }
+        }
+        return m;
+    }
+
+    private void verifyFactorCausesAndMitigates(Factor original, Factor newRevision, Map<URI, URI> factorMapping) {
+        if (original.getCauses() != null) {
+            verifySetContents(original.getCauses(), newRevision.getCauses(), factorMapping);
+        }
+        if (original.getMitigatingFactors() != null) {
+            verifySetContents(original.getMitigatingFactors(), newRevision.getMitigatingFactors(), factorMapping);
+        }
+        if (original.getChildren() != null) {
+            final SortedSet<Factor> sortedOriginalChildren = getSortedChildren(original.getChildren());
+            final SortedSet<Factor> sortedRevisionChildren = getSortedChildren(newRevision.getChildren());
+            final Iterator<Factor> itOriginal = sortedOriginalChildren.iterator();
+            final Iterator<Factor> itNewFactor = sortedRevisionChildren.iterator();
+            while (itOriginal.hasNext() && itNewFactor.hasNext()) {
+                verifyFactorCausesAndMitigates(itOriginal.next(), itNewFactor.next(), factorMapping);
+            }
+        }
+    }
+
+    private void verifySetContents(Set<Factor> orig, Set<Factor> newRevision, Map<URI, URI> factorMapping) {
+        assertEquals(orig.size(), newRevision.size());
+        boolean found = false;
+        for (Factor origRev : orig) {
+            final URI newRevisionUri = factorMapping.get(origRev.getUri());
+            for (Factor newRev : newRevision) {
+                if (newRev.getUri().equals(newRevisionUri)) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue(found);
+        }
+    }
+
+    private static class FactorComparator implements Comparator<Factor> {
+
+        @Override
+        public int compare(Factor o1, Factor o2) {
+            return o1.getStartTime().compareTo(o2.getStartTime());
+        }
+    }
+
+    @Test
+    public void getRevisionsForOccurrenceReturnsListOfReportRevisionsOrderedByRevisionNumberDesc() throws Exception {
+        final List<InvestigationReport> reports = initRevisions(-1);
+
+        final List<ReportRevisionInfo> revisions = service.getRevisionsForOccurrence(reports.get(0).getOccurrence());
+        assertEquals(reports.size(), revisions.size());
+        for (int i = 0; i < reports.size(); i++) {
+            assertEquals(reports.get(i).getUri(), revisions.get(i).getUri());
+            assertEquals(reports.get(i).getKey(), revisions.get(i).getKey());
+            assertEquals(reports.get(i).getRevision(), revisions.get(i).getRevision());
+            assertEquals(reports.get(i).getCreated(), revisions.get(i).getCreated());
+        }
+    }
+
+    private List<InvestigationReport> initRevisions(int count) {
+        count = count < 0 ? Generator.randomInt(10) : count;
+        assertTrue(count > 0);
+        final List<InvestigationReport> revisions = new ArrayList<>(count);
+        final InvestigationReport revisionOne = Generator.generateMinimalInvestigation();
+        occurrenceDao.persist(revisionOne.getOccurrence());
+        revisions.add(revisionOne);
+        for (int i = 0; i < count; i++) {
+            final InvestigationReport revision = new InvestigationReport(revisionOne);
+            revision.setAuthor(Environment.getCurrentUser());
+            revision.setRevision(Constants.INITIAL_REVISION + i + 1);
+            revision.setCreated(new Date());
+            if (i % 2 == 0) {   // Set last edited only for every even index
+                revision.setLastEdited(new Date(System.currentTimeMillis() + 100000));
+            }
+            revisions.add(revision);
+        }
+        investigationDao.persist(revisions);
+        Collections.sort(revisions, (rOne, rTwo) -> rTwo.getRevision() - rOne.getRevision());
+        return revisions;
+    }
+
+    @Test
+    public void getInvestigationReportsReturnsLatestRevisionsOfInvestigations() {
+        final PreliminaryReport pr = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        pr.setRevision(Constants.INITIAL_REVISION + 1);
+        occurrenceDao.persist(pr.getOccurrence());
+        preliminaryReportDao.persist(pr);
+        final InvestigationReport irOne = service.createFromPreliminaryReport(pr);
+        final List<InvestigationReport> revisions = initRevisions(2);
+        final InvestigationReport irTwo = revisions.get(0);
+
+        final Collection<InvestigationReport> result = service.findAll();
+        assertEquals(2, result.size());
+        for (InvestigationReport report : result) {
+            assertTrue(irOne.getUri().equals(report.getUri()) || irTwo.getUri().equals(report.getUri()));
+        }
+
     }
 }

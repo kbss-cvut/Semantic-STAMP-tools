@@ -1,7 +1,9 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.dto.InvestigationReportDto;
+import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
+import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
@@ -10,6 +12,7 @@ import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;
 import cz.cvut.kbss.inbas.audit.service.OccurrenceReportService;
+import cz.cvut.kbss.inbas.audit.service.OccurrenceService;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/investigations")
@@ -31,6 +35,8 @@ public class InvestigationController extends BaseController {
     private InvestigationReportService investigationReportService;
     @Autowired
     private OccurrenceReportService occurrenceReportService;
+    @Autowired
+    private OccurrenceService occurrenceService;
 
     @Autowired
     private ReportMapper reportMapper;
@@ -102,5 +108,24 @@ public class InvestigationController extends BaseController {
         final InvestigationReport toRemove = getReport(key);
         investigationReportService.remove(toRemove);
         LOG.debug("Investigation removed: {}", toRemove);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/{key}/revisions")
+    public ResponseEntity<Void> createNewRevision(@PathVariable("key") String key) {
+        final InvestigationReport report = getReport(key);
+        final InvestigationReport newRevision = investigationReportService.createNewRevision(report);
+        final HttpHeaders headers = RestUtils.createLocationHeader("{key}", newRevision.getKey());
+        final String location = headers.getLocation().toString();
+        headers.set(HttpHeaders.LOCATION, location.replace(key + "/revisions", ""));
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/revisions/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ReportRevisionInfo> getOccurrenceReportRevisions(@PathVariable("key") String occurrenceKey) {
+        final Occurrence occurrence = occurrenceService.findByKey(occurrenceKey);
+        if (occurrence == null) {
+            throw NotFoundException.create("Occurrence", occurrenceKey);
+        }
+        return investigationReportService.getRevisionsForOccurrence(occurrence);
     }
 }

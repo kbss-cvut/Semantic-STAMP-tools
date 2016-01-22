@@ -1,7 +1,6 @@
 package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
-import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
@@ -11,6 +10,7 @@ import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
 import cz.cvut.kbss.inbas.audit.service.repository.RepositoryOccurrenceReportService;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,10 +75,8 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     private InvestigationReport persistInvestigationReport() throws Exception {
         final InvestigationReport ir = Generator.generateInvestigationWithCausesAndMitigatingFactors();
-        final Occurrence occurrence = Generator.generateOccurrence();
-        occurrenceDao.persist(occurrence);
+        occurrenceDao.persist(ir.getOccurrence());
         ir.setAuthor(author);
-        ir.setOccurrence(occurrence);
         investigationReportDao.persist(ir);
         return ir;
     }
@@ -93,5 +91,38 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         occurrenceReportService.remove(toRemove);
         final Collection<OccurrenceReport> result = occurrenceReportService.findAll();
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void findAllGetsLatestRevisionsOfBothPreliminaryAndInvestigationReports() throws Exception {
+        final PreliminaryReport pr = persistPreliminaryReport();
+        final PreliminaryReport prRevOne = new PreliminaryReport(pr);
+        prRevOne.setRevision(Constants.INITIAL_REVISION + 1 + Generator.randomInt(10));
+        prRevOne.setAuthor(author);
+        preliminaryReportDao.persist(prRevOne);
+        final InvestigationReport ir = persistInvestigationReport();
+        final InvestigationReport irRevOne = new InvestigationReport(ir);
+        irRevOne.setAuthor(author);
+        irRevOne.setRevision(Constants.INITIAL_REVISION + 1 + Generator.randomInt(10));
+        investigationReportDao.persist(irRevOne);
+
+        final Collection<OccurrenceReport> reports = occurrenceReportService.findAll();
+        assertEquals(2, reports.size());
+        boolean found = false;
+        for (OccurrenceReport rep : reports) {
+            if (rep.getUri().equals(prRevOne.getUri())) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
+        found = false;
+        for (OccurrenceReport rep : reports) {
+            if (rep.getUri().equals(irRevOne.getUri())) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
     }
 }

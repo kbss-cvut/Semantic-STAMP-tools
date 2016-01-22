@@ -5,6 +5,7 @@ describe('ReportDetailController tests', function () {
     var React = require('react'),
         Button = require('react-bootstrap').Button,
         Environment = require('../environment/Environment'),
+        Generator = require('../environment/Generator'),
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
         ReportDetailController = require('../../js/components/preliminary/ReportDetailController'),
@@ -70,20 +71,14 @@ describe('ReportDetailController tests', function () {
     });
 
     it('Show only cancel button for older revisions of a report', function () {
-        var report = {
-            key: '123455',
-            occurrence: {key: '554321'},
-            initialReports: [{text: 'First Initial Report'}],
-            occurrenceStart: Date.now() - 10000,
-            occurrenceEnd: Date.now(),
-            revision: 1
-        }, revisions = [
-            {revision: 2, key: '123456'},
-            {revision: 1, key: '123455'}
-        ];
+        var report = Generator.generatePreliminaryReport(),
+            revisions = [
+                {revision: 2, key: '123456'},
+                {revision: report.revision, key: report.key}
+            ];
         spyOn(Actions, 'findPreliminary');
         spyOn(Actions, 'loadPreliminaryRevisions');
-        var controller = Environment.render(<ReportDetailController params={{reportKey: '123455'}}/>),
+        var controller = Environment.render(<ReportDetailController params={{reportKey: report.key}}/>),
             expectedButtons = ['Cancel'],
             hiddenButtons = ['Save', 'Submit to authority', 'Investigate'],
             i;
@@ -101,4 +96,29 @@ describe('ReportDetailController tests', function () {
     function getButton(root, text) {
         return Environment.getComponentByText(root, Button, text);
     }
+
+    it('updates report state when onChange is called', function () {
+        var report = Generator.generatePreliminaryReport(),
+            newSummary = 'New summary';
+        spyOn(Actions, 'findPreliminary');
+        spyOn(Actions, 'loadPreliminaryRevisions');
+        var controller = Environment.render(<ReportDetailController params={{reportKey: report.key}}/>);
+        controller.onReportStoreTrigger({action: Actions.findPreliminary, report: report});
+
+        controller.onChange({summary: newSummary});
+        expect(controller.state.report.summary).toEqual(newSummary);
+    });
+
+    it('calls loadReport when revision is selected.', function () {
+        var report = Generator.generatePreliminaryReport(),
+            selectedRevision = {revision: 2, key: '111222333'};
+        spyOn(Actions, 'findPreliminary');
+        spyOn(Actions, 'loadPreliminaryRevisions');
+        var controller = Environment.render(<ReportDetailController params={{reportKey: report.key}}/>);
+        controller.onReportStoreTrigger({action: Actions.findPreliminary, report: report});
+        spyOn(controller, 'loadReport');
+
+        controller.onRevisionSelected(selectedRevision);
+        expect(controller.loadReport).toHaveBeenCalledWith(selectedRevision.key);
+    });
 });
