@@ -104,7 +104,7 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         typeAssessment.setEventType(new EventType(URI.create(
                 "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200100"),
                 "2200100 - Runway incursions"));
-        report.setTypeAssessments(Collections.singleton(typeAssessment));
+        report.setTypeAssessments(new HashSet<>((Collections.singletonList(typeAssessment))));
         return report;
     }
 
