@@ -59,6 +59,7 @@ public class Generator {
         report.setAuthor(getPerson());
         report.setLastEdited(new Date());
         report.setLastEditedBy(getPerson());
+        report.setFileNumber(System.currentTimeMillis());
         report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         final InitialReport irOne = new InitialReport("Test initial report one.");
         final InitialReport irTwo = new InitialReport("Test initial report two.");

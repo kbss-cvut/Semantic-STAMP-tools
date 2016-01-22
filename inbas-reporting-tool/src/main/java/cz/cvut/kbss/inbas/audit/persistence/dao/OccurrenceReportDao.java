@@ -59,6 +59,7 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
      */
     @Override
     protected List<OccurrenceReport> findAll(EntityManager em) {
+        // TODO This should also return only latest revisions for every file number (report chain)
         return em.createNativeQuery(
                 "SELECT ?x WHERE { ?x a ?type ;" +
                         "?hasRevision ?revision ;" +
@@ -91,6 +92,41 @@ public class OccurrenceReportDao extends BaseDao<OccurrenceReport>
                      .setParameter("type", typeIri).setParameter("reportType", URI.create(type))
                      .setParameter("hasRevision", URI.create(
                              Vocabulary.p_revision))
+                     .setParameter("hasOccurrence", URI.create(Vocabulary.p_hasOccurrence))
+                     .setParameter("hasStartTime", URI.create(Vocabulary.p_startTime))
+                     .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Gets reports concerning the specified occurrence.
+     * <p>
+     * Only latest revisions of reports of each phase are returned.
+     *
+     * @param occurrence The occurrence to filter reports by
+     * @return List of reports
+     */
+    public List<OccurrenceReport> findByOccurrence(Occurrence occurrence) {
+        // TODO This does not take into account difference between preliminary and investigation report
+        // Need to filter by fileNumber and remember that preliminary reports
+        final EntityManager em = entityManager();
+        try {
+            return em.createNativeQuery(
+                    "SELECT ?x WHERE { ?x a ?type ;" +
+                            "?hasRevision ?revision ;" +
+                            "?hasStartTime ?startTime ;" +
+                            "?hasOccurrence ?occurrence . " +
+                            // Use only the max revision reports
+                            "{ SELECT (MAX(?rev) AS ?maxRev) WHERE " +
+                            "{ ?y a ?type ; ?hasOccurrence ?occurrence ; ?hasRevision ?rev . } }" +
+                            "FILTER (?revision = ?maxRev)" +
+                            "} ORDER BY DESC(?startTime) DESC(?revision)",
+                    OccurrenceReport.class)
+                     .setParameter("type", typeIri)
+                     .setParameter("occurrence", occurrence.getUri())
+                     .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
                      .setParameter("hasOccurrence", URI.create(Vocabulary.p_hasOccurrence))
                      .setParameter("hasStartTime", URI.create(Vocabulary.p_startTime))
                      .getResultList();

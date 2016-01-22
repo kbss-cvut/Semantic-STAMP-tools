@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
-import cz.cvut.kbss.inbas.audit.model.reports.Report;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.service.OccurrenceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class OccurrenceController extends BaseController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{key}/reports", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<Report> getOccurrenceReports(@PathVariable("key") String key) {
+    public Collection<OccurrenceReport> getOccurrenceReports(@PathVariable("key") String key) {
         final Occurrence occurrence = findByKey(key);
         return occurrenceService.getReports(occurrence);
     }

@@ -42,6 +42,7 @@ public abstract class ReportMapper {
         final InvestigationReportDto dto = new InvestigationReportDto();
         dto.setUri(report.getUri());
         dto.setKey(report.getKey());
+        dto.setFileNumber(report.getFileNumber());
         dto.setOccurrence(report.getOccurrence());
         dto.setOccurrenceStart(report.getOccurrenceStart());
         dto.setOccurrenceEnd(report.getOccurrenceEnd());
@@ -103,6 +104,7 @@ public abstract class ReportMapper {
         final InvestigationReport report = new InvestigationReport();
         report.setUri(dto.getUri());
         report.setKey(dto.getKey());
+        report.setFileNumber(dto.getFileNumber());
         report.setOccurrenceStart(dto.getOccurrenceStart());
         report.setOccurrenceEnd(dto.getOccurrenceEnd());
         report.setOccurrence(dto.getOccurrence());

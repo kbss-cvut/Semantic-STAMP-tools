@@ -60,6 +60,15 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
+    public void persistGeneratesKeyOnInstance() throws Exception {
+        final PreliminaryReport report = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        assertNull(report.getKey());
+        dao.persist(report);
+        assertNotNull(report.getKey());
+    }
+
+    @Test
     public void persistingReportsWithSameEventTypeSavesItFirstTimeAndReusesLater() throws Exception {
         final PreliminaryReport rOne = initPreliminaryReportWithTypeAssessment(eventType);
         dao.persist(rOne);
@@ -230,6 +239,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         report.setOccurrenceEnd(new Date());
         report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setAuthor(author);
+        report.setFileNumber(System.currentTimeMillis());
         return report;
     }
 

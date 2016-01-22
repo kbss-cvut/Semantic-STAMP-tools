@@ -23,8 +23,13 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
     @Id(generated = true)
     private URI uri;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_fileNumber)
+    private Long fileNumber;
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_startTime)
@@ -80,6 +85,7 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
     public InvestigationReport(PreliminaryReport preliminaryReport) {
         assert preliminaryReport != null;
 
+        this.fileNumber = preliminaryReport.getFileNumber();
         this.occurrence = preliminaryReport.getOccurrence();
         occurrence.transitionToPhase(getPhase());
         this.occurrenceStart = preliminaryReport.getOccurrenceStart();
@@ -95,6 +101,7 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
     public InvestigationReport(InvestigationReport other) {
         assert other != null;
 
+        this.fileNumber = other.fileNumber;
         this.occurrence = other.occurrence;
         this.occurrenceStart = other.occurrenceStart;
         this.occurrenceEnd = other.occurrenceEnd;
@@ -104,7 +111,8 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
             this.initialReports = other.initialReports.stream().map(InitialReport::new).collect(Collectors.toSet());
         }
         if (other.correctiveMeasures != null) {
-            this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasure::new).collect(Collectors.toSet());
+            this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasure::new)
+                                                              .collect(Collectors.toSet());
         }
     }
 
@@ -114,6 +122,14 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public Long getFileNumber() {
+        return fileNumber;
+    }
+
+    public void setFileNumber(Long fileNumber) {
+        this.fileNumber = fileNumber;
     }
 
     public Date getOccurrenceStart() {
