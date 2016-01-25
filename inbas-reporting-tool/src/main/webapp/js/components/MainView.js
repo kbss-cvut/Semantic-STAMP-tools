@@ -20,7 +20,6 @@ var Constants = require('../constants/Constants');
 var I18nMixin = require('../i18n/I18nMixin');
 
 var Authentication = require('../utils/Authentication');
-var Constants = require('../constants/Constants');
 var UserStore = require('../stores/UserStore');
 
 var MainView = React.createClass({

@@ -69,7 +69,7 @@ var ReportStatements = React.createClass({
         var statement = data.statement;
         var eventTypes = this.props.report.typeAssessments != null ? this.props.report.typeAssessments : [];
         eventTypes.push(statement);
-        this.props.onChange('typeAssessments', eventTypes);
+        this.props.onChange({typeAssessments: eventTypes});
         closeCallback();
     },
 
@@ -78,14 +78,14 @@ var ReportStatements = React.createClass({
         var eventTypes = this.props.report.typeAssessments;
         eventTypes.splice(statement.index, 1, statement);
         delete statement.index;
-        this.props.onChange('typeAssessments', eventTypes);
+        this.props.onChange({typeAssessments: eventTypes});
         closeCallback();
     },
 
     onRemoveEventTypeAssessment: function (index) {
-        var types = this.props.report.typeAssessments;
-        types.splice(index, 1);
-        this.props.onChange('typeAssessments', types);
+        var eventTypes = this.props.report.typeAssessments;
+        eventTypes.splice(index, 1);
+        this.props.onChange({typeAssessments: eventTypes});
     },
 
     onEditEventTypeAssessment: function (index) {
@@ -116,7 +116,7 @@ var ReportStatements = React.createClass({
         var measure = data.statement;
         var measures = this.props.report.correctiveMeasures != null ? this.props.report.correctiveMeasures : [];
         measures.push(measure);
-        this.props.onChange('correctiveMeasures', measures);
+        this.props.onChange({correctiveMeasures: measures});
         closeCallback();
     },
 
@@ -126,14 +126,14 @@ var ReportStatements = React.createClass({
         measures.splice(measure.index, 1, measure);
 
         delete measure.index;
-        this.props.onChange('correctiveMeasures', measures);
+        this.props.onChange({correctiveMeasures: measures});
         closeCallback();
     },
 
     onRemoveCorrectiveMeasure: function (index) {
         var measures = this.props.report.correctiveMeasures;
         measures.splice(index, 1);
-        this.props.onChange('correctiveMeasures', measures);
+        this.props.onChange({correctiveMeasures: measures});
     },
 
     onEditCorrectiveMeasure: function (index) {
