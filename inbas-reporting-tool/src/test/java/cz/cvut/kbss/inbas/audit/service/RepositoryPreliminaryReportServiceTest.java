@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.audit.service;
 
-import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
@@ -99,6 +98,7 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         report.setOccurrence(Generator.generateOccurrence());
         report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setSummary("Narrative");
+        report.setFileNumber(System.currentTimeMillis());
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
         typeAssessment.setDescription("Event type assessment.");
         typeAssessment.setEventType(new EventType(URI.create(
@@ -341,19 +341,6 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         assertTrue(newRevision.getRevision() < anotherRevision.getRevision());
         verifyRevisionIndependence(report, newRevision);
         verifyRevisionIndependence(newRevision, anotherRevision);
-    }
-
-    @Test
-    public void getRevisionsForOccurrenceReturnsListOfReportRevisionsForOccurrence() throws Exception {
-        final List<PreliminaryReport> reports = initReportRevisions();
-
-        final List<ReportRevisionInfo> result = reportService.getRevisionsForOccurrence(reports.get(0).getOccurrence());
-        assertEquals(reports.size(), result.size());
-        for (int i = 0; i < reports.size(); i++) {
-            assertEquals(reports.get(i).getUri(), result.get(i).getUri());
-            assertEquals(reports.get(i).getRevision(), result.get(i).getRevision());
-            assertEquals(reports.get(i).getCreated(), result.get(i).getCreated());
-        }
     }
 
     private List<PreliminaryReport> initReportRevisions() {

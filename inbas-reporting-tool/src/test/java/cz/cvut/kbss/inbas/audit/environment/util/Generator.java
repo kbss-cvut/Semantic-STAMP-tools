@@ -105,6 +105,7 @@ public class Generator {
         report.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas-2015#Investigation_instance319360066"));
         report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         report.setOccurrence(generateOccurrence());
+        report.setFileNumber(System.currentTimeMillis());
         final Date start = new Date(System.currentTimeMillis() - 10000);
         report.setOccurrenceStart(start);
         final Date end = new Date();
@@ -156,6 +157,7 @@ public class Generator {
         final Date end = new Date();
         report.setOccurrenceEnd(end);
         report.setAuthor(getPerson());
+        report.setFileNumber(System.currentTimeMillis());
 
         final Factor root = new Factor();
         root.setStartTime(start);

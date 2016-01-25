@@ -91,7 +91,7 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
         this.occurrenceStart = preliminaryReport.getOccurrenceStart();
         this.occurrenceEnd = preliminaryReport.getOccurrenceEnd();
         this.summary = preliminaryReport.getSummary();
-        this.revision = Constants.INITIAL_REVISION;
+        this.revision = preliminaryReport.getRevision() + 1;
         this.severityAssessment = preliminaryReport.getSeverityAssessment();
     }
 

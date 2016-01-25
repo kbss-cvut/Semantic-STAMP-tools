@@ -58,6 +58,7 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             r.setRevision(2);
             r.setOccurrenceStart(startTime);
             r.setOccurrenceEnd(endTime);
+            r.setFileNumber(System.currentTimeMillis());
             r.setAuthor(author);
             r.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
             preliminaryReports.add(r);
@@ -71,6 +72,7 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             r.setRevision(2);
             r.setOccurrenceStart(startTime);
             r.setOccurrenceEnd(endTime);
+            r.setFileNumber(System.currentTimeMillis());
             r.setAuthor(author);
             investigationReports.add(r);
         }

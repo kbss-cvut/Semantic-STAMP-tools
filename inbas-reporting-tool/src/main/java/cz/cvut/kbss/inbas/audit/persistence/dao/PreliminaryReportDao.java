@@ -32,7 +32,8 @@ public class PreliminaryReportDao extends BaseReportDao<PreliminaryReport> {
         if (entity.getRevision() == null) {
             entity.setRevision(Constants.INITIAL_REVISION);
         }
-        if (entity.getRevision().equals(Constants.INITIAL_REVISION)) {
+        if (entity.getRevision().equals(Constants.INITIAL_REVISION) &&
+                !occurrenceDao.exists(entity.getOccurrence().getUri(), em)) {
             occurrenceDao.persist(entity.getOccurrence(), em);
         }
         if (entity.getTypeAssessments() != null) {

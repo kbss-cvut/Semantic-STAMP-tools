@@ -1,13 +1,10 @@
 package cz.cvut.kbss.inbas.audit.service.repository;
 
-import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.persistence.dao.*;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;
 import cz.cvut.kbss.inbas.audit.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.audit.service.validation.Validator;
-import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +30,6 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
     private FactorDao factorDao;
     @Autowired
     private InvestigationReportDao investigationReportDao;
-    @Autowired
-    private OccurrenceReportDao reportDao;
 
     @Override
     protected GenericDao<InvestigationReport> getPrimaryDao() {
@@ -198,12 +193,5 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         if (root.getChildren() != null) {
             root.getChildren().forEach(child -> copyCausesAndMitigates(child, factorMapping.get(child), factorMapping));
         }
-    }
-
-    @Override
-    public List<ReportRevisionInfo> getRevisionsForOccurrence(Occurrence occurrence) {
-        Objects.requireNonNull(occurrence);
-
-        return reportDao.getRevisionsForOccurrence(occurrence, Vocabulary.InvestigationReport);
     }
 }
