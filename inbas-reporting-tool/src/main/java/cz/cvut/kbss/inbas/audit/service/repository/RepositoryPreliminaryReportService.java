@@ -55,6 +55,9 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
     private void prepareReportForPersist(PreliminaryReport report) {
         report.setAuthor(securityUtils.getCurrentUser());
         report.setCreated(new Date());
+        if (report.getFileNumber() == null) {
+            report.setFileNumber(System.currentTimeMillis());
+        }
         reportValidator.validate(report);
         report.getOccurrence().transitionToPhase(ReportingPhase.PRELIMINARY);
     }

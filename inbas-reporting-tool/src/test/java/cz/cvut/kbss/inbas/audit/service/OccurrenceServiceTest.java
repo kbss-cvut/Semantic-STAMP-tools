@@ -2,12 +2,10 @@ package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
-import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.junit.Before;
@@ -21,8 +19,6 @@ import static org.junit.Assert.*;
 public class OccurrenceServiceTest extends BaseServiceTestRunner {
 
     @Autowired
-    private PersonDao personDao;
-    @Autowired
     private OccurrenceDao occurrenceDao;
 
     @Autowired
@@ -34,16 +30,14 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
     @Autowired
     private OccurrenceService occurrenceService;
 
-    private Person author;
     private Occurrence occurrence;
     private Map<ReportingPhase, Set<? extends Report>> data;
 
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         this.occurrence = Generator.generateOccurrence();
         occurrenceDao.persist(occurrence);
-        this.author = Generator.getPerson();
-        personDao.persist(author);
         this.data = persistTestData();
     }
 
@@ -59,7 +53,7 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             r.setOccurrenceStart(startTime);
             r.setOccurrenceEnd(endTime);
             r.setFileNumber(System.currentTimeMillis());
-            r.setAuthor(author);
+            r.setAuthor(person);
             r.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
             preliminaryReports.add(r);
         }
@@ -73,7 +67,7 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             r.setOccurrenceStart(startTime);
             r.setOccurrenceEnd(endTime);
             r.setFileNumber(System.currentTimeMillis());
-            r.setAuthor(author);
+            r.setAuthor(person);
             investigationReports.add(r);
         }
         investigationReportDao.persist(investigationReports);

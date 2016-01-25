@@ -13,6 +13,8 @@ public interface Report {
 
     URI getUri();
 
+    String getKey();
+
     /**
      * Gets reporting phase to which this report is relevant.
      *

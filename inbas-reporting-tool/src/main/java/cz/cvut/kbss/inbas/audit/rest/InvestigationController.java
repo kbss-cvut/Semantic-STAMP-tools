@@ -9,8 +9,8 @@ import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;
-import cz.cvut.kbss.inbas.audit.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
+import cz.cvut.kbss.inbas.audit.service.ReportService;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -30,14 +30,14 @@ public class InvestigationController extends BaseController {
     @Autowired
     private InvestigationReportService investigationReportService;
     @Autowired
-    private OccurrenceReportService occurrenceReportService;
+    private ReportService reportService;
 
     @Autowired
     private ReportMapper reportMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<OccurrenceReport> getInvestigationReports() {
-        return occurrenceReportService.findAll(Vocabulary.InvestigationReport);
+        return reportService.findAll(Vocabulary.InvestigationReport);
     }
 
 

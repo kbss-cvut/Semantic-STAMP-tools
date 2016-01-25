@@ -7,8 +7,8 @@ import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.rest.util.RestUtils;
-import cz.cvut.kbss.inbas.audit.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
+import cz.cvut.kbss.inbas.audit.service.ReportService;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -27,14 +27,14 @@ public class PreliminaryReportController extends BaseController {
     private PreliminaryReportService preliminaryReportService;
 
     @Autowired
-    private OccurrenceReportService occurrenceReportService;
+    private ReportService reportService;
 
     @Autowired
     private ReportMapper reportMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<OccurrenceReport> getAllReports() {
-        return occurrenceReportService.findAll(Vocabulary.PreliminaryReport);
+        return reportService.findAll(Vocabulary.PreliminaryReport);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)

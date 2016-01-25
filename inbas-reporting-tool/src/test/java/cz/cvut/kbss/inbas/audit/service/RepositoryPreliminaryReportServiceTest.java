@@ -49,6 +49,17 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
     }
 
     @Test
+    public void persistSetsFileNumber() throws Exception {
+        final PreliminaryReport report = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        report.setFileNumber(null);
+
+        reportService.persist(report);
+        assertNotNull(report.getFileNumber());
+        assertNotNull(reportService.find(report.getUri()));
+    }
+
+    @Test
     public void eventTypeAssessmentsWithRunwayIncursionAreDeletedWhenRemovedFromReport() throws Exception {
         final PreliminaryReport reportWithIncursion = persistReportWithIncursion();
         assertNotNull(reportWithIncursion.getKey());

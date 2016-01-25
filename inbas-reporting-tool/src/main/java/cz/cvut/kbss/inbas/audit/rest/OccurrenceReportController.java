@@ -1,9 +1,10 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.model.reports.Report;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.BadRequestException;
 import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
-import cz.cvut.kbss.inbas.audit.service.OccurrenceReportService;
+import cz.cvut.kbss.inbas.audit.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +17,7 @@ import java.util.Collection;
 public class OccurrenceReportController extends BaseController {
 
     @Autowired
-    private OccurrenceReportService reportService;
+    private ReportService reportService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<OccurrenceReport> getAllReports(@RequestParam(value = "type", required = false) String type) {
@@ -28,8 +29,8 @@ public class OccurrenceReportController extends BaseController {
     }
 
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public OccurrenceReport getReport(@PathVariable("key") String key) {
-        final OccurrenceReport report = reportService.findByKey(key);
+    public Report getReport(@PathVariable("key") String key) {
+        final Report report = reportService.findByKey(key);
         if (report == null) {
             throw NotFoundException.create("Occurrence report", key);
         }
@@ -39,7 +40,7 @@ public class OccurrenceReportController extends BaseController {
     @RequestMapping(value = "/{key}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReport(@PathVariable("key") String key) {
-        final OccurrenceReport toRemove = getReport(key);
+        final Report toRemove = getReport(key);
         reportService.remove(toRemove);
     }
 }

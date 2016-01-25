@@ -2,14 +2,12 @@ package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
-import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
 import cz.cvut.kbss.inbas.audit.service.repository.RepositoryInvestigationReportService;
 import cz.cvut.kbss.inbas.audit.util.Constants;
@@ -28,8 +26,6 @@ import static org.junit.Assert.*;
 
 public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRunner {
 
-    @Autowired
-    private PersonDao personDao;
     @Autowired
     private OccurrenceDao occurrenceDao;
     @Autowired
@@ -50,11 +46,8 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
 
     @Before
     public void setUp() throws Exception {
-        final Person user = Generator.getPerson();
-        if (personDao.findByUsername(user.getUsername()) == null) {
-            personDao.persist(user);
-        }
-        Environment.setCurrentUser(user);
+        super.setUp();
+        Environment.setCurrentUser(person);
     }
 
     @Test
