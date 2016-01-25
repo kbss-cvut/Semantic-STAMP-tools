@@ -71,7 +71,8 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
     private Set<CorrectiveMeasure> correctiveMeasures;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = {CascadeType.MERGE,
+            CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Set<EventTypeAssessment> typeAssessments;
 
     @Types(fetchType = FetchType.EAGER)
