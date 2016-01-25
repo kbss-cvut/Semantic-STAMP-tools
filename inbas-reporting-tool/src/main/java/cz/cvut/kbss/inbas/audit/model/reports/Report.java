@@ -15,6 +15,8 @@ public interface Report {
 
     String getKey();
 
+    Long getFileNumber();
+
     /**
      * Gets reporting phase to which this report is relevant.
      *

@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.Report;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
@@ -9,6 +10,9 @@ import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.net.URI;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -78,18 +82,62 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void testRemovePreliminaryReport() {
+    public void findAllWithNullTypeReturnsSameAsFindAllWithoutArgs() {
         final PreliminaryReport pr = persistPreliminaryReport();
+        final InvestigationReport investigation = persistInvestigation();
+        final Set<URI> uris = new HashSet<>(Arrays.asList(pr.getUri(), investigation.getUri()));
 
-        reportService.remove(pr);
-        assertNull(preliminaryReportDao.find(pr.getUri()));
+        final List<OccurrenceReport> allByType = reportService.findAll(null);
+        final List<OccurrenceReport> all = reportService.findAll();
+        assertEquals(uris.size(), allByType.size());
+        assertEquals(uris.size(), all.size());
+        allByType.forEach(report -> assertTrue(uris.contains(report.getUri())));
+        all.forEach(report -> assertTrue(uris.contains(report.getUri())));
     }
 
     @Test
-    public void testRemoveInvestigation() {
-        final InvestigationReport investigation = persistInvestigation();
+    public void removeReportChainRemovesAllReportsInChain() {
+        final List<Report> chain = persistReportChain();
+        reportService.removeReportChain(chain.get(0).getFileNumber());
 
-        reportService.remove(investigation);
-        assertNull(investigationDao.find(investigation.getUri()));
+        for (Report r : chain) {
+            assertNull(reportService.find(r.getUri()));
+        }
+    }
+
+    private List<Report> persistReportChain() {
+        final List<Report> reports = new ArrayList<>();
+        PreliminaryReport prevRevision = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        prevRevision.setCreated(new Date());
+        preliminaryReportDao.persist(prevRevision);
+        final int cnt = Generator.randomInt(5);
+        final List<PreliminaryReport> toPersist = new ArrayList<>(cnt);
+        for (int i = 0; i < cnt; i++) {
+            reports.add(prevRevision);
+            final PreliminaryReport nextRevision = new PreliminaryReport(prevRevision);
+            nextRevision.setRevision(prevRevision.getRevision() + 1);
+            nextRevision.setAuthor(person);
+            nextRevision.setCreated(new Date());
+            toPersist.add(nextRevision);
+            prevRevision = nextRevision;
+        }
+        preliminaryReportDao.persist(toPersist);
+        InvestigationReport prevInvestigation = new InvestigationReport(toPersist.get(cnt - 1));
+        prevInvestigation.setCreated(new Date());
+        prevInvestigation.setAuthor(person);
+        investigationDao.persist(prevInvestigation);
+        final List<InvestigationReport> toPersistInv = new ArrayList<>(cnt);
+        for (int i = 0; i < cnt; i++) {
+            reports.add(prevInvestigation);
+            final InvestigationReport nextInvestigation = new InvestigationReport(prevInvestigation);
+            nextInvestigation.setRevision(prevInvestigation.getRevision() + 1);
+            nextInvestigation.setAuthor(person);
+            nextInvestigation.setCreated(new Date());
+            toPersistInv.add(nextInvestigation);
+            prevInvestigation = nextInvestigation;
+        }
+        investigationDao.persist(toPersistInv);
+        return reports;
     }
 }
