@@ -34,6 +34,15 @@ public abstract class ReportMapper {
         throw new IllegalArgumentException("Unsupported report type: " + report.getClass());
     }
 
+    public Report reportDtoToReport(AbstractReportDto dto) {
+        if (dto instanceof PreliminaryReportDto) {
+            return preliminaryReportDtoToPreliminaryReport((PreliminaryReportDto) dto);
+        } else if (dto instanceof InvestigationReportDto) {
+            return investigationReportDtoToInvestigationReport((InvestigationReportDto) dto);
+        }
+        throw new IllegalArgumentException("Unsupported report dto type: " + dto.getClass());
+    }
+
     public OccurrenceReportInfo occurrenceReportToOccurrenceReportInfo(PreliminaryReport report) {
         return new OccurrenceReportInfo(report);
     }

@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
+import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
@@ -81,13 +82,28 @@ public class MainReportService implements ReportService {
     }
 
     @Override
-    public void update(PreliminaryReport report) {
-        preliminaryReportService.update(report);
+    public void update(Report report) {
+        Objects.requireNonNull(report);
+        final Report original = findByKey(report.getKey());
+        if (original == null) {
+            throw NotFoundException.create("Original report", report.getKey());
+        }
+        verifyUpdateReportIdentity(original, report);
+        if (report instanceof PreliminaryReport) {
+            preliminaryReportService.update((PreliminaryReport) report);
+        } else if (report instanceof InvestigationReport) {
+            investigationService.update((InvestigationReport) report);
+        } else {
+            throw new IllegalArgumentException("Unsupported report type " + report.getClass());
+        }
     }
 
-    @Override
-    public void update(InvestigationReport report) {
-        investigationService.update(report);
+    private void verifyUpdateReportIdentity(Report original, Report update) {
+        if (!original.getUri().equals(update.getUri())) {
+            throw new ValidationException(
+                    "The updated report URI " + update.getUri() + " is different from the original URI " + original
+                            .getUri() + "!");
+        }
     }
 
     @Override

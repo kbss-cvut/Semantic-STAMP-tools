@@ -2,7 +2,6 @@ package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
-import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.Report;
@@ -60,9 +59,13 @@ public interface ReportService {
 
     void persist(PreliminaryReport report);
 
-    void update(PreliminaryReport report);
-
-    void update(InvestigationReport report);
+    /**
+     * Updates the specified report.
+     *
+     * @param report The report to update
+     * @throws cz.cvut.kbss.inbas.audit.exception.ValidationException If the report is not valid
+     */
+    void update(Report report);
 
     /**
      * Removes all reports in report chain with the specified file number.

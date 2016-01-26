@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.service;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
+import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
@@ -218,5 +219,51 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         final InvestigationReport latest = (InvestigationReport) reports.get(0);
 
         assertNull(reportService.findRevision(latest.getFileNumber(), latest.getRevision() + 1));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void updateThrowsNotFoundWhenOriginalReportCannotBeFound() {
+        final PreliminaryReport report = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        final String key = "117";
+        report.setKey(key);
+
+        reportService.update(report);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void updateThrowsValidationExceptionWhenOriginalAndUpdateUrisDontMatch() {
+        final PreliminaryReport original = persistPreliminaryReport();
+        final PreliminaryReport update = new PreliminaryReport(original);
+        update.setKey(original.getKey());
+        update.setUri(URI.create("http://different.uri.org"));
+
+        reportService.update(update);
+    }
+
+    @Test
+    public void updateUpdatesPreliminaryReport() {
+        Environment.setCurrentUser(person);
+        final PreliminaryReport report = persistPreliminaryReport();
+        final String summaryUpdate = "Different summary after update.";
+        report.setSummary(summaryUpdate);
+
+        reportService.update(report);
+
+        final PreliminaryReport result = preliminaryReportDao.find(report.getUri());
+        assertEquals(summaryUpdate, result.getSummary());
+    }
+
+    @Test
+    public void updateUpdatesInvestigation() {
+        Environment.setCurrentUser(person);
+        final InvestigationReport report = persistInvestigation();
+        final String summaryUpdate = "Different summary after update.";
+        report.setSummary(summaryUpdate);
+
+        reportService.update(report);
+
+        final InvestigationReport result = investigationDao.find(report.getUri());
+        assertEquals(summaryUpdate, result.getSummary());
     }
 }

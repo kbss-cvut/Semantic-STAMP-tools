@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.dto;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
@@ -10,6 +11,7 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "dtoClass")
 public abstract class AbstractReportDto {
 
     private URI uri;

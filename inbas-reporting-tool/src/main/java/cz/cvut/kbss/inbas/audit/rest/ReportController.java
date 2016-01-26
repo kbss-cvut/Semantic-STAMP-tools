@@ -1,9 +1,11 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.dto.AbstractReportDto;
+import cz.cvut.kbss.inbas.audit.dto.PreliminaryReportDto;
 import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.Report;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.audit.rest.exception.BadRequestException;
@@ -38,6 +40,19 @@ public class ReportController extends BaseController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Void> createReport(@RequestBody PreliminaryReportDto reportDto) {
+        final PreliminaryReport preliminaryReport = reportMapper.preliminaryReportDtoToPreliminaryReport(reportDto);
+        assert preliminaryReport != null;
+        reportService.persist(preliminaryReport);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Created report from data {}", reportDto);
+        }
+        final HttpHeaders header = RestUtils.createLocationHeaderFromCurrentUri("/{key}", preliminaryReport.getKey());
+        return new ResponseEntity<>(header, HttpStatus.CREATED);
+    }
+
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public AbstractReportDto getReport(@PathVariable("key") String key) {
         final Report report = getReportInternal(key);
@@ -50,6 +65,16 @@ public class ReportController extends BaseController {
             throw NotFoundException.create("Occurrence report", key);
         }
         return report;
+    }
+
+    @RequestMapping(value = "/{key}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateReport(@PathVariable("key") String key, @RequestBody AbstractReportDto reportUpdate) {
+        if (!key.equals(reportUpdate.getKey())) {
+            throw new BadRequestException("The passed report's key is different from the specified one.");
+        }
+        final Report report = reportMapper.reportDtoToReport(reportUpdate);
+        reportService.update(report);
     }
 
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.DELETE)
