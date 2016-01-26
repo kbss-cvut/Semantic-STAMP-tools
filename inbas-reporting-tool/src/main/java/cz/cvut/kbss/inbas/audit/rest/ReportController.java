@@ -97,11 +97,25 @@ public class ReportController extends BaseController {
         return reportService.getReportChainRevisions(fileNumber);
     }
 
+    /**
+     * Creates new revision in the report chain (of the same type as the latest revision) or starts investigation (from
+     * latest preliminary report).
+     *
+     * @param fileNumber  Report chain identifier
+     * @param investigate Whether a new investigation should be start
+     * @return Response with location header pointing to the new report
+     */
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.POST)
-    public ResponseEntity<Void> createNewRevision(@PathVariable("fileNumber") Long fileNumber) {
-        final Report newRevision = reportService.createNewRevision(fileNumber);
-        final HttpHeaders headers = RestUtils.createLocationHeaderFromContextPath("/reports/{key}",
-                newRevision.getKey());
+    public ResponseEntity<Void> createNewRevision(@PathVariable("fileNumber") Long fileNumber,
+                                                  @RequestParam(required = false, value = "investigate") boolean investigate) {
+        final Report newRevision;
+        if (investigate) {
+            newRevision = reportService.startInvestigation(fileNumber);
+        } else {
+            newRevision = reportService.createNewRevision(fileNumber);
+        }
+        final HttpHeaders headers = RestUtils
+                .createLocationHeaderFromContextPath("/reports/{key}", newRevision.getKey());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 

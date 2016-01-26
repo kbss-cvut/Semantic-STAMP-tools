@@ -2,11 +2,15 @@ package cz.cvut.kbss.inbas.audit.service.repository;
 
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.service.BaseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.Collection;
 
 public abstract class BaseRepositoryService<T> implements BaseService<T> {
+
+    protected static final Logger LOG = LoggerFactory.getLogger(BaseRepositoryService.class);
 
     protected abstract GenericDao<T> getPrimaryDao();
 

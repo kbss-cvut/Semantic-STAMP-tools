@@ -2,12 +2,15 @@ package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
+import cz.cvut.kbss.inbas.audit.exception.InvestigationExistsException;
 import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,6 +30,12 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private ReportService reportService;
+
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        Environment.setCurrentUser(person);
+    }
 
     @Test
     public void testFindPreliminaryReport() {
@@ -157,7 +166,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void createNewRevisionCreatesNewRevisionFromLatestExistingReport() {
-        Environment.setCurrentUser(Generator.getPerson());
         final PreliminaryReport rOne = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
         final PreliminaryReport rTwo = new PreliminaryReport(rOne);
         rTwo.setAuthor(Generator.getPerson());
@@ -175,7 +183,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void createNewRevisionFromInvestigationCreatesNewRevision() {
-        Environment.setCurrentUser(Generator.getPerson());
         final List<Report> reports = persistReportChain();
         Collections.sort(reports, (a, b) -> b.getRevision() - a.getRevision());
         final InvestigationReport latest = (InvestigationReport) reports.get(0);
@@ -188,14 +195,12 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test(expected = NotFoundException.class)
     public void createNewRevisionFromUnknownChainThrowsNotFoundException() {
-        Environment.setCurrentUser(Generator.getPerson());
         final Long unknownFileNumber = 998877L;
         reportService.createNewRevision(unknownFileNumber);
     }
 
     @Test
     public void findRevisionReturnsReportWithMatchingFileNumberAndRevision() {
-        Environment.setCurrentUser(Generator.getPerson());
         final List<Report> reports = persistReportChain();
 
         for (Report r : reports) {
@@ -243,7 +248,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void updateUpdatesPreliminaryReport() {
-        Environment.setCurrentUser(person);
         final PreliminaryReport report = persistPreliminaryReport();
         final String summaryUpdate = "Different summary after update.";
         report.setSummary(summaryUpdate);
@@ -256,7 +260,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void updateUpdatesInvestigation() {
-        Environment.setCurrentUser(person);
         final InvestigationReport report = persistInvestigation();
         final String summaryUpdate = "Different summary after update.";
         report.setSummary(summaryUpdate);
@@ -265,5 +268,29 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
         final InvestigationReport result = investigationDao.find(report.getUri());
         assertEquals(summaryUpdate, result.getSummary());
+    }
+
+    @Test(expected = InvestigationExistsException.class)
+    public void startInvestigationThrowsInvestigationExistsExceptionWhenInvestigationAlreadyExists() {
+        final List<Report> reportChain = persistReportChain();
+        assertEquals(ReportingPhase.INVESTIGATION, reportChain.get(reportChain.size() - 1).getPhase());
+        reportService.startInvestigation(reportChain.get(0).getFileNumber());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void startInvestigationThrowsNotFoundWhenReportChainCannotBeFound() {
+        final Long unknownFileNumber = 998877L;
+        reportService.startInvestigation(unknownFileNumber);
+    }
+
+    @Test
+    public void startInvestigationCreatesNewInvestigationForReportChain() {
+        final PreliminaryReport report = persistPreliminaryReport();
+        assertEquals(ReportingPhase.PRELIMINARY, report.getOccurrence().getReportingPhase());
+
+        final InvestigationReport investigation = reportService.startInvestigation(report.getFileNumber());
+        assertNotNull(investigation);
+        assertEquals(report.getRevision() + 1, investigation.getRevision().intValue());
+        assertEquals(ReportingPhase.INVESTIGATION, investigation.getOccurrence().getReportingPhase());
     }
 }

@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
+import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.Report;
@@ -9,6 +10,12 @@ import cz.cvut.kbss.inbas.audit.model.reports.Report;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * Main facade to the report-related business logic.
+ * <p>
+ * This class should be used by the higher-level layers instead of the preliminary and investigation report-specific
+ * services.
+ */
 public interface ReportService {
 
     /**
@@ -99,4 +106,15 @@ public interface ReportService {
      * @return Matching report or {@code null}
      */
     Report findRevision(Long fileNumber, Integer revision);
+
+    /**
+     * Starts investigation from the latest preliminary report in a report chain identified by the specified file
+     * number.
+     *
+     * @param fileNumber Report chain identifier
+     * @return The newly created investigation
+     * @throws cz.cvut.kbss.inbas.audit.exception.InvestigationExistsException When the report chain is already in
+     *                                                                         investigation phase
+     */
+    InvestigationReport startInvestigation(Long fileNumber);
 }

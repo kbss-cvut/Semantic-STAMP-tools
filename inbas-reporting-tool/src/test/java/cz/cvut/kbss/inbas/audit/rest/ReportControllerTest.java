@@ -133,4 +133,34 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         assertEquals(HttpStatus.NO_CONTENT, HttpStatus.valueOf(result.getResponse().getStatus()));
         verify(reportServiceMock).update(any(Report.class));
     }
+
+    @Test
+    public void createRevisionWithInvestigateParamStartsInvestigationFromLatestPreliminaryReport() throws Exception {
+        final Long fileNumber = 12345L;
+        final InvestigationReport investigation = Generator.generateMinimalInvestigation();
+        investigation.setFileNumber(fileNumber);
+        investigation.setKey("117");
+        when(reportServiceMock.startInvestigation(fileNumber)).thenReturn(investigation);
+
+        mockMvc.perform(
+                post("/reports/chain/" + fileNumber + "/revisions").param("investigate", Boolean.TRUE.toString()))
+               .andReturn();
+        verify(reportServiceMock).startInvestigation(fileNumber);
+    }
+
+    @Test
+    public void startingInvestigationReturnsLocationHeader() throws Exception {
+        final Long fileNumber = 12345L;
+        final String key = "117";
+        final InvestigationReport investigation = Generator.generateMinimalInvestigation();
+        investigation.setFileNumber(fileNumber);
+        investigation.setKey(key);
+        when(reportServiceMock.startInvestigation(fileNumber)).thenReturn(investigation);
+
+        final MvcResult result = mockMvc.perform(
+                post("/reports/chain/" + fileNumber + "/revisions").param("investigate", Boolean.TRUE.toString()))
+                                        .andReturn();
+        assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
+        verifyLocationEquals("/reports/" + key, result);
+    }
 }

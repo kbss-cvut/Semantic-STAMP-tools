@@ -69,6 +69,9 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
         investigation.setRootFactor(generateFactors(investigation, preliminaryReport.getTypeAssessments()));
         investigationReportDao.persist(investigation);
         occurrenceDao.update(investigation.getOccurrence());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Started new investigation: {}", investigation);
+        }
         return investigation;
     }
 

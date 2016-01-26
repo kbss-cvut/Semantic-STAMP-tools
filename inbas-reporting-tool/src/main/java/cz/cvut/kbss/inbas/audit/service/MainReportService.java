@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.audit.exception.InvestigationExistsException;
 import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
@@ -165,5 +166,21 @@ public class MainReportService implements ReportService {
             return null;
         }
         return find(info.get().getUri());
+    }
+
+    @Override
+    public InvestigationReport startInvestigation(Long fileNumber) {
+        Objects.requireNonNull(fileNumber);
+
+        final Report report = findLatestRevision(fileNumber);
+        if (report == null) {
+            throw NotFoundException.create("Report chain", fileNumber);
+        }
+        if (report.getPhase() == ReportingPhase.INVESTIGATION) {
+            throw new InvestigationExistsException("Report chain " + fileNumber +
+                    " is already in investigation phase. Cannot start new investigation.");
+        }
+        assert report instanceof PreliminaryReport;
+        return investigationService.createFromPreliminaryReport((PreliminaryReport) report);
     }
 }
