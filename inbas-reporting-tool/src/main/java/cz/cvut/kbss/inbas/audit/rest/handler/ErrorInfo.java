@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.rest.handlers;
+package cz.cvut.kbss.inbas.audit.rest.handler;
 
 /**
  * Class which contains information about an error and can be send to client as JSON to let him know what is wrong.

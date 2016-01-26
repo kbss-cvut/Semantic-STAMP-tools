@@ -17,6 +17,8 @@ public interface Report {
 
     Long getFileNumber();
 
+    Integer getRevision();
+
     /**
      * Gets reporting phase to which this report is relevant.
      *

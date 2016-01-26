@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.Factor;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
+import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
@@ -28,6 +29,8 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
     private PersonDao personDao;
     @Autowired
     private OccurrenceDao occurrenceDao;
+    @Autowired
+    private PreliminaryReportDao preliminaryReportDao;
     @Autowired
     private InvestigationReportDao investigationDao;
 
@@ -221,5 +224,45 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
                 result.get(0).getUri().equals(rTwoRevTwo.getUri()));
         assertTrue(result.get(1).getUri().equals(rOneRevTwo.getUri()) ||
                 result.get(1).getUri().equals(rTwoRevTwo.getUri()));
+    }
+
+    @Test
+    public void getLatestRevisionReturnsLatestInvestigationRevision() {
+        final InvestigationReport latest = persistInvestigationInChain();
+
+        final InvestigationReport result = investigationDao.findLatestRevision(latest.getFileNumber());
+        assertNotNull(result);
+        assertEquals(latest.getUri(), result.getUri());
+    }
+
+    private PreliminaryReport persistPreliminaryReportChain() {
+        personDao.persist(Generator.getPerson());
+        final PreliminaryReport rOne = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        rOne.setAuthor(Generator.getPerson());
+        preliminaryReportDao.persist(rOne);
+        final PreliminaryReport rTwo = new PreliminaryReport(rOne);
+        rTwo.setRevision(rOne.getRevision() + 1);
+        rTwo.setAuthor(Generator.getPerson());
+        preliminaryReportDao.persist(rTwo);
+        return rTwo;
+    }
+
+    private InvestigationReport persistInvestigationInChain() {
+        final PreliminaryReport rTwo = persistPreliminaryReportChain();
+        final InvestigationReport rThree = new InvestigationReport(rTwo);
+        rThree.setAuthor(Generator.getPerson());
+        investigationDao.persist(rThree);
+        final InvestigationReport latest = new InvestigationReport(rThree);
+        latest.setAuthor(Generator.getPerson());
+        latest.setRevision(rThree.getRevision() + 1);
+        investigationDao.persist(latest);
+        return latest;
+    }
+
+    @Test
+    public void getLatestRevisionReturnsNullWhenLatestRevisionIsPreliminary() {
+        final PreliminaryReport latest = persistPreliminaryReportChain();
+        final InvestigationReport result = investigationDao.findLatestRevision(latest.getFileNumber());
+        assertNull(result);
     }
 }

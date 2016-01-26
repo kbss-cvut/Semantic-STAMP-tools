@@ -54,6 +54,12 @@ public class RepositoryInvestigationReportService extends BaseRepositoryService<
     }
 
     @Override
+    public InvestigationReport findLatestRevision(Long fileNumber) {
+        Objects.requireNonNull(fileNumber);
+        return investigationReportDao.findLatestRevision(fileNumber);
+    }
+
+    @Override
     public InvestigationReport createFromPreliminaryReport(PreliminaryReport preliminaryReport) {
         reportValidator.validate(preliminaryReport);
         final InvestigationReport investigation = new InvestigationReport(preliminaryReport);

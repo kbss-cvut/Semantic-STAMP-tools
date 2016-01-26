@@ -1,12 +1,12 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.dto.InvestigationReportDto;
+import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
-import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.audit.service.InvestigationReportService;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
@@ -91,7 +91,7 @@ public class InvestigationController extends BaseController {
             LOG.trace("Creating investigation report from preliminary report {}", report.getKey());
         }
         final InvestigationReport investigation = investigationReportService.createFromPreliminaryReport(report);
-        final HttpHeaders headers = RestUtils.createLocationHeader("/{key}", investigation.getKey());
+        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{key}", investigation.getKey());
         LOG.debug("Investigation successfully created. URI: {}", investigation.getUri());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
@@ -108,7 +108,7 @@ public class InvestigationController extends BaseController {
     public ResponseEntity<Void> createNewRevision(@PathVariable("key") String key) {
         final InvestigationReport report = getReport(key);
         final InvestigationReport newRevision = investigationReportService.createNewRevision(report);
-        final HttpHeaders headers = RestUtils.createLocationHeader("{key}", newRevision.getKey());
+        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("{key}", newRevision.getKey());
         final String location = headers.getLocation().toString();
         headers.set(HttpHeaders.LOCATION, location.replace(key + "/revisions", ""));
         return new ResponseEntity<>(headers, HttpStatus.CREATED);

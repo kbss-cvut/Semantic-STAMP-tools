@@ -47,6 +47,12 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
     }
 
     @Override
+    public PreliminaryReport findLatestRevision(Long fileNumber) {
+        Objects.requireNonNull(fileNumber);
+        return preliminaryReportDao.findLatestRevision(fileNumber);
+    }
+
+    @Override
     public void persist(PreliminaryReport report) {
         prepareReportForPersist(report);
         preliminaryReportDao.persist(report);

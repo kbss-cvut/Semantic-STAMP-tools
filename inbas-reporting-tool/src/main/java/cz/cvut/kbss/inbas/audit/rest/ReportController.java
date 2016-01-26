@@ -2,15 +2,18 @@ package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.dto.AbstractReportDto;
 import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.Report;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
-import cz.cvut.kbss.inbas.audit.rest.exceptions.BadRequestException;
-import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
+import cz.cvut.kbss.inbas.audit.rest.exception.BadRequestException;
+import cz.cvut.kbss.inbas.audit.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.audit.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -55,8 +58,37 @@ public class ReportController extends BaseController {
         reportService.removeReportChain(fileNumber);
     }
 
+    @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public AbstractReportDto findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
+        final Report report = reportService.findLatestRevision(fileNumber);
+        if (report == null) {
+            throw NotFoundException.create("Report chain", fileNumber);
+        }
+        return reportMapper.reportToReportDto(report);
+    }
+
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReportRevisionInfo> getReportChainRevisions(@PathVariable("fileNumber") Long fileNumber) {
         return reportService.getReportChainRevisions(fileNumber);
+    }
+
+    @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.POST)
+    public ResponseEntity<Void> createNewRevision(@PathVariable("fileNumber") Long fileNumber) {
+        final Report newRevision = reportService.createNewRevision(fileNumber);
+        final HttpHeaders headers = RestUtils.createLocationHeaderFromContextPath("/reports/{key}",
+                newRevision.getKey());
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public AbstractReportDto getRevision(@PathVariable("fileNumber") Long fileNumber,
+                                         @PathVariable("revision") Integer revision) {
+        final Report report = reportService.findRevision(fileNumber, revision);
+        if (report == null) {
+            throw new NotFoundException(
+                    "Report with revision " + revision + " not found in report chain with file number " + fileNumber +
+                            " or the report chain does not exist.");
+        }
+        return reportMapper.reportToReportDto(report);
     }
 }

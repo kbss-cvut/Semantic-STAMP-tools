@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class MainReportService implements ReportService {
@@ -91,7 +94,7 @@ public class MainReportService implements ReportService {
     public void removeReportChain(Long fileNumber) {
         final List<ReportRevisionInfo> reports = getReportChainRevisions(fileNumber);
         if (reports.isEmpty()) {
-            return;
+            throw NotFoundException.create("Report chain", fileNumber);
         }
         final List<PreliminaryReport> preliminaryToRemove = new ArrayList<>();
         final List<InvestigationReport> investigationToRemove = new ArrayList<>();
@@ -108,5 +111,43 @@ public class MainReportService implements ReportService {
         preliminaryReportService.remove(preliminaryToRemove);
         investigationService.remove(investigationToRemove);
         LOG.debug("Deleted report chain under file number {}.", fileNumber);
+    }
+
+    @Override
+    public Report createNewRevision(Long fileNumber) {
+        final Report latestRevision = findLatestRevision(fileNumber);
+        if (latestRevision == null) {
+            throw NotFoundException.create("Report chain", fileNumber);
+        }
+        if (latestRevision instanceof PreliminaryReport) {
+            return preliminaryReportService.createNewRevision((PreliminaryReport) latestRevision);
+        } else {
+            return investigationService.createNewRevision((InvestigationReport) latestRevision);
+        }
+    }
+
+    @Override
+    public Report findLatestRevision(Long fileNumber) {
+        Objects.requireNonNull(fileNumber);
+
+        final InvestigationReport investigation = investigationService.findLatestRevision(fileNumber);
+        if (investigation != null) {
+            return investigation;
+        }
+        return preliminaryReportService.findLatestRevision(fileNumber);
+    }
+
+    @Override
+    public Report findRevision(Long fileNumber, Integer revision) {
+        Objects.requireNonNull(fileNumber);
+        Objects.requireNonNull(revision);
+
+        final List<ReportRevisionInfo> revisions = getReportChainRevisions(fileNumber);
+        final Optional<ReportRevisionInfo> info = revisions.stream().filter(rev -> rev.getRevision().equals(revision))
+                                                           .findFirst();
+        if (!info.isPresent()) {
+            return null;
+        }
+        return find(info.get().getUri());
     }
 }

@@ -1,11 +1,11 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.dto.PreliminaryReportDto;
+import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
-import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
 import cz.cvut.kbss.inbas.audit.service.ReportService;
@@ -103,7 +103,7 @@ public class PreliminaryReportController extends BaseController {
             LOG.trace("Creating new revision of report {}", report);
         }
         final PreliminaryReport newRevision = preliminaryReportService.createNewRevision(report);
-        final HttpHeaders headers = RestUtils.createLocationHeader("{key}", newRevision.getKey());
+        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("{key}", newRevision.getKey());
         final String location = headers.getLocation().toString();
         headers.set(HttpHeaders.LOCATION, location.replace(key + "/revisions", ""));
         return new ResponseEntity<>(headers, HttpStatus.CREATED);

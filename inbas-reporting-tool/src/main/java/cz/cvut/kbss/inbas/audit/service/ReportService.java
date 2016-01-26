@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
@@ -67,6 +68,32 @@ public interface ReportService {
      * Removes all reports in report chain with the specified file number.
      *
      * @param fileNumber Report chain identifier
+     * @throws NotFoundException If there is no report chain with the specified file number
      */
     void removeReportChain(Long fileNumber);
+
+    /**
+     * Creates new report revision in report chain with the specified file number.
+     *
+     * @param fileNumber Report chain identifier
+     * @return The new revision
+     */
+    Report createNewRevision(Long fileNumber);
+
+    /**
+     * Gets report with latest revision in report chain with the specified file number.
+     *
+     * @param fileNumber Report chain identifier
+     * @return Latest revision report or {@code null} if there is no matching report chain
+     */
+    Report findLatestRevision(Long fileNumber);
+
+    /**
+     * Gets report in report chain with the specified file number and with the specified revision number.
+     *
+     * @param fileNumber Report chain identifier
+     * @param revision   Revision number
+     * @return Matching report or {@code null}
+     */
+    Report findRevision(Long fileNumber, Integer revision);
 }

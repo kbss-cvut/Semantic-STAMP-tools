@@ -1,8 +1,8 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
+import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
-import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import cz.cvut.kbss.inbas.audit.service.OccurrenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

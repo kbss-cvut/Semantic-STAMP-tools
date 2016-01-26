@@ -375,6 +375,9 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         }
     }
 
+    /**
+     * @return List of latest revisions in the persisted chains
+     */
     private List<PreliminaryReport> persistReportsWithRevisions() {
         final List<PreliminaryReport> result = new ArrayList<>(2);
         final PreliminaryReport repOneRevOne = initPreliminaryReportWithTypeAssessment(eventType);
@@ -398,5 +401,15 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         dao.persist(repTwoRevTwo);
 
         return result;
+    }
+
+    @Test
+    public void getLatestRevisionReturnsLatestPreliminaryReport() {
+        final List<PreliminaryReport> latestRevisions = persistReportsWithRevisions();
+        for (PreliminaryReport pr : latestRevisions) {
+            final PreliminaryReport result = dao.findLatestRevision(pr.getFileNumber());
+            assertNotNull(result);
+            assertEquals(pr.getUri(), result.getUri());
+        }
     }
 }

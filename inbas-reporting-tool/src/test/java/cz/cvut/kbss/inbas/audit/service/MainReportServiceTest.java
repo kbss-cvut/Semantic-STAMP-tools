@@ -1,10 +1,9 @@
 package cz.cvut.kbss.inbas.audit.service;
 
+import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
-import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
-import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
-import cz.cvut.kbss.inbas.audit.model.reports.Report;
+import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
+import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
@@ -122,8 +121,12 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
             toPersist.add(nextRevision);
             prevRevision = nextRevision;
         }
+        reports.add(prevRevision);
         preliminaryReportDao.persist(toPersist);
         InvestigationReport prevInvestigation = new InvestigationReport(toPersist.get(cnt - 1));
+        prevInvestigation.setRootFactor(new Factor());
+        prevInvestigation.getRootFactor().setStartTime(new Date());
+        prevInvestigation.getRootFactor().setEndTime(new Date());
         prevInvestigation.setCreated(new Date());
         prevInvestigation.setAuthor(person);
         investigationDao.persist(prevInvestigation);
@@ -134,10 +137,86 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
             nextInvestigation.setRevision(prevInvestigation.getRevision() + 1);
             nextInvestigation.setAuthor(person);
             nextInvestigation.setCreated(new Date());
+            nextInvestigation.setRootFactor(new Factor());
+            nextInvestigation.getRootFactor().setStartTime(new Date());
+            nextInvestigation.getRootFactor().setEndTime(new Date());
             toPersistInv.add(nextInvestigation);
             prevInvestigation = nextInvestigation;
         }
+        reports.add(prevInvestigation);
         investigationDao.persist(toPersistInv);
         return reports;
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void removeReportChainWithUnknownFileNumberThrowsNotFoundException() throws Exception {
+        final Long unknownFileNumber = 998877L;
+        reportService.removeReportChain(unknownFileNumber);
+    }
+
+    @Test
+    public void createNewRevisionCreatesNewRevisionFromLatestExistingReport() {
+        Environment.setCurrentUser(Generator.getPerson());
+        final PreliminaryReport rOne = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        final PreliminaryReport rTwo = new PreliminaryReport(rOne);
+        rTwo.setAuthor(Generator.getPerson());
+        rTwo.setRevision(rOne.getRevision() + 1);
+        rTwo.setSummary("Different summary.");  // Differ from rOne
+        preliminaryReportDao.persist(Arrays.asList(rOne, rTwo));
+
+        final Report result = reportService.createNewRevision(rOne.getFileNumber());
+        assertNotNull(result);
+        assertTrue(result instanceof PreliminaryReport);
+        final PreliminaryReport res = (PreliminaryReport) result;
+        assertEquals(rTwo.getSummary(), res.getSummary());
+        assertEquals(rTwo.getRevision() + 1, res.getRevision().intValue());
+    }
+
+    @Test
+    public void createNewRevisionFromInvestigationCreatesNewRevision() {
+        Environment.setCurrentUser(Generator.getPerson());
+        final List<Report> reports = persistReportChain();
+        Collections.sort(reports, (a, b) -> b.getRevision() - a.getRevision());
+        final InvestigationReport latest = (InvestigationReport) reports.get(0);
+
+        final Report result = reportService.createNewRevision(latest.getFileNumber());
+        assertNotNull(result);
+        assertTrue(result instanceof InvestigationReport);
+        assertEquals(latest.getRevision() + 1, result.getRevision().intValue());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void createNewRevisionFromUnknownChainThrowsNotFoundException() {
+        Environment.setCurrentUser(Generator.getPerson());
+        final Long unknownFileNumber = 998877L;
+        reportService.createNewRevision(unknownFileNumber);
+    }
+
+    @Test
+    public void findRevisionReturnsReportWithMatchingFileNumberAndRevision() {
+        Environment.setCurrentUser(Generator.getPerson());
+        final List<Report> reports = persistReportChain();
+
+        for (Report r : reports) {
+            final Report result = reportService.findRevision(r.getFileNumber(), r.getRevision());
+            assertNotNull(result);
+            assertEquals(r.getUri(), result.getUri());
+            assertEquals(r.getKey(), result.getKey());
+        }
+    }
+
+    @Test
+    public void findRevisionReturnsNullWhenReportChainDoesNotExist() {
+        final List<Report> reports = persistReportChain();
+        assertNull(reportService.findRevision(reports.get(0).getFileNumber() + 1, reports.get(0).getRevision()));
+    }
+
+    @Test
+    public void findRevisionReturnsNullWhenRevisionDoesNotExist() {
+        final List<Report> reports = persistReportChain();
+        Collections.sort(reports, (a, b) -> b.getRevision() - a.getRevision());
+        final InvestigationReport latest = (InvestigationReport) reports.get(0);
+
+        assertNull(reportService.findRevision(latest.getFileNumber(), latest.getRevision() + 1));
     }
 }
