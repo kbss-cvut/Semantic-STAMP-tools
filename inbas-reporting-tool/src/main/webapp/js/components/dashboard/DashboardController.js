@@ -17,7 +17,6 @@ var ReportStore = require('../../stores/ReportStore');
 var Dashboard = require('./Dashboard');
 var WizardWindow = require('./../wizard/WizardWindow');
 var InitialReportImportSteps = require('../initialreport/Steps');
-var ReportType = require('../../model/ReportType');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var DashboardController = React.createClass({

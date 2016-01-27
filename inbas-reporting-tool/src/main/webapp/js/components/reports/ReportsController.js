@@ -9,7 +9,6 @@ var Reflux = require('reflux');
 var Actions = require('../../actions/Actions');
 var ReportStore = require('../../stores/ReportStore');
 var Reports = require('./Reports');
-var ReportType = require('../../model/ReportType');
 var Routes = require('../../utils/Routes');
 var Routing = require('../../utils/Routing');
 
