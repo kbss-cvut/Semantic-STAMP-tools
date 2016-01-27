@@ -31,15 +31,14 @@ var ReportsController = React.createClass({
     },
 
     onEdit: function (report) {
-        var route = ReportType.getDetailRoute(report);
-        Routing.transitionTo(route, {
+        Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
             handlers: {onCancel: Routes.reports}
         });
     },
 
     onRemove: function (report) {
-        Actions.deleteReport(report);
+        Actions.deleteReportChain(report.fileNumber);
     },
 
     render: function () {

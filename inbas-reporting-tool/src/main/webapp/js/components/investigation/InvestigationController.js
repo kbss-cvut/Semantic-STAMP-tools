@@ -49,7 +49,7 @@ var InvestigationController = React.createClass({
         if (!report) {
             this.setState({loading: false});
         } else {
-            Actions.loadInvestigationRevisions(report.occurrence.key);
+            Actions.loadRevisions(report.fileNumber);
             this.setState({report: assign({}, report), loading: false});
         }
     },
@@ -60,15 +60,15 @@ var InvestigationController = React.createClass({
 
     loadReport: function (key) {
         this.setState({loading: true});
-        Routing.transitionTo(Routes.editInvestigation, {
+        Routing.transitionTo(Routes.editReport, {
             params: {reportKey: key},
-            handlers: {onCancel: Routes.investigations}
+            handlers: {onCancel: Routes.reports}
         });
-        Actions.findInvestigation(key);
+        Actions.loadReport(key);
     },
 
     onCancel: function () {
-        var handlers = RouterStore.getViewHandlers(Routes.editInvestigation.name);
+        var handlers = RouterStore.getViewHandlers(Routes.editReport.name);
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
         } else {

@@ -18,9 +18,7 @@ var InitialReports = require('./../initialreport/InitialReports');
 var ReportStatements = require('./ReportStatements');
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo');
 var ReportSummary = require('./ReportSummary');
-var Mask = require('../Mask');
 var MessageMixin = require('../mixin/MessageMixin');
-var ResourceNotFound = require('../ResourceNotFound');
 var ReportValidator = require('../../validation/ReportValidator');
 var I18nMixin = require('../../i18n/I18nMixin');
 var ReportDetailMixin = require('../mixin/ReportDetailMixin');
@@ -45,36 +43,23 @@ var ReportDetail = React.createClass({
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
         if (report.isNew) {
-            Actions.createPreliminary(report, this.onSaveSuccess, this.onSaveError);
+            Actions.createPreliminary(report, null, this.onSaveError);
         }
         else {
-            Actions.updatePreliminary(report, this.onSaveSuccess, this.onSaveError);
+            Actions.updateReport(report, this.onSaveSuccess, this.onSaveError);
         }
     },
 
     onSubmit: function () {
         this.setState({submitting: true});
-        Actions.submitPreliminary(this.props.report, this.onSubmitSuccess, this.onSubmitError);
+        Actions.submitReport(this.props.report, this.onSubmitSuccess, this.onSubmitError);
     },
 
     _canEdit: function () {
         return this.props.report && this.props.report.occurrence.reportingPhase !== Constants.INVESTIGATION_REPORT_PHASE;
     },
 
-
     render: function () {
-        if (this.props.loading) {
-            return (
-                <Mask text={this.i18n('preliminary.detail.loading-mask')}/>
-            );
-        }
-        if (!this.props.report) {
-            return (<ResourceNotFound resource={this.i18n('preliminary.detail.panel-title')}/>);
-        }
-        return this.renderDetail();
-    },
-
-    renderDetail: function () {
         var report = this.props.report;
 
         return (

@@ -46,9 +46,7 @@ public class ReportController extends BaseController {
         final PreliminaryReport preliminaryReport = reportMapper.preliminaryReportDtoToPreliminaryReport(reportDto);
         assert preliminaryReport != null;
         reportService.persist(preliminaryReport);
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Created report from data {}", reportDto);
-        }
+        LOG.debug("Created report from data {}", reportDto);
         final HttpHeaders header = RestUtils.createLocationHeaderFromCurrentUri("/{key}", preliminaryReport.getKey());
         return new ResponseEntity<>(header, HttpStatus.CREATED);
     }
@@ -75,6 +73,9 @@ public class ReportController extends BaseController {
         }
         final Report report = reportMapper.reportDtoToReport(reportUpdate);
         reportService.update(report);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Updated report {}", report);
+        }
     }
 
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.DELETE)

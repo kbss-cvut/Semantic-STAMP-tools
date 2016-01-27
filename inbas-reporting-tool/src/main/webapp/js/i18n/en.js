@@ -36,6 +36,8 @@ module.exports = {
         'detail.submit-tooltip': 'Submit the current revision to authority',
         'detail.submit-success-message': 'Report successfully submitted.',
         'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
+        'detail.loading': 'Loading report...',
+        'detail.not-found.title': 'Report not found',
 
         'login.title': Constants.APP_NAME + ' - Login',
         'login.username': 'Username',
@@ -56,8 +58,7 @@ module.exports = {
         'register.mask': 'Registering...',
 
         'main.dashboard-nav': 'Dashboard',
-        'main.preliminary-nav': 'Preliminary Reports',
-        'main.investigations-nav': 'Investigations',
+        'main.reports-nav': 'Reports',
         'main.logout': 'Logout',
 
         'dashboard.welcome': 'Hello {name}, Welcome to the ' + Constants.APP_NAME + '.',

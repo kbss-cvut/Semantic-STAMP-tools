@@ -11,7 +11,7 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "dtoClass")
+@JsonTypeInfo(use = JsonTypeInfo.Id.MINIMAL_CLASS, include = JsonTypeInfo.As.PROPERTY, property = "dtoClass")
 public abstract class AbstractReportDto {
 
     private URI uri;

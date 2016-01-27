@@ -4,7 +4,7 @@ var React = require('react');
 var Button = require('react-bootstrap').Button;
 
 /**
- * Aggregates some of the functionality of the report detail view (used in both Investigation and Preliminary report).
+ * Aggregates some of the functionality of the report detail view.
  */
 var ReportDetailMixin = {
 

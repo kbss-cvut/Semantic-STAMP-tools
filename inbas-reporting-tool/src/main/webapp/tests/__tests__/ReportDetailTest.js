@@ -68,7 +68,7 @@ describe('ReportDetail component', function () {
     it('Enables save button on submit success', function () {
         var detail = Environment.render(<ReportDetail report={report} loading={false} handlers={handlers}/>),
             key = '12345';
-        spyOn(Actions, 'submitPreliminary');
+        spyOn(Actions, 'submitReport');
         detail.onSubmit();
         detail.onSubmitSuccess(key);
         expect(detail.state.submitting).toBeFalsy();

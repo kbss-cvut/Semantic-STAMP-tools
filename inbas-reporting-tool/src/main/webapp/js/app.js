@@ -44,10 +44,7 @@ var Register = require('./components/register/Register');
 var MainView = require('./components/MainView');
 var DashboardController = require('./components/dashboard/DashboardController');
 var ReportsController = require('./components/reports/ReportsController');
-var PreliminaryReportsController = require('./components/preliminary/ReportsController');
-var PreliminaryReportController = require('./components/preliminary/ReportDetailController');
-var InvestigationsController = require('./components/investigation/InvestigationsController');
-var InvestigationController = require('./components/investigation/InvestigationController');
+var ReportDetailController = require('./components/reports/ReportController');
 
 // Wrapping router in a React component to allow Intl to initialize
 var App = React.createClass({
@@ -61,11 +58,8 @@ var App = React.createClass({
                         <Route path={Routes.register.path} component={Register}/>
                         <Route path={Routes.dashboard.path} component={DashboardController}/>
                         <Route path={Routes.reports.path} component={ReportsController}/>
-                        <Route path={Routes.preliminary.path} component={PreliminaryReportsController}/>
-                        <Route path={Routes.createReport.path} component={PreliminaryReportController}/>
-                        <Route path={Routes.editReport.path} component={PreliminaryReportController}/>
-                        <Route path={Routes.investigations.path} component={InvestigationsController}/>
-                        <Route path={Routes.editInvestigation.path} component={InvestigationController}/>
+                        <Route path={Routes.createReport.path} component={ReportDetailController}/>
+                        <Route path={Routes.editReport.path} component={ReportDetailController}/>
                     </Route>
                 </Router>
             </IntlProvider>

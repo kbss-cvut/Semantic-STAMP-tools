@@ -20,7 +20,7 @@ var ReportDetailControllerMixin = {
     },
 
     isLatestRevision: function () {
-        var revisions = this.state.revisions;
+        var revisions = this.props.revisions;
         if (!revisions || revisions.length === 0) {
             return true;
         }
@@ -29,10 +29,10 @@ var ReportDetailControllerMixin = {
 
 
     renderRevisionInfo: function () {
-        if (!this.state.revisions || this.state.revisions.length === 0) {
+        if (!this.props.revisions || this.props.revisions.length === 0) {
             return null;
         }
-        return (<RevisionInfo revisions={this.state.revisions} selectedRevision={this.state.report.revision}
+        return (<RevisionInfo revisions={this.props.revisions} selectedRevision={this.state.report.revision}
                               onSelect={this.onRevisionSelected}/>);
     }
 };

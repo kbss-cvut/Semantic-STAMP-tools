@@ -36,6 +36,8 @@ module.exports = {
         'detail.submit-tooltip': 'Odeslat současnou revizi zprávy úřadu',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
         'detail.submit-failed-message': 'Hlášení se nepodařilo odeslat. Odpověď serveru: ',
+        'detail.loading': 'Načítám hlášení...',
+        'detail.not-found.title': 'Hlášení nenalezeno',
 
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
@@ -57,8 +59,7 @@ module.exports = {
         'register.mask': 'Registruji...',
 
         'main.dashboard-nav': 'Hlavní strana',
-        'main.preliminary-nav': 'Předběžná hlášení',
-        'main.investigations-nav': 'Šetření',
+        'main.reports-nav': 'Hlášení',
         'main.logout': 'Odhlásit se',
 
         'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',
