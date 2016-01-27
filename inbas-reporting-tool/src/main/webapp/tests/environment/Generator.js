@@ -150,6 +150,7 @@ var Generator = {
      */
     generateInvestigation: function () {
         return {
+            phase: Constants.INVESTIGATION_REPORT_PHASE,
             key: 12345,
             occurrenceStart: Date.now() - 10000,
             occurrenceEnd: Date.now(),
@@ -170,6 +171,7 @@ var Generator = {
      */
     generatePreliminaryReport: function () {
         return {
+            phase: Constants.PRELIMINARY_REPORT_PHASE,
             key: '123455',
             occurrence: {key: '554321'},
             initialReports: [{text: 'First Initial Report'}],

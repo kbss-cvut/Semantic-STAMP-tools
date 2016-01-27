@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.audit.dto;
 
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
+
 public class InvestigationReportDto extends AbstractReportDto {
 
     private FactorDto rootFactor;
@@ -20,6 +22,10 @@ public class InvestigationReportDto extends AbstractReportDto {
 
     public void setLinks(Links links) {
         this.links = links;
+    }
+
+    public ReportingPhase getPhase() {
+        return ReportingPhase.INVESTIGATION;
     }
 
     @Override

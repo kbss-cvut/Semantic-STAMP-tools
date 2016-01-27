@@ -16,7 +16,7 @@ var ReportType = {
     },
 
     _isPreliminary: function (report) {
-        return !report.types || report.types.indexOf(Constants.PRELIMINARY_REPORT_TYPE) !== -1;
+        return !report.phase || report.phase === Constants.PRELIMINARY_REPORT_PHASE;
     },
 
     getIconSrc: function (report) {

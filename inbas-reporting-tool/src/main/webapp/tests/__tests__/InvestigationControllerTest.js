@@ -32,11 +32,9 @@ describe('Investigation controller', function () {
             expectedButtons = ['Cancel'],
             hiddenButtons = ['Save', 'Submit to authority'],
             i, len;
-        spyOn(Actions, 'findInvestigation');
-        spyOn(Actions, 'loadInvestigationRevisions');
-        var result = Environment.render(<InvestigationController params={{}}/>);
-        result.onInvestigationStoreTrigger({action: Actions.findInvestigation, investigation: investigation});
-        result.onInvestigationStoreTrigger({action: Actions.loadInvestigationRevisions, revisions: revisions});
+        spyOn(Actions, 'loadReport');
+        spyOn(Actions, 'loadRevisions');
+        var result = Environment.render(<InvestigationController report={investigation} revisions={revisions}/>);
 
         for (i = 0, len = expectedButtons.length; i < len; i++) {
             expect(getButton(result, expectedButtons[i])).not.toBeNull();
@@ -53,10 +51,9 @@ describe('Investigation controller', function () {
     it('updates report state when onChange is called.', function () {
         var investigation = Generator.generateInvestigation(),
             newSummary = 'New investigation summary.';
-        spyOn(Actions, 'findInvestigation');
-        spyOn(Actions, 'loadInvestigationRevisions');
-        var result = Environment.render(<InvestigationController params={{}}/>);
-        result.onInvestigationStoreTrigger({action: Actions.findInvestigation, investigation: investigation});
+        spyOn(Actions, 'loadReport');
+        spyOn(Actions, 'loadRevisions');
+        var result = Environment.render(<InvestigationController report={investigation}/>);
 
         result.onChange({summary: newSummary});
         expect(result.state.report.summary).toEqual(newSummary);
@@ -65,10 +62,9 @@ describe('Investigation controller', function () {
     it('calls loadReport when revision is selected.', function () {
         var investigation = Generator.generateInvestigation(),
             selectedRevision = {revision: 2, key: '111222333'};
-        spyOn(Actions, 'findInvestigation');
-        spyOn(Actions, 'loadInvestigationRevisions');
-        var result = Environment.render(<InvestigationController params={{}}/>);
-        result.onInvestigationStoreTrigger({action: Actions.findInvestigation, investigation: investigation});
+        spyOn(Actions, 'loadReport');
+        spyOn(Actions, 'loadRevisions');
+        var result = Environment.render(<InvestigationController report={investigation}/>);
         spyOn(result, 'loadReport');
 
         result.onRevisionSelected(selectedRevision);

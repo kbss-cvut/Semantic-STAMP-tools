@@ -43,7 +43,7 @@ var ReportDetail = React.createClass({
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
         if (report.isNew) {
-            Actions.createPreliminary(report, null, this.onSaveError);
+            Actions.createPreliminary(report, this.onSaveSuccess, this.onSaveError);
         }
         else {
             Actions.updateReport(report, this.onSaveSuccess, this.onSaveError);

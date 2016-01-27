@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.audit.dto;
 
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
+
 import java.util.Set;
 
 public class PreliminaryReportDto extends AbstractReportDto {
@@ -12,6 +14,10 @@ public class PreliminaryReportDto extends AbstractReportDto {
 
     public void setTypeAssessments(Set<EventTypeAssessmentDto> typeAssessments) {
         this.typeAssessments = typeAssessments;
+    }
+
+    public ReportingPhase getPhase() {
+        return ReportingPhase.PRELIMINARY;
     }
 
     @Override

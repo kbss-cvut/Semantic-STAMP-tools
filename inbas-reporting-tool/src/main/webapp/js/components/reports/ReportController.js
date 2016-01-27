@@ -47,7 +47,7 @@ var ReportController = React.createClass({
     },
 
     componentWillReceiveProps: function (nextProps) {
-        if (this.state.key !== nextProps.params.reportKey) {
+        if (nextProps.params.reportKey && this.state.key !== nextProps.params.reportKey) {
             this._loadReport(nextProps.params.reportKey);
         }
     },

@@ -10,9 +10,6 @@ var BASE_URL = 'rest/reports';
 var BASE_URL_WITH_SLASH = 'rest/reports/';
 var PRELIMINARY_DTO = '.PreliminaryReportDto';
 
-/**
- * Stores overviews of all reports.
- */
 var ReportStore = Reflux.createStore({
     listenables: [Actions],
 
@@ -51,6 +48,15 @@ var ReportStore = Reflux.createStore({
             }
             this.onLoadAllReports();
         }.bind(this), onError);
+    },
+
+    onCreateInvestigation: function (fileNumber, onSuccess, onError) {
+        Ajax.post(BASE_URL_WITH_SLASH + 'chain/' + fileNumber + '/revisions?investigate=true').end(function (data, resp) {
+            if (onSuccess) {
+                var key = Utils.extractKeyFromLocationHeader(resp);
+                onSuccess(key);
+            }
+        }, onError);
     },
 
     onUpdateReport: function (report, onSuccess, onError) {

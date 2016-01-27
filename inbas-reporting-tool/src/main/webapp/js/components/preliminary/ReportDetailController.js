@@ -19,18 +19,11 @@ var ReportDetailController = React.createClass({
         ReportDetailControllerMixin
     ],
 
-    getInitialState: function () {
-        return {
-            report: this.props.report,
-            revisions: null
-        }
-    },
-
     onSuccess: function (reportKey) {
-        if (this.state.report.isNew) {
+        if (this.props.report.isNew) {
             Routing.transitionTo(Routes.reports);
         } else {
-            this.loadReport(reportKey ? reportKey : this.state.report.key);
+            this.loadReport(reportKey ? reportKey : this.props.report.key);
         }
     },
 
@@ -42,7 +35,7 @@ var ReportDetailController = React.createClass({
     },
 
     onCancel: function () {
-        var handlers = RouterStore.getViewHandlers(this.state.report.isNew ? Routes.createReport.name : Routes.editReport.name);
+        var handlers = RouterStore.getViewHandlers(this.props.report.isNew ? Routes.createReport.name : Routes.editReport.name);
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
         } else {
@@ -51,7 +44,7 @@ var ReportDetailController = React.createClass({
     },
 
     onInvestigate: function () {
-        Actions.createInvestigation(this.state.report.key, this.loadReport);
+        Actions.createInvestigation(this.props.report.fileNumber, this.loadReport);
     },
 
 
@@ -63,7 +56,7 @@ var ReportDetailController = React.createClass({
             onChange: this.onChange
         };
         return (
-            <ReportDetail report={this.state.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+            <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
                           readOnly={!this.isLatestRevision()}/>
         );
     }
