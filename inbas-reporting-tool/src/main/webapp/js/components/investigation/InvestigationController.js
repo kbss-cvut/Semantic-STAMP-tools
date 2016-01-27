@@ -20,7 +20,7 @@ var InvestigationController = React.createClass({
     ],
 
     onSuccess: function (key) {
-        this.loadReport(key ? key : this.state.report.key);
+        this.loadReport(key ? key : this.props.report.key);
     },
 
     loadReport: function (key) {

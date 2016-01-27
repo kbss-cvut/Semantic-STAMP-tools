@@ -101,10 +101,8 @@ module.exports = {
         'initial.label': 'Initial report',
 
         'preliminary.type': 'Preliminary',
-        'preliminary.panel-title': 'Preliminary reports',
         'preliminary.table-investigate': 'Investigate',
         'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
-        'preliminary.detail.loading-mask': 'Loading report...',
         'preliminary.detail.panel-title': 'Preliminary occurrence report',
         'preliminary.detail.last-edited-msg': 'Last edited {date} by {name}.',
         'preliminary.detail.narrative-tooltip': 'Narrative - this field is required',
@@ -199,11 +197,6 @@ module.exports = {
         'eventtype.incursion.conflicting.phase.landing-tooltip': 'Plane landing',
 
         'investigation.type': 'Investigation',
-        'investigation.panel-title': 'Investigation reports',
-        'investigation.open-tooltip': 'Click to see investigation detail',
-        'investigation.edit-tooltip': 'Edit this investigation report',
-        'investigation.delete-tooltip': 'Delete this investigation report',
-        'investigation.detail.loading': 'Loading investigation report...',
         'investigation.detail.panel-title': 'Investigation report',
 
         'factors.panel-title': 'Factors',

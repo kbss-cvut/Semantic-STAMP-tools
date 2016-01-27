@@ -103,10 +103,8 @@ module.exports = {
         'initial.label': 'Prvotní hlášení',
 
         'preliminary.type': 'Předběžné',
-        'preliminary.panel-title': 'Předběžná hlášení',
         'preliminary.table-investigate': 'Šetřit',
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
-        'preliminary.detail.loading-mask': 'Načítám hlášení...',
         'preliminary.detail.panel-title': 'Předběžné hlášení o události',
         'preliminary.detail.last-edited-msg': 'Naposledy upravil(a) {name} {date}.',
         'preliminary.detail.narrative-tooltip': 'Popis - pole je povinné',
@@ -201,11 +199,6 @@ module.exports = {
         'eventtype.incursion.conflicting.phase.landing-tooltip': 'Letadlo přistávalo',
 
         'investigation.type': 'Šetření',
-        'investigation.panel-title': 'Hlášení o šetření',
-        'investigation.open-tooltip': 'Kliknutím zobrazíte detail šetření',
-        'investigation.edit-tooltip': 'Editovat toto šetření',
-        'investigation.delete-tooltip': 'Smazat toto šetření',
-        'investigation.detail.loading': 'Nahrávám šetření...',
         'investigation.detail.panel-title': 'Hlášení o šetření',
 
         'factors.panel-title': 'Faktory',
