@@ -67,7 +67,7 @@ var Investigation = React.createClass({
 
         return (
             <div>
-                <Panel header={<h2>{this.i18n('investigation.detail.panel-title')}</h2>} bsStyle='primary'>
+                <Panel header={this.renderHeader()} bsStyle='primary'>
                     <form>
                         <BasicOccurrenceInfo report={investigation} revisions={this.props.revisions}
                                              onChange={this.onChange} onAttributeChange={this.onAttributeChange}/>
@@ -99,6 +99,16 @@ var Investigation = React.createClass({
                 {this.renderMessage()}
             </div>
         );
+    },
+
+    renderHeader: function () {
+        return (
+            <div>
+                <h2 className='panel-title pull-left'>{this.i18n('investigation.detail.panel-title')}</h2>
+                <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.investigation.fileNumber}</h3>
+                <div style={{clear: 'both'}}/>
+            </div>
+        )
     },
 
     renderButtons: function () {

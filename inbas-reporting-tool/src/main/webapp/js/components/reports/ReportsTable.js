@@ -19,7 +19,6 @@ var ReportsTable = React.createClass({
     propTypes: {
         reports: React.PropTypes.array.isRequired,
         panelTitle: React.PropTypes.string, // Panel title (header), optional
-        tableHead: React.PropTypes.object,   // Table header, optional
         rowComponent: React.PropTypes.func     // A react component, optional
     },
 
@@ -52,12 +51,12 @@ var ReportsTable = React.createClass({
     },
 
     renderHeader: function () {
-        return this.props.tableHeader ? this.props.tableHeader : (
+        return (
             <thead>
             <tr>
-                <th className='col-xs-2'>{this.i18n('headline')}</th>
-                <th className='col-xs-2'>{this.i18n('reports.table-date')}</th>
-                <th className='col-xs-5'>{this.i18n('narrative')}</th>
+                <th className='col-xs-2 content-center'>{this.i18n('headline')}</th>
+                <th className='col-xs-2 content-center'>{this.i18n('reports.table-date')}</th>
+                <th className='col-xs-5 content-center'>{this.i18n('narrative')}</th>
                 <th className='col-xs-1 content-center'>{this.i18n('reports.table-type')}</th>
                 <th className='col-xs-2 content-center'>{this.i18n('table-actions')}</th>
             </tr>

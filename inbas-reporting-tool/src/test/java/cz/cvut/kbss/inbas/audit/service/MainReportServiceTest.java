@@ -293,4 +293,14 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertEquals(report.getRevision() + 1, investigation.getRevision().intValue());
         assertEquals(ReportingPhase.INVESTIGATION, investigation.getOccurrence().getReportingPhase());
     }
+
+    @Test
+    public void reportChainUsesTheSameFileNumber() {
+        final List<Report> result = persistReportChain();
+        assertFalse(result.isEmpty());
+        Long fileNumber = result.get(0).getFileNumber();
+        for (Report r : result) {
+            assertEquals(fileNumber, r.getFileNumber());
+        }
+    }
 }

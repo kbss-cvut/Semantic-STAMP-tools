@@ -17,6 +17,7 @@ module.exports = {
         'delete': 'Delete',
         'headline': 'Headline',
         'narrative': 'Narrative',
+        'fileNo': 'File number',
         'table-actions': 'Actions',
         'table-edit': 'Edit',
         'save-success-message': 'Report successfully saved.',

@@ -11,4 +11,3 @@ Show autocomplete results as tree when appropriate
 Design some generic validation mechanism for the wizards
     Show validation errors on the corresponding fields
 Design a way to represent wizards in ontology and generate them based on this ontology
-Revise the wizards according to the updated requirements

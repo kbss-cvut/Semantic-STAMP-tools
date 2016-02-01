@@ -64,7 +64,7 @@ var ReportDetail = React.createClass({
 
         return (
             <div>
-                <Panel header={<h2>{this.i18n('preliminary.detail.panel-title')}</h2>} bsStyle='primary'>
+                <Panel header={this.renderHeader()} bsStyle='primary'>
                     <form>
                         <BasicOccurrenceInfo report={report} onChange={this.onChange} revisions={this.props.revisions}
                                              onAttributeChange={this.onAttributeChange}/>
@@ -95,6 +95,16 @@ var ReportDetail = React.createClass({
                 {this.renderMessage()}
             </div>
         );
+    },
+
+    renderHeader: function () {
+        return (
+            <div>
+                <h2 className='panel-title pull-left'>{this.i18n('preliminary.detail.panel-title')}</h2>
+                <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>
+                <div style={{clear: 'both'}}/>
+            </div>
+        )
     },
 
     renderButtons: function () {

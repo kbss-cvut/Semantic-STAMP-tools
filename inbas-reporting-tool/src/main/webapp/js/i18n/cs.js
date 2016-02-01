@@ -17,6 +17,7 @@ module.exports = {
         'delete': 'Smazat',
         'headline': 'Název',
         'narrative': 'Popis',
+        'fileNo': 'Číslo záznamu',
         'table-actions': 'Akce',
         'table-edit': 'Editovat',
         'save-success-message': 'Hlášení úspěšně uloženo.',
