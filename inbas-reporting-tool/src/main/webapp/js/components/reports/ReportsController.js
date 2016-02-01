@@ -5,6 +5,7 @@
 
 var React = require('react');
 var Reflux = require('reflux');
+var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
 var ReportStore = require('../../stores/ReportStore');
@@ -17,7 +18,8 @@ var ReportsController = React.createClass({
 
     getInitialState: function () {
         return {
-            reports: null
+            reports: null,
+            filter: null
         };
     },
 
@@ -40,13 +42,34 @@ var ReportsController = React.createClass({
         Actions.deleteReportChain(report.fileNumber);
     },
 
+    onFilterChange: function (filter) {
+        this.setState({filter: assign({}, this.state.filter, filter)});
+    },
+
+    filterReports: function () {
+        var filter = this.state.filter;
+        if (!filter) {
+            return this.state.reports;
+        }
+        return this.state.reports.filter(function (item) {
+            for (var key in filter) {
+                if (filter[key].toLowerCase() !== 'all' && item[key].toLowerCase() !== filter[key].toLowerCase()) {
+                    return false;
+                }
+                return true;
+            }
+        });
+    },
+
+
     render: function () {
         var actions = {
             onEdit: this.onEdit,
-            onRemove: this.onRemove
+            onRemove: this.onRemove,
+            onFilterChange: this.onFilterChange
         };
         return (
-            <Reports reports={this.state.reports} actions={actions}/>
+            <Reports reports={this.filterReports()} actions={actions}/>
         );
     }
 });

@@ -151,12 +151,12 @@ var Generator = {
     generateInvestigation: function () {
         return {
             phase: Constants.INVESTIGATION_REPORT_PHASE,
-            key: 12345,
+            key: this.getRandomInt().toString(),
             occurrenceStart: Date.now() - 10000,
             occurrenceEnd: Date.now(),
             revision: 1,
             occurrence: {
-                key: 117,
+                key: this.getRandomInt().toString(),
                 name: 'TestOccurrence'
             },
             rootFactor: {
@@ -172,13 +172,45 @@ var Generator = {
     generatePreliminaryReport: function () {
         return {
             phase: Constants.PRELIMINARY_REPORT_PHASE,
-            key: '123455',
-            occurrence: {key: '554321'},
+            key: this.getRandomInt().toString(),
+            occurrence: {key: this.getRandomInt().toString()},
             initialReports: [{text: 'First Initial Report'}],
             occurrenceStart: Date.now() - 10000,
             occurrenceEnd: Date.now(),
             revision: 1
         }
+    },
+
+    /**
+     * Generates random integer between 0 (included) and max(excluded).
+     * @param max Maximum generated number, optional. If not specified, max safe integer value is used.
+     * @return {number}
+     */
+    getRandomInt: function (max) {
+        var min = 0,
+            bound = max ? max : Number.MAX_SAFE_INTEGER;
+        return Math.floor(Math.random() * (bound - min)) + min;
+    },
+
+    /**
+     * Generates a random number of evenly distributed preliminary and investigation reports.
+     */
+    generateReports: function () {
+        var count = this.getRandomInt(100),
+            reports = [],
+            report,
+            preliminary = true;
+        for (var i = 0; i < count; i++) {
+            if (preliminary) {
+                report = this.generatePreliminaryReport();
+            } else {
+                report = this.generateInvestigation();
+            }
+            report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
+            reports.push(report);
+            preliminary = !preliminary;
+        }
+        return reports;
     }
 };
 

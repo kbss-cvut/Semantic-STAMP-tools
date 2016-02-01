@@ -5,7 +5,6 @@
 'use strict';
 
 var React = require('react');
-var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 
 var injectIntl = require('../../utils/injectIntl');
@@ -17,35 +16,26 @@ var ReportsTable = React.createClass({
     mixins: [I18nMixin],
 
     propTypes: {
-        reports: React.PropTypes.array.isRequired,
-        panelTitle: React.PropTypes.string, // Panel title (header), optional
-        rowComponent: React.PropTypes.func     // A react component, optional
+        reports: React.PropTypes.array.isRequired
     },
 
     render: function () {
-        var title = <h3>{this.props.panelTitle ? this.props.panelTitle : this.i18n('reports.panel-title')}</h3>;
-        return (<div>
-            <Panel header={title} bsStyle='primary' {...this.props}>
-                <Table striped bordered condensed hover>
-                    {this.renderHeader()}
-                    <tbody>
-                    {this.renderReports()}
-                    </tbody>
-                </Table>
-            </Panel>
-        </div>);
+        return (
+            <Table striped bordered condensed hover>
+                {this.renderHeader()}
+                <tbody>
+                {this.renderReports()}
+                </tbody>
+            </Table>);
     },
 
     renderReports: function () {
         var result = [],
             len = this.props.reports.length,
-            rowComponent = this.props.rowComponent ? this.props.rowComponent : ReportRow;
+            report;
         for (var i = 0; i < len; i++) {
-            result.push(React.createElement(rowComponent, {
-                report: this.props.reports[i],
-                key: this.props.reports[i].uri,
-                actions: this.props.actions
-            }));
+            report = this.props.reports[i];
+            result.push(<ReportRow report={report} key={report.uri} actions={this.props.actions}/>);
         }
         return result;
     },

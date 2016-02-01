@@ -84,6 +84,10 @@ module.exports = {
         'reports.panel-title': 'Hlášení událostí',
         'reports.table-date': 'Datum a čas události',
         'reports.table-type': 'Typ',
+        'reports.filter.label': 'Zobrazit',
+        'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',
+        'reports.filter.type.all': 'Všechna',
+        'reports.filter.type.preliminary': 'Předběžná',
 
         'delete-dialog.title': 'Smazat hlášení?',
         'delete-dialog.content': 'Skutečně chcete smazat toto hlášení?',

@@ -83,6 +83,10 @@ module.exports = {
         'reports.panel-title': 'Occurrence reports',
         'reports.table-date': 'Occurrence date',
         'reports.table-type': 'Type',
+        'reports.filter.label': 'Filter',
+        'reports.filter.type.tooltip': 'Select report type',
+        'reports.filter.type.all': 'All',
+        'reports.filter.type.preliminary': 'Preliminary',
 
         'delete-dialog.title': 'Delete {type} Report?',
         'delete-dialog.content': 'Are you sure you want to remove this report?',

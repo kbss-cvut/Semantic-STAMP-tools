@@ -6,9 +6,11 @@
 
 var React = require('react');
 var Jumbotron = require('react-bootstrap').Jumbotron;
+var Panel = require('react-bootstrap').Panel;
 
 var injectIntl = require('../../utils/injectIntl');
 
+var ReportsFilter = require('./ReportsFilter');
 var ReportsTable = require('./ReportsTable');
 var Mask = require('./../Mask');
 var I18nMixin = require('../../i18n/I18nMixin');
@@ -41,7 +43,11 @@ var Reports = React.createClass({
                 </div>
             );
         } else {
-            return (<ReportsTable {...this.props}/>);
+            return (
+                <Panel header={<h3>{this.i18n('reports.panel-title')}</h3>} bsStyle='primary'>
+                    <ReportsFilter onFilterChange={this.props.actions.onFilterChange}/>
+                    <ReportsTable {...this.props}/>
+                </Panel>);
         }
 
     }
