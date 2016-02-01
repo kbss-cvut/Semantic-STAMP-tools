@@ -264,6 +264,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         assertEquals(reports.size(), result.size());
         for (int i = 0; i < reports.size(); i++) {
             assertEquals(reports.get(i).getUri(), result.get(i).getUri());
+            assertEquals(reports.get(i).getPhase(), result.get(i).getPhase());
         }
     }
 }

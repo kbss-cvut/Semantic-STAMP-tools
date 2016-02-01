@@ -2,16 +2,15 @@
 
 var Constants = require('../constants/Constants');
 var I18nStore = require('../stores/I18nStore');
-var PreliminaryController = require('../components/preliminary/ReportDetailController');
-var InvestigationController = require('../components/investigation/InvestigationController');
 
 var ReportType = {
 
     getDetailController: function (report) {
+        // Use require in method call to prevent circular dependencies with RevisionInfo
         if (this._isPreliminary(report)) {
-            return PreliminaryController;
+            return require('../components/preliminary/ReportDetailController');
         } else {
-            return InvestigationController;
+            return require('../components/investigation/InvestigationController');
         }
     },
 

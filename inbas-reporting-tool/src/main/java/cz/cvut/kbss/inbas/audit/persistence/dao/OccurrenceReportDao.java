@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 
 import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -123,11 +124,13 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
         final EntityManager em = entityManager();
         try {
             final List rows = em.createNativeQuery(
-                    "SELECT ?x ?revision ?key ?created WHERE { ?x a ?type ;" +
+                    "SELECT ?x ?revision ?key ?created ?phase WHERE { ?x a ?type ;" +
+                            "a ?phase ;" +
                             "?hasRevision ?revision ; " +
                             "?wasCreated ?created ;" +
                             "?hasFileNumber ?fileNo ;" +
                             "?hasKey ?key ." +
+                            "FILTER (?type != ?phase)" +
                             "} ORDER BY DESC(?revision)")
                                 .setParameter("type", typeIri)
                                 .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
@@ -144,6 +147,7 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
                 info.setRevision((Integer) rowArr[1]);
                 info.setKey((String) rowArr[2]);
                 info.setCreated((Date) rowArr[3]);
+                info.setPhase(ReportingPhase.fromType((URI) rowArr[4]));
                 result.add(info);
             }
             return result;

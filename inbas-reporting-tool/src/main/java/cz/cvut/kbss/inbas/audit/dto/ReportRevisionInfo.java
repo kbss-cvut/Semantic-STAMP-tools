@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.audit.dto;
 
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
+
 import java.net.URI;
 import java.util.Date;
 
@@ -14,6 +16,8 @@ public class ReportRevisionInfo {
     private Date created;
 
     private Integer revision;
+
+    private ReportingPhase phase;
 
     public URI getUri() {
         return uri;
@@ -45,6 +49,14 @@ public class ReportRevisionInfo {
 
     public void setRevision(Integer revision) {
         this.revision = revision;
+    }
+
+    public ReportingPhase getPhase() {
+        return phase;
+    }
+
+    public void setPhase(ReportingPhase phase) {
+        this.phase = phase;
     }
 
     @Override

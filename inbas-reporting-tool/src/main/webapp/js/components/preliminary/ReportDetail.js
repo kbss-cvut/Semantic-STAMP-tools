@@ -88,8 +88,6 @@ var ReportDetail = React.createClass({
                         {this.renderButtons()}
 
                         <div style={{clear: 'both'}}/>
-
-                        {this.renderCannotModifyMessage()}
                     </form>
                 </Panel>
                 {this.renderMessage()}
@@ -151,15 +149,6 @@ var ReportDetail = React.createClass({
                     onClick={this.onSubmit}>
                 {this.i18n('detail.submit')}
             </Button>);
-    },
-
-    renderCannotModifyMessage: function () {
-        if (this._canEdit()) {
-            return null;
-        }
-        return (<div className='notice-small' style={{textAlign: 'right'}}>
-            {this.i18n('preliminary.detail.cannot-modify')}
-        </div>);
     }
 });
 
