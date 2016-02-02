@@ -65,7 +65,6 @@ public class PersistenceFactory {
         final Map<String, String> map = new HashMap<>();
         map.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, "en");
         map.put(OWLAPIPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.audit.model");
-        map.put("storage", "new");  // Will be removed in the future
         map.put(OWLAPIPersistenceProperties.JPA_PERSISTENCE_PROVIDER,
                 OWLAPIPersistenceProvider.class.getName());
         return map;
