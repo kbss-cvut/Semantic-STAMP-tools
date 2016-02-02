@@ -147,7 +147,12 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
                 info.setRevision((Integer) rowArr[1]);
                 info.setKey((String) rowArr[2]);
                 info.setCreated((Date) rowArr[3]);
-                info.setPhase(ReportingPhase.fromType((URI) rowArr[4]));
+                try {
+                    info.setPhase(ReportingPhase.fromType((URI) rowArr[4]));
+                } catch (IllegalArgumentException e) {
+                    LOG.trace("Type {} is not a valid reporting phase.", rowArr[4]);
+                    continue;
+                }
                 result.add(info);
             }
             return result;
