@@ -75,7 +75,9 @@ module.exports = {
         'dashboard.recent-table-last-edited': 'Last edited',
 
         'reports.no-occurrence-reports': 'There are no occurrence reports, yet.',
-        'reports.no-reports': 'There are no reports here, yet.',
+        'reports.no-reports': 'There are no reports, yet. You can create one ',
+        'reports.no-reports.link': 'here.',
+        'reports.no-reports.link-tooltip': 'Go to dashboard',
         'reports.open-tooltip': 'Click to see report detail',
         'reports.edit-tooltip': 'Edit this occurrence report',
         'reports.delete-tooltip': 'Delete this occurrence report',
@@ -87,6 +89,7 @@ module.exports = {
         'reports.filter.type.tooltip': 'Select report type',
         'reports.filter.type.all': 'All',
         'reports.filter.type.preliminary': 'Preliminary',
+        'reports.filter.no-matching-found': 'There are no reports of the selected type.',
 
         'delete-dialog.title': 'Delete {type} Report?',
         'delete-dialog.content': 'Are you sure you want to remove this report?',

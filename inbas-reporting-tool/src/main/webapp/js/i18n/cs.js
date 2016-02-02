@@ -76,7 +76,9 @@ module.exports = {
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
 
         'reports.no-occurrence-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
-        'reports.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
+        'reports.no-reports': 'Nenalezena žádná hlášení. Nové hlášení můžete vytvořit ',
+        'reports.no-reports.link': 'zde.',
+        'reports.no-reports.link-tooltip': 'Jít na hlavní stránku',
         'reports.open-tooltip': 'Kliknutím zobrazíte detail hlášení',
         'reports.edit-tooltip': 'Editovat toto hlášení',
         'reports.delete-tooltip': 'Smazat toto hlášení',
@@ -88,6 +90,7 @@ module.exports = {
         'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',
         'reports.filter.type.all': 'Všechna',
         'reports.filter.type.preliminary': 'Předběžná',
+        'reports.filter.no-matching-found': 'Nenalezena žádná hlášení vybraného typu.',
 
         'delete-dialog.title': 'Smazat hlášení?',
         'delete-dialog.content': 'Skutečně chcete smazat toto hlášení?',

@@ -16,7 +16,8 @@ var ReportsTable = React.createClass({
     mixins: [I18nMixin],
 
     propTypes: {
-        reports: React.PropTypes.array.isRequired
+        reports: React.PropTypes.array.isRequired,
+        actions: React.PropTypes.object
     },
 
     render: function () {

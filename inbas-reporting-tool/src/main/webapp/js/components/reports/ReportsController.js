@@ -69,7 +69,7 @@ var ReportsController = React.createClass({
             onFilterChange: this.onFilterChange
         };
         return (
-            <Reports reports={this.filterReports()} actions={actions}/>
+            <Reports reports={this.filterReports()} filter={this.state.filter} actions={actions}/>
         );
     }
 });
