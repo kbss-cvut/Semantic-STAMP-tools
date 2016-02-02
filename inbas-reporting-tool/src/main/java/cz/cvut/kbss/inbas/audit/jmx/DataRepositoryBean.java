@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.persistence.sesame;
+package cz.cvut.kbss.inbas.audit.jmx;
 
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -9,19 +9,22 @@ import org.openrdf.rio.rdfxml.util.RDFXMLPrettyWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jmx.export.annotation.ManagedOperation;
+import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 
 @Component
-public class SesameDataDao implements DataDao {
+@ManagedResource(objectName = "bean:name=DataRepositoryMBean", description = "MBean for accessing raw repository data.")
+public class DataRepositoryBean {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SesameDataDao.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DataRepositoryBean.class);
 
     @Autowired
     private Repository repository;
 
-    @Override
+    @ManagedOperation(description = "Returns raw repository data.")
     public String getRepositoryData() {
         try {
             final RepositoryConnection connection = repository.getConnection();

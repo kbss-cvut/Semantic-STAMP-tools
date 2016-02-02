@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.audit.environment.config;
 
-import cz.cvut.kbss.inbas.audit.persistence.sesame.DataDao;
 import cz.cvut.kbss.inbas.audit.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -58,10 +57,5 @@ public class MockServiceConfig {
     @Bean
     public ConfigReader configReader() {
         return new ConfigReader();
-    }
-
-    @Bean
-    public DataDao dataDao() {
-        return mock(DataDao.class);
     }
 }
