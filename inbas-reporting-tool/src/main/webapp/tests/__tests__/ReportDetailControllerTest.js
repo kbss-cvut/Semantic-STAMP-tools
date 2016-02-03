@@ -11,7 +11,7 @@ describe('ReportDetailController tests', function () {
         ReportDetailController = require('../../js/components/preliminary/ReportDetailController');
 
     beforeEach(function () {
-        spyOn(Actions, 'loadOccurrenceSeverityOptions');
+        spyOn(Actions, 'loadOptions');
     });
 
     it('Show only cancel button for older revisions of a report', function () {

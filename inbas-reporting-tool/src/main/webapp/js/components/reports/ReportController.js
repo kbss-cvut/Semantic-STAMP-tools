@@ -39,6 +39,7 @@ var ReportController = React.createClass({
         if (!this._isNew()) {
             this._loadReport(this.props.params.reportKey);
         }
+        Actions.loadOptions();
     },
 
     _loadReport: function (reportKey) {

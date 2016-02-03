@@ -10,7 +10,6 @@ var Reflux = require('reflux');
 var injectIntl = require('../../utils/injectIntl');
 
 var Select = require('../Select');
-var Actions = require('../../actions/Actions');
 var OptionsStore = require('../../stores/OptionsStore');
 var Utils = require('../../utils/Utils');
 var I18nMixin = require('../../i18n/I18nMixin');
@@ -20,24 +19,19 @@ var OccurrenceSeverity = React.createClass({
     getInitialState: function () {
         return {
             severity: this.props.severityAssessment ? this.props.severityAssessment : null,
-            options: []
+            options: OptionsStore.getOccurrenceSeverityOptions()
         };
     },
 
     componentDidMount: function () {
         this.listenTo(OptionsStore, this.onSeveritiesLoaded);
-        Actions.loadOccurrenceSeverityOptions();
     },
 
     onSeveritiesLoaded: function (type, data) {
         if (type !== 'occurrenceSeverity') {
             return;
         }
-        var options = [];
-        for (var i = 0, len = data.length; i < len; i++) {
-            options.push({label: Utils.constantToString(data[i], true), value: data[i]});
-        }
-        this.setState({options: options});
+        this.setState({options: data});
     },
 
     onChange: function (e) {
@@ -46,11 +40,20 @@ var OccurrenceSeverity = React.createClass({
         this.setState({severity: value});
     },
 
+    _prepareOptions: function() {
+        var options = this.state.options,
+            toRender = [];
+        for (var i = 0, len = options.length; i < len; i++) {
+            toRender.push({label: Utils.constantToString(options[i], true), value: options[i]});
+        }
+        return toRender;
+    },
+
     render: function () {
         return (
             <Select label={this.i18n('occurrence.class') + '*'}
                     title={this.i18n('occurrence.class-tooltip')}
-                    value={this.state.severity} options={this.state.options} onChange={this.onChange}/>
+                    value={this.state.severity} options={this._prepareOptions()} onChange={this.onChange}/>
         )
     }
 });

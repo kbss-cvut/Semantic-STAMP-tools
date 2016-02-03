@@ -12,7 +12,7 @@ describe('ReportController', function () {
         Constants = require('../../js/constants/Constants');
 
     beforeEach(function () {
-        spyOn(Actions, 'loadOccurrenceSeverityOptions');
+        spyOn(Actions, 'loadOptions');
     });
 
     it('Uses report passed from router store if it is set', function () {

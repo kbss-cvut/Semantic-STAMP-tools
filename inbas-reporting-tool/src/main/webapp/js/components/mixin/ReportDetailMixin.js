@@ -16,7 +16,7 @@ var ReportDetailMixin = {
     onSaveSuccess: function () {
         this.setState({submitting: false});
         this.props.handlers.onSuccess();
-        if (!this.props.report.isNew) {
+        if (!this.props.report || !this.props.report.isNew) {
             this.showSuccessMessage(this.i18n('save-success-message'));
         }
     },
