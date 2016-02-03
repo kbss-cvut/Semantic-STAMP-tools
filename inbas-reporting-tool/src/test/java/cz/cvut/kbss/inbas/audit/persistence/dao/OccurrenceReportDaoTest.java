@@ -267,4 +267,18 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
             assertEquals(reports.get(i).getPhase(), result.get(i).getPhase());
         }
     }
+
+    @Test
+    public void getReportChainRevisionsSkipsReturnsOnlyKnownPhases() throws Exception {
+        final PreliminaryReport rOne = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        rOne.setCreated(new Date());
+        rOne.addType("http://www.w3.org/2000/01/rdf-schema#Resource");  // Inferred by RDFS rule engines
+        preliminaryReportDao.persist(rOne);
+
+        final List<ReportRevisionInfo> result = occurrenceReportDao.getReportChainRevisions(rOne.getFileNumber());
+        assertEquals(1, result.size());
+        assertEquals(rOne.getUri(), result.get(0).getUri());
+        assertEquals(rOne.getKey(), result.get(0).getKey());
+    }
 }
