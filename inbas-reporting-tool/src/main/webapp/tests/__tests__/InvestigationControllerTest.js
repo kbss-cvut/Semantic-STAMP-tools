@@ -12,7 +12,7 @@ describe('Investigation controller', function () {
         Actions = require('../../js/actions/Actions');
 
     beforeEach(function () {
-        spyOn(Actions, 'loadOccurrenceSeverityOptions');
+        spyOn(Actions, 'loadOptions');
         Environment.mockFactors(Investigation);
         InvestigationController.__set__('Investigation', Investigation);
     });

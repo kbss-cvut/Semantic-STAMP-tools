@@ -10,11 +10,15 @@ var occurrenceSeverityOptions = [];
 
 var OptionsStore = Reflux.createStore({
     init: function () {
-        this.listenTo(Actions.loadLvpOptions, this.onLoadLvpOptions);
-        this.listenTo(Actions.loadOccurrenceSeverityOptions, this.onLoadOccurrenceSeverityOptions);
+        this.listenTo(Actions.loadOptions, this.onLoadOptions);
     },
 
-    onLoadLvpOptions: function () {
+    onLoadOptions: function () {
+        this._loadLvpOptions();
+        this._loadOccurrenceSeverityOptions();
+    },
+
+    _loadLvpOptions: function () {
         if (lvpOptions.length !== 0) {
             this.trigger('lvp', lvpOptions);
             return;
@@ -23,15 +27,11 @@ var OptionsStore = Reflux.createStore({
             lvpOptions = data;
             this.trigger('lvp', lvpOptions);
         }.bind(this), function () {
-            this.trigger(lvpOptions);
+            this.trigger('lvp', lvpOptions);
         }.bind(this));
     },
 
-    onLoadingError: function (err, type) {
-        console.log('Unable to load ' + type + ' options. Got status ' + err.status);
-    },
-
-    onLoadOccurrenceSeverityOptions: function () {
+    _loadOccurrenceSeverityOptions: function () {
         if (occurrenceSeverityOptions.length !== 0) {
             this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
             return;
@@ -40,8 +40,16 @@ var OptionsStore = Reflux.createStore({
             occurrenceSeverityOptions = data;
             this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
         }.bind(this), function () {
-            this.trigger(occurrenceSeverityOptions);
+            this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
         }.bind(this));
+    },
+
+    getLowVisibilityProcedureOptions: function () {
+        return lvpOptions;
+    },
+
+    getOccurrenceSeverityOptions: function () {
+        return occurrenceSeverityOptions;
     }
 });
 
