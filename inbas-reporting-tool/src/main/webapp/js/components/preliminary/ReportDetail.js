@@ -18,9 +18,7 @@ var InitialReports = require('./../initialreport/InitialReports');
 var ReportStatements = require('./ReportStatements');
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo');
 var ReportSummary = require('./ReportSummary');
-var Mask = require('../Mask');
 var MessageMixin = require('../mixin/MessageMixin');
-var ResourceNotFound = require('../ResourceNotFound');
 var ReportValidator = require('../../validation/ReportValidator');
 var I18nMixin = require('../../i18n/I18nMixin');
 var ReportDetailMixin = require('../mixin/ReportDetailMixin');
@@ -48,38 +46,25 @@ var ReportDetail = React.createClass({
             Actions.createPreliminary(report, this.onSaveSuccess, this.onSaveError);
         }
         else {
-            Actions.updatePreliminary(report, this.onSaveSuccess, this.onSaveError);
+            Actions.updateReport(report, this.onSaveSuccess, this.onSaveError);
         }
     },
 
     onSubmit: function () {
         this.setState({submitting: true});
-        Actions.submitPreliminary(this.props.report, this.onSubmitSuccess, this.onSubmitError);
+        Actions.submitReport(this.props.report, this.onSubmitSuccess, this.onSubmitError);
     },
 
     _canEdit: function () {
         return this.props.report && this.props.report.occurrence.reportingPhase !== Constants.INVESTIGATION_REPORT_PHASE;
     },
 
-
     render: function () {
-        if (this.props.loading) {
-            return (
-                <Mask text={this.i18n('preliminary.detail.loading-mask')}/>
-            );
-        }
-        if (!this.props.report) {
-            return (<ResourceNotFound resource={this.i18n('preliminary.detail.panel-title')}/>);
-        }
-        return this.renderDetail();
-    },
-
-    renderDetail: function () {
         var report = this.props.report;
 
         return (
             <div>
-                <Panel header={<h2>{this.i18n('preliminary.detail.panel-title')}</h2>} bsStyle='primary'>
+                <Panel header={this.renderHeader()} bsStyle='primary'>
                     <form>
                         <BasicOccurrenceInfo report={report} onChange={this.onChange} revisions={this.props.revisions}
                                              onAttributeChange={this.onAttributeChange}/>
@@ -103,13 +88,21 @@ var ReportDetail = React.createClass({
                         {this.renderButtons()}
 
                         <div style={{clear: 'both'}}/>
-
-                        {this.renderCannotModifyMessage()}
                     </form>
                 </Panel>
                 {this.renderMessage()}
             </div>
         );
+    },
+
+    renderHeader: function () {
+        return (
+            <div>
+                <h2 className='panel-title pull-left'>{this.i18n('preliminary.detail.panel-title')}</h2>
+                <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>
+                <div style={{clear: 'both'}}/>
+            </div>
+        )
     },
 
     renderButtons: function () {
@@ -156,15 +149,6 @@ var ReportDetail = React.createClass({
                     onClick={this.onSubmit}>
                 {this.i18n('detail.submit')}
             </Button>);
-    },
-
-    renderCannotModifyMessage: function () {
-        if (this._canEdit()) {
-            return null;
-        }
-        return (<div className='notice-small' style={{textAlign: 'right'}}>
-            {this.i18n('preliminary.detail.cannot-modify')}
-        </div>);
     }
 });
 

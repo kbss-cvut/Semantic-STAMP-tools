@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.InitialReport)
-public class InitialReport implements HasOwlKey, Serializable, Report {
+public class InitialReport implements HasOwlKey, Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -102,7 +102,6 @@ public class InitialReport implements HasOwlKey, Serializable, Report {
         }
     }
 
-    @Override
     public ReportingPhase getPhase() {
         return ReportingPhase.INITIAL;
     }

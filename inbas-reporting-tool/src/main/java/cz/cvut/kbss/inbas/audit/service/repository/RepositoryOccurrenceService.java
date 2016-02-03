@@ -2,21 +2,17 @@ package cz.cvut.kbss.inbas.audit.service.repository;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
-import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
-import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
-import cz.cvut.kbss.inbas.audit.model.reports.Report;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.audit.service.OccurrenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class RepositoryOccurrenceService extends BaseRepositoryService<Occurrence> implements OccurrenceService {
@@ -25,9 +21,7 @@ public class RepositoryOccurrenceService extends BaseRepositoryService<Occurrenc
     private OccurrenceDao occurrenceDao;
 
     @Autowired
-    private PreliminaryReportDao preliminaryReportDao;
-    @Autowired
-    private InvestigationReportDao investigationReportDao;
+    private OccurrenceReportDao reportDao;
 
     @Override
     protected GenericDao<Occurrence> getPrimaryDao() {
@@ -40,30 +34,17 @@ public class RepositoryOccurrenceService extends BaseRepositoryService<Occurrenc
     }
 
     @Override
-    public Collection<Report> getReports(Occurrence occurrence) {
-        final List<PreliminaryReport> preliminaryReports = preliminaryReportDao.findByOccurrence(occurrence);
-        final List<InvestigationReport> investigationReports = investigationReportDao.findByOccurrence(occurrence);
-        final List<Report> result = new ArrayList<>(preliminaryReports);
-        result.addAll(investigationReports);
-        return result;
+    public Collection<OccurrenceReport> getReports(Occurrence occurrence) {
+        return reportDao.findByOccurrence(occurrence);
     }
 
     @Override
-    public Collection<Report> getReports(Occurrence occurrence, ReportingPhase phase) {
+    public Collection<OccurrenceReport> getReports(Occurrence occurrence, ReportingPhase phase) {
         Objects.requireNonNull(occurrence);
         Objects.requireNonNull(phase);
 
-        final List<? extends Report> result;
-        switch (phase) {
-            case PRELIMINARY:
-                result = preliminaryReportDao.findByOccurrence(occurrence);
-                break;
-            case INVESTIGATION:
-                result = investigationReportDao.findByOccurrence(occurrence);
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported report phase " + phase);
-        }
-        return new ArrayList<>(result);
+        final Collection<OccurrenceReport> reports = getReports(occurrence);
+        return reports.stream().filter(occurrenceReport -> occurrenceReport.getPhase() == phase)
+                      .collect(Collectors.toList());
     }
 }

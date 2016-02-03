@@ -1,4 +1,4 @@
-package cz.cvut.kbss.inbas.audit.rest.exceptions;
+package cz.cvut.kbss.inbas.audit.exception;
 
 public class NotFoundException extends RuntimeException {
 

@@ -1,16 +1,16 @@
 package cz.cvut.kbss.inbas.audit.service.repository;
 
-import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
-import cz.cvut.kbss.inbas.audit.persistence.dao.*;
+import cz.cvut.kbss.inbas.audit.persistence.dao.CorrectiveMeasureDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.EventTypeAssessmentDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
+import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
 import cz.cvut.kbss.inbas.audit.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.audit.service.validation.PreliminaryReportValidator;
-import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +35,6 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
     private CorrectiveMeasureDao correctiveMeasureDao;
 
     @Autowired
-    private OccurrenceReportDao occurrenceReportDao;
-
-    @Autowired
     private SecurityUtils securityUtils;
 
     @Override
@@ -50,6 +47,12 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
     }
 
     @Override
+    public PreliminaryReport findLatestRevision(Long fileNumber) {
+        Objects.requireNonNull(fileNumber);
+        return preliminaryReportDao.findLatestRevision(fileNumber);
+    }
+
+    @Override
     public void persist(PreliminaryReport report) {
         prepareReportForPersist(report);
         preliminaryReportDao.persist(report);
@@ -58,6 +61,9 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
     private void prepareReportForPersist(PreliminaryReport report) {
         report.setAuthor(securityUtils.getCurrentUser());
         report.setCreated(new Date());
+        if (report.getFileNumber() == null) {
+            report.setFileNumber(System.currentTimeMillis());
+        }
         reportValidator.validate(report);
         report.getOccurrence().transitionToPhase(ReportingPhase.PRELIMINARY);
     }
@@ -126,10 +132,5 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
         newRevision.setRevision(report.getRevision() + 1);
         persist(newRevision);
         return newRevision;
-    }
-
-    @Override
-    public List<ReportRevisionInfo> getRevisionsForOccurrence(Occurrence occurrence) {
-        return occurrenceReportDao.getRevisionsForOccurrence(occurrence, Vocabulary.PreliminaryReport);
     }
 }

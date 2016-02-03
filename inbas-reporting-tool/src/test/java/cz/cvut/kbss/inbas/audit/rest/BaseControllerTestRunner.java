@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.audit.config.WebAppConfig;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -21,10 +22,17 @@ public abstract class BaseControllerTestRunner {
     @Autowired
     protected WebApplicationContext webApplicationContext;
 
+    @Autowired
+    protected ObjectMapper objectMapper;
+
     protected MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
+
+    protected String toJson(Object object) throws Exception {
+        return objectMapper.writeValueAsString(object);
     }
 }

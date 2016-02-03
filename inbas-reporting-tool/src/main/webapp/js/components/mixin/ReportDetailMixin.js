@@ -4,7 +4,7 @@ var React = require('react');
 var Button = require('react-bootstrap').Button;
 
 /**
- * Aggregates some of the functionality of the report detail view (used in both Investigation and Preliminary report).
+ * Aggregates some of the functionality of the report detail view.
  */
 var ReportDetailMixin = {
 
@@ -16,7 +16,9 @@ var ReportDetailMixin = {
     onSaveSuccess: function () {
         this.setState({submitting: false});
         this.props.handlers.onSuccess();
-        this.showSuccessMessage(this.i18n('save-success-message'));
+        if (!this.props.report.isNew) {
+            this.showSuccessMessage(this.i18n('save-success-message'));
+        }
     },
 
     onSaveError: function (error) {

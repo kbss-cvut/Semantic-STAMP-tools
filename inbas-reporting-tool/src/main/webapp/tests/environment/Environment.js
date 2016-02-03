@@ -35,6 +35,10 @@ module.exports = {
      */
     getComponentByText: function (root, component, text) {
         var components = TestUtils.scryRenderedComponentsWithType(root, component);
+        return this._getNodeByText(components, text);
+    },
+
+    _getNodeByText: function (components, text) {
         for (var i = 0, len = components.length; i < len; i++) {
             var node = ReactDOM.findDOMNode(components[i]);
             if (node.textContent === text) {
@@ -42,6 +46,19 @@ module.exports = {
             }
         }
         return null;
+    },
+
+    /**
+     * Finds component with the specified text.
+     *
+     * This version searches components by tag, so it will catch also simple components like div.
+     * @param root Root of the tree where the component is searched for
+     * @param tag Tag name
+     * @param text Component text
+     */
+    getComponentByTagAndText: function (root, tag, text) {
+        var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag);
+        return this._getNodeByText(components, text);
     },
 
     mockFactors: function (investigation) {

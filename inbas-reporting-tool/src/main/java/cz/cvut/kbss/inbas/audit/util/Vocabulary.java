@@ -81,5 +81,6 @@ public class Vocabulary {
     public static final String p_hasFactor = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasFactor";
 
     public static final String p_hasKey = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasKey";
+    public static final String p_fileNumber = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#fileNumber";
     public static final String p_dtoClass = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#dtoClass";
 }

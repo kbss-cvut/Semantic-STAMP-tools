@@ -5,6 +5,7 @@
     "name": "Runway incursion",
     "reportingPhase": "INVESTIGATION"
   },
+  "dtoClass": "cz.cvut.kbss.inbas.audit.dto.InvestigationReportDto",
   "occurrenceStart": 1447144734937,
   "occurrenceEnd": 1447144800937,
   "created": 1447144867175,

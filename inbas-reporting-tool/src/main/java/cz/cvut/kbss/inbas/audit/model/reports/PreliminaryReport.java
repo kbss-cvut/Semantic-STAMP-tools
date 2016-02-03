@@ -21,8 +21,13 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
     @Id(generated = true)
     private URI uri;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_fileNumber)
+    private Long fileNumber;
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_startTime)
@@ -81,6 +86,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
      * Copy constructor.
      */
     public PreliminaryReport(PreliminaryReport other) {
+        this.fileNumber = other.fileNumber;
         this.occurrenceStart = other.occurrenceStart;
         this.occurrenceEnd = other.occurrenceEnd;
         this.severityAssessment = other.severityAssessment;
@@ -108,6 +114,14 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public Long getFileNumber() {
+        return fileNumber;
+    }
+
+    public void setFileNumber(Long fileNumber) {
+        this.fileNumber = fileNumber;
     }
 
     public Date getOccurrenceStart() {

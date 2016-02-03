@@ -17,6 +17,7 @@ module.exports = {
         'delete': 'Smazat',
         'headline': 'Název',
         'narrative': 'Popis',
+        'fileNo': 'Číslo záznamu',
         'table-actions': 'Akce',
         'table-edit': 'Editovat',
         'save-success-message': 'Hlášení úspěšně uloženo.',
@@ -36,6 +37,8 @@ module.exports = {
         'detail.submit-tooltip': 'Odeslat současnou revizi zprávy úřadu',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
         'detail.submit-failed-message': 'Hlášení se nepodařilo odeslat. Odpověď serveru: ',
+        'detail.loading': 'Načítám hlášení...',
+        'detail.not-found.title': 'Hlášení nenalezeno',
 
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
@@ -57,8 +60,7 @@ module.exports = {
         'register.mask': 'Registruji...',
 
         'main.dashboard-nav': 'Hlavní strana',
-        'main.preliminary-nav': 'Předběžná hlášení',
-        'main.investigations-nav': 'Šetření',
+        'main.reports-nav': 'Hlášení',
         'main.logout': 'Odhlásit se',
 
         'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',
@@ -74,7 +76,9 @@ module.exports = {
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
 
         'reports.no-occurrence-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
-        'reports.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
+        'reports.no-reports': 'Nenalezena žádná hlášení. Nové hlášení můžete vytvořit ',
+        'reports.no-reports.link': 'zde.',
+        'reports.no-reports.link-tooltip': 'Jít na hlavní stránku',
         'reports.open-tooltip': 'Kliknutím zobrazíte detail hlášení',
         'reports.edit-tooltip': 'Editovat toto hlášení',
         'reports.delete-tooltip': 'Smazat toto hlášení',
@@ -82,6 +86,11 @@ module.exports = {
         'reports.panel-title': 'Hlášení událostí',
         'reports.table-date': 'Datum a čas události',
         'reports.table-type': 'Typ',
+        'reports.filter.label': 'Zobrazit',
+        'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',
+        'reports.filter.type.all': 'Všechna',
+        'reports.filter.type.preliminary': 'Předběžná',
+        'reports.filter.no-matching-found': 'Nenalezena žádná hlášení vybraného typu.',
 
         'delete-dialog.title': 'Smazat hlášení?',
         'delete-dialog.content': 'Skutečně chcete smazat toto hlášení?',
@@ -102,16 +111,13 @@ module.exports = {
         'initial.label': 'Prvotní hlášení',
 
         'preliminary.type': 'Předběžné',
-        'preliminary.panel-title': 'Předběžná hlášení',
         'preliminary.table-investigate': 'Šetřit',
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
-        'preliminary.detail.loading-mask': 'Načítám hlášení...',
         'preliminary.detail.panel-title': 'Předběžné hlášení o události',
         'preliminary.detail.last-edited-msg': 'Naposledy upravil(a) {name} {date}.',
         'preliminary.detail.narrative-tooltip': 'Popis - pole je povinné',
         'preliminary.detail.table-edit-tooltip': 'Editovat položku',
         'preliminary.detail.table-delete-tooltip': 'Smazat položku',
-        'preliminary.detail.cannot-modify': 'Předběžné hlášení nelze upravovat, protože událost je již ve fázi šetření.',
         'preliminary.detail.corrective.panel-title': 'Nápravná opatření',
         'preliminary.detail.corrective.table-description': 'Opatření',
         'preliminary.detail.corrective.description-placeholder': 'Popis nápravného opatření',
@@ -200,11 +206,6 @@ module.exports = {
         'eventtype.incursion.conflicting.phase.landing-tooltip': 'Letadlo přistávalo',
 
         'investigation.type': 'Šetření',
-        'investigation.panel-title': 'Hlášení o šetření',
-        'investigation.open-tooltip': 'Kliknutím zobrazíte detail šetření',
-        'investigation.edit-tooltip': 'Editovat toto šetření',
-        'investigation.delete-tooltip': 'Smazat toto šetření',
-        'investigation.detail.loading': 'Nahrávám šetření...',
         'investigation.detail.panel-title': 'Hlášení o šetření',
 
         'factors.panel-title': 'Faktory',

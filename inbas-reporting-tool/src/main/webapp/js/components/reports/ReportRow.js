@@ -6,6 +6,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
+var Label = require('react-bootstrap').Label;
 
 var injectIntl = require('../../utils/injectIntl');
 
@@ -52,9 +53,9 @@ var ReportRow = React.createClass({
                 <td style={verticalAlign}><a href='javascript:void(0);' onClick={this.onEditClick}
                                              title={this.i18n('reports.open-tooltip')}>{report.occurrence.name}</a>
                 </td>
-                <td style={verticalAlign}>{formattedDate}</td>
+                <td style={verticalAlign} className='content-center'>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.summary}/></td>
-                <td style={verticalAlign} className='content-center'>{ReportType.asString(report)}</td>
+                <td style={verticalAlign} className='content-center'><Label>{ReportType.asString(report)}</Label></td>
                 <td style={verticalAlign} className='actions'>
                     <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.edit-tooltip')}
                             onClick={this.onEditClick}>{this.i18n('table-edit')}</Button>

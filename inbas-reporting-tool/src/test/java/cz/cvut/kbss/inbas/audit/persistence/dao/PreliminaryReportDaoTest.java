@@ -60,6 +60,15 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
+    public void persistGeneratesKeyOnInstance() throws Exception {
+        final PreliminaryReport report = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        assertNull(report.getKey());
+        dao.persist(report);
+        assertNotNull(report.getKey());
+    }
+
+    @Test
     public void persistingReportsWithSameEventTypeSavesItFirstTimeAndReusesLater() throws Exception {
         final PreliminaryReport rOne = initPreliminaryReportWithTypeAssessment(eventType);
         dao.persist(rOne);
@@ -196,6 +205,17 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         assertEquals(loc, resLocTwo);
     }
 
+    @Test
+    public void persistDoesNotPersistOccurrenceIfItExistsEvenForInitialRevision() {
+        final PreliminaryReport report = initBasicValidReport();
+        assertEquals(Constants.INITIAL_REVISION, report.getRevision());
+        dao.persist(report);
+        final PreliminaryReport reportTwo = initBasicValidReport(); // Same occurrence, different report chain
+        reportTwo.setOccurrence(report.getOccurrence());
+        assertEquals(Constants.INITIAL_REVISION, reportTwo.getRevision());
+        dao.persist(reportTwo);
+    }
+
     private PreliminaryReport initOccurrenceReportWithLocation(Location location) {
         final PreliminaryReport r = initBasicValidReport();
         final EventTypeAssessment type = new EventTypeAssessment();
@@ -230,6 +250,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         report.setOccurrenceEnd(new Date());
         report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setAuthor(author);
+        report.setFileNumber(System.currentTimeMillis());
         return report;
     }
 
@@ -354,6 +375,9 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         }
     }
 
+    /**
+     * @return List of latest revisions in the persisted chains
+     */
     private List<PreliminaryReport> persistReportsWithRevisions() {
         final List<PreliminaryReport> result = new ArrayList<>(2);
         final PreliminaryReport repOneRevOne = initPreliminaryReportWithTypeAssessment(eventType);
@@ -380,34 +404,12 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
-    public void findByOccurrenceReturnsAllReportsForOccurrenceOrderedByRevision() {
-        final List<PreliminaryReport> reports = persistReportsForOccurrence();
-
-        final List<PreliminaryReport> result = dao.findByOccurrence(reports.get(0).getOccurrence());
-        assertEquals(reports.size(), result.size());
-        for (int i = 0; i < reports.size(); i++) {
-            assertEquals(reports.get(i).getUri(), result.get(i).getUri());
-            assertEquals(reports.get(i).getRevision(), result.get(i).getRevision());
+    public void getLatestRevisionReturnsLatestPreliminaryReport() {
+        final List<PreliminaryReport> latestRevisions = persistReportsWithRevisions();
+        for (PreliminaryReport pr : latestRevisions) {
+            final PreliminaryReport result = dao.findLatestRevision(pr.getFileNumber());
+            assertNotNull(result);
+            assertEquals(pr.getUri(), result.getUri());
         }
-    }
-
-    private List<PreliminaryReport> persistReportsForOccurrence() {
-        final List<PreliminaryReport> reports = new ArrayList<>();
-        final PreliminaryReport rOne = Generator
-                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
-        rOne.setAuthor(author);
-        reports.add(rOne);
-        dao.persist(rOne);
-        final PreliminaryReport rTwo = new PreliminaryReport(rOne);
-        rTwo.setRevision(Constants.INITIAL_REVISION + 1);
-        rTwo.setAuthor(author);
-        reports.add(rTwo);
-        dao.persist(rTwo);
-        final PreliminaryReport rThree = new PreliminaryReport(rTwo);
-        rThree.setRevision(rTwo.getRevision() + 1);
-        rThree.setAuthor(author);
-        reports.add(rThree);
-        dao.persist(rThree);
-        return reports;
     }
 }

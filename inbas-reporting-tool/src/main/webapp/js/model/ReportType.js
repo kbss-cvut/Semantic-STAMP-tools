@@ -1,27 +1,24 @@
 'use strict';
 
 var Constants = require('../constants/Constants');
-var Routes = require('../utils/Routes');
 var I18nStore = require('../stores/I18nStore');
 
 var ReportType = {
-    /**
-     * Gets route to open for report detail.
-     * @param report Report to open detail
-     */
-    getDetailRoute: function(report) {
+
+    getDetailController: function (report) {
+        // Use require in method call to prevent circular dependencies with RevisionInfo
         if (this._isPreliminary(report)) {
-            return Routes.editReport;
+            return require('../components/preliminary/ReportDetailController');
         } else {
-            return Routes.editInvestigation;
+            return require('../components/investigation/InvestigationController');
         }
     },
 
-    _isPreliminary: function(report) {
-        return report.types.indexOf(Constants.PRELIMINARY_REPORT_TYPE) !== -1;
+    _isPreliminary: function (report) {
+        return !report.phase || report.phase === Constants.PRELIMINARY_REPORT_PHASE;
     },
 
-    getIconSrc: function(report) {
+    getIconSrc: function (report) {
         if (this._isPreliminary(report)) {
             return 'resources/images/icons/preliminary.png';
         } else {
@@ -29,7 +26,7 @@ var ReportType = {
         }
     },
 
-    asString: function(report) {
+    asString: function (report) {
         if (this._isPreliminary(report)) {
             return I18nStore.i18n('preliminary.type');
         } else {

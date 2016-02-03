@@ -1,9 +1,9 @@
-package cz.cvut.kbss.inbas.audit.rest.handlers;
+package cz.cvut.kbss.inbas.audit.rest.handler;
 
+import cz.cvut.kbss.inbas.audit.exception.NotFoundException;
 import cz.cvut.kbss.inbas.audit.exception.UsernameExistsException;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.exception.WebServiceIntegrationException;
-import cz.cvut.kbss.inbas.audit.rest.exceptions.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

@@ -17,6 +17,7 @@ module.exports = {
         'delete': 'Delete',
         'headline': 'Headline',
         'narrative': 'Narrative',
+        'fileNo': 'File number',
         'table-actions': 'Actions',
         'table-edit': 'Edit',
         'save-success-message': 'Report successfully saved.',
@@ -36,6 +37,8 @@ module.exports = {
         'detail.submit-tooltip': 'Submit the current revision to authority',
         'detail.submit-success-message': 'Report successfully submitted.',
         'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
+        'detail.loading': 'Loading report...',
+        'detail.not-found.title': 'Report not found',
 
         'login.title': Constants.APP_NAME + ' - Login',
         'login.username': 'Username',
@@ -56,8 +59,7 @@ module.exports = {
         'register.mask': 'Registering...',
 
         'main.dashboard-nav': 'Dashboard',
-        'main.preliminary-nav': 'Preliminary Reports',
-        'main.investigations-nav': 'Investigations',
+        'main.reports-nav': 'Reports',
         'main.logout': 'Logout',
 
         'dashboard.welcome': 'Hello {name}, Welcome to the ' + Constants.APP_NAME + '.',
@@ -73,7 +75,9 @@ module.exports = {
         'dashboard.recent-table-last-edited': 'Last edited',
 
         'reports.no-occurrence-reports': 'There are no occurrence reports, yet.',
-        'reports.no-reports': 'There are no reports here, yet.',
+        'reports.no-reports': 'There are no reports, yet. You can create one ',
+        'reports.no-reports.link': 'here.',
+        'reports.no-reports.link-tooltip': 'Go to dashboard',
         'reports.open-tooltip': 'Click to see report detail',
         'reports.edit-tooltip': 'Edit this occurrence report',
         'reports.delete-tooltip': 'Delete this occurrence report',
@@ -81,6 +85,11 @@ module.exports = {
         'reports.panel-title': 'Occurrence reports',
         'reports.table-date': 'Occurrence date',
         'reports.table-type': 'Type',
+        'reports.filter.label': 'Filter',
+        'reports.filter.type.tooltip': 'Select report type',
+        'reports.filter.type.all': 'All',
+        'reports.filter.type.preliminary': 'Preliminary',
+        'reports.filter.no-matching-found': 'There are no reports of the selected type.',
 
         'delete-dialog.title': 'Delete {type} Report?',
         'delete-dialog.content': 'Are you sure you want to remove this report?',
@@ -100,16 +109,13 @@ module.exports = {
         'initial.label': 'Initial report',
 
         'preliminary.type': 'Preliminary',
-        'preliminary.panel-title': 'Preliminary reports',
         'preliminary.table-investigate': 'Investigate',
         'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
-        'preliminary.detail.loading-mask': 'Loading report...',
         'preliminary.detail.panel-title': 'Preliminary occurrence report',
         'preliminary.detail.last-edited-msg': 'Last edited {date} by {name}.',
         'preliminary.detail.narrative-tooltip': 'Narrative - this field is required',
         'preliminary.detail.table-edit-tooltip': 'Edit statement',
         'preliminary.detail.table-delete-tooltip': 'Delete statement',
-        'preliminary.detail.cannot-modify': 'Preliminary report cannot be modified, because it is already in the investigation phase.',
         'preliminary.detail.corrective.panel-title': 'Corrective measures',
         'preliminary.detail.corrective.table-description': 'Corrective measure',
         'preliminary.detail.corrective.description-placeholder': 'Corrective measure description',
@@ -198,11 +204,6 @@ module.exports = {
         'eventtype.incursion.conflicting.phase.landing-tooltip': 'Plane landing',
 
         'investigation.type': 'Investigation',
-        'investigation.panel-title': 'Investigation reports',
-        'investigation.open-tooltip': 'Click to see investigation detail',
-        'investigation.edit-tooltip': 'Edit this investigation report',
-        'investigation.delete-tooltip': 'Delete this investigation report',
-        'investigation.detail.loading': 'Loading investigation report...',
         'investigation.detail.panel-title': 'Investigation report',
 
         'factors.panel-title': 'Factors',

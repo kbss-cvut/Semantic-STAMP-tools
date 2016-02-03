@@ -40,8 +40,8 @@ public class MockServiceConfig {
     }
 
     @Bean
-    public OccurrenceReportService occurrenceReportService() {
-        return mock(OccurrenceReportService.class);
+    public ReportService reportService() {
+        return mock(ReportService.class);
     }
 
     @Bean

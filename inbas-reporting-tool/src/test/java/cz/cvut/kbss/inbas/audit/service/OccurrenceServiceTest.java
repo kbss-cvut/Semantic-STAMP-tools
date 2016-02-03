@@ -2,16 +2,12 @@ package cz.cvut.kbss.inbas.audit.service;
 
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
-import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
-import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
-import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
-import cz.cvut.kbss.inbas.audit.model.reports.Report;
+import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
+import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +18,6 @@ import static org.junit.Assert.*;
 
 public class OccurrenceServiceTest extends BaseServiceTestRunner {
 
-    @Autowired
-    private PersonDao personDao;
     @Autowired
     private OccurrenceDao occurrenceDao;
 
@@ -36,16 +30,14 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
     @Autowired
     private OccurrenceService occurrenceService;
 
-    private Person author;
     private Occurrence occurrence;
     private Map<ReportingPhase, Set<? extends Report>> data;
 
     @Before
     public void setUp() throws Exception {
+        super.setUp();
         this.occurrence = Generator.generateOccurrence();
         occurrenceDao.persist(occurrence);
-        this.author = Generator.getPerson();
-        personDao.persist(author);
         this.data = persistTestData();
     }
 
@@ -60,7 +52,8 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             r.setRevision(2);
             r.setOccurrenceStart(startTime);
             r.setOccurrenceEnd(endTime);
-            r.setAuthor(author);
+            r.setFileNumber(System.currentTimeMillis());
+            r.setAuthor(person);
             r.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
             preliminaryReports.add(r);
         }
@@ -73,7 +66,8 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             r.setRevision(2);
             r.setOccurrenceStart(startTime);
             r.setOccurrenceEnd(endTime);
-            r.setAuthor(author);
+            r.setFileNumber(System.currentTimeMillis());
+            r.setAuthor(person);
             investigationReports.add(r);
         }
         investigationReportDao.persist(investigationReports);
@@ -83,20 +77,20 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void getReportsByOccurrenceReturnsBothPreliminaryAndInvestigationReports() throws Exception {
-        final Collection<Report> results = occurrenceService.getReports(occurrence);
+        final Collection<OccurrenceReport> results = occurrenceService.getReports(occurrence);
         assertNotNull(results);
         boolean found = false;
-        for (Report r : results) {
-            if (r instanceof PreliminaryReport) {
+        for (OccurrenceReport r : results) {
+            if (r.getTypes().contains(Vocabulary.PreliminaryReport)) {
                 for (Report pr : data.get(ReportingPhase.PRELIMINARY)) {
-                    if (((PreliminaryReport) r).getUri().equals(((PreliminaryReport) pr).getUri())) {
+                    if (r.getUri().equals(pr.getUri())) {
                         found = true;
                         break;
                     }
                 }
             } else {
                 for (Report ir : data.get(ReportingPhase.INVESTIGATION)) {
-                    if (((InvestigationReport) r).getUri().equals(((InvestigationReport) ir).getUri())) {
+                    if (r.getUri().equals(ir.getUri())) {
                         found = true;
                         break;
                     }
@@ -108,28 +102,26 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void testGetReportsByPhasePreliminary() throws Exception {
-        final Collection<Report> results = occurrenceService.getReports(occurrence, ReportingPhase.PRELIMINARY);
+        final Collection<OccurrenceReport> results = occurrenceService
+                .getReports(occurrence, ReportingPhase.PRELIMINARY);
         final Set<? extends Report> preliminaryReports = data.get(ReportingPhase.PRELIMINARY);
         assertEquals(preliminaryReports.size(), results.size());
         for (Report r : preliminaryReports) {
-            Report matching = results.stream().filter(rep -> ((PreliminaryReport) r).getUri()
-                                                                                    .equals(((PreliminaryReport) rep)
-                                                                                            .getUri())).findFirst()
-                                     .get();
+            OccurrenceReport matching = results.stream().filter(rep -> r.getUri().equals(rep.getUri())).findFirst()
+                                               .get();
             assertNotNull(matching);
         }
     }
 
     @Test
     public void testGetReportsByPhaseInvestigation() throws Exception {
-        final Collection<Report> results = occurrenceService.getReports(occurrence, ReportingPhase.INVESTIGATION);
+        final Collection<OccurrenceReport> results = occurrenceService
+                .getReports(occurrence, ReportingPhase.INVESTIGATION);
         final Set<? extends Report> preliminaryReports = data.get(ReportingPhase.INVESTIGATION);
         assertEquals(preliminaryReports.size(), results.size());
         for (Report r : preliminaryReports) {
-            Report matching = results.stream().filter(rep -> ((InvestigationReport) r).getUri()
-                                                                                      .equals(((InvestigationReport) rep)
-                                                                                              .getUri())).findFirst()
-                                     .get();
+            OccurrenceReport matching = results.stream().filter(rep -> r.getUri().equals(rep.getUri())).findFirst()
+                                               .get();
             assertNotNull(matching);
         }
     }

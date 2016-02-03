@@ -11,7 +11,7 @@ var RevisionInfo = require('../reports/RevisionInfo');
 var ReportDetailControllerMixin = {
 
     onChange: function (changes) {
-        var report = assign(this.state.report, changes);
+        var report = assign(this.props.report, changes);
         this.setState({report: report}); // Force update
     },
 
@@ -20,19 +20,19 @@ var ReportDetailControllerMixin = {
     },
 
     isLatestRevision: function () {
-        var revisions = this.state.revisions;
+        var revisions = this.props.revisions;
         if (!revisions || revisions.length === 0) {
             return true;
         }
-        return this.state.report.revision === revisions[0].revision;
+        return this.props.report.revision === revisions[0].revision;
     },
 
 
     renderRevisionInfo: function () {
-        if (!this.state.revisions || this.state.revisions.length === 0) {
+        if (!this.props.revisions || this.props.revisions.length === 0) {
             return null;
         }
-        return (<RevisionInfo revisions={this.state.revisions} selectedRevision={this.state.report.revision}
+        return (<RevisionInfo revisions={this.props.revisions} selectedRevision={this.props.report.revision}
                               onSelect={this.onRevisionSelected}/>);
     }
 };

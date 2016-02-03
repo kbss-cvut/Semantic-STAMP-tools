@@ -3,10 +3,7 @@ package cz.cvut.kbss.inbas.audit.rest.dto.mapper;
 import cz.cvut.kbss.inbas.audit.dto.*;
 import cz.cvut.kbss.inbas.audit.dto.incursion.*;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
-import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
-import cz.cvut.kbss.inbas.audit.model.reports.Factor;
-import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
-import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
@@ -27,6 +24,25 @@ public abstract class ReportMapper {
 
     private final SplittableRandom random = new SplittableRandom();
 
+    public AbstractReportDto reportToReportDto(Report report) {
+        if (report instanceof PreliminaryReport) {
+            return preliminaryReportToPreliminaryReportDto((PreliminaryReport) report);
+        }
+        if (report instanceof InvestigationReport) {
+            return investigationReportToInvestigationReportDto((InvestigationReport) report);
+        }
+        throw new IllegalArgumentException("Unsupported report type: " + report.getClass());
+    }
+
+    public Report reportDtoToReport(AbstractReportDto dto) {
+        if (dto instanceof PreliminaryReportDto) {
+            return preliminaryReportDtoToPreliminaryReport((PreliminaryReportDto) dto);
+        } else if (dto instanceof InvestigationReportDto) {
+            return investigationReportDtoToInvestigationReport((InvestigationReportDto) dto);
+        }
+        throw new IllegalArgumentException("Unsupported report dto type: " + dto.getClass());
+    }
+
     public OccurrenceReportInfo occurrenceReportToOccurrenceReportInfo(PreliminaryReport report) {
         return new OccurrenceReportInfo(report);
     }
@@ -42,6 +58,7 @@ public abstract class ReportMapper {
         final InvestigationReportDto dto = new InvestigationReportDto();
         dto.setUri(report.getUri());
         dto.setKey(report.getKey());
+        dto.setFileNumber(report.getFileNumber());
         dto.setOccurrence(report.getOccurrence());
         dto.setOccurrenceStart(report.getOccurrenceStart());
         dto.setOccurrenceEnd(report.getOccurrenceEnd());
@@ -103,6 +120,7 @@ public abstract class ReportMapper {
         final InvestigationReport report = new InvestigationReport();
         report.setUri(dto.getUri());
         report.setKey(dto.getKey());
+        report.setFileNumber(dto.getFileNumber());
         report.setOccurrenceStart(dto.getOccurrenceStart());
         report.setOccurrenceEnd(dto.getOccurrenceEnd());
         report.setOccurrence(dto.getOccurrence());
@@ -194,9 +212,9 @@ public abstract class ReportMapper {
     public abstract EventTypeAssessment generalEventDtoToEventTypeAssessment(GeneralEventDto dto);
 
     @Mappings({
-                      @Mapping(target = "lvp", source = "lowVisibilityProcedure"),
-                      @Mapping(target = "incursionUri", source = "uri")
-              })
+            @Mapping(target = "lvp", source = "lowVisibilityProcedure"),
+            @Mapping(target = "incursionUri", source = "uri")
+    })
     public abstract RunwayIncursionDto runwayIncursionToRunwayIncursionDto(RunwayIncursion incursion);
 
     @InheritInverseConfiguration
@@ -240,8 +258,8 @@ public abstract class ReportMapper {
     public abstract Aircraft aircraftIntruderToAircraft(AircraftIntruderDto intruder);
 
     @Mappings({@Mapping(target = "intruderType", constant = PersonIntruder.INTRUDER_TYPE),
-               @Mapping(target = "wasDoing", source = "whatWasDoing"),
-               @Mapping(target = "organization", source = "organization.name")})
+            @Mapping(target = "wasDoing", source = "whatWasDoing"),
+            @Mapping(target = "organization", source = "organization.name")})
     public abstract PersonIntruderDto personIntruderToPersonIntruderDto(
             cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder personIntruder);
 
@@ -250,8 +268,8 @@ public abstract class ReportMapper {
             PersonIntruderDto intruder);
 
     @Mappings({@Mapping(target = "intruderType", constant = Vehicle.INTRUDER_TYPE),
-               @Mapping(target = "wasDoing", source = "whatWasDoing"),
-               @Mapping(target = "organization", source = "organization.name")})
+            @Mapping(target = "wasDoing", source = "whatWasDoing"),
+            @Mapping(target = "organization", source = "organization.name")})
     public abstract VehicleIntruderDto vehicleToVehicleIntruder(Vehicle vehicle);
 
     @Mapping(target = "whatWasDoing", source = "wasDoing")

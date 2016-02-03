@@ -14,6 +14,11 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
+    <!-- Restrict logging of the Sesame HTTP client (used to connect to remote repositories -->
+    <logger name="org.openrdf.http" level="WARN" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
     <!-- By default, the level of the root level is set to DEBUG -->
     <root level="DEBUG">
         <appender-ref ref="STDOUT" />

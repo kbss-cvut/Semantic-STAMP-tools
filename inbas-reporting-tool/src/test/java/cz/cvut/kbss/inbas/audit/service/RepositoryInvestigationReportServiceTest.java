@@ -1,16 +1,13 @@
 package cz.cvut.kbss.inbas.audit.service;
 
-import cz.cvut.kbss.inbas.audit.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
-import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.Intruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.dao.InvestigationReportDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OccurrenceDao;
-import cz.cvut.kbss.inbas.audit.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
 import cz.cvut.kbss.inbas.audit.service.repository.RepositoryInvestigationReportService;
 import cz.cvut.kbss.inbas.audit.util.Constants;
@@ -29,8 +26,6 @@ import static org.junit.Assert.*;
 
 public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRunner {
 
-    @Autowired
-    private PersonDao personDao;
     @Autowired
     private OccurrenceDao occurrenceDao;
     @Autowired
@@ -51,11 +46,8 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
 
     @Before
     public void setUp() throws Exception {
-        final Person user = Generator.getPerson();
-        if (personDao.findByUsername(user.getUsername()) == null) {
-            personDao.persist(user);
-        }
-        Environment.setCurrentUser(user);
+        super.setUp();
+        Environment.setCurrentUser(person);
     }
 
     @Test
@@ -121,6 +113,17 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
             }
             assertTrue(found);
         }
+    }
+
+    @Test
+    public void createFromPreliminaryReportSetsFileNumber() {
+        final PreliminaryReport report = Generator
+                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        preliminaryReportDao.persist(report);
+
+        final InvestigationReport result = service.createFromPreliminaryReport(report);
+        assertNotNull(result);
+        assertEquals(report.getFileNumber(), result.getFileNumber());
     }
 
     private void verifyIncursion(RunwayIncursion expected, RunwayIncursion actual) {
@@ -426,25 +429,13 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
         }
     }
 
-    @Test
-    public void getRevisionsForOccurrenceReturnsListOfReportRevisionsOrderedByRevisionNumberDesc() throws Exception {
-        final List<InvestigationReport> reports = initRevisions(-1);
-
-        final List<ReportRevisionInfo> revisions = service.getRevisionsForOccurrence(reports.get(0).getOccurrence());
-        assertEquals(reports.size(), revisions.size());
-        for (int i = 0; i < reports.size(); i++) {
-            assertEquals(reports.get(i).getUri(), revisions.get(i).getUri());
-            assertEquals(reports.get(i).getKey(), revisions.get(i).getKey());
-            assertEquals(reports.get(i).getRevision(), revisions.get(i).getRevision());
-            assertEquals(reports.get(i).getCreated(), revisions.get(i).getCreated());
-        }
-    }
-
     private List<InvestigationReport> initRevisions(int count) {
         count = count < 0 ? Generator.randomInt(10) : count;
         assertTrue(count > 0);
         final List<InvestigationReport> revisions = new ArrayList<>(count);
+        final Long fileNumber = System.currentTimeMillis();
         final InvestigationReport revisionOne = Generator.generateMinimalInvestigation();
+        revisionOne.setFileNumber(fileNumber);
         occurrenceDao.persist(revisionOne.getOccurrence());
         revisions.add(revisionOne);
         for (int i = 0; i < count; i++) {
@@ -452,6 +443,7 @@ public class RepositoryInvestigationReportServiceTest extends BaseServiceTestRun
             revision.setAuthor(Environment.getCurrentUser());
             revision.setRevision(Constants.INITIAL_REVISION + i + 1);
             revision.setCreated(new Date());
+            revision.setFileNumber(fileNumber);
             if (i % 2 == 0) {   // Set last edited only for every even index
                 revision.setLastEdited(new Date(System.currentTimeMillis() + 100000));
             }

@@ -17,9 +17,7 @@ var Factors = require('./Factors');
 var InitialReports = require('../initialreport/InitialReports');
 var ReportSummary = require('../preliminary/ReportSummary');
 var ReportStatements = require('../preliminary/ReportStatements');
-var Mask = require('../Mask');
 var MessageMixin = require('../mixin/MessageMixin');
-var ResourceNotFound = require('../ResourceNotFound');
 var InvestigationValidator = require('../../validation/InvestigationValidator');
 var I18nMixin = require('../../i18n/I18nMixin');
 var ReportDetailMixin = require('../mixin/ReportDetailMixin');
@@ -56,33 +54,20 @@ var Investigation = React.createClass({
         this.setState(assign(this.state, {submitting: true}));
         investigation.rootFactor = factors.getFactorHierarchy();
         investigation.links = factors.getLinks();
-        Actions.updateInvestigation(investigation, this.onSaveSuccess, this.onSaveError);
+        Actions.updateReport(investigation, this.onSaveSuccess, this.onSaveError);
     },
 
     onSubmit: function () {
         this.setState({submitting: true});
-        Actions.submitInvestigation(this.props.investigation, this.onSubmitSuccess, this.onSubmitError);
+        Actions.submitReport(this.props.investigation, this.onSubmitSuccess, this.onSubmitError);
     },
-
 
     render: function () {
-        if (this.props.loading) {
-            return (
-                <Mask text={this.i18n('investigation.detail.loading')}/>
-            );
-        }
-        if (!this.props.investigation) {
-            return (<ResourceNotFound resource={this.i18n('investigation.detail.panel-title')}/>);
-        }
-        return this.renderDetail();
-    },
-
-    renderDetail: function () {
         var investigation = this.props.investigation;
 
         return (
             <div>
-                <Panel header={<h2>{this.i18n('investigation.detail.panel-title')}</h2>} bsStyle='primary'>
+                <Panel header={this.renderHeader()} bsStyle='primary'>
                     <form>
                         <BasicOccurrenceInfo report={investigation} revisions={this.props.revisions}
                                              onChange={this.onChange} onAttributeChange={this.onAttributeChange}/>
@@ -114,6 +99,16 @@ var Investigation = React.createClass({
                 {this.renderMessage()}
             </div>
         );
+    },
+
+    renderHeader: function () {
+        return (
+            <div>
+                <h2 className='panel-title pull-left'>{this.i18n('investigation.detail.panel-title')}</h2>
+                <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.investigation.fileNumber}</h3>
+                <div style={{clear: 'both'}}/>
+            </div>
+        )
     },
 
     renderButtons: function () {

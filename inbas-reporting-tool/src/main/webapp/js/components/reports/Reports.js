@@ -5,12 +5,14 @@
 'use strict';
 
 var React = require('react');
-var Jumbotron = require('react-bootstrap').Jumbotron;
+var Panel = require('react-bootstrap').Panel;
 
 var injectIntl = require('../../utils/injectIntl');
 
+var ReportsFilter = require('./ReportsFilter');
 var ReportsTable = require('./ReportsTable');
 var Mask = require('./../Mask');
+var Routing = require('../../utils/Routing');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var Reports = React.createClass({
@@ -18,10 +20,13 @@ var Reports = React.createClass({
 
     propTypes: {
         reports: React.PropTypes.array,
-        rowComponent: React.PropTypes.func,     // A react component
-        onEdit: React.PropTypes.func,
-        onRemove: React.PropTypes.func
+        actions: React.PropTypes.object
     },
+
+    createReport: function () {
+        Routing.transitionToHome();
+    },
+
 
     render: function () {
         var reports = this.props.reports;
@@ -30,20 +35,28 @@ var Reports = React.createClass({
                 <Mask text={this.i18n('reports.loading-mask')}/>
             );
         }
-        if (reports.length === 0) {
-            return (
-                <div>
-                    <Jumbotron>
-                        <h2>INBAS Reporting</h2>
+        return (
+            <Panel header={<h3>{this.i18n('reports.panel-title')}</h3>} bsStyle='primary'>
+                <ReportsFilter onFilterChange={this.props.actions.onFilterChange}/>
+                {this.renderReports()}
+            </Panel>);
+    },
 
-                        <p>{this.i18n('reports.no-reports')}</p>
-                    </Jumbotron>
-                </div>
-            );
-        } else {
-            return (<ReportsTable {...this.props}/>);
+    renderReports: function () {
+        if (this.props.reports.length === 0) {
+            if (this.props.filter) {
+                return <div className='no-reports-notice italics'>{this.i18n('reports.filter.no-matching-found')}</div>;
+            } else {
+                return (
+                    <div className='no-reports-notice italics'>
+                        {this.i18n('reports.no-reports')}
+                        <a href='#' onClick={this.createReport} title={this.i18n('reports.no-reports.link-tooltip')}>
+                            {this.i18n('reports.no-reports.link')}
+                        </a>
+                    </div>);
+            }
         }
-
+        return <ReportsTable {...this.props}/>
     }
 });
 

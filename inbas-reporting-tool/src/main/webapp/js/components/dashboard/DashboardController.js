@@ -17,7 +17,6 @@ var ReportStore = require('../../stores/ReportStore');
 var Dashboard = require('./Dashboard');
 var WizardWindow = require('./../wizard/WizardWindow');
 var InitialReportImportSteps = require('../initialreport/Steps');
-var ReportType = require('../../model/ReportType');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var DashboardController = React.createClass({
@@ -72,8 +71,7 @@ var DashboardController = React.createClass({
     },
 
     openReport: function (report) {
-        var route = ReportType.getDetailRoute(report);
-        Routing.transitionTo(route, {
+        Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
             handlers: {onCancel: Routes.dashboard}
         });

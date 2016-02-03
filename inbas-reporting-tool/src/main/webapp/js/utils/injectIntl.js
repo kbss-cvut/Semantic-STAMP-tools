@@ -13,5 +13,9 @@ module.exports = function (component) {
     comp.prototype.getWrappedElement = function () {
         return this.refs.wrappedElement;
     };
+    // Store this only for development purposes
+    if (process.env.NODE_ENV !== 'production') {
+        comp.wrappedComponent = component;
+    }
     return comp;
 };

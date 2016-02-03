@@ -341,4 +341,37 @@ public class MappersTest {
         }
         return false;
     }
+
+    @Test
+    public void reportToDtoWithPreliminaryReportInstanceReturnsPreliminaryReportDto() {
+        final Report report = Generator.generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
+        final AbstractReportDto result = reportMapper.reportToReportDto(report);
+        assertNotNull(result);
+        assertTrue(result instanceof PreliminaryReportDto);
+    }
+
+    @Test
+    public void reportToDtoWithInvestigationInstanceReturnsPInvestigationDto() {
+        final Report report = Generator.generateMinimalInvestigation();
+        final AbstractReportDto result = reportMapper.reportToReportDto(report);
+        assertNotNull(result);
+        assertTrue(result instanceof InvestigationReportDto);
+    }
+
+    @Test
+    public void reportDtoToReportWithPreliminaryDtoReturnsPreliminaryReport() {
+        final PreliminaryReportDto dto = reportMapper
+                .preliminaryReportToPreliminaryReportDto(Generator.generatePreliminaryReport(
+                        Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS));
+        final Report result = reportMapper.reportDtoToReport(dto);
+        assertTrue(result instanceof PreliminaryReport);
+    }
+
+    @Test
+    public void reportDtoToReportWithInvestigationDtoReturnsInvestigation() {
+        final InvestigationReportDto dto = reportMapper
+                .investigationReportToInvestigationReportDto(Generator.generateMinimalInvestigation());
+        final Report result = reportMapper.reportDtoToReport(dto);
+        assertTrue(result instanceof InvestigationReport);
+    }
 }

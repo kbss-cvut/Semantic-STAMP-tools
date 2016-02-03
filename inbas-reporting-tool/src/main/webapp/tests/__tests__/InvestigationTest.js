@@ -12,7 +12,7 @@ describe('Investigation', function () {
         investigation;
 
     beforeEach(function () {
-        spyOn(Actions, 'updateInvestigation');
+        spyOn(Actions, 'updateReport');
         spyOn(Actions, 'loadOccurrenceSeverityOptions');
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
         Environment.mockFactors(Investigation);

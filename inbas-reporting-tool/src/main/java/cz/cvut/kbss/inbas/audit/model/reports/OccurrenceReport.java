@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.model.reports;
 
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
+import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -11,20 +12,23 @@ import java.util.Set;
 
 /**
  * Represents an occurrence report.
- *
- * All reports (initial, preliminary, investigation) are kinds of OccurrenceReport. This is currently represented
- * only on the ontology level by the specialized reports having also type {@link Vocabulary#Report}.
- *
+ * <p>
+ * All reports (initial, preliminary, investigation) are kinds of OccurrenceReport. This is currently represented only
+ * on the ontology level by the specialized reports having also type {@link Vocabulary#Report}.
+ * <p>
  * This class is meant only for reading, all modifications should be done through the appropriate report instances.
  */
 @OWLClass(iri = Vocabulary.Report)
-public class OccurrenceReport implements Serializable {
+public class OccurrenceReport implements Report, Serializable {
 
     @Id(generated = true)
     private URI uri;
 
     @OWLDataProperty(iri = Vocabulary.p_hasKey, readOnly = true)
     private String key;
+
+    @OWLDataProperty(iri = Vocabulary.p_fileNumber, readOnly = true)
+    private Long fileNumber;
 
     @OWLDataProperty(iri = Vocabulary.p_revision, readOnly = true)
     private Integer revision;
@@ -67,6 +71,14 @@ public class OccurrenceReport implements Serializable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public Long getFileNumber() {
+        return fileNumber;
+    }
+
+    public void setFileNumber(Long fileNumber) {
+        this.fileNumber = fileNumber;
     }
 
     public Integer getRevision() {
@@ -131,6 +143,19 @@ public class OccurrenceReport implements Serializable {
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    @Override
+    public ReportingPhase getPhase() {
+        if (getTypes() != null && !getTypes().isEmpty()) {
+            if (types.contains(Vocabulary.InvestigationReport)) {
+                return ReportingPhase.INVESTIGATION;
+            }
+            if (types.contains(Vocabulary.PreliminaryReport)) {
+                return ReportingPhase.PRELIMINARY;
+            }
+        }
+        throw new IllegalStateException("Missing type specifying reporting phase. Types: " + types);
     }
 
     @Override
