@@ -67,6 +67,10 @@ public class Vocabulary {
     public static final String p_eventType = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#type";
     public static final String p_revision = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#revision";
 
+    public static final String p_barrierEffectiveness = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#barrierEffectiveness";
+    public static final String p_mostCredibleOutcome = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#mostCredibleOutcome";
+    public static final String p_armsIndex = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#ARMS-Index";
+
     public static final String p_hasIncursion = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasRunwayIncursion";
     public static final String p_hasClearedAircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasClearedAircraft";
     public static final String p_hasIntruder = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasIntruder";

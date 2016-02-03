@@ -1,7 +1,3 @@
-/**
- * @author ledvima1
- */
-
 'use strict';
 
 var Reflux = require('reflux');

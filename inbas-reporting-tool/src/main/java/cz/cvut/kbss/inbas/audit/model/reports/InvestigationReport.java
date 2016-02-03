@@ -4,6 +4,8 @@ import cz.cvut.kbss.inbas.audit.model.HasOwlKey;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
+import cz.cvut.kbss.inbas.audit.model.arms.AccidentOutcome;
+import cz.cvut.kbss.inbas.audit.model.arms.BarrierEffectiveness;
 import cz.cvut.kbss.inbas.audit.util.Constants;
 import cz.cvut.kbss.inbas.audit.util.IdentificationUtils;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
@@ -51,6 +53,19 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
     @OWLDataProperty(iri = Vocabulary.p_severityLevel)
     private OccurrenceSeverity severityAssessment;
 
+    // ARMS Attributes BEGIN
+
+    @OWLDataProperty(iri = Vocabulary.p_barrierEffectiveness)
+    private BarrierEffectiveness barrierEffectiveness;
+
+    @OWLDataProperty(iri = Vocabulary.p_mostCredibleOutcome)
+    private AccidentOutcome accidentOutcome;
+
+    @OWLDataProperty(iri = Vocabulary.p_armsIndex)
+    private Short armsIndex;
+
+    // ARMS Attributes END
+
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String summary;
 
@@ -90,6 +105,9 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
         occurrence.transitionToPhase(getPhase());
         this.occurrenceStart = preliminaryReport.getOccurrenceStart();
         this.occurrenceEnd = preliminaryReport.getOccurrenceEnd();
+        this.barrierEffectiveness = preliminaryReport.getBarrierEffectiveness();
+        this.accidentOutcome = preliminaryReport.getAccidentOutcome();
+        this.armsIndex = preliminaryReport.getArmsIndex();
         this.summary = preliminaryReport.getSummary();
         this.revision = preliminaryReport.getRevision() + 1;
         this.severityAssessment = preliminaryReport.getSeverityAssessment();
@@ -106,6 +124,9 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
         this.occurrenceStart = other.occurrenceStart;
         this.occurrenceEnd = other.occurrenceEnd;
         this.severityAssessment = other.severityAssessment;
+        this.barrierEffectiveness = other.barrierEffectiveness;
+        this.accidentOutcome = other.accidentOutcome;
+        this.armsIndex = other.armsIndex;
         this.summary = other.summary;
         if (other.initialReports != null) {
             this.initialReports = other.initialReports.stream().map(InitialReport::new).collect(Collectors.toSet());
@@ -178,6 +199,30 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
 
     public void setSeverityAssessment(OccurrenceSeverity severityAssessment) {
         this.severityAssessment = severityAssessment;
+    }
+
+    public BarrierEffectiveness getBarrierEffectiveness() {
+        return barrierEffectiveness;
+    }
+
+    public void setBarrierEffectiveness(BarrierEffectiveness barrierEffectiveness) {
+        this.barrierEffectiveness = barrierEffectiveness;
+    }
+
+    public AccidentOutcome getAccidentOutcome() {
+        return accidentOutcome;
+    }
+
+    public void setAccidentOutcome(AccidentOutcome accidentOutcome) {
+        this.accidentOutcome = accidentOutcome;
+    }
+
+    public Short getArmsIndex() {
+        return armsIndex;
+    }
+
+    public void setArmsIndex(Short armsIndex) {
+        this.armsIndex = armsIndex;
     }
 
     public String getSummary() {

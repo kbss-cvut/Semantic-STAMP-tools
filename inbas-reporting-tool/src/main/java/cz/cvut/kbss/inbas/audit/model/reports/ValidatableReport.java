@@ -20,5 +20,7 @@ public interface ValidatableReport extends Report {
 
     OccurrenceSeverity getSeverityAssessment();
 
+    Short getArmsIndex();
+
     String getSummary();
 }

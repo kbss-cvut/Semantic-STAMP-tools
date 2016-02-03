@@ -67,6 +67,9 @@ public abstract class ReportMapper {
         dto.setLastEditedBy(report.getLastEditedBy());
         dto.setLastEdited(report.getLastEdited());
         dto.setRevision(report.getRevision());
+        dto.setBarrierEffectiveness(report.getBarrierEffectiveness());
+        dto.setAccidentOutcome(report.getAccidentOutcome());
+        dto.setArmsIndex(report.getArmsIndex());
         dto.setSummary(report.getSummary());
         dto.setCorrectiveMeasures(report.getCorrectiveMeasures());
         dto.setInitialReports(report.getInitialReports());
@@ -129,6 +132,9 @@ public abstract class ReportMapper {
         report.setLastEdited(dto.getLastEdited());
         report.setLastEditedBy(dto.getLastEditedBy());
         report.setRevision(dto.getRevision());
+        report.setBarrierEffectiveness(dto.getBarrierEffectiveness());
+        report.setAccidentOutcome(dto.getAccidentOutcome());
+        report.setArmsIndex(dto.getArmsIndex());
         report.setSummary(dto.getSummary());
         report.setCorrectiveMeasures(dto.getCorrectiveMeasures());
         report.setInitialReports(dto.getInitialReports());

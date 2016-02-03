@@ -90,4 +90,11 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
         report.setSeverityAssessment(null);
         validator.validate(report);
     }
+
+    @Test(expected = ValidationException.class)
+    public void reportWithNegativeArmsIndexIsInvalid() throws Exception {
+        final PreliminaryReport report = getDefaultValidReport();
+        report.setArmsIndex(Short.MIN_VALUE);
+        validator.validate(report);
+    }
 }

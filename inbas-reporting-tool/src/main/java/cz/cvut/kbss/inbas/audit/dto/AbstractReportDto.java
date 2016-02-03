@@ -3,6 +3,8 @@ package cz.cvut.kbss.inbas.audit.dto;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
+import cz.cvut.kbss.inbas.audit.model.arms.AccidentOutcome;
+import cz.cvut.kbss.inbas.audit.model.arms.BarrierEffectiveness;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
@@ -31,6 +33,12 @@ public abstract class AbstractReportDto {
     private Integer revision;
 
     private OccurrenceSeverity severityAssessment;
+
+    private BarrierEffectiveness barrierEffectiveness;
+
+    private AccidentOutcome accidentOutcome;
+
+    private Short armsIndex;
 
     private String summary;
 
@@ -114,6 +122,30 @@ public abstract class AbstractReportDto {
 
     public void setSeverityAssessment(OccurrenceSeverity severityAssessment) {
         this.severityAssessment = severityAssessment;
+    }
+
+    public BarrierEffectiveness getBarrierEffectiveness() {
+        return barrierEffectiveness;
+    }
+
+    public void setBarrierEffectiveness(BarrierEffectiveness barrierEffectiveness) {
+        this.barrierEffectiveness = barrierEffectiveness;
+    }
+
+    public AccidentOutcome getAccidentOutcome() {
+        return accidentOutcome;
+    }
+
+    public void setAccidentOutcome(AccidentOutcome accidentOutcome) {
+        this.accidentOutcome = accidentOutcome;
+    }
+
+    public Short getArmsIndex() {
+        return armsIndex;
+    }
+
+    public void setArmsIndex(Short armsIndex) {
+        this.armsIndex = armsIndex;
     }
 
     public String getSummary() {
