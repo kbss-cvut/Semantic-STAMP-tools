@@ -106,7 +106,7 @@ var ArmsAttributes = React.createClass({
         return options;
     },
 
-    resolveArmsIndexCls() {
+    resolveArmsIndexCls: function () {
         var armsIndex = this.props.report.armsIndex;
         if (!armsIndex) {
             return '';
