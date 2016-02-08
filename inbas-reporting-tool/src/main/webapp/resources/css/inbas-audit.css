@@ -380,13 +380,13 @@ img.factor-descriptive-factor {
 }
 
 .arms-index-green {
-    background-color: rgba(68, 157, 68, 0.5);
+    background-color: rgba(68, 157, 68, 0.3);
 }
 
 .arms-index-yellow {
-    background-color: rgba(236, 151, 31, 0.5);
+    background-color: rgba(236, 151, 31, 0.3);
 }
 
 .arms-index-red {
-    background-color: rgba(217, 83, 79, 0.5);
+    background-color: rgba(217, 83, 79, 0.3);
 }

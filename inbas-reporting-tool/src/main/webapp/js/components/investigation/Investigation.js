@@ -12,6 +12,7 @@ var assign = require('object-assign');
 var injectIntl = require('../../utils/injectIntl');
 
 var Actions = require('../../actions/Actions');
+var ArmsAttributes = require('../reports/arms/ArmsAttributes');
 var BasicOccurrenceInfo = require('../preliminary/BasicOccurrenceInfo');
 var Factors = require('./Factors');
 var InitialReports = require('../initialreport/InitialReports');
@@ -85,6 +86,10 @@ var Investigation = React.createClass({
                         <div className='form-group'>
                             <ReportStatements report={investigation} onChange={this.props.onChange}
                                               show={['correctiveMeasures']}/>
+                        </div>
+
+                        <div className='form-group'>
+                            <ArmsAttributes report={investigation} onAttributeChange={this.onAttributeChange}/>
                         </div>
 
                         <div className='row'>
