@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
+import cz.cvut.kbss.inbas.audit.dto.Pair;
 import cz.cvut.kbss.inbas.audit.model.arms.AccidentOutcome;
 import cz.cvut.kbss.inbas.audit.model.arms.BarrierEffectiveness;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
@@ -34,7 +35,7 @@ public class OptionsController extends BaseController {
     }
 
     @RequestMapping(value = "/accidentOutcome", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<AccidentOutcome> getAccidentOutcomeOptions() {
-        return Arrays.asList(AccidentOutcome.values());
+    public List<Pair<AccidentOutcome, String>> getAccidentOutcomeOptions() {
+        return AccidentOutcome.toPairs();
     }
 }

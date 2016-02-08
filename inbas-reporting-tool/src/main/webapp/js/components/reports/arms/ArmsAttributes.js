@@ -101,7 +101,11 @@ var ArmsAttributes = React.createClass({
         var outcomes = this.state.outcomes,
             options = [];
         for (var i = 0, len = outcomes.length; i < len; i++) {
-            options.push({value: outcomes[i], label: Utils.constantToString(outcomes[i], true)});
+            options.push({
+                value: outcomes[i].key,
+                label: Utils.constantToString(outcomes[i].key, true),
+                title: outcomes[i].value
+            });
         }
         return options;
     },
