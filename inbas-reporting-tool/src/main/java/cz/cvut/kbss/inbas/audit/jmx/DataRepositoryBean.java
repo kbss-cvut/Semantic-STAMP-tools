@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayOutputStream;
 
 @Component
-@ManagedResource(objectName = "bean:name=DataRepositoryMBean", description = "MBean for accessing raw repository data.")
+@ManagedResource(objectName = "bean:name=UCLDataRepositoryMBean", description = "MBean for accessing raw repository data.")
 public class DataRepositoryBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataRepositoryBean.class);
