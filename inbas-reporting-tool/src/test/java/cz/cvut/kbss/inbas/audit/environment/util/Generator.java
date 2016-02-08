@@ -12,6 +12,7 @@ import java.util.*;
 public class Generator {
 
     public static final String USERNAME = "halsey@unsc.org";
+    public static final String PASSWORD = "john117";
 
     private static Random random = new Random();
 
@@ -30,7 +31,7 @@ public class Generator {
         person.setFirstName("Catherine");
         person.setLastName("Halsey");
         person.setUsername(USERNAME);
-        person.setPassword("john117");
+        person.setPassword(PASSWORD);
         person.generateUri();
         return person;
     }
