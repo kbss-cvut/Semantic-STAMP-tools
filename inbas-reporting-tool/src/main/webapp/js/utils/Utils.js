@@ -6,11 +6,11 @@
 /**
  * Common propositions that should not be capitalized
  */
-var PROPOSITIONS = [
+var PREPOSITIONS = [
     'a', 'about', 'across', 'after', 'along', 'among', 'an', 'around', 'as', 'aside', 'at', 'before', 'behind', 'below',
     'beneath', 'beside', 'besides', 'between', 'beyond', 'but', 'by', 'for', 'given', 'in', 'inside', 'into', 'like', 'near',
     'of', 'off', 'on', 'onto', 'outside', 'over', 'since', 'than', 'through', 'to', 'until', 'up', 'via', 'with', 'within',
-    'without'
+    'without', 'not'
 ];
 var WORD_LENGTH_THRESHOLD = 4;
 
@@ -41,13 +41,11 @@ var Utils = {
         var words = constant.split('_');
         for (var i = 0, len = words.length; i < len; i++) {
             var word = words[i];
-            if (word.length < WORD_LENGTH_THRESHOLD) {
-                if (PROPOSITIONS.indexOf(word) === -1) {
-                    continue;
-                }
+            if (i > 0 && PREPOSITIONS.indexOf(word.toLowerCase()) !== -1) {
                 words[i] = word.toLowerCase();
+            } else {
+                words[i] = word.charAt(0) + word.substring(1).toLowerCase();
             }
-            words[i] = word.charAt(0) + word.substring(1).toLowerCase();
         }
         return words.join(' ');
     },

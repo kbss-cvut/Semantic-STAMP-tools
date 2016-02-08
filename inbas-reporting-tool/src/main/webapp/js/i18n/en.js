@@ -127,6 +127,13 @@ module.exports = {
         'preliminary.detail.eventtype.table-type': 'Event type',
         'preliminary.detail.eventtype.table-summary': 'Summary',
         'preliminary.detail.eventtype.add-tooltip': 'Add an event type assessment',
+        'preliminary.detail.arms.panel-title': 'ARMS attributes',
+        'preliminary.detail.arms.barriers-label': 'Barriers effectiveness',
+        'preliminary.detail.arms.barriers-tooltip': 'What was the effectiveness of the remaining barriers between this ' +
+        'event and the most probable accident scenario?',
+        'preliminary.detail.arms.outcomes-label': 'Most probable accident outcome',
+        'preliminary.detail.arms.outcomes-tooltip': 'If this event had escalated into an accident, what would have been ' +
+        'the most probable accident outcome?',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',

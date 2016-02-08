@@ -17,6 +17,7 @@ var Constants = require('../../constants/Constants');
 var InitialReports = require('./../initialreport/InitialReports');
 var ReportStatements = require('./ReportStatements');
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo');
+var ArmsAttributes = require('../reports/arms/ArmsAttributes');
 var ReportSummary = require('./ReportSummary');
 var MessageMixin = require('../mixin/MessageMixin');
 var ReportValidator = require('../../validation/ReportValidator');
@@ -77,6 +78,10 @@ var ReportDetail = React.createClass({
 
                         <div className='form-group'>
                             <ReportStatements report={report} onChange={this.props.handlers.onChange}/>
+                        </div>
+
+                        <div className='form-group'>
+                            <ArmsAttributes report={report} onAttributeChange={this.onAttributeChange}/>
                         </div>
 
                         <div className='row'>

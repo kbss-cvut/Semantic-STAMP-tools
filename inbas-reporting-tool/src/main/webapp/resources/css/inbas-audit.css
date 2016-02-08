@@ -372,9 +372,21 @@ img.factor-descriptive-factor {
 
 .filter-label {
     margin-top: 6px;
-    margin-right:0.5em;
+    margin-right: 0.5em;
 }
 
 .no-reports-notice {
     margin-top: 1em;
+}
+
+.arms-index-green {
+    background-color: rgba(68, 157, 68, 0.5);
+}
+
+.arms-index-yellow {
+    background-color: rgba(236, 151, 31, 0.5);
+}
+
+.arms-index-red {
+    background-color: rgba(217, 83, 79, 0.5);
 }

@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author ledvima1
- */
 @PreAuthorize("permitAll()")
 @RestController
 @RequestMapping("/options")

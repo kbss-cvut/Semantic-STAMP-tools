@@ -44,7 +44,7 @@ var WasConflictingAircraft = React.createClass({
     render: function () {
         var title = (<h3>{this.i18n('eventtype.incursion.wasconflicting.panel-title')}</h3>);
         return (
-            <Panel title={title}>
+            <Panel header={title}>
                 <h5>{this.i18n('eventtype.incursion.wasconflicting.text')}</h5>
 
                 <div>

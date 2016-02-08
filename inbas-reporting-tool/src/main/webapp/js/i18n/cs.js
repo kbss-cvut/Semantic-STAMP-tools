@@ -129,6 +129,13 @@ module.exports = {
         'preliminary.detail.eventtype.table-type': 'Typ události',
         'preliminary.detail.eventtype.table-summary': 'Popis',
         'preliminary.detail.eventtype.add-tooltip': 'Přidat popis typu události',
+        'preliminary.detail.arms.panel-title': 'ARMS atributy',
+        'preliminary.detail.arms.barriers-label': 'Efektivita bariér',
+        'preliminary.detail.arms.barriers-tooltip': 'Jaká byla efektivita bariér zbývajících mezi touto událostí a ' +
+        'nejpravděpodobnějším nehodovým scénářem?',
+        'preliminary.detail.arms.outcomes-label': 'Nejpravděpodobnější následek nehody',
+        'preliminary.detail.arms.outcomes-tooltip': 'Pokud by tato událost vyústila v nehodu, jaký by byl její ' +
+        'nejpravděpodobnější následek?',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

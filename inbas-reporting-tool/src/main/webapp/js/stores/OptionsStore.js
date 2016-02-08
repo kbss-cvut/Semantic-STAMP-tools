@@ -7,8 +7,11 @@ var Ajax = require('../utils/Ajax');
 
 var lvpOptions = [];
 var occurrenceSeverityOptions = [];
+var barrierEffectiveness = [];
+var accidentOutcomes = [];
 
 var OptionsStore = Reflux.createStore({
+
     init: function () {
         this.listenTo(Actions.loadOptions, this.onLoadOptions);
     },
@@ -16,6 +19,8 @@ var OptionsStore = Reflux.createStore({
     onLoadOptions: function () {
         this._loadLvpOptions();
         this._loadOccurrenceSeverityOptions();
+        this._loadBarrierEffectivenessOptions();
+        this._loadAccidentOutcomeOptions();
     },
 
     _loadLvpOptions: function () {
@@ -44,12 +49,46 @@ var OptionsStore = Reflux.createStore({
         }.bind(this));
     },
 
+    _loadBarrierEffectivenessOptions: function () {
+        if (barrierEffectiveness.length !== 0) {
+            this.trigger('barrierEffectiveness', barrierEffectiveness);
+            return;
+        }
+        Ajax.get('rest/options/barrierEffectiveness').end(function (data) {
+            barrierEffectiveness = data;
+            this.trigger('barrierEffectiveness', barrierEffectiveness);
+        }.bind(this), function () {
+            this.trigger('barrierEffectiveness', barrierEffectiveness);
+        }.bind(this));
+    },
+
+    _loadAccidentOutcomeOptions: function () {
+        if (accidentOutcomes.length !== 0) {
+            this.trigger('accidentOutcome', accidentOutcomes);
+            return;
+        }
+        Ajax.get('rest/options/accidentOutcome').end(function (data) {
+            accidentOutcomes = data;
+            this.trigger('accidentOutcome', accidentOutcomes);
+        }.bind(this), function () {
+            this.trigger('accidentOutcome', accidentOutcomes);
+        }.bind(this));
+    },
+
     getLowVisibilityProcedureOptions: function () {
         return lvpOptions;
     },
 
     getOccurrenceSeverityOptions: function () {
         return occurrenceSeverityOptions;
+    },
+
+    getBarrierEffectivenessOptions: function () {
+        return barrierEffectiveness;
+    },
+
+    getAccidentOutcomeOptions: function () {
+        return accidentOutcomes;
     }
 });
 
