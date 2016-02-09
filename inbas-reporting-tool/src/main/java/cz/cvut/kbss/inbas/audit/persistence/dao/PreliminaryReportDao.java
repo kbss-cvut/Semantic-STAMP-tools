@@ -36,6 +36,7 @@ public class PreliminaryReportDao extends BaseReportDao<PreliminaryReport> {
                 !occurrenceDao.exists(entity.getOccurrence().getUri(), em)) {
             occurrenceDao.persist(entity.getOccurrence(), em);
         }
+        persistOccurrenceCategoryIfNecessary(entity.getOccurrenceCategory(), em);
         if (entity.getTypeAssessments() != null) {
             entity.getTypeAssessments().forEach(typeAssessmentDao::persist);
         }
@@ -57,6 +58,7 @@ public class PreliminaryReportDao extends BaseReportDao<PreliminaryReport> {
     public void update(PreliminaryReport entity, EntityManager em) {
         Objects.requireNonNull(entity);
 
+        persistOccurrenceCategoryIfNecessary(entity.getOccurrenceCategory(), em);
         if (entity.getTypeAssessments() != null) {
             entity.getTypeAssessments().forEach(eta -> {
                 if (eta.getUri() == null) {

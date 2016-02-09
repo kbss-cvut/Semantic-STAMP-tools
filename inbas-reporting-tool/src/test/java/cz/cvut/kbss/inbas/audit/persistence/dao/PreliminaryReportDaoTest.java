@@ -10,6 +10,8 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.Vehicle;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.inbas.audit.util.Constants;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,6 +39,9 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
 
     @Autowired
     private OccurrenceDao occurrenceDao;
+
+    @Autowired
+    private EntityManagerFactory emf;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -247,6 +252,7 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(Generator.generateOccurrence());
         report.setOccurrenceStart(new Date(System.currentTimeMillis() - 10000));
+        report.setOccurrenceCategory(eventType);
         report.setOccurrenceEnd(new Date());
         report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setAuthor(author);
@@ -411,5 +417,49 @@ public class PreliminaryReportDaoTest extends BaseDaoTestRunner {
             assertNotNull(result);
             assertEquals(pr.getUri(), result.getUri());
         }
+    }
+
+    @Test
+    public void persistSavesOccurrenceCategoryWhenItDoesNotExistYet() throws Exception {
+        final PreliminaryReport report = initBasicValidReport();
+        final URI categoryId = eventType.getId();
+        assertNotNull(categoryId);
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNull(em.find(EventType.class, eventType.getId()));
+            dao.persist(report);
+            em.clear();
+            assertNotNull(em.find(EventType.class, eventType.getId()));
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void persistReusesExistingOccurrenceCategory() throws Exception {
+        final PreliminaryReport reportOne = initBasicValidReport();
+        final PreliminaryReport reportTwo = initBasicValidReport();
+        dao.persist(reportOne);
+        dao.persist(reportTwo);
+        final PreliminaryReport rOneResult = dao.find(reportOne.getUri());
+        assertNotNull(rOneResult);
+        final PreliminaryReport rTwoResult = dao.find(reportTwo.getUri());
+        assertNotNull(rTwoResult);
+        assertEquals(rOneResult.getOccurrenceCategory(), rTwoResult.getOccurrenceCategory());
+    }
+
+    @Test
+    public void updatePersistsOccurrenceCategoryWhenItDoesNotExistYet() throws Exception {
+        final PreliminaryReport report = initBasicValidReport();
+        dao.persist(report);
+        final EventType newOne = new EventType(URI.create(
+                "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110"),
+                "2200110 - Incursions generally");
+        assertNotEquals(eventType, newOne);
+        report.setOccurrenceCategory(newOne);
+        dao.update(report);
+        final PreliminaryReport result = dao.find(report.getUri());
+        assertNotNull(result);
+        assertEquals(newOne, result.getOccurrenceCategory());
     }
 }

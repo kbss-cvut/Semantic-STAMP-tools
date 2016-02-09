@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
+import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.model.reports.InitialReport;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 
@@ -19,6 +20,8 @@ public abstract class AbstractReportDto {
     private String key;
 
     private Long fileNumber;
+
+    private EventType occurrenceCategory;
 
     private Date occurrenceStart;
 
@@ -66,6 +69,14 @@ public abstract class AbstractReportDto {
 
     public void setFileNumber(Long fileNumber) {
         this.fileNumber = fileNumber;
+    }
+
+    public EventType getOccurrenceCategory() {
+        return occurrenceCategory;
+    }
+
+    public void setOccurrenceCategory(EventType occurrenceCategory) {
+        this.occurrenceCategory = occurrenceCategory;
     }
 
     public Date getOccurrenceStart() {

@@ -30,6 +30,10 @@ public class OccurrenceReport implements Report, Serializable {
     @OWLDataProperty(iri = Vocabulary.p_fileNumber, readOnly = true)
     private Long fileNumber;
 
+    //    @ParticipationConstraints(nonEmpty = true)
+    @OWLObjectProperty(iri = Vocabulary.p_occurrenceCategory, fetch = FetchType.EAGER)
+    private EventType occurrenceCategory;
+
     @OWLDataProperty(iri = Vocabulary.p_revision, readOnly = true)
     private Integer revision;
 
@@ -79,6 +83,14 @@ public class OccurrenceReport implements Report, Serializable {
 
     public void setFileNumber(Long fileNumber) {
         this.fileNumber = fileNumber;
+    }
+
+    public EventType getOccurrenceCategory() {
+        return occurrenceCategory;
+    }
+
+    public void setOccurrenceCategory(EventType occurrenceCategory) {
+        this.occurrenceCategory = occurrenceCategory;
     }
 
     public Integer getRevision() {

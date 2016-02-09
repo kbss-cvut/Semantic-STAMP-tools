@@ -39,6 +39,10 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
     @OWLDataProperty(iri = Vocabulary.p_endTime)
     private Date occurrenceEnd;
 
+    //    @ParticipationConstraints(nonEmpty = true)
+    @OWLObjectProperty(iri = Vocabulary.p_occurrenceCategory, fetch = FetchType.EAGER)
+    private EventType occurrenceCategory;
+
     @OWLDataProperty(iri = Vocabulary.p_dateCreated)
     private Date created;
 
@@ -88,6 +92,7 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
         this.fileNumber = preliminaryReport.getFileNumber();
         this.occurrence = preliminaryReport.getOccurrence();
         occurrence.transitionToPhase(getPhase());
+        this.occurrenceCategory = preliminaryReport.getOccurrenceCategory();
         this.occurrenceStart = preliminaryReport.getOccurrenceStart();
         this.occurrenceEnd = preliminaryReport.getOccurrenceEnd();
         this.summary = preliminaryReport.getSummary();
@@ -103,6 +108,7 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
 
         this.fileNumber = other.fileNumber;
         this.occurrence = other.occurrence;
+        this.occurrenceCategory = other.occurrenceCategory;
         this.occurrenceStart = other.occurrenceStart;
         this.occurrenceEnd = other.occurrenceEnd;
         this.severityAssessment = other.severityAssessment;
@@ -146,6 +152,14 @@ public class InvestigationReport implements HasOwlKey, Serializable, Validatable
 
     public void setOccurrenceEnd(Date occurrenceEnd) {
         this.occurrenceEnd = occurrenceEnd;
+    }
+
+    public EventType getOccurrenceCategory() {
+        return occurrenceCategory;
+    }
+
+    public void setOccurrenceCategory(EventType occurrenceCategory) {
+        this.occurrenceCategory = occurrenceCategory;
     }
 
     public Date getCreated() {

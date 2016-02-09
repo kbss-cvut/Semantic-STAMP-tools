@@ -28,7 +28,6 @@ public class Vocabulary {
     public static final String Vehicle = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#Vehicle";
 
     public static final String p_hasOccurrence = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasOccurrence";
-    public static final String p_hasResource = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasResource";
     public static final String p_severityLevel = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#severityLevel";
     public static final String p_firstName = "http://xmlns.com/foaf/0.1/firstName";
     public static final String p_lastName = "http://xmlns.com/foaf/0.1/lastName";
@@ -66,6 +65,7 @@ public class Vocabulary {
     public static final String p_organizationCode = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#code";
     public static final String p_eventType = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#type";
     public static final String p_revision = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#revision";
+    public static final String p_occurrenceCategory = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#occurrenceCategory";
 
     public static final String p_hasIncursion = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasRunwayIncursion";
     public static final String p_hasClearedAircraft = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasClearedAircraft";
@@ -82,5 +82,4 @@ public class Vocabulary {
 
     public static final String p_hasKey = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#hasKey";
     public static final String p_fileNumber = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#fileNumber";
-    public static final String p_dtoClass = "http://krizik.felk.cvut.cz/ontologies/inbas-2015#dtoClass";
 }

@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
+import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -14,11 +15,12 @@ public class EventType implements Serializable {
     @Id
     private URI id;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_label)
     private String name;
 
-    @OWLDataProperty(iri = Vocabulary.p_dtoClass)
-    private String dtoClass;
+    @OWLDataProperty(iri = Vocabulary.p_description)
+    private String description;
 
     @OWLDataProperty(iri = Vocabulary.p_eventType)
     private String type;
@@ -51,12 +53,12 @@ public class EventType implements Serializable {
         this.name = name;
     }
 
-    public String getDtoClass() {
-        return dtoClass;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDtoClass(String dtoClass) {
-        this.dtoClass = dtoClass;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getType() {
@@ -92,9 +94,5 @@ public class EventType implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
-    }
-
-    public void generateUri(String identification) {
-        this.id = URI.create(Vocabulary.EventType + "_" + identification);
     }
 }

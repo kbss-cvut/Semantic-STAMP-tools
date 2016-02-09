@@ -27,6 +27,7 @@ public class InvestigationReportDao extends BaseReportDao<InvestigationReport> {
         if (entity.getRootFactor() != null) {
             persistFactors(entity.getRootFactor(), em);
         }
+        persistOccurrenceCategoryIfNecessary(entity.getOccurrenceCategory(), em);
         persistInitialReports(entity.getInitialReports(), em);
         entity.addType(Vocabulary.Report);
         super.persist(entity, em);
@@ -53,6 +54,7 @@ public class InvestigationReportDao extends BaseReportDao<InvestigationReport> {
         if (entity.getRootFactor() != null) {
             updateFactors(entity.getRootFactor(), em);
         }
+        persistOccurrenceCategoryIfNecessary(entity.getOccurrenceCategory(), em);
         entity.addType(Vocabulary.Report);
         super.update(entity, em);
     }

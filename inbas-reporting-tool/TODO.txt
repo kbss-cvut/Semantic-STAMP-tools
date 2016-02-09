@@ -5,9 +5,7 @@ Localization
 Set up the Jasmine tests so that they can be run in browser and debugged
 Disable fuzzy string matching in autocomplete
         - requires writing our own string matching function
-Add loss of separation wizard
 Show autocomplete results as tree when appropriate
         - Try using react-bootstrap-treeview
 Design some generic validation mechanism for the wizards
     Show validation errors on the corresponding fields
-Design a way to represent wizards in ontology and generate them based on this ontology

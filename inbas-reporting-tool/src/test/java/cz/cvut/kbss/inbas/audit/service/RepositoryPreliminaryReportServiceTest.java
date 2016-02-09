@@ -86,7 +86,8 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         final PreliminaryReport report = initReportWithOccurrence();
         report.setSummary("test report");
         final EventTypeAssessment one = new EventTypeAssessment();
-        one.setEventType(new EventType(URI.create("http://krizik.felk.cvut.cz/ontologies/eventTypes#Incursion")));
+        one.setEventType(
+                new EventType(URI.create("http://krizik.felk.cvut.cz/ontologies/eventTypes#Incursion"), "Incursion"));
         final RunwayIncursion incursion = new RunwayIncursion();
         final Aircraft cleared = new Aircraft();
         cleared.setCallSign("test");
@@ -96,7 +97,8 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         one.setRunwayIncursion(incursion);
         final EventTypeAssessment two = new EventTypeAssessment();
         two.setDescription("Event description");
-        two.setEventType(new EventType(URI.create("http://krizik.felk.cvut.cz/ontologies/eventTypes#General")));
+        two.setEventType(
+                new EventType(URI.create("http://krizik.felk.cvut.cz/ontologies/eventTypes#General"), "General"));
         report.setTypeAssessments(new HashSet<>(Arrays.asList(one, two)));
         reportService.persist(report);
         return report;
@@ -107,6 +109,7 @@ public class RepositoryPreliminaryReportServiceTest extends BaseServiceTestRunne
         report.setOccurrenceStart(new Date(System.currentTimeMillis() - 10000));
         report.setOccurrenceEnd(new Date());
         report.setOccurrence(Generator.generateOccurrence());
+        report.setOccurrenceCategory(Generator.getEventType());
         report.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         report.setSummary("Narrative");
         report.setFileNumber(System.currentTimeMillis());

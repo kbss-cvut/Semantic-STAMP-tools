@@ -157,6 +157,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         r1.setFileNumber(System.currentTimeMillis());
         r1.setOccurrenceStart(startTime);
         r1.setOccurrenceEnd(endTime);
+        r1.setOccurrenceCategory(Generator.getEventType());
         r1.setOccurrence(o1);
         r1.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
         reports.add(r1);
@@ -164,6 +165,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         r2.setAuthor(author);
         r2.setRevision(Constants.INITIAL_REVISION + 1);
         r2.setFileNumber(r1.getFileNumber());
+        r2.setOccurrenceCategory(Generator.getEventType());
         r2.setOccurrenceStart(startTime);
         r2.setOccurrenceEnd(endTime);
         r2.setOccurrence(o1);
@@ -173,6 +175,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final PreliminaryReport r3 = new PreliminaryReport();
         r3.setOccurrence(o1);
         r3.setAuthor(author);
+        r3.setOccurrenceCategory(Generator.getEventType());
         r3.setOccurrenceStart(startTime);
         r3.setOccurrenceEnd(endTime);
         r3.setRevision(Constants.INITIAL_REVISION);
@@ -182,6 +185,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final PreliminaryReport r4 = new PreliminaryReport();
         r4.setOccurrence(o1);
         r4.setAuthor(author);
+        r4.setOccurrenceCategory(Generator.getEventType());
         r4.setOccurrenceStart(startTime);
         r4.setOccurrenceEnd(endTime);
         r4.setRevision(Constants.INITIAL_REVISION + 5);
