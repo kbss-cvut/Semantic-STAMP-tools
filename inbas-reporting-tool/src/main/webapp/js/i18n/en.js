@@ -84,6 +84,7 @@ module.exports = {
         'reports.loading-mask': 'Loading reports...',
         'reports.panel-title': 'Occurrence reports',
         'reports.table-date': 'Occurrence date',
+        'reports.table-occurrence-category': 'Occurrence classification',
         'reports.table-type': 'Type',
         'reports.filter.label': 'Filter',
         'reports.filter.type.tooltip': 'Select report type',

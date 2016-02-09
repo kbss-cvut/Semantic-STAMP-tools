@@ -159,6 +159,7 @@ public class Generator {
         final InvestigationReport report = new InvestigationReport();
         report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         report.setOccurrence(generateOccurrence());
+        report.setOccurrenceCategory(getEventType());
         report.setCreated(new Date());
         final Date start = new Date(System.currentTimeMillis() - 10000);
         report.setOccurrenceStart(start);

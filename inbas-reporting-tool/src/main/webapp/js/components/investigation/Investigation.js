@@ -18,7 +18,7 @@ var InitialReports = require('../initialreport/InitialReports');
 var ReportSummary = require('../preliminary/ReportSummary');
 var ReportStatements = require('../preliminary/ReportStatements');
 var MessageMixin = require('../mixin/MessageMixin');
-var InvestigationValidator = require('../../validation/InvestigationValidator');
+var ReportValidator = require('../../validation/ReportValidator');
 var I18nMixin = require('../../i18n/I18nMixin');
 var ReportDetailMixin = require('../mixin/ReportDetailMixin');
 
@@ -116,7 +116,7 @@ var Investigation = React.createClass({
             return this.renderReadOnlyButtons();
         }
         var loading = this.state.submitting,
-            saveDisabled = !InvestigationValidator.isValid(this.props.investigation) || loading,
+            saveDisabled = !ReportValidator.isValid(this.props.investigation) || loading,
             saveTitle = this.i18n('detail.save-tooltip'),
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
         if (loading) {

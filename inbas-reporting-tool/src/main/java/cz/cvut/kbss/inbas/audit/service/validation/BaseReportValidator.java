@@ -37,6 +37,9 @@ public class BaseReportValidator implements Validator<ValidatableReport> {
         if (report.getSeverityAssessment() == null) {
             throw new ValidationException("Report is missing occurrence class.");
         }
+        if (report.getOccurrenceCategory() == null) {
+            throw new ValidationException("Report is missing occurrence category.");
+        }
         if (report.getSummary() == null || report.getSummary().isEmpty()) {
             throw new ValidationException("Report is missing narrative.");
         }

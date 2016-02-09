@@ -85,6 +85,7 @@ module.exports = {
         'reports.loading-mask': 'Nahrávám hlášení...',
         'reports.panel-title': 'Hlášení událostí',
         'reports.table-date': 'Datum a čas události',
+        'reports.table-occurrence-category': 'Klasifikace události',
         'reports.table-type': 'Typ',
         'reports.filter.label': 'Zobrazit',
         'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',

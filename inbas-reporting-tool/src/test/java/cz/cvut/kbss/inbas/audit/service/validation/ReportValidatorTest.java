@@ -1,12 +1,10 @@
 package cz.cvut.kbss.inbas.audit.service.validation;
 
+import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.exception.ValidationException;
 import cz.cvut.kbss.inbas.audit.model.Occurrence;
 import cz.cvut.kbss.inbas.audit.model.Person;
-import cz.cvut.kbss.inbas.audit.model.reports.EventType;
-import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
-import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
-import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.service.BaseServiceTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,7 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
     private static final Person PERSON = initPerson();
 
     @Autowired
-    private PreliminaryReportValidator validator;
+    private Validator<ValidatableReport> validator;
 
     private static Person initPerson() {
         final Person p = new Person();
@@ -47,6 +45,7 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
         report.setOccurrenceEnd(new Date());
         report.setSummary("Yadayadayada");
         report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
+        report.setOccurrenceCategory(Generator.getEventType());
         final EventTypeAssessment typeAssessment = new EventTypeAssessment();
         typeAssessment.setDescription("Event type assessment.");
         typeAssessment.setEventType(new EventType(URI.create(
@@ -78,16 +77,16 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
     }
 
     @Test(expected = ValidationException.class)
-    public void reportWithoutTypeAssessmentsIsInvalid() throws Exception {
+    public void reportWithoutOccurrenceClassIsInvalid() throws Exception {
         final PreliminaryReport report = getDefaultValidReport();
-        report.setTypeAssessments(null);
+        report.setSeverityAssessment(null);
         validator.validate(report);
     }
 
     @Test(expected = ValidationException.class)
-    public void reportWithoutOccurrenceClassIsInvalid() throws Exception {
+    public void reportWithoutOccurrenceCategoryIsInvalid() throws Exception {
         final PreliminaryReport report = getDefaultValidReport();
-        report.setSeverityAssessment(null);
+        report.setOccurrenceCategory(null);
         validator.validate(report);
     }
 }
