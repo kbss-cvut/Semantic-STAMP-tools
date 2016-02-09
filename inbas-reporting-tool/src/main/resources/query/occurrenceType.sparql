@@ -5,8 +5,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX j.0: <http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/>
 
 CONSTRUCT {    
-	?term rdfs:label ?label ;        
-	a ?type ;        
+	?term rdfs:label ?label ;
 	rdfs:comment ?comment ;
 } WHERE {
 	# Occurrence types

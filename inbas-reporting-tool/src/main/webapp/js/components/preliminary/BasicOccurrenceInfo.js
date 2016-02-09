@@ -37,12 +37,8 @@ var BasicOccurrenceInfo = React.createClass({
                 <OccurrenceDetail report={this.props.report}
                                   onAttributeChange={this.props.onAttributeChange}/>
 
-                <div className='row'>
-                    <div className='col-xs-4'>
-                        <OccurrenceSeverity onChange={this.props.onAttributeChange}
-                                            severityAssessment={report.severityAssessment}/>
-                    </div>
-                </div>
+                <OccurrenceSeverity onChange={this.props.onAttributeChange}
+                                    report={report}/>
 
                 <div className='row'>
                     {this.renderAuthor()}

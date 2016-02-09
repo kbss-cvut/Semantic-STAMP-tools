@@ -127,6 +127,7 @@ module.exports = {
         'preliminary.detail.eventtype.table-type': 'Event type',
         'preliminary.detail.eventtype.table-summary': 'Summary',
         'preliminary.detail.eventtype.add-tooltip': 'Add an event type assessment',
+        'preliminary.detail.occurrence-category.label': 'Occurrence category',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',

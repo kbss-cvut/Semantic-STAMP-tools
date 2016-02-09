@@ -44,6 +44,7 @@ var ReportController = React.createClass({
 
     componentDidMount: function () {
         Actions.loadOptions();
+        Actions.loadOccurrenceCategories();
     },
 
     _loadReport: function (reportKey) {

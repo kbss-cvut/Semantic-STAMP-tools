@@ -32,6 +32,9 @@ var EventTypeResultList = React.createClass({
     },
 
     renderIcon: function (option) {
+        if (!option.type) {
+            return null;
+        }
         var styleInfo = FactorStyleInfo.getStyleInfo(option.type);
 
         return (<img src={styleInfo.icon} className={styleInfo.cls} title={styleInfo.title}/>);

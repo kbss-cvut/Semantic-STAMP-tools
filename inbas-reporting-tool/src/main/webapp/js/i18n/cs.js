@@ -129,6 +129,7 @@ module.exports = {
         'preliminary.detail.eventtype.table-type': 'Typ události',
         'preliminary.detail.eventtype.table-summary': 'Popis',
         'preliminary.detail.eventtype.add-tooltip': 'Přidat popis typu události',
+        'preliminary.detail.occurrence-category.label': 'Klasifikace události',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

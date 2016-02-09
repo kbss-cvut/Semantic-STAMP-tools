@@ -44,18 +44,20 @@ public class OptionsService {
             case "operator":
                 return new RawJson(localLoader.loadData("operators.json", Collections.emptyMap()));
             case "eventType":
-                return loadEventTypes();
+                return loadRemoteData(Constants.EVENT_TYPE_QUERY_FILE);
+            case "occurrenceCategory":
+                return loadRemoteData(Constants.OCCURRENCE_CATEGORY_QUERY_FILE);
             default:
                 throw new IllegalArgumentException("Unsupported option type " + type);
         }
     }
 
-    private RawJson loadEventTypes() {
+    private RawJson loadRemoteData(String queryFile) {
         final String repositoryUrl = configReader.getConfig(ConfigParam.EVENT_TYPE_REPOSITORY_URL);
         if (repositoryUrl == null) {
             throw new IllegalStateException("Missing repository URL configuration.");
         }
-        String query = localLoader.loadData(Constants.EVENT_TYPE_QUERY_FILE, Collections.emptyMap());
+        String query = localLoader.loadData(queryFile, Collections.emptyMap());
         try {
             query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
             final String data = remoteLoader.loadData(repositoryUrl, Collections.singletonMap("query", query));

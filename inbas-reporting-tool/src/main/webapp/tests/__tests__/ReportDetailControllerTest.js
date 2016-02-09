@@ -12,6 +12,7 @@ describe('ReportDetailController tests', function () {
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
+        spyOn(Actions, 'loadOccurrenceCategories');
     });
 
     it('Show only cancel button for older revisions of a report', function () {

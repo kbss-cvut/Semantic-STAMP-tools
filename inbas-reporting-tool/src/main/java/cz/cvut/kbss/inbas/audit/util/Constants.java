@@ -32,4 +32,9 @@ public final class Constants {
      * File with a query for getting event types.
      */
     public static final String EVENT_TYPE_QUERY_FILE = "query/eventType.sparql";
+
+    /**
+     * FIle with a query for getting occurrence types (categories).
+     */
+    public static final String OCCURRENCE_CATEGORY_QUERY_FILE = "query/occurrenceType.sparql";
 }
