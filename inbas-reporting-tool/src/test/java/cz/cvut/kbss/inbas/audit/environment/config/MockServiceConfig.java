@@ -1,6 +1,8 @@
 package cz.cvut.kbss.inbas.audit.environment.config;
 
 import cz.cvut.kbss.inbas.audit.service.*;
+import cz.cvut.kbss.inbas.audit.service.data.FileDataLoader;
+import cz.cvut.kbss.inbas.audit.service.data.RemoteDataLoader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -57,5 +59,15 @@ public class MockServiceConfig {
     @Bean
     public ConfigReader configReader() {
         return new ConfigReader();
+    }
+
+    @Bean(name = "localDataLoader")
+    public FileDataLoader fileDataLoader() {
+        return new FileDataLoader();
+    }
+
+    @Bean(name = "remoteDataLoader")
+    public RemoteDataLoader remoteDataLoader() {
+        return mock(RemoteDataLoader.class);
     }
 }

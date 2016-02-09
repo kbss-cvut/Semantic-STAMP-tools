@@ -5,7 +5,7 @@ var Reflux = require('reflux');
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
 
-var URL = 'rest/typeahead/options?type=';
+var URL = 'rest/options?type=';
 
 var eventTypes = [];
 var locations = [];

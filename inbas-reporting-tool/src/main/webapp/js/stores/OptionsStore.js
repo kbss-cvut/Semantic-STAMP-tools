@@ -23,7 +23,7 @@ var OptionsStore = Reflux.createStore({
             this.trigger('lvp', lvpOptions);
             return;
         }
-        Ajax.get('rest/options/lvp').end(function (data) {
+        Ajax.get('rest/options?type=lvp').end(function (data) {
             lvpOptions = data;
             this.trigger('lvp', lvpOptions);
         }.bind(this), function () {
@@ -36,7 +36,7 @@ var OptionsStore = Reflux.createStore({
             this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
             return;
         }
-        Ajax.get('rest/options/occurrenceSeverity').end(function (data) {
+        Ajax.get('rest/options?type=occurrenceSeverity').end(function (data) {
             occurrenceSeverityOptions = data;
             this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
         }.bind(this), function () {
