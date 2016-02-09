@@ -64,13 +64,13 @@ var TypeaheadStore = Reflux.createStore({
         return operators;
     },
 
-    onLoadOccurrenceCategories() {
+    onLoadOccurrenceCategories: function () {
         this.load('occurrenceCategory', 'occurrenceCategories', occurrenceCategories, function (data) {
             occurrenceCategories = data;
         });
     },
 
-    getOccurrenceCategories() {
+    getOccurrenceCategories: function () {
         return occurrenceCategories;
     }
 });
