@@ -10,7 +10,7 @@ var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Input = require('../Input');
 var Utils = require('../../utils/Utils');
-var OccurrenceSeverity = require('../occurrence/OccurrenceSeverity');
+var OccurrenceClassification = require('../occurrence/OccurrenceClassification');
 var OccurrenceDetail = require('../occurrence/OccurrenceDetail');
 var I18nMixin = require('../../i18n/I18nMixin');
 
@@ -37,7 +37,7 @@ var BasicOccurrenceInfo = React.createClass({
                 <OccurrenceDetail report={this.props.report}
                                   onAttributeChange={this.props.onAttributeChange}/>
 
-                <OccurrenceSeverity onChange={this.props.onAttributeChange}
+                <OccurrenceClassification onChange={this.props.onAttributeChange}
                                     report={report}/>
 
                 <div className='row'>

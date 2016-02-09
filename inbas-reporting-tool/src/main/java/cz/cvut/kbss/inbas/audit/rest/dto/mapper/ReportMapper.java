@@ -43,10 +43,6 @@ public abstract class ReportMapper {
         throw new IllegalArgumentException("Unsupported report dto type: " + dto.getClass());
     }
 
-    public OccurrenceReportInfo occurrenceReportToOccurrenceReportInfo(PreliminaryReport report) {
-        return new OccurrenceReportInfo(report);
-    }
-
     public abstract PreliminaryReportDto preliminaryReportToPreliminaryReportDto(PreliminaryReport report);
 
     public abstract PreliminaryReport preliminaryReportDtoToPreliminaryReport(PreliminaryReportDto dto);
@@ -62,6 +58,7 @@ public abstract class ReportMapper {
         dto.setOccurrence(report.getOccurrence());
         dto.setOccurrenceStart(report.getOccurrenceStart());
         dto.setOccurrenceEnd(report.getOccurrenceEnd());
+        dto.setOccurrenceCategory(report.getOccurrenceCategory());
         dto.setAuthor(report.getAuthor());
         dto.setCreated(report.getCreated());
         dto.setLastEditedBy(report.getLastEditedBy());
@@ -123,6 +120,7 @@ public abstract class ReportMapper {
         report.setFileNumber(dto.getFileNumber());
         report.setOccurrenceStart(dto.getOccurrenceStart());
         report.setOccurrenceEnd(dto.getOccurrenceEnd());
+        report.setOccurrenceCategory(dto.getOccurrenceCategory());
         report.setOccurrence(dto.getOccurrence());
         report.setAuthor(dto.getAuthor());
         report.setCreated(dto.getCreated());

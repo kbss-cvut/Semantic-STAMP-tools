@@ -7,6 +7,7 @@ var Actions = require('../../actions/Actions');
 var PreliminaryReportFactory = require('../../model/PreliminaryReportFactory');
 var Report = require('./Report');
 var OptionsStore = require('../../stores/OptionsStore'); // Forces store init, so that it can listen to actions
+var TypeaheadStore = require('../../stores/TypeaheadStore');
 var ReportStore = require('../../stores/ReportStore');
 var RouterStore = require('../../stores/RouterStore');
 var Routes = require('../../utils/Routes');

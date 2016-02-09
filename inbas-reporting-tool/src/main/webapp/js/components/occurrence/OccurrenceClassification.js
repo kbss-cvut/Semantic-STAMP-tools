@@ -17,7 +17,7 @@ var TypeaheadStore = require('../../stores/TypeaheadStore');
 var Utils = require('../../utils/Utils');
 var I18nMixin = require('../../i18n/I18nMixin');
 
-var OccurrenceSeverity = React.createClass({
+var OccurrenceClassification = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
 
     propTypes: {
@@ -95,4 +95,4 @@ var OccurrenceSeverity = React.createClass({
     }
 });
 
-module.exports = injectIntl(OccurrenceSeverity);
+module.exports = injectIntl(OccurrenceClassification);
