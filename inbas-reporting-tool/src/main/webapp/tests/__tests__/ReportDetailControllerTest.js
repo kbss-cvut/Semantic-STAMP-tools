@@ -62,4 +62,13 @@ describe('ReportDetailController tests', function () {
         controller.onRevisionSelected(selectedRevision);
         expect(controller.loadReport).toHaveBeenCalledWith(selectedRevision.key);
     });
+
+    it('reloads report on save success.', function() {
+        var report = Generator.generatePreliminaryReport();
+        spyOn(Actions, 'loadReport');
+        var controller = Environment.render(<ReportDetailController report={report}/>);
+
+        controller.onSuccess();
+        expect(Actions.loadReport).toHaveBeenCalled();
+    });
 });

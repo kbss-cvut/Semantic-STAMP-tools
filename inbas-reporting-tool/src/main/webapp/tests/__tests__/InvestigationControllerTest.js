@@ -71,4 +71,13 @@ describe('Investigation controller', function () {
         result.onRevisionSelected(selectedRevision);
         expect(result.loadReport).toHaveBeenCalledWith(selectedRevision.key);
     });
+
+    it('reloads report on save success.', function () {
+        var investigation = Generator.generateInvestigation();
+        spyOn(Actions, 'loadReport');
+        var result = Environment.render(<InvestigationController report={investigation}/>);
+
+        result.onSuccess();
+        expect(Actions.loadReport).toHaveBeenCalled();
+    });
 });
