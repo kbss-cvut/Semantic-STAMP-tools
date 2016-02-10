@@ -7,6 +7,7 @@ describe('ReportsController', function () {
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator'),
 
+        Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
         ReportsController = require('../../js/components/reports/ReportsController'),
         Reports = require('../../js/components/reports/Reports');
@@ -16,7 +17,7 @@ describe('ReportsController', function () {
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
             reports = Generator.generateReports(),
             renderedReports, filter;
-        controller.onReportsLoaded(reports);
+        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports).toEqual(reports);
 

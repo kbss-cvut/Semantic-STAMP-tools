@@ -70,5 +70,29 @@ module.exports = {
         Factors.__set__('FactorRenderer', FactorRenderer);
         Factors.__set__('FactorJsonSerializer', FactorJsonSerializer);
         investigation.__set__('Factors', Factors);
+    },
+
+    /**
+     * Creates a mock objects with the specified methods.
+     *
+     * The methods adhere to the builder pattern - they return the mock instance itself.
+     * @param reqMockMethods array of methods to mock
+     */
+    mockRequestMethods: function (reqMockMethods) {
+        var reqMock = jasmine.createSpyObj('request', reqMockMethods);
+        for (var i = 0; i < reqMockMethods.length; i++) {
+            // All mock methods just return the instance to adhere to the builder pattern implemented by request
+            reqMock[reqMockMethods[i]].and.callFake(function () {
+                return reqMock;
+            });
+        }
+        return reqMock;
+    },
+
+    /**
+     * Mocks the Logger, so that test console output is not polluted with log messages.
+     */
+    mockLogger: function () {
+        return jasmine.createSpyObj('Logger', ['warn', 'log', 'error']);
     }
 };

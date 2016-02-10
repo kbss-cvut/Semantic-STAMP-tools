@@ -68,13 +68,15 @@ var Ajax = {
                     return;
                 }
                 try {
-                    onError ? onError(JSON.parse(err.response.text)) : this._handleError(err);
+                    if (onError) {
+                        onError(JSON.parse(err.response.text), err);
+                    }
+                    this._handleError(err);
                 } catch (ex) {
-                    // The response text is not a  parseable JSON
+                    // The response text is not a parseable JSON
                     this._handleError(err);
                 }
-            }
-            if (onSuccess) {
+            } else if (onSuccess) {
                 onSuccess(resp.body, resp);
             }
         }.bind(this));

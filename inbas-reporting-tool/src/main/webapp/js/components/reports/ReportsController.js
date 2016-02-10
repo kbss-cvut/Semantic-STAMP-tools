@@ -27,8 +27,10 @@ var ReportsController = React.createClass({
         Actions.loadAllReports();
     },
 
-    onReportsLoaded: function (reports) {
-        this.setState({reports: reports});
+    onReportsLoaded: function (data) {
+        if (data.action === Actions.loadAllReports) {
+            this.setState({reports: data.reports});
+        }
     },
 
     onEdit: function (report) {
