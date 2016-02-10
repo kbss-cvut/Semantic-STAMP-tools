@@ -37,7 +37,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
     @OWLDataProperty(iri = Vocabulary.p_endTime)
     private Date occurrenceEnd;
 
-//    @ParticipationConstraints(nonEmpty = true)
+    @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_occurrenceCategory, fetch = FetchType.EAGER)
     private EventType occurrenceCategory;
 

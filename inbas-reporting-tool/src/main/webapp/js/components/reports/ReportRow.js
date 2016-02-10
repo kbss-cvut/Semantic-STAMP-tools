@@ -48,7 +48,6 @@ var ReportRow = React.createClass({
             formattedDate = Utils.formatDate(date),
         // Have to set style directly, class style is overridden by the bootstrap styling
             verticalAlign = {verticalAlign: 'middle'};
-        // TODO Remove null check for occurrenceCategory after data migration
         return (
             <tr onDoubleClick={this.onDoubleClick}>
                 <td style={verticalAlign}><a href='javascript:void(0);' onClick={this.onEditClick}
@@ -56,7 +55,7 @@ var ReportRow = React.createClass({
                 </td>
                 <td style={verticalAlign} className='content-center'>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.summary}/></td>
-                <td style={verticalAlign}>{report.occurrenceCategory ? report.occurrenceCategory.name : ''}</td>
+                <td style={verticalAlign}>{report.occurrenceCategory.name}</td>
                 <td style={verticalAlign} className='content-center'><Label>{ReportType.asString(report)}</Label></td>
                 <td style={verticalAlign} className='actions'>
                     <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.edit-tooltip')}

@@ -68,6 +68,7 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
             r.setOccurrenceStart(startTime);
             r.setOccurrenceEnd(endTime);
             r.setFileNumber(System.currentTimeMillis());
+            r.setOccurrenceCategory(Generator.getEventType());
             r.setAuthor(person);
             investigationReports.add(r);
         }

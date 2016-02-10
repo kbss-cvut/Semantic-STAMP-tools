@@ -154,6 +154,11 @@ var Generator = {
             key: this.getRandomInt().toString(),
             occurrenceStart: Date.now() - 10000,
             occurrenceEnd: Date.now(),
+            occurrenceCategory: {
+                id: 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110',
+                name: '2200110 - Incursions generally',
+                description: 'Blablabla'
+            },
             revision: 1,
             occurrence: {
                 key: this.getRandomInt().toString(),
@@ -177,6 +182,11 @@ var Generator = {
             initialReports: [{text: 'First Initial Report'}],
             occurrenceStart: Date.now() - 10000,
             occurrenceEnd: Date.now(),
+            occurrenceCategory: {
+                id: 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110',
+                name: '2200110 - Incursions generally',
+                description: 'Blablabla'
+            },
             revision: 1
         }
     },
