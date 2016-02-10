@@ -2,6 +2,7 @@
 
 var Actions = require('../actions/Actions');
 var Ajax = require('./Ajax');
+var Routes = require('./Routes');
 var Routing = require('./Routing');
 var Logger = require('./Logger');
 
@@ -33,6 +34,7 @@ var Authentication = {
             } else {
                 Logger.log('User successfully logged out.');
             }
+            Routing.transitionTo(Routes.login);
             window.location.reload();
         });
     }

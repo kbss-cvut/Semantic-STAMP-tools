@@ -5,7 +5,7 @@ describe('Ajax utility', function () {
     var rewire = require('rewire'),
         Ajax = rewire('../../js/utils/Ajax'),
         Routes = require('../../js/utils/Routes'),
-        reqMock, RoutingMock, LoggerMock,
+        reqMock, RoutingMock, LoggerMock, UtilsMock,
         reqMockMethods = ['get', 'put', 'post', 'del', 'send', 'accept', 'set', 'end'];
 
     beforeEach(function () {
@@ -13,10 +13,13 @@ describe('Ajax utility', function () {
         reqMock = jasmine.createSpyObj('request', reqMockMethods);
         initRequestMock();
         RoutingMock = jasmine.createSpyObj('Routing', ['transitionTo', 'transitionToHome', 'saveOriginalTarget']);
-        LoggerMock = jasmine.createSpyObj('Logger', ['warn', 'log', 'error']);  // Just prevent log messages in test output
+        // Just prevent log messages in test output
+        LoggerMock = jasmine.createSpyObj('Logger', ['warn', 'log', 'error']);
+        UtilsMock = jasmine.createSpyObj('Utils', ['getPathFromLocation']);
         Ajax.__set__('request', reqMock);
         Ajax.__set__('Routing', RoutingMock);
         Ajax.__set__('Logger', LoggerMock);
+        Ajax.__set__('Utils', UtilsMock);
     });
 
     function initRequestMock() {
@@ -35,11 +38,49 @@ describe('Ajax utility', function () {
             };
             fn(err, {});
         });
-
+        UtilsMock.getPathFromLocation.and.returnValue('reports');
         Ajax.get('rest/reports').end();
 
         expect(reqMock.end).toHaveBeenCalled();
         expect(RoutingMock.transitionTo).toHaveBeenCalledWith(Routes.login);
+    });
+
+    it('saves original target route before transitioning to login when 401 status is returned', function () {
+        var path = Routes.reports.path;
+        reqMock.end.and.callFake(function (fn) {
+            var err = {
+                status: 401
+            };
+            fn(err, {});
+        });
+        UtilsMock.getPathFromLocation.and.returnValue(path);
+
+        Ajax.get('rest/reports').end();
+
+        expect(RoutingMock.saveOriginalTarget).toHaveBeenCalledWith({path: path});
+        expect(RoutingMock.transitionTo).toHaveBeenCalledWith(Routes.login);
+    });
+
+    it('does not transition anywhere when the user is on register or login screen', function() {
+        var path = Routes.login.path;
+        reqMock.end.and.callFake(function (fn) {
+            var err = {
+                status: 401
+            };
+            fn(err, {});
+        });
+        UtilsMock.getPathFromLocation.and.returnValue(path);
+
+        Ajax.get('rest/users/current').end();
+        expect(RoutingMock.saveOriginalTarget).not.toHaveBeenCalled();
+        expect(RoutingMock.transitionTo).not.toHaveBeenCalled();
+
+        path = Routes.register.path;
+        UtilsMock.getPathFromLocation.and.returnValue(path);
+
+        Ajax.get('rest/users/current').end();
+        expect(RoutingMock.saveOriginalTarget).not.toHaveBeenCalled();
+        expect(RoutingMock.transitionTo).not.toHaveBeenCalled();
     });
 
     it('calls success handler when it is defined and success response is returned', function () {

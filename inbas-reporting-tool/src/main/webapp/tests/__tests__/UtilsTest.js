@@ -10,45 +10,63 @@ describe('Utility functions tests', function () {
         expect(result).toEqual('Constant With Underscores');
     });
 
-    it('Returns the same value when converting to the same unit', function() {
+    it('Returns the same value when converting to the same unit', function () {
         var value = 117;
         var result = Utils.convertTime('second', 'second', value);
         expect(result).toEqual(value);
     });
 
-    it('Converts minutes to seconds correctly', function() {
-       var value = 7;
+    it('Converts minutes to seconds correctly', function () {
+        var value = 7;
         var result = Utils.convertTime('minute', 'second', value);
-        expect(result).toEqual(7 *  60);
+        expect(result).toEqual(7 * 60);
     });
 
-    it('Converts minutes to hours with rounding', function() {
-       var value = 7;
+    it('Converts minutes to hours with rounding', function () {
+        var value = 7;
         var result = Utils.convertTime('minute', 'hour', value);
         expect(result).toEqual(0);
     });
 
-    it('Converts seconds to minutes with rounding', function() {
+    it('Converts seconds to minutes with rounding', function () {
         var value = 117;
         var result = Utils.convertTime('second', 'minute', value);
         expect(result).toEqual(2);
     });
 
-    it('Converts seconds to hours with rounding', function() {
-       var value = 3600;
+    it('Converts seconds to hours with rounding', function () {
+        var value = 3600;
         var result = Utils.convertTime('second', 'hour', value);
         expect(result).toEqual(1);
     });
 
-    it('Converts hours to minutes correctly', function() {
+    it('Converts hours to minutes correctly', function () {
         var value = 11;
         var result = Utils.convertTime('hour', 'minute', value);
         expect(result).toEqual(11 * 60);
     });
 
-    it('Converts hours to seconds correctly', function() {
+    it('Converts hours to seconds correctly', function () {
         var value = 11;
         var result = Utils.convertTime('hour', 'second', value);
         expect(result).toEqual(11 * 60 * 60);
-    })
+    });
+
+    it('Extracts path from unparametrized location', function () {
+        jasmine.getGlobal().window = {
+            location: {
+                hash: '#/reports?_k=3123123'
+            }
+        };
+        expect(Utils.getPathFromLocation()).toEqual('reports');
+    });
+
+    it('Extracts path from parametrized location', function () {
+        jasmine.getGlobal().window = {
+            location: {
+                hash: '#/reports/1234567890?_k=3123123'
+            }
+        };
+        expect(Utils.getPathFromLocation()).toEqual('reports/1234567890');
+    });
 });
