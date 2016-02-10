@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service.options;
 
+import cz.cvut.kbss.inbas.audit.model.arms.AccidentOutcome;
+import cz.cvut.kbss.inbas.audit.model.arms.BarrierEffectiveness;
 import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceSeverity;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.rest.dto.model.RawJson;
@@ -39,6 +41,10 @@ public class OptionsService {
                 return Arrays.asList(LowVisibilityProcedure.values());
             case "occurrenceSeverity":
                 return Arrays.asList(OccurrenceSeverity.values());
+            case "barrierEffectiveness":
+                return Arrays.asList(BarrierEffectiveness.values());
+            case "accidentOutcome":
+                return AccidentOutcome.toPairs();
             case "location":
                 return new RawJson(localLoader.loadData("locations.json", Collections.emptyMap()));
             case "operator":

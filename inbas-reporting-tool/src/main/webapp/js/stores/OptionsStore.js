@@ -54,7 +54,7 @@ var OptionsStore = Reflux.createStore({
             this.trigger('barrierEffectiveness', barrierEffectiveness);
             return;
         }
-        Ajax.get('rest/options/barrierEffectiveness').end(function (data) {
+        Ajax.get('rest/options?type=barrierEffectiveness').end(function (data) {
             barrierEffectiveness = data;
             this.trigger('barrierEffectiveness', barrierEffectiveness);
         }.bind(this), function () {
@@ -67,7 +67,7 @@ var OptionsStore = Reflux.createStore({
             this.trigger('accidentOutcome', accidentOutcomes);
             return;
         }
-        Ajax.get('rest/options/accidentOutcome').end(function (data) {
+        Ajax.get('rest/options?type=accidentOutcome').end(function (data) {
             accidentOutcomes = data;
             this.trigger('accidentOutcome', accidentOutcomes);
         }.bind(this), function () {
