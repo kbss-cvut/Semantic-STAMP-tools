@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.security;
 
 import cz.cvut.kbss.inbas.audit.config.RestConfig;
+import cz.cvut.kbss.inbas.audit.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.audit.environment.config.TestSecurityConfig;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
@@ -22,7 +23,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = {TestSecurityConfig.class, RestConfig.class})
+@ContextConfiguration(classes = {TestSecurityConfig.class, RestConfig.class, MockSesamePersistence.class})
 public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
 
     @Autowired

@@ -7,6 +7,7 @@ import cz.cvut.kbss.inbas.audit.dto.*;
 import cz.cvut.kbss.inbas.audit.dto.incursion.AircraftIntruderDto;
 import cz.cvut.kbss.inbas.audit.dto.incursion.PersonIntruderDto;
 import cz.cvut.kbss.inbas.audit.dto.incursion.RunwayIncursionDto;
+import cz.cvut.kbss.inbas.audit.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
@@ -35,6 +36,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {RestConfig.class,
         ServiceConfig.class,
         TestPersistenceConfig.class,
+        MockSesamePersistence.class,
         SecurityConfig.class})
 public class MappersTest {
 
