@@ -49,6 +49,7 @@ public class OccurrenceServiceTest extends BaseServiceTestRunner {
         for (int i = 0; i < 5; i++) {
             final PreliminaryReport r = new PreliminaryReport();
             r.setOccurrence(occurrence);
+            r.setOccurrenceCategory(Generator.getEventType());
             r.setRevision(2);
             r.setOccurrenceStart(startTime);
             r.setOccurrenceEnd(endTime);

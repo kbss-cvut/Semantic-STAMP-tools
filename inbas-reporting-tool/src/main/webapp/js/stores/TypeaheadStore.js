@@ -5,9 +5,10 @@ var Reflux = require('reflux');
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
 
-var URL = 'rest/typeahead/options?type=';
+var URL = 'rest/options?type=';
 
 var eventTypes = [];
+var occurrenceCategories = [];
 var locations = [];
 var operators = [];
 
@@ -17,6 +18,7 @@ var TypeaheadStore = Reflux.createStore({
         this.listenTo(Actions.loadEventTypes, this.onLoadEventTypes);
         this.listenTo(Actions.loadLocations, this.onLoadLocations);
         this.listenTo(Actions.loadOperators, this.onLoadOperators);
+        this.listenTo(Actions.loadOccurrenceCategories, this.onLoadOccurrenceCategories);
     },
 
     onLoadEventTypes: function () {
@@ -60,6 +62,16 @@ var TypeaheadStore = Reflux.createStore({
 
     getOperators: function () {
         return operators;
+    },
+
+    onLoadOccurrenceCategories: function () {
+        this.load('occurrenceCategory', 'occurrenceCategories', occurrenceCategories, function (data) {
+            occurrenceCategories = data;
+        });
+    },
+
+    getOccurrenceCategories: function () {
+        return occurrenceCategories;
     }
 });
 

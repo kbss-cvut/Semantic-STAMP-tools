@@ -3,20 +3,18 @@ package cz.cvut.kbss.inbas.audit.persistence.dao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
-import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
-import cz.cvut.kbss.inbas.audit.model.reports.Factor;
-import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
-import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.model.reports.*;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.BaseDaoTestRunner;
-import cz.cvut.kbss.inbas.audit.util.FileDataLoader;
+import cz.cvut.kbss.inbas.audit.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.URI;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -68,7 +66,7 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
     }
 
     private InvestigationReport loadReport(String fileName) throws Exception {
-        final String json = new FileDataLoader().load(fileName);
+        final String json = new FileDataLoader().loadData(fileName, Collections.emptyMap());
         final InvestigationReport report = objectMapper
                 .readValue(json, InvestigationReport.class);
         report.setFileNumber(System.currentTimeMillis());
@@ -264,5 +262,44 @@ public class InvestigationReportDaoTest extends BaseDaoTestRunner {
         final PreliminaryReport latest = persistPreliminaryReportChain();
         final InvestigationReport result = investigationDao.findLatestRevision(latest.getFileNumber());
         assertNull(result);
+    }
+
+    @Test
+    public void persistSavesOccurrenceCategoryIfItDoesNotExistYet() throws Exception {
+        final PreliminaryReport rTwo = persistPreliminaryReportChain();
+        final InvestigationReport rThree = new InvestigationReport(rTwo);
+        rThree.setAuthor(Generator.getPerson());
+        final EventType newOne = new EventType(
+                URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000"),
+                "NewEventType");
+        rThree.setOccurrenceCategory(newOne);
+        investigationDao.persist(rThree);
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNotNull(em.find(EventType.class, newOne.getId()));
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void updateSavesOccurrenceCategoryIfItDoesNotExistYet() throws Exception {
+        final PreliminaryReport rTwo = persistPreliminaryReportChain();
+        final InvestigationReport rThree = new InvestigationReport(rTwo);
+        rThree.setAuthor(Generator.getPerson());
+        final EventType newOne = new EventType(
+                URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000"),
+                "NewEventType");
+        investigationDao.persist(rThree);
+        rThree.setOccurrenceCategory(newOne);
+        investigationDao.update(rThree);
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNotNull(em.find(EventType.class, newOne.getId()));
+        } finally {
+            em.close();
+        }
+        final InvestigationReport result = investigationDao.find(rThree.getUri());
+        assertEquals(newOne, result.getOccurrenceCategory());
     }
 }

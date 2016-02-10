@@ -4,13 +4,14 @@ import cz.cvut.kbss.inbas.audit.model.ReportingPhase;
 import cz.cvut.kbss.inbas.audit.model.reports.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.audit.model.reports.EventTypeAssessment;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.audit.model.reports.ValidatableReport;
 import cz.cvut.kbss.inbas.audit.persistence.dao.CorrectiveMeasureDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.EventTypeAssessmentDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.audit.persistence.dao.PreliminaryReportDao;
 import cz.cvut.kbss.inbas.audit.service.PreliminaryReportService;
 import cz.cvut.kbss.inbas.audit.service.security.SecurityUtils;
-import cz.cvut.kbss.inbas.audit.service.validation.PreliminaryReportValidator;
+import cz.cvut.kbss.inbas.audit.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class RepositoryPreliminaryReportService extends BaseRepositoryService<Pr
         implements PreliminaryReportService {
 
     @Autowired
-    private PreliminaryReportValidator reportValidator;
+    private Validator<ValidatableReport> reportValidator;
 
     @Autowired
     private PreliminaryReportDao preliminaryReportDao;

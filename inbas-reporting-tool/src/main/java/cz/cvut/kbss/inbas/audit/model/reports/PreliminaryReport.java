@@ -39,6 +39,10 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
     @OWLDataProperty(iri = Vocabulary.p_endTime)
     private Date occurrenceEnd;
 
+//    @ParticipationConstraints(nonEmpty = true)
+    @OWLObjectProperty(iri = Vocabulary.p_occurrenceCategory, fetch = FetchType.EAGER)
+    private EventType occurrenceCategory;
+
     @OWLDataProperty(iri = Vocabulary.p_dateCreated)
     private Date created;
 
@@ -85,7 +89,6 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
     @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasure> correctiveMeasures;
 
-    @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_hasEventTypeAssessment, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Set<EventTypeAssessment> typeAssessments;
@@ -102,6 +105,7 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
      */
     public PreliminaryReport(PreliminaryReport other) {
         this.fileNumber = other.fileNumber;
+        this.occurrenceCategory = other.occurrenceCategory;
         this.occurrenceStart = other.occurrenceStart;
         this.occurrenceEnd = other.occurrenceEnd;
         this.severityAssessment = other.severityAssessment;
@@ -140,6 +144,14 @@ public class PreliminaryReport implements HasOwlKey, Serializable, ValidatableRe
 
     public void setFileNumber(Long fileNumber) {
         this.fileNumber = fileNumber;
+    }
+
+    public EventType getOccurrenceCategory() {
+        return occurrenceCategory;
+    }
+
+    public void setOccurrenceCategory(EventType occurrenceCategory) {
+        this.occurrenceCategory = occurrenceCategory;
     }
 
     public Date getOccurrenceStart() {

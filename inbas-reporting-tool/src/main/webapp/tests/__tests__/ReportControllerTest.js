@@ -13,6 +13,7 @@ describe('ReportController', function () {
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
+        spyOn(Actions, 'loadOccurrenceCategories');
     });
 
     it('Uses report passed from router store if it is set', function () {

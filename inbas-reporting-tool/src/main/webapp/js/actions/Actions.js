@@ -8,7 +8,7 @@ var Actions = Reflux.createActions([
     'loadAllReports', 'deleteReportChain', 'createPreliminary', 'createInvestigation', 'updateReport', 'submitReport',
     'loadRevisions', 'loadReport',
 
-    'loadOptions', 'loadEventTypes', 'loadLocations', 'loadOperators',
+    'loadOptions', 'loadEventTypes', 'loadLocations', 'loadOperators', 'loadOccurrenceCategories',
 
     'setTransitionPayload'
 ]);

@@ -13,6 +13,7 @@ describe('Investigation controller', function () {
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
+        spyOn(Actions, 'loadOccurrenceCategories');
         Environment.mockFactors(Investigation);
         InvestigationController.__set__('Investigation', Investigation);
     });
@@ -69,5 +70,14 @@ describe('Investigation controller', function () {
 
         result.onRevisionSelected(selectedRevision);
         expect(result.loadReport).toHaveBeenCalledWith(selectedRevision.key);
+    });
+
+    it('reloads report on save success.', function () {
+        var investigation = Generator.generateInvestigation();
+        spyOn(Actions, 'loadReport');
+        var result = Environment.render(<InvestigationController report={investigation}/>);
+
+        result.onSuccess();
+        expect(Actions.loadReport).toHaveBeenCalled();
     });
 });

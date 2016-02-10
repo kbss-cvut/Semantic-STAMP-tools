@@ -84,6 +84,7 @@ module.exports = {
         'reports.loading-mask': 'Loading reports...',
         'reports.panel-title': 'Occurrence reports',
         'reports.table-date': 'Occurrence date',
+        'reports.table-occurrence-category': 'Occurrence classification',
         'reports.table-type': 'Type',
         'reports.filter.label': 'Filter',
         'reports.filter.type.tooltip': 'Select report type',
@@ -127,6 +128,7 @@ module.exports = {
         'preliminary.detail.eventtype.table-type': 'Event type',
         'preliminary.detail.eventtype.table-summary': 'Summary',
         'preliminary.detail.eventtype.add-tooltip': 'Add an event type assessment',
+        'preliminary.detail.occurrence-category.label': 'Occurrence category',
         'preliminary.detail.arms.panel-title': 'ARMS attributes',
         'preliminary.detail.arms.barriers-label': 'Barriers effectiveness',
         'preliminary.detail.arms.barriers-tooltip': 'What was the effectiveness of the remaining barriers between this ' +

@@ -181,7 +181,7 @@ var ReportStatements = React.createClass({
         return (
             <Panel
                 header={<h5 title={this.i18n('preliminary.detail.eventtype.panel-title-tooltip')}>
-                {this.i18n('preliminary.detail.eventtype.panel-title') + '*'}
+                {this.i18n('preliminary.detail.eventtype.panel-title')}
                 </h5>}
                 bsStyle='info'
                 key='typeAssessments'>

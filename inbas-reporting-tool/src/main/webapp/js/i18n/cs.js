@@ -85,6 +85,7 @@ module.exports = {
         'reports.loading-mask': 'Nahrávám hlášení...',
         'reports.panel-title': 'Hlášení událostí',
         'reports.table-date': 'Datum a čas události',
+        'reports.table-occurrence-category': 'Klasifikace události',
         'reports.table-type': 'Typ',
         'reports.filter.label': 'Zobrazit',
         'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',
@@ -129,6 +130,7 @@ module.exports = {
         'preliminary.detail.eventtype.table-type': 'Typ události',
         'preliminary.detail.eventtype.table-summary': 'Popis',
         'preliminary.detail.eventtype.add-tooltip': 'Přidat popis typu události',
+        'preliminary.detail.occurrence-category.label': 'Klasifikace události',
         'preliminary.detail.arms.panel-title': 'ARMS atributy',
         'preliminary.detail.arms.barriers-label': 'Efektivita bariér',
         'preliminary.detail.arms.barriers-tooltip': 'Jaká byla efektivita bariér zbývajících mezi touto událostí a ' +

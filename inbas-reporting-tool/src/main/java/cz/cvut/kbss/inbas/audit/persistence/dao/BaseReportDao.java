@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.audit.persistence.dao;
 
+import cz.cvut.kbss.inbas.audit.model.reports.EventType;
 import cz.cvut.kbss.inbas.audit.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.audit.util.Vocabulary;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
@@ -62,6 +63,16 @@ public abstract class BaseReportDao<T> extends BaseDao<T> {
             throw new PersistenceException(e);
         } finally {
             em.close();
+        }
+    }
+
+    protected void persistOccurrenceCategoryIfNecessary(EventType category, EntityManager em) {
+        if (category == null) {
+            return;
+        }
+        assert category.getId() != null;
+        if (em.find(EventType.class, category.getId()) == null) {
+            em.persist(category);
         }
     }
 }

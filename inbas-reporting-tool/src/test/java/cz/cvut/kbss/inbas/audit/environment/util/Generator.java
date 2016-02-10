@@ -12,6 +12,7 @@ import java.util.*;
 public class Generator {
 
     public static final String USERNAME = "halsey@unsc.org";
+    public static final String PASSWORD = "john117";
 
     private static Random random = new Random();
 
@@ -30,7 +31,7 @@ public class Generator {
         person.setFirstName("Catherine");
         person.setLastName("Halsey");
         person.setUsername(USERNAME);
-        person.setPassword("john117");
+        person.setPassword(PASSWORD);
         person.generateUri();
         return person;
     }
@@ -53,6 +54,7 @@ public class Generator {
     private static PreliminaryReport reportWithoutTypeAssessments() {
         final PreliminaryReport report = new PreliminaryReport();
         report.setOccurrence(generateOccurrence());
+        report.setOccurrenceCategory(getEventType());
         report.getOccurrence().transitionToPhase(ReportingPhase.PRELIMINARY);
         report.setOccurrenceStart(new Date(System.currentTimeMillis() - 10000));
         report.setOccurrenceEnd(new Date());
@@ -69,6 +71,12 @@ public class Generator {
         report.setCorrectiveMeasures(new HashSet<>(Arrays.asList(crOne, crTwo)));
         report.setSummary("Test preliminary report summary.");
         return report;
+    }
+
+    public static EventType getEventType() {
+        return new EventType(URI.create(
+                "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110"),
+                "2200110 - Incursions generally");
     }
 
     private static PreliminaryReport reportWithTypeAssessments() {
@@ -151,6 +159,7 @@ public class Generator {
         final InvestigationReport report = new InvestigationReport();
         report.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
         report.setOccurrence(generateOccurrence());
+        report.setOccurrenceCategory(getEventType());
         report.setCreated(new Date());
         final Date start = new Date(System.currentTimeMillis() - 10000);
         report.setOccurrenceStart(start);

@@ -1,17 +1,20 @@
-package cz.cvut.kbss.inbas.audit.util;
+package cz.cvut.kbss.inbas.audit.service.data;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Map;
 
 /**
  * Classpath-based file content loader.
  */
-public class FileDataLoader {
+@Service("localDataLoader")
+public class FileDataLoader implements DataLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileDataLoader.class);
 
@@ -21,15 +24,15 @@ public class FileDataLoader {
      * The file is loaded as a classloader resource, so it should be on classpath or it should be an absolute path.
      *
      * @param fileName Name of the file to load
+     * @param params   The parameters are ignored in this implementation
      * @return File contents as string
      */
-    public String load(String fileName) {
+    public String loadData(String fileName, Map<String, String> params) {
         final InputStream is = this.getClass().getClassLoader().getResourceAsStream(fileName);
         if (is == null) {
             throw new IllegalArgumentException("File " + fileName + " not found.");
         }
-        try (final BufferedReader reader = new BufferedReader(
-                new InputStreamReader(is))) {
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             final StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -38,7 +41,7 @@ public class FileDataLoader {
             }
             return sb.toString();
         } catch (IOException e) {
-            LOG.error("Unable to file contents.", e);
+            LOG.error("Unable to read file contents.", e);
             return "";
         }
     }

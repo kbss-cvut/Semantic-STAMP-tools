@@ -23,7 +23,11 @@ var ReportDetailController = React.createClass({
         if (this.props.report.isNew) {
             Routing.transitionTo(Routes.reports);
         } else {
-            this.loadReport(reportKey ? reportKey : this.props.report.key);
+            if (!reportKey || reportKey === this.props.report.key) {
+                Actions.loadReport(this.props.report.key);
+            } else {
+                this.loadReport(reportKey);
+            }
         }
     },
 

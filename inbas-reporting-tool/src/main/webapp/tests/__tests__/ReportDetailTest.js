@@ -12,6 +12,7 @@ describe('ReportDetail component', function () {
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');    // Prevents Ajax request to load occurrence severity options
+        spyOn(Actions, 'loadOccurrenceCategories');
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onInvestigate', 'onChange']);
         report = {
             occurrence: {

@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.audit.test.config.TestPersistenceConfig;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,12 +21,16 @@ public abstract class BaseServiceTestRunner {
     @Autowired
     private PersonDao personDao;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     protected Person person;
 
     @Before
     public void setUp() throws Exception {
         person = Generator.getPerson();
         if (personDao.findByUsername(person.getUsername()) == null) {
+            person.encodePassword(passwordEncoder);
             personDao.persist(person);
         }
     }

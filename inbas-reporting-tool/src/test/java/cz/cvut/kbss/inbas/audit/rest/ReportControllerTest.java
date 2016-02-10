@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
 import cz.cvut.kbss.inbas.audit.environment.config.MockServiceConfig;
+import cz.cvut.kbss.inbas.audit.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Person;
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
-@ContextConfiguration(classes = {MockServiceConfig.class})
+@ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Autowired

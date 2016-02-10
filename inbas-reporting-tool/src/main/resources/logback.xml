@@ -11,7 +11,7 @@
 
     <!-- Logger for our app -->
     <logger name="cz.cvut.kbss" level="TRACE" additivity="false">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </logger>
 
     <!-- Restrict logging of the Sesame HTTP client (used to connect to remote repositories -->
@@ -19,8 +19,13 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
+    <!-- Restrict logging of Spring -->
+    <logger name="org.springframework" level="INFO" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
     <!-- By default, the level of the root level is set to DEBUG -->
     <root level="DEBUG">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

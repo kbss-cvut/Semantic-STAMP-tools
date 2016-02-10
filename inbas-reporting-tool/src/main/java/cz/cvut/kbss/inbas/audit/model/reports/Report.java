@@ -19,6 +19,8 @@ public interface Report {
 
     Integer getRevision();
 
+    EventType getOccurrenceCategory();
+
     /**
      * Gets reporting phase to which this report is relevant.
      *

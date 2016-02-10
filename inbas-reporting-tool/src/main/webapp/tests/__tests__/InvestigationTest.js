@@ -14,6 +14,7 @@ describe('Investigation', function () {
     beforeEach(function () {
         spyOn(Actions, 'updateReport');
         spyOn(Actions, 'loadOptions');
+        spyOn(Actions, 'loadOccurrenceCategories');
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
         Environment.mockFactors(Investigation);
         investigation = Generator.generateInvestigation();

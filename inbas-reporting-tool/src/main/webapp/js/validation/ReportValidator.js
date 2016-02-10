@@ -23,7 +23,7 @@ var ReportValidator = {
         if (!report.summary || report.summary.length === 0) {
             return false;
         }
-        if (!report.typeAssessments || report.typeAssessments.length === 0) {
+        if (!report.occurrenceCategory) {
             return false;
         }
         return true;

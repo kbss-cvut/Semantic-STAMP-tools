@@ -7,6 +7,7 @@ import cz.cvut.kbss.inbas.audit.dto.*;
 import cz.cvut.kbss.inbas.audit.dto.incursion.AircraftIntruderDto;
 import cz.cvut.kbss.inbas.audit.dto.incursion.PersonIntruderDto;
 import cz.cvut.kbss.inbas.audit.dto.incursion.RunwayIncursionDto;
+import cz.cvut.kbss.inbas.audit.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Aircraft;
@@ -18,8 +19,8 @@ import cz.cvut.kbss.inbas.audit.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.PersonIntruder;
 import cz.cvut.kbss.inbas.audit.model.reports.incursions.RunwayIncursion;
 import cz.cvut.kbss.inbas.audit.persistence.dao.OrganizationDao;
+import cz.cvut.kbss.inbas.audit.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.audit.test.config.TestPersistenceConfig;
-import cz.cvut.kbss.inbas.audit.util.FileDataLoader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {RestConfig.class,
         ServiceConfig.class,
         TestPersistenceConfig.class,
+        MockSesamePersistence.class,
         SecurityConfig.class})
 public class MappersTest {
 
@@ -232,7 +234,7 @@ public class MappersTest {
 
     @Test
     public void assignsRandomReferenceIdsToFactorDtos() throws Exception {
-        final String json = new FileDataLoader().load("test_data/reportWithFactorHierarchy.json");
+        final String json = new FileDataLoader().loadData("test_data/reportWithFactorHierarchy.json", null);
         final InvestigationReport report = Environment.getObjectMapper().readValue(json, InvestigationReport.class);
 
         final FactorDto dto = reportMapper.factorToFactorDto(report.getRootFactor());
@@ -248,7 +250,7 @@ public class MappersTest {
 
     @Test
     public void testInvestigationReportDtoWithLinksToInvestigationReport() throws Exception {
-        final String json = new FileDataLoader().load("test_data/reportDtoFactorsCauseMitigate.json");
+        final String json = new FileDataLoader().loadData("test_data/reportDtoFactorsCauseMitigate.json", null);
         final InvestigationReportDto dto = Environment.getObjectMapper().readValue(json, InvestigationReportDto.class);
 
         final InvestigationReport result = reportMapper.investigationReportDtoToInvestigationReport(dto);
