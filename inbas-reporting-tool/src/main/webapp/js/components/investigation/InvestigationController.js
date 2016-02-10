@@ -6,6 +6,7 @@
 
 var React = require('react');
 
+var Actions = require('../../actions/Actions');
 var Constants = require('../../constants/Constants');
 var Investigation = require('./Investigation');
 var Routing = require('../../utils/Routing');
@@ -19,11 +20,14 @@ var InvestigationController = React.createClass({
     ],
 
     onSuccess: function (key) {
-        this.loadReport(key ? key : this.props.report.key);
+        if (!key || key === this.props.report.key) {
+            Actions.loadReport(this.props.report.key);
+        } else {
+            this.loadReport(key);
+        }
     },
 
     loadReport: function (key) {
-        this.setState({loading: true});
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: key},
             handlers: {onCancel: Routes.reports}
