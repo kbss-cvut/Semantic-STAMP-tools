@@ -61,6 +61,15 @@ describe('Utility functions tests', function () {
         expect(Utils.getPathFromLocation()).toEqual('reports');
     });
 
+    it('Extracts path from unparametrized location without slash after hashtag', function () {
+        jasmine.getGlobal().window = {
+            location: {
+                hash: '#login?_k=3123123'
+            }
+        };
+        expect(Utils.getPathFromLocation()).toEqual('login');
+    });
+
     it('Extracts path from parametrized location', function () {
         jasmine.getGlobal().window = {
             location: {

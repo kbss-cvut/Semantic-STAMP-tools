@@ -112,9 +112,8 @@ var Utils = {
      */
     getPathFromLocation: function () {
         var hash = window.location.hash;
-        hash = hash.substring(2);   // Skip #/
-        hash = hash.substring(0, hash.indexOf('?'));    // Get rid of the history param ?_fkd123
-        return hash;
+        var result = /#[/]?([a-z/0-9]+)\?/.exec(hash);
+        return result ? result[1] : '';
     }
 };
 

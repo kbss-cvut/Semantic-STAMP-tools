@@ -47,6 +47,9 @@ var Routing = {
     },
 
     saveOriginalTarget: function (route) {
+        if (!route || route === '') {
+            return;
+        }
         this.originalTarget = route;
     },
 
