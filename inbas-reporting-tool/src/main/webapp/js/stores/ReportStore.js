@@ -18,7 +18,15 @@ var ReportStore = Reflux.createStore({
     onLoadAllReports: function () {
         Ajax.get(BASE_URL).end(function (data) {
             this._reports = data;
-            this.trigger(this._reports);
+            this.trigger({
+                action: Actions.loadAllReports,
+                reports: this._reports
+            });
+        }.bind(this), function () {
+            this.trigger({
+                action: Actions.loadAllReports,
+                reports: []
+            });
         }.bind(this));
     },
 
@@ -27,6 +35,11 @@ var ReportStore = Reflux.createStore({
             this.trigger({
                 action: Actions.loadReport,
                 report: data
+            });
+        }.bind(this), function () {
+            this.trigger({
+                action: Actions.loadReport,
+                report: null
             });
         }.bind(this));
     },

@@ -19,8 +19,10 @@ var Reports = React.createClass({
     mixins: [I18nMixin],
 
     propTypes: {
+        allReports: React.PropTypes.array,
         reports: React.PropTypes.array,
-        actions: React.PropTypes.object
+        actions: React.PropTypes.object,
+        filter: React.PropTypes.object
     },
 
     createReport: function () {
@@ -37,7 +39,7 @@ var Reports = React.createClass({
         }
         return (
             <Panel header={<h3>{this.i18n('reports.panel-title')}</h3>} bsStyle='primary'>
-                <ReportsFilter onFilterChange={this.props.actions.onFilterChange}/>
+                <ReportsFilter onFilterChange={this.props.actions.onFilterChange} reports={this.props.allReports}/>
                 {this.renderReports()}
             </Panel>);
     },

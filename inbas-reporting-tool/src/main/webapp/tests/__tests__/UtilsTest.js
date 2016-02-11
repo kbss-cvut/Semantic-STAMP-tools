@@ -51,5 +51,23 @@ describe('Utility functions tests', function () {
         var value = 11;
         var result = Utils.convertTime('hour', 'second', value);
         expect(result).toEqual(11 * 60 * 60);
-    })
+    });
+
+    it('Extracts path from unparametrized location', function () {
+        jasmine.getGlobal().window = {
+            location: {
+                hash: '#/reports?_k=3123123'
+            }
+        };
+        expect(Utils.getPathFromLocation()).toEqual('reports');
+    });
+
+    it('Extracts path from parametrized location', function () {
+        jasmine.getGlobal().window = {
+            location: {
+                hash: '#/reports/1234567890?_k=3123123'
+            }
+        };
+        expect(Utils.getPathFromLocation()).toEqual('reports/1234567890');
+    });
 });

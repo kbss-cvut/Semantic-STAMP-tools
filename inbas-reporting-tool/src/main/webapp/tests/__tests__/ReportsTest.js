@@ -13,7 +13,7 @@ describe('Reports', function () {
         actions = jasmine.createSpyObj('actions', ['onFilterChange']);
 
     it('shows message informing that there are no matching reports when filter finds no reports.', function () {
-        var result = Environment.render(<Reports reports={[]} actions={actions} filter={{}}/>),
+        var result = Environment.render(<Reports allReports={[]} reports={[]} actions={actions} filter={{}}/>),
             filter = TestUtils.scryRenderedComponentsWithType(result, ReportsFilter.wrappedComponent),
             message = Environment.getComponentByTagAndText(result, 'div', en.messages['reports.filter.no-matching-found']);
 
@@ -22,7 +22,7 @@ describe('Reports', function () {
     });
 
     it('shows message with a link to dashboard when no reports exist.', function () {
-        var result = Environment.render(<Reports reports={[]} actions={actions}/>),
+        var result = Environment.render(<Reports allReports={[]} reports={[]} actions={actions}/>),
             filter = TestUtils.scryRenderedComponentsWithType(result, ReportsFilter.wrappedComponent),
             message = Environment.getComponentByTagAndText(result, 'div', en.messages['reports.no-reports'] + en.messages['reports.no-reports.link']),
             link = Environment.getComponentByTagAndText(result, 'a', en.messages['reports.no-reports.link']);

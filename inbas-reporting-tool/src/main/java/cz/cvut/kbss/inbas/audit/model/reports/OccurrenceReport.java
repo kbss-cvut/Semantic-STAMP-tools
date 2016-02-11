@@ -30,8 +30,8 @@ public class OccurrenceReport implements Report, Serializable {
     @OWLDataProperty(iri = Vocabulary.p_fileNumber, readOnly = true)
     private Long fileNumber;
 
-    //    @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_occurrenceCategory, fetch = FetchType.EAGER)
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLObjectProperty(iri = Vocabulary.p_occurrenceCategory, fetch = FetchType.EAGER, readOnly = true)
     private EventType occurrenceCategory;
 
     @OWLDataProperty(iri = Vocabulary.p_revision, readOnly = true)

@@ -100,6 +100,19 @@ var Utils = {
             return '';
         }
         return location.substring(location.lastIndexOf('/') + 1);
+    },
+
+    /**
+     * Extracts application path from the current window location.
+     *
+     * I.e. if the current hash is '#/reports?_k=312312', the result will be 'reports'
+     * @return {String}
+     */
+    getPathFromLocation: function () {
+        var hash = window.location.hash;
+        hash = hash.substring(2);   // Skip #/
+        hash = hash.substring(0, hash.indexOf('?'));    // Get rid of the history param ?_fkd123
+        return hash;
     }
 };
 

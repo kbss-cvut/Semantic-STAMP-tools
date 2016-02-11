@@ -7,6 +7,11 @@
   },
   "occurrenceStart": 1447144734937,
   "occurrenceEnd": 1447144800937,
+  "occurrenceCategory": {
+    "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-28",
+    "name": "28 - RI-VAP: Runway incursion - vehicle, aircraft or person",
+    "description": "Note: From Procedures for Air Navigation Services – Air traffic Management (ICAO DOC 4444)."
+  },
   "created": 1447144867175,
   "lastEdited": 1447147087897,
   "summary": "Short report summary.",
@@ -66,7 +71,9 @@
               },
               "description": "Event type assessment with description only."
             },
-            "mitigatingFactors": [3]
+            "mitigatingFactors": [
+              3
+            ]
           }
         ]
       },
@@ -82,7 +89,9 @@
           },
           "description": "Event type assessment with description only."
         },
-        "causes": [4]
+        "causes": [
+          4
+        ]
       }
     ]
   }

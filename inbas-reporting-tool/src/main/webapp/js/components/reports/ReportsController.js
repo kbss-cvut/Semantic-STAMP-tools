@@ -8,6 +8,7 @@ var Reflux = require('reflux');
 var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
+var DataFilter = require('../../utils/DataFilter');
 var ReportStore = require('../../stores/ReportStore');
 var Reports = require('./Reports');
 var Routes = require('../../utils/Routes');
@@ -27,8 +28,10 @@ var ReportsController = React.createClass({
         Actions.loadAllReports();
     },
 
-    onReportsLoaded: function (reports) {
-        this.setState({reports: reports});
+    onReportsLoaded: function (data) {
+        if (data.action === Actions.loadAllReports) {
+            this.setState({reports: data.reports});
+        }
     },
 
     onEdit: function (report) {
@@ -47,18 +50,7 @@ var ReportsController = React.createClass({
     },
 
     filterReports: function () {
-        var filter = this.state.filter;
-        if (!filter) {
-            return this.state.reports;
-        }
-        return this.state.reports.filter(function (item) {
-            for (var key in filter) {
-                if (filter[key].toLowerCase() !== 'all' && item[key].toLowerCase() !== filter[key].toLowerCase()) {
-                    return false;
-                }
-                return true;
-            }
-        });
+        return DataFilter.filterData(this.state.reports, this.state.filter);
     },
 
 
@@ -69,7 +61,8 @@ var ReportsController = React.createClass({
             onFilterChange: this.onFilterChange
         };
         return (
-            <Reports reports={this.filterReports()} filter={this.state.filter} actions={actions}/>
+            <Reports allReports={this.state.reports} reports={this.filterReports()} filter={this.state.filter}
+                     actions={actions}/>
         );
     }
 });
