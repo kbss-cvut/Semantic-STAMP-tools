@@ -3,6 +3,7 @@
 describe('ReportsFilter', function () {
 
     var React = require('react'),
+        TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
         ReportsFilter = require('../../js/components/reports/ReportsFilter'),
 
@@ -15,7 +16,7 @@ describe('ReportsFilter', function () {
     it('shows a set of existing report categories in the filter', function () {
         var reports = prepareReports(),
             uniqueCategories = resolveCategories(reports),
-            filter = Environment.render(<ReportsFilter onFilterChange={onFilterChange} reports={reports}/>);
+            filter = Environment.renderIntoTable(<ReportsFilter onFilterChange={onFilterChange} reports={reports}/>);
 
         var options = filter.renderClassificationOptions();
         expect(options.length).toEqual(uniqueCategories.length + 1);

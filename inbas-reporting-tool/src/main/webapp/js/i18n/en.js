@@ -92,7 +92,7 @@ module.exports = {
         'reports.filter.type.tooltip': 'Select report type',
         'reports.filter.type.all': 'All',
         'reports.filter.type.preliminary': 'Preliminary',
-        'reports.filter.no-matching-found': 'There are no reports of the selected type.',
+        'reports.filter.no-matching-found': 'No reports match the selected filters.',
 
         'delete-dialog.title': 'Delete {type} Report?',
         'delete-dialog.content': 'Are you sure you want to remove this report?',

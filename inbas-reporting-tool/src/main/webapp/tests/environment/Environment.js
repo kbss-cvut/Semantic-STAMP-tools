@@ -28,6 +28,30 @@ module.exports = {
     },
 
     /**
+     * Renders the specified component into a table body, wrapping it all in a TestApp instance, which is used to
+     * initialize some required context data, e.g. i18n.
+     *
+     * This is useful for components representing table rows.
+     * @param component Component to render
+     * @return {*|!ReactComponent} The rendered component
+     */
+    renderIntoTable: function (component) {
+        var type = component.type,
+            result = TestUtils.renderIntoDocument(<TestApp>
+                <table>
+                    <tbody>{component}</tbody>
+                </table>
+            </TestApp>),
+            renderedComponent = TestUtils.findRenderedComponentWithType(result, type);
+        //console.log(renderedComponent);
+        if (renderedComponent.refs && renderedComponent.refs.wrappedElement) {
+            return renderedComponent.refs.wrappedElement;
+        } else {
+            return renderedComponent;
+        }
+    },
+
+    /**
      * Finds component with the specified text.
      * @param root Root of the tree where the component is searched for
      * @param component Component class

@@ -9,6 +9,7 @@ var Table = require('react-bootstrap').Table;
 
 var injectIntl = require('../../utils/injectIntl');
 
+var ReportFilter = require('./ReportsFilter');
 var ReportRow = require('./ReportRow');
 var I18nMixin = require('../../i18n/I18nMixin');
 
@@ -25,6 +26,7 @@ var ReportsTable = React.createClass({
             <Table striped bordered condensed hover>
                 {this.renderHeader()}
                 <tbody>
+                <ReportFilter onFilterChange={this.props.actions.onFilterChange} reports={this.props.allReports}/>
                 {this.renderReports()}
                 </tbody>
             </Table>);

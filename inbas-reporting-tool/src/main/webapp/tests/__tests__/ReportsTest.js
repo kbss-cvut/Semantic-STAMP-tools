@@ -13,7 +13,7 @@ describe('Reports', function () {
         actions = jasmine.createSpyObj('actions', ['onFilterChange']);
 
     it('shows message informing that there are no matching reports when filter finds no reports.', function () {
-        var result = Environment.render(<Reports allReports={[]} reports={[]} actions={actions} filter={{}}/>),
+        var result = Environment.render(<Reports allReports={[]} reports={[]} actions={actions} filter={{type: 'INVESTIGATION'}}/>),
             filter = TestUtils.scryRenderedComponentsWithType(result, ReportsFilter.wrappedComponent),
             message = Environment.getComponentByTagAndText(result, 'div', en.messages['reports.filter.no-matching-found']);
 

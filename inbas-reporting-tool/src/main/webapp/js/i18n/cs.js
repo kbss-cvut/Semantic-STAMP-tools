@@ -93,7 +93,7 @@ module.exports = {
         'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',
         'reports.filter.type.all': 'Všechna',
         'reports.filter.type.preliminary': 'Předběžná',
-        'reports.filter.no-matching-found': 'Nenalezena žádná hlášení vybraného typu.',
+        'reports.filter.no-matching-found': 'Žádná hlášení neodpovídají zvoleným parametrům.',
 
         'delete-dialog.title': 'Smazat hlášení?',
         'delete-dialog.content': 'Skutečně chcete smazat toto hlášení?',
