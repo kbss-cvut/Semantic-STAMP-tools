@@ -368,13 +368,20 @@ img.factor-descriptive-factor {
     margin-right: auto;
     border: 1px solid #bce8f1;
     border-radius: 3px 3px 0 0;
+    padding: 3px 3px 3px 3px !important;
+    text-align: center;
 }
 
 .filter-label {
     margin-top: 6px;
-    margin-right:0.5em;
+    margin-right: 0.5em;
 }
 
 .no-reports-notice {
     margin-top: 1em;
+}
+
+button.reset-filters {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
 }

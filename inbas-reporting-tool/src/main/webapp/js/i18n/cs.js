@@ -94,6 +94,7 @@ module.exports = {
         'reports.filter.type.all': 'Všechna',
         'reports.filter.type.preliminary': 'Předběžná',
         'reports.filter.no-matching-found': 'Žádná hlášení neodpovídají zvoleným parametrům.',
+        'reports.filter.reset': 'Zrušit filtry',
 
         'delete-dialog.title': 'Smazat hlášení?',
         'delete-dialog.content': 'Skutečně chcete smazat toto hlášení?',

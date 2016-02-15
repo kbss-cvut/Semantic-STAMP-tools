@@ -3,9 +3,10 @@
 describe('ReportsFilter', function () {
 
     var React = require('react'),
-        TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
+        Generator = require('../environment/Generator'),
         ReportsFilter = require('../../js/components/reports/ReportsFilter'),
+        Constants = require('../../js/constants/Constants'),
 
         onFilterChange;
 
@@ -69,4 +70,35 @@ describe('ReportsFilter', function () {
         }
         return cats;
     }
+
+    it('calls filter change when filter value changes', function () {
+        var reports = prepareReports(),
+            uniqueCategories = resolveCategories(reports),
+            filter = Environment.renderIntoTable(<ReportsFilter onFilterChange={onFilterChange} reports={reports}/>),
+            evt = {
+                target: {
+                    name: 'occurrenceCategory.id',
+                    value: uniqueCategories[0]
+                }
+            };
+
+        filter.onSelect(evt);
+        expect(filter.state[evt.target.name]).toEqual(uniqueCategories[0]);
+        expect(onFilterChange).toHaveBeenCalledWith({'occurrenceCategory.id': uniqueCategories[0]});
+    });
+
+    it('sets filter to default value on reset filter trigger', function () {
+        var reports = prepareReports(),
+            uniqueCategories = resolveCategories(reports),
+            filter = Environment.renderIntoTable(<ReportsFilter onFilterChange={onFilterChange} reports={reports}/>);
+
+        for (var key in filter.state) {
+            filter.state[key] = Generator.getRandomInt();
+        }
+        filter.onResetFilters();
+        for (var key in filter.state) {
+            expect(filter.state[key]).toEqual(Constants.FILTER_DEFAULT);
+        }
+        expect(onFilterChange).toHaveBeenCalled();
+    });
 });
