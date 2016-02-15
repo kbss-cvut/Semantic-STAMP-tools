@@ -94,6 +94,7 @@ module.exports = {
         'reports.filter.type.preliminary': 'Preliminary',
         'reports.filter.no-matching-found': 'No reports match the selected filters.',
         'reports.filter.reset': 'Reset filters',
+        'reports.create-report': 'Create report',
 
         'delete-dialog.title': 'Delete {type} Report?',
         'delete-dialog.content': 'Are you sure you want to remove this report?',

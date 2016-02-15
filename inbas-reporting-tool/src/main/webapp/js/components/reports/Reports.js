@@ -5,10 +5,12 @@
 'use strict';
 
 var React = require('react');
+var Button = require('react-bootstrap').Button;
 var Panel = require('react-bootstrap').Panel;
 
 var injectIntl = require('../../utils/injectIntl');
 
+var Constants = require('../../constants/Constants');
 var ReportsTable = require('./ReportsTable');
 var Mask = require('./../Mask');
 var Routing = require('../../utils/Routing');
@@ -25,7 +27,7 @@ var Reports = React.createClass({
     },
 
     createReport: function () {
-        Routing.transitionToHome();
+        Routing.transitionToHome({payload: {dashboard: Constants.DASHBOARDS.CREATE_REPORT}});
     },
 
 
@@ -45,7 +47,9 @@ var Reports = React.createClass({
 
     renderNoReports: function () {
         if (this.props.reports.length !== 0) {
-            return null;
+            return <div>
+                <Button bsStyle='primary' onClick={this.createReport}>{this.i18n('reports.create-report')}</Button>
+            </div>;
         }
         if (this._areReportsFiltered()) {
             return <div className='no-reports-notice italics'>{this.i18n('reports.filter.no-matching-found')}</div>;

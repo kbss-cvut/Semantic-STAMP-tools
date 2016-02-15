@@ -14,6 +14,7 @@ var Row = require('react-bootstrap').Row;
 var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
+var Constants = require('../../constants/Constants');
 var Tile = require('./DashboardTile');
 var ReportTypeahead = require('../typeahead/ReportTypeahead');
 var RecentlyEdited = require('./RecentlyEditedReports');
@@ -27,12 +28,13 @@ var Dashboard = React.createClass({
         createEmptyReport: React.PropTypes.func.isRequired,
         importInitialReport: React.PropTypes.func.isRequired,
         showAllReports: React.PropTypes.func.isRequired,
-        openReport: React.PropTypes.func.isRequired
+        openReport: React.PropTypes.func.isRequired,
+        dashboard: React.PropTypes.string
     },
 
     getInitialState: function () {
         return {
-            dashboard: 'main',
+            dashboard: this.props.dashboard ? this.props.dashboard : Constants.DASHBOARDS.MAIN,
             search: false
         }
     },
@@ -42,11 +44,11 @@ var Dashboard = React.createClass({
     },
 
     goBack: function () {
-        this.setState({dashboard: 'main'});
+        this.setState({dashboard: Constants.DASHBOARDS.MAIN});
     },
 
     createReport: function () {
-        this.setState({dashboard: 'createReport'});
+        this.setState({dashboard: Constants.DASHBOARDS.CREATE_REPORT});
     },
 
     toggleSearch: function () {
@@ -72,7 +74,7 @@ var Dashboard = React.createClass({
     },
 
     renderTitle: function () {
-        if (this.state.dashboard === 'main') {
+        if (this.state.dashboard === Constants.DASHBOARDS.MAIN) {
             return (<h3><FormattedMessage id='dashboard.welcome'
                                           values={{name: <span className='bold'>{this.props.userFirstName}</span>}}/>
             </h3>);
@@ -82,7 +84,7 @@ var Dashboard = React.createClass({
     },
 
     renderDashboardContent: function () {
-        if (this.state.dashboard === 'main') {
+        if (this.state.dashboard === Constants.DASHBOARDS.MAIN) {
             return this.renderMainDashboard();
         } else {
             return this.renderCreateReportDashboard();

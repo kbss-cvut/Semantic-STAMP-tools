@@ -16,5 +16,10 @@ module.exports = {
 
     UNAUTHORIZED_USER: {name: 'unauthorized'},
 
-    FILTER_DEFAULT: 'all'
+    FILTER_DEFAULT: 'all',
+
+    DASHBOARDS: {
+        MAIN: 'main',
+        CREATE_REPORT: 'createReport'
+    }
 };
