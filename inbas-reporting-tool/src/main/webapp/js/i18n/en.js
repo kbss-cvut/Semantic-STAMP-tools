@@ -58,8 +58,9 @@ module.exports = {
         'register.submit': 'Register',
         'register.mask': 'Registering...',
 
-        'main.dashboard-nav': 'Dashboard',
+        'main.dashboard-nav': 'Dashboards',
         'main.reports-nav': 'Reports',
+        'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
 
         'dashboard.welcome': 'Hello {name}, Welcome to the ' + Constants.APP_NAME + '.',
