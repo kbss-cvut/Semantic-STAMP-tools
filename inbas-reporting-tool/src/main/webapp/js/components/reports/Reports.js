@@ -70,7 +70,7 @@ var Reports = React.createClass({
             return false;
         }
         for (var key in filter) {
-            if (filter[key] !== 'all') {
+            if (filter[key] !== Constants.FILTER_DEFAULT) {
                 return true;
             }
         }
