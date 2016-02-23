@@ -44,6 +44,7 @@ var Register = require('./components/register/Register');
 var MainView = require('./components/MainView');
 var DashboardController = require('./components/dashboard/DashboardController');
 var ReportsController = require('./components/reports/ReportsController');
+var StatisticsController = require('./components/statistics/Statistics');
 var ReportDetailController = require('./components/reports/ReportController');
 
 // Wrapping router in a React component to allow Intl to initialize
@@ -58,6 +59,7 @@ var App = React.createClass({
                         <Route path={Routes.register.path} component={Register}/>
                         <Route path={Routes.dashboard.path} component={DashboardController}/>
                         <Route path={Routes.reports.path} component={ReportsController}/>
+                        <Route path={Routes.statistics.path} component={StatisticsController}/>
                         <Route path={Routes.createReport.path} component={ReportDetailController}/>
                         <Route path={Routes.editReport.path} component={ReportDetailController}/>
                     </Route>

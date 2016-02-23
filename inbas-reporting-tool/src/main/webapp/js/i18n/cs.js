@@ -61,6 +61,7 @@ module.exports = {
 
         'main.dashboard-nav': 'Hlavní strana',
         'main.reports-nav': 'Hlášení',
+        'main.statistics-nav': 'Statistiky',
         'main.logout': 'Odhlásit se',
 
         'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',

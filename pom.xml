@@ -11,8 +11,9 @@
 
 	<modules>
 		<module>inbas-parent</module>
-		<module>inbas-api</module>
+		<!--<module>inbas-api</module>-->
 		<module>inbas-reporting-tool</module>
+		<module>inbas-eccairs-webapi</module>
 	</modules>
 </project>
 

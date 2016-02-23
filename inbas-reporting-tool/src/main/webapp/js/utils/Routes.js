@@ -6,6 +6,7 @@ var Routes = {
     register: {name: 'register', path: 'register'},
     dashboard: {name: 'dashboard', path: 'dashboard'},
     reports: {name: 'reports', path: 'reports'},
+    statistics: {name: 'statistics', path: 'statistics'},
     createReport: {name: 'createReport', path: 'reports/create'},
     editReport: {name: 'editReport', path: 'reports/:reportKey'}
 };
