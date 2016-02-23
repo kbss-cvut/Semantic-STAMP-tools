@@ -83,6 +83,7 @@ body {
 }
 
 ul.autocomplete-results {
+    margin-top: -15px;
     padding: 0.3em 0.5em 0.5em 0.5em;
     position: absolute;
     background-color: #ffffff;

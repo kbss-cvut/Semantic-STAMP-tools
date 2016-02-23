@@ -5,7 +5,7 @@
 
 var React = require('react');
 var Reflux = require('reflux');
-var Typeahead = require('react-typeahead').Typeahead;
+var Typeahead = require('react-bootstrap-typeahead').Typeahead;
 var injectIntl = require('../../utils/injectIntl');
 
 var Actions = require('../../actions/Actions');

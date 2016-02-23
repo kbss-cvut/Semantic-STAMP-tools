@@ -6,7 +6,7 @@
 
 var React = require('react');
 var Reflux = require('reflux');
-var Typeahead = require('react-typeahead').Typeahead;
+var Typeahead = require('react-bootstrap-typeahead').Typeahead;
 var assign = require('object-assign');
 
 var injectIntl = require('../../utils/injectIntl');
@@ -41,9 +41,13 @@ var ReportTypeahead = React.createClass({
         this.refs.reportTypeahead.focus();
     },
 
-    onReportsLoaded: function (reports) {
+    onReportsLoaded: function (data) {
+        if (data.action !== Actions.loadAllReports) {
+            return;
+        }
         var options = [],
-            option;
+            option,
+            reports = data.reports;
         for (var i = 0, len = reports.length; i < len; i++) {
             option = assign({}, reports[i].occurrence);
             option.startTime = reports[i].occurrenceStart;

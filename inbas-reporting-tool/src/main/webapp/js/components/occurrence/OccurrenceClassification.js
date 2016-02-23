@@ -6,7 +6,7 @@
 
 var React = require('react');
 var Reflux = require('reflux');
-var Typeahead = require('react-typeahead').Typeahead;
+var Typeahead = require('react-bootstrap-typeahead').Typeahead;
 var TypeaheadResultList = require('../typeahead/EventTypeTypeaheadResultList');
 
 var injectIntl = require('../../utils/injectIntl');
@@ -56,6 +56,10 @@ var OccurrenceClassification = React.createClass({
         this.props.onChange('occurrenceCategory', cat);
     },
 
+    _onShowCategories: function () {
+        this.refs.occurrenceCategory.showOptions();
+    },
+
     _prepareOptions: function () {
         var options = this.state.severities,
             toRender = [];
@@ -83,7 +87,7 @@ var OccurrenceClassification = React.createClass({
                         {this.i18n('preliminary.detail.occurrence-category.label') + '*'}
                     </label>
                     <Typeahead className='form-group form-group-sm' name='occurrenceCategory'
-                               formInputOption='id'
+                               ref='occurrenceCategory' formInputOption='id' optionsButton={true}
                                placeholder={this.i18n('preliminary.detail.occurrence-category.label')}
                                onOptionSelected={this.onCategorySelect} filterOption='name'
                                value={report.occurrenceCategory ? report.occurrenceCategory.name : null}
