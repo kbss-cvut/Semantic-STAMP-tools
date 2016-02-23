@@ -116,6 +116,7 @@ module.exports = {
         'initial.label': 'Prvotní hlášení',
 
         'preliminary.type': 'Předběžné',
+        'preliminary.new': 'Nové hlášení',
         'preliminary.table-investigate': 'Šetřit',
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
         'preliminary.detail.panel-title': 'Předběžné hlášení o události',

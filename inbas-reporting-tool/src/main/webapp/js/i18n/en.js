@@ -114,6 +114,7 @@ module.exports = {
         'initial.label': 'Initial report',
 
         'preliminary.type': 'Preliminary',
+        'preliminary.new': 'New report',
         'preliminary.table-investigate': 'Investigate',
         'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
         'preliminary.detail.panel-title': 'Preliminary occurrence report',
