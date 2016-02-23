@@ -37,9 +37,9 @@ public class OntologyAuthenticationProvider implements AuthenticationProvider {
 
         final UserDetails userDetails = (UserDetails) userDetailsService.loadUserByUsername(username);
         final String password = (String) authentication.getCredentials();
-//        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-//            throw new BadCredentialsException("Provided credentials don't match.");
-//        }
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Provided credentials don't match.");
+        }
         userDetails.eraseCredentials(); // Don't pass credentials around in the user details object
         final AuthenticationToken token = new AuthenticationToken(userDetails.getAuthorities(), userDetails);
         token.setAuthenticated(true);
