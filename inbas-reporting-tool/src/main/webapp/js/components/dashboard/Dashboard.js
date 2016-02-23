@@ -30,7 +30,7 @@ var Dashboard = React.createClass({
         showAllReports: React.PropTypes.func.isRequired,
         openReport: React.PropTypes.func.isRequired,
         dashboard: React.PropTypes.string,
-        statistics: React.PropTypes.func.isRequired
+        statistics: React.PropTypes.func
     },
 
     getInitialState: function () {
