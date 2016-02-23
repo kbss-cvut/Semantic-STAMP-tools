@@ -64,5 +64,10 @@
     ]
   },
 
-  "author": "Martin Ledvinka"
+  "author": "Martin Ledvinka",
+  "repository": {
+    "type": "git",
+    "url": "https://dev.inbas.cz/git/inbas-system"
+  },
+  "private": true
 }
