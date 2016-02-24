@@ -6,7 +6,11 @@ var MAX_BUTTONS = 5;
 /**
  * Mixin for data paging in tables.
  *
- * It expects a state
+ * It is completely self-contained and provides methods which:
+ * <ul>
+ *     <li>Render the pagination component when necessary (when data don't fit one page)</li>
+ *     <li>Return portion of data corresponding to the currently active page</li>
+ * </ul>
  */
 var PagingMixin = {
 
@@ -17,7 +21,7 @@ var PagingMixin = {
 
     getDefaultProps: function () {
         return {
-            pageSize: 10,
+            pageSize: 11,
             maxButtons: MAX_BUTTONS
         }
     },
@@ -33,7 +37,7 @@ var PagingMixin = {
     /**
      * Resets pagination to defaults.
      */
-    resetPagination: function() {
+    resetPagination: function () {
         this.setState(this.getInitialState());
     },
 
@@ -48,6 +52,12 @@ var PagingMixin = {
         return data.slice(startIndex, endIndex);
     },
 
+    /**
+     * Renders the pagination component.
+     *
+     * If the data fits one page, {@code null} is returned, as there is no need for paging.
+     * @param data The data that will be shown and need paging
+     */
     renderPagination: function (data) {
         var itemCount = Math.ceil(data.length / this.props.pageSize);
         if (itemCount === 1) {
