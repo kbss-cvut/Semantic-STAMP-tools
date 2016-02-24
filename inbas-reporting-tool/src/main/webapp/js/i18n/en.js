@@ -58,8 +58,9 @@ module.exports = {
         'register.submit': 'Register',
         'register.mask': 'Registering...',
 
-        'main.dashboard-nav': 'Dashboard',
+        'main.dashboard-nav': 'Dashboards',
         'main.reports-nav': 'Reports',
+        'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
 
         'dashboard.welcome': 'Hello {name}, Welcome to the ' + Constants.APP_NAME + '.',
@@ -92,7 +93,9 @@ module.exports = {
         'reports.filter.type.tooltip': 'Select report type',
         'reports.filter.type.all': 'All',
         'reports.filter.type.preliminary': 'Preliminary',
-        'reports.filter.no-matching-found': 'There are no reports of the selected type.',
+        'reports.filter.no-matching-found': 'No reports match the selected filters.',
+        'reports.filter.reset': 'Reset filters',
+        'reports.create-report': 'Create report',
 
         'delete-dialog.title': 'Delete {type} Report?',
         'delete-dialog.content': 'Are you sure you want to remove this report?',
@@ -112,6 +115,7 @@ module.exports = {
         'initial.label': 'Initial report',
 
         'preliminary.type': 'Preliminary',
+        'preliminary.new': 'New report',
         'preliminary.table-investigate': 'Investigate',
         'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
         'preliminary.detail.panel-title': 'Preliminary occurrence report',

@@ -5,11 +5,12 @@
 'use strict';
 
 var React = require('react');
+var Button = require('react-bootstrap').Button;
 var Panel = require('react-bootstrap').Panel;
 
 var injectIntl = require('../../utils/injectIntl');
 
-var ReportsFilter = require('./ReportsFilter');
+var Constants = require('../../constants/Constants');
 var ReportsTable = require('./ReportsTable');
 var Mask = require('./../Mask');
 var Routing = require('../../utils/Routing');
@@ -26,7 +27,7 @@ var Reports = React.createClass({
     },
 
     createReport: function () {
-        Routing.transitionToHome();
+        Routing.transitionToHome({payload: {dashboard: Constants.DASHBOARDS.CREATE_REPORT}});
     },
 
 
@@ -39,26 +40,41 @@ var Reports = React.createClass({
         }
         return (
             <Panel header={<h3>{this.i18n('reports.panel-title')}</h3>} bsStyle='primary'>
-                <ReportsFilter onFilterChange={this.props.actions.onFilterChange} reports={this.props.allReports}/>
-                {this.renderReports()}
+                <ReportsTable {...this.props}/>
+                {this.renderNoReports()}
             </Panel>);
     },
 
-    renderReports: function () {
-        if (this.props.reports.length === 0) {
-            if (this.props.filter) {
-                return <div className='no-reports-notice italics'>{this.i18n('reports.filter.no-matching-found')}</div>;
-            } else {
-                return (
-                    <div className='no-reports-notice italics'>
-                        {this.i18n('reports.no-reports')}
-                        <a href='#' onClick={this.createReport} title={this.i18n('reports.no-reports.link-tooltip')}>
-                            {this.i18n('reports.no-reports.link')}
-                        </a>
-                    </div>);
+    renderNoReports: function () {
+        if (this.props.reports.length !== 0) {
+            return <div>
+                <Button bsStyle='primary' onClick={this.createReport}>{this.i18n('reports.create-report')}</Button>
+            </div>;
+        }
+        if (this._areReportsFiltered()) {
+            return <div className='no-reports-notice italics'>{this.i18n('reports.filter.no-matching-found')}</div>;
+        } else {
+            return (
+                <div className='no-reports-notice italics'>
+                    {this.i18n('reports.no-reports')}
+                    <a href='#' onClick={this.createReport} title={this.i18n('reports.no-reports.link-tooltip')}>
+                        {this.i18n('reports.no-reports.link')}
+                    </a>
+                </div>);
+        }
+    },
+
+    _areReportsFiltered: function () {
+        var filter = this.props.filter;
+        if (!filter) {
+            return false;
+        }
+        for (var key in filter) {
+            if (filter[key] !== Constants.FILTER_DEFAULT) {
+                return true;
             }
         }
-        return <ReportsTable {...this.props}/>
+        return false;
     }
 });
 

@@ -2,10 +2,9 @@ package cz.cvut.kbss.inbas.audit.persistence;
 
 import cz.cvut.kbss.jopa.Persistence;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
-import cz.cvut.kbss.jopa.owlapi.OWLAPIPersistenceProperties;
-import cz.cvut.kbss.jopa.owlapi.OWLAPIPersistenceProvider;
+import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
+import cz.cvut.kbss.jopa.model.JOPAPersistenceProvider;
 import cz.cvut.kbss.ontodriver.OntoDriverProperties;
-import cz.cvut.kbss.ontodriver.OntologyStorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,14 +13,11 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Provides entity manager factory bean.
- *
- * @author ledvima1
+ * Sets up persistence and provides {@link EntityManagerFactory} as Spring bean.
  */
 @Configuration
 @PropertySource("classpath:config.properties")
@@ -32,7 +28,7 @@ public class PersistenceFactory {
     private static final String USERNAME_PROPERTY = "username";
     private static final String PASSWORD_PROPERTY = "password";
 
-    private static final Map<String, String> PARAMS = initParams();
+    private static final Map<String, String> DEFAULT_PARAMS = initParams();
 
     @Autowired
     private Environment environment;
@@ -46,14 +42,14 @@ public class PersistenceFactory {
 
     @PostConstruct
     private void init() {
-        final OntologyStorageProperties.OntologyStoragePropertiesBuilder builder = OntologyStorageProperties.physicalUri(
-                URI.create(environment.getProperty(URL_PROPERTY))).driver(environment.getProperty(DRIVER_PROPERTY));
+        final Map<String, String> properties = new HashMap<>(DEFAULT_PARAMS);
+        properties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(URL_PROPERTY));
+        properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, environment.getProperty(DRIVER_PROPERTY));
         if (environment.getProperty(USERNAME_PROPERTY) != null) {
-            builder.username(environment.getProperty(USERNAME_PROPERTY));
-            builder.password(environment.getProperty(PASSWORD_PROPERTY));
+            properties.put(JOPAPersistenceProperties.DATA_SOURCE_USERNAME, environment.getProperty(USERNAME_PROPERTY));
+            properties.put(JOPAPersistenceProperties.DATA_SOURCE_PASSWORD, environment.getProperty(PASSWORD_PROPERTY));
         }
-        final OntologyStorageProperties storageProperties = builder.build();
-        this.emf = Persistence.createEntityManagerFactory("inbasPU", storageProperties, PARAMS);
+        this.emf = Persistence.createEntityManagerFactory("inbasPU", properties);
     }
 
     @PreDestroy
@@ -64,9 +60,8 @@ public class PersistenceFactory {
     private static Map<String, String> initParams() {
         final Map<String, String> map = new HashMap<>();
         map.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, "en");
-        map.put(OWLAPIPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.audit.model");
-        map.put(OWLAPIPersistenceProperties.JPA_PERSISTENCE_PROVIDER,
-                OWLAPIPersistenceProvider.class.getName());
+        map.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.audit.model");
+        map.put(JOPAPersistenceProperties.JPA_PERSISTENCE_PROVIDER, JOPAPersistenceProvider.class.getName());
         return map;
     }
 }

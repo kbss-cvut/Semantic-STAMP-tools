@@ -14,5 +14,12 @@ module.exports = {
         MITIGATE: 'mitigate'
     },
 
-    UNAUTHORIZED_USER: {name: 'unauthorized'}
+    UNAUTHORIZED_USER: {name: 'unauthorized'},
+
+    FILTER_DEFAULT: 'all',
+
+    DASHBOARDS: {
+        MAIN: 'main',
+        CREATE_REPORT: 'createReport'
+    }
 };
