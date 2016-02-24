@@ -25,7 +25,7 @@ describe('ReportDetail component', function () {
 
     it('Shows all buttons for valid existing report', function () {
         var detail = Environment.render(<ReportDetail report={report} loading={false} handlers={handlers}/>),
-            buttons = ['Save', 'Cancel', 'Submit to authority', 'Investigate'];
+            buttons = ['Save', 'Cancel', 'Submit to SAG', 'Investigate'];
         for (var i = 0; i < buttons.length; i++) {
             var button = getButton(detail, buttons[i]);
             expect(button).not.toBeNull();
