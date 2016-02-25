@@ -12,6 +12,7 @@ var Actions = require('../../actions/Actions');
 var TypeaheadResultList = require('./EventTypeTypeaheadResultList');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var I18nMixin = require('../../i18n/I18nMixin');
+var Vocabulary = require('../../constants/Vocabulary');
 
 var EventTypeTypeahead = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
@@ -34,7 +35,16 @@ var EventTypeTypeahead = React.createClass({
         }
     },
     onEventsLoaded: function () {
-        this.setState({options: TypeaheadStore.getEventTypes()});
+        var options = TypeaheadStore.getEventTypes();
+        options = options.map(function (item) {
+            return {
+                id: item['@id'],
+                type: item['@type'],
+                name: item[Vocabulary.RDFS_LABEL],
+                description: item[Vocabulary.RDFS_COMMENT]
+            }
+        });
+        this.setState({options: options});
     },
 
     focus: function () {

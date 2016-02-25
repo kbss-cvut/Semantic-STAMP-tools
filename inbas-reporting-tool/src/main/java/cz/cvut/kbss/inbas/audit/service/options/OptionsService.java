@@ -7,7 +7,6 @@ import cz.cvut.kbss.inbas.audit.service.ConfigReader;
 import cz.cvut.kbss.inbas.audit.service.data.DataLoader;
 import cz.cvut.kbss.inbas.audit.util.ConfigParam;
 import cz.cvut.kbss.inbas.audit.util.Constants;
-import cz.cvut.kbss.inbas.audit.util.EventTypeJsonLdTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -30,8 +29,6 @@ public class OptionsService {
     @Autowired
     @Qualifier("remoteDataLoader")
     private DataLoader remoteLoader;
-
-    private final EventTypeJsonLdTransformer eventTypeTransformer = new EventTypeJsonLdTransformer();
 
     public Object getOptions(String type) {
         switch (type) {
@@ -61,7 +58,7 @@ public class OptionsService {
         try {
             query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
             final String data = remoteLoader.loadData(repositoryUrl, Collections.singletonMap("query", query));
-            return new RawJson(eventTypeTransformer.transform(data));
+            return new RawJson(data);
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unable to find encoding " + Constants.UTF_8_ENCODING, e);
         }
