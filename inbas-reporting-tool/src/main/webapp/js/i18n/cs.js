@@ -61,6 +61,7 @@ module.exports = {
 
         'main.dashboard-nav': 'Hlavní strana',
         'main.reports-nav': 'Hlášení',
+        'main.statistics-nav': 'Statistiky',
         'main.logout': 'Odhlásit se',
 
         'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',
@@ -94,6 +95,8 @@ module.exports = {
         'reports.filter.type.all': 'Všechna',
         'reports.filter.type.preliminary': 'Předběžná',
         'reports.filter.no-matching-found': 'Žádná hlášení neodpovídají zvoleným parametrům.',
+        'reports.filter.reset': 'Zrušit filtry',
+        'reports.create-report': 'Nové hlášení',
 
         'delete-dialog.title': 'Smazat hlášení?',
         'delete-dialog.content': 'Skutečně chcete smazat toto hlášení?',
@@ -114,6 +117,7 @@ module.exports = {
         'initial.label': 'Prvotní hlášení',
 
         'preliminary.type': 'Předběžné',
+        'preliminary.new': 'Nové hlášení',
         'preliminary.table-investigate': 'Šetřit',
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
         'preliminary.detail.panel-title': 'Předběžné hlášení o události',

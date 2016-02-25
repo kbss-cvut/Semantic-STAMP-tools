@@ -14,6 +14,7 @@ var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var UserStore = require('../../stores/UserStore');
 var ReportStore = require('../../stores/ReportStore');
+var RouterStore = require('../../stores/RouterStore');
 var Dashboard = require('./Dashboard');
 var WizardWindow = require('./../wizard/WizardWindow');
 var InitialReportImportSteps = require('../initialreport/Steps');
@@ -95,9 +96,16 @@ var DashboardController = React.createClass({
                               onHide={this.cancelInitialReportImport}/>
                 <Dashboard userFirstName={this.state.firstName} reports={this.state.reports}
                            showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
-                           importInitialReport={this.openInitialReportImport} openReport={this.openReport}/>
+                           importInitialReport={this.openInitialReportImport} openReport={this.openReport}
+                           dashboard={this._resolveDashboard()}/>
             </div>
         );
+    },
+
+    _resolveDashboard: function () {
+        var payload = RouterStore.getTransitionPayload(Routes.dashboard.name);
+        RouterStore.setTransitionPayload(Routes.dashboard.name, null);
+        return payload ? payload.dashboard : null;
     }
 });
 

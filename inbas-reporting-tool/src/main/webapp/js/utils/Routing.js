@@ -42,8 +42,8 @@ var Routing = {
         return path;
     },
 
-    transitionToHome: function () {
-        this.transitionTo(Constants.HOME_ROUTE);
+    transitionToHome: function (options) {
+        this.transitionTo(Constants.HOME_ROUTE, options);
     },
 
     saveOriginalTarget: function (route) {

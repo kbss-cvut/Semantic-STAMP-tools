@@ -54,6 +54,8 @@ var MainView = React.createClass({
                                 to='dashboard'><NavItem>{this.i18n('main.dashboard-nav')}</NavItem></LinkContainer>
                             <LinkContainer
                                 to='reports'><NavItem>{this.i18n('main.reports-nav')}</NavItem></LinkContainer>
+                            <LinkContainer
+                                to='statistics'><NavItem>{this.i18n('main.statistics-nav')}</NavItem></LinkContainer>
                         </Nav>
                         <Nav right style={{margin: '0 -15px 0 0'}}>
                             <NavDropdown id='logout' title={name}>

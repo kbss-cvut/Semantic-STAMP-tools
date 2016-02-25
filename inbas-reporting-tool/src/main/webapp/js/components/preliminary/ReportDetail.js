@@ -96,10 +96,17 @@ var ReportDetail = React.createClass({
     },
 
     renderHeader: function () {
+        var fileNo;
+        if (this.props.report.fileNumber) {
+            fileNo =
+                <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
+        } else {
+            fileNo = <h3 className='panel-title pull-right'>{this.i18n('preliminary.new')}</h3>;
+        }
         return (
             <div>
                 <h2 className='panel-title pull-left'>{this.i18n('preliminary.detail.panel-title')}</h2>
-                <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>
+                {fileNo}
                 <div style={{clear: 'both'}}/>
             </div>
         )

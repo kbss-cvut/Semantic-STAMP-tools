@@ -12,32 +12,42 @@ var injectIntl = require('../../utils/injectIntl');
 var ReportFilter = require('./ReportsFilter');
 var ReportRow = require('./ReportRow');
 var I18nMixin = require('../../i18n/I18nMixin');
+var PagingMixin = require('../mixin/PagingMixin');
 
 var ReportsTable = React.createClass({
-    mixins: [I18nMixin],
+    mixins: [I18nMixin, PagingMixin],
 
     propTypes: {
         reports: React.PropTypes.array.isRequired,
         actions: React.PropTypes.object
     },
 
+    _onFilterChange: function (change) {
+        this.resetPagination();
+        this.props.actions.onFilterChange(change);
+    },
+
     render: function () {
         return (
-            <Table striped bordered condensed hover>
-                {this.renderHeader()}
-                <tbody>
-                <ReportFilter onFilterChange={this.props.actions.onFilterChange} reports={this.props.allReports}/>
-                {this.renderReports()}
-                </tbody>
-            </Table>);
+            <div>
+                <Table striped bordered condensed hover>
+                    {this.renderHeader()}
+                    <tbody>
+                    <ReportFilter onFilterChange={this._onFilterChange} reports={this.props.allReports}/>
+                    {this.renderReports()}
+                    </tbody>
+                </Table>
+                {this.renderPagination(this.props.reports)}
+            </div>);
     },
 
     renderReports: function () {
         var result = [],
-            len = this.props.reports.length,
+            reports = this.getCurrentPage(this.props.reports),
+            len = reports.length,
             report;
         for (var i = 0; i < len; i++) {
-            report = this.props.reports[i];
+            report = reports[i];
             result.push(<ReportRow report={report} key={report.uri} actions={this.props.actions}/>);
         }
         return result;

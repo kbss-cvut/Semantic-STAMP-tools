@@ -4,9 +4,9 @@
   "description": "Reporting tool for the INBAS project.",
   "main": "js/app.js",
   "dependencies": {
-    "react": "~0.14.3",
-    "react-dom": "~0.14.3",
-    "react-addons-linked-state-mixin": "~0.14.3",
+    "react": "~0.14.7",
+    "react-dom": "~0.14.7",
+    "react-addons-linked-state-mixin": "~0.14.7",
     "keymirror": "~0.1.0",
     "object-assign": "~4.0.1",
     "superagent": "~1.2.0",
@@ -19,7 +19,7 @@
     "reflux": "~0.3.0",
     "kbss-react-bootstrap-datetimepicker": "https://dev.inbas.cz/dist/kbss-react-bootstrap-datetimepicker-0.0.3.tgz",
     "classnames": "~2.2.0",
-    "react-typeahead": "~1.1.5",
+    "react-bootstrap-typeahead": "https://dev.inbas.cz/dist/react-bootstrap-typeahead-0.0.2.tgz",
     "remarkable": "~1.6.0",
     "js-cookie": "~2.0.3",
     "halogen": "~0.1.10",
@@ -64,5 +64,10 @@
     ]
   },
 
-  "author": "Martin Ledvinka"
+  "author": "Martin Ledvinka",
+  "repository": {
+    "type": "git",
+    "url": "https://dev.inbas.cz/git/inbas-system"
+  },
+  "private": true
 }
