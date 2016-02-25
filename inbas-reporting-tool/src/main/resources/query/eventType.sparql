@@ -1,39 +1,34 @@
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX e: <http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/>
-PREFIX m: <http://onto.fel.cvut.cz/ontologies/eccairs/model/>
+BASE <http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/>
+
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX j.0: <http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX eccairs-model: <http://onto.fel.cvut.cz/ontologies/eccairs/model/>
+PREFIX eccairs: <http://onto.fel.cvut.cz/ontologies/eccairs/>
 
 CONSTRUCT {    
 	?term rdfs:label ?label ;        
 	a ?type ;        
 	rdfs:comment ?comment ;
 } WHERE {
-	{    
+{
 	# all events
 	# j.0:A-390 j.0:hasChild ?c.
 	# ANS events
-	e:A-390 e:hasChild+ ?term.
-	BIND(m:event-type as ?type)
+	<a-390> eccairs-model:has-child+ ?term.
+	BIND(eccairs:event-type as ?type)
 } UNION {
-	# all events
-	# j.0:A-390 j.0:hasChild ?c.
 	# Aircraft operation DF
-	e:V-24-1-31-26-27-488-10000000 e:hasChild+ ?term.
-	BIND(m:descriptive-factor as ?type)
+	<vl-v4-cd-descriptive-factors/v-10000000> eccairs-model:has-child+ ?term.
+	BIND(eccairs:descriptive-factor as ?type)
 } UNION {
-	# all events
-	# j.0:A-390 j.0:hasChild ?c.
 	# ATM DF
-	e:V-24-1-31-26-27-488-20000000 e:hasChild+ ?term.
-	BIND(m:descriptive-factor as ?type)
+	<vl-v4-cd-descriptive-factors/v-20000000> eccairs-model:has-child+ ?term.
+	BIND(eccairs:descriptive-factor as ?type)
 } UNION {
-	# all events
-	# j.0:A-390 j.0:hasChild ?c.
 	# METEO DF
-	e:V-24-1-31-26-27-488-50000000 e:hasChild+ ?term.
-	BIND(m:descriptive-factor as ?type)
+	<vl-v4-cd-descriptive-factors/v-50000000> eccairs-model:has-child+ ?term.
+	BIND(eccairs:descriptive-factor as ?type)
 }
 	?term rdfs:label ?label.
-	?term j.0:hasExplanation ?comment.
+	?term eccairs-model:has-explanation ?comment.
 }
