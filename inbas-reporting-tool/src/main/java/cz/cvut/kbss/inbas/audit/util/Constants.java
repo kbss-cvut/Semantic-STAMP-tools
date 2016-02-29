@@ -26,6 +26,11 @@ public final class Constants {
      */
     public static final String UTF_8_ENCODING = "UTF-8";
 
+    /**
+     * JSON-LD MIME type.
+     */
+    public static final String APPLICATION_JSON_LD_TYPE = "application/ld+json";
+
     // Query files
 
     /**

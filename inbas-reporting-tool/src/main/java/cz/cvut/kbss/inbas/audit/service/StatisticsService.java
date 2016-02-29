@@ -6,6 +6,8 @@ import cz.cvut.kbss.inbas.audit.util.ConfigParam;
 import cz.cvut.kbss.inbas.audit.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -39,7 +41,7 @@ public class StatisticsService {
             query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
             final Map<String, String> params = new HashMap<>();
             params.put("query", query);
-            params.put("Accept", "application/json");
+            params.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
             final String data = remoteLoader.loadData(repositoryUrl, params);
             return new RawJson(data);
         } catch (UnsupportedEncodingException e) {

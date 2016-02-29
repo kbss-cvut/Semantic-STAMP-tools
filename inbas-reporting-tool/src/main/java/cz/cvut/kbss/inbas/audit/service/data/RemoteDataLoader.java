@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.audit.service.data;
 
 import cz.cvut.kbss.inbas.audit.exception.WebServiceIntegrationException;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -19,21 +20,25 @@ public class RemoteDataLoader implements DataLoader {
     private static final Logger LOG = LoggerFactory.getLogger(RemoteDataLoader.class);
 
     /**
+     * Configurable HTTP headers supported by {@link #loadData(String, Map)}.
+     */
+    public static final String[] SUPPORTED_HEADERS = {HttpHeaders.ACCEPT, HttpHeaders.CONTENT_TYPE};
+
+    /**
      * {@inheritDoc}
+     * <p>
+     * The parameters are processed in the following way:
+     * <p>
+     * <ul> <li>Known and supported HTTP headers are extracted and,</li> <li>The rest of the parameters are used as
+     * query params in the request.</li> </ul>
      *
-     * @param remoteUrl   Remote data source (URL)
-     * @param queryParams Query parameters
+     * @param remoteUrl Remote data source (URL)
+     * @param params    Query parameters
      * @return Loaded data
      */
-    public String loadData(String remoteUrl, Map<String, String> queryParams) {
-        final URI urlWithQuery = prepareUri(remoteUrl, queryParams);
-        final HttpHeaders headers = new HttpHeaders();
-        if (queryParams.containsKey("Accept")) {
-            headers.set("Accept", queryParams.get("Accept"));
-            queryParams.remove("Accept");
-        } else {
-            headers.set("Accept", "application/ld+json");
-        }
+    public String loadData(String remoteUrl, Map<String, String> params) {
+        final HttpHeaders headers = processHeaders(params);
+        final URI urlWithQuery = prepareUri(remoteUrl, params);
         final HttpEntity<Object> entity = new HttpEntity<>(null, headers);
         final RestTemplate restTemplate = new RestTemplate();
         if (LOG.isTraceEnabled()) {
@@ -47,6 +52,19 @@ public class RemoteDataLoader implements DataLoader {
             LOG.error("Error when requesting remote data, url: " + urlWithQuery.toString(), e);
             throw new WebServiceIntegrationException("Unable to fetch remote data.", e);
         }
+    }
+
+    private HttpHeaders processHeaders(Map<String, String> params) {
+        final HttpHeaders headers = new HttpHeaders();
+        // Set default accept type to JSON-LD
+        headers.set(HttpHeaders.ACCEPT, Constants.APPLICATION_JSON_LD_TYPE);
+        for (String header : SUPPORTED_HEADERS) {
+            if (params.containsKey(header)) {
+                headers.set(header, params.get(header));
+                params.remove(header);
+            }
+        }
+        return headers;
     }
 
     private URI prepareUri(String remoteUrl, Map<String, String> queryParams) {
