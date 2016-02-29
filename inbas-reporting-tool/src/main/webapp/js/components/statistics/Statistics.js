@@ -52,7 +52,7 @@ var Statistics = React.createClass({
 
         var self = this;
 
-        request.get("http://martin.inbas.cz/openrdf-sesame/repositories/reports-fd-2016-02-02?query=" + encodeURIComponent(sparqlQuery)).set('Accept', 'application/json').end(function (err, resp) {
+        request.get("http://localhost/openrdf-sesame/repositories/eccairs-3.4.0.2-v-2016-02-23?query=" + encodeURIComponent(sparqlQuery)).set('Accept', 'application/json').end(function (err, resp) {
             var data = JSON.parse(resp.text);
 
             //Logger.log(resp.text);
