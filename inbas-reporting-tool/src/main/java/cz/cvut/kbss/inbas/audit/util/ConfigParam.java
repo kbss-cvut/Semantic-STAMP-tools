@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.audit.util;
 
 public enum ConfigParam {
 
+    REPOSITORY_URL("repositoryUrl"),
     EVENT_TYPE_REPOSITORY_URL("eventTypesRepository"),
     PORTAL_URL("portalUrl");
 

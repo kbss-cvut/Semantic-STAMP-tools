@@ -28,7 +28,7 @@ public class RemoteDataLoader implements DataLoader {
     public String loadData(String remoteUrl, Map<String, String> queryParams) {
         final URI urlWithQuery = prepareUri(remoteUrl, queryParams);
         final HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", "application/ld+json");
+        headers.set("Accept", "application/json");
         final HttpEntity<Object> entity = new HttpEntity<>(null, headers);
         final RestTemplate restTemplate = new RestTemplate();
         if (LOG.isTraceEnabled()) {

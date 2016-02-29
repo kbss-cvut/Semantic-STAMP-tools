@@ -46,13 +46,9 @@ var Statistics = React.createClass({
                 width: width
             }
         );
-
-        var sparqlQuery =
-            "PREFIX : <http://krizik.felk.cvut.cz/ontologies/inbas-2015#> SELECT ?event_type ?factor (COUNT(*) AS ?count) { {SELECT ?f1 ?event_type {?f1 a :Factor ; :hasEventTypeAssessment/:hasEventType/rdfs:label ?event_type . }} {SELECT ?f2 ?factor {?f2 a :Factor ; :hasEventTypeAssessment/:hasEventType/rdfs:label ?factor . }} ?f1 :hasCause ?f2 .} GROUP BY ?factor ?event_type";
-
         var self = this;
 
-        request.get("http://localhost/openrdf-sesame/repositories/eccairs-3.4.0.2-v-2016-02-23?query=" + encodeURIComponent(sparqlQuery)).set('Accept', 'application/json').end(function (err, resp) {
+        request.get('rest/statistics/').set('Accept', 'application/json').end(function (err, resp) {
             var data = JSON.parse(resp.text);
 
             //Logger.log(resp.text);
@@ -95,7 +91,7 @@ var Statistics = React.createClass({
                 self.setState(
                     {
                         rows: rows,
-                        activeDimensions:activeDimensions,
+                        activeDimensions: activeDimensions,
                         dimensions: dimensions,
                         calculations: calculations,
                         reportKey: Date.now()
@@ -111,7 +107,7 @@ var Statistics = React.createClass({
         var sum = 0
 
         var dimm = '';
-        var singleValueSet =  [];
+        var singleValueSet = [];
 
         for (var d in data) {
             var cur = {};
@@ -124,7 +120,7 @@ var Statistics = React.createClass({
                 }
             }
 
-            if ( i == 1 ) {
+            if (i == 1) {
                 dimm = dimmm
                 singleValueSet.push(data[d])
             }
@@ -166,7 +162,7 @@ var Statistics = React.createClass({
                 radius={100}
                 innerRadius={20}
                 title={''}
-                />
+            />
         </div> )
 
     },
