@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class StatisticsService {
@@ -35,7 +37,10 @@ public class StatisticsService {
         String query = localLoader.loadData(Constants.STATISTICS_QUERY_FILE, Collections.emptyMap());
         try {
             query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
-            final String data = remoteLoader.loadData(repositoryUrl, Collections.singletonMap("query", query));
+            final Map<String, String> params = new HashMap<>();
+            params.put("query", query);
+            params.put("Accept", "application/json");
+            final String data = remoteLoader.loadData(repositoryUrl, params);
             return new RawJson(data);
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unable to find encoding " + Constants.UTF_8_ENCODING, e);
