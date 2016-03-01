@@ -26,6 +26,11 @@ public final class Constants {
      */
     public static final String UTF_8_ENCODING = "UTF-8";
 
+    /**
+     * JSON-LD MIME type.
+     */
+    public static final String APPLICATION_JSON_LD_TYPE = "application/ld+json";
+
     // Query files
 
     /**
@@ -34,7 +39,12 @@ public final class Constants {
     public static final String EVENT_TYPE_QUERY_FILE = "query/eventType.sparql";
 
     /**
-     * FIle with a query for getting occurrence types (categories).
+     * File with a query for getting occurrence types (categories).
      */
     public static final String OCCURRENCE_CATEGORY_QUERY_FILE = "query/occurrenceType.sparql";
+
+    /**
+     * File with a query for getting report statistics.
+     */
+    public static final String STATISTICS_QUERY_FILE = "query/statistics.sparql";
 }

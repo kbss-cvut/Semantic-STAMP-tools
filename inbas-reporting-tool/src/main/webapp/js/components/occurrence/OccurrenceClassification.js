@@ -16,6 +16,7 @@ var OptionsStore = require('../../stores/OptionsStore');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var Utils = require('../../utils/Utils');
 var I18nMixin = require('../../i18n/I18nMixin');
+var Vocabulary = require('../../constants/Vocabulary');
 
 var OccurrenceClassification = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
@@ -44,7 +45,15 @@ var OccurrenceClassification = React.createClass({
     },
 
     onOccurrenceCategoriesLoaded: function () {
-        this.setState({occurrenceCategories: TypeaheadStore.getOccurrenceCategories()});
+        var options = TypeaheadStore.getOccurrenceCategories();
+        options = options.map(function(item) {
+            return {
+                id: item['@id'],
+                name: item[Vocabulary.RDFS_LABEL],
+                description: item[Vocabulary.RDFS_COMMENT]
+            };
+        });
+        this.setState({occurrenceCategories: options});
     },
 
     onChange: function (e) {
