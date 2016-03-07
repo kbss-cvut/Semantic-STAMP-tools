@@ -6,6 +6,7 @@ var Panel = require('react-bootstrap').Panel;
 var Input = require('../../Input');
 var Select = require('../../Select');
 
+var Constants = require('../../../constants/Constants');
 var OptionsStore = require('../../../stores/OptionsStore');
 var Utils = require('../../../utils/Utils');
 
@@ -17,14 +18,11 @@ var ARMS_THRESHOLDS = {
     yellow: 500
 };
 
-var ARMS_INDEX_MIN = 1;
-var ARMS_INDEX_MAX = 10000;
-
 var ArmsAttributes = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
 
     propTypes: {
-        onAttributeChange: React.PropTypes.func.isRequired,
+        onChange: React.PropTypes.func.isRequired,
         report: React.PropTypes.object.isRequired
     },
 
@@ -48,15 +46,21 @@ var ArmsAttributes = React.createClass({
     },
 
     onChange: function (e) {
-        var value = e.target.value;
-        if (e.target.name === 'armsIndex') {
-            if (value < ARMS_INDEX_MIN) {
-                value = ARMS_INDEX_MIN;
-            } else if (value > ARMS_INDEX_MAX) {
-                value = ARMS_INDEX_MAX;
-            }
-        }
-        this.props.onAttributeChange(e.target.name, value);
+        var value = e.target.value,
+            armsValues = {
+                barrierEffectiveness: this.props.report.barrierEffectiveness,
+                accidentOutcome: this.props.report.accidentOutcome
+            },
+            armsIndex, change = {};
+        armsValues[e.target.name] = value;
+        armsIndex = this._calculateArmsIndex(armsValues.accidentOutcome, armsValues.barrierEffectiveness);
+        change.armsIndex = armsIndex;
+        change[e.target.name] = value;
+        this.props.onChange(change);
+    },
+
+    _calculateArmsIndex: function(outcome, barriers) {
+        return Constants.ARMS_INDEX[outcome] ? (Constants.ARMS_INDEX[outcome][barriers] ? Constants.ARMS_INDEX[outcome][barriers] : 0) : 0;
     },
 
 
@@ -66,22 +70,22 @@ var ArmsAttributes = React.createClass({
             <Panel header={<h5>{this.i18n('preliminary.detail.arms.panel-title')}</h5>} bsStyle='info'>
                 <div className='row'>
                     <div className='col-xs-4' title={this.i18n('preliminary.detail.arms.barriers-tooltip')}>
-                        <Select name='barrierEffectiveness' value={report.barrierEffectiveness}
+                        <Select ref='barrierEffectiveness' name='barrierEffectiveness'
+                                value={report.barrierEffectiveness}
                                 label={this.i18n('preliminary.detail.arms.barriers-label')}
                                 tooltip={this.i18n('preliminary.detail.arms.barriers-tooltip')}
                                 onChange={this.onChange} options={this.renderBarrierOptions()}/>
                     </div>
 
                     <div className='col-xs-4' title={this.i18n('preliminary.detail.arms.outcomes-tooltip')}>
-                        <Select name='accidentOutcome' value={report.accidentOutcome}
+                        <Select ref='accidentOutcome' name='accidentOutcome' value={report.accidentOutcome}
                                 label={this.i18n('preliminary.detail.arms.outcomes-label')}
                                 tooltip={this.i18n('preliminary.detail.arms.outcomes-tooltip')}
                                 onChange={this.onChange} options={this.renderOutcomesOptions()}/>
                     </div>
                     <div className='col-xs-4'>
-                        <Input className={this.resolveArmsIndexCls()} type='number' name='armsIndex'
-                               value={report.armsIndex} label='ARMS Index'
-                               onChange={this.onChange} min={ARMS_INDEX_MIN} max={ARMS_INDEX_MAX}/>
+                        <Input ref='armsIndex' className={this.resolveArmsIndexCls()} type='number' name='armsIndex'
+                               value={report.armsIndex} label='ARMS Index' readOnly/>
                     </div>
                 </div>
             </Panel>

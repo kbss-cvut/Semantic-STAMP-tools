@@ -84,12 +84,12 @@ var Investigation = React.createClass({
                         </div>
 
                         <div className='form-group'>
-                            <ReportStatements report={investigation} onChange={this.props.onChange}
+                            <ReportStatements report={investigation} onChange={this.props.handlers.onChange}
                                               show={['correctiveMeasures']}/>
                         </div>
 
                         <div className='form-group'>
-                            <ArmsAttributes report={investigation} onAttributeChange={this.onAttributeChange}/>
+                            <ArmsAttributes report={investigation} onChange={this.props.handlers.onChange}/>
                         </div>
 
                         <div className='row'>

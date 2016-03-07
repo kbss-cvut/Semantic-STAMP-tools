@@ -36,6 +36,10 @@ var Select = React.createClass({
         return options;
     },
 
+    getInputNode: function() {
+        return this.refs.select.refs.input;
+    },
+
     render: function () {
         var options = this.generateOptions();
         return (

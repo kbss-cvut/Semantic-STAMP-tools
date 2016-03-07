@@ -21,5 +21,33 @@ module.exports = {
     DASHBOARDS: {
         MAIN: 'main',
         CREATE_REPORT: 'createReport'
+    },
+
+    // ARMS Index values, according to https://www.easa.europa.eu/essi/documents/ARMS.pdf, slide 27
+    ARMS_INDEX: {
+        'NEGLIGIBLE': {
+            'EFFECTIVE': 1,
+            'LIMITED': 1,
+            'MINIMAL': 1,
+            'NOT_EFFECTIVE': 1
+        },
+        'MINOR': {
+            'EFFECTIVE': 2,
+            'LIMITED': 4,
+            'MINIMAL': 20,
+            'NOT_EFFECTIVE': 100
+        },
+        'MAJOR': {
+            'EFFECTIVE': 10,
+            'LIMITED': 20,
+            'MINIMAL': 100,
+            'NOT_EFFECTIVE': 500
+        },
+        'CATASTROPHIC': {
+            'EFFECTIVE': 50,
+            'LIMITED': 100,
+            'MINIMAL': 500,
+            'NOT_EFFECTIVE': 2500
+        }
     }
 };

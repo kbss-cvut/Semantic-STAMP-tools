@@ -387,14 +387,15 @@ button.reset-filters {
     margin-right: 0.5em;
 }
 
+/* Set it to important so it does not get overridden by the readOnly background color*/
 .arms-index-green {
-    background-color: rgba(68, 157, 68, 0.3);
+    background-color: rgba(68, 157, 68, 0.3) !important;
 }
 
 .arms-index-yellow {
-    background-color: rgba(236, 151, 31, 0.3);
+    background-color: rgba(236, 151, 31, 0.3) !important;
 }
 
 .arms-index-red {
-    background-color: rgba(217, 83, 79, 0.3);
+    background-color: rgba(217, 83, 79, 0.3) !important;
 }
