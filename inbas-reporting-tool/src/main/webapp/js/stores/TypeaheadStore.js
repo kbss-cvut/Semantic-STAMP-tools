@@ -1,6 +1,7 @@
 'use strict';
 
 var Reflux = require('reflux');
+var jsonld = require('jsonld');
 
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
@@ -22,8 +23,16 @@ var TypeaheadStore = Reflux.createStore({
     },
 
     onLoadEventTypes: function () {
+        var self = this;
         this.load('eventType', 'event types', eventTypes, function (data) {
-            eventTypes = data;
+            if (data.length === 0) {
+                self.trigger();
+                return;
+            }
+            jsonld.frame(data, {}, null, function (err, framed) {
+                eventTypes = framed['@graph'];
+                self.trigger();
+            });
         });
     },
 
@@ -34,7 +43,6 @@ var TypeaheadStore = Reflux.createStore({
         }
         Ajax.get(URL + type).end(function (data) {
             success(data);
-            this.trigger();
         }.bind(this), function () {
             this.trigger();
         }.bind(this));
@@ -47,7 +55,8 @@ var TypeaheadStore = Reflux.createStore({
     onLoadLocations: function () {
         this.load('location', 'locations', locations, function (data) {
             locations = data;
-        });
+            this.trigger();
+        }.bind(this));
     },
 
     getLocations: function () {
@@ -57,7 +66,8 @@ var TypeaheadStore = Reflux.createStore({
     onLoadOperators: function () {
         this.load('operator', 'operators', operators, function (data) {
             operators = data;
-        });
+            this.trigger();
+        }.bind(this));
     },
 
     getOperators: function () {
@@ -65,8 +75,16 @@ var TypeaheadStore = Reflux.createStore({
     },
 
     onLoadOccurrenceCategories: function () {
+        var self = this;
         this.load('occurrenceCategory', 'occurrenceCategories', occurrenceCategories, function (data) {
-            occurrenceCategories = data;
+            if (data.length === 0) {
+                self.trigger();
+                return;
+            }
+            jsonld.frame(data, {}, null, function (err, framed) {
+                occurrenceCategories = framed['@graph'];
+                self.trigger();
+            });
         });
     },
 

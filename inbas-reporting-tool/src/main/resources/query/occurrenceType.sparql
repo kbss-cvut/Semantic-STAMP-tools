@@ -1,16 +1,18 @@
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX e: <http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/>
-PREFIX m: <http://onto.fel.cvut.cz/ontologies/eccairs/model/>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX j.0: <http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/>
+BASE <http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/>
 
-CONSTRUCT {    
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX eccairs-model: <http://onto.fel.cvut.cz/ontologies/eccairs/model/>
+PREFIX eccairs: <http://onto.fel.cvut.cz/ontologies/eccairs/>
+
+CONSTRUCT {
 	?term rdfs:label ?label ;
+	a ?type ;
 	rdfs:comment ?comment ;
 } WHERE {
 	# Occurrence types
-	e:A-430 e:hasChild  ?term.
+	<a-430> eccairs-model:has-child+ ?term.
 	?term rdfs:label ?label.
-	?term j.0:hasExplanation ?comment.
-    BIND(m:occurrence-category as ?type)
+	?term eccairs-model:has-explanation ?comment.
+	BIND(eccairs:occurrence-category as ?type)
 }

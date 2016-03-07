@@ -7,6 +7,7 @@ import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
 import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpoint;
 import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpointType;
 import cz.cvut.kbss.inbas.audit.service.PersonService;
+import cz.cvut.kbss.inbas.audit.util.ConfigParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,6 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
 
     private static final String COMPANY_ID_COOKIE = "COMPANY_ID";
 
-    private static final String PORTAL_URL_CONFIG = "portalUrl";
     private static final String PORTAL_TYPE_CONFIG = "portalEndpointType";
 
     private static final Logger LOG = LoggerFactory.getLogger(PortalAuthenticationProvider.class);
@@ -77,7 +77,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     }
 
     private Person authenticateAgainstPortal(String username, String password) {
-        String url = environment.getProperty(PORTAL_URL_CONFIG);
+        String url = environment.getProperty(ConfigParam.PORTAL_URL.toString());
         if (url == null) {
             throw new AuthenticationServiceException("Portal is not available.");
         }

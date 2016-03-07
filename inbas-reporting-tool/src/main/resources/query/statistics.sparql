@@ -1,0 +1,7 @@
+PREFIX : <http://krizik.felk.cvut.cz/ontologies/inbas-2015#>
+
+SELECT ?event_type ?factor (COUNT(*) AS ?count)
+{
+{SELECT ?f1 ?event_type {?f1 a :Factor ; :hasEventTypeAssessment/:hasEventType/rdfs:label ?event_type . }}
+{SELECT ?f2 ?factor {?f2 a :Factor ; :hasEventTypeAssessment/:hasEventType/rdfs:label ?factor . }}
+?f1 :hasCause ?f2 .} GROUP BY ?factor ?event_type

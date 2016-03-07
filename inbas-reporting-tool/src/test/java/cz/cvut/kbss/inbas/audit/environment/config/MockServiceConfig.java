@@ -70,4 +70,9 @@ public class MockServiceConfig {
     public RemoteDataLoader remoteDataLoader() {
         return mock(RemoteDataLoader.class);
     }
+
+    @Bean
+    public StatisticsService statisticsService() {
+        return mock(StatisticsService.class);
+    }
 }

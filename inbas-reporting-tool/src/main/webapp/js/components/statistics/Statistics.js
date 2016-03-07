@@ -4,14 +4,17 @@
 
 'use strict';
 
+window.React = require('react');
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
+var ReactPivot = require('react-pivot')
+var rd3 = require('react-d3');
+//var Treemap = rd3.Treemap;
+var PieChart = rd3.PieChart;
 
 var injectIntl = require('../../utils/injectIntl');
 var Ajax = require('../../utils/Ajax');
 
-//var ReportsFilter = require('./ReportsFilter');
-//var ReportsTable = require('./StatisticsTable');
 var Mask = require('./../Mask');
 var Routing = require('../../utils/Routing');
 var I18nMixin = require('../../i18n/I18nMixin');
@@ -24,52 +27,145 @@ var Statistics = React.createClass({
 
     getInitialState: function () {
         return {
-            result: 'xxxxxxx'
+            rows: [],
+            dimensions: [],
+            activeDimensions: [],
+            reduce: function (row, memo) {
+                return memo
+            },
+            calculations: [],
+            pieData: [],
+            result: ""
         }
     },
 
     componentDidMount: function () {
-        var sparqlQuery =
-            "PREFIX : <http://krizik.felk.cvut.cz/ontologies/inbas-2015#> SELECT ?cause ?result (COUNT(*) AS ?count) { {SELECT ?f1 ?result {?f1 a :Factor ; :hasEventTypeAssessment/:hasEventType/rdfs:label ?result . }} {SELECT ?f2 ?cause {?f2 a :Factor ; :hasEventTypeAssessment/:hasEventType/rdfs:label ?cause . }} ?f1 :hasCause ?f2 .} GROUP BY ?cause ?result";
+        var width = React.findDOMNode(this).offsetWidth;
+        this.setState(
+            {
+                width: width
+            }
+        );
+        var self = this;
 
-        request.get("http://martin.inbas.cz/openrdf-sesame/repositories/reports-fd-2016-02-02?query=" + encodeURIComponent(sparqlQuery)).end(function (err, resp) {
-            var data = resp.text;
-            Logger.log(data);
-            this.setState({result: data});
-        }.bind(this));
+        request.get('rest/statistics/').set('Accept', 'application/json').end(function (err, resp) {
+            var data = JSON.parse(resp.text);
+
+            //Logger.log(resp.text);
+            if (self.isMounted()) {
+                Logger.log("Mounted, fetching setting new state...");
+
+                var rows = []
+                for (var row in data.results.bindings) {
+                    var record = data.results.bindings[row]
+                    var newRecord = {}
+                    for (var col in record) {
+                        var val = record[col]
+                        newRecord[col] = val.value
+                    }
+                    rows.push(newRecord)
+                }
+
+                Logger.log(JSON.stringify(rows, null, 2));
+
+                var dimensions = []
+                var calculations = []
+                for (var v in data.head.vars) {
+                    var vName = data.head.vars[v]
+                    if (!vName.startsWith('count'))
+                        dimensions.push({value: vName, title: vName.replace('_', ' ')})
+                }
+
+                var activeDimensions = [dimensions[0]]
+
+                var calculations = [
+                    {
+                        title: 'count', value: 'count',
+                        template: function (val, row) {
+                            Logger.log("val=" + val + ",row=" + row)
+                            return val
+                        }
+                    }
+                ]
+
+                self.setState(
+                    {
+                        rows: rows,
+                        activeDimensions: activeDimensions,
+                        dimensions: dimensions,
+                        calculations: calculations,
+                        reportKey: Date.now()
+                    }
+                );
+            }
+        });
     },
 
-    //createReport: function () {
-    //    Routing.transitionToHome();
-    //},
+    onData: function (data) {
+        Logger.log('ONDATA: ' + data)
+        var pieData = [];
+        var sum = 0
 
+        var dimm = '';
+        var singleValueSet = [];
+
+        for (var d in data) {
+            var cur = {};
+            var i = 0
+            var dimmm = ''
+            for (var dim in this.state.dimensions) {
+                if (data[d][this.state.dimensions[dim].title]) {
+                    dimmm = this.state.dimensions[dim].title
+                    i += 1
+                }
+            }
+
+            if (i == 1) {
+                dimm = dimmm
+                singleValueSet.push(data[d])
+            }
+        }
+
+        for (var ddx in singleValueSet) {
+            sum = sum + singleValueSet[ddx].count
+            pieData.push({label: singleValueSet[ddx][dimm], value: singleValueSet[ddx].count})
+        }
+
+        for (var d in pieData) {
+            pieData[d].value = pieData[d].value / sum * 100;
+        }
+
+        this.setState({pieData: pieData})
+    },
+
+    reduce: function (row, memo) {
+        memo.count = (memo.count || 0) + parseFloat(row.count)
+        return memo
+    },
 
     render: function () {
-        //var reports = this.props.reports;
-        //if (reports === null) {
-        //    return (
-        //        <Mask text={this.i18n('reports.loading-mask')}/>
-        //    );
-        //}
-        //return (
-        //    <Panel header={<h3>{this.i18n('reports.panel-title')}</h3>} bsStyle='primary'>
-        //        <ReportsFilter onFilterChange={this.props.actions.onFilterChange}/>
-        //        {this.renderReports()}
-        //    </Panel>);
-
-
-        return <div>{this.state.result}</div>;
+        return ( <div>
+            <ReactPivot
+                key={this.state.reportKey}
+                rows={this.state.rows}
+                dimensions={this.state.dimensions}
+                reduce={this.reduce}
+                calculations={this.state.calculations}
+                activeDimensions={this.state.dimensions[0]}
+                onData={this.onData}
+                //sortBy={this.state.calculations[0].title}
+                sortDir='desc'/>
+            <PieChart
+                data={this.state.pieData}
+                width={this.state.width}
+                height={400}
+                radius={100}
+                innerRadius={20}
+                title={''}
+            />
+        </div> )
 
     },
-
-    //renderReports: function () {
-    //    if (this.props.reports.length === 0) {
-    //        if (this.props.filter) {
-    //            return <div className='no-reports-notice
-    // italics'>{this.i18n('reports.filter.no-matching-found')}</div>; } else { return ( <div
-    // className='no-reports-notice italics'> {this.i18n('reports.no-reports')} <a href='#' onClick={this.createReport}
-    // title={this.i18n('reports.no-reports.link-tooltip')}> {this.i18n('reports.no-reports.link')} </a> </div>); } }
-    // return <ReportsTable {...this.props}/> }
 });
 
 module.exports = injectIntl(Statistics);

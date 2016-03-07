@@ -7,13 +7,13 @@ var FactorStyleInfo = {
 
     getStyleInfo: function (type) {
         switch (type) {
-            case 'http://onto.fel.cvut.cz/ontologies/eccairs/model/event-type':
+            case 'http://onto.fel.cvut.cz/ontologies/eccairs/event-type':
                 return {
                     icon: 'resources/images/icons/event_type.gif',
                     cls: 'factor-event-type',
                     title: 'Event type'
                 };
-            case 'http://onto.fel.cvut.cz/ontologies/eccairs/model/descriptive-factor':
+            case 'http://onto.fel.cvut.cz/ontologies/eccairs/descriptive-factor':
                 return {
                     icon: 'resources/images/icons/descriptive_factor.gif',
                     cls: 'factor-descriptive-factor',

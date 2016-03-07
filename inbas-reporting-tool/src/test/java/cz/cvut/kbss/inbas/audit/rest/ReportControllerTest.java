@@ -1,11 +1,13 @@
 package cz.cvut.kbss.inbas.audit.rest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import cz.cvut.kbss.inbas.audit.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.audit.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.audit.environment.util.Environment;
 import cz.cvut.kbss.inbas.audit.environment.util.Generator;
 import cz.cvut.kbss.inbas.audit.model.Person;
 import cz.cvut.kbss.inbas.audit.model.reports.InvestigationReport;
+import cz.cvut.kbss.inbas.audit.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.audit.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.audit.model.reports.Report;
 import cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper;
@@ -20,9 +22,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class ReportControllerTest extends BaseControllerTestRunner {
@@ -163,5 +170,31 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                                         .andReturn();
         assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
         verifyLocationEquals("/reports/" + key, result);
+    }
+
+    @Test
+    public void getReportsReturnsEmptyArrayWhenThereAreNone() throws Exception {
+        when(reportServiceMock.findAll(anyString())).thenReturn(Collections.emptyList());
+        final MvcResult result = mockMvc.perform(get("/reports")).andReturn();
+        assertEquals(HttpStatus.OK, HttpStatus.valueOf(result.getResponse().getStatus()));
+        final List<OccurrenceReport> body = objectMapper.readValue(result.getResponse().getContentAsString(),
+                new TypeReference<List<OccurrenceReport>>() {
+                });
+        assertTrue(body.isEmpty());
+    }
+
+    @Test
+    public void getReportsWithInvalidTypeThrowsBadRequest() throws Exception {
+        final String invalidType = "invalidType";
+        when(reportServiceMock.findAll(invalidType)).thenThrow(new IllegalArgumentException());
+        final MvcResult result = mockMvc.perform(get("/reports").param("type", invalidType)).andReturn();
+        assertEquals(HttpStatus.BAD_REQUEST, HttpStatus.valueOf(result.getResponse().getStatus()));
+    }
+
+    @Test
+    public void getReportReturnsNotFoundForUnknownKey() throws Exception {
+        final String key = "unknownKey";
+        when(reportServiceMock.findByKey(key)).thenReturn(null);
+        mockMvc.perform(get("/reports/" + key)).andExpect(status().isNotFound());
     }
 }
