@@ -26,9 +26,10 @@ var OccurrenceClassification = React.createClass({
     },
 
     getInitialState: function () {
+        var options = TypeaheadStore.getOccurrenceCategories();
         return {
             severities: OptionsStore.getOccurrenceSeverityOptions(),
-            occurrenceCategories: TypeaheadStore.getOccurrenceCategories()
+            occurrenceCategories: options.length !== 0 ? this._transformOccurrenceCategories(options) : options
         };
     },
 
@@ -46,14 +47,18 @@ var OccurrenceClassification = React.createClass({
 
     onOccurrenceCategoriesLoaded: function () {
         var options = TypeaheadStore.getOccurrenceCategories();
-        options = options.map(function(item) {
+        options = this._transformOccurrenceCategories(options);
+        this.setState({occurrenceCategories: options});
+    },
+
+    _transformOccurrenceCategories: function (options) {
+        return options.map(function (item) {
             return {
                 id: item['@id'],
                 name: item[Vocabulary.RDFS_LABEL],
                 description: item[Vocabulary.RDFS_COMMENT]
             };
         });
-        this.setState({occurrenceCategories: options});
     },
 
     onChange: function (e) {
