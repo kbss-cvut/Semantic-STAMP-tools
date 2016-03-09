@@ -13,7 +13,6 @@ var Actions = require('../../actions/Actions');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var UserStore = require('../../stores/UserStore');
-var ReportStore = require('../../stores/ReportStore');
 var RouterStore = require('../../stores/RouterStore');
 var Dashboard = require('./Dashboard');
 var WizardWindow = require('./../wizard/WizardWindow');
@@ -23,13 +22,11 @@ var I18nMixin = require('../../i18n/I18nMixin');
 var DashboardController = React.createClass({
     mixins: [
         Reflux.listenTo(UserStore, 'onUserLoaded'),
-        Reflux.listenTo(ReportStore, 'onReportsLoaded'),
         I18nMixin
     ],
     getInitialState: function () {
         return {
             firstName: UserStore.getCurrentUser() ? UserStore.getCurrentUser().firstName : '',
-            reports: ReportStore.getReports() ? ReportStore.getReports() : [],
             initialReportImportOpen: false
         }
     },
@@ -40,10 +37,6 @@ var DashboardController = React.createClass({
 
     onUserLoaded: function (user) {
         this.setState({firstName: user.firstName});
-    },
-
-    onReportsLoaded: function () {
-        this.setState({reports: ReportStore.getReports()});
     },
 
     createEmptyReport: function () {
@@ -94,7 +87,7 @@ var DashboardController = React.createClass({
             <div>
                 <WizardWindow show={this.state.initialReportImportOpen} {...wizardProperties}
                               onHide={this.cancelInitialReportImport}/>
-                <Dashboard userFirstName={this.state.firstName} reports={this.state.reports}
+                <Dashboard userFirstName={this.state.firstName}
                            showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
                            importInitialReport={this.openInitialReportImport} openReport={this.openReport}
                            dashboard={this._resolveDashboard()}/>

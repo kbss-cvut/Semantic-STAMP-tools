@@ -7,21 +7,38 @@
 var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
+var Reflux = require('reflux');
 
 var injectIntl = require('../../utils/injectIntl');
 
+var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
 var CollapsibleText = require('../CollapsibleText');
+var Mask = require('../Mask');
 var ReportType = require('../../model/ReportType');
+var ReportStore = require('../../stores/ReportStore');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var RECENTLY_EDITED_COUNT = 10;
 
 var RecentlyEditedReports = React.createClass({
-    mixins: [I18nMixin],
+    mixins: [I18nMixin,
+        Reflux.listenTo(ReportStore, '_onReportsLoaded')],
+
+    getInitialState: function () {
+        return {
+            reports: ReportStore.getReports()
+        }
+    },
+
+    _onReportsLoaded: function (data) {
+        if (data.action === Actions.loadAllReports) {
+            this.setState({reports: data.reports});
+        }
+    },
 
     filterRecentReports: function () {
-        var reports = this.props.reports.slice();
+        var reports = this.state.reports.slice();
         reports.sort(function (a, b) {
             var aEdited = a.lastEdited ? a.lastEdited : a.created,
                 bEdited = b.lastEdited ? b.lastEdited : b.created;
@@ -31,11 +48,21 @@ var RecentlyEditedReports = React.createClass({
     },
 
     render: function () {
-        var title = (<h5>{this.i18n('dashboard.recent-panel-heading')}</h5>),
-            recentReports = this.renderRecentReports(this.filterRecentReports()),
-            content = null;
+        var title = (<h5>{this.i18n('dashboard.recent-panel-heading')}</h5>);
+        return (
+            <Panel header={title} bsStyle='info' style={{height: '100%'}}>
+                {this._renderPanelContent()}
+            </Panel>
+        );
+    },
+
+    _renderPanelContent: function () {
+        if (!this.state.reports) {
+            return <Mask text={this.i18n('reports.loading-mask')} classes='mask-container'/>;
+        }
+        var recentReports = this.renderRecentReports(this.filterRecentReports());
         if (recentReports.length > 0) {
-            content = (<Table striped bordered condensed hover>
+            return (<Table striped bordered condensed hover>
                 <thead>
                 <tr>
                     <th className='col-xs-5'>{this.i18n('dashboard.recent-table-headline')}</th>
@@ -50,13 +77,8 @@ var RecentlyEditedReports = React.createClass({
                 </tbody>
             </Table>);
         } else {
-            content = (<div>{this.i18n('reports.no-occurrence-reports')}</div>);
+            return (<div>{this.i18n('reports.no-occurrence-reports')}</div>);
         }
-        return (
-            <Panel header={title} bsStyle='info' style={{height: '100%'}}>
-                {content}
-            </Panel>
-        );
     },
 
     renderRecentReports: function (reports) {

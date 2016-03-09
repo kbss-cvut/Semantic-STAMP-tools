@@ -272,4 +272,4 @@ var Factors = React.createClass({
     }
 });
 
-module.exports = injectIntl(Factors);
+module.exports = injectIntl(Factors, {withRef: true});

@@ -193,7 +193,7 @@ var Generator = {
 
     /**
      * Generates random integer between 0 (included) and max(excluded).
-     * @param max Maximum generated number, optional. If not specified, max safe integer value is used.
+     * @param max [optional] Maximum generated number, optional. If not specified, max safe integer value is used.
      * @return {number}
      */
     getRandomInt: function (max) {
