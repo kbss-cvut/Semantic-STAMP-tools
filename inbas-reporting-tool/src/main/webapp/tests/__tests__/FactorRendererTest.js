@@ -82,7 +82,7 @@ describe('FactorRenderer tests', function () {
         var rootId = null, childIds = [];
         investigation.rootFactor = Generator.generateFactors(investigation.occurrenceStart, investigation.occurrenceEnd, 2);
         GanttController.addFactor.and.callFake(function (item, parentId) {
-            var id = Date.now();
+            var id = Generator.getRandomInt();
             if (parentId === rootId) {
                 childIds.push(id);
             }
