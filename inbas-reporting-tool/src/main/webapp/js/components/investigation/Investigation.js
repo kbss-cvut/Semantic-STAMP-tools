@@ -49,7 +49,7 @@ var Investigation = React.createClass({
 
     onSave: function (e) {
         var investigation = this.props.investigation,
-            factors = this.refs.factors.getWrappedElement();
+            factors = this.refs.factors.getWrappedInstance();
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
         investigation.rootFactor = factors.getFactorHierarchy();
