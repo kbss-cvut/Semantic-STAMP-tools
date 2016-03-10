@@ -157,10 +157,10 @@ var Statistics = React.createClass({
                 sortDir='desc'/>
             <PieChart
                 data={this.state.pieData}
-                width={this.state.width}
+                width='100%'
                 height={400}
-                radius={100}
-                innerRadius={20}
+                radius={150}
+                innerRadius={30}
                 title={''}
             />
         </div> )
