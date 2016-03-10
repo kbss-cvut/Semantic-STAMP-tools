@@ -159,8 +159,8 @@ var Statistics = React.createClass({
                 data={this.state.pieData}
                 width='100%'
                 height={400}
-                radius={150}
-                innerRadius={30}
+                radius={100}
+                innerRadius={20}
                 title={''}
             />
         </div> )
