@@ -1,0 +1,62 @@
+package cz.cvut.kbss.inbas.reporting.model_new;
+
+import cz.cvut.kbss.jopa.model.annotations.*;
+
+import java.io.Serializable;
+import java.net.URI;
+import java.util.Set;
+
+@OWLClass(iri = Vocabulary.Event)
+public class Event implements Serializable {
+
+    @Id(generated = true)
+    private URI uri;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Factor> factors;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER)
+    private Set<Event> children;
+
+    @Types
+    private Set<String> types;
+
+    public URI getUri() {
+        return uri;
+    }
+
+    public void setUri(URI uri) {
+        this.uri = uri;
+    }
+
+    public Set<Factor> getFactors() {
+        return factors;
+    }
+
+    public void setFactors(Set<Factor> factors) {
+        this.factors = factors;
+    }
+
+    public Set<Event> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<Event> children) {
+        this.children = children;
+    }
+
+    public Set<String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<String> types) {
+        this.types = types;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" + uri +
+                ", types=" + types +
+                '}';
+    }
+}
