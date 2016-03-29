@@ -21,6 +21,7 @@ public class Vocabulary {
     public static final String Factor = "http://onto.fel.cvut.cz/ontologies/documentation/factor";
 
     public static final String CorrectiveMeasureRequest = "http://onto.fel.cvut.cz/ontologies/documentation/corrective_measure_request";
+    public static final String SeverityLevel = "http://onto.fel.cvut.cz/ontologies/documentation/severity_level";
 
     public static final String Object = "http://onto.fel.cvut.cz/ontologies/ufo/Object";
     public static final String Agent = "http://onto.fel.cvut.cz/ontologies/ufo/Agent";
@@ -43,7 +44,14 @@ public class Vocabulary {
     public static final String p_hasKey = "http://onto.fel.cvut.cz/ontologies/documentation/has-key";
     public static final String p_fileNumber = "http://onto.fel.cvut.cz/ontologies/documentation/file-number";
 
+    /**
+     * rdfs:label
+     */
     public static final String p_name = "http://www.w3.org/2000/01/rdf-schema#label"; // rdfs:label
+    /**
+     * rdfs:comment
+     */
+    public static final String p_comment = "http://www.w3.org/2000/01/rdf-schema#comment"; // rdfs:comment
     public static final String p_description = "http://purl.org/dc/terms/description";
     public static final String p_dateCreated = "http://purl.org/dc/terms/created";
     public static final String p_lastModified = "http://onto.fel.cvut.cz/ontologies/documentation/last-modified";

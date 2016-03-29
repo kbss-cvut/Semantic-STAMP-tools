@@ -17,9 +17,11 @@ public class Person implements HasDerivableUri, Serializable {
     @Id
     private URI uri;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_firstName)
     private String firstName;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_lastName)
     private String lastName;
 

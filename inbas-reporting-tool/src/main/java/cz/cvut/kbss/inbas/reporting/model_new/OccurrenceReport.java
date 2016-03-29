@@ -40,7 +40,7 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER)
-    private Agent author;
+    private Person author;
 
     @OWLDataProperty(iri = Vocabulary.p_dateCreated)
     private Date dateCreated;
@@ -49,11 +49,14 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
     private Date lastModified;
 
     @OWLObjectProperty(iri = Vocabulary.p_lastModifiedBy, fetch = FetchType.EAGER)
-    private Agent lastModifiedBy;
+    private Person lastModifiedBy;
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_revision)
     private Integer revision;
+
+    @OWLObjectProperty(iri = Vocabulary.p_severityAssessment, fetch = FetchType.EAGER)
+    private SeverityLevel severityAssessment;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasureRequests;
@@ -114,11 +117,11 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
         this.occurrenceEnd = occurrenceEnd;
     }
 
-    public Agent getAuthor() {
+    public Person getAuthor() {
         return author;
     }
 
-    public void setAuthor(Agent author) {
+    public void setAuthor(Person author) {
         this.author = author;
     }
 
@@ -138,11 +141,11 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
         this.lastModified = lastModified;
     }
 
-    public Agent getLastModifiedBy() {
+    public Person getLastModifiedBy() {
         return lastModifiedBy;
     }
 
-    public void setLastModifiedBy(Agent lastModifiedBy) {
+    public void setLastModifiedBy(Person lastModifiedBy) {
         this.lastModifiedBy = lastModifiedBy;
     }
 
@@ -152,6 +155,14 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
 
     public void setRevision(Integer revision) {
         this.revision = revision;
+    }
+
+    public SeverityLevel getSeverityAssessment() {
+        return severityAssessment;
+    }
+
+    public void setSeverityAssessment(SeverityLevel severityAssessment) {
+        this.severityAssessment = severityAssessment;
     }
 
     public Set<CorrectiveMeasureRequest> getCorrectiveMeasureRequests() {

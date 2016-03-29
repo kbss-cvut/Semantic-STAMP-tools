@@ -3,8 +3,6 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao;
 import cz.cvut.kbss.inbas.reporting.model.HasDerivableUri;
 import cz.cvut.kbss.inbas.reporting.model.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
-import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
-import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
@@ -20,7 +18,7 @@ import java.util.Objects;
 /**
  * Base implementation of the generic DAO.
  */
-public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
+public abstract class BaseDao<T> implements GenericDao<T> {
 
     protected static final Logger LOG = LoggerFactory.getLogger(BaseDao.class);
 
@@ -52,27 +50,6 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
 
     protected T findByUri(URI uri, EntityManager em) {
         return em.find(type, uri);
-    }
-
-    @Override
-    public T findByKey(String key) {
-        Objects.requireNonNull(key);
-        final EntityManager em = entityManager();
-        try {
-            return findByKey(key, em);
-        } finally {
-            em.close();
-        }
-    }
-
-    protected T findByKey(String key, EntityManager em) {
-        try {
-            return em.createNativeQuery("SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> ?key ;" +
-                    "a ?type }", type)
-                     .setParameter("key", key, "en").setParameter("type", typeUri).getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
     }
 
     @Override

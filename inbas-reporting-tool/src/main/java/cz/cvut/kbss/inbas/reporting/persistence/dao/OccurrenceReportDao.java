@@ -14,7 +14,7 @@ import java.util.*;
 
 @Repository
 public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
-        implements GenericDao<OccurrenceReport>, SupportsOwlKey<OccurrenceReport> {
+        implements GenericDao<OccurrenceReport> {
 
     private final URI typeIri;
 

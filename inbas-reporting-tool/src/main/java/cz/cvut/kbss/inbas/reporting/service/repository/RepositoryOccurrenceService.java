@@ -1,8 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
-import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.ReportingPhase;
 import cz.cvut.kbss.inbas.reporting.model.reports.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
@@ -35,7 +35,8 @@ public class RepositoryOccurrenceService extends BaseRepositoryService<Occurrenc
 
     @Override
     public Collection<OccurrenceReport> getReports(Occurrence occurrence) {
-        return reportDao.findByOccurrence(occurrence);
+//        return reportDao.findByOccurrence(occurrence);
+        return null;
     }
 
     @Override
