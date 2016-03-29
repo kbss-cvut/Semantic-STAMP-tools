@@ -5,11 +5,11 @@ import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
-import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.reports.InvestigationReport;
 import cz.cvut.kbss.inbas.reporting.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.reports.PreliminaryReport;
 import cz.cvut.kbss.inbas.reporting.model.reports.Report;
+import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.reporting.service.ReportService;
 import org.junit.Before;
@@ -50,8 +50,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void createPreliminaryReportReturnsLocationOfNewInstance() throws Exception {
-        final PreliminaryReport report = Generator
-                .generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        final PreliminaryReport report = null;
         final String key = "117";
         doAnswer(call -> {
             final PreliminaryReport pr = (PreliminaryReport) call.getArguments()[0];
@@ -60,7 +59,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         }).when(reportServiceMock).persist(any(PreliminaryReport.class));
 
         final MvcResult result = mockMvc.perform(
-                post("/reports").content(toJson(reportMapper.preliminaryReportToPreliminaryReportDto(report)))
+                post("/reports").content(toJson(null))
                                 .contentType(
                                         MediaType.APPLICATION_JSON_VALUE)).andReturn();
         assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
@@ -118,25 +117,23 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void updateReportWithDifferentKeyThrowsBadRequest() throws Exception {
-        final PreliminaryReport report = Generator
-                .generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        final PreliminaryReport report = null;
         report.setKey("711");
         final String differentKey = "117";
 
         final MvcResult result = mockMvc.perform(put("/reports/" + differentKey)
-                .content(toJson(reportMapper.preliminaryReportToPreliminaryReportDto(report)))
+                .content(toJson(null))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
         assertEquals(HttpStatus.BAD_REQUEST, HttpStatus.valueOf(result.getResponse().getStatus()));
     }
 
     @Test
     public void updateReportPassesEntityMappedFromDtoToService() throws Exception {
-        final PreliminaryReport report = Generator
-                .generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
+        final PreliminaryReport report = null;
         final String key = "117";
         report.setKey(key);
         final MvcResult result = mockMvc.perform(put("/reports/" + key)
-                .content(toJson(reportMapper.preliminaryReportToPreliminaryReportDto(report)))
+                .content(toJson(null))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
         assertEquals(HttpStatus.NO_CONTENT, HttpStatus.valueOf(result.getResponse().getStatus()));
         verify(reportServiceMock).update(any(Report.class));
@@ -145,7 +142,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void createRevisionWithInvestigateParamStartsInvestigationFromLatestPreliminaryReport() throws Exception {
         final Long fileNumber = 12345L;
-        final InvestigationReport investigation = Generator.generateMinimalInvestigation();
+        final InvestigationReport investigation = null;
         investigation.setFileNumber(fileNumber);
         investigation.setKey("117");
         when(reportServiceMock.startInvestigation(fileNumber)).thenReturn(investigation);
@@ -160,7 +157,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     public void startingInvestigationReturnsLocationHeader() throws Exception {
         final Long fileNumber = 12345L;
         final String key = "117";
-        final InvestigationReport investigation = Generator.generateMinimalInvestigation();
+        final InvestigationReport investigation = null;
         investigation.setFileNumber(fileNumber);
         investigation.setKey(key);
         when(reportServiceMock.startInvestigation(fileNumber)).thenReturn(investigation);

@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
-import cz.cvut.kbss.inbas.reporting.model.Organization;
+import cz.cvut.kbss.inbas.reporting.model_new.Organization;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OrganizationDao;
 import cz.cvut.kbss.inbas.reporting.service.OrganizationService;

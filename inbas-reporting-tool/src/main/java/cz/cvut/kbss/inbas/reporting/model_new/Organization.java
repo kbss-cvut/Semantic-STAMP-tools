@@ -74,6 +74,11 @@ public class Organization implements HasDerivableUri, Serializable {
 
     @Override
     public String toString() {
-        return name + " (" + uri + ')';
+        String res = "Organization {" + name;
+        if (uri != null) {
+            res += " (" + uri + ')';
+        }
+        res += '}';
+        return res;
     }
 }

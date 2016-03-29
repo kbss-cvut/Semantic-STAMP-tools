@@ -148,6 +148,6 @@ public class Person implements HasDerivableUri, Serializable {
      */
     public boolean valueEquals(Person other) {
         return other != null && firstName.equals(other.firstName) && lastName.equals(other.lastName) &&
-                password.equals(other.password);
+                ((password == null && other.password == null) || password != null && password.equals(other.password));
     }
 }

@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
-import cz.cvut.kbss.inbas.reporting.model.Organization;
+import cz.cvut.kbss.inbas.reporting.model_new.Organization;
 
 public interface OrganizationService extends BaseService<Organization> {
 

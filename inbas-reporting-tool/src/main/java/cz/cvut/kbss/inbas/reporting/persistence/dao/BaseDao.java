@@ -25,7 +25,7 @@ public abstract class BaseDao<T> implements GenericDao<T>, SupportsOwlKey<T> {
     protected static final Logger LOG = LoggerFactory.getLogger(BaseDao.class);
 
     protected final Class<T> type;
-    protected final URI typeUri;
+    final URI typeUri;
 
     protected BaseDao(Class<T> type) {
         this.type = type;

@@ -1,59 +1,57 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
-import cz.cvut.kbss.inbas.reporting.model.reports.OccurrenceSeverity;
-import cz.cvut.kbss.inbas.reporting.model.reports.PreliminaryReport;
+import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-/**
- * @author ledvima1
- */
 public class BaseDaoTest extends BaseDaoTestRunner {
 
     @Autowired
     private PersonDao personDao;
 
-    @Autowired
-    private PreliminaryReportDao dao;  // We're using one of the DAO implementations for the basic tests
-
-    @Before
-    public void setUp() throws Exception {
-        personDao.persist(Generator.getPerson());
-    }
-
     @Test
     public void existsForExistingInstanceReturnsTrue() throws Exception {
-        final PreliminaryReport report =
-                Generator.generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
-        dao.persist(report);
-        assertNotNull(report.getUri());
-        assertTrue(dao.exists(report.getUri()));
+        final Person person = Generator.getPerson();
+        personDao.persist(person);
+        assertTrue(personDao.exists(person.getUri()));
     }
 
     @Test
     public void findAllReturnsAllExistingInstances() {
-        final List<PreliminaryReport> reports = new ArrayList<>();
-        final PreliminaryReport r1 = Generator.generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
-        reports.add(r1);
-        final PreliminaryReport r2 = Generator.generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
-        r2.setSeverityAssessment(OccurrenceSeverity.INCIDENT);
-        reports.add(r2);
-        dao.persist(reports);
+        final List<Person> instances = generateInstances();
+        personDao.persist(instances);
+        final List<Person> result = personDao.findAll();
 
-        final List<PreliminaryReport> result = dao.findAll();
-        assertEquals(reports.size(), result.size());
-        for (PreliminaryReport r : reports) {
-            final PreliminaryReport matching = result.stream().filter(pr -> r.getUri().equals(pr.getUri())).findFirst()
-                                                     .get();
-            assertNotNull(matching);
+        assertEquals(instances.size(), result.size());
+        boolean found = false;
+        for (Person p : instances) {
+            for (Person pp : result) {
+                if (p.valueEquals(pp)) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue(found);
         }
+    }
+
+    private List<Person> generateInstances() {
+        final List<Person> instances = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final Person p = new Person();
+            p.setFirstName("user" + i);
+            p.setLastName("lastName" + i);
+            p.setUsername("user" + i + "@kbss.felk.cvu.cz");
+            instances.add(p);
+        }
+        return instances;
     }
 }

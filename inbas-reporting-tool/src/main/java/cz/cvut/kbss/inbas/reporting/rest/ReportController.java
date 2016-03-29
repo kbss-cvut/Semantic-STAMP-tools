@@ -43,7 +43,7 @@ public class ReportController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createReport(@RequestBody PreliminaryReportDto reportDto) {
-        final PreliminaryReport preliminaryReport = reportMapper.preliminaryReportDtoToPreliminaryReport(reportDto);
+        final PreliminaryReport preliminaryReport = null;
         assert preliminaryReport != null;
         reportService.persist(preliminaryReport);
         LOG.debug("Created report from data {}", reportDto);
@@ -54,7 +54,7 @@ public class ReportController extends BaseController {
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public AbstractReportDto getReport(@PathVariable("key") String key) {
         final Report report = getReportInternal(key);
-        return reportMapper.reportToReportDto(report);
+        return null;
     }
 
     private Report getReportInternal(String key) {
@@ -71,7 +71,7 @@ public class ReportController extends BaseController {
         if (!key.equals(reportUpdate.getKey())) {
             throw new BadRequestException("The passed report's key is different from the specified one.");
         }
-        final Report report = reportMapper.reportDtoToReport(reportUpdate);
+        final Report report = null;
         reportService.update(report);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Updated report {}", report);
@@ -90,7 +90,7 @@ public class ReportController extends BaseController {
         if (report == null) {
             throw NotFoundException.create("Report chain", fileNumber);
         }
-        return reportMapper.reportToReportDto(report);
+        return null;
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -129,6 +129,6 @@ public class ReportController extends BaseController {
                     "Report with revision " + revision + " not found in report chain with file number " + fileNumber +
                             " or the report chain does not exist.");
         }
-        return reportMapper.reportToReportDto(report);
+        return null;
     }
 }

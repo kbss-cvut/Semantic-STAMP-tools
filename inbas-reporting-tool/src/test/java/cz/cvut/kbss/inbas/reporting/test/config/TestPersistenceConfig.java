@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@ComponentScan(basePackages = "cz.cvut.kbss.inbas.audit.persistence.dao")
+@ComponentScan(basePackages = "cz.cvut.kbss.inbas.reporting.persistence.dao")
 @Import({TestPersistenceFactory.class})
 public class TestPersistenceConfig {
 }

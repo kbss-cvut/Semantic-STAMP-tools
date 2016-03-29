@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -8,11 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.net.URI;
 
-/**
- * @author ledvima1
- */
 @Repository
-public class PersonDao extends BaseDao<Person> {
+public class PersonDao extends DerivableUriDao<Person> {
 
     public PersonDao() {
         super(Person.class);

@@ -1,16 +1,15 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model.Organization;
-import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model_new.Organization;
+import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.stereotype.Repository;
 
-/**
- * @author ledvima1
- */
+import java.net.URI;
+
 @Repository
-public class OrganizationDao extends BaseDao<Organization> {
+public class OrganizationDao extends DerivableUriDao<Organization> {
 
     public OrganizationDao() {
         super(Organization.class);
@@ -28,8 +27,9 @@ public class OrganizationDao extends BaseDao<Organization> {
         }
         final EntityManager em = entityManager();
         try {
-            return em.createNativeQuery("SELECT ?x WHERE { ?x <" + Vocabulary.p_label + "> \"" + name + "\"@en . }",
-                    Organization.class).getSingleResult();
+            return em.createNativeQuery("SELECT ?x WHERE { ?x ?hasName ?name . }", Organization.class)
+                     .setParameter("hasName", URI.create(Vocabulary.p_name))
+                     .setParameter("name", name, "en").getSingleResult();
         } catch (NoResultException e) {
             return null;
         } finally {
