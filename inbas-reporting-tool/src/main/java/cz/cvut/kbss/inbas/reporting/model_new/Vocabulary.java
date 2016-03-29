@@ -20,7 +20,7 @@ public class Vocabulary {
     public static final String Occurrence = "http://onto.fel.cvut.cz/ontologies/documentation/occurrence";
     public static final String Factor = "http://onto.fel.cvut.cz/ontologies/documentation/factor";
 
-    public static final String CorrectiveMeasure = "http://onto.fel.cvut.cz/ontologies/documentation/corrective_measure";
+    public static final String CorrectiveMeasureRequest = "http://onto.fel.cvut.cz/ontologies/documentation/corrective_measure_request";
 
     public static final String Object = "http://onto.fel.cvut.cz/ontologies/ufo/Object";
     public static final String Agent = "http://onto.fel.cvut.cz/ontologies/ufo/Agent";
@@ -38,12 +38,20 @@ public class Vocabulary {
     public static final String p_hasResponsibleAgent = "http://onto.fel.cvut.cz/ontologies/documentation/has-responsible-agent";
     public static final String p_hasFactor = "http://onto.fel.cvut.cz/ontologies/documentation/has-factor";
     public static final String p_factorType = "http://onto.fel.cvut.cz/ontologies/documentation/factor-type";
+    public static final String p_severityAssessment = "http://onto.fel.cvut.cz/ontologies/documentation/severity-assessment";
 
     public static final String p_hasKey = "http://onto.fel.cvut.cz/ontologies/documentation/has-key";
+    public static final String p_fileNumber = "http://onto.fel.cvut.cz/ontologies/documentation/file-number";
 
     public static final String p_name = "http://www.w3.org/2000/01/rdf-schema#label"; // rdfs:label
     public static final String p_description = "http://purl.org/dc/terms/description";
     public static final String p_dateCreated = "http://purl.org/dc/terms/created";
+    public static final String p_lastModified = "http://onto.fel.cvut.cz/ontologies/documentation/last-modified";
+    public static final String p_lastModifiedBy = "http://onto.fel.cvut.cz/ontologies/aviation/documentation#has-last-editor";
+    public static final String p_revision = "http://onto.fel.cvut.cz/ontologies/documentation/revision";
+
+    public static final String p_startTime = "http://onto.fel.cvut.cz/ontologies/documentation/start-time";
+    public static final String p_endTime = "http://onto.fel.cvut.cz/ontologies/documentation/end-time";
 
     public static final String p_firstName = "http://xmlns.com/foaf/0.1/firstName";
     public static final String p_lastName = "http://xmlns.com/foaf/0.1/lastName";

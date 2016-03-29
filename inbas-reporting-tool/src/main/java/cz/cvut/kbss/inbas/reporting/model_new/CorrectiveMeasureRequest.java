@@ -6,8 +6,8 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Set;
 
-@OWLClass(iri = Vocabulary.CorrectiveMeasure)
-public class CorrectiveMeasure implements Serializable {
+@OWLClass(iri = Vocabulary.CorrectiveMeasureRequest)
+public class CorrectiveMeasureRequest implements Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -46,9 +46,9 @@ public class CorrectiveMeasure implements Serializable {
     public String toString() {
         // First 50 characters of the description
         if (description != null) {
-            return "CorrectiveMeasure{" +
+            return "CorrectiveMeasureRequest{" +
                     description.substring(0, description.length() > 50 ? 50 : description.length()) + "..." + '}';
         }
-        return "CorrectiveMeasure{" + uri + "}";
+        return "CorrectiveMeasureRequest{" + uri + "}";
     }
 }

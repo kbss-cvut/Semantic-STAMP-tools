@@ -1,9 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
-import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
+import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -15,7 +12,7 @@ public class EventType implements Serializable {
     private URI uri;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_name)
+    @OWLAnnotationProperty(iri = Vocabulary.p_name)
     private String name;
 
     @OWLDataProperty(iri = Vocabulary.p_description)    // Perhaps rdfs:comment would be more appropriate?

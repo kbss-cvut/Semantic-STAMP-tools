@@ -19,7 +19,7 @@ public class Occurrence implements HasOwlKey, Serializable {
     private String key;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_name)
+    @OWLAnnotationProperty(iri = Vocabulary.p_name)
     private String name;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)

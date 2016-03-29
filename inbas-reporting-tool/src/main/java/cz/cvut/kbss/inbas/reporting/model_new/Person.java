@@ -37,7 +37,7 @@ public class Person implements HasDerivableUri, Serializable {
     private Set<String> types;
 
     public Person() {
-        this.types = new HashSet<>();
+        this.types = new HashSet<>(4);
         // Person is an Agent
         types.add(Vocabulary.Agent);
     }

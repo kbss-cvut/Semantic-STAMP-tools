@@ -1,9 +1,0 @@
-Modularize the application so that queries and repository (the one for getting options and event types) can be specified at runtime
-Localization
-    - Use portal language setting when available
-    - Add support for language switching in the app, save language setting in cookies
-Set up the Jasmine tests so that they can be run in browser and debugged
-Show autocomplete results as tree when appropriate
-        - Try using react-bootstrap-treeview
-Design some generic validation mechanism for the wizards
-    Show validation errors on the corresponding fields
