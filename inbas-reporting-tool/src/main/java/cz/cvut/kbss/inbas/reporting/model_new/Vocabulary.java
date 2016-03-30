@@ -37,6 +37,7 @@ public class Vocabulary {
     public static final String p_hasAuthor = "http://onto.fel.cvut.cz/ontologies/documentation/has-author";
     public static final String p_hasCorrectiveMeasure = "http://onto.fel.cvut.cz/ontologies/documentation/has-corrective-measure";
     public static final String p_hasResponsibleAgent = "http://onto.fel.cvut.cz/ontologies/documentation/has-responsible-agent";
+    public static final String p_basedOn = "http://onto.fel.cvut.cz/ontologies/documentation/based-on";
     public static final String p_hasFactor = "http://onto.fel.cvut.cz/ontologies/documentation/has-factor";
     public static final String p_factorType = "http://onto.fel.cvut.cz/ontologies/documentation/factor-type";
     public static final String p_severityAssessment = "http://onto.fel.cvut.cz/ontologies/documentation/severity-assessment";
@@ -44,6 +45,12 @@ public class Vocabulary {
     public static final String p_hasKey = "http://onto.fel.cvut.cz/ontologies/documentation/has-key";
     public static final String p_fileNumber = "http://onto.fel.cvut.cz/ontologies/documentation/file-number";
 
+    /**
+     * Although instances of EventType should be subclasses of Event, so that their instances could exist (e.g.
+     * RunwayIncursion), programming language do not allow a class to be at the same time instance of another class, so
+     * we need to connect event instances with event type instances by an attribute.
+     */
+    public static final String p_hasEventType = "http://onto.fel.cvut.cz/ontologies/documentation/has-event-type";
     /**
      * rdfs:label
      */

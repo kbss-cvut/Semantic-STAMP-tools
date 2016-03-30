@@ -12,6 +12,8 @@ import java.util.Set;
 @OWLClass(iri = Vocabulary.CorrectiveMeasureRequest)
 public class CorrectiveMeasureRequest implements HasUri, Serializable {
 
+    // TODO Issues: Agent can be Person or Organization, Event can be Event or Occurrence
+
     @Id(generated = true)
     private URI uri;
 
@@ -20,6 +22,9 @@ public class CorrectiveMeasureRequest implements HasUri, Serializable {
 
     @OWLObjectProperty(iri = Vocabulary.p_hasResponsibleAgent, fetch = FetchType.EAGER)
     private Set<Agent> responsibleAgents;
+
+    @OWLObjectProperty(iri = Vocabulary.p_basedOn, fetch = FetchType.EAGER)
+    private Event basedOn;
 
     public CorrectiveMeasureRequest() {
     }
@@ -60,6 +65,14 @@ public class CorrectiveMeasureRequest implements HasUri, Serializable {
 
     public void setResponsibleAgents(Set<Agent> responsibleAgents) {
         this.responsibleAgents = responsibleAgents;
+    }
+
+    public Event getBasedOn() {
+        return basedOn;
+    }
+
+    public void setBasedOn(Event basedOn) {
+        this.basedOn = basedOn;
     }
 
     @Override
