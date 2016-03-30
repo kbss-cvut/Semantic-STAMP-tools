@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
+import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -9,7 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.CorrectiveMeasureRequest)
-public class CorrectiveMeasureRequest implements Serializable {
+public class CorrectiveMeasureRequest implements HasUri, Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -36,6 +37,7 @@ public class CorrectiveMeasureRequest implements Serializable {
         this.responsibleAgents = other.getResponsibleAgents() != null ? new HashSet<>(other.responsibleAgents) : null;
     }
 
+    @Override
     public URI getUri() {
         return uri;
     }

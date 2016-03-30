@@ -44,6 +44,7 @@ public class Person implements HasDerivableUri, Serializable {
         types.add(Vocabulary.Agent);
     }
 
+    @Override
     public URI getUri() {
         return uri;
     }

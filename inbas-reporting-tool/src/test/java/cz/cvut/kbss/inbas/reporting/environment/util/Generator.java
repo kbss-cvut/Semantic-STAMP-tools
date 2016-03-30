@@ -50,7 +50,7 @@ public class Generator {
         if (setAttributes) {
             report.setAuthor(getPerson());
             report.setDateCreated(new Date());
-            report.setFileNumber(System.currentTimeMillis());
+            report.setFileNumber((long) randomInt(Integer.MAX_VALUE));
             report.setRevision(1);
         }
         return report;

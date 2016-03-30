@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasOwlKey;
+import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -9,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.Occurrence)
-public class Occurrence implements HasOwlKey, Serializable {
+public class Occurrence implements HasOwlKey, HasUri, Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -37,6 +38,7 @@ public class Occurrence implements HasOwlKey, Serializable {
         types.add(Vocabulary.Event);
     }
 
+    @Override
     public URI getUri() {
         return uri;
     }

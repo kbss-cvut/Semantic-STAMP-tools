@@ -1,12 +1,13 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
+import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
 
 @OWLClass(iri = Vocabulary.EventType)
-public class EventType implements Serializable {
+public class EventType implements HasUri, Serializable {
 
     @Id
     private URI uri;
@@ -18,6 +19,7 @@ public class EventType implements Serializable {
     @OWLDataProperty(iri = Vocabulary.p_description)    // Perhaps rdfs:comment would be more appropriate?
     private String description;
 
+    @Override
     public URI getUri() {
         return uri;
     }

@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
+import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -7,7 +8,7 @@ import java.net.URI;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.Event)
-public class Event implements Serializable {
+public class Event implements HasUri, Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -21,6 +22,7 @@ public class Event implements Serializable {
     @Types
     private Set<String> types;
 
+    @Override
     public URI getUri() {
         return uri;
     }

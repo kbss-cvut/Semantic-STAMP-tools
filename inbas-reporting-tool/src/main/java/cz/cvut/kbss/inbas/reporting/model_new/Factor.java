@@ -1,12 +1,13 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
+import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
 
 @OWLClass(iri = Vocabulary.Factor)
-public class Factor implements Serializable {
+public class Factor implements HasUri, Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -19,6 +20,7 @@ public class Factor implements Serializable {
     @OWLDataProperty(iri = Vocabulary.p_factorType)
     private FactorType type;
 
+    @Override
     public URI getUri() {
         return uri;
     }

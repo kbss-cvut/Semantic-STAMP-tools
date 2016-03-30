@@ -48,6 +48,7 @@ public class Organization implements HasDerivableUri, Serializable {
         this.uri = URI.create(sb.toString());
     }
 
+    @Override
     public URI getUri() {
         return uri;
     }

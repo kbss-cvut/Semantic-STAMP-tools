@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
+import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
@@ -12,7 +13,7 @@ import java.net.URI;
  * modify them.
  */
 @OWLClass(iri = Vocabulary.SeverityLevel)
-public class SeverityLevel implements Serializable {
+public class SeverityLevel implements HasUri, Serializable {
 
     @Id
     private URI uri;
@@ -23,6 +24,7 @@ public class SeverityLevel implements Serializable {
     @OWLAnnotationProperty(iri = Vocabulary.p_comment)
     private String description;
 
+    @Override
     public URI getUri() {
         return uri;
     }

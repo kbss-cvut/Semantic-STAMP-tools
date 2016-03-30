@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
+import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
@@ -8,6 +9,9 @@ import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.net.URI;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -38,7 +42,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
-    public void persistOfReportWithExistingOccurrenceReusesIt() {
+    public void persistReportWithExistingOccurrenceReusesOccurrenceInstance() {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
         report.setAuthor(author);
         occurrenceReportDao.persist(report);
@@ -56,149 +60,76 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         assertEquals(resOrig.getOccurrence().getUri(), resCopy.getOccurrence().getUri());
     }
 
-//    @Test
-//    public void findAllGetsReportsOrderedByOccurrenceStartDescending() {
-//        final PreliminaryReport prOne = persistPreliminaryWithRevisions(null);
-//        final PreliminaryReport prTwo = Generator.generatePreliminaryReport(Generator.ReportType.WITH_TYPE_ASSESSMENTS);
-//        prTwo.setOccurrenceStart(new Date(System.currentTimeMillis() + 10000));
-//        preliminaryReportDao.persist(prTwo);
-//
-//        final List<OccurrenceReport> result = occurrenceReportDao.findAll();
-//        assertEquals(2, result.size());
-//        assertEquals(prTwo.getUri(), result.get(0).getUri());
-//        assertEquals(prOne.getUri(), result.get(1).getUri());
-//    }
-//
-//    @Test
-//    public void findAllGetsLatestRevisionsForEveryReportChain() {
-//        final PreliminaryReport prOne = persistPreliminaryWithRevisions(null);
-//        final PreliminaryReport prTwo = persistPreliminaryWithRevisions(null);
-//        final InvestigationReport ir = new InvestigationReport(prOne);
-//        ir.setOccurrenceStart(new Date(System.currentTimeMillis() + 10000));
-//        ir.setAuthor(author);
-//        investigationReportDao.persist(ir);
-//
-//        final List<OccurrenceReport> result = occurrenceReportDao.findAll();
-//        assertEquals(2, result.size());
-//        assertEquals(ir.getUri(), result.get(0).getUri());
-//        assertEquals(prTwo.getUri(), result.get(1).getUri());
-//    }
-//
-//    private List<PreliminaryReport> generateReports(boolean lastRevisionsOnly) {
-//        Date startTime = new Date(System.currentTimeMillis() - 5000);
-//        final Date endTime = new Date();
-//        final List<PreliminaryReport> reports = new ArrayList<>();
-//        final Occurrence o1 = new Occurrence();
-//        o1.setName("SomeOccurrence");
-//        occurrenceDao.persist(o1);
-//        final PreliminaryReport r1 = new PreliminaryReport();
-//        r1.setAuthor(author);
-//        r1.setRevision(Constants.INITIAL_REVISION);
-//        r1.setFileNumber(System.currentTimeMillis());
-//        r1.setOccurrenceStart(startTime);
-//        r1.setOccurrenceEnd(endTime);
-//        r1.setOccurrenceCategory(Generator.getEventType());
-//        r1.setOccurrence(o1);
-//        r1.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
-//        reports.add(r1);
-//        final PreliminaryReport r2 = new PreliminaryReport();
-//        r2.setAuthor(author);
-//        r2.setRevision(Constants.INITIAL_REVISION + 1);
-//        r2.setFileNumber(r1.getFileNumber());
-//        r2.setOccurrenceCategory(Generator.getEventType());
-//        r2.setOccurrenceStart(startTime);
-//        r2.setOccurrenceEnd(endTime);
-//        r2.setOccurrence(o1);
-//        r2.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
-//        reports.add(r2);
-//        startTime = new Date(startTime.getTime() - 7000);
-//        final PreliminaryReport r3 = new PreliminaryReport();
-//        r3.setOccurrence(o1);
-//        r3.setAuthor(author);
-//        r3.setOccurrenceCategory(Generator.getEventType());
-//        r3.setOccurrenceStart(startTime);
-//        r3.setOccurrenceEnd(endTime);
-//        r3.setRevision(Constants.INITIAL_REVISION);
-//        r3.setFileNumber(System.currentTimeMillis() + 1000L);
-//        r3.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
-//        reports.add(r3);
-//        final PreliminaryReport r4 = new PreliminaryReport();
-//        r4.setOccurrence(o1);
-//        r4.setAuthor(author);
-//        r4.setOccurrenceCategory(Generator.getEventType());
-//        r4.setOccurrenceStart(startTime);
-//        r4.setOccurrenceEnd(endTime);
-//        r4.setRevision(Constants.INITIAL_REVISION + 5);
-//        r4.setFileNumber(r3.getFileNumber());
-//        r4.setSeverityAssessment(OccurrenceSeverity.OCCURRENCE_WITHOUT_SAFETY_EFFECT);
-//        reports.add(r4);
-//        // The set messes the order a little, to verify our ordering implementation
-//        preliminaryReportDao.persist(new HashSet<>(reports));
-//        if (lastRevisionsOnly) {
-//            // Remove reports with old revision number from results
-//            reports.remove(r1);
-//            reports.remove(r3);
-//        }
-//        return reports;
-//    }
-//
-//    @Test
-//    public void findByOccurrenceReturnsLatestRevisionsOfMatchingReportChains() throws Exception {
-//        final Occurrence occurrence = Generator.generateOccurrence();
-//        persistPreliminaryWithRevisions(null);
-//        final PreliminaryReport chainOne = persistPreliminaryWithRevisions(occurrence);
-//        final InvestigationReport chainTwo = persistInvestigationReport(occurrence);
-//        final Set<URI> uris = new HashSet<>(Arrays.asList(chainOne.getUri(), chainTwo.getUri()));
-//
-//        final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
-//        assertEquals(2, result.size());
-//        result.forEach(report -> {
-//            assertTrue(uris.contains(report.getUri()));
-//            assertEquals(occurrence.getUri(), report.getOccurrence().getUri());
-//        });
-//    }
-//
-//    @Test
-//    public void getReportChainRevisionsReturnsRevisionsForAllTypesOfReportsInChain() throws Exception {
-//        final PreliminaryReport rOne = Generator
-//                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
-//        rOne.setCreated(new Date());
-//        preliminaryReportDao.persist(rOne);
-//        final PreliminaryReport rTwo = new PreliminaryReport(rOne);
-//        rTwo.setAuthor(author);
-//        rTwo.setRevision(rOne.getRevision() + 1);
-//        rTwo.setCreated(new Date());
-//        preliminaryReportDao.persist(rTwo);
-//        final InvestigationReport rThree = new InvestigationReport(rTwo);
-//        rThree.setAuthor(author);
-//        rThree.setCreated(new Date());
-//        investigationReportDao.persist(rThree);
-//        final InvestigationReport rFour = new InvestigationReport(rThree);
-//        rFour.setAuthor(author);
-//        rFour.setRevision(rThree.getRevision() + 1);
-//        rFour.setCreated(new Date());
-//        investigationReportDao.persist(rFour);
-//        final List<Report> reports = Arrays.asList(rFour, rThree, rTwo, rOne);
-//
-//        final List<ReportRevisionInfo> result = occurrenceReportDao.getReportChainRevisions(rOne.getFileNumber());
-//        assertEquals(reports.size(), result.size());
-//        for (int i = 0; i < reports.size(); i++) {
-//            assertEquals(reports.get(i).getUri(), result.get(i).getUri());
-//            assertEquals(reports.get(i).getPhase(), result.get(i).getPhase());
-//        }
-//    }
-//
-//    @Test
-//    public void getReportChainRevisionsSkipsReturnsOnlyKnownPhases() throws Exception {
-//        final PreliminaryReport rOne = Generator
-//                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
-//        rOne.setCreated(new Date());
-//        rOne.addType("http://www.w3.org/2000/01/rdf-schema#Resource");  // Inferred by RDFS rule engines
-//        preliminaryReportDao.persist(rOne);
-//
-//        final List<ReportRevisionInfo> result = occurrenceReportDao.getReportChainRevisions(rOne.getFileNumber());
-//        assertEquals(1, result.size());
-//        assertEquals(rOne.getUri(), result.get(0).getUri());
-//        assertEquals(rOne.getKey(), result.get(0).getKey());
-//    }
+    @Test
+    public void findByOccurrenceGetsReportsWithMatchingOccurrence() {
+        final Occurrence occurrence = Generator.generateOccurrence();
+        occurrenceDao.persist(occurrence);
+        final List<OccurrenceReport> reports = persistReportsForOccurrence(occurrence);
+        // This one is just so that the method does not simply select all reports
+        final OccurrenceReport other = Generator.generateOccurrenceReport(true);
+        other.setAuthor(author);
+        occurrenceReportDao.persist(other);
+
+        final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
+        assertTrue(Environment.areEqual(reports, result));
+    }
+
+    private List<OccurrenceReport> persistReportsForOccurrence(Occurrence occurrence) {
+        final List<OccurrenceReport> reports = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final OccurrenceReport r = Generator.generateOccurrenceReport(true);
+            r.setOccurrence(occurrence);
+            r.setAuthor(author);
+            r.setOccurrenceStart(new Date(System.currentTimeMillis() + i * 1000));
+            reports.add(r);
+        }
+        occurrenceReportDao.persist(reports);
+        return reports;
+    }
+
+    @Test
+    public void findByOccurrenceReturnsLatestRevisionsOfMatchingReportChains() throws Exception {
+        final Occurrence occurrence = Generator.generateOccurrence();
+        occurrenceDao.persist(occurrence);
+        final Set<URI> reportUris = new HashSet<>();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final OccurrenceReport firstRev = Generator.generateOccurrenceReport(true);
+            firstRev.setOccurrence(occurrence);
+            firstRev.setAuthor(author);
+            final List<OccurrenceReport> chain = persistReportChain(firstRev, occurrenceReportDao);
+            reportUris.add(chain.get(chain.size() - 1).getUri());
+        }
+
+        final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
+        assertEquals(reportUris.size(), result.size());
+        result.forEach(r -> assertTrue(reportUris.contains(r.getUri())));
+    }
+
+    static List<OccurrenceReport> persistReportChain(OccurrenceReport firstRevision, OccurrenceReportDao dao) {
+        final List<OccurrenceReport> chain = new ArrayList<>();
+        chain.add(firstRevision);
+        dao.persist(firstRevision);
+        OccurrenceReport previous = firstRevision;
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final OccurrenceReport r = new OccurrenceReport(previous);
+            r.setRevision(previous.getRevision() + 1);
+            r.setAuthor(previous.getAuthor());
+            r.setDateCreated(new Date());
+            dao.persist(r);
+            chain.add(r);
+            previous = r;
+        }
+        return chain;
+    }
+
+    @Test
+    public void findByOccurrenceReturnsReportsOrderedByOccurrenceStartDescending() {
+        final Occurrence occurrence = Generator.generateOccurrence();
+        occurrenceDao.persist(occurrence);
+        final List<OccurrenceReport> reports = persistReportsForOccurrence(occurrence);
+        Collections.sort(reports, (a, b) -> b.getOccurrenceStart().compareTo(a.getOccurrenceStart()));  // Descending
+
+        final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
+        assertTrue(Environment.areEqual(reports, result));
+    }
 }

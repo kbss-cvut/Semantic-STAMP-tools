@@ -3,11 +3,14 @@ package cz.cvut.kbss.inbas.reporting.environment.util;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+
+import java.util.Collection;
 
 public class Environment {
 
@@ -47,5 +50,34 @@ public class Environment {
             objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
         }
         return objectMapper;
+    }
+
+    /**
+     * Returns true if the two collections contain elements with the same URIs.
+     *
+     * @param one First collection
+     * @param two Second collection
+     * @return True if the collections match, false otherwise
+     */
+    public static boolean areEqual(Collection<? extends HasUri> one, Collection<? extends HasUri> two) {
+        assert one != null;
+        assert two != null;
+        if (one.size() != two.size()) {
+            return false;
+        }
+        boolean found;
+        for (HasUri a : one) {
+            found = false;
+            for (HasUri b : two) {
+                if (a.getUri().equals(b.getUri())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                return false;
+            }
+        }
+        return true;
     }
 }

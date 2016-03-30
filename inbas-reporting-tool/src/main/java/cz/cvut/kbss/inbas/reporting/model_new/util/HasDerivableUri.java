@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.reporting.model_new.util;
 /**
  * Marker interface for entity classes with non-generated identifiers, which can be derived from their attributes.
  */
-public interface HasDerivableUri {
+public interface HasDerivableUri extends HasUri {
 
     /**
      * Generates URI for this instance.
