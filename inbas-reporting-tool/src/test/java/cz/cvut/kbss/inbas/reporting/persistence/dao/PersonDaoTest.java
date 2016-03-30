@@ -6,8 +6,7 @@ import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class PersonDaoTest extends BaseDaoTestRunner {
 
@@ -20,5 +19,21 @@ public class PersonDaoTest extends BaseDaoTestRunner {
         assertNull(p.getUri());
         dao.persist(p);
         assertNotNull(p.getUri());
+    }
+
+    @Test
+    public void findByUsernameFindsCorrespondingUser() {
+        final Person p = Generator.getPerson();
+        persistPerson(p);
+
+        final Person res = dao.findByUsername(p.getUsername());
+        assertNotNull(res);
+        assertEquals(p.getUri(), res.getUri());
+        assertTrue(p.valueEquals(res));
+    }
+
+    @Test
+    public void findByUsernameReturnsNullWhenNoMatchingUserExists() {
+        assertNull(dao.findByUsername("unknownUser"));
     }
 }

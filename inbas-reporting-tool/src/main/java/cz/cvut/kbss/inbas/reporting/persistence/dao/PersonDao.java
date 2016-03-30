@@ -1,7 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
-import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -19,8 +20,9 @@ public class PersonDao extends DerivableUriDao<Person> {
         final EntityManager em = entityManager();
         try {
             return em.createNativeQuery(
-                    "SELECT ?x WHERE { ?x ?hasUsername ?username . }", Person.class).setParameter("hasUsername",
-                    URI.create(Vocabulary.p_username)).setParameter("username", username, "en")
+                    "SELECT ?x WHERE { ?x ?hasUsername ?username . }", Person.class)
+                     .setParameter("hasUsername", URI.create(Vocabulary.p_username))
+                     .setParameter("username", username, Constants.PU_LANGUAGE)
                      .getSingleResult();
         } catch (NoResultException e) {
             return null;

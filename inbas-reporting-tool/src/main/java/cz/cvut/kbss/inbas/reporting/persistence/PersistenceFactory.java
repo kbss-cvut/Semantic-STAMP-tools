@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence;
 
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.Persistence;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
@@ -59,8 +60,8 @@ public class PersistenceFactory {
 
     private static Map<String, String> initParams() {
         final Map<String, String> map = new HashMap<>();
-        map.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, "en");
-        map.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.audit.model");
+        map.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, Constants.PU_LANGUAGE);
+        map.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.reporting.model");
         map.put(JOPAPersistenceProperties.JPA_PERSISTENCE_PROVIDER, JOPAPersistenceProvider.class.getName());
         return map;
     }

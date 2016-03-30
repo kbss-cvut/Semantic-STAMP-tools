@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence;
 
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.Persistence;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
@@ -42,7 +43,7 @@ public class TestPersistenceFactory {
     @PostConstruct
     private void init() {
         final Map<String, String> properties = new HashMap<>();
-        properties.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, "en");
+        properties.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, Constants.PU_LANGUAGE);
         properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.reporting.model_new");
         properties.put(SesameOntoDriverProperties.SESAME_USE_VOLATILE_STORAGE, Boolean.TRUE.toString());
         properties.put(SesameOntoDriverProperties.SESAME_USE_INFERENCE, Boolean.FALSE.toString());

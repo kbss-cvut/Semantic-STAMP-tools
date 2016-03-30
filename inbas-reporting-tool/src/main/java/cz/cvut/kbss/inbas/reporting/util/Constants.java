@@ -7,6 +7,11 @@ public final class Constants {
     }
 
     /**
+     * Language used by the persistence unit.
+     */
+    public static final String PU_LANGUAGE = "en";
+
+    /**
      * Base URI for Persons in the Reporting tool.
      */
     public static final String PERSON_BASE_URI = "http://www.inbas.cz/ontologies/reporting-tool/people#";

@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasOwlKey;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -54,7 +55,7 @@ public abstract class OwlKeySupportingDao<T extends HasOwlKey> extends BaseDao<T
             return em.createNativeQuery("SELECT ?x WHERE { ?x ?hasKey ?key ;" +
                     "a ?type }", type)
                      .setParameter("hasKey", URI.create(Vocabulary.p_hasKey))
-                     .setParameter("key", key, "en").setParameter("type", typeUri).getSingleResult();
+                     .setParameter("key", key, Constants.PU_LANGUAGE).setParameter("type", typeUri).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
