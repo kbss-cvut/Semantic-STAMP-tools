@@ -4,15 +4,12 @@ import cz.cvut.kbss.inbas.reporting.dto.AbstractReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.PreliminaryReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
-import cz.cvut.kbss.inbas.reporting.model.reports.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.model.reports.PreliminaryReport;
-import cz.cvut.kbss.inbas.reporting.model.reports.Report;
+import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model_new.Report;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
-import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,9 +29,9 @@ public class ReportController extends BaseController {
     private ReportMapper reportMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<OccurrenceReport> getAllReports(@RequestParam(value = "type", required = false) String type) {
+    public Collection<OccurrenceReport> getAllReports() {
         try {
-            return reportService.findAll(type);
+            return reportService.findAll();
         } catch (IllegalArgumentException e) {
             throw new BadRequestException(e);
         }
@@ -43,12 +40,7 @@ public class ReportController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createReport(@RequestBody PreliminaryReportDto reportDto) {
-        final PreliminaryReport preliminaryReport = null;
-        assert preliminaryReport != null;
-        reportService.persist(preliminaryReport);
-        LOG.debug("Created report from data {}", reportDto);
-        final HttpHeaders header = RestUtils.createLocationHeaderFromCurrentUri("/{key}", preliminaryReport.getKey());
-        return new ResponseEntity<>(header, HttpStatus.CREATED);
+        return null;
     }
 
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -109,15 +101,7 @@ public class ReportController extends BaseController {
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.POST)
     public ResponseEntity<Void> createNewRevision(@PathVariable("fileNumber") Long fileNumber,
                                                   @RequestParam(required = false, value = "investigate") boolean investigate) {
-        final Report newRevision;
-        if (investigate) {
-            newRevision = reportService.startInvestigation(fileNumber);
-        } else {
-            newRevision = reportService.createNewRevision(fileNumber);
-        }
-        final HttpHeaders headers = RestUtils
-                .createLocationHeaderFromContextPath("/reports/{key}", newRevision.getKey());
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        return null;
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @OWLClass(iri = Vocabulary.OccurrenceReport)
 public class OccurrenceReport implements HasOwlKey, Serializable {
@@ -67,6 +69,20 @@ public class OccurrenceReport implements HasOwlKey, Serializable {
     public OccurrenceReport() {
         this.types = new HashSet<>(4);
         types.add(Vocabulary.Report);
+    }
+
+    public OccurrenceReport(OccurrenceReport other) {
+        this();
+        Objects.requireNonNull(other);
+        this.fileNumber = other.fileNumber;
+        this.occurrence = other.occurrence;
+        this.occurrenceStart = other.occurrenceStart;
+        this.occurrenceEnd = other.occurrenceEnd;
+        this.severityAssessment = other.severityAssessment; // SeverityLevel instances are predefined
+        if (other.correctiveMeasureRequests != null) {
+            this.correctiveMeasureRequests = other.correctiveMeasureRequests.stream().map(CorrectiveMeasureRequest::new)
+                                                                            .collect(Collectors.toSet());
+        }
     }
 
     public URI getUri() {

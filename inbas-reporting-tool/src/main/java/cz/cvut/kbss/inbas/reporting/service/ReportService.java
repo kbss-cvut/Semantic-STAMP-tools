@@ -1,14 +1,10 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.reporting.exception.InvestigationExistsException;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
-import cz.cvut.kbss.inbas.reporting.model.reports.InvestigationReport;
-import cz.cvut.kbss.inbas.reporting.model.reports.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.model.reports.PreliminaryReport;
-import cz.cvut.kbss.inbas.reporting.model.reports.Report;
-import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model_new.Report;
 
 import java.net.URI;
 import java.util.List;
@@ -29,19 +25,6 @@ public interface ReportService {
      * @return Reports
      */
     List<OccurrenceReport> findAll();
-
-    /**
-     * Finds all occurrence reports of the specified type.
-     * <p>
-     * The type is expected to be a String representation of the type URI, e.g. {@link
-     * Vocabulary#PreliminaryReport}.
-     * <p>
-     * This methods returns latest revisions of matching type for every report chain in the storage.
-     *
-     * @param type Report type. If {@code null}, the result is the same as {@link #findAll()}
-     * @return List of reports
-     */
-    List<OccurrenceReport> findAll(String type);
 
     /**
      * Finds report by its URI.
@@ -66,8 +49,6 @@ public interface ReportService {
      * @return List of revisions, in descending order
      */
     List<ReportRevisionInfo> getReportChainRevisions(Long fileNumber);
-
-    void persist(PreliminaryReport report);
 
     /**
      * Updates the specified report.
@@ -109,15 +90,4 @@ public interface ReportService {
      * @return Matching report or {@code null}
      */
     Report findRevision(Long fileNumber, Integer revision);
-
-    /**
-     * Starts investigation from the latest preliminary report in a report chain identified by the specified file
-     * number.
-     *
-     * @param fileNumber Report chain identifier
-     * @return The newly created investigation
-     * @throws InvestigationExistsException When the report chain is already in
-     *                                                                         investigation phase
-     */
-    InvestigationReport startInvestigation(Long fileNumber);
 }

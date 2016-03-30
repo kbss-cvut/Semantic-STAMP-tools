@@ -1,20 +1,25 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.reporting.model.Occurrence;
-import cz.cvut.kbss.inbas.reporting.model.ReportingPhase;
-import cz.cvut.kbss.inbas.reporting.model.reports.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Repository
-public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
-        implements GenericDao<OccurrenceReport> {
+public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> implements GenericDao<OccurrenceReport> {
+
+    @Autowired
+    private OccurrenceDao occurrenceDao;
 
     private final URI typeIri;
 
@@ -26,55 +31,12 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
     }
 
     @Override
-    public void persist(OccurrenceReport entity) {
-        throw new UnsupportedOperationException("Persist is not supported for OccurrenceReports.");
-    }
-
-    @Override
-    public void persist(Collection<OccurrenceReport> entities) {
-        throw new UnsupportedOperationException("Persist is not supported for OccurrenceReports.");
-    }
-
-    @Override
-    public void update(OccurrenceReport entity) {
-        throw new UnsupportedOperationException("Update is not supported for OccurrenceReports.");
-    }
-
-    @Override
-    public void remove(OccurrenceReport entity) {
-        throw new UnsupportedOperationException("Remove is not supported for OccurrenceReports.");
-    }
-
-    @Override
-    public void remove(Collection<OccurrenceReport> entities) {
-        throw new UnsupportedOperationException("Remove is not supported for OccurrenceReports.");
-    }
-
-    public List<OccurrenceReport> findAll(String type) {
-        final EntityManager em = entityManager();
-        try {
-            return em.createNativeQuery(
-                    "SELECT ?x WHERE { ?x a ?type ;" +
-                            "a ?reportType ;" +
-                            "?hasRevision ?revision ;" +
-                            "?hasFileNumber ?fileNo ;" +
-                            "?hasStartTime ?startTime ;" +
-                            // Use only the max revision report for each report chain (file number)
-                            "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
-                            "{ ?y a ?type ; a ?reportType ; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . } " +
-                            "GROUP BY ?iFileNo }" +
-                            "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
-                            "} ORDER BY DESC(?startTime) DESC(?revision)",
-                    OccurrenceReport.class)
-                     .setParameter("type", typeIri).setParameter("reportType", URI.create(type))
-                     .setParameter("hasRevision", URI.create(
-                             Vocabulary.p_revision))
-                     .setParameter("hasStartTime", URI.create(Vocabulary.p_startTime))
-                     .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
-                     .getResultList();
-        } finally {
-            em.close();
+    protected void persist(OccurrenceReport entity, EntityManager em) {
+        assert entity != null;
+        if (entity.getOccurrence() != null && entity.getOccurrence().getUri() == null) {
+            occurrenceDao.persist(entity.getOccurrence(), em);
         }
+        super.persist(entity, em);
     }
 
     /**
@@ -93,10 +55,10 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
                             "?hasRevision ?revision ;" +
                             "?hasStartTime ?startTime ;" +
                             "?hasFileNumber ?fileNo ;" +
-                            "?hasOccurrence ?occurrence . " +
+                            "?documents ?occurrence . " +
                             // Use only the max revision reports
                             "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
-                            "{ ?y a ?type ; ?hasOccurrence ?occurrence ; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . }" +
+                            "{ ?y a ?type ; ?documents ?occurrence ; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . }" +
                             " GROUP BY ?iFileNo }" +
                             "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
                             "} ORDER BY DESC(?startTime) DESC(?revision)",
@@ -104,7 +66,7 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
                      .setParameter("type", typeIri)
                      .setParameter("occurrence", occurrence.getUri())
                      .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
-                     .setParameter("hasOccurrence", URI.create(Vocabulary.p_hasOccurrence))
+                     .setParameter("documents", URI.create(Vocabulary.p_documents))
                      .setParameter("hasStartTime", URI.create(Vocabulary.p_startTime))
                      .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
                      .getResultList();
@@ -124,13 +86,11 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
         final EntityManager em = entityManager();
         try {
             final List rows = em.createNativeQuery(
-                    "SELECT ?x ?revision ?key ?created ?phase WHERE { ?x a ?type ;" +
-                            "a ?phase ;" +
+                    "SELECT ?x ?revision ?key ?created WHERE { ?x a ?type ;" +
                             "?hasRevision ?revision ; " +
                             "?wasCreated ?created ;" +
                             "?hasFileNumber ?fileNo ;" +
                             "?hasKey ?key ." +
-                            "FILTER (?type != ?phase)" +
                             "} ORDER BY DESC(?revision)")
                                 .setParameter("type", typeIri)
                                 .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
@@ -147,10 +107,6 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
                 info.setRevision((Integer) rowArr[1]);
                 info.setKey((String) rowArr[2]);
                 info.setCreated((Date) rowArr[3]);
-                if (!ReportingPhase.isSupported((URI) rowArr[4])) {
-                    continue;
-                }
-                info.setPhase(ReportingPhase.fromType((URI) rowArr[4]));
                 result.add(info);
             }
             return result;

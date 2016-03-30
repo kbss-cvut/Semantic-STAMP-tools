@@ -1,8 +1,10 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
 import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 
@@ -32,9 +34,31 @@ public class Generator {
         return person;
     }
 
-    public enum ReportType {
-        WITHOUT_TYPE_ASSESSMENTS, WITH_TYPE_ASSESSMENTS
+    /**
+     * Generates occurrence report.
+     * <p>
+     * Revision is set to 1, {@link #getPerson()} is used as author.
+     *
+     * @param setAttributes Whether to set attributes which should be normally set by a service, e.g. author.
+     * @return OccurrenceReport
+     */
+    public static OccurrenceReport generateOccurrenceReport(boolean setAttributes) {
+        final OccurrenceReport report = new OccurrenceReport();
+        report.setOccurrence(generateOccurrence());
+        report.setOccurrenceStart(new Date(System.currentTimeMillis() - 100000));
+        report.setOccurrenceEnd(new Date());
+        if (setAttributes) {
+            report.setAuthor(getPerson());
+            report.setDateCreated(new Date());
+            report.setFileNumber(System.currentTimeMillis());
+            report.setRevision(1);
+        }
+        return report;
     }
+
+//    public enum ReportType {
+//        WITHOUT_TYPE_ASSESSMENTS, WITH_TYPE_ASSESSMENTS
+//    }
 
 //    public static PreliminaryReport generatePreliminaryReport(ReportType type) {
 //        switch (type) {

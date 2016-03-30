@@ -4,6 +4,8 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.CorrectiveMeasureRequest)
@@ -17,6 +19,22 @@ public class CorrectiveMeasureRequest implements Serializable {
 
     @OWLObjectProperty(iri = Vocabulary.p_hasResponsibleAgent, fetch = FetchType.EAGER)
     private Set<Agent> responsibleAgents;
+
+    public CorrectiveMeasureRequest() {
+    }
+
+    /**
+     * Copy constructor.
+     * <p>
+     * Responsible agents are reused.
+     *
+     * @param other The instance to copy
+     */
+    public CorrectiveMeasureRequest(CorrectiveMeasureRequest other) {
+        Objects.requireNonNull(other);
+        this.description = other.description;
+        this.responsibleAgents = other.getResponsibleAgents() != null ? new HashSet<>(other.responsibleAgents) : null;
+    }
 
     public URI getUri() {
         return uri;

@@ -11,7 +11,7 @@ import java.util.Set;
 @OWLClass(iri = Vocabulary.Occurrence)
 public class Occurrence implements HasOwlKey, Serializable {
 
-    @Id
+    @Id(generated = true)
     private URI uri;
 
     @ParticipationConstraints(nonEmpty = true)

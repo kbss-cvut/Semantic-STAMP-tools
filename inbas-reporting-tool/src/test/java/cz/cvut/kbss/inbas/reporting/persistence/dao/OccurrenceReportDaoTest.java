@@ -1,66 +1,61 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
+import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
-import org.junit.Ignore;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Ignore
+import static org.junit.Assert.*;
+
 public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
-//
-//    @Autowired
-//    private OccurrenceReportDao occurrenceReportDao;
-//
-//    @Autowired
-//    private OccurrenceDao occurrenceDao;
-//
-//    private Person author;
-//
-//    @Before
-//    public void setUp() throws Exception {
-//        this.author = Generator.getPerson();
-//        super.persistPerson(author);
-//    }
-//
-//    @Test
-//    public void findAllSearchesAllReportTypes() throws Exception {
-//        final PreliminaryReport pr = persistPreliminaryWithRevisions(null);
-//        final InvestigationReport ir = persistInvestigationReport(null);
-//        final Set<URI> uris = new HashSet<>(Arrays.asList(pr.getUri(), ir.getUri()));
-//
-//        final List<OccurrenceReport> result = occurrenceReportDao.findAll();
-//        assertEquals(uris.size(), result.size());
-//        result.forEach(report -> assertTrue(uris.contains(report.getUri())));
-//    }
-//
-//    private PreliminaryReport persistPreliminaryWithRevisions(Occurrence occurrence) {
-//        final PreliminaryReport rOne = Generator
-//                .generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
-//        rOne.setFileNumber(System.currentTimeMillis());
-//        if (occurrence != null) {
-//            rOne.setOccurrence(occurrence);
-//        }
-//        final PreliminaryReport rTwo = new PreliminaryReport(rOne);
-//        rTwo.setAuthor(author);
-//        rTwo.setRevision(rOne.getRevision() + 3);
-//        preliminaryReportDao.persist(Arrays.asList(rOne, rTwo));
-//        return rTwo;
-//    }
-//
-//    private InvestigationReport persistInvestigationReport(Occurrence occurrence) throws Exception {
-//        final PreliminaryReport pr = Generator.generatePreliminaryReport(Generator.ReportType.WITHOUT_TYPE_ASSESSMENTS);
-//        pr.setFileNumber(System.currentTimeMillis());
-//        pr.setAuthor(author);
-//        if (occurrence != null) {
-//            pr.setOccurrence(occurrence);
-//        }
-//        preliminaryReportDao.persist(pr);
-//
-//        final InvestigationReport ir = new InvestigationReport(pr);
-//        ir.setAuthor(author);
-//        ir.setRevision(pr.getRevision() + 1);
-//        investigationReportDao.persist(ir);
-//        return ir;
-//    }
-//
+
+    @Autowired
+    private OccurrenceReportDao occurrenceReportDao;
+
+    @Autowired
+    private OccurrenceDao occurrenceDao;
+
+    private Person author;
+
+    @Before
+    public void setUp() throws Exception {
+        this.author = Generator.getPerson();
+        persistPerson(author);
+    }
+
+    @Test
+    public void persistNewReportPersistsOccurrenceAsWell() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportDao.persist(report);
+
+        final Occurrence occurrence = occurrenceDao.find(report.getOccurrence().getUri());
+        assertNotNull(occurrence);
+    }
+
+    @Test
+    public void persistOfReportWithExistingOccurrenceReusesIt() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportDao.persist(report);
+
+        final OccurrenceReport newReport = new OccurrenceReport(report);
+        assertSame(report.getOccurrence(), newReport.getOccurrence());
+        newReport.setAuthor(author);
+        newReport.setRevision(report.getRevision() + 1);
+        occurrenceReportDao.persist(newReport);
+
+        final OccurrenceReport resOrig = occurrenceReportDao.find(report.getUri());
+        assertNotNull(resOrig);
+        final OccurrenceReport resCopy = occurrenceReportDao.find(newReport.getUri());
+        assertNotNull(resCopy);
+        assertEquals(resOrig.getOccurrence().getUri(), resCopy.getOccurrence().getUri());
+    }
+
 //    @Test
 //    public void findAllGetsReportsOrderedByOccurrenceStartDescending() {
 //        final PreliminaryReport prOne = persistPreliminaryWithRevisions(null);
@@ -87,43 +82,6 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 //        assertEquals(2, result.size());
 //        assertEquals(ir.getUri(), result.get(0).getUri());
 //        assertEquals(prTwo.getUri(), result.get(1).getUri());
-//    }
-//
-//    @Test
-//    public void findSearchesBothInPreliminaryAndInvestigationReports() throws Exception {
-//        final PreliminaryReport pr = persistPreliminaryWithRevisions(null);
-//        final InvestigationReport ir = persistInvestigationReport(null);
-//
-//        final OccurrenceReport resultInvestigation = occurrenceReportDao.find(ir.getUri());
-//        assertNotNull(resultInvestigation);
-//        assertEquals(ir.getOccurrence().getUri(), resultInvestigation.getOccurrence().getUri());
-//        final OccurrenceReport resultPreliminary = occurrenceReportDao.find(pr.getUri());
-//        assertNotNull(resultPreliminary);
-//    }
-//
-//    @Test
-//    public void findAllByTypeReturnsReportsOfSpecifiedType() throws Exception {
-//        persistPreliminaryWithRevisions(null);
-//        final InvestigationReport ir = persistInvestigationReport(null);
-//
-//        final List<OccurrenceReport> result = occurrenceReportDao.findAll(Vocabulary.InvestigationReport);
-//        assertEquals(1, result.size());
-//        assertEquals(ir.getUri(), result.get(0).getUri());
-//    }
-//
-//    @Test
-//    public void findAllByTypeReturnsLatestRevisionsForEveryReportChain() throws Exception {
-//        final PreliminaryReport chainOne = persistPreliminaryWithRevisions(null);
-//        final PreliminaryReport chainTwo = persistPreliminaryWithRevisions(null);
-//        final InvestigationReport ir = new InvestigationReport(chainTwo);
-//        ir.setAuthor(author);
-//        investigationReportDao.persist(ir);
-//        final Set<URI> uris = new HashSet<>(Arrays.asList(chainOne.getUri(), chainTwo.getUri()));
-//
-//        // Investigation has higher revision number, but does not match the type filter
-//        final List<OccurrenceReport> result = occurrenceReportDao.findAll(Vocabulary.PreliminaryReport);
-//        assertEquals(2, result.size());
-//        result.forEach(report -> assertTrue(uris.contains(report.getUri())));
 //    }
 //
 //    private List<PreliminaryReport> generateReports(boolean lastRevisionsOnly) {
@@ -182,30 +140,6 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 //            reports.remove(r3);
 //        }
 //        return reports;
-//    }
-//
-//    @Test
-//    public void findAllByTypeReturnsReportsOrderedByOccurrenceTime() throws Exception {
-//        generateReports(true);
-//
-//        final List<OccurrenceReport> result = occurrenceReportDao.findAll(Vocabulary.PreliminaryReport);
-//        assertFalse(result.isEmpty());
-//        Date previous = result.get(0).getOccurrenceStart();
-//        for (OccurrenceReport report : result) {
-//            assertTrue(report.getOccurrenceStart().compareTo(previous) <= 0);
-//            previous = report.getOccurrenceStart();
-//        }
-//    }
-//
-//    @Test
-//    public void findAllByTypeReturnsOnlyLatestRevisionsForEveryReportChain() throws Exception {
-//        final List<PreliminaryReport> reports = generateReports(true);
-//
-//        final List<OccurrenceReport> result = occurrenceReportDao.findAll(Vocabulary.PreliminaryReport);
-//        assertEquals(reports.size(), result.size());
-//        for (int i = 0; i < reports.size(); i++) {
-//            assertEquals(reports.get(i).getUri(), result.get(i).getUri());
-//        }
 //    }
 //
 //    @Test

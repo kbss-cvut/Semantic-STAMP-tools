@@ -1,10 +1,12 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
+import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasOwlKey;
-import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 
+import java.net.URI;
 import java.util.Objects;
 
 /**
@@ -12,10 +14,23 @@ import java.util.Objects;
  *
  * @param <T> Entity type
  */
-public abstract class SupportsOwlKey<T extends HasOwlKey> extends BaseDao<T> {
+public abstract class OwlKeySupportingDao<T extends HasOwlKey> extends BaseDao<T> {
 
-    protected SupportsOwlKey(Class<T> type) {
+    protected OwlKeySupportingDao(Class<T> type) {
         super(type);
+    }
+
+    /**
+     * Generates key and then calls persist.
+     *
+     * @param entity The instance to persist
+     * @param em     Current EntityManager
+     */
+    @Override
+    protected void persist(T entity, EntityManager em) {
+        assert entity != null;
+        entity.setKey(IdentificationUtils.generateKey());
+        super.persist(entity, em);
     }
 
     /**
@@ -36,8 +51,9 @@ public abstract class SupportsOwlKey<T extends HasOwlKey> extends BaseDao<T> {
 
     protected T findByKey(String key, EntityManager em) {
         try {
-            return em.createNativeQuery("SELECT ?x WHERE { ?x <" + Vocabulary.p_hasKey + "> ?key ;" +
+            return em.createNativeQuery("SELECT ?x WHERE { ?x ?hasKey ?key ;" +
                     "a ?type }", type)
+                     .setParameter("hasKey", URI.create(Vocabulary.p_hasKey))
                      .setParameter("key", key, "en").setParameter("type", typeUri).getSingleResult();
         } catch (NoResultException e) {
             return null;

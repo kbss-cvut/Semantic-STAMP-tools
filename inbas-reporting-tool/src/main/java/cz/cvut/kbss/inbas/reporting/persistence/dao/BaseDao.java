@@ -1,7 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model.HasDerivableUri;
-import cz.cvut.kbss.inbas.reporting.model.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -84,12 +82,6 @@ public abstract class BaseDao<T> implements GenericDao<T> {
     }
 
     protected void persist(T entity, EntityManager em) {
-        if (entity instanceof HasOwlKey) {
-            ((HasOwlKey) entity).generateKey();
-        }
-        if (entity instanceof HasDerivableUri) {
-            ((HasDerivableUri) entity).generateUri();
-        }
         em.persist(entity);
     }
 

@@ -17,16 +17,15 @@ abstract class DerivableUriDao<T extends HasDerivableUri> extends BaseDao<T> {
     }
 
     /**
-     * Generates URI and the calls persist.
+     * Generates URI and then calls persist.
      *
      * @param entity Entity to persist
      * @param em     Current entity manager
      */
     @Override
     protected void persist(T entity, EntityManager em) {
-        if (entity != null) {
-            entity.generateUri();
-        }
+        assert entity != null;
+        entity.generateUri();
         super.persist(entity, em);
     }
 }
