@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
@@ -51,29 +50,13 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
     public void findAllGetsLatestRevisionsForEveryReportChain() {
         final Set<URI> latestRevisionUris = new HashSet<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
-            final OccurrenceReport firstRev = Generator.generateOccurrenceReport(true);
-            firstRev.setAuthor(author);
-            final List<OccurrenceReport> chain = OccurrenceReportDaoTest.persistReportChain(firstRev, dao);
+            final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+            dao.persist(chain);
             latestRevisionUris.add(chain.get(chain.size() - 1).getUri());   // Get latest revision URI
         }
 
         final List<OccurrenceReport> result = dao.findAll();
         assertEquals(latestRevisionUris.size(), result.size());
         result.forEach(r -> assertTrue(latestRevisionUris.contains(r.getUri())));
-    }
-
-    @Test
-    public void getReportChainRevisionsReturnsAllRevisions() {
-        final OccurrenceReport firstRevision = Generator.generateOccurrenceReport(true);
-        firstRevision.setAuthor(author);
-        final List<OccurrenceReport> chain = OccurrenceReportDaoTest.persistReportChain(firstRevision, dao);
-        Collections.reverse(chain); // Make it descending by revision number
-
-        final List<ReportRevisionInfo> revisions = dao.getReportChainRevisions(firstRevision.getFileNumber());
-        assertEquals(chain.size(), revisions.size());
-        for (int i = 0; i < chain.size(); i++) {
-            assertEquals(chain.get(i).getUri(), revisions.get(i).getUri());
-            assertEquals(chain.get(i).getRevision(), revisions.get(i).getRevision());
-        }
     }
 }

@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
@@ -10,10 +9,7 @@ import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 abstract class BaseReportDao<T extends HasOwlKey> extends OwlKeySupportingDao<T> {
 
@@ -71,46 +67,6 @@ abstract class BaseReportDao<T extends HasOwlKey> extends OwlKeySupportingDao<T>
         } catch (NoUniqueResultException e) {
             LOG.error("Expected single report with highest revision number, but got multiple!");
             throw new PersistenceException(e);
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Gets a list of revision info instances for a report chain identified by the specified file number.
-     *
-     * @param fileNumber Report chain identifier
-     * @return List of revision infos, ordered by revision number (descending)
-     */
-    public List<ReportRevisionInfo> getReportChainRevisions(Long fileNumber) {
-        Objects.requireNonNull(fileNumber);
-        final EntityManager em = entityManager();
-        try {
-            final List rows = em.createNativeQuery(
-                    "SELECT ?x ?revision ?key ?created WHERE { ?x a ?type ;" +
-                            "?hasRevision ?revision ; " +
-                            "?wasCreated ?created ;" +
-                            "?hasFileNumber ?fileNo ;" +
-                            "?hasKey ?key ." +
-                            "} ORDER BY DESC(?revision)")
-                                .setParameter("type", typeIri)
-                                .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
-                                .setParameter("wasCreated", URI.create(Vocabulary.p_dateCreated))
-                                .setParameter("hasKey", URI.create(Vocabulary.p_hasKey))
-                                .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
-                                .setParameter("fileNo", fileNumber)
-                                .getResultList();
-            final List<ReportRevisionInfo> result = new ArrayList<>(rows.size());
-            for (Object row : rows) {
-                final Object[] rowArr = (Object[]) row;
-                final ReportRevisionInfo info = new ReportRevisionInfo();
-                info.setUri((URI) rowArr[0]);
-                info.setRevision((Integer) rowArr[1]);
-                info.setKey((String) rowArr[2]);
-                info.setCreated((Date) rowArr[3]);
-                result.add(info);
-            }
-            return result;
         } finally {
             em.close();
         }

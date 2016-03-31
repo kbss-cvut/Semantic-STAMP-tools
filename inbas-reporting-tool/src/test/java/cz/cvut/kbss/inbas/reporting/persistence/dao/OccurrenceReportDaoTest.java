@@ -101,33 +101,15 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         occurrenceDao.persist(occurrence);
         final Set<URI> reportUris = new HashSet<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
-            final OccurrenceReport firstRev = Generator.generateOccurrenceReport(true);
-            firstRev.setOccurrence(occurrence);
-            firstRev.setAuthor(author);
-            final List<OccurrenceReport> chain = persistReportChain(firstRev, occurrenceReportDao);
+            final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+            chain.forEach(r -> r.setOccurrence(occurrence));
+            occurrenceReportDao.persist(chain);
             reportUris.add(chain.get(chain.size() - 1).getUri());
         }
 
         final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
         assertEquals(reportUris.size(), result.size());
         result.forEach(r -> assertTrue(reportUris.contains(r.getUri())));
-    }
-
-    static List<OccurrenceReport> persistReportChain(OccurrenceReport firstRevision, OccurrenceReportDao dao) {
-        final List<OccurrenceReport> chain = new ArrayList<>();
-        chain.add(firstRevision);
-        dao.persist(firstRevision);
-        OccurrenceReport previous = firstRevision;
-        for (int i = 0; i < Generator.randomInt(10); i++) {
-            final OccurrenceReport r = new OccurrenceReport(previous);
-            r.setRevision(previous.getRevision() + 1);
-            r.setAuthor(previous.getAuthor());
-            r.setDateCreated(new Date());
-            dao.persist(r);
-            chain.add(r);
-            previous = r;
-        }
-        return chain;
     }
 
     @Test

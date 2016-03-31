@@ -4,9 +4,7 @@ import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Generator {
 
@@ -54,6 +52,29 @@ public class Generator {
             report.setRevision(1);
         }
         return report;
+    }
+
+    /**
+     * Generates chain of OccurrenceReport instances with the same file number.
+     *
+     * @param author Report author, for all reports
+     * @return The generated chain
+     */
+    public static List<OccurrenceReport> generateOccurrenceReportChain(Person author) {
+        final OccurrenceReport first = Generator.generateOccurrenceReport(true);
+        first.setAuthor(author);
+        final List<OccurrenceReport> reports = new ArrayList<>();
+        reports.add(first);
+        OccurrenceReport previous = first;
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final OccurrenceReport newRev = new OccurrenceReport(previous);
+            newRev.setAuthor(author);
+            newRev.setRevision(previous.getRevision() + 1);
+            newRev.setDateCreated(new Date());
+            reports.add(newRev);
+            previous = newRev;
+        }
+        return reports;
     }
 
     public static int randomInt(int upperBound) {
