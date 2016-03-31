@@ -9,6 +9,16 @@
         </encoder>
     </appender>
 
+    <!-- JOPA logger -->
+    <logger name="cz.cvut.kbss.jopa" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- OntoDriver logger -->
+    <logger name="cz.cvut.kbss.ontodriver" level="DEBUG" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
     <!-- Logger for our app -->
     <logger name="cz.cvut.kbss" level="TRACE" additivity="false">
         <appender-ref ref="STDOUT"/>

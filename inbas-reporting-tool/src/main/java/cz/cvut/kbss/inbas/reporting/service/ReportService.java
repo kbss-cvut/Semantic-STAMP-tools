@@ -2,37 +2,30 @@ package cz.cvut.kbss.inbas.reporting.service;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
-import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
-import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.model_new.Report;
+import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 
-import java.net.URI;
 import java.util.List;
 
 /**
  * Main facade to the report-related business logic.
  * <p>
- * This class should be used by the higher-level layers instead of the preliminary and investigation report-specific
- * services.
+ * This class should be used by the higher-level layers instead of the report-type specific services.
  */
-public interface ReportService {
+public interface ReportService<T extends LogicalDocument> {
 
     /**
-     * Finds all occurrence reports.
-     * <p>
-     * Returns latest revisions for every report chain in the storage.
+     * Gets all reports.
      *
-     * @return Reports
+     * @return All reports in the system
      */
-    List<OccurrenceReport> findAll();
+    List<T> findAll();
 
     /**
-     * Finds report by its URI.
+     * Creates new report.
      *
-     * @param uri Report URI
-     * @return Report or {@code null}
+     * @param report The instance to persist
      */
-    Report find(URI uri);
+    void persist(T report);
 
     /**
      * Finds report by its key.
@@ -40,39 +33,14 @@ public interface ReportService {
      * @param key Report key
      * @return Report or {@code null}
      */
-    Report findByKey(String key);
-
-    /**
-     * Gets all revisions in a report chain with the specified file number.
-     *
-     * @param fileNumber Report chain identifier
-     * @return List of revisions, in descending order
-     */
-    List<ReportRevisionInfo> getReportChainRevisions(Long fileNumber);
+    T findByKey(String key);
 
     /**
      * Updates the specified report.
      *
-     * @param report The report to update
-     * @throws ValidationException If the report is not valid
+     * @param report Updated report instance
      */
-    void update(Report report);
-
-    /**
-     * Removes all reports in report chain with the specified file number.
-     *
-     * @param fileNumber Report chain identifier
-     * @throws NotFoundException If there is no report chain with the specified file number
-     */
-    void removeReportChain(Long fileNumber);
-
-    /**
-     * Creates new report revision in report chain with the specified file number.
-     *
-     * @param fileNumber Report chain identifier
-     * @return The new revision
-     */
-    Report createNewRevision(Long fileNumber);
+    void update(T report);
 
     /**
      * Gets report with latest revision in report chain with the specified file number.
@@ -80,7 +48,32 @@ public interface ReportService {
      * @param fileNumber Report chain identifier
      * @return Latest revision report or {@code null} if there is no matching report chain
      */
-    Report findLatestRevision(Long fileNumber);
+    T findLatestRevision(Long fileNumber);
+
+    /**
+     * Removes all reports in a report chain with the specified file number.
+     *
+     * @param fileNumber Report chain identifier
+     * @throws NotFoundException If there is no report chain with the specified file number
+     */
+    void removeReportChain(Long fileNumber);
+
+    /**
+     * Gets all revisions in a report chain with the specified file number.
+     *
+     * @param fileNumber Report chain identifier
+     * @return List of revisions, in descending order, or empty list if there is no such report chain
+     */
+    List<ReportRevisionInfo> getReportChainRevisions(Long fileNumber);
+
+    /**
+     * Creates new report revision in report chain with the specified file number.
+     *
+     * @param fileNumber Report chain identifier
+     * @return The new revision
+     * @throws NotFoundException If there is no report chain with the specified file number
+     */
+    T createNewRevision(Long fileNumber);
 
     /**
      * Gets report in report chain with the specified file number and with the specified revision number.
@@ -89,5 +82,5 @@ public interface ReportService {
      * @param revision   Revision number
      * @return Matching report or {@code null}
      */
-    Report findRevision(Long fileNumber, Integer revision);
+    T findRevision(Long fileNumber, Integer revision);
 }
