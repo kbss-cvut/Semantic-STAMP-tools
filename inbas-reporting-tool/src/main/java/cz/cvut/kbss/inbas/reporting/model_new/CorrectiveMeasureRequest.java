@@ -9,10 +9,13 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * The responsiblePerson/Organization and basedOnEvent/Occurrence fields are here because of the lack of support for
+ * inheritance in JOPA. This should be handled on DTO level, where these fields should be replaced with ones using
+ * inheritance between agent - Person/Organization and Event - Occurrence.
+ */
 @OWLClass(iri = Vocabulary.CorrectiveMeasureRequest)
 public class CorrectiveMeasureRequest implements HasUri, Serializable {
-
-    // TODO Issues: Agent can be Person or Organization, Event can be Event or Occurrence
 
     @Id(generated = true)
     private URI uri;
@@ -20,11 +23,17 @@ public class CorrectiveMeasureRequest implements HasUri, Serializable {
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String description;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasResponsibleAgent, fetch = FetchType.EAGER)
-    private Set<Agent> responsibleAgents;
+    @OWLObjectProperty(iri = Vocabulary.p_hasResponsiblePerson, fetch = FetchType.EAGER)
+    private Set<Person> responsiblePersons;
 
-    @OWLObjectProperty(iri = Vocabulary.p_basedOn, fetch = FetchType.EAGER)
-    private Event basedOn;
+    @OWLObjectProperty(iri = Vocabulary.p_hasResponsibleOrganization, fetch = FetchType.EAGER)
+    private Set<Organization> responsibleOrganizations;
+
+    @OWLObjectProperty(iri = Vocabulary.p_basedOnEvent, fetch = FetchType.EAGER)
+    private Event basedOnEvent;
+
+    @OWLObjectProperty(iri = Vocabulary.p_basedOnOccurrence, fetch = FetchType.EAGER)
+    private Occurrence basedOnOccurrence;
 
     public CorrectiveMeasureRequest() {
     }
@@ -39,7 +48,14 @@ public class CorrectiveMeasureRequest implements HasUri, Serializable {
     public CorrectiveMeasureRequest(CorrectiveMeasureRequest other) {
         Objects.requireNonNull(other);
         this.description = other.description;
-        this.responsibleAgents = other.getResponsibleAgents() != null ? new HashSet<>(other.responsibleAgents) : null;
+        if (other.responsiblePersons != null) {
+            this.responsiblePersons = new HashSet<>(other.responsiblePersons);
+        }
+        if (other.responsibleOrganizations != null) {
+            this.responsibleOrganizations = new HashSet<>(other.responsibleOrganizations);
+        }
+        this.basedOnEvent = other.basedOnEvent;
+        this.basedOnOccurrence = other.basedOnOccurrence;
     }
 
     @Override
@@ -59,20 +75,37 @@ public class CorrectiveMeasureRequest implements HasUri, Serializable {
         this.description = description;
     }
 
-    public Set<Agent> getResponsibleAgents() {
-        return responsibleAgents;
+    public Event getBasedOnEvent() {
+        return basedOnEvent;
     }
 
-    public void setResponsibleAgents(Set<Agent> responsibleAgents) {
-        this.responsibleAgents = responsibleAgents;
+    public void setBasedOnEvent(Event basedOnEvent) {
+        this.basedOnEvent = basedOnEvent;
     }
 
-    public Event getBasedOn() {
-        return basedOn;
+    public Occurrence getBasedOnOccurrence() {
+        return basedOnOccurrence;
     }
 
-    public void setBasedOn(Event basedOn) {
-        this.basedOn = basedOn;
+    public void setBasedOnOccurrence(Occurrence basedOnOccurrence) {
+        this.basedOnOccurrence = basedOnOccurrence;
+    }
+
+    public Set<Person> getResponsiblePersons() {
+        return responsiblePersons;
+    }
+
+    public void setResponsiblePersons(Set<Person> responsiblePersons) {
+        this.responsiblePersons = responsiblePersons;
+    }
+
+    public Set<Organization> getResponsibleOrganizations() {
+        return responsibleOrganizations;
+    }
+
+    public void setResponsibleOrganizations(
+            Set<Organization> responsibleOrganizations) {
+        this.responsibleOrganizations = responsibleOrganizations;
     }
 
     @Override
@@ -80,7 +113,7 @@ public class CorrectiveMeasureRequest implements HasUri, Serializable {
         // First 50 characters of the description
         if (description != null) {
             return "CorrectiveMeasureRequest{" +
-                    description.substring(0, description.length() > 50 ? 50 : description.length()) + "..." + '}';
+                    (description.length() > 50 ? description.substring(0, 50) + "..." : description) + '}';
         }
         return "CorrectiveMeasureRequest{" + uri + "}";
     }

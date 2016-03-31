@@ -2,10 +2,10 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
-import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
-import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model_new.*;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,19 @@ import static org.junit.Assert.*;
 
 public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
+    private static final String ORGANIZATION_NAME = "Czech Technical University in Prague";
+
     @Autowired
     private OccurrenceReportDao occurrenceReportDao;
 
     @Autowired
     private OccurrenceDao occurrenceDao;
+
+    @Autowired
+    private OrganizationDao organizationDao;
+
+    @Autowired
+    private EntityManagerFactory emf;
 
     private Person author;
 
@@ -131,5 +139,112 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
         final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
         assertTrue(Environment.areEqual(reports, result));
+    }
+
+    @Test
+    public void persistPersistsReportWithCorrectiveMeasureRequestsWithResponsibleAgentsAndRelatedOccurrence() {
+        final OccurrenceReport report = prepareReportWithMeasureRequests();
+        occurrenceReportDao.persist(report);
+
+        final OccurrenceReport result = occurrenceReportDao.findByKey(report.getKey());
+        assertNotNull(result);
+        verifyCorrectiveMeasureRequests(report.getCorrectiveMeasureRequests(), result.getCorrectiveMeasureRequests());
+    }
+
+    private void verifyCorrectiveMeasureRequests(Set<CorrectiveMeasureRequest> expected,
+                                                 Set<CorrectiveMeasureRequest> actual) {
+        assertEquals(expected.size(), actual.size());
+        boolean found;
+        for (CorrectiveMeasureRequest r : expected) {
+            found = false;
+            for (CorrectiveMeasureRequest rr : actual) {
+                if (r.getUri().equals(rr.getUri())) {
+                    assertEquals(r.getDescription(), rr.getDescription());
+                    found = true;
+                }
+            }
+            assertTrue(found);
+        }
+    }
+
+    private OccurrenceReport prepareReportWithMeasureRequests() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        final Organization org = new Organization(ORGANIZATION_NAME);
+        report.setCorrectiveMeasureRequests(new HashSet<>());
+        organizationDao.persist(org);   // The organization must exist
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final CorrectiveMeasureRequest req = new CorrectiveMeasureRequest();
+            req.setDescription("Corrective measure request " + i);
+            if (i % 2 == 0) {
+                req.setResponsiblePersons(Collections.singleton(author));
+            } else {
+                req.setResponsibleOrganizations(Collections.singleton(org));
+            }
+            req.setBasedOnOccurrence(report.getOccurrence());
+            report.getCorrectiveMeasureRequests().add(req);
+        }
+        return report;
+    }
+
+    @Test
+    public void updateUpdatesCorrectiveMeasureRequestsInReport() {
+        final OccurrenceReport report = prepareReportWithMeasureRequests();
+        occurrenceReportDao.persist(report);
+
+        final CorrectiveMeasureRequest newRequest = new CorrectiveMeasureRequest();
+        newRequest.setDescription("Added corrective measure request");
+        newRequest.setResponsiblePersons(Collections.singleton(author));
+        newRequest.setResponsibleOrganizations(Collections.singleton(organizationDao.findByName(ORGANIZATION_NAME)));
+        final Iterator<CorrectiveMeasureRequest> it = report.getCorrectiveMeasureRequests().iterator();
+        it.next();
+        it.remove();
+        report.getCorrectiveMeasureRequests().add(newRequest);
+        occurrenceReportDao.update(report);
+
+        final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
+        verifyCorrectiveMeasureRequests(report.getCorrectiveMeasureRequests(), result.getCorrectiveMeasureRequests());
+        verifyOrphanRemoval(report);
+    }
+
+    private void verifyOrphanRemoval(OccurrenceReport report) {
+        final EntityManager em = emf.createEntityManager();
+        try {
+            final Integer cnt = em
+                    .createNativeQuery("SELECT (count(?x) as ?count) WHERE {?x a ?measureType . }", Integer.class)
+                    .setParameter("measureType", URI.create(Vocabulary.CorrectiveMeasureRequest)).getSingleResult();
+            assertEquals(report.getCorrectiveMeasureRequests().size(), cnt.intValue());
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void updateWorkForReportsWithoutCorrectiveMeasures() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportDao.persist(report);
+
+        report.setOccurrenceStart(new Date());
+        report.setOccurrenceEnd(new Date(System.currentTimeMillis() + 100000));
+        occurrenceReportDao.update(report);
+
+        final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
+        assertEquals(report.getOccurrenceStart(), result.getOccurrenceStart());
+        assertEquals(report.getOccurrenceEnd(), result.getOccurrenceEnd());
+    }
+
+    @Test
+    public void reportUpdateCascadesChangeToOccurrence() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportDao.persist(report);
+
+        final String newName = "UpdatedOccurrenceName";
+        report.getOccurrence().setName(newName);
+        occurrenceReportDao.update(report);
+
+        final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
+        assertEquals(newName, result.getOccurrence().getName());
     }
 }

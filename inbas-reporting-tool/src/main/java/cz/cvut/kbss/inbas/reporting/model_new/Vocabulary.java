@@ -36,11 +36,19 @@ public class Vocabulary {
     public static final String p_hasPart = "http://onto.fel.cvut.cz/ontologies/ufo/has_part";
     public static final String p_hasAuthor = "http://onto.fel.cvut.cz/ontologies/documentation/has-author";
     public static final String p_hasCorrectiveMeasure = "http://onto.fel.cvut.cz/ontologies/documentation/has-corrective-measure";
-    public static final String p_hasResponsibleAgent = "http://onto.fel.cvut.cz/ontologies/documentation/has-responsible-agent";
-    public static final String p_basedOn = "http://onto.fel.cvut.cz/ontologies/documentation/based-on";
     public static final String p_hasFactor = "http://onto.fel.cvut.cz/ontologies/documentation/has-factor";
     public static final String p_factorType = "http://onto.fel.cvut.cz/ontologies/documentation/factor-type";
     public static final String p_severityAssessment = "http://onto.fel.cvut.cz/ontologies/documentation/severity-assessment";
+
+    // Currently, responsible agent can be person or organization and since JOPA does not support inheritance, we have to specify
+    // them explicitly, thus the has-responsible-person and has-responsible-organization properties
+//    public static final String p_hasResponsibleAgent = "http://onto.fel.cvut.cz/ontologies/documentation/has-responsible-agent";
+    public static final String p_hasResponsiblePerson = "http://onto.fel.cvut.cz/ontologies/documentation/has-responsible-person";
+    public static final String p_hasResponsibleOrganization = "http://onto.fel.cvut.cz/ontologies/documentation/has-responsible-organization";
+    // Same as above
+//    public static final String p_basedOn = "http://onto.fel.cvut.cz/ontologies/documentation/based-on";
+    public static final String p_basedOnEvent = "http://onto.fel.cvut.cz/ontologies/documentation/based-on-event";
+    public static final String p_basedOnOccurrence = "http://onto.fel.cvut.cz/ontologies/documentation/based-on-occurrence";
 
     public static final String p_hasKey = "http://onto.fel.cvut.cz/ontologies/documentation/has-key";
     public static final String p_fileNumber = "http://onto.fel.cvut.cz/ontologies/documentation/file-number";

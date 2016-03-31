@@ -44,7 +44,7 @@ public class OccurrenceReportTest {
         requests.add(rOne);
         final CorrectiveMeasureRequest rTwo = new CorrectiveMeasureRequest();
         rTwo.setDescription("CorrectiveMeasureRequest_Two");
-        rTwo.setResponsibleAgents(Collections.singleton(new Agent()));
+        rTwo.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
         requests.add(rTwo);
         original.setCorrectiveMeasureRequests(requests);
 

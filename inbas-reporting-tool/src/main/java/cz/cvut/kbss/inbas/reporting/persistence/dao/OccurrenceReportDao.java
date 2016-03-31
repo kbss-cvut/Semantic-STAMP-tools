@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
+import cz.cvut.kbss.inbas.reporting.model_new.CorrectiveMeasureRequest;
 import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
@@ -8,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> implements GenericDao<OccurrenceReport> {
@@ -27,6 +31,28 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
             occurrenceDao.persist(entity.getOccurrence(), em);
         }
         super.persist(entity, em);
+    }
+
+    @Override
+    protected void update(OccurrenceReport entity, EntityManager em) {
+        if (entity.getUri() != null) {
+            updateWithOrphanRemoval(entity, em);
+        } else {
+            em.merge(entity);
+        }
+    }
+
+    private void updateWithOrphanRemoval(OccurrenceReport entity, EntityManager em) {
+        final OccurrenceReport original = em.find(OccurrenceReport.class, entity.getUri());
+        final Set<URI> measureUris = entity.getCorrectiveMeasureRequests() == null ? Collections.emptySet() :
+                                     entity.getCorrectiveMeasureRequests().stream()
+                                           .map(CorrectiveMeasureRequest::getUri).collect(Collectors.toSet());
+        final Set<CorrectiveMeasureRequest> orphans =
+                original.getCorrectiveMeasureRequests() == null ? Collections.emptySet() :
+                original.getCorrectiveMeasureRequests().stream().filter(m -> !measureUris.contains(m.getUri()))
+                        .collect(Collectors.toSet());
+        em.merge(entity);
+        orphans.forEach(em::remove);
     }
 
     /**
