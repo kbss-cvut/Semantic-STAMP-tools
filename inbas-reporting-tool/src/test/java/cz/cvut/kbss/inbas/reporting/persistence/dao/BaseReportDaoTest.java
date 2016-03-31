@@ -11,8 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URI;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class BaseReportDaoTest extends BaseDaoTestRunner {
 
@@ -58,5 +57,44 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
         final List<OccurrenceReport> result = dao.findAll();
         assertEquals(latestRevisionUris.size(), result.size());
         result.forEach(r -> assertTrue(latestRevisionUris.contains(r.getUri())));
+    }
+
+    @Test
+    public void findLatestRevisionReturnReportWithHighestRevisionInChain() {
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        dao.persist(chain);
+        final OccurrenceReport latest = chain.get(chain.size() - 1);
+
+        final OccurrenceReport result = dao.findLatestRevision(latest.getFileNumber());
+        assertEquals(latest.getUri(), result.getUri());
+        assertEquals(latest.getRevision(), result.getRevision());
+    }
+
+    @Test
+    public void findLatestRevisionReturnsNullForUnknownReportChain() {
+        final OccurrenceReport result = dao.findLatestRevision(Long.MAX_VALUE);
+        assertNull(result);
+    }
+
+    @Test
+    public void findRevisionReturnsSpecificReportRevision() {
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        dao.persist(chain);
+        final OccurrenceReport report = chain.get(Generator.randomInt(chain.size()));
+
+        final OccurrenceReport result = dao.findRevision(report.getFileNumber(), report.getRevision());
+        assertNotNull(result);
+        assertEquals(report.getUri(), result.getUri());
+        assertEquals(report.getFileNumber(), result.getFileNumber());
+        assertEquals(report.getRevision(), result.getRevision());
+    }
+
+    @Test
+    public void findRevisionReturnsNullForUnknownRevision() {
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        dao.persist(chain);
+        final Integer revision = chain.get(chain.size() - 1).getRevision() + 1;
+
+        assertNull(dao.findRevision(chain.get(0).getFileNumber(), revision));
     }
 }

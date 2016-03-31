@@ -71,4 +71,34 @@ abstract class BaseReportDao<T extends HasOwlKey> extends OwlKeySupportingDao<T>
             em.close();
         }
     }
+
+    /**
+     * Finds report with the specified revision in report chain with the specified identifier.
+     *
+     * @param fileNumber Report chain identifier
+     * @param revision   Report revision
+     * @return Matching report or {@code null}, if no such report exists
+     */
+    public T findRevision(Long fileNumber, Integer revision) {
+        final EntityManager em = entityManager();
+        try {
+            return em.createNativeQuery("SELECT ?x WHERE {" +
+                    "?x a ?type ;" +
+                    "?hasFileNumber ?fileNo ;" +
+                    "?hasRevision ?revision . }", type)
+                     .setParameter("type", typeIri)
+                     .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
+                     .setParameter("fileNo", fileNumber)
+                     .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
+                     .setParameter("revision", revision)
+                     .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } catch (NoUniqueResultException e) {
+            LOG.error("Expected single report with highest revision number, but got multiple!");
+            throw new PersistenceException(e);
+        } finally {
+            em.close();
+        }
+    }
 }
