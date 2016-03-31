@@ -8,7 +8,6 @@ import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Report;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
-import cz.cvut.kbss.inbas.reporting.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,18 +22,11 @@ import java.util.List;
 public class ReportController extends BaseController {
 
     @Autowired
-    private ReportService reportService;
-
-    @Autowired
     private ReportMapper reportMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<OccurrenceReport> getAllReports() {
-        try {
-            return reportService.findAll();
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException(e);
-        }
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -50,7 +42,7 @@ public class ReportController extends BaseController {
     }
 
     private Report getReportInternal(String key) {
-        final Report report = reportService.findByKey(key);
+        final Report report = null;
         if (report == null) {
             throw NotFoundException.create("Occurrence report", key);
         }
@@ -64,7 +56,6 @@ public class ReportController extends BaseController {
             throw new BadRequestException("The passed report's key is different from the specified one.");
         }
         final Report report = null;
-        reportService.update(report);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Updated report {}", report);
         }
@@ -73,12 +64,12 @@ public class ReportController extends BaseController {
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeChain(@PathVariable("fileNumber") Long fileNumber) {
-        reportService.removeReportChain(fileNumber);
+
     }
 
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public AbstractReportDto findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
-        final Report report = reportService.findLatestRevision(fileNumber);
+        final Report report = null;
         if (report == null) {
             throw NotFoundException.create("Report chain", fileNumber);
         }
@@ -87,7 +78,7 @@ public class ReportController extends BaseController {
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReportRevisionInfo> getReportChainRevisions(@PathVariable("fileNumber") Long fileNumber) {
-        return reportService.getReportChainRevisions(fileNumber);
+        return null;
     }
 
     /**
@@ -107,7 +98,7 @@ public class ReportController extends BaseController {
     @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public AbstractReportDto getRevision(@PathVariable("fileNumber") Long fileNumber,
                                          @PathVariable("revision") Integer revision) {
-        final Report report = reportService.findRevision(fileNumber, revision);
+        final Report report = null;
         if (report == null) {
             throw new NotFoundException(
                     "Report with revision " + revision + " not found in report chain with file number " + fileNumber +

@@ -32,7 +32,7 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
 
     @Before
     public void setUp() throws Exception {
-        super.setUp();
+        persistPerson();
         SecurityContextHolder.setContext(new SecurityContextImpl());
     }
 

@@ -17,11 +17,6 @@ import static org.mockito.Mockito.mock;
 public class MockServiceConfig {
 
     @Bean
-    public InvestigationReportService investigationReportService() {
-        return mock(InvestigationReportService.class);
-    }
-
-    @Bean
     public OccurrenceService occurrenceService() {
         return mock(OccurrenceService.class);
     }
@@ -34,11 +29,6 @@ public class MockServiceConfig {
     @Bean
     public PersonService personService() {
         return mock(PersonService.class);
-    }
-
-    @Bean
-    public PreliminaryReportService preliminaryReportService() {
-        return mock(PreliminaryReportService.class);
     }
 
     @Bean

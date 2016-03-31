@@ -5,7 +5,6 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.reporting.test.config.TestPersistenceConfig;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,14 +23,10 @@ public abstract class BaseServiceTestRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    protected Person person;
-
-    @Before
-    public void setUp() throws Exception {
-        person = Generator.getPerson();
-        if (personDao.findByUsername(person.getUsername()) == null) {
-            person.encodePassword(passwordEncoder);
-            personDao.persist(person);
-        }
+    protected Person persistPerson() {
+        final Person p = Generator.getPerson();
+        p.encodePassword(passwordEncoder);
+        personDao.persist(p);
+        return p;
     }
 }

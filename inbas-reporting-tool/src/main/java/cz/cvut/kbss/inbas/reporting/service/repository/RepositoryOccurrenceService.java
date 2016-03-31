@@ -1,21 +1,20 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
-import cz.cvut.kbss.inbas.reporting.model.ReportingPhase;
-import cz.cvut.kbss.inbas.reporting.model.reports.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.GenericDao;
+import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
-public class RepositoryOccurrenceService extends BaseRepositoryService<Occurrence> implements OccurrenceService {
+public class RepositoryOccurrenceService extends KeySupportingRepositoryService<Occurrence>
+        implements OccurrenceService {
 
     @Autowired
     private OccurrenceDao occurrenceDao;
@@ -24,28 +23,13 @@ public class RepositoryOccurrenceService extends BaseRepositoryService<Occurrenc
     private OccurrenceReportDao reportDao;
 
     @Override
-    protected GenericDao<Occurrence> getPrimaryDao() {
+    protected OwlKeySupportingDao<Occurrence> getPrimaryDao() {
         return occurrenceDao;
     }
 
     @Override
-    public Occurrence findByKey(String key) {
-        return occurrenceDao.findByKey(key);
-    }
-
-    @Override
     public Collection<OccurrenceReport> getReports(Occurrence occurrence) {
-//        return reportDao.findByOccurrence(occurrence);
-        return null;
-    }
-
-    @Override
-    public Collection<OccurrenceReport> getReports(Occurrence occurrence, ReportingPhase phase) {
         Objects.requireNonNull(occurrence);
-        Objects.requireNonNull(phase);
-
-        final Collection<OccurrenceReport> reports = getReports(occurrence);
-        return reports.stream().filter(occurrenceReport -> occurrenceReport.getPhase() == phase)
-                      .collect(Collectors.toList());
+        return reportDao.findByOccurrence(occurrence);
     }
 }

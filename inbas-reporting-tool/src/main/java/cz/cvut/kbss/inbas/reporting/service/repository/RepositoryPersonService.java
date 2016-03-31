@@ -32,7 +32,6 @@ public class RepositoryPersonService extends BaseRepositoryService<Person> imple
         if (findByUsername(person.getUsername()) != null) {
             throw new UsernameExistsException("Username " + person.getUsername() + " already exists.");
         }
-        person.generateUri();
         person.encodePassword(passwordEncoder);
         personDao.persist(person);
     }
@@ -47,10 +46,5 @@ public class RepositoryPersonService extends BaseRepositoryService<Person> imple
             instance.encodePassword(passwordEncoder);
         }
         personDao.update(instance);
-    }
-
-    @Override
-    public void remove(Person instance) {
-        personDao.remove(instance);
     }
 }
