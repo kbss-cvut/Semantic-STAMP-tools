@@ -5,6 +5,7 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.Report)
@@ -40,6 +41,23 @@ public class Report implements LogicalDocument, Serializable {
 
     @Types
     private Set<String> types;
+
+    public Report() {
+    }
+
+    public Report(OccurrenceReport report) {
+        assert report != null;
+        this.uri = report.getUri();
+        this.key = report.getKey();
+        this.fileNumber = report.getFileNumber();
+        this.author = report.getAuthor();
+        this.dateCreated = report.getDateCreated();
+        this.lastModified = report.getLastModified();
+        this.lastModifiedBy = report.getLastModifiedBy();
+        this.revision = report.getRevision();
+        this.types = new HashSet<>();
+        types.add(Vocabulary.OccurrenceReport);
+    }
 
     @Override
     public URI getUri() {

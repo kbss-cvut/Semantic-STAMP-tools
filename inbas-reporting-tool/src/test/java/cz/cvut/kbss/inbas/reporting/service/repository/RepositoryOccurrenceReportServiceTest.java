@@ -139,4 +139,17 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
             expectedRevision++;
         }
     }
+
+    @Test
+    public void updateSetsLastModifiedAndLastModifiedBy() {
+        final OccurrenceReport report = persistFirstRevision(true);
+        assertNull(report.getLastModifiedBy());
+        assertNull(report.getLastModifiedBy());
+        report.setSummary("Report summary.");
+        occurrenceReportService.update(report);
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertEquals(Environment.getCurrentUser().getUri(), result.getLastModifiedBy().getUri());
+        assertNotNull(result.getLastModified());
+    }
 }

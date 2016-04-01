@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 public class Environment {
 
@@ -79,5 +80,24 @@ public class Environment {
             }
         }
         return true;
+    }
+
+    /**
+     * Gets random element from the specified collection.
+     *
+     * @param col The collection
+     * @param <T> Element type
+     * @return Randomly selected element from the collection
+     */
+    public static <T> T randomElement(Collection<T> col) {
+        final int index = Generator.randomInt(col.size() + 1) - 1;  // Some arithmetic to get the bounds right
+        final Iterator<T> it = col.iterator();
+        int i = 0;
+        T item = null;
+        while (it.hasNext() && i <= index) {
+            item = it.next();
+            i++;
+        }
+        return item;
     }
 }

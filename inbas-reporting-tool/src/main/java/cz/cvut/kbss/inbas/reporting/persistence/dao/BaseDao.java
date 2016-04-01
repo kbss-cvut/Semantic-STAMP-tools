@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
+import cz.cvut.kbss.inbas.reporting.model_new.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -25,11 +26,7 @@ public abstract class BaseDao<T> implements GenericDao<T> {
 
     protected BaseDao(Class<T> type) {
         this.type = type;
-        final OWLClass owlClass = type.getDeclaredAnnotation(OWLClass.class);
-        if (owlClass == null) {
-            throw new IllegalArgumentException("Class " + type + " is not an entity.");
-        }
-        this.typeUri = URI.create(owlClass.iri());
+        this.typeUri = URI.create(EntityToOwlClassMapper.getOwlClassForEntity(type));
     }
 
     @Autowired
@@ -190,7 +187,7 @@ public abstract class BaseDao<T> implements GenericDao<T> {
                  .setParameter("type", URI.create(owlClass)).getSingleResult();
     }
 
-    protected EntityManager entityManager() {
+    EntityManager entityManager() {
         return emf.createEntityManager();
     }
 }

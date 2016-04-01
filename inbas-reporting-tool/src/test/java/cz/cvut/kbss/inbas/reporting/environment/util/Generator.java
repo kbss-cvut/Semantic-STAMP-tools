@@ -77,6 +77,15 @@ public class Generator {
         return reports;
     }
 
+    /**
+     * Generates a (pseudo-)random integer between 0 and the specified upper bound.
+     * <p>
+     * <b>IMPORTANT</b>: The lower bound (0) is not included in the generator output, so the smallest number this
+     * generator returns is 1.
+     *
+     * @param upperBound Upper bound of the generated number
+     * @return Randomly generated integer
+     */
     public static int randomInt(int upperBound) {
         int rand;
         do {

@@ -90,6 +90,14 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
+    public void findRevisionReturnsNullForUnknownChain() {
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        dao.persist(chain);
+        final Integer revision = chain.get(0).getRevision();
+        assertNull(dao.findRevision(Long.MAX_VALUE, revision));
+    }
+
+    @Test
     public void findRevisionReturnsNullForUnknownRevision() {
         final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
         dao.persist(chain);

@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
+import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.exceptions.NoUniqueResultException;
@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
-abstract class BaseReportDao<T extends HasOwlKey> extends OwlKeySupportingDao<T> {
+abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupportingDao<T> {
 
     final URI typeIri;
 

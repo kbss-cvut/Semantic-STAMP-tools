@@ -11,7 +11,7 @@ public interface OccurrenceService extends BaseService<Occurrence> {
      * Finds occurrence with the specified key.
      *
      * @param key Occurrence key
-     * @return Matching occurrence instance or {@code null}, if none exists
+     * @return Matching instance or {@code null}, if none exists
      */
     Occurrence findByKey(String key);
 

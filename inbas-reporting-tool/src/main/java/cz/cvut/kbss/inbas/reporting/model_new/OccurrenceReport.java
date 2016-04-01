@@ -1,7 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasOwlKey;
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -13,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @OWLClass(iri = Vocabulary.OccurrenceReport)
-public class OccurrenceReport implements HasOwlKey, HasUri, Serializable {
+public class OccurrenceReport implements LogicalDocument, Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -63,6 +61,9 @@ public class OccurrenceReport implements HasOwlKey, HasUri, Serializable {
 
     @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasureRequests;
+
+    @OWLDataProperty(iri = Vocabulary.p_description)
+    private String summary;
 
     @Types
     private Set<String> types;
@@ -189,6 +190,14 @@ public class OccurrenceReport implements HasOwlKey, HasUri, Serializable {
 
     public void setCorrectiveMeasureRequests(Set<CorrectiveMeasureRequest> correctiveMeasureRequests) {
         this.correctiveMeasureRequests = correctiveMeasureRequests;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public Set<String> getTypes() {

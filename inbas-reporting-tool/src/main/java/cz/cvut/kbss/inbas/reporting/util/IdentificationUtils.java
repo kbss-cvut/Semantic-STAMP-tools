@@ -8,6 +8,10 @@ public class IdentificationUtils {
 
     private static final Random RANDOM = new Random();
 
+    private IdentificationUtils() {
+        throw new AssertionError();
+    }
+
     /**
      * Generates a pseudo-unique OWL key using current system time and a random generator.
      *

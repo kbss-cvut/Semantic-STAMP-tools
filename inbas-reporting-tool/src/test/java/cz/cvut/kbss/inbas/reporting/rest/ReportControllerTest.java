@@ -6,7 +6,7 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
-import cz.cvut.kbss.inbas.reporting.service.ReportService;
+import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.mockito.Mockito;
@@ -18,7 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Autowired
-    private ReportService reportServiceMock;
+    private ReportBusinessService reportServiceMock;
 
     @Autowired
     private ReportMapper reportMapper;

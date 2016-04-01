@@ -1,11 +1,14 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model_new.Report;
 import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,6 +24,13 @@ public class ReportDaoTest extends BaseDaoTestRunner {
     @Autowired
     private OccurrenceReportDao occurrenceReportDao;
 
+    private Person author;
+
+    @Before
+    public void setUp() {
+        this.author = Generator.getPerson();
+    }
+
     @Test
     public void getReportTypesReturnsClassesOfOccurrenceReport() {
         final OccurrenceReport report = persistReport();
@@ -32,7 +42,6 @@ public class ReportDaoTest extends BaseDaoTestRunner {
 
     private OccurrenceReport persistReport() {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        final Person author = Generator.getPerson();
         persistPerson(author);
         report.setAuthor(author);
         occurrenceReportDao.persist(report);
@@ -59,7 +68,6 @@ public class ReportDaoTest extends BaseDaoTestRunner {
     }
 
     private List<OccurrenceReport> persistReportChain() {
-        final Person author = Generator.getPerson();
         persistPerson(author);
         final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
         chain.get(0).getTypes().add(Vocabulary.LogicalDocument);
@@ -86,5 +94,29 @@ public class ReportDaoTest extends BaseDaoTestRunner {
             assertEquals(chain.get(i).getUri(), revisions.get(i).getUri());
             assertEquals(chain.get(i).getRevision(), revisions.get(i).getRevision());
         }
+    }
+
+    @Test
+    public void findAllReturnsLatestRevisionsOfAllReportChains() {
+        // Once other report types are added, they should be added into this tests
+        final List<Report> latestRevisions = initReportChains();
+
+        final List<Report> result = reportDao.findAll();
+        assertTrue(Environment.areEqual(latestRevisions, result));
+    }
+
+    /**
+     * Generates report chains.
+     *
+     * @return List of latest revisions of the generated chains, ordered by date created descending
+     */
+    private List<Report> initReportChains() {
+        final List<Report> latestRevisions = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final List<OccurrenceReport> chain = persistReportChain();
+            latestRevisions.add(new Report(chain.get(chain.size() - 1)));
+        }
+        Collections.sort(latestRevisions, (a, b) -> b.getDateCreated().compareTo(a.getDateCreated()));
+        return latestRevisions;
     }
 }

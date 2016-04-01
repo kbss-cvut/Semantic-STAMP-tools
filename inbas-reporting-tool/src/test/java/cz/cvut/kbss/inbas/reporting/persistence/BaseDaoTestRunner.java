@@ -18,6 +18,9 @@ public abstract class BaseDaoTestRunner {
     private PersonDao personDao;
 
     protected void persistPerson(Person person) {
-        personDao.persist(person);
+        assert person.getUsername() != null;
+        if (personDao.findByUsername(person.getUsername()) == null) {
+            personDao.persist(person);
+        }
     }
 }

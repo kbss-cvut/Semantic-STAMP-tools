@@ -203,7 +203,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
-    public void updateWorkForReportsWithoutCorrectiveMeasures() {
+    public void updateWorksForReportsWithoutCorrectiveMeasures() {
         final OccurrenceReport report = persistReport();
 
         report.setOccurrenceStart(new Date());

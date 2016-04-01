@@ -2,8 +2,8 @@ package cz.cvut.kbss.inbas.reporting.service.repository;
 
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Service
-public class RepositoryOccurrenceReportService extends BaseRepositoryService<OccurrenceReport>
+public class RepositoryOccurrenceReportService extends KeySupportingRepositoryService<OccurrenceReport>
         implements OccurrenceReportService {
 
     @Autowired
@@ -26,7 +26,7 @@ public class RepositoryOccurrenceReportService extends BaseRepositoryService<Occ
     private SecurityUtils securityUtils;
 
     @Override
-    protected GenericDao<OccurrenceReport> getPrimaryDao() {
+    protected OwlKeySupportingDao<OccurrenceReport> getPrimaryDao() {
         return reportDao;
     }
 
@@ -52,6 +52,14 @@ public class RepositoryOccurrenceReportService extends BaseRepositoryService<Occ
         }
         instances.forEach(this::initReportData);
         super.persist(instances);
+    }
+
+    @Override
+    public void update(OccurrenceReport instance) {
+        Objects.requireNonNull(instance);
+        instance.setLastModifiedBy(securityUtils.getCurrentUser());
+        instance.setLastModified(new Date());
+        super.update(instance);
     }
 
     @Override

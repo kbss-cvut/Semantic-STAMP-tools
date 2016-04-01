@@ -1,46 +1,22 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
-import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 
-import java.util.List;
-
 /**
- * Main facade to the report-related business logic.
- * <p>
- * This class should be used by the higher-level layers instead of the report-type specific services.
+ * Base interface which every report-specific service has to implement.
+ *
+ * @param <T> Report type
  */
-public interface ReportService<T extends LogicalDocument> {
+interface BaseReportService<T extends LogicalDocument> extends BaseService<T> {
 
     /**
-     * Gets all reports.
+     * Finds instance with the specified key.
      *
-     * @return All reports in the system
-     */
-    List<T> findAll();
-
-    /**
-     * Creates new report.
-     *
-     * @param report The instance to persist
-     */
-    void persist(T report);
-
-    /**
-     * Finds report by its key.
-     *
-     * @param key Report key
-     * @return Report or {@code null}
+     * @param key Instance key
+     * @return Matching instance or {@code null}, if none exists
      */
     T findByKey(String key);
-
-    /**
-     * Updates the specified report.
-     *
-     * @param report Updated report instance
-     */
-    void update(T report);
 
     /**
      * Gets report with latest revision in report chain with the specified file number.
@@ -58,14 +34,6 @@ public interface ReportService<T extends LogicalDocument> {
      * @param fileNumber Report chain identifier
      */
     void removeReportChain(Long fileNumber);
-
-    /**
-     * Gets all revisions in a report chain with the specified file number.
-     *
-     * @param fileNumber Report chain identifier
-     * @return List of revisions, in descending order, or empty list if there is no such report chain
-     */
-    List<ReportRevisionInfo> getReportChainRevisions(Long fileNumber);
 
     /**
      * Creates new report revision in report chain with the specified file number.

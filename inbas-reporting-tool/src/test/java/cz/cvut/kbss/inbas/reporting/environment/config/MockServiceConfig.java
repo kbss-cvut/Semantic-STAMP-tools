@@ -32,8 +32,8 @@ public class MockServiceConfig {
     }
 
     @Bean
-    public ReportService reportService() {
-        return mock(ReportService.class);
+    public ReportBusinessService reportService() {
+        return mock(ReportBusinessService.class);
     }
 
     @Bean
