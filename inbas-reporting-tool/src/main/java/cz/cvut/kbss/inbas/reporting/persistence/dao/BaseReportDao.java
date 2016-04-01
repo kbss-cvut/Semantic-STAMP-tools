@@ -10,6 +10,7 @@ import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 abstract class BaseReportDao<T extends HasOwlKey> extends OwlKeySupportingDao<T> {
 
@@ -100,5 +101,35 @@ abstract class BaseReportDao<T extends HasOwlKey> extends OwlKeySupportingDao<T>
         } finally {
             em.close();
         }
+    }
+
+    /**
+     * Removes all reports in report chain with the specified identifier.
+     * <p>
+     * Does nothing if there is no such report chain
+     *
+     * @param fileNumber Report chain identifier
+     */
+    public void removeReportChain(Long fileNumber) {
+        Objects.requireNonNull(fileNumber);
+        final EntityManager em = entityManager();
+        try {
+            final List<T> chain = loadChain(fileNumber, em);
+            if (chain.isEmpty()) {
+                return;
+            }
+            em.getTransaction().begin();
+            // Better call the remove method instead of directly remove on EM in case there is some additional remove logic
+            chain.forEach(r -> remove(r, em));
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
+
+    private List<T> loadChain(Long fileNumber, EntityManager em) {
+        return em.createNativeQuery("SELECT ?x WHERE { ?x a ?type; ?hasFileNumber ?fileNo . }", type)
+                 .setParameter("type", typeIri).setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
+                 .setParameter("fileNo", fileNumber).getResultList();
     }
 }

@@ -80,4 +80,10 @@ public class RepositoryOccurrenceReportService extends BaseRepositoryService<Occ
         Objects.requireNonNull(revision);
         return reportDao.findRevision(fileNumber, revision);
     }
+
+    @Override
+    public void removeReportChain(Long fileNumber) {
+        Objects.requireNonNull(fileNumber);
+        reportDao.removeReportChain(fileNumber);
+    }
 }

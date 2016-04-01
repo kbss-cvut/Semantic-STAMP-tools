@@ -32,4 +32,13 @@ public interface OccurrenceReportService extends BaseService<OccurrenceReport> {
      * with the specified identifier or it contains no such revision
      */
     OccurrenceReport findRevision(Long fileNumber, Integer revision);
+
+    /**
+     * Removes all reports in a report chain with the specified file number.
+     * <p>
+     * Does nothing if the report chain does not exist.
+     *
+     * @param fileNumber Report chain identifier
+     */
+    void removeReportChain(Long fileNumber);
 }

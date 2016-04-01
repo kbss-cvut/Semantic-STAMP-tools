@@ -52,9 +52,10 @@ public interface ReportService<T extends LogicalDocument> {
 
     /**
      * Removes all reports in a report chain with the specified file number.
+     * <p>
+     * Does nothing if the report chain does not exist.
      *
      * @param fileNumber Report chain identifier
-     * @throws NotFoundException If there is no report chain with the specified file number
      */
     void removeReportChain(Long fileNumber);
 

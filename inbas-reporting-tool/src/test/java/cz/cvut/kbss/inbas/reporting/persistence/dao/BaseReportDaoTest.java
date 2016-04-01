@@ -97,4 +97,26 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
 
         assertNull(dao.findRevision(chain.get(0).getFileNumber(), revision));
     }
+
+    @Test
+    public void removeReportChainDeletesAllReportsInChain() {
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        dao.persist(chain);
+        final Long fileNumber = chain.get(0).getFileNumber();
+
+        dao.removeReportChain(fileNumber);
+        chain.forEach(r -> {
+            assertNull(dao.find(r.getUri()));
+            assertFalse(dao.exists(r.getUri()));
+        });
+    }
+
+    @Test
+    public void removeChainDoesNothingWhenChainDoesNotExist() {
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        dao.persist(chain);
+
+        dao.removeReportChain(Long.MAX_VALUE);
+        chain.forEach(r -> assertNotNull(dao.find(r.getUri())));
+    }
 }
