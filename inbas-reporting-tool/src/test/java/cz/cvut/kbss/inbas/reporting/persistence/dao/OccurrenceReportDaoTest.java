@@ -41,19 +41,22 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistNewReportPersistsOccurrenceAsWell() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setAuthor(author);
-        occurrenceReportDao.persist(report);
+        final OccurrenceReport report = persistReport();
 
         final Occurrence occurrence = occurrenceDao.find(report.getOccurrence().getUri());
         assertNotNull(occurrence);
     }
 
-    @Test
-    public void persistReportWithExistingOccurrenceReusesOccurrenceInstance() {
+    private OccurrenceReport persistReport() {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
         report.setAuthor(author);
         occurrenceReportDao.persist(report);
+        return report;
+    }
+
+    @Test
+    public void persistReportWithExistingOccurrenceReusesOccurrenceInstance() {
+        final OccurrenceReport report = persistReport();
 
         final OccurrenceReport newReport = new OccurrenceReport(report);
         assertSame(report.getOccurrence(), newReport.getOccurrence());
@@ -74,9 +77,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         occurrenceDao.persist(occurrence);
         final List<OccurrenceReport> reports = persistReportsForOccurrence(occurrence);
         // This one is just so that the method does not simply select all reports
-        final OccurrenceReport other = Generator.generateOccurrenceReport(true);
-        other.setAuthor(author);
-        occurrenceReportDao.persist(other);
+        persistReport();
 
         final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
         assertTrue(Environment.areEqual(reports, result));
@@ -203,9 +204,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void updateWorkForReportsWithoutCorrectiveMeasures() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setAuthor(author);
-        occurrenceReportDao.persist(report);
+        final OccurrenceReport report = persistReport();
 
         report.setOccurrenceStart(new Date());
         report.setOccurrenceEnd(new Date(System.currentTimeMillis() + 100000));
@@ -218,9 +217,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void reportUpdateCascadesChangeToOccurrence() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setAuthor(author);
-        occurrenceReportDao.persist(report);
+        final OccurrenceReport report = persistReport();
 
         final String newName = "UpdatedOccurrenceName";
         report.getOccurrence().setName(newName);
@@ -228,5 +225,26 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
         final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
         assertEquals(newName, result.getOccurrence().getName());
+    }
+
+    @Test
+    public void removeDeletesCorrectiveMeasuresAsWell() {
+        final OccurrenceReport report = prepareReportWithMeasureRequests();
+        occurrenceReportDao.persist(report);
+
+        occurrenceReportDao.remove(report);
+        assertFalse(occurrenceReportDao.exists(report.getUri()));
+        final EntityManager em = emf.createEntityManager();
+        try {
+            for (CorrectiveMeasureRequest cmr : report.getCorrectiveMeasureRequests()) {
+                final Boolean res = em.createNativeQuery("ASK WHERE { ?x a ?type . }", Boolean.class)
+                                      .setParameter("x", cmr.getUri())
+                                      .setParameter("type", URI.create(Vocabulary.CorrectiveMeasureRequest))
+                                      .getSingleResult();
+                assertFalse(res);
+            }
+        } finally {
+            em.close();
+        }
     }
 }
