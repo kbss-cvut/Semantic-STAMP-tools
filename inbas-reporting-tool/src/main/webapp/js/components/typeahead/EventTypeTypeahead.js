@@ -37,12 +37,19 @@ var EventTypeTypeahead = React.createClass({
     onEventsLoaded: function () {
         var options = TypeaheadStore.getEventTypes();
         options = options.map(function (item) {
-            return {
+            var res = {
                 id: item['@id'],
                 type: item['@type'],
-                name: item[Vocabulary.RDFS_LABEL],
-                description: item[Vocabulary.RDFS_COMMENT]
+                name: typeof(item[Vocabulary.RDFS_LABEL]) === 'string' ? item[Vocabulary.RDFS_LABEL] : item[Vocabulary.RDFS_LABEL]['@value']
+            };
+            if (item[Vocabulary.RDFS_COMMENT]) {
+                if (typeof(item[Vocabulary.RDFS_COMMENT]) === 'string') {
+                    res.description = item[Vocabulary.RDFS_COMMENT];
+                } else {
+                    res.description = item[Vocabulary.RDFS_COMMENT]['@value'];
+                }
             }
+            return res;
         });
         this.setState({options: options});
     },

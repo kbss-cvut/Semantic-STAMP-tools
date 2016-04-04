@@ -9,8 +9,9 @@ var React = require('react');
 var Panel = require('react-bootstrap').Panel;
 var ReactPivot = require('react-pivot')
 var rd3 = require('react-d3');
-//var Treemap = rd3.Treemap;
+var Treemap = rd3.Treemap;
 var PieChart = rd3.PieChart;
+var Input = require('../Input');
 
 var injectIntl = require('../../utils/injectIntl');
 var Ajax = require('../../utils/Ajax');
@@ -35,7 +36,8 @@ var Statistics = React.createClass({
             },
             calculations: [],
             pieData: [],
-            result: ""
+            result: "",
+            chartType: 'pie'
         }
     },
 
@@ -55,38 +57,38 @@ var Statistics = React.createClass({
             if (self.isMounted()) {
                 Logger.log("Mounted, fetching setting new state...");
 
-                var rows = []
+                var rows = [];
                 for (var row in data.results.bindings) {
-                    var record = data.results.bindings[row]
-                    var newRecord = {}
+                    var record = data.results.bindings[row];
+                    var newRecord = {};
                     for (var col in record) {
-                        var val = record[col]
-                        newRecord[col] = val.value
+                        var val = record[col];
+                        newRecord[col] = val.value;
                     }
-                    rows.push(newRecord)
+                    rows.push(newRecord);
                 }
 
                 Logger.log(JSON.stringify(rows, null, 2));
 
-                var dimensions = []
-                var calculations = []
+                var dimensions = [];
+                var calculations = [];
                 for (var v in data.head.vars) {
-                    var vName = data.head.vars[v]
+                    var vName = data.head.vars[v];
                     if (!vName.startsWith('count'))
-                        dimensions.push({value: vName, title: vName.replace('_', ' ')})
+                        dimensions.push({value: vName, title: vName.replace('_', ' ')});
                 }
 
-                var activeDimensions = [dimensions[0]]
+                var activeDimensions = [dimensions[0]];
 
                 var calculations = [
                     {
                         title: 'count', value: 'count',
                         template: function (val, row) {
-                            Logger.log("val=" + val + ",row=" + row)
-                            return val
+                            Logger.log("val=" + val + ",row=" + row);
+                            return val;
                         }
                     }
-                ]
+                ];
 
                 self.setState(
                     {
@@ -102,21 +104,21 @@ var Statistics = React.createClass({
     },
 
     onData: function (data) {
-        Logger.log('ONDATA: ' + data)
+        Logger.log('ONDATA: ' + data);
         var pieData = [];
-        var sum = 0
+        var sum = 0;
 
         var dimm = '';
         var singleValueSet = [];
 
         for (var d in data) {
             var cur = {};
-            var i = 0
+            var i = 0;
             var dimmm = ''
             for (var dim in this.state.dimensions) {
                 if (data[d][this.state.dimensions[dim].title]) {
-                    dimmm = this.state.dimensions[dim].title
-                    i += 1
+                    dimmm = this.state.dimensions[dim].title;
+                    i += 1;
                 }
             }
 
@@ -132,7 +134,7 @@ var Statistics = React.createClass({
         }
 
         for (var d in pieData) {
-            pieData[d].value = pieData[d].value / sum * 100;
+            pieData[d].value = Math.round((pieData[d].value / sum * 100) * 100) / 100;
         }
 
         this.setState({pieData: pieData})
@@ -143,8 +145,12 @@ var Statistics = React.createClass({
         return memo
     },
 
+    _onChartTypeSelect: function (e) {
+        this.setState({chartType: e.target.value});
+    },
+
     render: function () {
-        return ( <div>
+        return ( <div className='centered'>
             <ReactPivot
                 key={this.state.reportKey}
                 rows={this.state.rows}
@@ -155,17 +161,34 @@ var Statistics = React.createClass({
                 onData={this.onData}
                 //sortBy={this.state.calculations[0].title}
                 sortDir='desc'/>
-            <PieChart
+            <div className='row' style={{margin: '1em 0 0 0'}}>
+                <div className='col-xs-3' style={{padding: '0 0 0 0'}}>
+                    <Input type='select' title='Chart type' label='Chart type' value={this.state.chartType}
+                           onChange={this._onChartTypeSelect}>
+                        <option value='pie'>Pie chart</option>
+                        <option value='tree'>Tree map</option>
+                    </Input>
+                </div>
+            </div>
+            {this.renderChart()}
+        </div> );
+    },
+
+    renderChart: function () {
+        if (this.state.chartType === 'pie') {
+            return <PieChart
                 data={this.state.pieData}
                 width={this.state.width}
-                height={400}
-                radius={100}
-                innerRadius={20}
+                height={800}
+                radius={350}
+                innerRadius={10}
                 title={''}
-            />
-        </div> )
-
-    },
+                showTooltip={true}
+                tooltipFormat={this.formatTooltip}
+            />;
+        }
+        return <Treemap data={this.state.pieData} width={this.state.width} height={800}/>;
+    }
 });
 
 module.exports = injectIntl(Statistics);

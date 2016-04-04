@@ -5,17 +5,21 @@ var injectIntl = require('react-intl').injectIntl;
 /**
  * Our version of react-intl's injectIntl.
  *
- * Decorates the basic instance returned by injectIntl with accessors to the wrapped element.
+ * Decorates the basic instance returned by injectIntl with accessors to the wrapped component or element (needed by
+ * tests).
  * @param component
  */
-module.exports = function (component) {
-    var comp = injectIntl(component);
-    comp.prototype.getWrappedElement = function () {
-        return this.refs.wrappedElement;
-    };
+module.exports = function (component, props) {
+    if (!props) {
+        props = {};
+    }
     // Store this only for development purposes
     if (process.env.NODE_ENV !== 'production') {
-        comp.wrappedComponent = component;
+        props.withRef = true;
+        var comp = injectIntl(component, props);
+        comp.wrappedComponent = comp;
+        return comp;
+    } else {
+        return injectIntl(component, props);
     }
-    return comp;
 };

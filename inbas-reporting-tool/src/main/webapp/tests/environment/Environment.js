@@ -20,8 +20,8 @@ module.exports = {
             result = TestUtils.renderIntoDocument(<TestApp>{component}</TestApp>),
             renderedComponent = TestUtils.findRenderedComponentWithType(result, type);
         //console.log(renderedComponent);
-        if (renderedComponent.refs && renderedComponent.refs.wrappedElement) {
-            return renderedComponent.refs.wrappedElement;
+        if (renderedComponent.getWrappedInstance) {
+            return renderedComponent.getWrappedInstance();
         } else {
             return renderedComponent;
         }
@@ -44,8 +44,8 @@ module.exports = {
             </TestApp>),
             renderedComponent = TestUtils.findRenderedComponentWithType(result, type);
         //console.log(renderedComponent);
-        if (renderedComponent.refs && renderedComponent.refs.wrappedElement) {
-            return renderedComponent.refs.wrappedElement;
+        if (renderedComponent.getWrappedInstance) {
+            return renderedComponent.getWrappedInstance();
         } else {
             return renderedComponent;
         }
