@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -34,6 +35,16 @@ public class Environment {
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(new AuthenticationToken(userDetails.getAuthorities(), userDetails));
         SecurityContextHolder.setContext(context);
+    }
+
+    /**
+     * Gets current user as security principal.
+     *
+     * @return Current user authentication as principal or {@code null} if there is no current user
+     */
+    public static Principal getCurrentUserPrincipal() {
+        return SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() :
+               null;
     }
 
     public static Person getCurrentUser() {
