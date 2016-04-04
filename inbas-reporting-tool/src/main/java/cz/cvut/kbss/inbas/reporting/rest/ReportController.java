@@ -1,10 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
-import cz.cvut.kbss.inbas.reporting.dto.AbstractReportDto;
-import cz.cvut.kbss.inbas.reporting.dto.PreliminaryReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
-import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model_new.Report;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
@@ -25,24 +23,24 @@ public class ReportController extends BaseController {
     private ReportMapper reportMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<OccurrenceReport> getAllReports() {
+    public Collection<LogicalDocument> getAllReports() {
         return null;
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> createReport(@RequestBody PreliminaryReportDto reportDto) {
+    public ResponseEntity<Void> createReport(@RequestBody LogicalDocument reportDto) {
         return null;
     }
 
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public AbstractReportDto getReport(@PathVariable("key") String key) {
-        final Report report = getReportInternal(key);
+    public LogicalDocument getReport(@PathVariable("key") String key) {
+        final LogicalDocument report = getReportInternal(key);
         return null;
     }
 
-    private Report getReportInternal(String key) {
-        final Report report = null;
+    private LogicalDocument getReportInternal(String key) {
+        final LogicalDocument report = null;
         if (report == null) {
             throw NotFoundException.create("Occurrence report", key);
         }
@@ -51,7 +49,7 @@ public class ReportController extends BaseController {
 
     @RequestMapping(value = "/{key}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateReport(@PathVariable("key") String key, @RequestBody AbstractReportDto reportUpdate) {
+    public void updateReport(@PathVariable("key") String key, @RequestBody LogicalDocument reportUpdate) {
         if (!key.equals(reportUpdate.getKey())) {
             throw new BadRequestException("The passed report's key is different from the specified one.");
         }
@@ -68,7 +66,7 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public AbstractReportDto findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
+    public LogicalDocument findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
         final Report report = null;
         if (report == null) {
             throw NotFoundException.create("Report chain", fileNumber);
@@ -96,8 +94,8 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public AbstractReportDto getRevision(@PathVariable("fileNumber") Long fileNumber,
-                                         @PathVariable("revision") Integer revision) {
+    public LogicalDocument getRevision(@PathVariable("fileNumber") Long fileNumber,
+                                       @PathVariable("revision") Integer revision) {
         final Report report = null;
         if (report == null) {
             throw new NotFoundException(
