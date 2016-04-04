@@ -48,4 +48,9 @@ public abstract class BaseRepositoryService<T> implements BaseService<T> {
     public void remove(Collection<T> instances) {
         getPrimaryDao().remove(instances);
     }
+
+    @Override
+    public boolean exists(URI uri) {
+        return getPrimaryDao().exists(uri);
+    }
 }

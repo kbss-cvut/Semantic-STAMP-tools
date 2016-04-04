@@ -2,16 +2,21 @@ package cz.cvut.kbss.inbas.reporting.service.validation;
 
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Objects;
 
-@Service
-public class OccurrenceReportValidator implements Validator<OccurrenceReport> {
+public class OccurrenceReportValidator extends Validator<OccurrenceReport> {
+
+    public OccurrenceReportValidator() {
+    }
+
+    public OccurrenceReportValidator(Validator<? super OccurrenceReport> next) {
+        super(next);
+    }
 
     @Override
-    public void validate(OccurrenceReport instance) throws ValidationException {
+    public void validateForPersist(OccurrenceReport instance) throws ValidationException {
         Objects.requireNonNull(instance);
         if (instance.getOccurrenceStart() != null) {
             if (instance.getOccurrenceStart().compareTo(new Date()) >= 0) {
@@ -21,6 +26,16 @@ public class OccurrenceReportValidator implements Validator<OccurrenceReport> {
                     instance.getOccurrenceStart().compareTo(instance.getOccurrenceEnd()) > 0) {
                 throw new ValidationException("Occurrence start cannot be after occurrence end.");
             }
+            if (instance.getOccurrence() != null &&
+                    (instance.getOccurrence().getName() == null || instance.getOccurrence().getName().isEmpty())) {
+                throw new ValidationException("Occurrence name cannot be empty.");
+            }
         }
+        super.validateForPersist(instance);
+    }
+
+    @Override
+    public void validateForUpdate(OccurrenceReport toValidate, OccurrenceReport original) throws ValidationException {
+        super.validateForUpdate(toValidate, original);
     }
 }
