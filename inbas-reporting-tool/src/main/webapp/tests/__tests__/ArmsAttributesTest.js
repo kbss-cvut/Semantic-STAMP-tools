@@ -69,13 +69,13 @@ describe('ARMS Attributes', function () {
     });
 
     function simulateArmsChange(change) {
-        TestUtils.Simulate.change(arms.refs.barrierEffectiveness.refs.wrappedElement.getInputNode().getInputDOMNode(), {
+        TestUtils.Simulate.change(arms.refs.barrierEffectiveness.getWrappedInstance().getInputNode().getInputDOMNode(), {
             target: {
                 name: 'barrierEffectiveness',
                 value: change.barrier
             }
         });
-        TestUtils.Simulate.change(arms.refs.accidentOutcome.refs.wrappedElement.getInputNode().getInputDOMNode(), {
+        TestUtils.Simulate.change(arms.refs.accidentOutcome.getWrappedInstance().getInputNode().getInputDOMNode(), {
             target: {
                 name: 'accidentOutcome',
                 value: change.outcome
