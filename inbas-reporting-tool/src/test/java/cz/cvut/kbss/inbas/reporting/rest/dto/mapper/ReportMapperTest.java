@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.rest.dto.mapper;
 
 import cz.cvut.kbss.inbas.reporting.config.RestConfig;
 import cz.cvut.kbss.inbas.reporting.dto.CorrectiveMeasureRequestDto;
+import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
@@ -21,10 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -146,6 +144,7 @@ public class ReportMapperTest {
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequestBasedOnOccurrence() {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
         final Occurrence occurrence = Generator.generateOccurrence();
+        occurrence.setType(Generator.generateEventType());
         occurrence.setKey(IdentificationUtils.generateKey());
         occurrence.setUri(URI.create(Vocabulary.Occurrence + "#instance"));
         req.setBasedOnOccurrence(occurrence);
@@ -239,6 +238,46 @@ public class ReportMapperTest {
         occurrenceDto.setName("Some occurrence");
         occurrenceDto.setType(Generator.generateEventType());
         dto.setBasedOn(occurrenceDto);
+        return dto;
+    }
+
+    @Test
+    public void reportToReportDtoTransformsOccurrenceReportToOccurrenceReportDto() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setCorrectiveMeasureRequests(Generator.generateCorrectiveMeasureRequests());
+        final LogicalDocument dto = mapper.reportToReportDto(report);
+        assertNotNull(dto);
+        assertTrue(dto instanceof OccurrenceReportDto);
+        final OccurrenceReportDto orDto = (OccurrenceReportDto) dto;
+        assertEquals(report.getCorrectiveMeasureRequests().size(), orDto.getCorrectiveMeasureRequests().size());
+        assertEquals(report.getUri(), orDto.getUri());
+        assertEquals(report.getKey(), orDto.getKey());
+        assertEquals(report.getFileNumber(), orDto.getFileNumber());
+    }
+
+    @Test
+    public void reportDtoToReportTransformsOccurrenceReportDtoToOccurrenceReport() {
+        final OccurrenceReportDto dto = generateOccurrenceReportDto();
+        final LogicalDocument doc = mapper.reportDtoToReport(dto);
+        assertNotNull(doc);
+        assertTrue(doc instanceof OccurrenceReport);
+        final OccurrenceReport report = (OccurrenceReport) doc;
+        assertEquals(dto.getOccurrenceStart(), report.getOccurrenceStart());
+        assertEquals(dto.getOccurrenceEnd(), report.getOccurrenceEnd());
+        assertEquals(dto.getOccurrence(), report.getOccurrence());
+        assertEquals(dto.getCorrectiveMeasureRequests().size(), report.getCorrectiveMeasureRequests().size());
+    }
+
+    private OccurrenceReportDto generateOccurrenceReportDto() {
+        final OccurrenceReportDto dto = new OccurrenceReportDto();
+        dto.setOccurrenceStart(new Date());
+        dto.setOccurrenceEnd(new Date());
+        dto.setOccurrence(Generator.generateOccurrence());
+        dto.setSummary("Occurrence report summary.");
+        dto.setCorrectiveMeasureRequests(new HashSet<>());
+        dto.getCorrectiveMeasureRequests().add(generateCorrectiveMeasureRequestDtoBasedOnEvent());
+        dto.getCorrectiveMeasureRequests().add(generateCorrectiveMeasureRequestDtoBasedOnOccurrence());
+        dto.getCorrectiveMeasureRequests().add(generateCorrectiveMeasureRequestDtoWithAgents());
         return dto;
     }
 }

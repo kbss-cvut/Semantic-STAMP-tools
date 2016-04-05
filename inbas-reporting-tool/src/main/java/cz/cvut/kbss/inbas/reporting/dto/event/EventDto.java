@@ -1,11 +1,9 @@
 package cz.cvut.kbss.inbas.reporting.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import cz.cvut.kbss.inbas.reporting.model_new.Event;
 import cz.cvut.kbss.inbas.reporting.model_new.EventType;
 
 import java.net.URI;
-import java.util.Objects;
 import java.util.Set;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
@@ -21,16 +19,6 @@ public class EventDto {
     private EventType type;
 
     private Set<String> types;
-
-    public EventDto() {
-    }
-
-    public EventDto(Event event) {
-        Objects.requireNonNull(event);
-        this.uri = event.getUri();
-        this.type = event.getType();
-        this.types = event.getTypes();
-    }
 
     public URI getUri() {
         return uri;

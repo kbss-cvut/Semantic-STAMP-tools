@@ -19,6 +19,26 @@ public abstract class ReportMapper {
 
     private final SplittableRandom random = new SplittableRandom();
 
+    public LogicalDocument reportToReportDto(LogicalDocument report) {
+        if (report == null) {
+            return null;
+        }
+        if (report instanceof OccurrenceReport) {
+            return occurrenceReportToOccurrenceReportDto((OccurrenceReport) report);
+        }
+        return report;
+    }
+
+    public LogicalDocument reportDtoToReport(LogicalDocument dto) {
+        if (dto == null) {
+            return null;
+        }
+        if (dto instanceof OccurrenceReportDto) {
+            return occurrenceReportDtoToOccurrenceReport((OccurrenceReportDto) dto);
+        }
+        return dto;
+    }
+
     public abstract OccurrenceReportDto occurrenceReportToOccurrenceReportDto(OccurrenceReport report);
 
     public abstract OccurrenceReport occurrenceReportDtoToOccurrenceReport(OccurrenceReportDto dto);

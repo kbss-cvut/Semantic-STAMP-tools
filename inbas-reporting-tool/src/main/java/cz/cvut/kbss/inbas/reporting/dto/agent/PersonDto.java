@@ -15,9 +15,6 @@ public class PersonDto extends AgentDto {
 
     private Set<String> types;
 
-    public PersonDto() {
-    }
-
     public String getFirstName() {
         return firstName;
     }

@@ -1,9 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
-import cz.cvut.kbss.inbas.reporting.model_new.EventType;
-import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
-import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model_new.*;
 
 import java.net.URI;
 import java.util.*;
@@ -22,7 +19,6 @@ public class Generator {
     public static Occurrence generateOccurrence() {
         final Occurrence occurrence = new Occurrence();
         occurrence.setName(UUID.randomUUID().toString());
-        occurrence.setType(generateEventType());
         return occurrence;
     }
 
@@ -46,6 +42,17 @@ public class Generator {
         person.setUsername(USERNAME);
         person.setPassword(PASSWORD);
         return person;
+    }
+
+    /**
+     * Generates {@link Organization} with a random name.
+     *
+     * @return Organization
+     */
+    public static Organization generateOrganization() {
+        final Organization org = new Organization();
+        org.setName(UUID.randomUUID().toString());
+        return org;
     }
 
     /**
@@ -91,6 +98,34 @@ public class Generator {
             previous = newRev;
         }
         return reports;
+    }
+
+    public static Set<CorrectiveMeasureRequest> generateCorrectiveMeasureRequests() {
+        final Set<CorrectiveMeasureRequest> set = new HashSet<>();
+        for (int i = 0; i < randomInt(10); i++) {
+            final CorrectiveMeasureRequest cmr = new CorrectiveMeasureRequest();
+            cmr.setDescription(UUID.randomUUID().toString());
+            int j = randomInt(Integer.MAX_VALUE);
+            switch (j % 3) {
+                case 0:
+                    cmr.setResponsiblePersons(Collections.singleton(getPerson()));
+                    final Event evt = new Event();
+                    evt.setType(generateEventType());
+                    cmr.setBasedOnEvent(evt);
+                    break;
+                case 1:
+                    cmr.setResponsibleOrganizations(Collections.singleton(generateOrganization()));
+                    cmr.setBasedOnOccurrence(generateOccurrence());
+                    cmr.getBasedOnOccurrence().setType(generateEventType());
+                    break;
+                case 2:
+                    cmr.setResponsiblePersons(Collections.singleton(getPerson()));
+                    cmr.setResponsibleOrganizations(Collections.singleton(generateOrganization()));
+                    break;
+            }
+            set.add(cmr);
+        }
+        return set;
     }
 
     /**

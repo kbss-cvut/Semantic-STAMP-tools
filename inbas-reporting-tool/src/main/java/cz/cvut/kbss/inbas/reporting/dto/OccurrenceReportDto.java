@@ -17,6 +17,8 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     private Long fileNumber;
 
+    // TODO Occurrence here can be the same as occurrence in some corrective measure request, but we are using a DTO there.
+    // This should be probably unified, so that a reference can be used
     private Occurrence occurrence;
 
     private Date occurrenceStart;
