@@ -264,7 +264,7 @@ public class ReportMapperTest {
         final OccurrenceReport report = (OccurrenceReport) doc;
         assertEquals(dto.getOccurrenceStart(), report.getOccurrenceStart());
         assertEquals(dto.getOccurrenceEnd(), report.getOccurrenceEnd());
-        assertEquals(dto.getOccurrence(), report.getOccurrence());
+        assertEquals(dto.getOccurrence().getName(), report.getOccurrence().getName());
         assertEquals(dto.getCorrectiveMeasureRequests().size(), report.getCorrectiveMeasureRequests().size());
     }
 
@@ -272,7 +272,10 @@ public class ReportMapperTest {
         final OccurrenceReportDto dto = new OccurrenceReportDto();
         dto.setOccurrenceStart(new Date());
         dto.setOccurrenceEnd(new Date());
-        dto.setOccurrence(Generator.generateOccurrence());
+        final Occurrence o = Generator.generateOccurrence();
+        final OccurrenceDto oDto = new OccurrenceDto();
+        o.setName(o.getName());
+        dto.setOccurrence(oDto);
         dto.setSummary("Occurrence report summary.");
         dto.setCorrectiveMeasureRequests(new HashSet<>());
         dto.getCorrectiveMeasureRequests().add(generateCorrectiveMeasureRequestDtoBasedOnEvent());

@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.dto;
 
+import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
-import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.model_new.SeverityLevel;
 
@@ -17,9 +17,7 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     private Long fileNumber;
 
-    // TODO Occurrence here can be the same as occurrence in some corrective measure request, but we are using a DTO there.
-    // This should be probably unified, so that a reference can be used
-    private Occurrence occurrence;
+    private OccurrenceDto occurrence;
 
     private Date occurrenceStart;
 
@@ -71,11 +69,11 @@ public class OccurrenceReportDto implements LogicalDocument {
         this.fileNumber = fileNumber;
     }
 
-    public Occurrence getOccurrence() {
+    public OccurrenceDto getOccurrence() {
         return occurrence;
     }
 
-    public void setOccurrence(Occurrence occurrence) {
+    public void setOccurrence(OccurrenceDto occurrence) {
         this.occurrence = occurrence;
     }
 
