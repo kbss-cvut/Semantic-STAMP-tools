@@ -8,6 +8,9 @@ public class OrganizationDto extends AgentDto {
 
     private Set<String> types;
 
+    public OrganizationDto() {
+    }
+
     public String getName() {
         return name;
     }

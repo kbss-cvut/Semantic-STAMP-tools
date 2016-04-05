@@ -1,9 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
+import cz.cvut.kbss.inbas.reporting.model_new.EventType;
 import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 
+import java.net.URI;
 import java.util.*;
 
 public class Generator {
@@ -20,7 +22,21 @@ public class Generator {
     public static Occurrence generateOccurrence() {
         final Occurrence occurrence = new Occurrence();
         occurrence.setName(UUID.randomUUID().toString());
+        occurrence.setType(generateEventType());
         return occurrence;
+    }
+
+    /**
+     * Generates an {@link EventType} instance with (pseudo) unique name and URI.
+     *
+     * @return EventType instance
+     */
+    public static EventType generateEventType() {
+        final EventType et = new EventType();
+        final int rand = randomInt(100000);
+        et.setName(rand + " - Runway Incursion by an Aircraft");
+        et.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-" + rand));
+        return et;
     }
 
     public static Person getPerson() {
