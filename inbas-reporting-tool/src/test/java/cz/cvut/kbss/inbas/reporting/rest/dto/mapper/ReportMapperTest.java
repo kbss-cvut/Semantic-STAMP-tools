@@ -12,6 +12,7 @@ import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.*;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +49,11 @@ public class ReportMapperTest {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequestWithResponsibleAgents();
         final CorrectiveMeasureRequestDto dto = mapper.correctiveMeasureRequestToDto(req);
         assertNotNull(dto);
+        verifyAgentsCorrespondToOrganizationsAndPersons(req, dto);
+    }
+
+    private void verifyAgentsCorrespondToOrganizationsAndPersons(CorrectiveMeasureRequest req,
+                                                                 CorrectiveMeasureRequestDto dto) {
         assertEquals(req.getResponsibleOrganizations().size() + req.getResponsiblePersons().size(),
                 dto.getResponsibleAgents().size());
         final Map<URI, HasUri> origAgents = new HashMap<>();
@@ -98,7 +104,7 @@ public class ReportMapperTest {
 
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequest() {
         final CorrectiveMeasureRequest request = new CorrectiveMeasureRequest();
-        request.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/corrective_measure_request#req"));
+        request.setUri(URI.create(Vocabulary.CorrectiveMeasureRequest + "#req"));
         request.setDescription("Sample corrective measure.");
         return request;
     }
@@ -117,7 +123,7 @@ public class ReportMapperTest {
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequestBasedOnEvent() {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
         final Event event = new Event();
-        event.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/ufo/Event#instance"));
+        event.setUri(URI.create(Vocabulary.Event + "#instance"));
         event.setType(Generator.generateEventType());
         req.setBasedOnEvent(event);
         return req;
@@ -141,8 +147,98 @@ public class ReportMapperTest {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
         final Occurrence occurrence = Generator.generateOccurrence();
         occurrence.setKey(IdentificationUtils.generateKey());
-        occurrence.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/occurrence#instance"));
+        occurrence.setUri(URI.create(Vocabulary.Occurrence + "#instance"));
         req.setBasedOnOccurrence(occurrence);
         return req;
+    }
+
+    @Test
+    public void dtoToCorrectiveMeasureRequestCopiesBasicAttributes() {
+        final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
+        final CorrectiveMeasureRequest req = mapper.dtoToCorrectiveMeasureRequest(dto);
+        assertNotNull(req);
+        assertEquals(dto.getUri(), req.getUri());
+        assertEquals(dto.getDescription(), req.getDescription());
+    }
+
+    private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDto() {
+        final CorrectiveMeasureRequestDto dto = new CorrectiveMeasureRequestDto();
+        dto.setUri(URI.create(Vocabulary.CorrectiveMeasureRequest + "#req"));
+        dto.setDescription("Sample corrective measure.");
+        return dto;
+    }
+
+    @Test
+    public void dtoToCorrectiveMeasureRequestTransformsAgentsToPersonsAndOrganizations() {
+        final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDtoWithAgents();
+        final CorrectiveMeasureRequest req = mapper.dtoToCorrectiveMeasureRequest(dto);
+        assertNotNull(req);
+        verifyAgentsCorrespondToOrganizationsAndPersons(req, dto);
+    }
+
+    private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDtoWithAgents() {
+        final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
+        final Set<AgentDto> agents = new HashSet<>();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final PersonDto p = new PersonDto();
+            p.setFirstName("FirstName" + i);
+            p.setLastName("LastName" + i);
+            p.setUsername("firstname-" + i + "@inbas.cz");
+            p.setUri(URI.create(Constants.PERSON_BASE_URI + p.getFirstName() + "+" + p.getLastName()));
+            agents.add(p);
+        }
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final OrganizationDto o = new OrganizationDto();
+            o.setName("Knowledge Based Software Systems Division " + i);
+            o.setUri(URI.create(Constants.ORGANIZATION_BASE_URI + "KBSS" + i));
+            agents.add(o);
+        }
+        dto.setResponsibleAgents(agents);
+        return dto;
+    }
+
+    @Test
+    public void dtoToCorrectiveMeasureRequestTransformsEventDtoToEvent() {
+        final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDtoBasedOnEvent();
+        final CorrectiveMeasureRequest req = mapper.dtoToCorrectiveMeasureRequest(dto);
+        assertNotNull(req);
+        assertNotNull(req.getBasedOnEvent());
+        assertNull(req.getBasedOnOccurrence());
+        assertEquals(dto.getBasedOn().getUri(), req.getBasedOnEvent().getUri());
+        assertEquals(dto.getBasedOn().getType(), req.getBasedOnEvent().getType());
+    }
+
+    private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDtoBasedOnEvent() {
+        final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
+        final EventDto eventDto = new EventDto();
+        eventDto.setType(Generator.generateEventType());
+        eventDto.setUri(URI.create(Vocabulary.Event + "#instance"));
+        dto.setBasedOn(eventDto);
+        return dto;
+    }
+
+    @Test
+    public void dtoToCorrectiveMeasureRequestTransformsOccurrenceDtoToOccurrence() {
+        final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDtoBasedOnOccurrence();
+        final CorrectiveMeasureRequest req = mapper.dtoToCorrectiveMeasureRequest(dto);
+        assertNotNull(req);
+        assertNotNull(req.getBasedOnOccurrence());
+        assertNull(req.getBasedOnEvent());
+        final OccurrenceDto oDto = (OccurrenceDto) dto.getBasedOn();
+        assertEquals(oDto.getUri(), req.getBasedOnOccurrence().getUri());
+        assertEquals(oDto.getName(), req.getBasedOnOccurrence().getName());
+        assertEquals(oDto.getKey(), req.getBasedOnOccurrence().getKey());
+        assertEquals(oDto.getType(), req.getBasedOnOccurrence().getType());
+    }
+
+    private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDtoBasedOnOccurrence() {
+        final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
+        final OccurrenceDto occurrenceDto = new OccurrenceDto();
+        occurrenceDto.setUri(URI.create(Vocabulary.Occurrence + "#instance"));
+        occurrenceDto.setKey(IdentificationUtils.generateKey());
+        occurrenceDto.setName("Some occurrence");
+        occurrenceDto.setType(Generator.generateEventType());
+        dto.setBasedOn(occurrenceDto);
+        return dto;
     }
 }
