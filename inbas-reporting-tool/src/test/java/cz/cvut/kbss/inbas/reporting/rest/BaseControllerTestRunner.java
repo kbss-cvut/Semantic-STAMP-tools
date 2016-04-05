@@ -10,6 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -34,5 +35,9 @@ public abstract class BaseControllerTestRunner {
 
     protected String toJson(Object object) throws Exception {
         return objectMapper.writeValueAsString(object);
+    }
+
+    <T> T readValue(MvcResult result, Class<T> targetType) throws Exception {
+        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), targetType);
     }
 }

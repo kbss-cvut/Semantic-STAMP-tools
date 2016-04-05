@@ -1,27 +1,39 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
-import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
+import cz.cvut.kbss.inbas.reporting.model_new.Report;
+import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
+import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.MvcResult;
 
-@Ignore
+import java.net.URI;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Autowired
     private ReportBusinessService reportServiceMock;
-
-    @Autowired
-    private ReportMapper reportMapper;
 
     @Before
     public void setUp() throws Exception {
@@ -29,6 +41,61 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         Mockito.reset(reportServiceMock);
         Person person = Generator.getPerson();
         Environment.setCurrentUser(person);
+    }
+
+    @Test
+    public void getAllReportsReturnsEmptyCollectionWhenThereAreNoReports() throws Exception {
+        when(reportServiceMock.findAll()).thenReturn(Collections.emptyList());
+        final MvcResult result = mockMvc.perform(get("/reports").accept(MediaType.APPLICATION_JSON_VALUE))
+                                        .andExpect(status().isOk()).andReturn();
+        final List<Report> res = objectMapper
+                .readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<Report>>() {
+                });
+        assertNotNull(res);
+        assertTrue(res.isEmpty());
+    }
+
+    @Test
+    public void getReportReturnsNotFoundForUnknownKey() throws Exception {
+        final String key = "unknownKey";
+        when(reportServiceMock.findByKey(key)).thenReturn(null);
+        mockMvc.perform(get("/reports/" + key)).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testGetReportForOccurrenceReport() throws Exception {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.getOccurrence().setUri(URI.create(Vocabulary.Occurrence + "#32145"));
+        report.setKey(IdentificationUtils.generateKey());
+        report.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance12345"));
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final MvcResult result = mockMvc.perform(get("/reports/" + report.getKey())).andExpect(status().isOk())
+                                        .andReturn();
+        final OccurrenceReportDto res = readValue(result, OccurrenceReportDto.class);
+        assertNotNull(res);
+        assertEquals(report.getUri(), res.getUri());
+        assertEquals(report.getKey(), res.getKey());
+        assertEquals(report.getOccurrence().getUri(), res.getOccurrence().getUri());
+    }
+
+    @Test
+    public void testGetLatestRevisionForOccurrenceReport() throws Exception {
+        final OccurrenceReport latestRevision = Generator.generateOccurrenceReport(true);
+        latestRevision.setRevision(Generator.randomInt(10));
+        when(reportServiceMock.findLatestRevision(latestRevision.getFileNumber())).thenReturn(latestRevision);
+        final MvcResult result = mockMvc.perform(get("/reports/chain/" + latestRevision.getFileNumber()))
+                                        .andExpect(status().isOk()).andReturn();
+        final OccurrenceReportDto res = readValue(result, OccurrenceReportDto.class);
+        assertNotNull(res);
+        assertEquals(latestRevision.getUri(), res.getUri());
+        assertEquals(latestRevision.getRevision(), res.getRevision());
+    }
+
+    @Test
+    public void getLatestRevisionThrowsNotFoundWhenReportChainIsNotFound() throws Exception {
+        final Long fileNumber = 12345L;
+        when(reportServiceMock.findLatestRevision(fileNumber)).thenReturn(null);
+        mockMvc.perform(get("/reports/chain/" + fileNumber)).andExpect(status().isNotFound());
     }
 
 //    @Test
@@ -67,24 +134,6 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 //        assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
 //        verifyLocationEquals("/reports/" + newRevision.getKey(), result);
 //        verify(reportServiceMock).createNewRevision(fileNumber);
-//    }
-//
-//    @Test
-//    public void getLatestRevisionThrowsNotFoundWhenReportChainIsNotFound() throws Exception {
-//        final Long fileNumber = 12345L;
-//        when(reportServiceMock.findLatestRevision(fileNumber)).thenReturn(null);
-//
-//        final MvcResult result = mockMvc.perform(get("/reports/chain/" + fileNumber)).andReturn();
-//        assertEquals(HttpStatus.NOT_FOUND, HttpStatus.valueOf(result.getResponse().getStatus()));
-//    }
-//
-//    @Test
-//    public void getReportThrowsNotFoundWhenReportIsNotFound() throws Exception {
-//        final String key = "12345";
-//        when(reportServiceMock.findByKey(key)).thenReturn(null);
-//
-//        final MvcResult result = mockMvc.perform(get("/reports/" + key)).andReturn();
-//        assertEquals(HttpStatus.NOT_FOUND, HttpStatus.valueOf(result.getResponse().getStatus()));
 //    }
 //
 //    @Test
@@ -150,31 +199,5 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 //                                        .andReturn();
 //        assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
 //        verifyLocationEquals("/reports/" + key, result);
-//    }
-//
-//    @Test
-//    public void getReportsReturnsEmptyArrayWhenThereAreNone() throws Exception {
-//        when(reportServiceMock.findAll(anyString())).thenReturn(Collections.emptyList());
-//        final MvcResult result = mockMvc.perform(get("/reports")).andReturn();
-//        assertEquals(HttpStatus.OK, HttpStatus.valueOf(result.getResponse().getStatus()));
-//        final List<OccurrenceReport> body = objectMapper.readValue(result.getResponse().getContentAsString(),
-//                new TypeReference<List<OccurrenceReport>>() {
-//                });
-//        assertTrue(body.isEmpty());
-//    }
-//
-//    @Test
-//    public void getReportsWithInvalidTypeThrowsBadRequest() throws Exception {
-//        final String invalidType = "invalidType";
-//        when(reportServiceMock.findAll(invalidType)).thenThrow(new IllegalArgumentException());
-//        final MvcResult result = mockMvc.perform(get("/reports").param("type", invalidType)).andReturn();
-//        assertEquals(HttpStatus.BAD_REQUEST, HttpStatus.valueOf(result.getResponse().getStatus()));
-//    }
-//
-//    @Test
-//    public void getReportReturnsNotFoundForUnknownKey() throws Exception {
-//        final String key = "unknownKey";
-//        when(reportServiceMock.findByKey(key)).thenReturn(null);
-//        mockMvc.perform(get("/reports/" + key)).andExpect(status().isNotFound());
 //    }
 }

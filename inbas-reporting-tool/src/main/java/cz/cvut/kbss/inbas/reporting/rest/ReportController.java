@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model_new.Report;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
+import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,11 +21,14 @@ import java.util.List;
 public class ReportController extends BaseController {
 
     @Autowired
+    private ReportBusinessService reportService;
+
+    @Autowired
     private ReportMapper reportMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<LogicalDocument> getAllReports() {
-        return null;
+    public Collection<Report> getAllReports() {
+        return reportService.findAll();
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -35,12 +39,11 @@ public class ReportController extends BaseController {
 
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument getReport(@PathVariable("key") String key) {
-        final LogicalDocument report = getReportInternal(key);
-        return null;
+        return reportMapper.reportToReportDto(getReportInternal(key));
     }
 
     private LogicalDocument getReportInternal(String key) {
-        final LogicalDocument report = null;
+        final LogicalDocument report = reportService.findByKey(key);
         if (report == null) {
             throw NotFoundException.create("Occurrence report", key);
         }
@@ -67,11 +70,11 @@ public class ReportController extends BaseController {
 
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
-        final Report report = null;
+        final LogicalDocument report = reportService.findLatestRevision(fileNumber);
         if (report == null) {
             throw NotFoundException.create("Report chain", fileNumber);
         }
-        return null;
+        return reportMapper.reportToReportDto(report);
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
