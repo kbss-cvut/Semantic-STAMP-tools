@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
+import cz.cvut.kbss.inbas.reporting.dto.event.FactorDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model_new.*;
 import org.mapstruct.Mapper;
@@ -111,4 +112,8 @@ public abstract class ReportMapper {
     public abstract OccurrenceDto occurrenceToOccurrenceDto(Occurrence occurrence);
 
     public abstract Occurrence occurrenceDtoToOccurrence(OccurrenceDto dto);
+
+    public abstract FactorDto factorToFactorDto(Factor factor);
+
+    public abstract Factor factorDtoToFactor(FactorDto dto);
 }
