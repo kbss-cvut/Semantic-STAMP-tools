@@ -80,4 +80,9 @@ public class Vocabulary {
     public static final String p_lastName = "http://xmlns.com/foaf/0.1/lastName";
     public static final String p_username = "http://xmlns.com/foaf/0.1/accountName";
     public static final String p_password = "http://onto.fel.cvut.cz/ontologies/documentation/password";
+
+    // ARMS Attributes
+    public static final String p_mostProbableAccidentOutcome = "http://onto.fel.cvut.cz/ontologies/documentation/arms-most-probable-accident-outcome";
+    public static final String p_barrierEffectiveness = "http://onto.fel.cvut.cz/ontologies/documentation/arms-barrier-effectiveness";
+    public static final String p_armsIndex = "http://onto.fel.cvut.cz/ontologies/documentation/arms-index";
 }

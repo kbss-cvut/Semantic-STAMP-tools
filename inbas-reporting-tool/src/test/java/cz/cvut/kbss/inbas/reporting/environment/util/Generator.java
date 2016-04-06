@@ -1,6 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
 import cz.cvut.kbss.inbas.reporting.model_new.*;
+import cz.cvut.kbss.inbas.reporting.model_new.arms.AccidentOutcome;
+import cz.cvut.kbss.inbas.reporting.model_new.arms.BarrierEffectiveness;
 
 import java.net.URI;
 import java.util.*;
@@ -73,6 +75,9 @@ public class Generator {
             report.setDateCreated(new Date());
             report.setFileNumber((long) randomInt(Integer.MAX_VALUE));
             report.setRevision(1);
+            report.setBarrierEffectiveness(BarrierEffectiveness.EFFECTIVE);
+            report.setAccidentOutcome(AccidentOutcome.NEGLIGIBLE);
+            report.setArmsIndex((short) 5);
         }
         return report;
     }

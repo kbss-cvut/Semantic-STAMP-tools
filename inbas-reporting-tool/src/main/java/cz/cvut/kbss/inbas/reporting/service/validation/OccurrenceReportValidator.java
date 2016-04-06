@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.service.validation;
 
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 
 import java.util.Date;
 import java.util.Objects;
@@ -26,16 +27,29 @@ public class OccurrenceReportValidator extends Validator<OccurrenceReport> {
                     instance.getOccurrenceStart().compareTo(instance.getOccurrenceEnd()) > 0) {
                 throw new ValidationException("Occurrence start cannot be after occurrence end.");
             }
-            if (instance.getOccurrence() != null &&
-                    (instance.getOccurrence().getName() == null || instance.getOccurrence().getName().isEmpty())) {
-                throw new ValidationException("Occurrence name cannot be empty.");
+        }
+        if (instance.getOccurrence() != null &&
+                (instance.getOccurrence().getName() == null || instance.getOccurrence().getName().isEmpty())) {
+            throw new ValidationException("Occurrence name cannot be empty.");
+        }
+        validateArmsIndex(instance);
+        super.validateForPersist(instance);
+    }
+
+    private void validateArmsIndex(OccurrenceReport report) {
+        if (report.getArmsIndex() != null) {
+            if (report.getArmsIndex() < Constants.ARMS_INDEX_MIN || report.getArmsIndex() > Constants.ARMS_INDEX_MAX) {
+                throw new ValidationException(
+                        "ARMS index value " + report.getArmsIndex() + " is not in the valid range " +
+                                Constants.ARMS_INDEX_MIN + " - " + Constants.ARMS_INDEX_MAX);
             }
         }
-        super.validateForPersist(instance);
     }
 
     @Override
     public void validateForUpdate(OccurrenceReport toValidate, OccurrenceReport original) throws ValidationException {
+        Objects.requireNonNull(toValidate);
+        validateArmsIndex(toValidate);
         super.validateForUpdate(toValidate, original);
     }
 }

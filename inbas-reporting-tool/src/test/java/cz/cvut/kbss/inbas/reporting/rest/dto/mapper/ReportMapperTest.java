@@ -253,6 +253,9 @@ public class ReportMapperTest {
         assertEquals(report.getUri(), orDto.getUri());
         assertEquals(report.getKey(), orDto.getKey());
         assertEquals(report.getFileNumber(), orDto.getFileNumber());
+        assertEquals(report.getAccidentOutcome(), orDto.getAccidentOutcome());
+        assertEquals(report.getBarrierEffectiveness(), orDto.getBarrierEffectiveness());
+        assertEquals(report.getArmsIndex(), orDto.getArmsIndex());
     }
 
     @Test

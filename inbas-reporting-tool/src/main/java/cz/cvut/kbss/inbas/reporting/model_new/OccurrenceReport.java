@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
+import cz.cvut.kbss.inbas.reporting.model_new.arms.AccidentOutcome;
+import cz.cvut.kbss.inbas.reporting.model_new.arms.BarrierEffectiveness;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -64,6 +66,17 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
 
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String summary;
+
+    // ARMS Attributes
+
+    @OWLDataProperty(iri = Vocabulary.p_mostProbableAccidentOutcome)
+    private AccidentOutcome accidentOutcome;
+
+    @OWLDataProperty(iri = Vocabulary.p_barrierEffectiveness)
+    private BarrierEffectiveness barrierEffectiveness;
+
+    @OWLDataProperty(iri = Vocabulary.p_armsIndex)
+    private Short armsIndex;
 
     @Types
     private Set<String> types;
@@ -198,6 +211,30 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public AccidentOutcome getAccidentOutcome() {
+        return accidentOutcome;
+    }
+
+    public void setAccidentOutcome(AccidentOutcome accidentOutcome) {
+        this.accidentOutcome = accidentOutcome;
+    }
+
+    public BarrierEffectiveness getBarrierEffectiveness() {
+        return barrierEffectiveness;
+    }
+
+    public void setBarrierEffectiveness(BarrierEffectiveness barrierEffectiveness) {
+        this.barrierEffectiveness = barrierEffectiveness;
+    }
+
+    public Short getArmsIndex() {
+        return armsIndex;
+    }
+
+    public void setArmsIndex(Short armsIndex) {
+        this.armsIndex = armsIndex;
     }
 
     public Set<String> getTypes() {

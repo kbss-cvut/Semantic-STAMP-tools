@@ -4,6 +4,8 @@ import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.model_new.SeverityLevel;
+import cz.cvut.kbss.inbas.reporting.model_new.arms.AccidentOutcome;
+import cz.cvut.kbss.inbas.reporting.model_new.arms.BarrierEffectiveness;
 
 import java.net.URI;
 import java.util.Date;
@@ -38,6 +40,14 @@ public class OccurrenceReportDto implements LogicalDocument {
     private Set<CorrectiveMeasureRequestDto> correctiveMeasureRequests;
 
     private String summary;
+
+    // ARMS Attributes
+
+    private AccidentOutcome accidentOutcome;
+
+    private BarrierEffectiveness barrierEffectiveness;
+
+    private Short armsIndex;
 
     private Set<String> types;
 
@@ -160,6 +170,30 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public AccidentOutcome getAccidentOutcome() {
+        return accidentOutcome;
+    }
+
+    public void setAccidentOutcome(AccidentOutcome accidentOutcome) {
+        this.accidentOutcome = accidentOutcome;
+    }
+
+    public BarrierEffectiveness getBarrierEffectiveness() {
+        return barrierEffectiveness;
+    }
+
+    public void setBarrierEffectiveness(BarrierEffectiveness barrierEffectiveness) {
+        this.barrierEffectiveness = barrierEffectiveness;
+    }
+
+    public Short getArmsIndex() {
+        return armsIndex;
+    }
+
+    public void setArmsIndex(Short armsIndex) {
+        this.armsIndex = armsIndex;
     }
 
     public Set<String> getTypes() {
