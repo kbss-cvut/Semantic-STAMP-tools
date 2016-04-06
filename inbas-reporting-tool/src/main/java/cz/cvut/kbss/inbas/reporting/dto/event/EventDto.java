@@ -1,7 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.dto.event;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import cz.cvut.kbss.inbas.reporting.dto.util.HasReferenceId;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import cz.cvut.kbss.inbas.reporting.model_new.EventType;
 import cz.cvut.kbss.inbas.reporting.model_new.Factor;
 
@@ -9,7 +10,9 @@ import java.net.URI;
 import java.util.Set;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "javaClass")
-public class EventDto extends HasReferenceId {
+// Note that every reference has to be defined before its first use
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
+public class EventDto {
 
     private URI uri;
 

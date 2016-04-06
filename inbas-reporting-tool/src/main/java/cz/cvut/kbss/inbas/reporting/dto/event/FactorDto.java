@@ -6,7 +6,8 @@ import cz.cvut.kbss.inbas.reporting.model_new.FactorType;
 
 import java.net.URI;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "referenceId")
+// Note that every reference has to be defined before its first use
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class FactorDto {
 
     private URI uri;

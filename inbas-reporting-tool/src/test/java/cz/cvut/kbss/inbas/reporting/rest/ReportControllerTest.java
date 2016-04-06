@@ -187,7 +187,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
         final MvcResult result = mockMvc
                 .perform(post("/reports").content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
-                                         .contentType(MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isCreated())
+                                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
         verifyLocationEquals("/reports/" + key, result);
         verify(reportServiceMock).persist(any(OccurrenceReport.class));
