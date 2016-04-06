@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
@@ -21,10 +22,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,12 +38,14 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Autowired
     private ReportBusinessService reportServiceMock;
 
+    private Person author;
+
     @Before
     public void setUp() throws Exception {
         super.setUp();
         Mockito.reset(reportServiceMock);
-        Person person = Generator.getPerson();
-        Environment.setCurrentUser(person);
+        this.author = Generator.getPerson();
+        Environment.setCurrentUser(author);
     }
 
     @Test
@@ -98,6 +103,69 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         mockMvc.perform(get("/reports/chain/" + fileNumber)).andExpect(status().isNotFound());
     }
 
+    @Test
+    public void testGetReportChainRevisions() throws Exception {
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        Collections.sort(chain, (a, b) -> b.getRevision().compareTo(a.getRevision()));  // sort by revision descending
+        final Long fileNumber = chain.get(0).getFileNumber();
+        final List<ReportRevisionInfo> revisions = new ArrayList<>(chain.size());
+        for (int i = 0; i < chain.size(); i++) {
+            final OccurrenceReport r = chain.get(i);
+            r.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance-" + i));
+            r.setKey(IdentificationUtils.generateKey());
+            final ReportRevisionInfo revision = new ReportRevisionInfo();
+            revision.setUri(r.getUri());
+            revision.setRevision(r.getRevision());
+            revision.setKey(r.getKey());
+            revision.setCreated(r.getDateCreated());
+            revisions.add(revision);
+        }
+        when(reportServiceMock.getReportChainRevisions(fileNumber)).thenReturn(revisions);
+        final MvcResult result = mockMvc.perform(get("/reports/chain/" + fileNumber + "/revisions"))
+                                        .andExpect(status().isOk()).andReturn();
+        final List<ReportRevisionInfo> res = readValue(result, new TypeReference<List<ReportRevisionInfo>>() {
+        });
+        assertNotNull(res);
+        assertEquals(revisions, res);
+    }
+
+    @Test
+    public void getReportChainRevisionsThrowsNotFoundForUnknownReportChainIdentifier() throws Exception {
+        final Long fileNumber = Long.MAX_VALUE;
+        when(reportServiceMock.getReportChainRevisions(fileNumber)).thenReturn(Collections.emptyList());
+        mockMvc.perform(get("/reports/chain/" + fileNumber + "/revisions")).andExpect(status().isNotFound());
+        verify(reportServiceMock).getReportChainRevisions(fileNumber);
+    }
+
+    @Test
+    public void testGetOccurrenceReportRevisionByChainIdentifierAndRevisionNumber() throws Exception {
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        chain.forEach(r -> {
+            r.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance-" + Generator.randomInt()));
+            r.setKey(IdentificationUtils.generateKey());
+        });
+        final OccurrenceReport report = chain.get(Generator.randomInt(chain.size()) - 1);
+        when(reportServiceMock.findRevision(report.getFileNumber(), report.getRevision())).thenReturn(report);
+        final MvcResult result = mockMvc
+                .perform(get("/reports/chain/" + report.getFileNumber() + "/revisions/" + report.getRevision()))
+                .andExpect(status().isOk()).andReturn();
+        final OccurrenceReportDto res = readValue(result, OccurrenceReportDto.class);
+        assertNotNull(res);
+        assertEquals(report.getFileNumber(), res.getFileNumber());
+        assertEquals(report.getRevision(), res.getRevision());
+        assertEquals(report.getUri(), res.getUri());
+    }
+
+    @Test
+    public void getRevisionThrowsNotFoundWhenRevisionIsNotFound() throws Exception {
+        final Long fileNumber = 12345L;
+        final Integer revision = 3;
+        when(reportServiceMock.findRevision(fileNumber, revision)).thenReturn(null);
+
+        mockMvc.perform(get("/reports/chain/" + fileNumber + "/revisions/" + revision))
+               .andExpect(status().isNotFound());
+    }
+
 //    @Test
 //    public void createPreliminaryReportReturnsLocationOfNewInstance() throws Exception {
 //        final PreliminaryReport report = null;
@@ -134,17 +202,6 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 //        assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
 //        verifyLocationEquals("/reports/" + newRevision.getKey(), result);
 //        verify(reportServiceMock).createNewRevision(fileNumber);
-//    }
-//
-//    @Test
-//    public void getRevisionThrowsNotFoundWhenRevisionIsNotFound() throws Exception {
-//        final Long fileNumber = 12345L;
-//        final Integer revision = 3;
-//        when(reportServiceMock.findRevision(fileNumber, revision)).thenReturn(null);
-//
-//        final MvcResult result = mockMvc.perform(get("/reports/chain/" + fileNumber + "/revisions/" + revision))
-//                                        .andReturn();
-//        assertEquals(HttpStatus.NOT_FOUND, HttpStatus.valueOf(result.getResponse().getStatus()));
 //    }
 //
 //    @Test

@@ -144,4 +144,16 @@ public class Generator {
         } while (rand == 0);
         return rand;
     }
+
+    /**
+     * Generates a (pseudo-) random integer.
+     * <p>
+     * This version has no bounds (aside from the integer range), so the returned number may be negative or zero.
+     *
+     * @return Randomly generated integer
+     * @see #randomInt(int)
+     */
+    public static int randomInt() {
+        return random.nextInt();
+    }
 }

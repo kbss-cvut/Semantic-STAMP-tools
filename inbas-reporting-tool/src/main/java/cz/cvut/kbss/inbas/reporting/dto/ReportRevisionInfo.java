@@ -1,7 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.dto;
 
-import cz.cvut.kbss.inbas.reporting.model.ReportingPhase;
-
 import java.net.URI;
 import java.util.Date;
 
@@ -16,8 +14,6 @@ public class ReportRevisionInfo {
     private Date created;
 
     private Integer revision;
-
-    private ReportingPhase phase;
 
     public URI getUri() {
         return uri;
@@ -51,19 +47,39 @@ public class ReportRevisionInfo {
         this.revision = revision;
     }
 
-    public ReportingPhase getPhase() {
-        return phase;
-    }
-
-    public void setPhase(ReportingPhase phase) {
-        this.phase = phase;
-    }
-
     @Override
     public String toString() {
         return "ReportRevisionInfo{" +
                 "uri=" + uri +
                 ", revision=" + revision +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ReportRevisionInfo that = (ReportRevisionInfo) o;
+
+        assert uri != null;
+        assert key != null;
+        assert revision != null;
+        if (!uri.equals(that.uri)) return false;
+        if (!key.equals(that.key)) return false;
+        if (created != null ? !created.equals(that.created) : that.created != null) return false;
+        return revision.equals(that.revision);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = uri.hashCode();
+        assert uri != null;
+        assert key != null;
+        assert revision != null;
+        result = 31 * result + key.hashCode();
+        result = 31 * result + (created != null ? created.hashCode() : 0);
+        result = 31 * result + revision.hashCode();
+        return result;
     }
 }

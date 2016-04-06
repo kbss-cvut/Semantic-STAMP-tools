@@ -79,7 +79,11 @@ public class ReportController extends BaseController {
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReportRevisionInfo> getReportChainRevisions(@PathVariable("fileNumber") Long fileNumber) {
-        return null;
+        final List<ReportRevisionInfo> revisions = reportService.getReportChainRevisions(fileNumber);
+        if (revisions.isEmpty()) {
+            throw NotFoundException.create("Report chain", fileNumber);
+        }
+        return revisions;
     }
 
     /**
@@ -99,12 +103,12 @@ public class ReportController extends BaseController {
     @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument getRevision(@PathVariable("fileNumber") Long fileNumber,
                                        @PathVariable("revision") Integer revision) {
-        final Report report = null;
+        final LogicalDocument report = reportService.findRevision(fileNumber, revision);
         if (report == null) {
             throw new NotFoundException(
                     "Report with revision " + revision + " not found in report chain with file number " + fileNumber +
                             " or the report chain does not exist.");
         }
-        return null;
+        return reportMapper.reportToReportDto(report);
     }
 }

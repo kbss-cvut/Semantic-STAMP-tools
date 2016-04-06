@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.reporting.config.WebAppConfig;
 import org.junit.Before;
@@ -38,6 +39,10 @@ public abstract class BaseControllerTestRunner {
     }
 
     <T> T readValue(MvcResult result, Class<T> targetType) throws Exception {
+        return objectMapper.readValue(result.getResponse().getContentAsByteArray(), targetType);
+    }
+
+    <T> T readValue(MvcResult result, TypeReference<T> targetType) throws Exception {
         return objectMapper.readValue(result.getResponse().getContentAsByteArray(), targetType);
     }
 }
