@@ -6,8 +6,10 @@ import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model_new.Report;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
 import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
+import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +36,14 @@ public class ReportController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createReport(@RequestBody LogicalDocument reportDto) {
-        return null;
+        final LogicalDocument report = reportMapper.reportDtoToReport(reportDto);
+        reportService.persist(report);
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Report {} successfully persisted.", report);
+        }
+        final String key = report.getKey();
+        final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{key}", key);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,16 +65,20 @@ public class ReportController extends BaseController {
         if (!key.equals(reportUpdate.getKey())) {
             throw new BadRequestException("The passed report's key is different from the specified one.");
         }
-        final Report report = null;
+        final LogicalDocument report = reportMapper.reportDtoToReport(reportUpdate);
+        if (reportService.findByKey(key) == null) {
+            throw NotFoundException.create("Report", key);
+        }
+        reportService.update(report);
         if (LOG.isTraceEnabled()) {
-            LOG.trace("Updated report {}", report);
+            LOG.trace("Updated report {}.", report);
         }
     }
 
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeChain(@PathVariable("fileNumber") Long fileNumber) {
-
+        reportService.removeReportChain(fileNumber);
     }
 
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -90,14 +103,16 @@ public class ReportController extends BaseController {
      * Creates new revision in the report chain (of the same type as the latest revision) or starts investigation (from
      * latest preliminary report).
      *
-     * @param fileNumber  Report chain identifier
-     * @param investigate Whether a new investigation should be start
+     * @param fileNumber Report chain identifier
      * @return Response with location header pointing to the new report
      */
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.POST)
-    public ResponseEntity<Void> createNewRevision(@PathVariable("fileNumber") Long fileNumber,
-                                                  @RequestParam(required = false, value = "investigate") boolean investigate) {
-        return null;
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Void> createNewRevision(@PathVariable("fileNumber") Long fileNumber) {
+        final LogicalDocument newRevision = reportService.createNewRevision(fileNumber);
+        final HttpHeaders headers = RestUtils
+                .createLocationHeaderFromContextPath("/reports/{key}", newRevision.getKey());
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,10 +1,10 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
-import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
+import cz.cvut.kbss.inbas.reporting.rest.dto.model.OccurrenceReportDtoList;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/occurrences")
@@ -41,9 +40,11 @@ public class OccurrenceController extends BaseController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{key}/reports", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<OccurrenceReportDto> getOccurrenceReports(@PathVariable("key") String key) {
+    public OccurrenceReportDtoList getOccurrenceReports(@PathVariable("key") String key) {
         final Occurrence occurrence = findByKey(key);
         final Collection<OccurrenceReport> reports = occurrenceService.getReports(occurrence);
-        return reports.stream().map(r -> mapper.occurrenceReportToOccurrenceReportDto(r)).collect(Collectors.toList());
+        final OccurrenceReportDtoList list = new OccurrenceReportDtoList(reports.size());
+        reports.forEach(r -> list.add(mapper.occurrenceReportToOccurrenceReportDto(r)));
+        return list;
     }
 }

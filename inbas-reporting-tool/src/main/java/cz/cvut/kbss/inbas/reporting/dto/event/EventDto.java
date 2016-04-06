@@ -6,7 +6,7 @@ import cz.cvut.kbss.inbas.reporting.model_new.EventType;
 import java.net.URI;
 import java.util.Set;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "javaClass")
 public class EventDto {
 
     private URI uri;

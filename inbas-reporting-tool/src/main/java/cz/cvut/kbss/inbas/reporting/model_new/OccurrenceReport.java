@@ -207,4 +207,14 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     public void setTypes(Set<String> types) {
         this.types = types;
     }
+
+    @Override
+    public String toString() {
+        return "OccurrenceReport{" +
+                "uri=" + uri +
+                ", fileNumber=" + fileNumber +
+                ", revision=" + revision +
+                ", occurrence=" + occurrence +
+                '}';
+    }
 }

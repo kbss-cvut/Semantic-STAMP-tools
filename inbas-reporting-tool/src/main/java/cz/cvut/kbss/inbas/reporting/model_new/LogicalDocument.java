@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 
@@ -13,6 +14,7 @@ import java.util.Date;
  * all reports. In the future, the interface should be replaced with a proper parent class, which would declare the
  * corresponding fields.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "javaClass")
 public interface LogicalDocument extends HasOwlKey, HasUri {
 
     /**
@@ -22,21 +24,21 @@ public interface LogicalDocument extends HasOwlKey, HasUri {
      *
      * @return File number
      */
-    public Long getFileNumber();
+    Long getFileNumber();
 
     /**
      * Gets author of the report.
      *
      * @return Author
      */
-    public Person getAuthor();
+    Person getAuthor();
 
     /**
      * Gets date when this report was created.
      *
      * @return Creation date
      */
-    public Date getDateCreated();
+    Date getDateCreated();
 
     /**
      * Gets date when this report was last modified.
@@ -46,7 +48,7 @@ public interface LogicalDocument extends HasOwlKey, HasUri {
      *
      * @return Date of last modification (if present)
      */
-    public Date getLastModified();
+    Date getLastModified();
 
     /**
      * Gets author of the last modification of this report.
@@ -56,7 +58,7 @@ public interface LogicalDocument extends HasOwlKey, HasUri {
      *
      * @return Author of last modification
      */
-    public Person getLastModifiedBy();
+    Person getLastModifiedBy();
 
     /**
      * Gets revision number of this report.
@@ -65,5 +67,5 @@ public interface LogicalDocument extends HasOwlKey, HasUri {
      *
      * @return Revision number
      */
-    public Integer getRevision();
+    Integer getRevision();
 }

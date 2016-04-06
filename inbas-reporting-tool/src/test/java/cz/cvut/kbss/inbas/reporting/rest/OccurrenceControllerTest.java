@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
@@ -8,6 +7,7 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.rest.dto.model.OccurrenceReportDtoList;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceService;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Before;
@@ -48,7 +48,7 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
         when(occurrenceService.findByKey(occurrence.getKey())).thenReturn(occurrence);
         final MvcResult result = mockMvc.perform(get("/occurrences/" + occurrence.getKey())).andReturn();
         assertEquals(HttpStatus.OK, HttpStatus.valueOf(result.getResponse().getStatus()));
-        final Occurrence res = objectMapper.readValue(result.getResponse().getContentAsByteArray(), Occurrence.class);
+        final Occurrence res = readValue(result, Occurrence.class);
         assertNotNull(res);
         assertEquals(occurrence.getUri(), res.getUri());
         assertEquals(occurrence.getName(), res.getName());
@@ -78,9 +78,7 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
         when(occurrenceService.getReports(occurrence)).thenReturn(reports);
         final MvcResult result = mockMvc.perform(get("/occurrences/" + occurrence.getKey() + "/reports").accept(
                 MediaType.APPLICATION_JSON_VALUE)).andReturn();
-        final List<OccurrenceReportDto> res = objectMapper.readValue(result.getResponse().getContentAsByteArray(),
-                new TypeReference<List<OccurrenceReportDto>>() {
-                });
+        final List<OccurrenceReportDto> res = readValue(result, OccurrenceReportDtoList.class);
         assertNotNull(res);
         assertEquals(reports.size(), res.size());
         for (int i = 0; i < reports.size(); i++) {
