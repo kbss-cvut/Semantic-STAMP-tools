@@ -113,6 +113,7 @@ module.exports = {
         'initial.wizard.add-title': 'Add initial report',
         'initial.wizard.edit-title': 'Edit initial report',
         'initial.label': 'Initial report',
+        'initial.tooltip': 'Initial report text - this field is required',
 
         'preliminary.type': 'Preliminary',
         'preliminary.new': 'New report',
@@ -126,6 +127,7 @@ module.exports = {
         'preliminary.detail.corrective.panel-title': 'Corrective measures',
         'preliminary.detail.corrective.table-description': 'Corrective measure',
         'preliminary.detail.corrective.description-placeholder': 'Corrective measure description',
+        'preliminary.detail.corrective.description-tooltip': 'Corrective measure description - field is required',
         'preliminary.detail.corrective.add-tooltip': 'Add a corrective measure',
         'preliminary.detail.corrective.wizard.title': 'Corrective Measure Wizard',
         'preliminary.detail.corrective.wizard.step-title': 'Corrective Measure Assessment',

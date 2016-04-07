@@ -115,6 +115,7 @@ module.exports = {
         'initial.wizard.add-title': 'Přidat prvotní hlášení',
         'initial.wizard.edit-title': 'Editovat prvotní hlášení',
         'initial.label': 'Prvotní hlášení',
+        'initial.tooltip': 'Text prvotního hlášení - pole je povinné',
 
         'preliminary.type': 'Předběžné',
         'preliminary.new': 'Nové hlášení',
@@ -128,6 +129,7 @@ module.exports = {
         'preliminary.detail.corrective.panel-title': 'Nápravná opatření',
         'preliminary.detail.corrective.table-description': 'Opatření',
         'preliminary.detail.corrective.description-placeholder': 'Popis nápravného opatření',
+        'preliminary.detail.corrective.description-tooltip': 'Popis nápravného opatření - pole je povinné',
         'preliminary.detail.corrective.add-tooltip': 'Přida popis nápravného opatření',
         'preliminary.detail.corrective.wizard.title': 'Průvodce nápravným opatřením',
         'preliminary.detail.corrective.wizard.step-title': 'Popis nápravného opatření',
