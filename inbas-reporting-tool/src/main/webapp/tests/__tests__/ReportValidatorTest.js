@@ -38,11 +38,6 @@ describe('Report validator', function () {
         expect(ReportValidator.isValid(report)).toBeFalsy();
     });
 
-    it('marks report without narrative as invalid', function () {
-        report.summary = '';
-        expect(ReportValidator.isValid(report)).toBeFalsy();
-    });
-
     it('marks report without occurrence class as invalid', function () {
         delete report.severityAssessment;
         expect(ReportValidator.isValid(report)).toBeFalsy();

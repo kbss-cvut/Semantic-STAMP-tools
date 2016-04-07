@@ -18,7 +18,7 @@ var ReportSummary = React.createClass({
 
     render: function () {
         var label = this.i18n('narrative');
-        return <Input type='textarea' rows='8' label={label + '*'} name='summary'
+        return <Input type='textarea' rows='8' label={label} name='summary'
                       placeholder={label}
                       value={this.props.report.summary} onChange={this.props.onChange}
                       title={this.i18n('preliminary.detail.narrative-tooltip')}/>;

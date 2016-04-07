@@ -70,13 +70,6 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
     }
 
     @Test(expected = ValidationException.class)
-    public void reportWithoutSummaryIsInvalid() throws Exception {
-        final PreliminaryReport report = getDefaultValidReport();
-        report.setSummary("");
-        validator.validate(report);
-    }
-
-    @Test(expected = ValidationException.class)
     public void reportWithoutOccurrenceClassIsInvalid() throws Exception {
         final PreliminaryReport report = getDefaultValidReport();
         report.setSeverityAssessment(null);

@@ -122,7 +122,7 @@ module.exports = {
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
         'preliminary.detail.panel-title': 'Předběžné hlášení o události',
         'preliminary.detail.last-edited-msg': 'Naposledy upravil(a) {name} {date}.',
-        'preliminary.detail.narrative-tooltip': 'Popis - pole je povinné',
+        'preliminary.detail.narrative-tooltip': 'Popis',
         'preliminary.detail.table-edit-tooltip': 'Editovat položku',
         'preliminary.detail.table-delete-tooltip': 'Smazat položku',
         'preliminary.detail.corrective.panel-title': 'Nápravná opatření',
