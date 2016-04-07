@@ -4,7 +4,7 @@ import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model_new.Report;
-import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
+import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
@@ -26,7 +26,7 @@ public class ReportController extends BaseController {
     private ReportBusinessService reportService;
 
     @Autowired
-    private ReportMapper reportMapper;
+    private DtoMapper dtoMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<Report> getAllReports() {
@@ -36,7 +36,7 @@ public class ReportController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createReport(@RequestBody LogicalDocument reportDto) {
-        final LogicalDocument report = reportMapper.reportDtoToReport(reportDto);
+        final LogicalDocument report = dtoMapper.reportDtoToReport(reportDto);
         reportService.persist(report);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Report {} successfully persisted.", report);
@@ -48,7 +48,7 @@ public class ReportController extends BaseController {
 
     @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument getReport(@PathVariable("key") String key) {
-        return reportMapper.reportToReportDto(getReportInternal(key));
+        return dtoMapper.reportToReportDto(getReportInternal(key));
     }
 
     private LogicalDocument getReportInternal(String key) {
@@ -65,7 +65,7 @@ public class ReportController extends BaseController {
         if (!key.equals(reportUpdate.getKey())) {
             throw new BadRequestException("The passed report's key is different from the specified one.");
         }
-        final LogicalDocument report = reportMapper.reportDtoToReport(reportUpdate);
+        final LogicalDocument report = dtoMapper.reportDtoToReport(reportUpdate);
         if (reportService.findByKey(key) == null) {
             throw NotFoundException.create("Report", key);
         }
@@ -87,7 +87,7 @@ public class ReportController extends BaseController {
         if (report == null) {
             throw NotFoundException.create("Report chain", fileNumber);
         }
-        return reportMapper.reportToReportDto(report);
+        return dtoMapper.reportToReportDto(report);
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -124,6 +124,6 @@ public class ReportController extends BaseController {
                     "Report with revision " + revision + " not found in report chain with file number " + fileNumber +
                             " or the report chain does not exist.");
         }
-        return reportMapper.reportToReportDto(report);
+        return dtoMapper.reportToReportDto(report);
     }
 }

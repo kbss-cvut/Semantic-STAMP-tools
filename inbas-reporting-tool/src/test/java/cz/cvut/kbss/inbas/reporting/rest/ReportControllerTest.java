@@ -14,7 +14,7 @@ import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.model_new.Report;
 import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
-import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
+import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Before;
@@ -45,7 +45,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     private ReportBusinessService reportServiceMock;
 
     @Autowired
-    private ReportMapper mapper;
+    private DtoMapper mapper;
 
     private Person author;
 

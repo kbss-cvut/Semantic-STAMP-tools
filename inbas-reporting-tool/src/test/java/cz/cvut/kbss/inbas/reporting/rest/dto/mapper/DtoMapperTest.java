@@ -28,10 +28,10 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RestConfig.class, MockServiceConfig.class, MockSesamePersistence.class})
-public class ReportMapperTest {
+public class DtoMapperTest {
 
     @Autowired
-    private ReportMapper mapper;
+    private DtoMapper mapper;
 
     @Test
     public void correctiveMeasureRequestToDtoCopiesBasicAttributes() {

@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.reporting.rest;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.ReportMapper;
+import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.OccurrenceReportDtoList;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class OccurrenceController extends BaseController {
     private OccurrenceService occurrenceService;
 
     @Autowired
-    private ReportMapper mapper;
+    private DtoMapper mapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Collection<Occurrence> getOccurrences() {

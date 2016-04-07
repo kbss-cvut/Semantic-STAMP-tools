@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.SplittableRandom;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
-public abstract class ReportMapper {
+public abstract class DtoMapper {
 
     private final SplittableRandom random = new SplittableRandom();
 
