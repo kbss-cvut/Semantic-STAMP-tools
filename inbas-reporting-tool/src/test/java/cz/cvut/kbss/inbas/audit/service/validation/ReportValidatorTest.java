@@ -82,4 +82,11 @@ public class ReportValidatorTest extends BaseServiceTestRunner {
         report.setOccurrenceCategory(null);
         validator.validate(report);
     }
+
+    @Test(expected = ValidationException.class)
+    public void reportWithoutSummaryIsInvalid() throws Exception {
+        final PreliminaryReport report = getDefaultValidReport();
+        report.setSummary("");
+        validator.validate(report);
+    }
 }
