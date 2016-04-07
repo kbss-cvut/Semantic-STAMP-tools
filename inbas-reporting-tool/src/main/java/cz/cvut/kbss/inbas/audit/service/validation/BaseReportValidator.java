@@ -43,6 +43,9 @@ public class BaseReportValidator implements Validator<ValidatableReport> {
         if (report.getArmsIndex() != null && report.getArmsIndex() <= 0) {
             throw new ValidationException("ARMS Index cannot be less than 1.");
         }
+        if (report.getSummary() == null || report.getSummary().isEmpty()) {
+            throw new ValidationException("Report is missing narrative.");
+        }
         occurrenceValidator.validate(report.getOccurrence());
     }
 }

@@ -46,5 +46,10 @@ describe('Report validator', function () {
     it('marks report without occurrence category as invalid', function () {
         delete report.occurrenceCategory;
         expect(ReportValidator.isValid(report)).toBeFalsy();
-    })
+    });
+
+    it('marks report without narrative as invalid', function () {
+        report.summary = '';
+        expect(ReportValidator.isValid(report)).toBeFalsy();
+    });
 });

@@ -20,6 +20,9 @@ var ReportValidator = {
         if (!report.severityAssessment) {
             return false;
         }
+        if (!report.summary || report.summary.length === 0) {
+            return false;
+        }
         if (!report.occurrenceCategory) {
             return false;
         }

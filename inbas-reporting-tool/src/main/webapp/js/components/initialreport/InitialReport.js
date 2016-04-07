@@ -20,18 +20,30 @@ var InitialReport = React.createClass({
         };
     },
 
+    componentDidMount: function () {
+        if (this.state.text.trim().length !== 0) {
+            this.props.enableNext();
+        }
+    },
+
     onChange: function (e) {
         var value = e.target.value,
             initialReport = this.props.data.initialReport;
         initialReport.text = value;
+        if (value.trim().length === 0) {
+            this.props.disableNext();
+        } else {
+            this.props.enableNext();
+        }
         this.setState({text: value});
     },
 
     render: function () {
         return (
             <div>
-                <Input type='textarea' rows='15' label={this.i18n('initial.label')}
-                       placeholder={this.i18n('initial.label')} value={this.state.text} onChange={this.onChange}/>
+                <Input type='textarea' rows='15' label={this.i18n('initial.label') + '*'}
+                       placeholder={this.i18n('initial.label')} value={this.state.text} onChange={this.onChange}
+                       title={this.i18n('initial.tooltip')}/>
             </div>
         );
     }

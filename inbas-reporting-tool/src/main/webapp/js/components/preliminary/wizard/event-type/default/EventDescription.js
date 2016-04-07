@@ -15,36 +15,24 @@ var EventDescription = React.createClass({
     getInitialState: function () {
         var description = this.props.data.statement.description;
         return {
-            description: description ? description : '',
-            descriptionValid: true
+            description: description ? description : ''
         };
-    },
-    componentDidMount: function () {
-        if (this.state.description !== '') {
-            this.props.enableNext();
-        }
     },
 
     onChange: function (e) {
         var value = e.target.value;
         var statement = this.props.data.statement;
         statement.description = value;
-        if (value !== '') {
-            this.props.enableNext();
-        } else {
-            this.props.disableNext();
-        }
-        this.setState({description: value, descriptionValid: value !== ''});
+        this.setState({description: value});
     },
 
 
     render: function () {
         return (
             <div>
-                <Input type='textarea' rows='8' label={this.i18n('eventtype.default.description') + '*'}
+                <Input type='textarea' rows='8' label={this.i18n('eventtype.default.description')}
                        placeholder={this.i18n('eventtype.default.description-placeholder')}
-                       bsStyle={this.state.descriptionValid ? null : 'error'}
-                       title={this.state.descriptionValid ? this.i18n('eventtype.default.description-placeholder') : this.i18n('eventtype.default.description-missing')}
+                       title={this.i18n('eventtype.default.description-placeholder')}
                        value={this.state.description} onChange={this.onChange}/>
             </div>
         );
