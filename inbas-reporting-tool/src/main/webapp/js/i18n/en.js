@@ -120,7 +120,7 @@ module.exports = {
         'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
         'preliminary.detail.panel-title': 'Preliminary occurrence report',
         'preliminary.detail.last-edited-msg': 'Last edited {date} by {name}.',
-        'preliminary.detail.narrative-tooltip': 'Narrative - this field is required',
+        'preliminary.detail.narrative-tooltip': 'Narrative',
         'preliminary.detail.table-edit-tooltip': 'Edit statement',
         'preliminary.detail.table-delete-tooltip': 'Delete statement',
         'preliminary.detail.corrective.panel-title': 'Corrective measures',
