@@ -33,6 +33,7 @@ module.exports = {
         'detail.save-tooltip': 'Save changes',
         'detail.saving': 'Saving...',
         'detail.invalid-tooltip': 'Some of the required values are missing',
+        'detail.large-time-diff-tooltip': 'Occurrence start and end time difference is too large',
         'detail.submit': 'Submit to authority',
         'detail.submit-tooltip': 'Submit the current revision to authority',
         'detail.submit-success-message': 'Report successfully submitted.',

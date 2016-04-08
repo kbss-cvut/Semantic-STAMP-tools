@@ -33,6 +33,7 @@ module.exports = {
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',
         'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
+        'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký',
         'detail.submit': 'Odeslat úřadu',
         'detail.submit-tooltip': 'Odeslat současnou revizi zprávy úřadu',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',

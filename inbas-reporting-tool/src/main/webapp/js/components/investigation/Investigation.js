@@ -117,21 +117,25 @@ var Investigation = React.createClass({
         }
         var loading = this.state.submitting,
             saveDisabled = !ReportValidator.isValid(this.props.investigation) || loading,
-            saveTitle = this.i18n('detail.save-tooltip'),
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
-        if (loading) {
-            saveTitle = this.i18n('detail.saving');
-        } else if (saveDisabled) {
-            saveTitle = this.i18n('detail.invalid-tooltip');
-        }
 
         return (<ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
-            <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={saveTitle}
+            <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this.renderSubmitButton()}
         </ButtonToolbar>);
+    },
+
+    getSaveButtonTitle: function() {
+        var titleProp = 'detail.save-tooltip';
+        if (this.state.submitting) {
+            titleProp = 'detail.saving';
+        } else if (!ReportValidator.isValid(this.props.investigation)) {
+            titleProp = ReportValidator.getValidationMessage(this.props.investigation);
+        }
+        return this.i18n(titleProp);
     },
 
     renderSubmitButton: function () {
