@@ -60,14 +60,20 @@ describe('Report validator', function () {
     });
 
     it('marks report with too large occurrence start and end time diff as invalid', function () {
-        report.occurrenceStart = Date.now() - Constants.MAX_START_END_DIFF - 1000;
+        report.occurrenceStart = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
         report.occurrenceEnd = Date.now();
         expect(ReportValidator.isValid(report)).toBeFalsy();
     });
 
     it('reports time difference error message when report with too large occurrence start and end time diff is validated', function () {
-        report.occurrenceStart = Date.now() - Constants.MAX_START_END_DIFF - 1000;
+        report.occurrenceStart = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
         report.occurrenceEnd = Date.now();
         expect(ReportValidator.getValidationMessage(report)).toEqual('detail.large-time-diff-tooltip');
+    });
+
+    it('marks report with too large occurrence start and end time diff as not renderable', function () {
+        report.occurrenceStart = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
+        report.occurrenceEnd = Date.now();
+        expect(ReportValidator.canRender(report)).toBeFalsy();
     });
 });

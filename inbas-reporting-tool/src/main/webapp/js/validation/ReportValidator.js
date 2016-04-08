@@ -42,9 +42,40 @@ var ReportValidator = {
         if (!report.occurrenceCategory) {
             return 'detail.invalid-tooltip';
         }
-        if (report.occurrenceEnd - report.occurrenceStart > Constants.MAX_START_END_DIFF) {
+        if (!this._isOccurrenceStartEndTimeDiffValid(report)) {
             return 'detail.large-time-diff-tooltip';
         }
+        return null;
+    },
+
+    _isOccurrenceStartEndTimeDiffValid: function (report) {
+        return report.occurrenceEnd - report.occurrenceStart <= Constants.MAX_OCCURRENCE_START_END_DIFF;
+    },
+
+    /**
+     * Checks whether the application will be able to render the specified report.
+     *
+     * For instance, reports with too large difference between occurrence start and end time cannot be rendered, because
+     * the gantt component hangs when trying to render such data and it causes the whole browser to freeze.
+     * @param report The report to check
+     */
+    canRender: function (report) {
+        return this.getRenderError(report) === null;
+    },
+
+    /**
+     * Gets error because of which the specified report cannot be rendered.
+     * @param report The report to check
+     * @return {*} Error message identifier, or {@code null}, if the report can be rendered
+     */
+    getRenderError: function (report) {
+        if (!report) {
+            return '';
+        }
+        if (!this._isOccurrenceStartEndTimeDiffValid(report)) {
+            return 'detail.large-time-diff-tooltip';
+        }
+        // More checks can be added
         return null;
     }
 };

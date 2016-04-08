@@ -7,6 +7,8 @@ var injectIntl = require('../../utils/injectIntl');
 var Mask = require('../Mask');
 var ReportType = require('../../model/ReportType');
 var ResourceNotFound = require('../ResourceNotFound');
+var ReportNotRenderable = require('../ReportNotRenderable');
+var ReportValidator = require('../../validation/ReportValidator');
 
 var Report = React.createClass({
     mixins: [I18nMixin],
@@ -25,6 +27,9 @@ var Report = React.createClass({
         }
         if (!this.props.report) {
             return (<ResourceNotFound resource={this.i18n('detail.not-found.title')}/>);
+        }
+        if (!ReportValidator.canRender(this.props.report)) {
+            return (<ReportNotRenderable messageId={ReportValidator.getRenderError(this.props.report)}/>);
         }
         return this.renderDetail();
     },

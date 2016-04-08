@@ -249,6 +249,10 @@ module.exports = {
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',
         'notfound.msg': 'Záznam \'{resource}\' nenalezen.',
 
+        'notrenderable.title': 'Nelze zobrazit záznam',
+        'notrenderable.error': 'Chyba: {message}',
+        'notrenderable.error-generic': 'Zkontrolujte, prosím, zda je záznam validní.',
+
         'revisions.label': 'Revize zprávy',
         'revisions.created': 'Vytvořeno',
         'revisions.show-tooltip': 'Zobrazit tuto revizi',
