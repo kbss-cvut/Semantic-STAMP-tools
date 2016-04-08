@@ -45,7 +45,9 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
     }
 
     private void extendSession(PortalUserDetails portalUser) {
-        LOG.debug("Extending portal session of user {}.", portalUser.getUsername());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Extending portal session of user {}.", portalUser.getUsername());
+        }
         String url = environment.getProperty(ConfigParam.PORTAL_URL.toString());
         assert url != null && !url.isEmpty();
         if (!url.endsWith("/")) {
@@ -55,9 +57,10 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
         final HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("Authorization", Constants.BASIC_AUTHORIZATION_PREFIX + portalUser.getBasicAuthentication());
         final HttpEntity<Object> entity = new HttpEntity<>(null, requestHeaders);
-        LOG.debug("Sending extend request {} to url {}.", entity, url);
         final RestTemplate restTemplate = new RestTemplate();
         final ResponseEntity res = restTemplate.postForObject(URI.create(url), entity, ResponseEntity.class);
+        // For some reason, the response is null, event though the request gets through and according to testing in Postman,
+        // the portal responds with 200 OK. To prevent NPX, check for res being null here. If it is, just silently ignore it.
         if (res != null && !res.getStatusCode().equals(HttpStatus.OK)) {
             LOG.error("Unable to extend portal session, got status {} and body {}.", res.getStatusCode(),
                     res.getBody());
