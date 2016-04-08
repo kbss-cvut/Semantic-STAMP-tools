@@ -55,9 +55,10 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
         final HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("Authorization", Constants.BASIC_AUTHORIZATION_PREFIX + portalUser.getBasicAuthentication());
         final HttpEntity<Object> entity = new HttpEntity<>(null, requestHeaders);
+        LOG.debug("Sending extend request {} to url {}.", entity, url);
         final RestTemplate restTemplate = new RestTemplate();
         final ResponseEntity res = restTemplate.postForObject(URI.create(url), entity, ResponseEntity.class);
-        if (!res.getStatusCode().equals(HttpStatus.OK)) {
+        if (res != null && !res.getStatusCode().equals(HttpStatus.OK)) {
             LOG.error("Unable to extend portal session, got status {} and body {}.", res.getStatusCode(),
                     res.getBody());
         }
