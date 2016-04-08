@@ -21,5 +21,7 @@ module.exports = {
     DASHBOARDS: {
         MAIN: 'main',
         CREATE_REPORT: 'createReport'
-    }
+    },
+
+    MINUTE: 60 * 1000   // Minute in milliseconds
 };
