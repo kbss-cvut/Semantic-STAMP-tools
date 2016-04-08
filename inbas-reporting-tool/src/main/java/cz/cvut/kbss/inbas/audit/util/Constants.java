@@ -31,6 +31,11 @@ public final class Constants {
      */
     public static final String APPLICATION_JSON_LD_TYPE = "application/ld+json";
 
+    /**
+     * Prefix for basic authentication for the Authorization HTTP header.
+     */
+    public static final String BASIC_AUTHORIZATION_PREFIX = "Basic ";
+
     // Query files
 
     /**

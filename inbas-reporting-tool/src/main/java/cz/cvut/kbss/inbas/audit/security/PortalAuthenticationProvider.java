@@ -6,8 +6,10 @@ import cz.cvut.kbss.inbas.audit.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
 import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpoint;
 import cz.cvut.kbss.inbas.audit.security.portal.PortalEndpointType;
+import cz.cvut.kbss.inbas.audit.security.portal.PortalUserDetails;
 import cz.cvut.kbss.inbas.audit.service.PersonService;
 import cz.cvut.kbss.inbas.audit.util.ConfigParam;
+import cz.cvut.kbss.inbas.audit.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +62,12 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Authenticating user {} against the portal.", username);
         }
-        final Person authenticatedUser = authenticateAgainstPortal(username,
-                authentication.getCredentials().toString());
+        final String password = authentication.getCredentials().toString();
+        final Person authenticatedUser = authenticateAgainstPortal(username, password);
         saveUser(authenticatedUser);
-        final UserDetails userDetails = new UserDetails(authenticatedUser,
-                Collections.singleton(new SimpleGrantedAuthority(PortalUser.PORTAL_USER_ROLE)));
+        final UserDetails userDetails = new PortalUserDetails(authenticatedUser,
+                Collections.singleton(new SimpleGrantedAuthority(PortalUser.PORTAL_USER_ROLE)),
+                encodeBase64(username, password));
         userDetails.eraseCredentials();
         final AuthenticationToken token = new AuthenticationToken(userDetails.getAuthorities(), userDetails);
         token.setAuthenticated(true);
@@ -89,7 +92,8 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             String companyId = getCompanyId();
             url += portalEndpoint.constructPath(username, companyId);
             final HttpHeaders requestHeaders = new HttpHeaders();
-            requestHeaders.add("Authorization", "Basic " + encodeBase64(username + ":" + password));
+            requestHeaders
+                    .add("Authorization", Constants.BASIC_AUTHORIZATION_PREFIX + encodeBase64(username, password));
             final HttpEntity<Object> entity = new HttpEntity<>(null, requestHeaders);
             final RestTemplate restTemplate = new RestTemplate();
             final PortalUser portalUser = restTemplate.exchange(url, HttpMethod.GET, entity, PortalUser.class)
@@ -131,7 +135,8 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
-    private String encodeBase64(String value) {
+    private String encodeBase64(String username, String password) {
+        final String value = username + ":" + password;
         return Base64.getEncoder().encodeToString(value.getBytes());
     }
 

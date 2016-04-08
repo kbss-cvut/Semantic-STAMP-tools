@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.audit.environment.config;
 import cz.cvut.kbss.inbas.audit.service.*;
 import cz.cvut.kbss.inbas.audit.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.audit.service.data.RemoteDataLoader;
+import cz.cvut.kbss.inbas.audit.service.security.PortalSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.mockito.Mockito.mock;
 
 @Configuration
-@ComponentScan(basePackages = "cz.cvut.kbss.inbas.audit.service.options")
+@ComponentScan(basePackages = {"cz.cvut.kbss.inbas.audit.service.options"})
 public class MockServiceConfig {
 
     @Bean
@@ -74,5 +75,10 @@ public class MockServiceConfig {
     @Bean
     public StatisticsService statisticsService() {
         return mock(StatisticsService.class);
+    }
+
+    @Bean
+    public PortalSessionManager portalSessionManager() {
+        return mock(PortalSessionManager.class);
     }
 }
