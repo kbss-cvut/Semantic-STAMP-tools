@@ -30,6 +30,9 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
     @Autowired
     private SecurityUtils securityUtils;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Override
     public void keepPortalSessionAlive() {
         final UserDetails userDetails = securityUtils.getCurrentUserDetails();
@@ -57,7 +60,6 @@ public class PortalSessionManagerImpl implements PortalSessionManager {
         final HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add("Authorization", Constants.BASIC_AUTHORIZATION_PREFIX + portalUser.getBasicAuthentication());
         final HttpEntity<Object> entity = new HttpEntity<>(null, requestHeaders);
-        final RestTemplate restTemplate = new RestTemplate();
         final ResponseEntity res = restTemplate.postForObject(URI.create(url), entity, ResponseEntity.class);
         // For some reason, the response is null, event though the request gets through and according to testing in Postman,
         // the portal responds with 200 OK. To prevent NPX, check for res being null here. If it is, just silently ignore it.

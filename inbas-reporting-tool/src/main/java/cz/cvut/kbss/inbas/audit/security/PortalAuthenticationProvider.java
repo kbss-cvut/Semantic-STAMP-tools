@@ -41,8 +41,6 @@ import java.util.Collections;
 @Service("portalAuthenticationProvider")
 public class PortalAuthenticationProvider implements AuthenticationProvider {
 
-    private static final String COMPANY_ID_COOKIE = "COMPANY_ID";
-
     private static final String PORTAL_TYPE_CONFIG = "portalEndpointType";
 
     private static final Logger LOG = LoggerFactory.getLogger(PortalAuthenticationProvider.class);
@@ -55,6 +53,9 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -95,7 +96,6 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             requestHeaders
                     .add("Authorization", Constants.BASIC_AUTHORIZATION_PREFIX + encodeBase64(username, password));
             final HttpEntity<Object> entity = new HttpEntity<>(null, requestHeaders);
-            final RestTemplate restTemplate = new RestTemplate();
             final PortalUser portalUser = restTemplate.exchange(url, HttpMethod.GET, entity, PortalUser.class)
                                                       .getBody();
             if (portalUser == null || portalUser.getEmailAddress() == null) {
@@ -123,7 +123,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             throw new AuthenticationServiceException("Portal is not available.");
         }
         for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals(COMPANY_ID_COOKIE)) {
+            if (cookie.getName().equals(Constants.COMPANY_ID_COOKIE)) {
                 companyId = cookie.getValue();
             }
         }
