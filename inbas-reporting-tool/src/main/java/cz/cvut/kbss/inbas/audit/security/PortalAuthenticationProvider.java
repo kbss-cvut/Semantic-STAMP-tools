@@ -81,8 +81,8 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     }
 
     private Person authenticateAgainstPortal(String username, String password) {
-        String url = environment.getProperty(ConfigParam.PORTAL_URL.toString());
-        if (url == null) {
+        String url = environment.getProperty(ConfigParam.PORTAL_URL.toString(), "");
+        if (url.isEmpty()) {
             throw new AuthenticationServiceException("Portal is not available.");
         }
         if (!url.endsWith("/")) {
@@ -119,15 +119,16 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     private String getCompanyId() {
         String companyId = null;
         final HttpServletRequest request = getCurrentRequest();
-        if (request.getCookies() == null) {
-            throw new AuthenticationServiceException("Portal is not available.");
-        }
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals(Constants.COMPANY_ID_COOKIE)) {
-                companyId = cookie.getValue();
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals(Constants.COMPANY_ID_COOKIE)) {
+                    companyId = cookie.getValue();
+                }
             }
         }
-        assert companyId != null;
+        if (companyId == null) {
+            throw new AuthenticationServiceException("Portal is not available.");
+        }
         return companyId;
     }
 
