@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest.util;
 
-import cz.cvut.kbss.inbas.audit.service.security.PortalSessionManager;
+import cz.cvut.kbss.inbas.reporting.service.security.PortalSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;

@@ -1,9 +1,9 @@
 package cz.cvut.kbss.inbas.reporting.service.security;
 
-import cz.cvut.kbss.inbas.audit.security.model.UserDetails;
+import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
 import cz.cvut.kbss.inbas.reporting.security.portal.PortalUserDetails;
-import cz.cvut.kbss.inbas.audit.util.ConfigParam;
-import cz.cvut.kbss.inbas.audit.util.Constants;
+import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
