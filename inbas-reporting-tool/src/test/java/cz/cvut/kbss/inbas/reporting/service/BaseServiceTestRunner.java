@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public abstract class BaseServiceTestRunner {
 
     @Autowired
-    private PersonDao personDao;
+    protected PersonDao personDao;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

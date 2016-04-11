@@ -33,6 +33,7 @@ module.exports = {
         'detail.save-tooltip': 'Save changes',
         'detail.saving': 'Saving...',
         'detail.invalid-tooltip': 'Some of the required values are missing',
+        'detail.large-time-diff-tooltip': 'Occurrence start and end time difference is too large',
         'detail.submit': 'Submit to authority',
         'detail.submit-tooltip': 'Submit the current revision to authority',
         'detail.submit-success-message': 'Report successfully submitted.',
@@ -113,6 +114,7 @@ module.exports = {
         'initial.wizard.add-title': 'Add initial report',
         'initial.wizard.edit-title': 'Edit initial report',
         'initial.label': 'Initial report',
+        'initial.tooltip': 'Initial report text - this field is required',
 
         'preliminary.type': 'Preliminary',
         'preliminary.new': 'New report',
@@ -126,6 +128,7 @@ module.exports = {
         'preliminary.detail.corrective.panel-title': 'Corrective measures',
         'preliminary.detail.corrective.table-description': 'Corrective measure',
         'preliminary.detail.corrective.description-placeholder': 'Corrective measure description',
+        'preliminary.detail.corrective.description-tooltip': 'Corrective measure description - field is required',
         'preliminary.detail.corrective.add-tooltip': 'Add a corrective measure',
         'preliminary.detail.corrective.wizard.title': 'Corrective Measure Wizard',
         'preliminary.detail.corrective.wizard.step-title': 'Corrective Measure Assessment',
@@ -156,7 +159,6 @@ module.exports = {
         'eventtype.title': 'Event type',
         'eventtype.default.description': 'Description',
         'eventtype.default.description-placeholder': 'Event description',
-        'eventtype.default.description-missing': 'Event description is required',
         'eventtype.incursion.lvp.label': 'Low visibility procedure',
         'eventtype.incursion.location.label': 'Location',
         'eventtype.incursion.location.step-title': 'Incursion location',
@@ -244,6 +246,10 @@ module.exports = {
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',
         'notfound.msg': '{resource} not found.',
+
+        'notrenderable.title': 'Unable to display report',
+        'notrenderable.error': 'Error: {message}',
+        'notrenderable.error-generic': 'Please verify report validity.',
 
         'revisions.label': 'Revisions',
         'revisions.created': 'Created',

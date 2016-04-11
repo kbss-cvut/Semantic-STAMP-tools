@@ -10,10 +10,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
@@ -24,6 +21,9 @@ import java.util.List;
 @EnableWebMvc
 @Import({RestConfig.class, SecurityConfig.class})
 public class WebAppConfig extends WebMvcConfigurerAdapter {
+
+    @Autowired
+    private PortalSessionExtendingInterceptor portalSessionInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -57,5 +57,10 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
                 Constants.UTF_8_ENCODING));
         converters.add(stringConverter);
         super.configureMessageConverters(converters);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(portalSessionInterceptor);
     }
 }

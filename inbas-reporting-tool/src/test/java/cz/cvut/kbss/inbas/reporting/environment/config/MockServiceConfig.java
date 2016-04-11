@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.Mockito.mock;
 
@@ -46,6 +47,11 @@ public class MockServiceConfig {
     }
 
     @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+    @Bean
     public ConfigReader configReader() {
         return new ConfigReader();
     }
@@ -63,6 +69,11 @@ public class MockServiceConfig {
     @Bean
     public StatisticsService statisticsService() {
         return mock(StatisticsService.class);
+    }
+
+    @Bean
+    public PortalSessionManager portalSessionManager() {
+        return mock(PortalSessionManager.class);
     }
 
     @Bean
