@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class EventGraph {
+public class FactorGraph {
 
     private List<EventDto> nodes;
 
-    private Set<EventGraphEdge> edges;
+    private Set<FactorGraphEdge> edges;
 
     public List<EventDto> getNodes() {
         return nodes;
@@ -26,15 +26,15 @@ public class EventGraph {
         nodes.add(node);
     }
 
-    public Set<EventGraphEdge> getEdges() {
+    public Set<FactorGraphEdge> getEdges() {
         return edges;
     }
 
-    public void setEdges(Set<EventGraphEdge> edges) {
+    public void setEdges(Set<FactorGraphEdge> edges) {
         this.edges = edges;
     }
 
-    public void addEdge(EventGraphEdge edge) {
+    public void addEdge(FactorGraphEdge edge) {
         if (edges == null) {
             this.edges = new HashSet<>();
         }

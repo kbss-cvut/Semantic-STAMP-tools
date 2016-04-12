@@ -1,6 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.dto;
 
-import cz.cvut.kbss.inbas.reporting.dto.event.EventGraph;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
+import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.model_new.SeverityLevel;
@@ -11,6 +13,8 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
+// It is important that occurrence comes before factorGraph, because it defines a reference to the occurrence, which can the be used
+@JsonPropertyOrder({"uri, key, occurrence, factorGraph"})
 public class OccurrenceReportDto implements LogicalDocument {
 
     private URI uri;
@@ -19,11 +23,13 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     private Long fileNumber;
 
-    private EventGraph occurrence;
+    private OccurrenceDto occurrence;
 
     private Date occurrenceStart;
 
     private Date occurrenceEnd;
+
+    private FactorGraph factorGraph;
 
     private Person author;
 
@@ -79,11 +85,11 @@ public class OccurrenceReportDto implements LogicalDocument {
         this.fileNumber = fileNumber;
     }
 
-    public EventGraph getOccurrence() {
+    public OccurrenceDto getOccurrence() {
         return occurrence;
     }
 
-    public void setOccurrence(EventGraph occurrence) {
+    public void setOccurrence(OccurrenceDto occurrence) {
         this.occurrence = occurrence;
     }
 
@@ -101,6 +107,14 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     public void setOccurrenceEnd(Date occurrenceEnd) {
         this.occurrenceEnd = occurrenceEnd;
+    }
+
+    public FactorGraph getFactorGraph() {
+        return factorGraph;
+    }
+
+    public void setFactorGraph(FactorGraph factorGraph) {
+        this.factorGraph = factorGraph;
     }
 
     @Override

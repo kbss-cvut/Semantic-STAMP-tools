@@ -2,7 +2,7 @@ package cz.cvut.kbss.inbas.reporting.dto.event;
 
 import java.net.URI;
 
-public class EventGraphEdge {
+public class FactorGraphEdge {
 
     private Integer from;
 
@@ -10,10 +10,10 @@ public class EventGraphEdge {
 
     private URI linkType;
 
-    public EventGraphEdge() {
+    public FactorGraphEdge() {
     }
 
-    public EventGraphEdge(Integer from, Integer to, URI linkType) {
+    public FactorGraphEdge(Integer from, Integer to, URI linkType) {
         this.from = from;
         this.to = to;
         this.linkType = linkType;
@@ -48,7 +48,7 @@ public class EventGraphEdge {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EventGraphEdge that = (EventGraphEdge) o;
+        FactorGraphEdge that = (FactorGraphEdge) o;
 
         if (from != null ? !from.equals(that.from) : that.from != null) return false;
         if (to != null ? !to.equals(that.to) : that.to != null) return false;

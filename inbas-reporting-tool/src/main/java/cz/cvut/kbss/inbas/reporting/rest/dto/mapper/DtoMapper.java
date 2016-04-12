@@ -6,14 +6,16 @@ import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
-import cz.cvut.kbss.inbas.reporting.dto.event.EventGraph;
-import cz.cvut.kbss.inbas.reporting.dto.event.EventGraphEdge;
+import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
+import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model_new.*;
 import cz.cvut.kbss.inbas.reporting.model_new.util.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.util.TriConsumer;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.net.URI;
 import java.util.*;
@@ -45,8 +47,10 @@ public abstract class DtoMapper {
         return dto;
     }
 
+    @Mapping(source = "occurrence", target = "factorGraph")
     public abstract OccurrenceReportDto occurrenceReportToOccurrenceReportDto(OccurrenceReport report);
 
+    @InheritInverseConfiguration
     public abstract OccurrenceReport occurrenceReportDtoToOccurrenceReport(OccurrenceReportDto dto);
 
     public CorrectiveMeasureRequestDto correctiveMeasureRequestToDto(CorrectiveMeasureRequest req) {
@@ -114,16 +118,34 @@ public abstract class DtoMapper {
 
     public abstract Event eventDtoToEvent(EventDto dto);
 
-    public abstract OccurrenceDto occurrenceToOccurrenceDto(Occurrence occurrence);
+    public OccurrenceDto occurrenceToOccurrenceDto(Occurrence occurrence) {
+        if (occurrence == null) {
+            return null;
+        }
+        if (occurrence.getReferenceId() == null) {
+            occurrence.setReferenceId(random.nextInt());
+        }
+        OccurrenceDto dto = new OccurrenceDto();
+        dto.setUri(occurrence.getUri());
+        dto.setType(occurrence.getType());
+        if (occurrence.getTypes() != null) {
+            dto.setTypes(new HashSet<>(occurrence.getTypes()));
+        }
+        dto.setKey(occurrence.getKey());
+        dto.setName(occurrence.getName());
+        dto.setReferenceId(occurrence.getReferenceId());
+
+        return dto;
+    }
 
     public abstract Occurrence occurrenceDtoToOccurrence(OccurrenceDto dto);
 
-    public EventGraph occurrenceToEventGraph(Occurrence occurrence) {
+    public FactorGraph occurrenceToEventGraph(Occurrence occurrence) {
         if (occurrence == null) {
             return null;
         }
         final Map<URI, EventDto> instanceMap = new LinkedHashMap<>();
-        final Set<EventGraphEdge> edges = new HashSet<>();
+        final Set<FactorGraphEdge> edges = new HashSet<>();
         // First run collects nodes and sets reference ids on them
         traverseTree(occurrence, dto -> {
             dto.setReferenceId(random.nextInt());
@@ -133,11 +155,11 @@ public abstract class DtoMapper {
         // Second run collects edges
         traverseTree(occurrence, (n) -> {
         }, (from, to, uri) -> {
-            final EventGraphEdge e = new EventGraphEdge(instanceMap.get(from.getUri()).getReferenceId(),
+            final FactorGraphEdge e = new FactorGraphEdge(instanceMap.get(from.getUri()).getReferenceId(),
                     instanceMap.get(to.getUri()).getReferenceId(), uri);
             edges.add(e);
         }, new HashSet<>());
-        final EventGraph graph = new EventGraph();
+        final FactorGraph graph = new FactorGraph();
         graph.setEdges(edges);
         graph.setNodes(new ArrayList<>(instanceMap.values()));
         return graph;
@@ -187,7 +209,7 @@ public abstract class DtoMapper {
         }
     }
 
-    public Occurrence eventGraphToOccurrence(EventGraph graph) {
+    public Occurrence eventGraphToOccurrence(FactorGraph graph) {
         if (graph == null) {
             return null;
         }
@@ -208,9 +230,9 @@ public abstract class DtoMapper {
         return (Occurrence) occurrence.get();
     }
 
-    private void transformEdgesToRelations(EventGraph graph, Map<Integer, EventDto> dtoMap,
+    private void transformEdgesToRelations(FactorGraph graph, Map<Integer, EventDto> dtoMap,
                                            Map<URI, FactorGraphItem> instanceMap) {
-        for (EventGraphEdge e : graph.getEdges()) {
+        for (FactorGraphEdge e : graph.getEdges()) {
             final EventDto source = dtoMap.get(e.getFrom());
             final EventDto target = dtoMap.get(e.getTo());
             if (e.getLinkType().equals(HAS_PART_URI)) {

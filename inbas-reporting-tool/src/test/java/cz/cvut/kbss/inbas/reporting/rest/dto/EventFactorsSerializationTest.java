@@ -3,8 +3,8 @@ package cz.cvut.kbss.inbas.reporting.rest.dto;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
-import cz.cvut.kbss.inbas.reporting.dto.event.EventGraph;
-import cz.cvut.kbss.inbas.reporting.dto.event.EventGraphEdge;
+import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
+import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.*;
 import cz.cvut.kbss.inbas.reporting.model_new.util.FactorGraphItem;
@@ -46,11 +46,11 @@ public class EventFactorsSerializationTest {
     @Test
     public void testSerializationOfOccurrenceWithSubEvents() throws Exception {
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
-        final EventGraph container = dtoMapper.occurrenceToEventGraph(occurrence);
+        final FactorGraph container = dtoMapper.occurrenceToEventGraph(occurrence);
         verifyStructure(occurrence, container);
     }
 
-    private Occurrence generateOccurrenceWithSubEvents() {
+    public static Occurrence generateOccurrenceWithSubEvents() {
         final Occurrence occurrence = occurrence();
         occurrence.setChildren(new HashSet<>());
         final int maxDepth = Generator.randomInt(5);
@@ -60,14 +60,14 @@ public class EventFactorsSerializationTest {
         return occurrence;
     }
 
-    private Occurrence occurrence() {
+    private static Occurrence occurrence() {
         final Occurrence occurrence = new Occurrence();
         occurrence.setName("Test");
         occurrence.setUri(URI.create(Vocabulary.Occurrence + "#instance-" + Generator.randomInt()));
         return occurrence;
     }
 
-    private Event generateSubEvents(int currentDepth, final int maxDepth) {
+    private static Event generateSubEvents(int currentDepth, final int maxDepth) {
         final Event evt = event();
         if (currentDepth < maxDepth) {
             evt.setChildren(new HashSet<>());
@@ -79,13 +79,13 @@ public class EventFactorsSerializationTest {
         return evt;
     }
 
-    private Event event() {
+    private static Event event() {
         final Event evt = new Event();
         evt.setUri(URI.create(Vocabulary.Event + "#instance-" + Generator.randomInt()));
         return evt;
     }
 
-    private void verifyStructure(Occurrence occurrence, EventGraph graph) {
+    private void verifyStructure(Occurrence occurrence, FactorGraph graph) {
         final Map<URI, EventDto> instanceMap = new HashMap<>();
         graph.getNodes().forEach(n -> instanceMap.put(n.getUri(), n));
         final Set<URI> visited = new HashSet<>();
@@ -101,12 +101,12 @@ public class EventFactorsSerializationTest {
         assertEquals(graph.getNodes().size(), visited.size());
     }
 
-    private void verifyEdge(EventDto start, EventDto end, URI type, EventGraph graph) {
-        final EventGraphEdge edge = new EventGraphEdge(start.getReferenceId(), end.getReferenceId(), type);
+    private void verifyEdge(EventDto start, EventDto end, URI type, FactorGraph graph) {
+        final FactorGraphEdge edge = new FactorGraphEdge(start.getReferenceId(), end.getReferenceId(), type);
         assertTrue(graph.getEdges().contains(edge));
     }
 
-    private void verifyStructure(Event event, EventGraph graph, Map<URI, EventDto> instanceMap, Set<URI> visited) {
+    private void verifyStructure(Event event, FactorGraph graph, Map<URI, EventDto> instanceMap, Set<URI> visited) {
         if (visited.contains(event.getUri())) {
             return;
         }
@@ -120,7 +120,7 @@ public class EventFactorsSerializationTest {
         }
     }
 
-    private void verifyFactors(HasUri target, Set<Factor> factors, EventGraph graph, Map<URI, EventDto> instanceMap,
+    private void verifyFactors(HasUri target, Set<Factor> factors, FactorGraph graph, Map<URI, EventDto> instanceMap,
                                Set<URI> visited) {
         if (factors == null || factors.isEmpty()) {
             return;
@@ -135,7 +135,7 @@ public class EventFactorsSerializationTest {
     @Test
     public void testSerializationOfLinksBetweenOccurrenceAndEventsAtSameLevel() throws Exception {
         final Occurrence occurrence = generateOccurrenceWithLinkChainOnSameLevel();
-        final EventGraph container = dtoMapper.occurrenceToEventGraph(occurrence);
+        final FactorGraph container = dtoMapper.occurrenceToEventGraph(occurrence);
         verifyStructure(occurrence, container);
     }
 
@@ -171,7 +171,8 @@ public class EventFactorsSerializationTest {
     public void testSerializationOfOccurrenceWithSubEventsConnectedByFactors() throws Exception {
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
         addFactorsToStructure(occurrence.getChildren());
-        final EventGraph graph = dtoMapper.occurrenceToEventGraph(occurrence);
+        final FactorGraph graph = dtoMapper.occurrenceToEventGraph(occurrence);
+
         verifyStructure(occurrence, graph);
     }
 
@@ -200,7 +201,7 @@ public class EventFactorsSerializationTest {
     public void testSerializationOfOccurrenceWithFactorsConnectingEventsFromDifferentSubtrees() {
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
         addCrossSubtreeFactors(occurrence.getChildren());
-        final EventGraph graph = dtoMapper.occurrenceToEventGraph(occurrence);
+        final FactorGraph graph = dtoMapper.occurrenceToEventGraph(occurrence);
         verifyStructure(occurrence, graph);
     }
 
@@ -237,7 +238,7 @@ public class EventFactorsSerializationTest {
      */
     @Test
     public void testDeserializationOfOccurrenceWithSubEvents() throws Exception {
-        final EventGraph graph = loadGraph("data/occurrenceWithSubEvents.json");
+        final FactorGraph graph = loadGraph("data/occurrenceWithSubEvents.json");
         final Occurrence res = dtoMapper.eventGraphToOccurrence(graph);
         final Map<Integer, Collection<Integer>> expectedChildren = new HashMap<>();
         expectedChildren.put(1, Arrays.asList(2, 3, 4));
@@ -248,7 +249,7 @@ public class EventFactorsSerializationTest {
         verifyDeserializedTree(graph, res, expectedChildren);
     }
 
-    private void verifyDeserializedTree(EventGraph graph, Occurrence o,
+    private void verifyDeserializedTree(FactorGraph graph, Occurrence o,
                                         Map<Integer, Collection<Integer>> expectedChildren) {
         final Map<URI, EventDto> dtos = new HashMap<>();
         graph.getNodes().forEach(n -> dtos.put(n.getUri(), n));
@@ -299,7 +300,7 @@ public class EventFactorsSerializationTest {
      */
     @Test
     public void testDeserializationOfOccurrenceWithSubEventsWithFactors() throws Exception {
-        final EventGraph graph = loadGraph("data/occurrenceWithSubEventsConnectedByFactors.json");
+        final FactorGraph graph = loadGraph("data/occurrenceWithSubEventsConnectedByFactors.json");
         final Occurrence res = dtoMapper.eventGraphToOccurrence(graph);
         final Map<Integer, Collection<Integer>> expectedChildren = new HashMap<>();
         expectedChildren.put(1, Arrays.asList(2, 3, 4));
@@ -335,10 +336,10 @@ public class EventFactorsSerializationTest {
         }
     }
 
-    private void verifyLinks(EventGraph graph, Map<URI, FactorGraphItem> flattenedGraph) {
+    private void verifyLinks(FactorGraph graph, Map<URI, FactorGraphItem> flattenedGraph) {
         final Map<Integer, URI> referenceToUri = new HashMap<>();
         graph.getNodes().forEach(dto -> referenceToUri.put(dto.getReferenceId(), dto.getUri()));
-        for (EventGraphEdge edge : graph.getEdges()) {
+        for (FactorGraphEdge edge : graph.getEdges()) {
             if (edge.getLinkType().equals(HAS_PART_URI)) {
                 // hasPart edges are checked in structure verification above
                 continue;
@@ -355,7 +356,7 @@ public class EventFactorsSerializationTest {
 
     @Test
     public void testDeserializationOfOccurrenceWithFactorsAtSameLevel() throws Exception {
-        final EventGraph graph = loadGraph("data/occurrenceWithFactorsAtSameLevel.json");
+        final FactorGraph graph = loadGraph("data/occurrenceWithFactorsAtSameLevel.json");
         final Occurrence res = dtoMapper.eventGraphToOccurrence(graph);
         final Map<Integer, Collection<Integer>> expectedChildren = new HashMap<>();
         expectedChildren.put(1, Collections.singletonList(8));
@@ -366,7 +367,7 @@ public class EventFactorsSerializationTest {
         verifyLinks(graph, factorGraphNodes);
     }
 
-    private EventGraph loadGraph(String fileName) throws IOException {
+    private FactorGraph loadGraph(String fileName) throws IOException {
         try (final BufferedReader in = new BufferedReader(
                 new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(fileName)))) {
             final StringBuilder builder = new StringBuilder();
@@ -374,7 +375,7 @@ public class EventFactorsSerializationTest {
             while ((line = in.readLine()) != null) {
                 builder.append(line).append('\n');
             }
-            return objectMapper.readValue(builder.toString(), EventGraph.class);
+            return objectMapper.readValue(builder.toString(), FactorGraph.class);
         }
     }
 }
