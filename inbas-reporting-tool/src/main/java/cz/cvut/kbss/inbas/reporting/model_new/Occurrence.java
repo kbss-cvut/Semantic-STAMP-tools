@@ -1,16 +1,17 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
+import cz.cvut.kbss.inbas.reporting.model_new.util.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasOwlKey;
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.Occurrence)
-public class Occurrence implements HasOwlKey, HasUri, Serializable {
+public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -74,12 +75,30 @@ public class Occurrence implements HasOwlKey, HasUri, Serializable {
         this.factors = factors;
     }
 
+    @Override
+    public void addFactor(Factor factor) {
+        Objects.requireNonNull(factor);
+        if (factors == null) {
+            this.factors = new HashSet<>();
+        }
+        factors.add(factor);
+    }
+
     public Set<Event> getChildren() {
         return children;
     }
 
     public void setChildren(Set<Event> children) {
         this.children = children;
+    }
+
+    @Override
+    public void addChild(Event child) {
+        Objects.requireNonNull(child);
+        if (children == null) {
+            this.children = new HashSet<>();
+        }
+        children.add(child);
     }
 
     public EventType getType() {

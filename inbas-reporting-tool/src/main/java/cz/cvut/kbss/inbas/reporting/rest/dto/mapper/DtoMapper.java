@@ -10,6 +10,7 @@ import cz.cvut.kbss.inbas.reporting.dto.event.EventGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.EventGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model_new.*;
+import cz.cvut.kbss.inbas.reporting.model_new.util.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.util.TriConsumer;
 import org.mapstruct.Mapper;
@@ -187,6 +188,43 @@ public abstract class DtoMapper {
     }
 
     public Occurrence eventGraphToOccurrence(EventGraph graph) {
-        return null;
+        if (graph == null) {
+            return null;
+        }
+        final Map<Integer, EventDto> dtoMap = new HashMap<>();
+        graph.getNodes().forEach(n -> dtoMap.put(n.getReferenceId(), n));
+        final Map<URI, FactorGraphItem> instanceMap = new HashMap<>(dtoMap.size());
+        graph.getNodes().forEach(n -> {
+            if (n instanceof OccurrenceDto) {
+                instanceMap.put(n.getUri(), occurrenceDtoToOccurrence((OccurrenceDto) n));
+            } else {
+                instanceMap.put(n.getUri(), eventDtoToEvent(n));
+            }
+        });
+        transformEdgesToRelations(graph, dtoMap, instanceMap);
+        final Optional<FactorGraphItem> occurrence = instanceMap.values().stream()
+                                                                .filter(item -> item instanceof Occurrence).findFirst();
+        assert occurrence.isPresent();
+        return (Occurrence) occurrence.get();
     }
+
+    private void transformEdgesToRelations(EventGraph graph, Map<Integer, EventDto> dtoMap,
+                                           Map<URI, FactorGraphItem> instanceMap) {
+        for (EventGraphEdge e : graph.getEdges()) {
+            final EventDto source = dtoMap.get(e.getFrom());
+            final EventDto target = dtoMap.get(e.getTo());
+            if (e.getLinkType().equals(HAS_PART_URI)) {
+                assert instanceMap.get(target.getUri()) instanceof Event;
+                instanceMap.get(source.getUri()).addChild((Event) instanceMap.get(target.getUri()));
+            } else {
+                final FactorType ft = FactorType.fromUri(e.getLinkType());
+                final Factor factor = new Factor();
+                factor.setType(ft);
+                factor.setEvent((Event) instanceMap.get(source.getUri()));
+                instanceMap.get(target.getUri()).addFactor(factor);
+            }
+        }
+    }
+
+
 }

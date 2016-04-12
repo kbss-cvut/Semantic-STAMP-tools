@@ -48,4 +48,23 @@ public class EventType implements HasUri, Serializable {
     public String toString() {
         return "EventType{" + name + " <" + uri + ">}";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EventType eventType = (EventType) o;
+
+        if (uri != null ? !uri.equals(eventType.uri) : eventType.uri != null) return false;
+        return name != null ? name.equals(eventType.name) : eventType.name == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = uri != null ? uri.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
+    }
 }

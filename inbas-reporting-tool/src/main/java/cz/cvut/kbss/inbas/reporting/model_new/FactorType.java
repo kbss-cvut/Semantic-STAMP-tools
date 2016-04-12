@@ -24,4 +24,13 @@ public enum FactorType {
     public String toString() {
         return uri.toString();
     }
+
+    public static FactorType fromUri(URI uri) {
+        for (FactorType ft : values()) {
+            if (ft.uri.equals(uri)) {
+                return ft;
+            }
+        }
+        throw new IllegalArgumentException("Unknown FactorType uri " + uri);
+    }
 }

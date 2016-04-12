@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model_new;
 
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
+import cz.cvut.kbss.inbas.reporting.model_new.util.FactorGraphItem;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.Event)
-public class Event implements HasUri, Serializable {
+public class Event implements FactorGraphItem, Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -45,6 +45,7 @@ public class Event implements HasUri, Serializable {
         this.factors = factors;
     }
 
+    @Override
     public void addFactor(Factor f) {
         Objects.requireNonNull(f);
         if (factors == null) {
@@ -59,6 +60,15 @@ public class Event implements HasUri, Serializable {
 
     public void setChildren(Set<Event> children) {
         this.children = children;
+    }
+
+    @Override
+    public void addChild(Event child) {
+        Objects.requireNonNull(child);
+        if (children == null) {
+            this.children = new HashSet<>();
+        }
+        children.add(child);
     }
 
     public EventType getType() {
