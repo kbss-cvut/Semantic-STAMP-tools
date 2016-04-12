@@ -6,19 +6,23 @@ import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
-import cz.cvut.kbss.inbas.reporting.dto.event.FactorDto;
+import cz.cvut.kbss.inbas.reporting.dto.event.EventGraph;
+import cz.cvut.kbss.inbas.reporting.dto.event.EventGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model_new.*;
+import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
+import cz.cvut.kbss.inbas.reporting.util.TriConsumer;
 import org.mapstruct.Mapper;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SplittableRandom;
+import java.net.URI;
+import java.util.*;
+import java.util.function.Consumer;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class DtoMapper {
 
     private final SplittableRandom random = new SplittableRandom();
+    private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
 
     public LogicalDocument reportToReportDto(LogicalDocument report) {
         if (report == null) {
@@ -113,7 +117,76 @@ public abstract class DtoMapper {
 
     public abstract Occurrence occurrenceDtoToOccurrence(OccurrenceDto dto);
 
-    public abstract FactorDto factorToFactorDto(Factor factor);
+    public EventGraph occurrenceToEventGraph(Occurrence occurrence) {
+        if (occurrence == null) {
+            return null;
+        }
+        final Map<URI, EventDto> instanceMap = new LinkedHashMap<>();
+        final Set<EventGraphEdge> edges = new HashSet<>();
+        // First run collects nodes and sets reference ids on them
+        traverseTree(occurrence, dto -> {
+            dto.setReferenceId(random.nextInt());
+            instanceMap.put(dto.getUri(), dto);
+        }, (a, b, c) -> {
+        }, new HashSet<>());
+        // Second run collects edges
+        traverseTree(occurrence, (n) -> {
+        }, (from, to, uri) -> {
+            final EventGraphEdge e = new EventGraphEdge(instanceMap.get(from.getUri()).getReferenceId(),
+                    instanceMap.get(to.getUri()).getReferenceId(), uri);
+            edges.add(e);
+        }, new HashSet<>());
+        final EventGraph graph = new EventGraph();
+        graph.setEdges(edges);
+        graph.setNodes(new ArrayList<>(instanceMap.values()));
+        return graph;
+    }
 
-    public abstract Factor factorDtoToFactor(FactorDto dto);
+    private void traverseTree(Occurrence occurrence, Consumer<EventDto> nodeConsumer,
+                              TriConsumer<HasUri, HasUri, URI> edgeConsumer, Set<URI> visited) {
+        if (visited.contains(occurrence.getUri())) {
+            return;
+        }
+        nodeConsumer.accept(occurrenceToOccurrenceDto(occurrence));
+        visited.add(occurrence.getUri());
+        if (occurrence.getFactors() != null) {
+
+            for (Factor f : occurrence.getFactors()) {
+                edgeConsumer.accept(f.getEvent(), occurrence, f.getType().getUri());
+                traverseTree(f.getEvent(), nodeConsumer, edgeConsumer, visited);
+            }
+        }
+        if (occurrence.getChildren() != null) {
+            occurrence.getChildren().forEach(child -> {
+                edgeConsumer.accept(occurrence, child, HAS_PART_URI);
+                traverseTree(child, nodeConsumer, edgeConsumer, visited);
+            });
+        }
+    }
+
+    private void traverseTree(Event event, Consumer<EventDto> nodeConsumer,
+                              TriConsumer<HasUri, HasUri, URI> edgeConsumer, Set<URI> visited) {
+        if (visited.contains(event.getUri())) {
+            return;
+        }
+        nodeConsumer.accept(eventToEventDto(event));
+        visited.add(event.getUri());
+        if (event.getFactors() != null) {
+
+            for (Factor f : event.getFactors()) {
+                edgeConsumer.accept(f.getEvent(), event, f.getType().getUri());
+                traverseTree(f.getEvent(), nodeConsumer, edgeConsumer, visited);
+            }
+        }
+        if (event.getChildren() != null) {
+            event.getChildren().forEach(child -> {
+                edgeConsumer.accept(event, child, HAS_PART_URI);
+                traverseTree(child, nodeConsumer, edgeConsumer, visited);
+            });
+        }
+    }
+
+    public Occurrence eventGraphToOccurrence(EventGraph graph) {
+        return null;
+    }
 }

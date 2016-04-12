@@ -1,23 +1,16 @@
 package cz.cvut.kbss.inbas.reporting.dto.event;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import cz.cvut.kbss.inbas.reporting.model_new.FactorType;
 
 import java.net.URI;
 
-// Note that every reference has to be defined before its first use
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class FactorDto {
 
     private URI uri;
 
-    private EventDto event;
+    private Integer event;
 
     private FactorType type;
-
-    // Reference ID for JSON references
-    private Integer referenceId;
 
     public URI getUri() {
         return uri;
@@ -27,11 +20,11 @@ public class FactorDto {
         this.uri = uri;
     }
 
-    public EventDto getEvent() {
+    public Integer getEvent() {
         return event;
     }
 
-    public void setEvent(EventDto event) {
+    public void setEvent(Integer event) {
         this.event = event;
     }
 
@@ -41,13 +34,5 @@ public class FactorDto {
 
     public void setType(FactorType type) {
         this.type = type;
-    }
-
-    public Integer getReferenceId() {
-        return referenceId;
-    }
-
-    public void setReferenceId(Integer referenceId) {
-        this.referenceId = referenceId;
     }
 }

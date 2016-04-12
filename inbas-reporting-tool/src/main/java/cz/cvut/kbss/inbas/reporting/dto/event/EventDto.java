@@ -1,28 +1,21 @@
 package cz.cvut.kbss.inbas.reporting.dto.event;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import cz.cvut.kbss.inbas.reporting.model_new.EventType;
-import cz.cvut.kbss.inbas.reporting.model_new.Factor;
 
 import java.net.URI;
 import java.util.Set;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "javaClass")
-// Note that every reference has to be defined before its first use
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 public class EventDto {
 
     private URI uri;
 
-    private Set<Factor> factors;
-
-    private Set<EventDto> children;
-
     private EventType type;
 
     private Set<String> types;
+
+    private Integer referenceId;
 
     public URI getUri() {
         return uri;
@@ -48,19 +41,11 @@ public class EventDto {
         this.types = types;
     }
 
-    public Set<Factor> getFactors() {
-        return factors;
+    public Integer getReferenceId() {
+        return referenceId;
     }
 
-    public void setFactors(Set<Factor> factors) {
-        this.factors = factors;
-    }
-
-    public Set<EventDto> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Set<EventDto> children) {
-        this.children = children;
+    public void setReferenceId(Integer referenceId) {
+        this.referenceId = referenceId;
     }
 }

@@ -89,7 +89,6 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         assertNotNull(res);
         assertEquals(report.getUri(), res.getUri());
         assertEquals(report.getKey(), res.getKey());
-        assertEquals(report.getOccurrence().getUri(), res.getOccurrence().getUri());
     }
 
     @Test

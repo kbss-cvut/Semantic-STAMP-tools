@@ -83,7 +83,6 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
         assertEquals(reports.size(), res.size());
         for (int i = 0; i < reports.size(); i++) {
             assertEquals(reports.get(i).getUri(), res.get(i).getUri());
-            assertEquals(occurrence.getUri(), res.get(i).getOccurrence().getUri());
             assertEquals(reports.get(i).getCorrectiveMeasureRequests().size(),
                     res.get(i).getCorrectiveMeasureRequests().size());
         }

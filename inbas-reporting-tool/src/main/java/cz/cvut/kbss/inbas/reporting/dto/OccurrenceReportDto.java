@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.dto;
 
-import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
+import cz.cvut.kbss.inbas.reporting.dto.event.EventGraph;
 import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model_new.Person;
 import cz.cvut.kbss.inbas.reporting.model_new.SeverityLevel;
@@ -19,7 +19,7 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     private Long fileNumber;
 
-    private OccurrenceDto occurrence;
+    private EventGraph occurrence;
 
     private Date occurrenceStart;
 
@@ -79,11 +79,11 @@ public class OccurrenceReportDto implements LogicalDocument {
         this.fileNumber = fileNumber;
     }
 
-    public OccurrenceDto getOccurrence() {
+    public EventGraph getOccurrence() {
         return occurrence;
     }
 
-    public void setOccurrence(OccurrenceDto occurrence) {
+    public void setOccurrence(EventGraph occurrence) {
         this.occurrence = occurrence;
     }
 

@@ -161,4 +161,18 @@ public class Generator {
     public static int randomInt() {
         return random.nextInt();
     }
+
+    /**
+     * Generates a (pseudo-)random index of an element in the collection.
+     * <p>
+     * I.e. the returned number is in the interval <0, col.size()).
+     *
+     * @param col The collection
+     * @return Random index
+     */
+    public static int randomIndex(Collection<?> col) {
+        assert col != null;
+        assert !col.isEmpty();
+        return random.nextInt(col.size());
+    }
 }

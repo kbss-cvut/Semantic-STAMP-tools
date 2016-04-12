@@ -6,6 +6,7 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.Event)
@@ -42,6 +43,14 @@ public class Event implements HasUri, Serializable {
 
     public void setFactors(Set<Factor> factors) {
         this.factors = factors;
+    }
+
+    public void addFactor(Factor f) {
+        Objects.requireNonNull(f);
+        if (factors == null) {
+            this.factors = new HashSet<>();
+        }
+        factors.add(f);
     }
 
     public Set<Event> getChildren() {

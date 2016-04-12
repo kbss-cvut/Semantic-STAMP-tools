@@ -1,10 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.rest.dto;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
+import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
+import cz.cvut.kbss.inbas.reporting.dto.event.EventGraph;
+import cz.cvut.kbss.inbas.reporting.dto.event.EventGraphEdge;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.*;
+import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapperImpl;
 import org.junit.Before;
@@ -23,30 +24,20 @@ import static org.junit.Assert.assertTrue;
  */
 public class EventFactorsSerializationTest {
 
-    private ObjectMapper objectMapper;
+    private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
 
     private DtoMapper dtoMapper;
 
     @Before
     public void setUp() {
-        this.objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         this.dtoMapper = new DtoMapperImpl();
     }
 
     @Test
     public void testSerializationOfOccurrenceWithSubEvents() throws Exception {
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
-        final Node occurrenceTree = buildTreeStructure(occurrence);
-        final Occurrence result = serializeAndDeserialize(occurrence);
-        verifyTreeStructure(occurrenceTree, result);
-    }
-
-    private Occurrence serializeAndDeserialize(Occurrence occurrence) throws java.io.IOException {
-        final OccurrenceDto dto = dtoMapper.occurrenceToOccurrenceDto(occurrence);
-        final String output = objectMapper.writeValueAsString(dto);
-        final OccurrenceDto readDto = objectMapper.readValue(output, OccurrenceDto.class);
-        return dtoMapper.occurrenceDtoToOccurrence(readDto);
+        final EventGraph container = dtoMapper.occurrenceToEventGraph(occurrence);
+        verifyStructure(occurrence, container);
     }
 
     private Occurrence generateOccurrenceWithSubEvents() {
@@ -84,49 +75,58 @@ public class EventFactorsSerializationTest {
         return evt;
     }
 
-    private Node buildTreeStructure(Occurrence occurrence) {
-        final Node n = new Node(occurrence.getUri());
-        if (!occurrence.getChildren().isEmpty()) {
-            occurrence.getChildren().forEach(child -> n.addChild(buildTreeStructure(child)));
-        }
-        return n;
-    }
+    private void verifyStructure(Occurrence occurrence, EventGraph graph) {
+        final Map<URI, EventDto> instanceMap = new HashMap<>();
+        graph.getNodes().forEach(n -> instanceMap.put(n.getUri(), n));
+        final Set<URI> visited = new HashSet<>();
+        visited.add(occurrence.getUri());
 
-    private Node buildTreeStructure(Event event) {
-        final Node n = new Node(event.getUri());
-        if (event.getChildren() != null && !event.getChildren().isEmpty()) {
-            event.getChildren().forEach(child -> n.addChild(buildTreeStructure(child)));
-        }
-        return n;
-    }
-
-    private void verifyTreeStructure(Node expected, Occurrence actual) {
-        assertEquals(expected.uri, actual.getUri());
-        assertEquals(expected.children.size(), actual.getChildren().size());
-        actual.getChildren().forEach(child -> {
-            assertTrue(expected.children.containsKey(child.getUri()));
-            verifyTreeStructure(expected.children.get(child.getUri()), child);
-        });
-    }
-
-    private void verifyTreeStructure(Node expected, Event actual) {
-        assertEquals(expected.uri, actual.getUri());
-        if (!expected.children.isEmpty()) {
-            assertEquals(expected.children.size(), actual.getChildren().size());
-            actual.getChildren().forEach(child -> {
-                assertTrue(expected.children.containsKey(child.getUri()));
-                verifyTreeStructure(expected.children.get(child.getUri()), child);
+        verifyFactors(occurrence, occurrence.getFactors(), graph, instanceMap, visited);
+        if (occurrence.getChildren() != null) {
+            occurrence.getChildren().forEach(child -> {
+                verifyEdge(instanceMap.get(occurrence.getUri()), instanceMap.get(child.getUri()), HAS_PART_URI, graph);
+                verifyStructure(child, graph, instanceMap, visited);
             });
+        }
+        assertEquals(graph.getNodes().size(), visited.size());
+    }
+
+    private void verifyEdge(EventDto start, EventDto end, URI type, EventGraph graph) {
+        final EventGraphEdge edge = new EventGraphEdge(start.getReferenceId(), end.getReferenceId(), type);
+        assertTrue(graph.getEdges().contains(edge));
+    }
+
+    private void verifyStructure(Event event, EventGraph graph, Map<URI, EventDto> instanceMap, Set<URI> visited) {
+        if (visited.contains(event.getUri())) {
+            return;
+        }
+        visited.add(event.getUri());
+        verifyFactors(event, event.getFactors(), graph, instanceMap, visited);
+        if (event.getChildren() != null) {
+            event.getChildren().forEach(child -> {
+                verifyEdge(instanceMap.get(event.getUri()), instanceMap.get(child.getUri()), HAS_PART_URI, graph);
+                verifyStructure(child, graph, instanceMap, visited);
+            });
+        }
+    }
+
+    private void verifyFactors(HasUri target, Set<Factor> factors, EventGraph graph, Map<URI, EventDto> instanceMap,
+                               Set<URI> visited) {
+        if (factors == null || factors.isEmpty()) {
+            return;
+        }
+        for (Factor f : factors) {
+            verifyEdge(instanceMap.get(f.getEvent().getUri()), instanceMap.get(target.getUri()), f.getType().getUri(),
+                    graph);
+            verifyStructure(f.getEvent(), graph, instanceMap, visited);
         }
     }
 
     @Test
     public void testSerializationOfLinksBetweenOccurrenceAndEventsAtSameLevel() throws Exception {
         final Occurrence occurrence = generateOccurrenceWithLinkChainOnSameLevel();
-        final Set<Link> origLinks = resolveLinks(occurrence);
-        final Occurrence result = serializeAndDeserialize(occurrence);
-        final Set<Link> resultLinks = resolveLinks(result);
-        assertEquals(origLinks, resultLinks);
+        final EventGraph container = dtoMapper.occurrenceToEventGraph(occurrence);
+        verifyStructure(occurrence, container);
     }
 
     private Occurrence generateOccurrenceWithLinkChainOnSameLevel() {
@@ -157,55 +157,20 @@ public class EventFactorsSerializationTest {
         return FactorType.values()[Generator.randomInt(FactorType.values().length) - 1];
     }
 
-    private Set<Link> resolveLinks(Occurrence occurrence) {
-        final Set<Link> links = new HashSet<>();
-        if (occurrence.getFactors() != null) {
-            occurrence.getFactors()
-                      .forEach(f -> links.add(new Link(f.getEvent().getUri(), occurrence.getUri(), f.getType())));
-        }
-        if (occurrence.getChildren() != null) {
-            final Set<Object> visited = new HashSet<>();
-            visited.add(occurrence);
-            occurrence.getChildren().forEach(child -> links.addAll(resolveLinks(child, visited)));
-        }
-        return links;
-    }
-
-    private Set<Link> resolveLinks(Event event, Set<Object> visitedObjects) {
-        if (visitedObjects.contains(event)) {
-            return Collections.emptySet();
-        }
-        visitedObjects.add(event);
-        final Set<Link> links = new HashSet<>();
-        if (event.getFactors() != null) {
-            event.getFactors()
-                 .forEach(f -> links.add(new Link(f.getEvent().getUri(), event.getUri(), f.getType())));
-        }
-        if (event.getChildren() != null) {
-            event.getChildren().forEach(child -> links.addAll(resolveLinks(child, visitedObjects)));
-        }
-        return links;
-    }
-
     @Test
     public void testSerializationOfOccurrenceWithSubEventsConnectedByFactors() throws Exception {
-        // TODO Fix the serialization issue (it causes SO)
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
         addFactorsToStructure(occurrence.getChildren());
-        final Node tree = buildTreeStructure(occurrence);
-        final Set<Link> links = resolveLinks(occurrence);
-        final Occurrence result = serializeAndDeserialize(occurrence);
-        verifyTreeStructure(tree, result);
-        final Set<Link> resultLinks = resolveLinks(result);
-        assertEquals(links, resultLinks);
+        final EventGraph graph = dtoMapper.occurrenceToEventGraph(occurrence);
+        verifyStructure(occurrence, graph);
     }
 
     private void addFactorsToStructure(Set<Event> siblings) {
         if (siblings.size() >= 2) {
             final List<Event> asList = new ArrayList<>(siblings);
             for (int i = 0; i < Generator.randomInt(asList.size()); i++) {
-                final Event from = asList.get(Generator.randomInt(asList.size()) - 1);
-                final Event to = asList.get(Generator.randomInt(asList.size()) - 1);
+                final Event from = asList.get(Generator.randomIndex(asList));
+                final Event to = asList.get(Generator.randomIndex(asList));
                 if (from == to) {
                     continue;
                 }
@@ -221,63 +186,31 @@ public class EventFactorsSerializationTest {
         siblings.stream().filter(e -> e.getChildren() != null).forEach(e -> addFactorsToStructure(e.getChildren()));
     }
 
-    private static class Node {
-
-        private final URI uri;
-
-        private final Map<URI, Node> children = new HashMap<>();
-
-        Node(URI uri) {
-            this.uri = uri;
-        }
-
-        void addChild(Node child) {
-            children.put(child.uri, child);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Node node = (Node) o;
-
-            return uri.equals(node.uri);
-        }
-
-        @Override
-        public int hashCode() {
-            return uri.hashCode();
-        }
+    @Test
+    public void testSerializationOfOccurrenceWithFactorsConnectingEventsFromDifferentSubtrees() {
+        final Occurrence occurrence = generateOccurrenceWithSubEvents();
+        addCrossSubtreeFactors(occurrence.getChildren());
+        final EventGraph graph = dtoMapper.occurrenceToEventGraph(occurrence);
+        verifyStructure(occurrence, graph);
     }
 
-    private static class Link {
-        private final URI from;
-        private final URI to;
-        private final FactorType type;
-
-        Link(URI from, URI to, FactorType type) {
-            this.from = from;
-            this.to = to;
-            this.type = type;
+    private void addCrossSubtreeFactors(Set<Event> siblings) {
+        if (siblings.size() >= 2) {
+            final List<Event> asList = new ArrayList<>(siblings);
+            final Event e1 = asList.get(Generator.randomIndex(asList));
+            final Event e2 = asList.get(Generator.randomIndex(asList));
+            if (e1 != e2 && e1.getChildren() != null && e1.getChildren().size() >= 2 && e2.getChildren() != null &&
+                    e2.getChildren().size() >= 2) {
+                final List<Event> e1Children = new ArrayList<>(e1.getChildren());
+                final List<Event> e2Children = new ArrayList<>(e2.getChildren());
+                final Event from = e1Children.get(Generator.randomIndex(e1Children));
+                final Event to = e2Children.get(Generator.randomIndex(e2Children));
+                final Factor f = new Factor();
+                f.setType(randomFactorType());
+                f.setEvent(from);
+                to.addFactor(f);
+            }
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Link link = (Link) o;
-
-            return from.equals(link.from) && to.equals(link.to) && type == link.type;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = from.hashCode();
-            result = 31 * result + to.hashCode();
-            result = 31 * result + type.hashCode();
-            return result;
-        }
+        siblings.stream().filter(e -> e.getChildren() != null).forEach(e -> addCrossSubtreeFactors(e.getChildren()));
     }
 }

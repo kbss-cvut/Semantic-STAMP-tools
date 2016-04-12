@@ -85,4 +85,10 @@ public class Vocabulary {
     public static final String p_mostProbableAccidentOutcome = "http://onto.fel.cvut.cz/ontologies/documentation/arms-most-probable-accident-outcome";
     public static final String p_barrierEffectiveness = "http://onto.fel.cvut.cz/ontologies/documentation/arms-barrier-effectiveness";
     public static final String p_armsIndex = "http://onto.fel.cvut.cz/ontologies/documentation/arms-index";
+
+    // Factor types (for now)
+    public static final String p_mitigates = "http://onto.fel.cvut.cz/ontologies/documentation/mitigates";
+    public static final String p_causes = "http://onto.fel.cvut.cz/ontologies/documentation/causes";
+    public static final String p_contributesTo = "http://onto.fel.cvut.cz/ontologies/documentation/contributes-to";
+    public static final String p_prevents = "http://onto.fel.cvut.cz/ontologies/documentation/prevents";
 }
