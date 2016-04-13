@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author ledvima1
+ * Returns info about authentication failure.
  */
 @Service
 public class AuthenticationFailure implements AuthenticationFailureHandler {

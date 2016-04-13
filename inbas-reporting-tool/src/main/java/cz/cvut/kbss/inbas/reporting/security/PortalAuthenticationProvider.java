@@ -22,7 +22,6 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -36,7 +35,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
-import java.util.Collections;
 
 @Service("portalAuthenticationProvider")
 public class PortalAuthenticationProvider implements AuthenticationProvider {
@@ -66,9 +64,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         final String password = authentication.getCredentials().toString();
         final Person authenticatedUser = authenticateAgainstPortal(username, password);
         saveUser(authenticatedUser);
-        final UserDetails userDetails = new PortalUserDetails(authenticatedUser,
-                Collections.singleton(new SimpleGrantedAuthority(PortalUser.PORTAL_USER_ROLE)),
-                encodeBase64(username, password));
+        final UserDetails userDetails = new PortalUserDetails(authenticatedUser, encodeBase64(username, password));
         userDetails.eraseCredentials();
         final AuthenticationToken token = new AuthenticationToken(userDetails.getAuthorities(), userDetails);
         token.setAuthenticated(true);

@@ -46,6 +46,11 @@ public final class Constants {
      */
     public static final String COMPANY_ID_COOKIE = "COMPANY_ID";
 
+    /**
+     * Default location of the index.html file, relative to the application classpath.
+     */
+    public static final String INDEX_FILE_LOCATION = "../../index.html";
+
     // Query files
 
     /**
