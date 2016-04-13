@@ -36,10 +36,6 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
     @Types
     private Set<String> types;
 
-    // Support reference usage in DTO transformation
-    @Transient
-    private Integer referenceId;
-
     public Occurrence() {
         this.types = new HashSet<>();
         // Occurrence is a subclass of Event
@@ -132,14 +128,6 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
 
     public void setTypes(Set<String> types) {
         this.types = types;
-    }
-
-    public Integer getReferenceId() {
-        return referenceId;
-    }
-
-    public void setReferenceId(Integer referenceId) {
-        this.referenceId = referenceId;
     }
 
     @Override

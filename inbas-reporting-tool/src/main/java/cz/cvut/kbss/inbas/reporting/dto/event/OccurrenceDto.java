@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.reporting.dto.event;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-@JsonIdentityInfo(property = "referenceId", generator = ObjectIdGenerators.None.class)
+@JsonIdentityInfo(property = "referenceId", generator = ObjectIdGenerators.PropertyGenerator.class)
 public class OccurrenceDto extends EventDto {
 
     private String key;

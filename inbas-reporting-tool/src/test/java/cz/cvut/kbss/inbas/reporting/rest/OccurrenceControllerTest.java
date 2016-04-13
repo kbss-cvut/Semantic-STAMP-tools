@@ -78,6 +78,7 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
         when(occurrenceService.getReports(occurrence)).thenReturn(reports);
         final MvcResult result = mockMvc.perform(get("/occurrences/" + occurrence.getKey() + "/reports").accept(
                 MediaType.APPLICATION_JSON_VALUE)).andReturn();
+        System.out.println(result.getResponse().getContentAsString());
         final List<OccurrenceReportDto> res = readValue(result, OccurrenceReportDtoList.class);
         assertNotNull(res);
         assertEquals(reports.size(), res.size());

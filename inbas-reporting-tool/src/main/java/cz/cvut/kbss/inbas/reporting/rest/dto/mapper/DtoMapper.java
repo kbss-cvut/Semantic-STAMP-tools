@@ -13,7 +13,6 @@ import cz.cvut.kbss.inbas.reporting.model_new.*;
 import cz.cvut.kbss.inbas.reporting.model_new.util.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.util.TriConsumer;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -27,10 +26,17 @@ public abstract class DtoMapper {
     private final SplittableRandom random = new SplittableRandom();
     private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
 
+    private Map<URI, HasUri> dtoRegistry = new HashMap<>();
+
+    private void reset() {
+        this.dtoRegistry = new HashMap<>();
+    }
+
     public LogicalDocument reportToReportDto(LogicalDocument report) {
         if (report == null) {
             return null;
         }
+        reset();
         if (report instanceof OccurrenceReport) {
             return occurrenceReportToOccurrenceReportDto((OccurrenceReport) report);
         }
@@ -41,16 +47,18 @@ public abstract class DtoMapper {
         if (dto == null) {
             return null;
         }
+        reset();
         if (dto instanceof OccurrenceReportDto) {
             return occurrenceReportDtoToOccurrenceReport((OccurrenceReportDto) dto);
         }
         return dto;
     }
 
-    @Mapping(source = "occurrence", target = "factorGraph")
+    @Mapping(source = "occurrence", target = "occurrence")
+    @Mapping(source = "occurrence", target = "factorGraph", dependsOn = "occurrence")
     public abstract OccurrenceReportDto occurrenceReportToOccurrenceReportDto(OccurrenceReport report);
 
-    @InheritInverseConfiguration
+    @Mapping(source = "factorGraph", target = "occurrence")
     public abstract OccurrenceReport occurrenceReportDtoToOccurrenceReport(OccurrenceReportDto dto);
 
     public CorrectiveMeasureRequestDto correctiveMeasureRequestToDto(CorrectiveMeasureRequest req) {
@@ -122,9 +130,6 @@ public abstract class DtoMapper {
         if (occurrence == null) {
             return null;
         }
-        if (occurrence.getReferenceId() == null) {
-            occurrence.setReferenceId(random.nextInt());
-        }
         OccurrenceDto dto = new OccurrenceDto();
         dto.setUri(occurrence.getUri());
         dto.setType(occurrence.getType());
@@ -133,7 +138,8 @@ public abstract class DtoMapper {
         }
         dto.setKey(occurrence.getKey());
         dto.setName(occurrence.getName());
-        dto.setReferenceId(occurrence.getReferenceId());
+        dto.setReferenceId(random.nextInt());
+        dtoRegistry.put(dto.getUri(), dto);
 
         return dto;
     }
@@ -148,7 +154,9 @@ public abstract class DtoMapper {
         final Set<FactorGraphEdge> edges = new HashSet<>();
         // First run collects nodes and sets reference ids on them
         traverseTree(occurrence, dto -> {
-            dto.setReferenceId(random.nextInt());
+            if (dto.getReferenceId() == null) {
+                dto.setReferenceId(random.nextInt());
+            }
             instanceMap.put(dto.getUri(), dto);
         }, (a, b, c) -> {
         }, new HashSet<>());
@@ -170,7 +178,9 @@ public abstract class DtoMapper {
         if (visited.contains(occurrence.getUri())) {
             return;
         }
-        nodeConsumer.accept(occurrenceToOccurrenceDto(occurrence));
+        nodeConsumer.accept(dtoRegistry.containsKey(occurrence.getUri()) ?
+                            (EventDto) dtoRegistry.get(occurrence.getUri()) :
+                            occurrenceToOccurrenceDto(occurrence));
         visited.add(occurrence.getUri());
         if (occurrence.getFactors() != null) {
 

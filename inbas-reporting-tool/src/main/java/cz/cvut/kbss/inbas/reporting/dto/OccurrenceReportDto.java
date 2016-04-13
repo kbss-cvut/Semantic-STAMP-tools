@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Set;
 
 // It is important that occurrence comes before factorGraph, because it defines a reference to the occurrence, which can the be used
-@JsonPropertyOrder({"uri, key, occurrence, factorGraph"})
+@JsonPropertyOrder(value = {"uri, key, occurrence, factorGraph"})
 public class OccurrenceReportDto implements LogicalDocument {
 
     private URI uri;

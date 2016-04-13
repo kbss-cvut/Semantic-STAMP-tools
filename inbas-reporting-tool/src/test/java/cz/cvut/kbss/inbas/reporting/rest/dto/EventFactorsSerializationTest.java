@@ -1,10 +1,9 @@
 package cz.cvut.kbss.inbas.reporting.rest.dto;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
+import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model_new.*;
 import cz.cvut.kbss.inbas.reporting.model_new.util.FactorGraphItem;
@@ -14,9 +13,6 @@ import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapperImpl;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.*;
 
@@ -34,13 +30,9 @@ public class EventFactorsSerializationTest {
 
     private DtoMapper dtoMapper;
 
-    private ObjectMapper objectMapper;
-
     @Before
     public void setUp() {
         this.dtoMapper = new DtoMapperImpl();
-        this.objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
     }
 
     @Test
@@ -367,15 +359,7 @@ public class EventFactorsSerializationTest {
         verifyLinks(graph, factorGraphNodes);
     }
 
-    private FactorGraph loadGraph(String fileName) throws IOException {
-        try (final BufferedReader in = new BufferedReader(
-                new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(fileName)))) {
-            final StringBuilder builder = new StringBuilder();
-            String line;
-            while ((line = in.readLine()) != null) {
-                builder.append(line).append('\n');
-            }
-            return objectMapper.readValue(builder.toString(), FactorGraph.class);
-        }
+    private FactorGraph loadGraph(String fileName) throws Exception {
+        return Environment.loadData(fileName, FactorGraph.class);
     }
 }

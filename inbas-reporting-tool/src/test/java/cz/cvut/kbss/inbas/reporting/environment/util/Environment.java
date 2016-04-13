@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Iterator;
@@ -110,5 +112,26 @@ public class Environment {
             i++;
         }
         return item;
+    }
+
+    /**
+     * Loads JSON data from the specified file and maps them to the specified result type.
+     *
+     * @param fileName   Name of the file to load data from (including path). It is expected to be on the classpath and
+     *                   Classloader is used to get input stream for the file.
+     * @param resultType Java type to which the JSON should be mapped
+     * @return Object loaded from the file and mapped to the result type
+     * @throws Exception If file reading or object unmarshalling fails
+     */
+    public static <T> T loadData(String fileName, Class<T> resultType) throws Exception {
+        try (final BufferedReader in = new BufferedReader(
+                new InputStreamReader(Environment.class.getClassLoader().getResourceAsStream(fileName)))) {
+            final StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                builder.append(line).append('\n');
+            }
+            return getObjectMapper().readValue(builder.toString(), resultType);
+        }
     }
 }
