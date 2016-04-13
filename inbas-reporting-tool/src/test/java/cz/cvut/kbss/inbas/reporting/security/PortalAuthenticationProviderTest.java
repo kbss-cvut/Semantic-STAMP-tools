@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.inbas.reporting.environment.config.TestSecurityConfig;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.PortalUser;
 import cz.cvut.kbss.inbas.reporting.security.portal.PortalEndpoint;
 import cz.cvut.kbss.inbas.reporting.security.portal.PortalEndpointType;
@@ -13,6 +14,8 @@ import cz.cvut.kbss.inbas.reporting.security.portal.PortalUserDetails;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +69,9 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
     @Autowired
     @Qualifier("portalAuthenticationProvider")
     AuthenticationProvider provider;
+
+    @Autowired
+    private EntityManagerFactory emf;
 
     private MockRestServiceServer mockServer;
 
@@ -149,14 +155,7 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
     @Test
     public void successfulLoginReusesExistingUserInstance() throws Exception {
         final PortalUser userData = getPortalUser();
-        final Person p = new Person();
-        p.setFirstName(userData.getFirstName());
-        p.setLastName(userData.getLastName());
-        p.setUsername(userData.getEmailAddress());
-        p.setPassword(PASSWORD);
-        p.encodePassword(encoder);
-        p.setUri(URI.create("http://krizik.felk.cvut.cz/differentUri"));
-        personDao.persist(p);
+        final Person p = persistUser(userData);
         mockServer.expect(requestTo(getExpectedUrl())).andExpect(method(HttpMethod.GET))
                   .andRespond(withSuccess(objectMapper.writeValueAsBytes(userData),
                           MediaType.APPLICATION_JSON));
@@ -167,6 +166,44 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         // This means it didn't persist the new person got from portal, because
         // it would have a different, generated, uri
         assertEquals(p.getUri(), res.getUri());
+    }
+
+    private Person persistUser(PortalUser userData) {
+        final Person p = new Person();
+        p.setFirstName(userData.getFirstName());
+        p.setLastName(userData.getLastName());
+        p.setUsername(userData.getEmailAddress());
+        p.setPassword(PASSWORD);
+        p.encodePassword(encoder);
+        p.setUri(URI.create("http://krizik.felk.cvut.cz/differentUri"));
+        personDao.persist(p);
+        return p;
+    }
+
+    @Test
+    public void successfulLoginDifferentPasswordUpdatesUser() throws Exception {
+        final PortalUser userData = getPortalUser();
+        final Person p = persistUser(userData);
+        mockServer.expect(requestTo(getExpectedUrl())).andExpect(method(HttpMethod.GET))
+                  .andRespond(withSuccess(objectMapper.writeValueAsBytes(userData),
+                          MediaType.APPLICATION_JSON));
+        setCompanyIdInCurrentRequest(COMPANY_ID);
+        final String updatedPassword = "updatedPassword";
+
+        final Authentication auth = new UsernamePasswordAuthenticationToken(USERNAME, updatedPassword);
+        provider.authenticate(auth);
+        final Person result = personDao.findByUsername(p.getUsername());
+        assertTrue(encoder.matches(updatedPassword, result.getPassword()));
+        final EntityManager em = emf.createEntityManager();
+        try {
+            final Integer res = em
+                    .createNativeQuery("SELECT(count(?p) as ?cnt) WHERE { ?x ?password ?p .}", Integer.class)
+                    .setParameter("x", p.getUri()).setParameter("password", URI.create(
+                            Vocabulary.p_password)).getSingleResult();
+            assertEquals(1, res.intValue());
+        } finally {
+            em.close();
+        }
     }
 
     @Test(expected = AuthenticationServiceException.class)

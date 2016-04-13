@@ -52,6 +52,6 @@ public class PersonControllerTest extends BaseControllerTestRunner {
                                   .andReturn();
         final Person res = objectMapper.readValue(result.getResponse().getContentAsString(), Person.class);
         assertEquals(p.getUri(), res.getUri());
-        assertTrue(p.valueEquals(res));
+        assertTrue(p.nameEquals(res));
     }
 }

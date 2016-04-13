@@ -146,8 +146,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             personService.persist(user);
             return;
         }
-        user.encodePassword(passwordEncoder);
-        if (!existing.valueEquals(user)) {
+        if (!existing.nameEquals(user) || !passwordEncoder.matches(user.getPassword(), existing.getPassword())) {
             personService.update(user);
         }
     }

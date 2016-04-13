@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.exception.WebServiceIntegrationException;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -24,13 +25,20 @@ public class RemoteDataLoader implements DataLoader {
      */
     public static final String[] SUPPORTED_HEADERS = {HttpHeaders.ACCEPT, HttpHeaders.CONTENT_TYPE};
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     /**
      * {@inheritDoc}
      * <p>
      * The parameters are processed in the following way:
      * <p>
-     * <ul> <li>Known and supported HTTP headers are extracted and,</li> <li>The rest of the parameters are used as
-     * query params in the request.</li> </ul>
+     * <pre>
+     * <ul>
+     *     <li>Known and supported HTTP headers are extracted and,</li>
+     *     <li>The rest of the parameters are used as query params in the request.</li>
+     * </ul>
+     * </pre>
      *
      * @param remoteUrl Remote data source (URL)
      * @param params    Query parameters
@@ -40,7 +48,6 @@ public class RemoteDataLoader implements DataLoader {
         final HttpHeaders headers = processHeaders(params);
         final URI urlWithQuery = prepareUri(remoteUrl, params);
         final HttpEntity<Object> entity = new HttpEntity<>(null, headers);
-        final RestTemplate restTemplate = new RestTemplate();
         if (LOG.isTraceEnabled()) {
             LOG.trace("Getting remote data using {}", urlWithQuery.toString());
         }

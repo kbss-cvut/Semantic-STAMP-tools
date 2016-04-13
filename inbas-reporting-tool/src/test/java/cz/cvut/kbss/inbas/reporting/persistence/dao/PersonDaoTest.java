@@ -29,7 +29,7 @@ public class PersonDaoTest extends BaseDaoTestRunner {
         final Person res = dao.findByUsername(p.getUsername());
         assertNotNull(res);
         assertEquals(p.getUri(), res.getUri());
-        assertTrue(p.valueEquals(res));
+        assertTrue(p.nameEquals(res));
     }
 
     @Test

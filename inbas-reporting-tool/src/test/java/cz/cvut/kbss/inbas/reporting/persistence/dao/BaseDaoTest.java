@@ -7,10 +7,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class BaseDaoTest extends BaseDaoTestRunner {
 
@@ -34,7 +34,7 @@ public class BaseDaoTest extends BaseDaoTestRunner {
         boolean found = false;
         for (Person p : instances) {
             for (Person pp : result) {
-                if (p.valueEquals(pp)) {
+                if (p.nameEquals(pp)) {
                     found = true;
                     break;
                 }
@@ -49,9 +49,32 @@ public class BaseDaoTest extends BaseDaoTestRunner {
             final Person p = new Person();
             p.setFirstName("user" + i);
             p.setLastName("lastName" + i);
-            p.setUsername("user" + i + "@kbss.felk.cvu.cz");
+            p.setUsername("user" + i + "@kbss.felk.cvut.cz");
             instances.add(p);
         }
         return instances;
+    }
+
+    @Test
+    public void existsReturnsFalseForNullUri() {
+        assertFalse(personDao.exists(null));
+    }
+
+    @Test
+    public void removeCollectionRemovesEveryInstanceInIt() {
+        final List<Person> persons = generateInstances();
+        personDao.persist(persons);
+
+        personDao.remove(persons);
+        persons.forEach(p -> assertNull(personDao.find(p.getUri())));
+    }
+
+    @Test
+    public void removeEmptyCollectionDoesNothing() {
+        final List<Person> persons = generateInstances();
+        personDao.persist(persons);
+
+        personDao.remove(Collections.emptyList());
+        persons.forEach(p -> assertNotNull(personDao.find(p.getUri())));
     }
 }

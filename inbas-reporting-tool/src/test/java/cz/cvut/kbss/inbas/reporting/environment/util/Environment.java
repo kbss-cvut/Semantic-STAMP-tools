@@ -131,7 +131,11 @@ public class Environment {
             while ((line = in.readLine()) != null) {
                 builder.append(line).append('\n');
             }
-            return getObjectMapper().readValue(builder.toString(), resultType);
+            if (String.class.isAssignableFrom(resultType)) {
+                return resultType.cast(builder.toString());
+            } else {
+                return getObjectMapper().readValue(builder.toString(), resultType);
+            }
         }
     }
 }

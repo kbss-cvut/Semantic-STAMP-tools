@@ -44,7 +44,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     private void verifyPersistedReport(OccurrenceReport report) {
         assertNotNull(report.getAuthor());
-        assertTrue(author.valueEquals(report.getAuthor()));
+        assertTrue(author.nameEquals(report.getAuthor()));
         assertNotNull(report.getDateCreated());
         assertNotNull(report.getFileNumber());
         assertEquals(Constants.INITIAL_REVISION, report.getRevision());
