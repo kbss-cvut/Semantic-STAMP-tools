@@ -2,8 +2,8 @@ package cz.cvut.kbss.inbas.reporting.service;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
-import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
-import cz.cvut.kbss.inbas.reporting.model_new.Report;
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
+import cz.cvut.kbss.inbas.reporting.model.Report;
 
 import java.util.List;
 

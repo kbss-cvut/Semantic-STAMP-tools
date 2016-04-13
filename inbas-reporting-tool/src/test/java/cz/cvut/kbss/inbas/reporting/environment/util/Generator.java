@@ -1,8 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
-import cz.cvut.kbss.inbas.reporting.model_new.*;
-import cz.cvut.kbss.inbas.reporting.model_new.arms.AccidentOutcome;
-import cz.cvut.kbss.inbas.reporting.model_new.arms.BarrierEffectiveness;
+import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
+import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 
 import java.net.URI;
 import java.util.*;

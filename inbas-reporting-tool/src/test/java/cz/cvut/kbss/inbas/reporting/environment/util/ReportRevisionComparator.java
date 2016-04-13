@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
-import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 
 import java.util.Comparator;
 

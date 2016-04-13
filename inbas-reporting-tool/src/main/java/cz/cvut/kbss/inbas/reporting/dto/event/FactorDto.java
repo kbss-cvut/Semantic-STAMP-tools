@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.dto.event;
 
-import cz.cvut.kbss.inbas.reporting.model_new.FactorType;
+import cz.cvut.kbss.inbas.reporting.model.FactorType;
 
 import java.net.URI;
 

@@ -5,7 +5,7 @@ import cz.cvut.kbss.inbas.reporting.config.RestConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.inbas.reporting.environment.config.TestSecurityConfig;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.PortalUser;
 import cz.cvut.kbss.inbas.reporting.security.portal.PortalEndpoint;
 import cz.cvut.kbss.inbas.reporting.security.portal.PortalEndpointType;

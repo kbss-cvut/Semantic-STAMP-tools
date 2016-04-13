@@ -5,7 +5,7 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.UnsupportedReportTypeException;
-import cz.cvut.kbss.inbas.reporting.model_new.*;
+import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import org.junit.Before;
 import org.junit.Test;

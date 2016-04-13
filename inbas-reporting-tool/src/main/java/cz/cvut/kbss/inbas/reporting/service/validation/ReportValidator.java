@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.service.validation;
 
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
-import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 
 import java.util.Objects;
 

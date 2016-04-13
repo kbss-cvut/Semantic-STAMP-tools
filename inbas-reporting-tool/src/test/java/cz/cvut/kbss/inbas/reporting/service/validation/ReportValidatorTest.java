@@ -2,8 +2,8 @@ package cz.cvut.kbss.inbas.reporting.service.validation;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
-import cz.cvut.kbss.inbas.reporting.model_new.Report;
+import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.Report;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Before;
 import org.junit.Rule;

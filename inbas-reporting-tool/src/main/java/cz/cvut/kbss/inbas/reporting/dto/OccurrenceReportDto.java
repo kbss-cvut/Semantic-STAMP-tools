@@ -3,11 +3,11 @@ package cz.cvut.kbss.inbas.reporting.dto;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
-import cz.cvut.kbss.inbas.reporting.model_new.LogicalDocument;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
-import cz.cvut.kbss.inbas.reporting.model_new.SeverityLevel;
-import cz.cvut.kbss.inbas.reporting.model_new.arms.AccidentOutcome;
-import cz.cvut.kbss.inbas.reporting.model_new.arms.BarrierEffectiveness;
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
+import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.SeverityLevel;
+import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
+import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 
 import java.net.URI;
 import java.util.Date;

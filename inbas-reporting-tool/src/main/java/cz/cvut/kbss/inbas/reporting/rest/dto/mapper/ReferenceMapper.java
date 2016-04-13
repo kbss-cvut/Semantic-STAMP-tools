@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest.dto.mapper;
 
-import cz.cvut.kbss.inbas.reporting.model_new.Organization;
+import cz.cvut.kbss.inbas.reporting.model.Organization;
 import cz.cvut.kbss.inbas.reporting.service.OrganizationService;
 import org.mapstruct.TargetType;
 import org.springframework.beans.factory.annotation.Autowired;

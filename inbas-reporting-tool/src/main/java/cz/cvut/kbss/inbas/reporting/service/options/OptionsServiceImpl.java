@@ -1,7 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.service.options;
 
-import cz.cvut.kbss.inbas.reporting.model.reports.OccurrenceSeverity;
-import cz.cvut.kbss.inbas.reporting.model.reports.incursions.LowVisibilityProcedure;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.ConfigReader;
 import cz.cvut.kbss.inbas.reporting.service.data.DataLoader;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
 import java.util.Collections;
 
 @Service
@@ -34,9 +31,11 @@ public class OptionsServiceImpl implements OptionsService {
     public Object getOptions(String type) {
         switch (type) {
             case "lvp":
-                return Arrays.asList(LowVisibilityProcedure.values());
+                // TODO
+                return Collections.emptyList();
             case "occurrenceSeverity":
-                return Arrays.asList(OccurrenceSeverity.values());
+                // TODO
+                return Collections.emptyList();
             case "location":
                 return new RawJson(localLoader.loadData("locations.json", Collections.emptyMap()));
             case "operator":

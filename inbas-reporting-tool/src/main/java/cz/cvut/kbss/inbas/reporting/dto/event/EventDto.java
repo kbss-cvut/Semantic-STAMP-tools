@@ -3,8 +3,8 @@ package cz.cvut.kbss.inbas.reporting.dto.event;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import cz.cvut.kbss.inbas.reporting.model_new.EventType;
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
+import cz.cvut.kbss.inbas.reporting.model.EventType;
+import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 
 import java.net.URI;
 import java.util.Set;

@@ -2,8 +2,8 @@ package cz.cvut.kbss.inbas.reporting.environment.util;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
+import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
 import org.springframework.security.core.context.SecurityContext;
