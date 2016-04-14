@@ -2,6 +2,7 @@
 
 import React from "react";
 
+// ES6 Higher Order Component (HOC) which wraps a component and passes to it the i18n utility function
 const I18nWrapper = (Component) => class extends React.Component {
     constructor(props) {
         super(props);

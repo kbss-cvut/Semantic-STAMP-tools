@@ -1,5 +1,7 @@
 /**
  * @jsx
+ *
+ * ES6 syntax used here.
  */
 
 'use strict';
@@ -16,6 +18,7 @@ import Ajax from "../../utils/Ajax";
 import Actions from "../../actions/Actions";
 
 class Register extends React.Component {
+    // Setup state in constructor (getInitialState originally)
     constructor(props) {
         super(props);
         this.state = {
@@ -31,6 +34,7 @@ class Register extends React.Component {
         };
     }
 
+    // Far arrow function with auto-binding (ES7 experimental) is used to make sure 'this' is bound automatically
     onChange = (e) => {
         var change = {};
         change[e.target.name] = e.target.value;
@@ -160,6 +164,8 @@ class Register extends React.Component {
         );
     }
 
+    // Here we're using ES6 syntax which does not bind 'this' in handlers. But this not a handler, it is explicitly
+    // called, so 'this' is bound correctly
     renderAlert() {
         return this.state.alertVisible ? (
             <Alert bsStyle='danger' bsSize='small' dismissAfter={3000} onDismiss={this.dismissAlert}>
@@ -186,4 +192,5 @@ class Register extends React.Component {
     }
 }
 
+// injectIntl and use the I18nWrapper to give access to the i18n function shortcut
 export default injectIntl(I18nWrapper(Register));
