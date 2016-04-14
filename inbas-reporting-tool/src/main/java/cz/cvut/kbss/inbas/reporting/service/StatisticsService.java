@@ -32,7 +32,6 @@ public class StatisticsService {
 
     public RawJson getStatistics() {
         final String repositoryUrl = configReader.getConfig(ConfigParam.REPOSITORY_URL);
-//        final String repositoryUrl = "http://martin.inbas.cz/openrdf-sesame/repositories/reports-fd-2016-02-02";
         if (repositoryUrl == null) {
             throw new IllegalStateException("Missing repository URL configuration.");
         }

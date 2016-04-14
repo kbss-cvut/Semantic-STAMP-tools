@@ -1,6 +1,4 @@
 /**
- * @jsx
- *
  * ES6 syntax used here.
  */
 

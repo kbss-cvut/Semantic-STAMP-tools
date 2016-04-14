@@ -4,7 +4,6 @@
 
 'use strict';
 
-// window.React = require('react');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactPivot = require('react-pivot');
