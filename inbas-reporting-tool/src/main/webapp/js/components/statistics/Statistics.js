@@ -6,6 +6,7 @@
 
 // window.React = require('react');
 var React = require('react');
+var ReactDOM = require('react-dom');
 var ReactPivot = require('react-pivot');
 var rd3 = require('react-d3');
 var Treemap = rd3.Treemap;
@@ -38,7 +39,7 @@ var Statistics = React.createClass({
     },
 
     componentDidMount: function () {
-        var width = React.findDOMNode(this).offsetWidth;
+        var width = ReactDOM.findDOMNode(this).offsetWidth;
         this.setState(
             {
                 width: width
