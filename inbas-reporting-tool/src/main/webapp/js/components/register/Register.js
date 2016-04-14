@@ -9,7 +9,6 @@ var Panel = require('react-bootstrap').Panel;
 var Button = require('react-bootstrap').Button;
 var Alert = require('react-bootstrap').Alert;
 
-var LinkedStateMixin = require('react-addons-linked-state-mixin');
 var injectIntl = require('../../utils/injectIntl');
 
 var Input = require('../Input');
@@ -21,7 +20,7 @@ var Actions = require('../../actions/Actions');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var Register = React.createClass({
-    mixins: [LinkedStateMixin, I18nMixin],
+    mixins: [I18nMixin],
     getInitialState: function () {
         return {
             firstName: '',
@@ -34,6 +33,12 @@ var Register = React.createClass({
             errorMessage: '',
             mask: false
         }
+    },
+
+    onChange: function (e) {
+        var change = {};
+        change[e.target.name] = e.target.value;
+        this.setState({change});
     },
 
     onPasswordChange: function (e) {
@@ -120,20 +125,20 @@ var Register = React.createClass({
                     <div className='row'>
                         <div className='col-xs-6'>
                             <Input type='text' name='firstName' label={this.i18n('register.first-name')}
-                                   labelClassName='col-xs-4'
-                                   valueLink={this.linkState('firstName')} wrapperClassName='col-xs-8'/>
+                                   value={this.state.firstName}
+                                   labelClassName='col-xs-4' wrapperClassName='col-xs-8' onChange={this.onChange}/>
                         </div>
                         <div className='col-xs-6'>
                             <Input type='text' name='lastName' label={this.i18n('register.last-name')}
-                                   labelClassName='col-xs-4'
-                                   valueLink={this.linkState('lastName')} wrapperClassName='col-xs-8'/>
+                                   value={this.state.lastName}
+                                   labelClassName='col-xs-4' wrapperClassName='col-xs-8' onChange={this.onChange}/>
                         </div>
                     </div>
                     <div className='row'>
                         <div className='col-xs-6'>
                             <Input type='text' name='username' label={this.i18n('register.username')}
-                                   labelClassName='col-xs-4'
-                                   valueLink={this.linkState('username')} wrapperClassName='col-xs-8'/>
+                                   value={this.state.username}
+                                   labelClassName='col-xs-4' wrapperClassName='col-xs-8' onChange={this.onChange}/>
                         </div>
                     </div>
                     <div className='row'>
