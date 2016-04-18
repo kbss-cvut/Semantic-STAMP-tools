@@ -9,11 +9,11 @@ var Row = (props) => {
     return <tr>
         <td key='cell_description' style={{whiteSpace: 'pre-wrap'}}>{props.data}</td>
         <td key='cell_actions' style={{verticalAlign: 'middle'}} className='actions'>
-            <Button onClick={this.onEdit} title={props.i18n('preliminary.detail.table-edit-tooltip')}
+            <Button onClick={this.onEdit} title={props.i18n('report.table-edit-tooltip')}
                     bsSize='small' bsStyle='primary'>
                 {props.i18n('table-edit')}
             </Button>
-            <Button onClick={this.onRemove} title={props.i18n('preliminary.detail.table-delete-tooltip')}
+            <Button onClick={this.onRemove} title={props.i18n('report.table-delete-tooltip')}
                     bsSize='small' bsStyle='warning'>
                 {props.i18n('delete')}
             </Button>
@@ -47,7 +47,7 @@ class CorrectiveMeasuresTable extends React.Component {
                 <thead>
                 <tr>
                     <th key='header_desc'
-                        className='col-xs-11'>{this.props.i18n('preliminary.detail.corrective.table-description')}</th>
+                        className='col-xs-11'>{this.props.i18n('report.corrective.table-description')}</th>
                     <th key='header_actions' className='col-xs-1'>{this.props.i18n('table-actions')}</th>
                 </tr>
                 </thead>

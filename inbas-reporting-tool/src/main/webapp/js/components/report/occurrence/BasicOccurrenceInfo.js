@@ -70,7 +70,7 @@ var BasicOccurrenceInfo = React.createClass({
         var formattedDate = Utils.formatDate(new Date(report.lastEdited));
         return (
             <div className='form-group notice-small'>
-                <FormattedMessage id='preliminary.detail.last-edited-msg'
+                <FormattedMessage id='report.last-edited-msg'
                                   values={{date: formattedDate, name: this.getFullName(report.lastEditedBy)}}/>
             </div>
         );

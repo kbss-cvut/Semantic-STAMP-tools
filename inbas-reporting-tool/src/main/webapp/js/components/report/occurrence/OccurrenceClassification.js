@@ -98,11 +98,11 @@ var OccurrenceClassification = React.createClass({
                 </div>
                 <div className='col-xs-4'>
                     <label className='control-label'>
-                        {this.i18n('preliminary.detail.occurrence-category.label') + '*'}
+                        {this.i18n('report.occurrence.category.label') + '*'}
                     </label>
                     <Typeahead className='form-group form-group-sm' name='occurrenceCategory'
                                ref='occurrenceCategory' formInputOption='id' optionsButton={true}
-                               placeholder={this.i18n('preliminary.detail.occurrence-category.label')}
+                               placeholder={this.i18n('report.occurrence.category.label')}
                                onOptionSelected={this.onCategorySelect} filterOption='name'
                                value={report.occurrenceCategory ? report.occurrenceCategory.name : ''}
                                displayOption='name' options={this.state.occurrenceCategories}

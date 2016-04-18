@@ -27,7 +27,7 @@ class CorrectiveMeasures extends React.Component {
             isWizardOpen: true,
             wizardProperties: {
                 steps: CorrectiveMeasureWizardSteps,
-                title: this.i18n('preliminary.detail.corrective.wizard.title'),
+                title: this.i18n('report.corrective.wizard.title'),
                 statement: statement,
                 onFinish: onFinish
             }
@@ -94,12 +94,12 @@ class CorrectiveMeasures extends React.Component {
         }
         var buttonCls = component ? 'float-right' : '';
         return (
-            <Panel header={<h5>{this.props.i18n('preliminary.detail.corrective.panel-title')}</h5>} bsStyle='info'
+            <Panel header={<h5>{this.props.i18n('report.corrective.panel-title')}</h5>} bsStyle='info'
                    key='correctiveMeasures'>
                 {component}
                 <div className={buttonCls}>
                     <Button bsStyle='primary' bsSize='small' onClick={this.onAdd}
-                            title={this.props.i18n('preliminary.detail.corrective.add-tooltip')}>
+                            title={this.props.i18n('report.corrective.add-tooltip')}>
                         <Glyphicon glyph='plus' style={{margin: '0 5px 0 0'}}/>
                         {this.props.i18n('add')}
                     </Button>

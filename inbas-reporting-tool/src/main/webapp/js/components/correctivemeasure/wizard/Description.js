@@ -41,9 +41,9 @@ var Description = React.createClass({
         return (
             <div>
                 <Input type='textarea' rows='8' label={this.i18n('description') + '*'}
-                       placeholder={this.i18n('preliminary.detail.corrective.description-placeholder')}
+                       placeholder={this.i18n('report.corrective.description-placeholder')}
                        value={this.state.description} onChange={this.onChange}
-                       title={this.i18n('preliminary.detail.corrective.description-tooltip')}/>
+                       title={this.i18n('report.corrective.description-tooltip')}/>
             </div>
         );
     }
