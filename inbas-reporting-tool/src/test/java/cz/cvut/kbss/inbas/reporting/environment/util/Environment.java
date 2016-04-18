@@ -2,14 +2,17 @@ package cz.cvut.kbss.inbas.reporting.environment.util;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasUri;
+import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -34,6 +37,16 @@ public class Environment {
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(new AuthenticationToken(userDetails.getAuthorities(), userDetails));
         SecurityContextHolder.setContext(context);
+    }
+
+    /**
+     * Gets current user as security principal.
+     *
+     * @return Current user authentication as principal or {@code null} if there is no current user
+     */
+    public static Principal getCurrentUserPrincipal() {
+        return SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() :
+               null;
     }
 
     public static Person getCurrentUser() {
@@ -99,5 +112,30 @@ public class Environment {
             i++;
         }
         return item;
+    }
+
+    /**
+     * Loads JSON data from the specified file and maps them to the specified result type.
+     *
+     * @param fileName   Name of the file to load data from (including path). It is expected to be on the classpath and
+     *                   Classloader is used to get input stream for the file.
+     * @param resultType Java type to which the JSON should be mapped
+     * @return Object loaded from the file and mapped to the result type
+     * @throws Exception If file reading or object unmarshalling fails
+     */
+    public static <T> T loadData(String fileName, Class<T> resultType) throws Exception {
+        try (final BufferedReader in = new BufferedReader(
+                new InputStreamReader(Environment.class.getClassLoader().getResourceAsStream(fileName)))) {
+            final StringBuilder builder = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                builder.append(line).append('\n');
+            }
+            if (String.class.isAssignableFrom(resultType)) {
+                return resultType.cast(builder.toString());
+            } else {
+                return getObjectMapper().readValue(builder.toString(), resultType);
+            }
+        }
     }
 }

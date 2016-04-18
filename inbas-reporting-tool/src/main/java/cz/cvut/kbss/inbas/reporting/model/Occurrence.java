@@ -1,67 +1,62 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
-import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
-import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
+import cz.cvut.kbss.inbas.reporting.model.util.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.HasOwlKey;
+import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @OWLClass(iri = Vocabulary.Occurrence)
-public class Occurrence implements HasOwlKey, Serializable {
+public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
 
     @Id(generated = true)
     private URI uri;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_hasKey)
     private String key;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_label)
-    private String name;    // Simple name of the event being reported
+    @OWLAnnotationProperty(iri = Vocabulary.p_name)
+    private String name;
 
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_reportingPhase)
-    private ReportingPhase reportingPhase;
+    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Factor> factors;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER)
+    private Set<Event> children;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
+    private EventType type;
+
+    @Types
+    private Set<String> types;
 
     public Occurrence() {
-        this.reportingPhase = ReportingPhase.INITIAL;
-    }
-
-    public Occurrence(Occurrence other) {
-        Objects.requireNonNull(other);
-        this.name = other.name;
-        this.reportingPhase = other.reportingPhase;
+        this.types = new HashSet<>();
+        // Occurrence is a subclass of Event
+        types.add(Vocabulary.Event);
     }
 
     @Override
-    public String getKey() {
-        return key;
-    }
-
-    @Override
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    @Override
-    public void generateKey() {
-        if (key == null) {
-            // Note: this either has to be called before persist or a setter has to be called to make JOPA notice the change
-            this.key = IdentificationUtils.generateKey();
-        }
-    }
-
     public URI getUri() {
         return uri;
     }
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName() {
@@ -72,41 +67,71 @@ public class Occurrence implements HasOwlKey, Serializable {
         this.name = name;
     }
 
-    public ReportingPhase getReportingPhase() {
-        return reportingPhase;
+    public Set<Factor> getFactors() {
+        return factors;
     }
 
-    /**
-     * Setter for persistence purposes.
-     * <p>
-     * For phase transitions, use {@link #transitionToPhase(ReportingPhase)}.
-     *
-     * @param reportingPhase Phase to set
-     */
-    public void setReportingPhase(ReportingPhase reportingPhase) {
-        this.reportingPhase = reportingPhase;
+    public void setFactors(Set<Factor> factors) {
+        this.factors = factors;
     }
 
-    /**
-     * Transitions to the specified target phase, if the occurrence is not already in a further phase.
-     *
-     * @param targetPhase Target reporting phase
-     */
-    public void transitionToPhase(ReportingPhase targetPhase) {
-        assert targetPhase != null;
-        if (reportingPhase == ReportingPhase.INITIAL) {
-            this.reportingPhase = targetPhase;
-        } else if (reportingPhase == ReportingPhase.PRELIMINARY && targetPhase != ReportingPhase.INITIAL) {
-            this.reportingPhase = targetPhase;
+    @Override
+    public void addFactor(Factor factor) {
+        Objects.requireNonNull(factor);
+        if (factors == null) {
+            this.factors = new HashSet<>();
         }
+        factors.add(factor);
+    }
+
+    public Set<Event> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<Event> children) {
+        this.children = children;
+    }
+
+    @Override
+    public void addChild(Event child) {
+        Objects.requireNonNull(child);
+        if (children == null) {
+            this.children = new HashSet<>();
+        }
+        children.add(child);
+    }
+
+    public EventType getType() {
+        return type;
+    }
+
+    /**
+     * Sets type of this occurrence.
+     * <p>
+     * Also adds the event type's URI to this instance's types.
+     *
+     * @param type The type to set
+     * @see Vocabulary#p_hasEventType
+     */
+    public void setType(EventType type) {
+        this.type = type;
+        if (type != null) {
+            assert types != null;
+            assert type.getUri() != null;
+            types.add(type.getUri().toString());
+        }
+    }
+
+    public Set<String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<String> types) {
+        this.types = types;
     }
 
     @Override
     public String toString() {
-        return "Occurrence{" +
-                "uri=" + uri +
-                ", name='" + name + '\'' +
-                ", reportingPhase=" + reportingPhase +
-                '}';
+        return "Occurrence{" + name + " <" + uri + ">, types=" + types + '}';
     }
 }

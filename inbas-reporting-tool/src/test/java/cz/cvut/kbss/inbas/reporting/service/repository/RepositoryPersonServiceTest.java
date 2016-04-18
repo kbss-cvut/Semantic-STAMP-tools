@@ -2,7 +2,7 @@ package cz.cvut.kbss.inbas.reporting.service.repository;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.exception.UsernameExistsException;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.service.PersonService;
 import org.junit.Test;

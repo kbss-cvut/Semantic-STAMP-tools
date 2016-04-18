@@ -6,16 +6,11 @@ import org.springframework.security.core.GrantedAuthority;
 import java.security.Principal;
 import java.util.Collection;
 
-/**
- * @author ledvima1
- */
 public class AuthenticationToken extends AbstractAuthenticationToken implements Principal {
 
     private UserDetails userDetails;
 
-    public AuthenticationToken(
-            Collection<? extends GrantedAuthority> authorities,
-            UserDetails userDetails) {
+    public AuthenticationToken(Collection<? extends GrantedAuthority> authorities, UserDetails userDetails) {
         super(authorities);
         this.userDetails = userDetails;
         super.setAuthenticated(true);

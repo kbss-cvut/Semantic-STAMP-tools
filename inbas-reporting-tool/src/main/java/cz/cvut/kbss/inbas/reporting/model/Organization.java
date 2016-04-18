@@ -1,50 +1,60 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
+import cz.cvut.kbss.inbas.reporting.model.util.HasDerivableUri;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
-import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
-import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
+import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * @author ledvima1
- */
 @OWLClass(iri = Vocabulary.Organization)
 public class Organization implements HasDerivableUri, Serializable {
 
     @Id
     private URI uri;
 
-    @OWLDataProperty(iri = Vocabulary.p_organizationCode)
-    private String code;
-
-    @OWLDataProperty(iri = Vocabulary.p_label)
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLAnnotationProperty(iri = Vocabulary.p_name)
     private String name;
 
+    @Types
+    private Set<String> types;
+
     public Organization() {
+        this.types = new HashSet<>(4);
+        types.add(Vocabulary.Agent);
     }
 
     public Organization(String name) {
+        this();
         this.name = name;
     }
 
+    @Override
+    public void generateUri() {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalStateException("Cannot generate URI. Missing organization name.");
+        }
+        final String[] parts = name.split(" ");
+        final StringBuilder sb = new StringBuilder(Constants.ORGANIZATION_BASE_URI);
+        for (int i = 0; i < parts.length; i++) {
+            sb.append(parts[i]);
+            if (i < parts.length - 1) {
+                sb.append('+');
+            }
+        }
+        this.uri = URI.create(sb.toString());
+    }
+
+    @Override
     public URI getUri() {
         return uri;
     }
 
     public void setUri(URI uri) {
         this.uri = uri;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public String getName() {
@@ -55,38 +65,21 @@ public class Organization implements HasDerivableUri, Serializable {
         this.name = name;
     }
 
-    @Override
-    public void generateUri() {
-        if (uri != null) {
-            return;
-        }
-        if (code != null) {
-            this.uri = URI.create(Constants.ORGANIZATION_BASE_URI + code);
-        } else if (name != null) {
-            this.uri = URI.create(Constants.ORGANIZATION_BASE_URI + name.replace(' ', '-'));
-        } else {
-            throw new IllegalStateException("Cannot generate URI of Organization. It is missing both code and name.");
-        }
+    public Set<String> getTypes() {
+        return types;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Organization that = (Organization) o;
-
-        return !(uri != null ? !uri.equals(that.uri) : that.uri != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return uri != null ? uri.hashCode() : 0;
+    public void setTypes(Set<String> types) {
+        this.types = types;
     }
 
     @Override
     public String toString() {
-        return name + " - " + code + "(" + uri + ")";
+        String res = "Organization {" + name;
+        if (uri != null) {
+            res += " (" + uri + ')';
+        }
+        res += '}';
+        return res;
     }
 }

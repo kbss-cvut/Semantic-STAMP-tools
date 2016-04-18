@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence;
 
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.reporting.test.config.TestPersistenceConfig;
 import org.junit.runner.RunWith;

@@ -3,6 +3,7 @@
 describe('Report validator', function () {
 
     var ReportValidator = require('../../js/validation/ReportValidator'),
+        Constants = require('../../js/constants/Constants'),
         report;
 
     beforeEach(function () {
@@ -38,11 +39,6 @@ describe('Report validator', function () {
         expect(ReportValidator.isValid(report)).toBeFalsy();
     });
 
-    it('marks report without narrative as invalid', function () {
-        report.summary = '';
-        expect(ReportValidator.isValid(report)).toBeFalsy();
-    });
-
     it('marks report without occurrence class as invalid', function () {
         delete report.severityAssessment;
         expect(ReportValidator.isValid(report)).toBeFalsy();
@@ -51,5 +47,33 @@ describe('Report validator', function () {
     it('marks report without occurrence category as invalid', function () {
         delete report.occurrenceCategory;
         expect(ReportValidator.isValid(report)).toBeFalsy();
-    })
+    });
+
+    it('marks report without narrative as invalid', function () {
+        report.summary = '';
+        expect(ReportValidator.isValid(report)).toBeFalsy();
+    });
+
+    it('returns missing field message when report without narrative is validated', function () {
+        report.summary = '';
+        expect(ReportValidator.getValidationMessage(report)).toEqual('detail.invalid-tooltip');
+    });
+
+    it('marks report with too large occurrence start and end time diff as invalid', function () {
+        report.occurrenceStart = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
+        report.occurrenceEnd = Date.now();
+        expect(ReportValidator.isValid(report)).toBeFalsy();
+    });
+
+    it('reports time difference error message when report with too large occurrence start and end time diff is validated', function () {
+        report.occurrenceStart = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
+        report.occurrenceEnd = Date.now();
+        expect(ReportValidator.getValidationMessage(report)).toEqual('detail.large-time-diff-tooltip');
+    });
+
+    it('marks report with too large occurrence start and end time diff as not renderable', function () {
+        report.occurrenceStart = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
+        report.occurrenceEnd = Date.now();
+        expect(ReportValidator.canRender(report)).toBeFalsy();
+    });
 });

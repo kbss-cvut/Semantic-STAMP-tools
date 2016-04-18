@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.PortalUser;
 import cz.cvut.kbss.inbas.reporting.security.model.LoginStatus;
 import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
+import cz.cvut.kbss.inbas.reporting.service.ConfigReader;
+import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -23,8 +27,6 @@ import java.io.InputStreamReader;
 
 /**
  * Writes basic login/logout information into the response.
- *
- * @author ledvima1
  */
 @Service
 public class AuthenticationSuccess implements AuthenticationSuccessHandler, LogoutSuccessHandler {
@@ -34,6 +36,9 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private ConfigReader config;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                         Authentication authentication) throws IOException, ServletException {
@@ -41,12 +46,32 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
         if (LOG.isTraceEnabled()) {
             LOG.trace("Successfully authenticated user {}", username);
         }
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority(PortalUser.PORTAL_USER_ROLE))) {
+        if (runningOnPortal(authentication, httpServletRequest)) {
             returnIndex(httpServletResponse);
         } else {
             final LoginStatus loginStatus = new LoginStatus(true, authentication.isAuthenticated(), username, null);
             mapper.writeValue(httpServletResponse.getOutputStream(), loginStatus);
         }
+    }
+
+    /**
+     * For the application to be considered running on portal, the user must have authenticated against the portal and
+     * the request must contain {@link Constants#COMPANY_ID_COOKIE}, indicating that the application is being accessed
+     * through the portal UI.
+     */
+    private boolean runningOnPortal(Authentication authentication, HttpServletRequest request) {
+        if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority(PortalUser.PORTAL_USER_ROLE))) {
+            return false;
+        }
+        if (request.getCookies() == null) {
+            return false;
+        }
+        for (Cookie c : request.getCookies()) {
+            if (c.getName().equals(Constants.COMPANY_ID_COOKIE)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getUsername(Authentication authentication) {
@@ -57,7 +82,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
     }
 
     private void returnIndex(HttpServletResponse response) {
-        final ClassPathResource indexFile = new ClassPathResource("../../index.html");
+        final ClassPathResource indexFile = new ClassPathResource(config.getConfig(ConfigParam.INDEX_FILE));
         try (BufferedReader in = new BufferedReader(new InputStreamReader(indexFile.getInputStream()))) {
             String line;
             while ((line = in.readLine()) != null) {
@@ -75,7 +100,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
         if (LOG.isTraceEnabled()) {
             LOG.trace("Successfully logged out user {}", getUsername(authentication));
         }
-        final LoginStatus loginStatus = new LoginStatus(true, false, null, null);
+        final LoginStatus loginStatus = new LoginStatus(false, true, null, null);
         mapper.writeValue(httpServletResponse.getOutputStream(), loginStatus);
     }
 }

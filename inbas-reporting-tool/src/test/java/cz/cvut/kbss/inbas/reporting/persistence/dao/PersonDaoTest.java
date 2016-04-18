@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class PersonDaoTest extends BaseDaoTestRunner {
         final Person res = dao.findByUsername(p.getUsername());
         assertNotNull(res);
         assertEquals(p.getUri(), res.getUri());
-        assertTrue(p.valueEquals(res));
+        assertTrue(p.nameEquals(res));
     }
 
     @Test

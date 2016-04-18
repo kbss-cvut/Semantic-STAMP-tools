@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasOwlKey;
+import cz.cvut.kbss.inbas.reporting.model.util.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 
 /**

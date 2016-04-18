@@ -7,7 +7,8 @@ var React = require('react');
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
-var DateTimePicker = require('kbss-react-bootstrap-datetimepicker');
+// require().default is needed for default-exported components using the ES6 syntax
+var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
 var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 

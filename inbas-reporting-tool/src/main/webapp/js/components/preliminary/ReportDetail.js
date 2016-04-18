@@ -116,27 +116,34 @@ var ReportDetail = React.createClass({
         if (this.props.readOnly) {
             return this.renderReadOnlyButtons();
         }
-        var report = this.props.report,
-            loading = this.state.submitting,
-            saveDisabled = !ReportValidator.isValid(report) || loading || !this._canEdit(),
-            saveTitle = this.i18n('detail.save-tooltip'),
-            saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
-        if (loading) {
-            saveTitle = this.i18n('detail.saving');
-        } else if (saveDisabled) {
-            saveTitle = !this._canEdit() ? this.i18n('preliminary.detail.cannot-modify') : this.i18n('detail.invalid-tooltip');
-        }
+        var saveDisabled = !ReportValidator.isValid(this.props.report) || this.state.submitting || !this._canEdit();
         return (
             <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
                 <Button bsStyle='success' bsSize='small' disabled={saveDisabled}
-                        ref='submit' title={saveTitle}
-                        onClick={this.onSave}>{saveLabel}</Button>
+                        ref='submit' title={this.getSaveButtonTitle()}
+                        onClick={this.onSave}>{this.getSaveButtonLabel()}</Button>
                 <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                         onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
                 {this.renderSubmitButton()}
                 {this.renderInvestigateButton()}
             </ButtonToolbar>
         );
+    },
+
+    getSaveButtonLabel: function () {
+        return this.i18n(this.state.submitting ? 'detail.saving' : 'save');
+    },
+
+    getSaveButtonTitle: function () {
+        var titleProp = 'detail.save-tooltip';
+        if (this.state.submitting) {
+            titleProp = 'detail.saving';
+        } else if (!this._canEdit()) {
+            titleProp = 'preliminary.detail.cannot-modify';
+        } else if (!ReportValidator.isValid(this.props.report)) {
+            titleProp = ReportValidator.getValidationMessage(this.props.report);
+        }
+        return this.i18n(titleProp);
     },
 
     renderInvestigateButton: function () {

@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.security.model;
 
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -12,22 +12,26 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     private Person person;
 
-    private final Set<GrantedAuthority> authorities;
+    protected final Set<GrantedAuthority> authorities;
 
     public UserDetails(Person person) {
         Objects.requireNonNull(person);
         this.person = person;
-        this.authorities = Collections.unmodifiableSet(Collections.singleton(new SimpleGrantedAuthority(DEFAULT_ROLE)));
+        this.authorities = new HashSet<>();
+        addDefaultRole();
     }
 
     public UserDetails(Person person, Collection<GrantedAuthority> authorities) {
         Objects.requireNonNull(person);
         Objects.requireNonNull(authorities);
         this.person = person;
-        final Set<GrantedAuthority> userAuthorities = new HashSet<>();
-        userAuthorities.add(new SimpleGrantedAuthority(DEFAULT_ROLE));
-        userAuthorities.addAll(authorities);
-        this.authorities = userAuthorities;
+        this.authorities = new HashSet<>();
+        addDefaultRole();
+        this.authorities.addAll(authorities);
+    }
+
+    private void addDefaultRole() {
+        authorities.add(new SimpleGrantedAuthority(DEFAULT_ROLE));
     }
 
     public void eraseCredentials() {
@@ -36,7 +40,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return Collections.unmodifiableCollection(authorities);
     }
 
     @Override

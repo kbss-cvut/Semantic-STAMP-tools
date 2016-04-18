@@ -3,9 +3,9 @@ package cz.cvut.kbss.inbas.reporting.service.repository;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
-import cz.cvut.kbss.inbas.reporting.model_new.CorrectiveMeasureRequest;
-import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
+import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.junit.Before;
@@ -44,7 +44,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     private void verifyPersistedReport(OccurrenceReport report) {
         assertNotNull(report.getAuthor());
-        assertTrue(author.valueEquals(report.getAuthor()));
+        assertTrue(author.nameEquals(report.getAuthor()));
         assertNotNull(report.getDateCreated());
         assertNotNull(report.getFileNumber());
         assertEquals(Constants.INITIAL_REVISION, report.getRevision());

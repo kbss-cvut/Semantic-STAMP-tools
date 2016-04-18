@@ -2,7 +2,7 @@ package cz.cvut.kbss.inbas.reporting.service;
 
 import cz.cvut.kbss.inbas.reporting.config.ServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.reporting.test.config.TestPersistenceConfig;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public abstract class BaseServiceTestRunner {
 
     @Autowired
-    private PersonDao personDao;
+    protected PersonDao personDao;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

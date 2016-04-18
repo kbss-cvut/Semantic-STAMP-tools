@@ -20,7 +20,7 @@ public class OptionsController extends BaseController {
     private OptionsService optionsService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getOptions(@RequestParam(value = "type", required = true) String type) {
+    public Object getOptions(@RequestParam(value = "type") String type) {
         try {
             return optionsService.getOptions(type);
         } catch (IllegalArgumentException e) {

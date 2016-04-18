@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model_new.util.HasDerivableUri;
+import cz.cvut.kbss.inbas.reporting.model.util.HasDerivableUri;
 import cz.cvut.kbss.jopa.model.EntityManager;
 
 /**

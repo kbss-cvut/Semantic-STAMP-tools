@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model_new.Organization;
+import cz.cvut.kbss.inbas.reporting.model.Organization;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

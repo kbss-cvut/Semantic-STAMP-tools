@@ -1,33 +1,31 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
+import cz.cvut.kbss.inbas.reporting.model.util.HasDerivableUri;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
-import cz.cvut.kbss.inbas.reporting.util.Vocabulary;
-import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.Properties;
+import cz.cvut.kbss.jopa.model.annotations.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * @author ledvima1
- */
 @OWLClass(iri = Vocabulary.Person)
 public class Person implements HasDerivableUri, Serializable {
 
     @Id
     private URI uri;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_firstName)
     private String firstName;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_lastName)
     private String lastName;
 
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_username)
     private String username;
 
@@ -37,6 +35,16 @@ public class Person implements HasDerivableUri, Serializable {
     @Properties
     private Map<String, Set<String>> properties;
 
+    @Types
+    private Set<String> types;
+
+    public Person() {
+        this.types = new HashSet<>(4);
+        // Person is an Agent
+        types.add(Vocabulary.Agent);
+    }
+
+    @Override
     public URI getUri() {
         return uri;
     }
@@ -106,6 +114,14 @@ public class Person implements HasDerivableUri, Serializable {
         this.properties = properties;
     }
 
+    public Set<String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<String> types) {
+        this.types = types;
+    }
+
     @Override
     public String toString() {
         return firstName + " " + lastName + " <" + uri + ">";
@@ -117,24 +133,24 @@ public class Person implements HasDerivableUri, Serializable {
     @Override
     public void generateUri() {
         if (firstName == null || firstName.isEmpty()) {
-            throw new IllegalStateException("Missing first name.");
+            throw new IllegalStateException("Cannot generate Person URI without first name.");
         }
         if (lastName == null || lastName.isEmpty()) {
-            throw new IllegalStateException("Missing last name.");
+            throw new IllegalStateException("Cannot generate Person URI without last name.");
         }
         this.uri = URI.create(Constants.PERSON_BASE_URI + firstName + "+" + lastName);
     }
 
     /**
-     * Returns true if attributes of this instance are equal to those of the other instance.
+     * Returns true if the first name and last name of this instance are equal to those of the other instance.
      * <p>
-     * Instance uri and username are not compared, because they are assumed to be read-only.
+     * Instance uri and username are not compared, because they are assumed to be read-only and password has to be
+     * compared using a password encoder.
      *
      * @param other The other instance to compare to this one
      * @return true if the selected attributes are equal, false otherwise
      */
-    public boolean valueEquals(Person other) {
-        return other != null && firstName.equals(other.firstName) && lastName.equals(other.lastName) &&
-                password.equals(other.password);
+    public boolean nameEquals(Person other) {
+        return other != null && firstName.equals(other.firstName) && lastName.equals(other.lastName);
     }
 }

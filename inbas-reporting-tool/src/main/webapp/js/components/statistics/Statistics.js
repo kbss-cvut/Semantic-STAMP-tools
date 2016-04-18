@@ -4,20 +4,16 @@
 
 'use strict';
 
-window.React = require('react');
 var React = require('react');
-var Panel = require('react-bootstrap').Panel;
-var ReactPivot = require('react-pivot')
+var ReactDOM = require('react-dom');
+var ReactPivot = require('react-pivot');
 var rd3 = require('react-d3');
 var Treemap = rd3.Treemap;
 var PieChart = rd3.PieChart;
 var Input = require('../Input');
 
 var injectIntl = require('../../utils/injectIntl');
-var Ajax = require('../../utils/Ajax');
 
-var Mask = require('./../Mask');
-var Routing = require('../../utils/Routing');
 var I18nMixin = require('../../i18n/I18nMixin');
 var Logger = require('../../utils/Logger');
 
@@ -42,7 +38,7 @@ var Statistics = React.createClass({
     },
 
     componentDidMount: function () {
-        var width = React.findDOMNode(this).offsetWidth;
+        var width = ReactDOM.findDOMNode(this).offsetWidth;
         this.setState(
             {
                 width: width
@@ -112,9 +108,8 @@ var Statistics = React.createClass({
         var singleValueSet = [];
 
         for (var d in data) {
-            var cur = {};
             var i = 0;
-            var dimmm = ''
+            var dimmm = '';
             for (var dim in this.state.dimensions) {
                 if (data[d][this.state.dimensions[dim].title]) {
                     dimmm = this.state.dimensions[dim].title;
@@ -123,26 +118,26 @@ var Statistics = React.createClass({
             }
 
             if (i == 1) {
-                dimm = dimmm
-                singleValueSet.push(data[d])
+                dimm = dimmm;
+                singleValueSet.push(data[d]);
             }
         }
 
         for (var ddx in singleValueSet) {
-            sum = sum + singleValueSet[ddx].count
-            pieData.push({label: singleValueSet[ddx][dimm], value: singleValueSet[ddx].count})
+            sum = sum + singleValueSet[ddx].count;
+            pieData.push({label: singleValueSet[ddx][dimm], value: singleValueSet[ddx].count});
         }
 
         for (var d in pieData) {
             pieData[d].value = Math.round((pieData[d].value / sum * 100) * 100) / 100;
         }
 
-        this.setState({pieData: pieData})
+        this.setState({pieData: pieData});
     },
 
     reduce: function (row, memo) {
-        memo.count = (memo.count || 0) + parseFloat(row.count)
-        return memo
+        memo.count = (memo.count || 0) + parseFloat(row.count);
+        return memo;
     },
 
     _onChartTypeSelect: function (e) {

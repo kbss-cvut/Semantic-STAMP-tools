@@ -1,9 +1,10 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
-import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
-import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
+import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 
+import java.net.URI;
 import java.util.*;
 
 public class Generator {
@@ -23,6 +24,19 @@ public class Generator {
         return occurrence;
     }
 
+    /**
+     * Generates an {@link EventType} instance with (pseudo) unique name and URI.
+     *
+     * @return EventType instance
+     */
+    public static EventType generateEventType() {
+        final EventType et = new EventType();
+        final int rand = randomInt(100000);
+        et.setName(rand + " - Runway Incursion by an Aircraft");
+        et.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-" + rand));
+        return et;
+    }
+
     public static Person getPerson() {
         final Person person = new Person();
         person.setFirstName("Catherine");
@@ -30,6 +44,17 @@ public class Generator {
         person.setUsername(USERNAME);
         person.setPassword(PASSWORD);
         return person;
+    }
+
+    /**
+     * Generates {@link Organization} with a random name.
+     *
+     * @return Organization
+     */
+    public static Organization generateOrganization() {
+        final Organization org = new Organization();
+        org.setName(UUID.randomUUID().toString());
+        return org;
     }
 
     /**
@@ -50,6 +75,9 @@ public class Generator {
             report.setDateCreated(new Date());
             report.setFileNumber((long) randomInt(Integer.MAX_VALUE));
             report.setRevision(1);
+            report.setBarrierEffectiveness(BarrierEffectiveness.EFFECTIVE);
+            report.setAccidentOutcome(AccidentOutcome.NEGLIGIBLE);
+            report.setArmsIndex((short) 5);
         }
         return report;
     }
@@ -77,6 +105,34 @@ public class Generator {
         return reports;
     }
 
+    public static Set<CorrectiveMeasureRequest> generateCorrectiveMeasureRequests() {
+        final Set<CorrectiveMeasureRequest> set = new HashSet<>();
+        for (int i = 0; i < randomInt(10); i++) {
+            final CorrectiveMeasureRequest cmr = new CorrectiveMeasureRequest();
+            cmr.setDescription(UUID.randomUUID().toString());
+            int j = randomInt(Integer.MAX_VALUE);
+            switch (j % 3) {
+                case 0:
+                    cmr.setResponsiblePersons(Collections.singleton(getPerson()));
+                    final Event evt = new Event();
+                    evt.setType(generateEventType());
+                    cmr.setBasedOnEvent(evt);
+                    break;
+                case 1:
+                    cmr.setResponsibleOrganizations(Collections.singleton(generateOrganization()));
+                    cmr.setBasedOnOccurrence(generateOccurrence());
+                    cmr.getBasedOnOccurrence().setType(generateEventType());
+                    break;
+                case 2:
+                    cmr.setResponsiblePersons(Collections.singleton(getPerson()));
+                    cmr.setResponsibleOrganizations(Collections.singleton(generateOrganization()));
+                    break;
+            }
+            set.add(cmr);
+        }
+        return set;
+    }
+
     /**
      * Generates a (pseudo-)random integer between 0 and the specified upper bound.
      * <p>
@@ -92,5 +148,31 @@ public class Generator {
             rand = random.nextInt(upperBound);
         } while (rand == 0);
         return rand;
+    }
+
+    /**
+     * Generates a (pseudo-) random integer.
+     * <p>
+     * This version has no bounds (aside from the integer range), so the returned number may be negative or zero.
+     *
+     * @return Randomly generated integer
+     * @see #randomInt(int)
+     */
+    public static int randomInt() {
+        return random.nextInt();
+    }
+
+    /**
+     * Generates a (pseudo-)random index of an element in the collection.
+     * <p>
+     * I.e. the returned number is in the interval <0, col.size()).
+     *
+     * @param col The collection
+     * @return Random index
+     */
+    public static int randomIndex(Collection<?> col) {
+        assert col != null;
+        assert !col.isEmpty();
+        return random.nextInt(col.size());
     }
 }

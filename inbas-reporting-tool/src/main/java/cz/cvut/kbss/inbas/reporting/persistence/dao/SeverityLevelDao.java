@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model_new.SeverityLevel;
+import cz.cvut.kbss.inbas.reporting.model.SeverityLevel;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.stereotype.Repository;
 

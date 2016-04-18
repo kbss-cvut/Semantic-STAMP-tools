@@ -33,6 +33,7 @@ module.exports = {
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',
         'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
+        'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký',
         'detail.submit': 'Odeslat úřadu',
         'detail.submit-tooltip': 'Odeslat současnou revizi zprávy úřadu',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
@@ -115,6 +116,7 @@ module.exports = {
         'initial.wizard.add-title': 'Přidat prvotní hlášení',
         'initial.wizard.edit-title': 'Editovat prvotní hlášení',
         'initial.label': 'Prvotní hlášení',
+        'initial.tooltip': 'Text prvotního hlášení - pole je povinné',
 
         'preliminary.type': 'Předběžné',
         'preliminary.new': 'Nové hlášení',
@@ -128,6 +130,7 @@ module.exports = {
         'preliminary.detail.corrective.panel-title': 'Nápravná opatření',
         'preliminary.detail.corrective.table-description': 'Opatření',
         'preliminary.detail.corrective.description-placeholder': 'Popis nápravného opatření',
+        'preliminary.detail.corrective.description-tooltip': 'Popis nápravného opatření - pole je povinné',
         'preliminary.detail.corrective.add-tooltip': 'Přida popis nápravného opatření',
         'preliminary.detail.corrective.wizard.title': 'Průvodce nápravným opatřením',
         'preliminary.detail.corrective.wizard.step-title': 'Popis nápravného opatření',
@@ -158,7 +161,6 @@ module.exports = {
         'eventtype.title': 'Typ události',
         'eventtype.default.description': 'Popis',
         'eventtype.default.description-placeholder': 'Popis události',
-        'eventtype.default.description-missing': 'Popis události je povinný',
         'eventtype.incursion.lvp.label': 'Status nízké viditelnosti',
         'eventtype.incursion.location.label': 'Poloha',
         'eventtype.incursion.location.step-title': 'Místo narušení',
@@ -246,6 +248,10 @@ module.exports = {
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',
         'notfound.msg': 'Záznam \'{resource}\' nenalezen.',
+
+        'notrenderable.title': 'Nelze zobrazit záznam',
+        'notrenderable.error': 'Chyba: {message}',
+        'notrenderable.error-generic': 'Zkontrolujte, prosím, zda je záznam validní.',
 
         'revisions.label': 'Revize zprávy',
         'revisions.created': 'Vytvořeno',

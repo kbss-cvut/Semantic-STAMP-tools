@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
-import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;

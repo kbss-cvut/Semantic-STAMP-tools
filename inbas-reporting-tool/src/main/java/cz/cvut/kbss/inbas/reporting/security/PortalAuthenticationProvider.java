@@ -1,13 +1,15 @@
 package cz.cvut.kbss.inbas.reporting.security;
 
-import cz.cvut.kbss.inbas.reporting.model_new.Person;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.PortalUser;
 import cz.cvut.kbss.inbas.reporting.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
 import cz.cvut.kbss.inbas.reporting.security.portal.PortalEndpoint;
 import cz.cvut.kbss.inbas.reporting.security.portal.PortalEndpointType;
+import cz.cvut.kbss.inbas.reporting.security.portal.PortalUserDetails;
 import cz.cvut.kbss.inbas.reporting.service.PersonService;
 import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,6 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
@@ -34,12 +35,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
-import java.util.Collections;
 
 @Service("portalAuthenticationProvider")
 public class PortalAuthenticationProvider implements AuthenticationProvider {
-
-    private static final String COMPANY_ID_COOKIE = "COMPANY_ID";
 
     private static final String PORTAL_TYPE_CONFIG = "portalEndpointType";
 
@@ -54,17 +52,19 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         final String username = authentication.getPrincipal().toString();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Authenticating user {} against the portal.", username);
         }
-        final Person authenticatedUser = authenticateAgainstPortal(username,
-                authentication.getCredentials().toString());
+        final String password = authentication.getCredentials().toString();
+        final Person authenticatedUser = authenticateAgainstPortal(username, password);
         saveUser(authenticatedUser);
-        final UserDetails userDetails = new UserDetails(authenticatedUser,
-                Collections.singleton(new SimpleGrantedAuthority(PortalUser.PORTAL_USER_ROLE)));
+        final UserDetails userDetails = new PortalUserDetails(authenticatedUser, encodeBase64(username, password));
         userDetails.eraseCredentials();
         final AuthenticationToken token = new AuthenticationToken(userDetails.getAuthorities(), userDetails);
         token.setAuthenticated(true);
@@ -77,8 +77,8 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     }
 
     private Person authenticateAgainstPortal(String username, String password) {
-        String url = environment.getProperty(ConfigParam.PORTAL_URL.toString());
-        if (url == null) {
+        String url = environment.getProperty(ConfigParam.PORTAL_URL.toString(), "");
+        if (url.isEmpty()) {
             throw new AuthenticationServiceException("Portal is not available.");
         }
         if (!url.endsWith("/")) {
@@ -89,9 +89,9 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             String companyId = getCompanyId();
             url += portalEndpoint.constructPath(username, companyId);
             final HttpHeaders requestHeaders = new HttpHeaders();
-            requestHeaders.add("Authorization", "Basic " + encodeBase64(username + ":" + password));
+            requestHeaders
+                    .add("Authorization", Constants.BASIC_AUTHORIZATION_PREFIX + encodeBase64(username, password));
             final HttpEntity<Object> entity = new HttpEntity<>(null, requestHeaders);
-            final RestTemplate restTemplate = new RestTemplate();
             final PortalUser portalUser = restTemplate.exchange(url, HttpMethod.GET, entity, PortalUser.class)
                                                       .getBody();
             if (portalUser == null || portalUser.getEmailAddress() == null) {
@@ -115,15 +115,16 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     private String getCompanyId() {
         String companyId = null;
         final HttpServletRequest request = getCurrentRequest();
-        if (request.getCookies() == null) {
-            throw new AuthenticationServiceException("Portal is not available.");
-        }
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals(COMPANY_ID_COOKIE)) {
-                companyId = cookie.getValue();
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals(Constants.COMPANY_ID_COOKIE)) {
+                    companyId = cookie.getValue();
+                }
             }
         }
-        assert companyId != null;
+        if (companyId == null) {
+            throw new AuthenticationServiceException("Portal is not available.");
+        }
         return companyId;
     }
 
@@ -131,7 +132,8 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
-    private String encodeBase64(String value) {
+    private String encodeBase64(String username, String password) {
+        final String value = username + ":" + password;
         return Base64.getEncoder().encodeToString(value.getBytes());
     }
 
@@ -144,8 +146,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
             personService.persist(user);
             return;
         }
-        user.encodePassword(passwordEncoder);
-        if (!existing.valueEquals(user)) {
+        if (!existing.nameEquals(user) || !passwordEncoder.matches(user.getPassword(), existing.getPassword())) {
             personService.update(user);
         }
     }

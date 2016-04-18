@@ -40,7 +40,7 @@ var Routes = require('./utils/Routes');
 var Actions = require('./actions/Actions');
 
 var Login = require('./components/login/Login');
-var Register = require('./components/register/Register');
+var Register = require('./components/register/Register').default;
 var MainView = require('./components/MainView');
 var DashboardController = require('./components/dashboard/DashboardController');
 var ReportsController = require('./components/reports/ReportsController');

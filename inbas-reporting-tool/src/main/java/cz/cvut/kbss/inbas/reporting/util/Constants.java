@@ -36,6 +36,21 @@ public final class Constants {
      */
     public static final String APPLICATION_JSON_LD_TYPE = "application/ld+json";
 
+    /**
+     * Prefix for basic authentication for the Authorization HTTP header.
+     */
+    public static final String BASIC_AUTHORIZATION_PREFIX = "Basic ";
+
+    /**
+     * Company ID cookie name, used for portal authentication.
+     */
+    public static final String COMPANY_ID_COOKIE = "COMPANY_ID";
+
+    /**
+     * Default location of the index.html file, relative to the application classpath.
+     */
+    public static final String INDEX_FILE_LOCATION = "../../index.html";
+
     // Query files
 
     /**
@@ -52,4 +67,16 @@ public final class Constants {
      * File with a query for getting report statistics.
      */
     public static final String STATISTICS_QUERY_FILE = "query/statistics.sparql";
+
+    /**
+     * Minimum ARMS index value, as per <a href="http://essi.easa.europa.eu/documents/ARMS.pdf">http://essi.easa.europa.eu/documents/ARMS.pdf</a>,
+     * slide 27.
+     */
+    public static final short ARMS_INDEX_MIN = 1;
+
+    /**
+     * Maximum ARMS index value, as per <a href="http://essi.easa.europa.eu/documents/ARMS.pdf">http://essi.easa.europa.eu/documents/ARMS.pdf</a>,
+     * slide 27.
+     */
+    public static final short ARMS_INDEX_MAX = 2500;
 }

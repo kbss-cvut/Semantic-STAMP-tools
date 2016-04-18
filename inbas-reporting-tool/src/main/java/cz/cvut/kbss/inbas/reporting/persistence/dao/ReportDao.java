@@ -1,8 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.reporting.model_new.Report;
-import cz.cvut.kbss.inbas.reporting.model_new.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.Report;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;

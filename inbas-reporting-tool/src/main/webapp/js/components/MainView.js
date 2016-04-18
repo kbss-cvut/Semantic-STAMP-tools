@@ -9,7 +9,7 @@ var Reflux = require('reflux');
 
 var Nav = require('react-bootstrap').Nav;
 var Navbar = require('react-bootstrap').Navbar;
-var NavBrand = require('react-bootstrap').NavBrand;
+var NavBrand = require('react-bootstrap').NavbarBrand;
 var NavItem = require('react-bootstrap').NavItem;
 var NavDropdown = require('react-bootstrap').NavDropdown;
 var MenuItem = require('react-bootstrap').MenuItem;
@@ -57,7 +57,7 @@ var MainView = React.createClass({
                             <LinkContainer
                                 to='statistics'><NavItem>{this.i18n('main.statistics-nav')}</NavItem></LinkContainer>
                         </Nav>
-                        <Nav right style={{margin: '0 -15px 0 0'}}>
+                        <Nav pullRight style={{margin: '0 -15px 0 0'}}>
                             <NavDropdown id='logout' title={name}>
                                 <MenuItem href='#' onClick={Authentication.logout}>{this.i18n('main.logout')}</MenuItem>
                             </NavDropdown>

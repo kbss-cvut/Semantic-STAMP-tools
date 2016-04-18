@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
-import cz.cvut.kbss.inbas.reporting.model_new.Occurrence;
-import cz.cvut.kbss.inbas.reporting.model_new.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 
 import java.util.Collection;
 

@@ -6,9 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * @author ledvima1
- */
 @Configuration
 @ComponentScan(basePackages = "cz.cvut.kbss.inbas.reporting.rest")
 public class RestConfig {

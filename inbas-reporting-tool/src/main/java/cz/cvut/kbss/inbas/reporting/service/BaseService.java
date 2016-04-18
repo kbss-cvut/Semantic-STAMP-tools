@@ -18,4 +18,12 @@ public interface BaseService<T> {
     void remove(T instance);
 
     void remove(Collection<T> instances);
+
+    /**
+     * Checks whether instance with the specified URI exists.
+     *
+     * @param uri Instance URI
+     * @return Whether a matching instance exists
+     */
+    boolean exists(URI uri);
 }

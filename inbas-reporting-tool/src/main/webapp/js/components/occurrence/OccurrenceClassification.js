@@ -104,7 +104,7 @@ var OccurrenceClassification = React.createClass({
                                ref='occurrenceCategory' formInputOption='id' optionsButton={true}
                                placeholder={this.i18n('preliminary.detail.occurrence-category.label')}
                                onOptionSelected={this.onCategorySelect} filterOption='name'
-                               value={report.occurrenceCategory ? report.occurrenceCategory.name : null}
+                               value={report.occurrenceCategory ? report.occurrenceCategory.name : ''}
                                displayOption='name' options={this.state.occurrenceCategories}
                                customClasses={classes} customListComponent={TypeaheadResultList}/>
                 </div>
