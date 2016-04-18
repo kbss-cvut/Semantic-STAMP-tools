@@ -148,9 +148,8 @@ var Generator = {
     /**
      * Gets an investigation object with occurrence and root factor.
      */
-    generateInvestigation: function () {
+    generateOccurrenceReport: function () {
         return {
-            phase: Constants.INVESTIGATION_REPORT_PHASE,
             key: this.getRandomInt().toString(),
             occurrenceStart: Date.now() - 10000,
             occurrenceEnd: Date.now(),
@@ -163,10 +162,6 @@ var Generator = {
             occurrence: {
                 key: this.getRandomInt().toString(),
                 name: 'TestOccurrence'
-            },
-            rootFactor: {
-                startTime: Date.now() - 10000,
-                endTime: Date.now()
             }
         };
     },
@@ -215,7 +210,7 @@ var Generator = {
             if (preliminary) {
                 report = this.generatePreliminaryReport();
             } else {
-                report = this.generateInvestigation();
+                report = this.generateOccurrenceReport();
             }
             report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
             report.occurrenceCategory = categories[this.getRandomInt(categories.length)];

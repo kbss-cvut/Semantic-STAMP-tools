@@ -6,7 +6,7 @@ describe('Tests for the gantt component controller', function () {
         gantt, props, investigation;
 
     beforeEach(function () {
-        gantt = jasmine.createSpyObj('gantt', ['init', 'clearAll', 'attachEvent', 'updateTask', 'refreshData', 'getChildren', 'open']);
+        gantt = jasmine.createSpyObj('gantt', ['init', 'clearAll', 'attachEvent', 'updateTask', 'refreshData', 'getChildren', 'open', 'render']);
         props = jasmine.createSpyObj('props', ['onLinkAdded', 'onCreateFactor', 'onEditFactor', 'onDeleteLink', 'updateOccurrence']);
         gantt.config = {
             scale_unit: 'second',

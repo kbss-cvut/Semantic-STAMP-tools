@@ -6,7 +6,7 @@ describe('OccurrenceDetail', function () {
         Environment = require('../environment/Environment'),
         Constants = require('../../js/constants/Constants'),
         ReportFactory = require('../../js/model/ReportFactory'),
-        OccurrenceDetail = require('.././OccurrenceDetail');
+        OccurrenceDetail = require('../../js/components/report/occurrence/Occurrence');
 
     it('Sets occurrence end time to the same as start time when start time is edited for the first time in a new report', function () {
         var report = ReportFactory.createReport(),

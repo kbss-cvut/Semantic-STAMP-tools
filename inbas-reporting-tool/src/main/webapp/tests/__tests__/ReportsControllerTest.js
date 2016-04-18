@@ -16,7 +16,7 @@ describe('ReportsController', function () {
         spyOn(Actions, 'loadAllReports');
     });
 
-    it('shows only reports of the corresponding type when type filter is triggered', function () {
+    xit('shows only reports of the corresponding type when type filter is triggered', function () {
         var controller = Environment.render(<ReportsController />),
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
             reports = Generator.generateReports(),

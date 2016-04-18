@@ -4,13 +4,13 @@ describe('ReportType', function () {
 
     var ReportType = require('../../js/model/ReportType'),
         Generator = require('../environment/Generator'),
-        PreliminaryReportFactory = require('../../js/model/PreliminaryReportFactory'),
-        InvestigationController = require('../../js/components/report/occurrence/InvestigationController');
+        ReportFactory = require('../../js/model/ReportFactory'),
+        OccurrenceReportController = require('../../js/components/report/occurrence/OccurrenceReportController');
 
     it('returns default detail controller for new report when getDetailController is called', function () {
-        var report = PreliminaryReportFactory.createReport(),
+        var report = ReportFactory.createReport(),
 
             controller = ReportType.getDetailController(report);
-        expect(controller).toEqual(InvestigationController);
+        expect(controller).toEqual(OccurrenceReportController);
     });
 });

@@ -19,15 +19,15 @@ describe('Occurrence report controller', function () {
     });
 
     it('shows only Cancel button if the displayed report is not the latest revision.', function () {
-        var investigation = Generator.generateInvestigation(),
+        var report = Generator.generateOccurrenceReport(),
             revisions = [
                 {
                     revision: 2,
                     key: 54321
                 },
                 {
-                    revision: investigation.revision,
-                    key: investigation.key
+                    revision: report.revision,
+                    key: report.key
                 }
             ],
             expectedButtons = ['Cancel'],
@@ -35,7 +35,7 @@ describe('Occurrence report controller', function () {
             i, len;
         spyOn(Actions, 'loadReport');
         spyOn(Actions, 'loadRevisions');
-        var result = Environment.render(<ReportController report={investigation} revisions={revisions}/>);
+        var result = Environment.render(<ReportController report={report} revisions={revisions}/>);
 
         for (i = 0, len = expectedButtons.length; i < len; i++) {
             expect(getButton(result, expectedButtons[i])).not.toBeNull();
@@ -50,22 +50,22 @@ describe('Occurrence report controller', function () {
     }
 
     it('updates report state when onChange is called.', function () {
-        var investigation = Generator.generateInvestigation(),
+        var report = Generator.generateOccurrenceReport(),
             newSummary = 'New investigation summary.';
         spyOn(Actions, 'loadReport');
         spyOn(Actions, 'loadRevisions');
-        var result = Environment.render(<ReportController report={investigation}/>);
+        var result = Environment.render(<ReportController report={report}/>);
 
         result.onChange({summary: newSummary});
         expect(result.state.report.summary).toEqual(newSummary);
     });
 
     it('calls loadReport when revision is selected.', function () {
-        var investigation = Generator.generateInvestigation(),
+        var report = Generator.generateOccurrenceReport(),
             selectedRevision = {revision: 2, key: '111222333'};
         spyOn(Actions, 'loadReport');
         spyOn(Actions, 'loadRevisions');
-        var result = Environment.render(<ReportController report={investigation}/>);
+        var result = Environment.render(<ReportController report={report}/>);
         spyOn(result, 'loadReport');
 
         result.onRevisionSelected(selectedRevision);
@@ -73,9 +73,9 @@ describe('Occurrence report controller', function () {
     });
 
     it('reloads report on save success.', function () {
-        var investigation = Generator.generateInvestigation();
+        var report = Generator.generateOccurrenceReport();
         spyOn(Actions, 'loadReport');
-        var result = Environment.render(<ReportController report={investigation}/>);
+        var result = Environment.render(<ReportController report={report}/>);
 
         result.onSuccess();
         expect(Actions.loadReport).toHaveBeenCalled();
