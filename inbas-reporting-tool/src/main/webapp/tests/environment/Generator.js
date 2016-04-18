@@ -146,7 +146,7 @@ var Generator = {
     },
 
     /**
-     * Gets an investigation object with occurrence and root factor.
+     * Gets an occurrence report with category, occurrence and revision number.
      */
     generateOccurrenceReport: function () {
         return {
@@ -167,26 +167,6 @@ var Generator = {
     },
 
     /**
-     * Gets a preliminary report with occurrence and an initial report.
-     */
-    generatePreliminaryReport: function () {
-        return {
-            phase: Constants.PRELIMINARY_REPORT_PHASE,
-            key: this.getRandomInt().toString(),
-            occurrence: {key: this.getRandomInt().toString()},
-            initialReports: [{text: 'First Initial Report'}],
-            occurrenceStart: Date.now() - 10000,
-            occurrenceEnd: Date.now(),
-            occurrenceCategory: {
-                id: 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110',
-                name: '2200110 - Incursions generally',
-                description: 'Blablabla'
-            },
-            revision: 1
-        }
-    },
-
-    /**
      * Generates random integer between 0 (included) and max(excluded).
      * @param max [optional] Maximum generated number, optional. If not specified, max safe integer value is used.
      * @return {number}
@@ -204,18 +184,12 @@ var Generator = {
         var count = this.getRandomInt(100),
             reports = [],
             report,
-            preliminary = true,
             categories = this.getCategories();
         for (var i = 0; i < count; i++) {
-            if (preliminary) {
-                report = this.generatePreliminaryReport();
-            } else {
-                report = this.generateOccurrenceReport();
-            }
+            report = this.generateOccurrenceReport();
             report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
             report.occurrenceCategory = categories[this.getRandomInt(categories.length)];
             reports.push(report);
-            preliminary = !preliminary;
         }
         return reports;
     },

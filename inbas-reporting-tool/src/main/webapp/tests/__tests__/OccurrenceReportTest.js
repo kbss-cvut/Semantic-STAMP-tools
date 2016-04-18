@@ -1,13 +1,15 @@
 'use strict';
 
-xdescribe('OccurrenceReport', function () {
+describe('OccurrenceReport', function () {
 
     var React = require('react'),
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator'),
         Actions = require('../../js/actions/Actions'),
+        ReportFactory = require('../../js/model/ReportFactory'),
         OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),
+        messages = require('../../js/i18n/en'),
         handlers,
         report;
 
@@ -20,7 +22,7 @@ xdescribe('OccurrenceReport', function () {
         report = Generator.generateOccurrenceReport();
     });
 
-    it('Gets factor hierarchy and links on submit', function () {
+    it('Gets factor graph on submit', () => {
         var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             saveEvent = {
                 preventDefault: function () {
@@ -28,7 +30,12 @@ xdescribe('OccurrenceReport', function () {
             },
             FactorJsonSerializer = OccurrenceReport.__get__('Factors').__get__('FactorJsonSerializer');
         component.onSave(saveEvent);
-        expect(FactorJsonSerializer.getFactorHierarchy).toHaveBeenCalled();
-        expect(FactorJsonSerializer.getLinks).toHaveBeenCalled();
+        expect(FactorJsonSerializer.getFactorGraph).toHaveBeenCalled();
     });
+
+    it('does not display report file number when it is not defined (e.g. for new reports.)', () => {
+        report = ReportFactory.createReport();
+        var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
+        expect(Environment.getComponentByTagAndContainedText(component, 'h3', messages['fileNo'])).toBeNull();
+    })
 });

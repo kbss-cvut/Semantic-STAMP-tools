@@ -90,7 +90,6 @@ describe('ReportsController', function () {
 
         sampleReport = reports[Generator.getRandomInt(reports.length)];
         filter = {
-            'phase': sampleReport.phase,
             'occurrenceCategory.id': sampleReport.occurrenceCategory.id
         };
         controller.onFilterChange(filter);
@@ -98,7 +97,6 @@ describe('ReportsController', function () {
         expect(renderedReports.length).toBeLessThan(reports.length);
 
         filter = {
-            'phase': 'all',
             'occurrenceCategory.id': 'all'
         };
         controller.onFilterChange(filter);

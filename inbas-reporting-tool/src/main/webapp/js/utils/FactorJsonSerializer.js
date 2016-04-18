@@ -8,6 +8,15 @@ var FactorJsonSerializer = {
     setGanttController: function (controller) {
         this.ganttController = controller;
     },
+    
+    getFactorGraph: function() {
+        this.verifyGanttControllerIsSet();
+        // TODO
+        return {
+            nodes: [],
+            edges: []
+        };
+    },
 
     getFactorHierarchy: function () {
         this.verifyGanttControllerIsSet();

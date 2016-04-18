@@ -59,13 +59,15 @@ module.exports = {
      */
     getComponentByText: function (root, component, text) {
         var components = TestUtils.scryRenderedComponentsWithType(root, component);
-        return this._getNodeByText(components, text);
+        return this._getNodeByText(components, text, true);
     },
 
-    _getNodeByText: function (components, text) {
+    _getNodeByText: function (components, text, strict) {
         for (var i = 0, len = components.length; i < len; i++) {
             var node = ReactDOM.findDOMNode(components[i]);
-            if (node.textContent === text) {
+            if (strict && node.textContent === text) {
+                return node;
+            } else if (!strict && node.textContent.indexOf(text) !== -1) {
                 return node;
             }
         }
@@ -82,14 +84,27 @@ module.exports = {
      */
     getComponentByTagAndText: function (root, tag, text) {
         var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag);
-        return this._getNodeByText(components, text);
+        return this._getNodeByText(components, text, true);
+    },
+
+    /**
+     * Finds component which contains the specified text.
+     *
+     * This version searches components by tag, so it will catch also simple components like div.
+     * @param root Root of the tree where the component is searched for
+     * @param tag Tag name
+     * @param text Text contained in the component's text content
+     */
+    getComponentByTagAndContainedText: function (root, tag, text) {
+        var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag);
+        return this._getNodeByText(components, text, false);
     },
 
     mockFactors: function (investigation) {
         var Factors = rewire('../../js/components/report/occurrence/Factors'),
             GanttController = jasmine.createSpyObj('GanttController', ['init', 'setScale', 'expandSubtree', 'updateOccurrenceEvent']),
             FactorRenderer = jasmine.createSpyObj('FactorRenderer', ['renderFactors']),
-            FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorHierarchy', 'getLinks', 'setGanttController']);
+            FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorGraph', 'getFactorHierarchy', 'getLinks', 'setGanttController']);
         Factors.__set__('GanttController', GanttController);
         Factors.__set__('FactorRenderer', FactorRenderer);
         Factors.__set__('FactorJsonSerializer', FactorJsonSerializer);

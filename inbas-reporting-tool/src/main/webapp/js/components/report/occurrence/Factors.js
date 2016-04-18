@@ -161,14 +161,9 @@ var Factors = React.createClass({
         });
     },
 
-    getFactorHierarchy: function () {
+    getFactorGraph: function () {
         FactorJsonSerializer.setGanttController(this.ganttController);
-        return FactorJsonSerializer.getFactorHierarchy();
-    },
-
-    getLinks: function () {
-        FactorJsonSerializer.setGanttController(this.ganttController);
-        return FactorJsonSerializer.getLinks();
+        return FactorJsonSerializer.getFactorGraph();
     },
 
 
