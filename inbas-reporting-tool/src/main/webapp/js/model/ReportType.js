@@ -7,11 +7,7 @@ var ReportType = {
 
     getDetailController: function (report) {
         // Use require in method call to prevent circular dependencies with RevisionInfo
-        if (this._isPreliminary(report)) {
-            return require('../components/preliminary/ReportDetailController');
-        } else {
-            return require('../components/investigation/InvestigationController');
-        }
+        return require('../components/report/occurrence/OccurrenceReportController');
     },
 
     _isPreliminary: function (report) {

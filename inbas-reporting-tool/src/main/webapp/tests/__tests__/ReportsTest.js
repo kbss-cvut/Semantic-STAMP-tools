@@ -7,8 +7,8 @@ describe('Reports', function () {
         TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
 
-        Reports = rewire('../../js/components/reports/Reports'),
-        ReportsFilter = require('../../js/components/reports/ReportsFilter'),
+        Reports = rewire('../../js/components/report/Reports'),
+        ReportsFilter = require('../../js/components/report/ReportsFilter'),
         RouterStore = require('../../js/stores/RouterStore'),
         Routes = require('../../js/utils/Routes'),
         Constants = require('../../js/constants/Constants'),

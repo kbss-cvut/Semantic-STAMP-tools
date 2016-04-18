@@ -4,7 +4,7 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var Actions = require('../../actions/Actions');
-var PreliminaryReportFactory = require('../../model/PreliminaryReportFactory');
+var ReportFactory = require('../../model/ReportFactory');
 var Report = require('./Report');
 var OptionsStore = require('../../stores/OptionsStore'); // Forces store init, so that it can listen to actions
 var TypeaheadStore = require('../../stores/TypeaheadStore');
@@ -30,7 +30,7 @@ var ReportController = React.createClass({
 
     initNewReport: function () {
         var payload = RouterStore.getTransitionPayload(Routes.createReport.name),
-            report = PreliminaryReportFactory.createReport();
+            report = ReportFactory.createReport();
         if (payload) {
             report.initialReports = payload.initialReports;
         }

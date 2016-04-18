@@ -7,13 +7,13 @@ var React = require('react');
 var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
 var assign = require('object-assign');
 
-var injectIntl = require('../../utils/injectIntl');
+var injectIntl = require('../../../utils/injectIntl');
 
-var Input = require('../Input');
-var Constants = require('../../constants/Constants');
-var I18nMixin = require('../../i18n/I18nMixin');
+var Input = require('../../Input');
+var Constants = require('../../../constants/Constants');
+var I18nMixin = require('../../../i18n/I18nMixin');
 
-var OccurrenceDetail = React.createClass({
+var Occurrence = React.createClass({
     mixins: [I18nMixin],
 
     propTypes: {
@@ -77,4 +77,4 @@ var OccurrenceDetail = React.createClass({
     }
 });
 
-module.exports = injectIntl(OccurrenceDetail);
+module.exports = injectIntl(Occurrence);

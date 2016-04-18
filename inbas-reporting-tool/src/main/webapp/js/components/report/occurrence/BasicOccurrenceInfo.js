@@ -5,14 +5,14 @@
 
 var React = require('react');
 
-var injectIntl = require('../../utils/injectIntl');
+var injectIntl = require('../../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
-var Input = require('../Input');
-var Utils = require('../../utils/Utils');
-var OccurrenceClassification = require('../occurrence/OccurrenceClassification');
-var OccurrenceDetail = require('../occurrence/OccurrenceDetail');
-var I18nMixin = require('../../i18n/I18nMixin');
+var Input = require('../../Input');
+var Utils = require('../../../utils/Utils');
+var OccurrenceClassification = require('./OccurrenceClassification');
+var OccurrenceDetail = require('./Occurrence');
+var I18nMixin = require('../../../i18n/I18nMixin');
 
 var BasicOccurrenceInfo = React.createClass({
     mixins: [I18nMixin],

@@ -7,7 +7,7 @@ describe('Report', function () {
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator'),
         Constants = require('../../js/constants/Constants'),
-        Report = require('../../js/components/reports/Report'),
+        Report = require('../../js/components/report/Report'),
         ResourceNotFound = require('../../js/components/ResourceNotFound'),
         ReportNotRenderable = require('../../js/components/ReportNotRenderable');
 

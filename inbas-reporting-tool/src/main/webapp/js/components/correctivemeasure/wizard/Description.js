@@ -5,10 +5,10 @@
 'use strict';
 
 var React = require('react');
-var injectIntl = require('../../../../utils/injectIntl');
+var injectIntl = require('../../../utils/injectIntl');
 
-var Input = require('../../../Input');
-var I18nMixin = require('../../../../i18n/I18nMixin');
+var Input = require('../../Input');
+var I18nMixin = require('../../../i18n/I18nMixin');
 
 var Description = React.createClass({
     mixins: [I18nMixin],

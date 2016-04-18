@@ -1,21 +1,21 @@
 'use strict';
 
-describe('Investigation controller', function () {
+describe('Occurrence report controller', function () {
 
     var React = require('react'),
         Button = require('react-bootstrap').Button,
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator'),
-        InvestigationController = rewire('../../js/components/investigation/InvestigationController'),
-        Investigation = rewire('../../js/components/investigation/Investigation'),
+        ReportController = rewire('../../js/components/report/occurrence/OccurrenceReportController'),
+        OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),
         Actions = require('../../js/actions/Actions');
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
         spyOn(Actions, 'loadOccurrenceCategories');
-        Environment.mockFactors(Investigation);
-        InvestigationController.__set__('Investigation', Investigation);
+        Environment.mockFactors(OccurrenceReport);
+        ReportController.__set__('ReportDetail', OccurrenceReport);
     });
 
     it('shows only Cancel button if the displayed report is not the latest revision.', function () {
@@ -35,7 +35,7 @@ describe('Investigation controller', function () {
             i, len;
         spyOn(Actions, 'loadReport');
         spyOn(Actions, 'loadRevisions');
-        var result = Environment.render(<InvestigationController report={investigation} revisions={revisions}/>);
+        var result = Environment.render(<ReportController report={investigation} revisions={revisions}/>);
 
         for (i = 0, len = expectedButtons.length; i < len; i++) {
             expect(getButton(result, expectedButtons[i])).not.toBeNull();
@@ -54,7 +54,7 @@ describe('Investigation controller', function () {
             newSummary = 'New investigation summary.';
         spyOn(Actions, 'loadReport');
         spyOn(Actions, 'loadRevisions');
-        var result = Environment.render(<InvestigationController report={investigation}/>);
+        var result = Environment.render(<ReportController report={investigation}/>);
 
         result.onChange({summary: newSummary});
         expect(result.state.report.summary).toEqual(newSummary);
@@ -65,7 +65,7 @@ describe('Investigation controller', function () {
             selectedRevision = {revision: 2, key: '111222333'};
         spyOn(Actions, 'loadReport');
         spyOn(Actions, 'loadRevisions');
-        var result = Environment.render(<InvestigationController report={investigation}/>);
+        var result = Environment.render(<ReportController report={investigation}/>);
         spyOn(result, 'loadReport');
 
         result.onRevisionSelected(selectedRevision);
@@ -75,7 +75,7 @@ describe('Investigation controller', function () {
     it('reloads report on save success.', function () {
         var investigation = Generator.generateInvestigation();
         spyOn(Actions, 'loadReport');
-        var result = Environment.render(<InvestigationController report={investigation}/>);
+        var result = Environment.render(<ReportController report={investigation}/>);
 
         result.onSuccess();
         expect(Actions.loadReport).toHaveBeenCalled();

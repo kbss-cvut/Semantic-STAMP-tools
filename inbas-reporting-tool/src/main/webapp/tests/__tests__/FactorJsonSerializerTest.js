@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Test factor tree hierarchy serialization for JSON', function() {
+xdescribe('Test factor tree hierarchy serialization for JSON', function() {
 
     var GanttController,
         FactorJsonSerializer,

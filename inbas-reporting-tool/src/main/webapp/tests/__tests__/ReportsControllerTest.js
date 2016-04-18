@@ -9,8 +9,8 @@ describe('ReportsController', function () {
 
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
-        ReportsController = require('../../js/components/reports/ReportsController'),
-        Reports = require('../../js/components/reports/Reports');
+        ReportsController = require('../../js/components/report/ReportsController'),
+        Reports = require('../../js/components/report/Reports');
 
     beforeEach(function() {
         spyOn(Actions, 'loadAllReports');

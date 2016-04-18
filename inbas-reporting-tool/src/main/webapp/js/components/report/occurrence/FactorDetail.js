@@ -9,17 +9,16 @@ var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
 // require().default is needed for default-exported components using the ES6 syntax
 var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
-var injectIntl = require('../../utils/injectIntl');
+var injectIntl = require('../../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
-var Input = require('../Input');
-var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
-var Utils = require('../../utils/Utils');
-var FactorStyleInfo = require('../../utils/FactorStyleInfo');
+var Input = require('../../Input');
+var EventTypeTypeahead = require('../../typeahead/EventTypeTypeahead');
+var Utils = require('../../../utils/Utils');
+var FactorStyleInfo = require('../../../utils/FactorStyleInfo');
 
-var EventTypeWizardSelector = require('../preliminary/wizard/event-type/EventTypeWizardSelector');
-var WizardWindow = require('../wizard/WizardWindow');
-var I18nMixin = require('../../i18n/I18nMixin');
+var WizardWindow = require('../../wizard/WizardWindow');
+var I18nMixin = require('../../../i18n/I18nMixin');
 
 
 function convertDurationToCurrentUnit(factor) {
@@ -90,8 +89,7 @@ var FactorDetail = React.createClass({
     },
 
     onOpenDetails: function () {
-        var wizardProps = !this.state.assessment ? EventTypeWizardSelector.getWizardSettings(this.state.eventType)
-            : EventTypeWizardSelector.getWizardSettingsForStatement(this.state.assessment);
+        var wizardProps = {}
         wizardProps.onFinish = this.onUpdateFactorDetails;
         this.openDetailsWizard(wizardProps);
     },

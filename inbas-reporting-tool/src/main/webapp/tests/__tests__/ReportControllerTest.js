@@ -7,7 +7,7 @@ describe('ReportController', function () {
         Generator = require('../environment/Generator'),
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
-        ReportController = require('../../js/components/reports/ReportController'),
+        ReportController = require('../../js/components/report/ReportController'),
         Routes = require('../../js/utils/Routes'),
         Constants = require('../../js/constants/Constants');
 

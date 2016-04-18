@@ -1,6 +1,6 @@
 'use strict';
 
-describe('FactorRenderer tests', function () {
+xdescribe('FactorRenderer tests', function () {
 
     var rewire = require('rewire'),
         FactorRenderer = rewire('../../js/components/investigation/FactorRenderer'),

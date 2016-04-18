@@ -1,7 +1,7 @@
 'use strict';
 
 var Description = require('./Description');
-var I18nStore = require('../../../../stores/I18nStore');
+var I18nStore = require('../../../stores/I18nStore');
 
 module.exports = [
     {

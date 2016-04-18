@@ -1,6 +1,6 @@
 'use strict';
 
-var FactorStyleInfo = require('../../utils/FactorStyleInfo');
+var FactorStyleInfo = require('../../../utils/FactorStyleInfo');
 
 var DATE_FORMAT = '%d-%m-%y %H:%i';
 var TOOLTIP_DATE_FORMAT = '%d-%m-%y %H:%i:%s';

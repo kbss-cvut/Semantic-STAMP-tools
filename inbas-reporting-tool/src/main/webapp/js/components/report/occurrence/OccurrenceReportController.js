@@ -6,13 +6,13 @@
 
 var React = require('react');
 
-var Actions = require('../../actions/Actions');
-var Constants = require('../../constants/Constants');
-var Investigation = require('./Investigation');
-var Routing = require('../../utils/Routing');
-var Routes = require('../../utils/Routes');
-var RouterStore = require('../../stores/RouterStore');
-var ReportDetailControllerMixin = require('../mixin/ReportDetailControllerMixin');
+var Actions = require('../../../actions/Actions');
+var Constants = require('../../../constants/Constants');
+var ReportDetail = require('./OccurrenceReport');
+var Routing = require('../../../utils/Routing');
+var Routes = require('../../../utils/Routes');
+var RouterStore = require('../../../stores/RouterStore');
+var ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMixin');
 
 var InvestigationController = React.createClass({
     mixins: [
@@ -51,8 +51,8 @@ var InvestigationController = React.createClass({
             onCancel: this.onCancel
         };
         return (
-            <Investigation investigation={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
-                           readOnly={!this.isLatestRevision()}/>
+            <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+                          readOnly={!this.isLatestRevision()}/>
         );
     }
 });

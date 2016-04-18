@@ -7,16 +7,16 @@
 var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-bootstrap-typeahead');
-var TypeaheadResultList = require('../typeahead/EventTypeTypeaheadResultList');
+var TypeaheadResultList = require('../../typeahead/EventTypeTypeaheadResultList');
 
-var injectIntl = require('../../utils/injectIntl');
+var injectIntl = require('../../../utils/injectIntl');
 
-var Select = require('../Select');
-var OptionsStore = require('../../stores/OptionsStore');
-var TypeaheadStore = require('../../stores/TypeaheadStore');
-var Utils = require('../../utils/Utils');
-var I18nMixin = require('../../i18n/I18nMixin');
-var Vocabulary = require('../../constants/Vocabulary');
+var Select = require('../../Select');
+var OptionsStore = require('../../../stores/OptionsStore');
+var TypeaheadStore = require('../../../stores/TypeaheadStore');
+var Utils = require('../../../utils/Utils');
+var I18nMixin = require('../../../i18n/I18nMixin');
+var Vocabulary = require('../../../constants/Vocabulary');
 
 var OccurrenceClassification = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
