@@ -138,13 +138,11 @@ public class DtoMapperTest {
         assertEquals(req.getBasedOnOccurrence().getUri(), occurrenceDto.getUri());
         assertEquals(req.getBasedOnOccurrence().getName(), occurrenceDto.getName());
         assertEquals(req.getBasedOnOccurrence().getKey(), occurrenceDto.getKey());
-        assertEquals(req.getBasedOnOccurrence().getType(), occurrenceDto.getType());
     }
 
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequestBasedOnOccurrence() {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
         final Occurrence occurrence = Generator.generateOccurrence();
-        occurrence.setType(Generator.generateEventType());
         occurrence.setKey(IdentificationUtils.generateKey());
         occurrence.setUri(URI.create(Vocabulary.Occurrence + "#instance"));
         req.setBasedOnOccurrence(occurrence);
@@ -227,7 +225,6 @@ public class DtoMapperTest {
         assertEquals(oDto.getUri(), req.getBasedOnOccurrence().getUri());
         assertEquals(oDto.getName(), req.getBasedOnOccurrence().getName());
         assertEquals(oDto.getKey(), req.getBasedOnOccurrence().getKey());
-        assertEquals(oDto.getType(), req.getBasedOnOccurrence().getType());
     }
 
     private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDtoBasedOnOccurrence() {

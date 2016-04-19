@@ -33,6 +33,7 @@ public class OccurrenceReportTest {
         assertEquals(original.getOccurrenceStart(), copy.getOccurrenceStart());
         assertEquals(original.getOccurrenceEnd(), copy.getOccurrenceEnd());
         assertEquals(original.getOccurrence(), copy.getOccurrence());
+        assertEquals(original.getOccurrenceCategory(), copy.getOccurrenceCategory());
     }
 
     @Test

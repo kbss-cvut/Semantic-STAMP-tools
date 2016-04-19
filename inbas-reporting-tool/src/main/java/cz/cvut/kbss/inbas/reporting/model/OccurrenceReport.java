@@ -34,6 +34,10 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     private Occurrence occurrence;
 
     @ParticipationConstraints(nonEmpty = true)
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
+    private URI occurrenceCategory;
+
+    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.p_startTime)
     private Date occurrenceStart;
 
@@ -93,7 +97,8 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.occurrence = other.occurrence;
         this.occurrenceStart = other.occurrenceStart;
         this.occurrenceEnd = other.occurrenceEnd;
-        this.severityAssessment = other.severityAssessment; // SeverityLevel instances are predefined
+        this.severityAssessment = other.severityAssessment;
+        this.occurrenceCategory = other.occurrenceCategory;
         if (other.correctiveMeasures != null) {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
                                                               .collect(Collectors.toSet());
@@ -131,6 +136,14 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
 
     public void setOccurrence(Occurrence occurrence) {
         this.occurrence = occurrence;
+    }
+
+    public URI getOccurrenceCategory() {
+        return occurrenceCategory;
+    }
+
+    public void setOccurrenceCategory(URI occurrenceCategory) {
+        this.occurrenceCategory = occurrenceCategory;
     }
 
     public Date getOccurrenceStart() {

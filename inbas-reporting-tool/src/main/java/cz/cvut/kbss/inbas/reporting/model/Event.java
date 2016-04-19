@@ -22,8 +22,8 @@ public class Event implements FactorGraphItem, Serializable {
             CascadeType.REMOVE})
     private Set<Event> children;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
-    private EventType type;
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
+    private URI type;
 
     @Types
     private Set<String> types;
@@ -71,7 +71,7 @@ public class Event implements FactorGraphItem, Serializable {
         children.add(child);
     }
 
-    public EventType getType() {
+    public URI getType() {
         return type;
     }
 
@@ -83,14 +83,13 @@ public class Event implements FactorGraphItem, Serializable {
      * @param type The type to set
      * @see Vocabulary#p_hasEventType
      */
-    public void setType(EventType type) {
+    public void setType(URI type) {
         this.type = type;
         if (type != null) {
             if (types == null) {
                 this.types = new HashSet<>(4);
             }
-            assert type.getUri() != null;
-            types.add(type.getUri().toString());
+            types.add(type.toString());
         }
     }
 

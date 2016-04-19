@@ -4,74 +4,49 @@
       "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto",
       "uri": "http://krizik.felk.cvut.cz/node-1",
       "name": "O1",
-      "type": {
-        "uri": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100100",
-        "name": "100100- Runway Incursion by an Aircraft"
-      },
       "referenceId": 1
     },
     {
       "uri": "http://krizik.felk.cvut.cz/node-2",
       "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
       "referenceId": 2,
-      "type": {
-        "uri": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100100",
-        "name": "100100- Runway Incursion by an Aircraft"
-      }
+      "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100100"
     },
     {
       "uri": "http://krizik.felk.cvut.cz/node-3",
       "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
       "referenceId": 3,
-      "type": {
-        "uri": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101",
-        "name": "100101- Runway Incursion by an Aircraft"
-      }
+      "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
     },
     {
       "uri": "http://krizik.felk.cvut.cz/node-4",
       "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
       "referenceId": 4,
-      "type": {
-        "uri": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101",
-        "name": "100101- Runway Incursion by an Aircraft"
-      }
+      "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
     },
     {
       "uri": "http://krizik.felk.cvut.cz/node-5",
       "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
       "referenceId": 5,
-      "type": {
-        "uri": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100105",
-        "name": "100105- Runway Incursion by an Aircraft"
-      }
+      "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100105"
     },
     {
       "uri": "http://krizik.felk.cvut.cz/node-6",
       "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
       "referenceId": 6,
-      "type": {
-        "uri": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100106",
-        "name": "100106- Runway Incursion by an Aircraft"
-      }
+      "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100106"
     },
     {
       "uri": "http://krizik.felk.cvut.cz/node-7",
       "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
       "referenceId": 7,
-      "type": {
-        "uri": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101",
-        "name": "100101- Runway Incursion by an Aircraft"
-      }
+      "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
     },
     {
       "uri": "http://krizik.felk.cvut.cz/node-8",
       "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
       "referenceId": 8,
-      "type": {
-        "uri": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101",
-        "name": "100101- Runway Incursion by an Aircraft"
-      }
+      "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
     }
   ],
   "edges": [

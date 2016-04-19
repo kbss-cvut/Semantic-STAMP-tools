@@ -75,7 +75,7 @@ var OccurrenceClassification = React.createClass({
     },
 
     onCategorySelect: function (cat) {
-        this.props.onChange('occurrenceCategory', cat);
+        this.props.onChange('occurrenceCategory', cat.id);
     },
 
     _onShowCategories: function () {
@@ -86,7 +86,8 @@ var OccurrenceClassification = React.createClass({
         var classes = {
                 input: 'form-control'
             },
-            report = this.props.report;
+            report = this.props.report,
+            categories = this._transformOccurrenceCategories();
         return (
             <div className='row'>
                 <div className='col-xs-4'>
@@ -103,12 +104,23 @@ var OccurrenceClassification = React.createClass({
                                ref='occurrenceCategory' formInputOption='id' optionsButton={true}
                                placeholder={this.i18n('report.occurrence.category.label')}
                                onOptionSelected={this.onCategorySelect} filterOption='name'
-                               value={report.occurrenceCategory ? report.occurrenceCategory.name : ''}
-                               displayOption='name' options={this._transformOccurrenceCategories()}
+                               value={this._resolveValue(categories)}
+                               displayOption='name' options={categories}
                                customClasses={classes} customListComponent={TypeaheadResultList}/>
                 </div>
             </div>
         )
+    },
+
+    _resolveValue: function (categories) {
+        var catId = this.props.report.occurrenceCategory;
+        if (!catId || categories.length === 0) {
+            return '';
+        }
+        var cat = categories.find((item, ind, arr) => {
+            return item.id === catId;
+        });
+        return cat.name;
     }
 });
 

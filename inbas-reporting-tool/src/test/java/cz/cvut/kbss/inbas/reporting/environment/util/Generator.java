@@ -25,16 +25,12 @@ public class Generator {
     }
 
     /**
-     * Generates an {@link EventType} instance with (pseudo) unique name and URI.
+     * Generates a (pseudo) unique event type URI.
      *
      * @return EventType instance
      */
-    public static EventType generateEventType() {
-        final EventType et = new EventType();
-        final int rand = randomInt(100000);
-        et.setName(rand + " - Runway Incursion by an Aircraft");
-        et.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-" + rand));
-        return et;
+    public static URI generateEventType() {
+        return URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-" + randomInt(100000));
     }
 
     public static Person getPerson() {
@@ -68,6 +64,7 @@ public class Generator {
     public static OccurrenceReport generateOccurrenceReport(boolean setAttributes) {
         final OccurrenceReport report = new OccurrenceReport();
         report.setOccurrence(generateOccurrence());
+        report.setOccurrenceCategory(generateEventType());
         report.setOccurrenceStart(new Date(System.currentTimeMillis() - 100000));
         report.setOccurrenceEnd(new Date());
         if (setAttributes) {
@@ -121,7 +118,6 @@ public class Generator {
                 case 1:
                     cmr.setResponsibleOrganizations(Collections.singleton(generateOrganization()));
                     cmr.setBasedOnOccurrence(generateOccurrence());
-                    cmr.getBasedOnOccurrence().setType(generateEventType());
                     break;
                 case 2:
                     cmr.setResponsiblePersons(Collections.singleton(getPerson()));

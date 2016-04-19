@@ -3,7 +3,6 @@ package cz.cvut.kbss.inbas.reporting.dto.event;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import cz.cvut.kbss.inbas.reporting.model.EventType;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 
 import java.net.URI;
@@ -15,7 +14,7 @@ public class EventDto implements HasUri {
 
     private URI uri;
 
-    private EventType type;
+    private URI type;
 
     private Set<String> types;
 
@@ -30,11 +29,11 @@ public class EventDto implements HasUri {
         this.uri = uri;
     }
 
-    public EventType getType() {
+    public URI getType() {
         return type;
     }
 
-    public void setType(EventType type) {
+    public void setType(URI type) {
         this.type = type;
     }
 

@@ -19,7 +19,6 @@ var BasicOccurrenceInfo = React.createClass({
 
     propTypes: {
         report: React.PropTypes.object.isRequired,
-        onChange: React.PropTypes.func.isRequired,
         onAttributeChange: React.PropTypes.func.isRequired
     },
 

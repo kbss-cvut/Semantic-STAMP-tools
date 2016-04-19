@@ -14,13 +14,15 @@ var Routes = require('../../../utils/Routes');
 var RouterStore = require('../../../stores/RouterStore');
 var ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMixin');
 
-var InvestigationController = React.createClass({
+var OccurrenceReportController = React.createClass({
     mixins: [
         ReportDetailControllerMixin
     ],
 
     onSuccess: function (key) {
-        if (!key || key === this.props.report.key) {
+        if (this.props.report.isNew) {
+            Routing.transitionTo(Routes.reports);
+        } else if (!key || key === this.props.report.key) {
             Actions.loadReport(this.props.report.key);
         } else {
             this.loadReport(key);
@@ -57,4 +59,4 @@ var InvestigationController = React.createClass({
     }
 });
 
-module.exports = InvestigationController;
+module.exports = OccurrenceReportController;

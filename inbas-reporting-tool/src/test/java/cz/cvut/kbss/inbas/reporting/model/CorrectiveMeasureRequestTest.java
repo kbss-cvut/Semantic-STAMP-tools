@@ -3,7 +3,6 @@ package cz.cvut.kbss.inbas.reporting.model;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import org.junit.Test;
 
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,21 +55,5 @@ public class CorrectiveMeasureRequestTest {
         final CorrectiveMeasureRequest copy = new CorrectiveMeasureRequest(original);
         assertEquals(original.getDescription(), copy.getDescription());
         assertEquals(original.getBasedOnOccurrence(), copy.getBasedOnOccurrence());
-    }
-
-    @Test
-    public void copyConstructorReusesRelatedEvent() {
-        final CorrectiveMeasureRequest original = new CorrectiveMeasureRequest();
-        original.setDescription("blabla");
-        final EventType et = new EventType();
-        et.setName("2200101 - Runway Incursion by an Aircraft");
-        et.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-2200101"));
-        final Event event = new Event();
-        event.setType(et);
-        original.setBasedOnEvent(event);
-
-        final CorrectiveMeasureRequest copy = new CorrectiveMeasureRequest(original);
-        assertEquals(original.getDescription(), copy.getDescription());
-        assertEquals(original.getBasedOnEvent(), copy.getBasedOnEvent());
     }
 }

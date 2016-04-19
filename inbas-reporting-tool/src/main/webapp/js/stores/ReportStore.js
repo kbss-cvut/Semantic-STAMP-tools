@@ -53,7 +53,7 @@ var ReportStore = Reflux.createStore({
     },
 
     onCreateReport: function (report, onSuccess, onError) {
-        Ajax.post(BASE_URL, report).end(function () {
+        Ajax.post(BASE_URL, report).end(function (data, resp) {
             if (onSuccess) {
                 var key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);

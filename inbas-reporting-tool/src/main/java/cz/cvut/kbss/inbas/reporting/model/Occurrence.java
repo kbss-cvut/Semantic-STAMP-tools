@@ -30,9 +30,6 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
     @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER)
     private Set<Event> children;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventType, fetch = FetchType.EAGER)
-    private EventType type;
-
     @Types
     private Set<String> types;
 
@@ -99,27 +96,6 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
             this.children = new HashSet<>();
         }
         children.add(child);
-    }
-
-    public EventType getType() {
-        return type;
-    }
-
-    /**
-     * Sets type of this occurrence.
-     * <p>
-     * Also adds the event type's URI to this instance's types.
-     *
-     * @param type The type to set
-     * @see Vocabulary#p_hasEventType
-     */
-    public void setType(EventType type) {
-        this.type = type;
-        if (type != null) {
-            assert types != null;
-            assert type.getUri() != null;
-            types.add(type.getUri().toString());
-        }
     }
 
     public Set<String> getTypes() {

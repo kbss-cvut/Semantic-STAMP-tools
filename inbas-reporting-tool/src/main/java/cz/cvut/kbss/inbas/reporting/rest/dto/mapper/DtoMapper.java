@@ -132,7 +132,6 @@ public abstract class DtoMapper {
         }
         OccurrenceDto dto = new OccurrenceDto();
         dto.setUri(occurrence.getUri());
-        dto.setType(occurrence.getType());
         if (occurrence.getTypes() != null) {
             dto.setTypes(new HashSet<>(occurrence.getTypes()));
         }
