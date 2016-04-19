@@ -90,7 +90,7 @@ var ReportsFilter = React.createClass({
                              value={Constants.FILTER_DEFAULT}>{this.i18n('reports.filter.type.all')}</option>);
         for (var i = 0, len = reports.length; i < len; i++) {
             category = reports[i].occurrenceCategory;
-            if (categories.indexOf(category.id) !== -1) {
+            if (!category || categories.indexOf(category.id) !== -1) {
                 continue;
             }
             categories.push(category.id);

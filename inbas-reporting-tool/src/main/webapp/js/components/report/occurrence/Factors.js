@@ -163,7 +163,7 @@ var Factors = React.createClass({
 
     getFactorGraph: function () {
         FactorJsonSerializer.setGanttController(this.ganttController);
-        return FactorJsonSerializer.getFactorGraph();
+        return FactorJsonSerializer.getFactorGraph(this.props.report);
     },
 
 

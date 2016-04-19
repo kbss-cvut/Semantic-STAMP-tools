@@ -8,7 +8,7 @@ describe('ReportType', function () {
         OccurrenceReportController = require('../../js/components/report/occurrence/OccurrenceReportController');
 
     it('returns default detail controller for new report when getDetailController is called', function () {
-        var report = ReportFactory.createReport(),
+        var report = ReportFactory.createOccurrenceReport(),
 
             controller = ReportType.getDetailController(report);
         expect(controller).toEqual(OccurrenceReportController);

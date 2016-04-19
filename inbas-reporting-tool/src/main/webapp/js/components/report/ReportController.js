@@ -30,7 +30,7 @@ var ReportController = React.createClass({
 
     initNewReport: function () {
         var payload = RouterStore.getTransitionPayload(Routes.createReport.name),
-            report = ReportFactory.createReport();
+            report = ReportFactory.createOccurrenceReport();
         if (payload) {
             report.initialReports = payload.initialReports;
         }

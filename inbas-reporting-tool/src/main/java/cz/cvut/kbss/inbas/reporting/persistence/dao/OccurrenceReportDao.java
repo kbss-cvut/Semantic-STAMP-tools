@@ -44,12 +44,12 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
 
     private void updateWithOrphanRemoval(OccurrenceReport entity, EntityManager em) {
         final OccurrenceReport original = em.find(OccurrenceReport.class, entity.getUri());
-        final Set<URI> measureUris = entity.getCorrectiveMeasureRequests() == null ? Collections.emptySet() :
-                                     entity.getCorrectiveMeasureRequests().stream()
+        final Set<URI> measureUris = entity.getCorrectiveMeasures() == null ? Collections.emptySet() :
+                                     entity.getCorrectiveMeasures().stream()
                                            .map(CorrectiveMeasureRequest::getUri).collect(Collectors.toSet());
         final Set<CorrectiveMeasureRequest> orphans =
-                original.getCorrectiveMeasureRequests() == null ? Collections.emptySet() :
-                original.getCorrectiveMeasureRequests().stream().filter(m -> !measureUris.contains(m.getUri()))
+                original.getCorrectiveMeasures() == null ? Collections.emptySet() :
+                original.getCorrectiveMeasures().stream().filter(m -> !measureUris.contains(m.getUri()))
                         .collect(Collectors.toSet());
         em.merge(entity);
         orphans.forEach(em::remove);

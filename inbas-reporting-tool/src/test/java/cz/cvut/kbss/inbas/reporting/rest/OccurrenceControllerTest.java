@@ -84,8 +84,8 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
         assertEquals(reports.size(), res.size());
         for (int i = 0; i < reports.size(); i++) {
             assertEquals(reports.get(i).getUri(), res.get(i).getUri());
-            assertEquals(reports.get(i).getCorrectiveMeasureRequests().size(),
-                    res.get(i).getCorrectiveMeasureRequests().size());
+            assertEquals(reports.get(i).getCorrectiveMeasures().size(),
+                    res.get(i).getCorrectiveMeasures().size());
         }
     }
 
@@ -94,7 +94,7 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final OccurrenceReport report = Generator.generateOccurrenceReport(true);
             report.setOccurrence(occurrence);
-            report.setCorrectiveMeasureRequests(Generator.generateCorrectiveMeasureRequests());
+            report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
             reports.add(report);
         }
         return reports;

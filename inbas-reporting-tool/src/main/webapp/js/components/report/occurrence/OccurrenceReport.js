@@ -52,7 +52,11 @@ var OccurrenceReport = React.createClass({
         e.preventDefault();
         this.setState(assign(this.state, {submitting: true}));
         report.factorGraph = factors.getFactorGraph();
-        Actions.updateReport(report, this.onSaveSuccess, this.onSaveError);
+        if (report.isNew) {
+            Actions.createReport(report, this.onSaveSuccess, this.onSaveError);
+        } else {
+            Actions.updateReport(report, this.onSaveSuccess, this.onSaveError);
+        }
     },
 
     onSubmit: function () {

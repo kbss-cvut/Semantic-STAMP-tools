@@ -131,7 +131,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
         final OccurrenceReport result = occurrenceReportDao.findByKey(report.getKey());
         assertNotNull(result);
-        verifyCorrectiveMeasureRequests(report.getCorrectiveMeasureRequests(), result.getCorrectiveMeasureRequests());
+        verifyCorrectiveMeasureRequests(report.getCorrectiveMeasures(), result.getCorrectiveMeasures());
     }
 
     private void verifyCorrectiveMeasureRequests(Set<CorrectiveMeasureRequest> expected,
@@ -154,7 +154,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
         report.setAuthor(author);
         final Organization org = new Organization(ORGANIZATION_NAME);
-        report.setCorrectiveMeasureRequests(new HashSet<>());
+        report.setCorrectiveMeasures(new HashSet<>());
         organizationDao.persist(org);   // The organization must exist
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final CorrectiveMeasureRequest req = new CorrectiveMeasureRequest();
@@ -165,7 +165,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
                 req.setResponsibleOrganizations(Collections.singleton(org));
             }
             req.setBasedOnOccurrence(report.getOccurrence());
-            report.getCorrectiveMeasureRequests().add(req);
+            report.getCorrectiveMeasures().add(req);
         }
         return report;
     }
@@ -179,14 +179,14 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         newRequest.setDescription("Added corrective measure request");
         newRequest.setResponsiblePersons(Collections.singleton(author));
         newRequest.setResponsibleOrganizations(Collections.singleton(organizationDao.findByName(ORGANIZATION_NAME)));
-        final Iterator<CorrectiveMeasureRequest> it = report.getCorrectiveMeasureRequests().iterator();
+        final Iterator<CorrectiveMeasureRequest> it = report.getCorrectiveMeasures().iterator();
         it.next();
         it.remove();
-        report.getCorrectiveMeasureRequests().add(newRequest);
+        report.getCorrectiveMeasures().add(newRequest);
         occurrenceReportDao.update(report);
 
         final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
-        verifyCorrectiveMeasureRequests(report.getCorrectiveMeasureRequests(), result.getCorrectiveMeasureRequests());
+        verifyCorrectiveMeasureRequests(report.getCorrectiveMeasures(), result.getCorrectiveMeasures());
         verifyOrphanRemoval(report);
     }
 
@@ -196,7 +196,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
             final Integer cnt = em
                     .createNativeQuery("SELECT (count(?x) as ?count) WHERE {?x a ?measureType . }", Integer.class)
                     .setParameter("measureType", URI.create(Vocabulary.CorrectiveMeasureRequest)).getSingleResult();
-            assertEquals(report.getCorrectiveMeasureRequests().size(), cnt.intValue());
+            assertEquals(report.getCorrectiveMeasures().size(), cnt.intValue());
         } finally {
             em.close();
         }
@@ -236,7 +236,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         assertFalse(occurrenceReportDao.exists(report.getUri()));
         final EntityManager em = emf.createEntityManager();
         try {
-            for (CorrectiveMeasureRequest cmr : report.getCorrectiveMeasureRequests()) {
+            for (CorrectiveMeasureRequest cmr : report.getCorrectiveMeasures()) {
                 final Boolean res = em.createNativeQuery("ASK WHERE { ?x a ?type . }", Boolean.class)
                                       .setParameter("x", cmr.getUri())
                                       .setParameter("type", URI.create(Vocabulary.CorrectiveMeasureRequest))

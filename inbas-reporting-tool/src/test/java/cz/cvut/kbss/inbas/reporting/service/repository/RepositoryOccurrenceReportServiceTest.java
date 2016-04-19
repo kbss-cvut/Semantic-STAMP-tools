@@ -89,7 +89,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
                 measureRequest.setResponsiblePersons(Collections.singleton(author));
                 measures.add(measureRequest);
             }
-            firstRevision.setCorrectiveMeasureRequests(measures);
+            firstRevision.setCorrectiveMeasures(measures);
         }
         occurrenceReportService.persist(firstRevision);
         return firstRevision;
@@ -103,17 +103,17 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     @Test
     public void createNewRevisionCreatesNewInstancesOfCorrectiveMeasureRequestAndReusesOccurrence() {
         final OccurrenceReport firstRevision = persistFirstRevision(true);
-        final Set<URI> measureRequestUris = firstRevision.getCorrectiveMeasureRequests().stream().map(
+        final Set<URI> measureRequestUris = firstRevision.getCorrectiveMeasures().stream().map(
                 CorrectiveMeasureRequest::getUri).collect(Collectors.toSet());
 
         final OccurrenceReport newRevision = occurrenceReportService.createNewRevision(firstRevision.getFileNumber());
-        assertNotNull(newRevision.getCorrectiveMeasureRequests());
-        assertEquals(measureRequestUris.size(), newRevision.getCorrectiveMeasureRequests().size());
-        newRevision.getCorrectiveMeasureRequests().forEach(mr -> assertFalse(measureRequestUris.contains(mr.getUri())));
+        assertNotNull(newRevision.getCorrectiveMeasures());
+        assertEquals(measureRequestUris.size(), newRevision.getCorrectiveMeasures().size());
+        newRevision.getCorrectiveMeasures().forEach(mr -> assertFalse(measureRequestUris.contains(mr.getUri())));
         boolean found;
-        for (CorrectiveMeasureRequest r : firstRevision.getCorrectiveMeasureRequests()) {
+        for (CorrectiveMeasureRequest r : firstRevision.getCorrectiveMeasures()) {
             found = false;
-            for (CorrectiveMeasureRequest rr : newRevision.getCorrectiveMeasureRequests()) {
+            for (CorrectiveMeasureRequest rr : newRevision.getCorrectiveMeasures()) {
                 if (r.getDescription().equals(rr.getDescription())) {
                     found = true;
                 }

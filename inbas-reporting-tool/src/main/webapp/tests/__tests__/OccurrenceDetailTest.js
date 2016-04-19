@@ -9,7 +9,7 @@ describe('OccurrenceDetail', function () {
         OccurrenceDetail = require('../../js/components/report/occurrence/Occurrence');
 
     it('Sets occurrence end time to the same as start time when start time is edited for the first time in a new report', function () {
-        var report = ReportFactory.createReport(),
+        var report = ReportFactory.createOccurrenceReport(),
             onAttributeChange = jasmine.createSpy('onAttributeChange'),
             detail = Environment.render(<OccurrenceDetail report={report} onAttributeChange={onAttributeChange}/>);
 
@@ -21,7 +21,7 @@ describe('OccurrenceDetail', function () {
     });
 
     it('Change occurrence end only on first edit of occurrence start', function () {
-        var report = ReportFactory.createReport(),
+        var report = ReportFactory.createOccurrenceReport(),
             onAttributeChange = jasmine.createSpy('onAttributeChange'),
             detail = Environment.render(<OccurrenceDetail report={report} onAttributeChange={onAttributeChange}/>);
         var newStart = report.occurrenceStart - 100000;
@@ -32,7 +32,7 @@ describe('OccurrenceDetail', function () {
     });
 
     it('Does not modify occurrence end for existing reports', function() {
-        var report = ReportFactory.createReport(),
+        var report = ReportFactory.createOccurrenceReport(),
             onAttributeChange = jasmine.createSpy('onAttributeChange'),
             detail = Environment.render(<OccurrenceDetail report={report} onAttributeChange={onAttributeChange}/>);
         delete report.isNew;

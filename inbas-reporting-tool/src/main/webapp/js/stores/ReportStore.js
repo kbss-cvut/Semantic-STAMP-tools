@@ -8,7 +8,6 @@ var Utils = require('../utils/Utils');
 
 var BASE_URL = 'rest/reports';
 var BASE_URL_WITH_SLASH = 'rest/reports/';
-var PRELIMINARY_DTO = '.PreliminaryReportDto';
 
 var ReportStore = Reflux.createStore({
     listenables: [Actions],
@@ -53,23 +52,14 @@ var ReportStore = Reflux.createStore({
         }.bind(this));
     },
 
-    onCreatePreliminary: function (report, onSuccess, onError) {
-        report.dtoClass = PRELIMINARY_DTO;
+    onCreateReport: function (report, onSuccess, onError) {
         Ajax.post(BASE_URL, report).end(function () {
-            if (onSuccess) {
-                onSuccess();
-            }
-            this.onLoadAllReports();
-        }.bind(this), onError);
-    },
-
-    onCreateInvestigation: function (fileNumber, onSuccess, onError) {
-        Ajax.post(BASE_URL_WITH_SLASH + 'chain/' + fileNumber + '/revisions?investigate=true').end(function (data, resp) {
             if (onSuccess) {
                 var key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);
             }
-        }, onError);
+            this.onLoadAllReports();
+        }.bind(this), onError);
     },
 
     onUpdateReport: function (report, onSuccess, onError) {

@@ -244,12 +244,12 @@ public class DtoMapperTest {
     @Test
     public void reportToReportDtoTransformsOccurrenceReportToOccurrenceReportDto() {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setCorrectiveMeasureRequests(Generator.generateCorrectiveMeasureRequests());
+        report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
         final LogicalDocument dto = mapper.reportToReportDto(report);
         assertNotNull(dto);
         assertTrue(dto instanceof OccurrenceReportDto);
         final OccurrenceReportDto orDto = (OccurrenceReportDto) dto;
-        assertEquals(report.getCorrectiveMeasureRequests().size(), orDto.getCorrectiveMeasureRequests().size());
+        assertEquals(report.getCorrectiveMeasures().size(), orDto.getCorrectiveMeasures().size());
         assertEquals(report.getUri(), orDto.getUri());
         assertEquals(report.getKey(), orDto.getKey());
         assertEquals(report.getFileNumber(), orDto.getFileNumber());
@@ -267,7 +267,7 @@ public class DtoMapperTest {
         final OccurrenceReport report = (OccurrenceReport) doc;
         assertEquals(dto.getOccurrenceStart(), report.getOccurrenceStart());
         assertEquals(dto.getOccurrenceEnd(), report.getOccurrenceEnd());
-        assertEquals(dto.getCorrectiveMeasureRequests().size(), report.getCorrectiveMeasureRequests().size());
+        assertEquals(dto.getCorrectiveMeasures().size(), report.getCorrectiveMeasures().size());
     }
 
     private OccurrenceReportDto generateOccurrenceReportDto() {
@@ -277,10 +277,10 @@ public class DtoMapperTest {
         final Occurrence o = Generator.generateOccurrence();
         o.setName(o.getName());
         dto.setSummary("Occurrence report summary.");
-        dto.setCorrectiveMeasureRequests(new HashSet<>());
-        dto.getCorrectiveMeasureRequests().add(generateCorrectiveMeasureRequestDtoBasedOnEvent());
-        dto.getCorrectiveMeasureRequests().add(generateCorrectiveMeasureRequestDtoBasedOnOccurrence());
-        dto.getCorrectiveMeasureRequests().add(generateCorrectiveMeasureRequestDtoWithAgents());
+        dto.setCorrectiveMeasures(new HashSet<>());
+        dto.getCorrectiveMeasures().add(generateCorrectiveMeasureRequestDtoBasedOnEvent());
+        dto.getCorrectiveMeasures().add(generateCorrectiveMeasureRequestDtoBasedOnOccurrence());
+        dto.getCorrectiveMeasures().add(generateCorrectiveMeasureRequestDtoWithAgents());
         return dto;
     }
 }

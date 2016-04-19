@@ -46,13 +46,13 @@ public class OccurrenceReportTest {
         rTwo.setDescription("CorrectiveMeasureRequest_Two");
         rTwo.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
         requests.add(rTwo);
-        original.setCorrectiveMeasureRequests(requests);
+        original.setCorrectiveMeasures(requests);
 
         final OccurrenceReport copy = new OccurrenceReport(original);
-        assertNotNull(copy.getCorrectiveMeasureRequests());
-        assertEquals(original.getCorrectiveMeasureRequests().size(), copy.getCorrectiveMeasureRequests().size());
-        for (CorrectiveMeasureRequest r : original.getCorrectiveMeasureRequests()) {
-            for (CorrectiveMeasureRequest rr : copy.getCorrectiveMeasureRequests()) {
+        assertNotNull(copy.getCorrectiveMeasures());
+        assertEquals(original.getCorrectiveMeasures().size(), copy.getCorrectiveMeasures().size());
+        for (CorrectiveMeasureRequest r : original.getCorrectiveMeasures()) {
+            for (CorrectiveMeasureRequest rr : copy.getCorrectiveMeasures()) {
                 assertNotSame(r, rr);
             }
         }

@@ -9,11 +9,12 @@ var FactorJsonSerializer = {
         this.ganttController = controller;
     },
     
-    getFactorGraph: function() {
+    getFactorGraph: function(report) {
         this.verifyGanttControllerIsSet();
+        report.occurrence.referenceId = 1;
         // TODO
         return {
-            nodes: [],
+            nodes: [1],
             edges: []
         };
     },

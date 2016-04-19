@@ -21,7 +21,6 @@ public class Vocabulary {
     public static final String Factor = "http://onto.fel.cvut.cz/ontologies/documentation/factor";
 
     public static final String CorrectiveMeasureRequest = "http://onto.fel.cvut.cz/ontologies/documentation/corrective_measure_request";
-    public static final String SeverityLevel = "http://onto.fel.cvut.cz/ontologies/documentation/severity_level";
 
     public static final String Object = "http://onto.fel.cvut.cz/ontologies/ufo/Object";
     public static final String Agent = "http://onto.fel.cvut.cz/ontologies/ufo/Agent";

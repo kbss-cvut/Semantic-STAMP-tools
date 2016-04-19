@@ -33,8 +33,34 @@ describe('OccurrenceReport', function () {
         expect(FactorJsonSerializer.getFactorGraph).toHaveBeenCalled();
     });
 
+    it('calls createReport when new report is saved', () => {
+        report.isNew = true;
+        spyOn(Actions, 'createReport');
+        var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            saveEvent = {
+                preventDefault: function () {
+                }
+            },
+            FactorJsonSerializer = OccurrenceReport.__get__('Factors').__get__('FactorJsonSerializer');
+        component.onSave(saveEvent);
+
+        expect(Actions.createReport).toHaveBeenCalled();
+    });
+
+    it('calls updateReport when an existing report is saved', () => {
+        var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            saveEvent = {
+                preventDefault: function () {
+                }
+            },
+            FactorJsonSerializer = OccurrenceReport.__get__('Factors').__get__('FactorJsonSerializer');
+        component.onSave(saveEvent);
+
+        expect(Actions.updateReport).toHaveBeenCalled();
+    });
+
     it('does not display report file number when it is not defined (e.g. for new reports.)', () => {
-        report = ReportFactory.createReport();
+        report = ReportFactory.createOccurrenceReport();
         var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
         expect(Environment.getComponentByTagAndContainedText(component, 'h3', messages['fileNo'])).toBeNull();
     })

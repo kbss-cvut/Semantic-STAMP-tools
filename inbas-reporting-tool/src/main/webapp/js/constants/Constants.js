@@ -26,5 +26,8 @@ module.exports = {
     MINUTE: 60 * 1000,   // Minute in milliseconds
     
     // Maximum time difference between occurrence start and end. 24 hours in millis
-    MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24
+    MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24,
+
+    OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
+    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto'
 };

@@ -5,7 +5,6 @@ import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Person;
-import cz.cvut.kbss.inbas.reporting.model.SeverityLevel;
 import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
 import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 
@@ -41,9 +40,9 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     private Integer revision;
 
-    private SeverityLevel severityAssessment;
+    private URI severityAssessment;
 
-    private Set<CorrectiveMeasureRequestDto> correctiveMeasureRequests;
+    private Set<CorrectiveMeasureRequestDto> correctiveMeasures;
 
     private String summary;
 
@@ -162,20 +161,20 @@ public class OccurrenceReportDto implements LogicalDocument {
         this.revision = revision;
     }
 
-    public SeverityLevel getSeverityAssessment() {
+    public URI getSeverityAssessment() {
         return severityAssessment;
     }
 
-    public void setSeverityAssessment(SeverityLevel severityAssessment) {
+    public void setSeverityAssessment(URI severityAssessment) {
         this.severityAssessment = severityAssessment;
     }
 
-    public Set<CorrectiveMeasureRequestDto> getCorrectiveMeasureRequests() {
-        return correctiveMeasureRequests;
+    public Set<CorrectiveMeasureRequestDto> getCorrectiveMeasures() {
+        return correctiveMeasures;
     }
 
-    public void setCorrectiveMeasureRequests(Set<CorrectiveMeasureRequestDto> correctiveMeasureRequests) {
-        this.correctiveMeasureRequests = correctiveMeasureRequests;
+    public void setCorrectiveMeasures(Set<CorrectiveMeasureRequestDto> correctiveMeasures) {
+        this.correctiveMeasures = correctiveMeasures;
     }
 
     public String getSummary() {

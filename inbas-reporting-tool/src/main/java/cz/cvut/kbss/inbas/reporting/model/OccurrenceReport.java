@@ -58,11 +58,11 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     @OWLDataProperty(iri = Vocabulary.p_revision)
     private Integer revision;
 
-    @OWLObjectProperty(iri = Vocabulary.p_severityAssessment, fetch = FetchType.EAGER)
-    private SeverityLevel severityAssessment;
+    @OWLObjectProperty(iri = Vocabulary.p_severityAssessment)
+    private URI severityAssessment;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<CorrectiveMeasureRequest> correctiveMeasureRequests;
+    private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
     @OWLDataProperty(iri = Vocabulary.p_description)
     private String summary;
@@ -94,9 +94,9 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.occurrenceStart = other.occurrenceStart;
         this.occurrenceEnd = other.occurrenceEnd;
         this.severityAssessment = other.severityAssessment; // SeverityLevel instances are predefined
-        if (other.correctiveMeasureRequests != null) {
-            this.correctiveMeasureRequests = other.correctiveMeasureRequests.stream().map(CorrectiveMeasureRequest::new)
-                                                                            .collect(Collectors.toSet());
+        if (other.correctiveMeasures != null) {
+            this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
+                                                              .collect(Collectors.toSet());
         }
     }
 
@@ -189,20 +189,20 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.revision = revision;
     }
 
-    public SeverityLevel getSeverityAssessment() {
+    public URI getSeverityAssessment() {
         return severityAssessment;
     }
 
-    public void setSeverityAssessment(SeverityLevel severityAssessment) {
+    public void setSeverityAssessment(URI severityAssessment) {
         this.severityAssessment = severityAssessment;
     }
 
-    public Set<CorrectiveMeasureRequest> getCorrectiveMeasureRequests() {
-        return correctiveMeasureRequests;
+    public Set<CorrectiveMeasureRequest> getCorrectiveMeasures() {
+        return correctiveMeasures;
     }
 
-    public void setCorrectiveMeasureRequests(Set<CorrectiveMeasureRequest> correctiveMeasureRequests) {
-        this.correctiveMeasureRequests = correctiveMeasureRequests;
+    public void setCorrectiveMeasures(Set<CorrectiveMeasureRequest> correctiveMeasures) {
+        this.correctiveMeasures = correctiveMeasures;
     }
 
     public String getSummary() {
