@@ -2,6 +2,7 @@
 
 import React from "react";
 import {Button, Glyphicon, Panel} from "react-bootstrap";
+import assign from "object-assign";
 import injectIntl from "../../utils/injectIntl";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import CorrectiveMeasuresTable from "./CorrectiveMeasuresTable";
@@ -27,7 +28,7 @@ class CorrectiveMeasures extends React.Component {
             isWizardOpen: true,
             wizardProperties: {
                 steps: CorrectiveMeasureWizardSteps,
-                title: this.i18n('report.corrective.wizard.title'),
+                title: this.props.i18n('report.corrective.wizard.title'),
                 statement: statement,
                 onFinish: onFinish
             }

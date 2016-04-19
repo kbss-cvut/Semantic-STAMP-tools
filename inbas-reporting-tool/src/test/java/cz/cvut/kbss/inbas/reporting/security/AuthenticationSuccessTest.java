@@ -83,8 +83,10 @@ public class AuthenticationSuccessTest extends BaseServiceTestRunner {
 
     private MockHttpServletRequest simulateRequestOnPortal() {
         final MockHttpServletRequest req = request();
+        // This is just so that there are multiple cookies in the request (more realistic)
+        final Cookie c2 = new Cookie("GUEST_LANGUAGE_ID", "en_US");
         final Cookie c = new Cookie(Constants.COMPANY_ID_COOKIE, "UNSC");
-        req.setCookies(c);
+        req.setCookies(c2, c);
         return req;
     }
 

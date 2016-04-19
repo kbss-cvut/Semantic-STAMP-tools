@@ -24,6 +24,7 @@ var Description = React.createClass({
         if (this.state.description.trim().length !== 0) {
             this.props.enableNext();
         }
+        this.refs.description.focus();
     },
 
     onChange: function (e) {
@@ -40,7 +41,7 @@ var Description = React.createClass({
     render: function () {
         return (
             <div>
-                <Input type='textarea' rows='8' label={this.i18n('description') + '*'}
+                <Input type='textarea' rows='8' label={this.i18n('description') + '*'} ref='description'
                        placeholder={this.i18n('report.corrective.description-placeholder')}
                        value={this.state.description} onChange={this.onChange}
                        title={this.i18n('report.corrective.description-tooltip')}/>

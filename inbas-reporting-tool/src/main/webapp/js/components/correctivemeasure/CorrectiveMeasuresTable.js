@@ -1,25 +1,42 @@
 'use strict';
 
 import React from "react";
-import {Table} from "react-bootstrap";
+import {Button, Table} from "react-bootstrap";
 import injectIntl from "../../utils/injectIntl";
 import I18nWrapper from "../../i18n/I18nWrapper";
 
-var Row = (props) => {
-    return <tr>
-        <td key='cell_description' style={{whiteSpace: 'pre-wrap'}}>{props.data}</td>
-        <td key='cell_actions' style={{verticalAlign: 'middle'}} className='actions'>
-            <Button onClick={this.onEdit} title={props.i18n('report.table-edit-tooltip')}
-                    bsSize='small' bsStyle='primary'>
-                {props.i18n('table-edit')}
-            </Button>
-            <Button onClick={this.onRemove} title={props.i18n('report.table-delete-tooltip')}
-                    bsSize='small' bsStyle='warning'>
-                {props.i18n('delete')}
-            </Button>
-        </td>
-    </tr>
-};
+class Row extends React.Component {
+    static propTypes = {
+        data: React.PropTypes.string.isRequired,
+        statementIndex: React.PropTypes.number.isRequired,
+        onEdit: React.PropTypes.func.isRequired,
+        onRemove: React.PropTypes.func.isRequired
+    }
+
+    onEdit = () => {
+        this.props.onEdit(this.props.statementIndex);
+    }
+
+    onRemove = () => {
+        this.props.onRemove(this.props.statementIndex);
+    }
+
+    render() {
+        return <tr>
+            <td key='cell_description' style={{whiteSpace: 'pre-wrap'}}>{this.props.data}</td>
+            <td key='cell_actions' style={{verticalAlign: 'middle'}} className='actions'>
+                <Button onClick={this.onEdit} title={this.props.i18n('report.table-edit-tooltip')}
+                        bsSize='small' bsStyle='primary'>
+                    {this.props.i18n('table-edit')}
+                </Button>
+                <Button onClick={this.onRemove} title={this.props.i18n('report.table-delete-tooltip')}
+                        bsSize='small' bsStyle='warning'>
+                    {this.props.i18n('delete')}
+                </Button>
+            </td>
+        </tr>;
+    }
+}
 
 Row = injectIntl(I18nWrapper(Row));
 
