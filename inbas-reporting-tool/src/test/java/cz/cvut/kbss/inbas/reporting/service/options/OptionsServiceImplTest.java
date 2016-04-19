@@ -95,7 +95,7 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         final Set<String> expected = new HashSet<>();
         expected.add("eventType");
         expected.add("occurrenceClass");
-        expected.add("occurrenceType");
+        expected.add("occurrenceCategory");
         final Field optionCategoriesField = OptionsServiceImpl.class.getDeclaredField("optionsCategories");
         optionCategoriesField.setAccessible(true);
         final Map<String, String> optionCategories = (Map<String, String>) optionCategoriesField.get(optionsService);

@@ -1,12 +1,13 @@
 'use strict';
 
 var Reflux = require('reflux');
+var jsonld = require('jsonld');
 
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
+var Logger = require('../utils/Logger');
 
-var lvpOptions = [];
-var occurrenceSeverityOptions = [];
+var occurrenceClasses = [];
 
 var OptionsStore = Reflux.createStore({
     init: function () {
@@ -14,42 +15,32 @@ var OptionsStore = Reflux.createStore({
     },
 
     onLoadOptions: function () {
-        this._loadLvpOptions();
-        this._loadOccurrenceSeverityOptions();
+        this._loadOccurrenceClassOptions();
     },
 
-    _loadLvpOptions: function () {
-        if (lvpOptions.length !== 0) {
-            this.trigger('lvp', lvpOptions);
+    _loadOccurrenceClassOptions: function () {
+        if (occurrenceClasses.length !== 0) {
+            this.trigger('occurrenceClass', occurrenceClasses);
             return;
         }
-        Ajax.get('rest/options?type=lvp').end(function (data) {
-            lvpOptions = data;
-            this.trigger('lvp', lvpOptions);
+        Ajax.get('rest/options?type=occurrenceClass').end(function (data) {
+            if (data.length > 0) {
+                jsonld.frame(data, {}, null, function (err, framed) {
+                    occurrenceClasses = framed['@graph'];
+                    this.trigger('occurrenceClass', occurrenceClasses);
+                }.bind(this));
+            } else {
+                Logger.warn('No data received when loading occurrence classes.');
+                this.trigger('occurrenceClass', occurrenceClasses);
+            }
+
         }.bind(this), function () {
-            this.trigger('lvp', lvpOptions);
+            this.trigger('occurrenceClass', occurrenceClasses);
         }.bind(this));
     },
 
-    _loadOccurrenceSeverityOptions: function () {
-        if (occurrenceSeverityOptions.length !== 0) {
-            this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
-            return;
-        }
-        Ajax.get('rest/options?type=occurrenceSeverity').end(function (data) {
-            occurrenceSeverityOptions = data;
-            this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
-        }.bind(this), function () {
-            this.trigger('occurrenceSeverity', occurrenceSeverityOptions);
-        }.bind(this));
-    },
-
-    getLowVisibilityProcedureOptions: function () {
-        return lvpOptions;
-    },
-
-    getOccurrenceSeverityOptions: function () {
-        return occurrenceSeverityOptions;
+    getOccurrenceClasses: function () {
+        return occurrenceClasses;
     }
 });
 

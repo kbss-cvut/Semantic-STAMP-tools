@@ -26,33 +26,41 @@ var OccurrenceClassification = React.createClass({
     },
 
     getInitialState: function () {
-        var options = TypeaheadStore.getOccurrenceCategories();
         return {
-            severities: OptionsStore.getOccurrenceSeverityOptions(),
-            occurrenceCategories: options.length !== 0 ? this._transformOccurrenceCategories(options) : options
+            occurrenceClasses: OptionsStore.getOccurrenceClasses(),
+            occurrenceCategories: TypeaheadStore.getOccurrenceCategories()
         };
     },
 
     componentDidMount: function () {
-        this.listenTo(OptionsStore, this.onSeveritiesLoaded);
+        this.listenTo(OptionsStore, this.onOccurrenceClassesLoaded);
         this.listenTo(TypeaheadStore, this.onOccurrenceCategoriesLoaded)
     },
 
-    onSeveritiesLoaded: function (type, data) {
-        if (type !== 'occurrenceSeverity') {
+    onOccurrenceClassesLoaded: function (type, data) {
+        if (type !== 'occurrenceClass') {
             return;
         }
-        this.setState({severities: data});
+        this.setState({occurrenceClasses: data});
+    },
+
+    _transformOccurrenceClasses: function () {
+        return this.state.occurrenceClasses.map((item) => {
+            return {
+                value: item['@id'],
+                label: item[Vocabulary.RDFS_LABEL],
+                title: item[Vocabulary.RDFS_COMMENT]
+            };
+        });
     },
 
     onOccurrenceCategoriesLoaded: function () {
         var options = TypeaheadStore.getOccurrenceCategories();
-        options = this._transformOccurrenceCategories(options);
         this.setState({occurrenceCategories: options});
     },
 
-    _transformOccurrenceCategories: function (options) {
-        return options.map(function (item) {
+    _transformOccurrenceCategories: function () {
+        return this.state.occurrenceCategories.map(function (item) {
             return {
                 id: item['@id'],
                 name: item[Vocabulary.RDFS_LABEL],
@@ -74,15 +82,6 @@ var OccurrenceClassification = React.createClass({
         this.refs.occurrenceCategory.showOptions();
     },
 
-    _prepareOptions: function () {
-        var options = this.state.severities,
-            toRender = [];
-        for (var i = 0, len = options.length; i < len; i++) {
-            toRender.push({label: Utils.constantToString(options[i], true), value: options[i]});
-        }
-        return toRender;
-    },
-
     render: function () {
         var classes = {
                 input: 'form-control'
@@ -93,7 +92,7 @@ var OccurrenceClassification = React.createClass({
                 <div className='col-xs-4'>
                     <Select label={this.i18n('occurrence.class') + '*'} name='severityAssessment'
                             title={this.i18n('occurrence.class-tooltip')}
-                            value={report.severityAssessment} options={this._prepareOptions()}
+                            value={report.severityAssessment} options={this._transformOccurrenceClasses()}
                             onChange={this.onChange}/>
                 </div>
                 <div className='col-xs-4'>
@@ -105,7 +104,7 @@ var OccurrenceClassification = React.createClass({
                                placeholder={this.i18n('report.occurrence.category.label')}
                                onOptionSelected={this.onCategorySelect} filterOption='name'
                                value={report.occurrenceCategory ? report.occurrenceCategory.name : ''}
-                               displayOption='name' options={this.state.occurrenceCategories}
+                               displayOption='name' options={this._transformOccurrenceCategories()}
                                customClasses={classes} customListComponent={TypeaheadResultList}/>
                 </div>
             </div>
