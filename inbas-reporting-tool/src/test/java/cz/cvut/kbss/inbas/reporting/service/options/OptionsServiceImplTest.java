@@ -18,7 +18,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -55,18 +59,27 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
 
     @Test
     public void getEventTypesLoadsEventsTypesFromRemoteLocation() throws Exception {
-        mockServer.expect(requestTo(expectedUrl())).andExpect(method(HttpMethod.GET))
+        testOptionsLoadingFromRemote("eventType");
+    }
+
+    private void testOptionsLoadingFromRemote(String category) throws Exception {
+        mockServer.expect(requestTo(expectedUrl("query/" + category + ".sparql"))).andExpect(method(HttpMethod.GET))
                   .andRespond(withSuccess(DATA,
                           MediaType.APPLICATION_JSON));
-        final Object res = optionsService.getOptions("eventType");
+        final Object res = optionsService.getOptions(category);
         assertTrue(res instanceof RawJson);
         assertEquals(DATA, ((RawJson) res).getValue());
     }
 
-    private String expectedUrl() throws Exception {
+    private String expectedUrl(String fileName) throws Exception {
         final String sparql = cz.cvut.kbss.inbas.reporting.environment.util.Environment
-                .loadData("query/eventType.sparql", String.class);
+                .loadData(fileName, String.class);
         return URL + "?query=" + URLEncoder.encode(sparql, Constants.UTF_8_ENCODING);
+    }
+
+    @Test
+    public void getOccurrenceClassesLoadsClassesFromRemoteRepository() throws Exception {
+        testOptionsLoadingFromRemote("occurrenceClass");
     }
 
     @Test
@@ -75,5 +88,17 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Unsupported option type " + unknownOptionType);
         optionsService.getOptions(unknownOptionType);
+    }
+
+    @Test
+    public void optionsServiceDiscoversQueryFilesOnStartup() throws Exception {
+        final Set<String> expected = new HashSet<>();
+        expected.add("eventType");
+        expected.add("occurrenceClass");
+        expected.add("occurrenceType");
+        final Field optionCategoriesField = OptionsServiceImpl.class.getDeclaredField("optionsCategories");
+        optionCategoriesField.setAccessible(true);
+        final Map<String, String> optionCategories = (Map<String, String>) optionCategoriesField.get(optionsService);
+        expected.forEach(key -> assertTrue(optionCategories.containsKey(key)));
     }
 }

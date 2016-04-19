@@ -33,15 +33,15 @@ class CorrectiveMeasures extends React.Component {
                 onFinish: onFinish
             }
         });
-    }
+    };
 
     closeWizard = () => {
         this.setState({isWizardOpen: false});
-    }
+    };
 
     onAdd = () => {
         this.openWizard({}, this.addCorrectiveMeasure);
-    }
+    };
 
     addCorrectiveMeasure = (data, closeCallback) => {
         var measure = data.statement;
@@ -49,7 +49,7 @@ class CorrectiveMeasures extends React.Component {
         measures.push(measure);
         this.props.onChange({correctiveMeasures: measures});
         closeCallback();
-    }
+    };
 
     updateCorrectiveMeasure = (data, closeCallback) => {
         var measure = data.statement,
@@ -59,19 +59,19 @@ class CorrectiveMeasures extends React.Component {
         delete measure.index;
         this.props.onChange({correctiveMeasures: measures});
         closeCallback();
-    }
+    };
 
     onRemove = (index) => {
         var measures = this.props.report.correctiveMeasures;
         measures.splice(index, 1);
         this.props.onChange({correctiveMeasures: measures});
-    }
+    };
 
     onEdit = (index) => {
         var measure = assign({}, this.props.report.correctiveMeasures[index]);
         measure.index = index;
         this.openWizard(measure, this.updateCorrectiveMeasure);
-    }
+    };
 
     render() {
         return (

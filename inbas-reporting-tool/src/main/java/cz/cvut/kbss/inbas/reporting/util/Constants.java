@@ -54,6 +54,11 @@ public final class Constants {
     // Query files
 
     /**
+     * Folder containing query files for the application
+     */
+    public static final String QUERY_FILES_DIRECTORY = "query";
+
+    /**
      * File with a query for getting event types.
      */
     public static final String EVENT_TYPE_QUERY_FILE = "query/eventType.sparql";
@@ -62,6 +67,11 @@ public final class Constants {
      * File with a query for getting occurrence types (categories).
      */
     public static final String OCCURRENCE_CATEGORY_QUERY_FILE = "query/occurrenceType.sparql";
+
+    /**
+     * File with a query for getting occurrence classes (severity levels).
+     */
+    public static final String OCCURRENCE_CLASS_QUERY_FILE = "query/occurrenceClass.sparql";
 
     /**
      * File with a query for getting report statistics.

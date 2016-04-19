@@ -11,15 +11,15 @@ class Row extends React.Component {
         statementIndex: React.PropTypes.number.isRequired,
         onEdit: React.PropTypes.func.isRequired,
         onRemove: React.PropTypes.func.isRequired
-    }
+    };
 
     onEdit = () => {
         this.props.onEdit(this.props.statementIndex);
-    }
+    };
 
     onRemove = () => {
         this.props.onRemove(this.props.statementIndex);
-    }
+    };
 
     render() {
         return <tr>

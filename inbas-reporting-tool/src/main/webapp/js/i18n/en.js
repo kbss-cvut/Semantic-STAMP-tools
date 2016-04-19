@@ -129,14 +129,15 @@ module.exports = {
         'report.corrective.wizard.step-title': 'Corrective Measure Assessment',
         'report.eventtype.table-type': 'Event type',
         'report.eventtype.add-tooltip': 'Add an event type assessment',
+        
         'report.occurrence.category.label': 'Occurrence category',
+        'occurrencereport.panel-title': 'Occurrence report',
 
         'preliminary.type': 'Preliminary',
         'preliminary.table-investigate': 'Investigate',
         'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
         'preliminary.detail.panel-title': 'Preliminary occurrence report',
         'investigation.type': 'Investigation',
-        'investigation.detail.panel-title': 'Investigation report',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',

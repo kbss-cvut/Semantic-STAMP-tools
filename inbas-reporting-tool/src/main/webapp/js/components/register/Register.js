@@ -37,7 +37,7 @@ class Register extends React.Component {
         var change = {};
         change[e.target.name] = e.target.value;
         this.setState(change);
-    }
+    };
 
     onPasswordChange = (e) => {
         this.state[e.target.name] = e.target.value;
@@ -46,22 +46,22 @@ class Register extends React.Component {
         } else {
             this.setState({passwordMatch: true});
         }
-    }
+    };
 
     onKeyDown = (e) => {
         if (e.key === 'Enter') {
             this.register();
         }
-    }
+    };
 
     dismissAlert = () => {
         this.setState({alertVisible: false});
-    }
+    };
 
     isValid = () => {
         var state = this.state;
         return (state.firstName !== '' && state.lastName !== '' && state.username !== '' && state.password !== '' && state.passwordMatch);
-    }
+    };
 
     register = () => {
         if (!this.isValid()) {
@@ -86,7 +86,7 @@ class Register extends React.Component {
             }
         }.bind(this));
         this.setState({mask: true});
-    }
+    };
 
     /**
      * After successful registration, perform a synthetic login so that the user receives his session and can start
@@ -106,11 +106,11 @@ class Register extends React.Component {
                 Actions.loadUser();
                 Routing.transitionToHome();
             }.bind(this));
-    }
+    };
 
     cancel = () => {
         Routing.transitionTo(Routes.login);
-    }
+    };
 
     render() {
         var panelCls = this.state.alertVisible ? 'register-panel expanded' : 'register-panel';

@@ -131,14 +131,15 @@ module.exports = {
         'report.corrective.wizard.step-title': 'Popis nápravného opatření',
         'report.eventtype.table-type': 'Typ události',
         'report.eventtype.add-tooltip': 'Přidat popis typu události',
+        
         'report.occurrence.category.label': 'Klasifikace události',
+        'occurrencereport.panel-title': 'Hlášení o události',
 
         'preliminary.type': 'Předběžné',
         'preliminary.table-investigate': 'Šetřit',
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
         'preliminary.detail.panel-title': 'Předběžné hlášení o události',
         'investigation.type': 'Šetření',
-        'investigation.detail.panel-title': 'Hlášení o šetření',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',
