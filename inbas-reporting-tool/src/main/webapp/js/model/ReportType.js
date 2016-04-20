@@ -3,6 +3,10 @@
 var Constants = require('../constants/Constants');
 var I18nStore = require('../stores/I18nStore');
 
+var REPORT_TYPES = {
+    'http://onto.fel.cvut.cz/ontologies/documentation/occurrence_report': 'Occurrence report'
+};
+
 var ReportType = {
 
     getDetailController: function (report) {
@@ -10,24 +14,19 @@ var ReportType = {
         return require('../components/report/occurrence/OccurrenceReportController');
     },
 
-    _isPreliminary: function (report) {
-        return !report.phase || report.phase === Constants.PRELIMINARY_REPORT_PHASE;
-    },
-
     getIconSrc: function (report) {
-        if (this._isPreliminary(report)) {
-            return 'resources/images/icons/preliminary.png';
-        } else {
-            return 'resources/images/icons/investigation.png';
-        }
+        return 'resources/images/icons/investigation.png';
     },
 
     asString: function (report) {
-        if (this._isPreliminary(report)) {
-            return I18nStore.i18n('preliminary.type');
-        } else {
-            return I18nStore.i18n('investigation.type');
+        if (report.types) {
+            for (var i = 0, len = report.types.length; i < len; i++) {
+                if (REPORT_TYPES[report.types[i]]) {
+                    return REPORT_TYPES[report.types[i]];
+                }
+            }
         }
+        return '';
     }
 };
 

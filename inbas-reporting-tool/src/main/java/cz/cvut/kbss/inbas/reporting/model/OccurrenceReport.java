@@ -244,9 +244,8 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         res.setLastModifiedBy(lastModifiedBy);
         res.setLastModified(lastModified);
         res.setRevision(revision);
-        if (types != null) {
-            res.setTypes(new HashSet<>(types));
-        }
+        res.setTypes(types != null ? new HashSet<>(types) : new HashSet<>());
+        res.getTypes().add(Vocabulary.OccurrenceReport);
         assert occurrence != null;
         res.setIdentification(occurrence.getName());
         res.setDate(occurrence.getStartTime());

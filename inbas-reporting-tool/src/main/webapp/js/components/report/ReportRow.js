@@ -44,18 +44,19 @@ var ReportRow = React.createClass({
 
     render: function () {
         var report = this.props.report,
-            date = new Date(report.occurrence.startTime),
-            formattedDate = Utils.formatDate(date),
+            formattedDate = '',
         // Have to set style directly, class style is overridden by the bootstrap styling
             verticalAlign = {verticalAlign: 'middle'};
+        if (report.date) {
+            formattedDate = Utils.formatDate(new Date(report.date));
+        }
         return (
             <tr onDoubleClick={this.onDoubleClick}>
                 <td style={verticalAlign}><a href='javascript:void(0);' onClick={this.onEditClick}
-                                             title={this.i18n('reports.open-tooltip')}>{report.occurrence.name}</a>
+                                             title={this.i18n('reports.open-tooltip')}>{report.identification}</a>
                 </td>
                 <td style={verticalAlign} className='content-center'>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.summary}/></td>
-                <td style={verticalAlign}>{report.occurrence.eventType}</td>
                 <td style={verticalAlign} className='content-center'><Label>{ReportType.asString(report)}</Label></td>
                 <td style={verticalAlign} className='actions'>
                     <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.edit-tooltip')}

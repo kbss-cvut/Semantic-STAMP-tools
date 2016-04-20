@@ -65,8 +65,10 @@ var RecentlyEditedReports = React.createClass({
             return (<Table striped bordered condensed hover>
                 <thead>
                 <tr>
-                    <th className='col-xs-5'>{this.i18n('dashboard.recent-table-headline')}</th>
-                    <th className='col-xs-3' className='content-center'>{this.i18n('dashboard.recent-table-date')}</th>
+                    <th className='col-xs-5'>{this.i18n('headline')}</th>
+                    <th className='col-xs-3' className='content-center' title={this.i18n('reports.table-date.tooltip')}>
+                        {this.i18n('reports.table-date')}
+                    </th>
                     <th className='col-xs-3'
                         className='content-center'>{this.i18n('dashboard.recent-table-last-edited')}</th>
                     <th className='col-xs-1' className='content-center'>{this.i18n('reports.table-type')}</th>
@@ -102,17 +104,17 @@ var ReportRow = injectIntl(React.createClass({
         var report = this.props.report,
             vAlign = {verticalAlign: 'middle'},
             type = ReportType.asString(report),
-            dateEdited = report.lastEdited ? report.lastEdited : report.created;
+            dateEdited = report.lastModified ? report.lastModified : report.dateCreated;
         return (
             <tr>
                 <td style={vAlign}>
                     <a href='javascript:void(0);' onClick={this.onOpenClick}
                        title={this.i18n('reports.open-tooltip')}><CollapsibleText
-                        text={report.occurrence.name}
+                        text={report.identification}
                         maxLength={20}/></a>
                 </td>
                 <td style={vAlign}
-                    className='content-center'>{Utils.formatDate(new Date(report.occurrence.startTime))}</td>
+                    className='content-center'>{report.date ? Utils.formatDate(new Date(report.date)) : ''}</td>
                 <td style={vAlign} className='content-center'>{Utils.formatDate(new Date(dateEdited))}</td>
                 <td style={vAlign} className='content-center'>
                     <img className='report-type-icon centered' src={ReportType.getIconSrc(report)} alt={type}

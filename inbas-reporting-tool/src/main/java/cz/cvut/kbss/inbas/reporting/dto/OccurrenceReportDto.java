@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
 import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 
@@ -150,9 +151,8 @@ public class OccurrenceReportDto implements LogicalDocument {
         res.setLastModifiedBy(lastModifiedBy);
         res.setLastModified(lastModified);
         res.setRevision(revision);
-        if (types != null) {
-            res.setTypes(new HashSet<>(types));
-        }
+        res.setTypes(types != null ? new HashSet<>(types) : new HashSet<>());
+        res.getTypes().add(Vocabulary.OccurrenceReport);
         assert occurrence != null;
         res.setIdentification(occurrence.getName());
         res.setDate(occurrence.getStartTime());

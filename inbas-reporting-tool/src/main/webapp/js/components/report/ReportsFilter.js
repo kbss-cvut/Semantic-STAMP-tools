@@ -50,29 +50,7 @@ var ReportsFilter = React.createClass({
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
                 <td>&nbsp;</td>
-                <td >
-                    <div style={{margin: '0 0 -15px 0'}}>
-                        <Input type='select' name='occurrence.eventType' value={this.state['occurrence.eventType']}
-                               title={this.i18n('reports.table-classification.tooltip')}
-                               onChange={this.onSelect}>
-                            {this.renderClassificationOptions()}
-                        </Input>
-                    </div>
-                </td>
-                <td >
-                    <div style={{margin: '0 0 -15px 0'}}>
-                        <Input type='select' name='phase' value={this.state['phase']}
-                               title={this.i18n('reports.filter.type.tooltip')}
-                               onChange={this.onSelect}>
-                            <option key='type-all'
-                                    value={Constants.FILTER_DEFAULT}>{this.i18n('reports.filter.type.all')}</option>
-                            <option key='type-preliminary'
-                                    value={Constants.PRELIMINARY_REPORT_PHASE}>{this.i18n('reports.filter.type.preliminary')}</option>
-                            <option key='type-investigation'
-                                    value={Constants.INVESTIGATION_REPORT_PHASE}>{this.i18n('investigation.type')}</option>
-                        </Input>
-                    </div>
-                </td>
+                <td>&nbsp;</td>
                 <td >
                     <Button bsStyle='primary' bsSize='small' className='reset-filters'
                             onClick={this.onResetFilters}>{this.i18n('reports.filter.reset')}</Button>

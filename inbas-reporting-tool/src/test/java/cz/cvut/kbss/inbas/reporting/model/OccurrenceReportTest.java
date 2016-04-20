@@ -76,17 +76,15 @@ public class OccurrenceReportTest {
         assertEquals(report.getRevision(), result.getRevision());
         assertEquals(report.getOccurrence().getName(), result.getIdentification());
         assertEquals(report.getOccurrence().getStartTime(), result.getDate());
-        assertEquals(report.getTypes(), result.getTypes());
+        assertTrue(result.getTypes().containsAll(report.getTypes()));
         assertEquals(report.getSeverityAssessment(), result.getSeverityAssessment());
         assertEquals(report.getSummary(), result.getSummary());
     }
 
     @Test
-    public void toReportDtoHandlesNullTypes() {
+    public void toReportDtoAddsOccurrenceReportToTypes() {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setTypes(null);
-
         final ReportDto dto = report.toReportDto();
-        assertTrue(dto instanceof OccurrenceReportDto);
+        assertTrue(dto.getTypes().contains(Vocabulary.OccurrenceReport));
     }
 }

@@ -58,9 +58,10 @@ var ReportsTable = React.createClass({
             <thead>
             <tr>
                 <th className='col-xs-2 content-center'>{this.i18n('headline')}</th>
-                <th className='col-xs-1 content-center'>{this.i18n('reports.table-date')}</th>
-                <th className='col-xs-4 content-center'>{this.i18n('narrative')}</th>
-                <th className='col-xs-2 content-center'>{this.i18n('reports.table-occurrence-category')}</th>
+                <th className='col-xs-1 content-center' title={this.i18n('reports.table-date.tooltip')}>
+                    {this.i18n('reports.table-date')}
+                </th>
+                <th className='col-xs-4 content-center'>{this.i18n('reports.table-moreinfo')}</th>
                 <th className='col-xs-1 content-center'>{this.i18n('reports.table-type')}</th>
                 <th className='col-xs-2 content-center'>{this.i18n('table-actions')}</th>
             </tr>
