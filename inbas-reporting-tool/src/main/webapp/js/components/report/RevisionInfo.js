@@ -49,8 +49,7 @@ var RevisionInfo = React.createClass({
                 options.push(<option key={'phase_trans_' + i} disabled>──────────────────────────</option>);
             }
             formattedDate = Utils.formatDate(new Date(revisions[i].created));
-            label = revisions[i].revision + ' (' + ReportType.asString(revisions[i]) + ')' + ' - ' +
-                this.i18n('revisions.created') + ': ' + formattedDate;
+            label = revisions[i].revision + ' - ' + this.i18n('revisions.created') + ': ' + formattedDate;
             options.push(<option key={'rev_' + revisions[i].revision} value={revisions[i].revision}
                                  title={this.i18n('revisions.show-tooltip')}>{label}</option>);
         }

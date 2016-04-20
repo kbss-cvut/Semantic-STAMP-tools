@@ -34,6 +34,7 @@ public class OccurrenceReportTest {
         assertEquals(original.getOccurrenceEnd(), copy.getOccurrenceEnd());
         assertEquals(original.getOccurrence(), copy.getOccurrence());
         assertEquals(original.getOccurrenceCategory(), copy.getOccurrenceCategory());
+        assertEquals(original.getSummary(), copy.getSummary());
     }
 
     @Test

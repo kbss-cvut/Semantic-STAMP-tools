@@ -67,14 +67,15 @@ public class Generator {
         report.setOccurrenceCategory(generateEventType());
         report.setOccurrenceStart(new Date(System.currentTimeMillis() - 100000));
         report.setOccurrenceEnd(new Date());
+        report.setBarrierEffectiveness(BarrierEffectiveness.EFFECTIVE);
+        report.setAccidentOutcome(AccidentOutcome.NEGLIGIBLE);
+        report.setArmsIndex((short) 5);
+        report.setSummary("Some random summary " + randomInt() + ".");
         if (setAttributes) {
             report.setAuthor(getPerson());
             report.setDateCreated(new Date());
             report.setFileNumber((long) randomInt(Integer.MAX_VALUE));
             report.setRevision(1);
-            report.setBarrierEffectiveness(BarrierEffectiveness.EFFECTIVE);
-            report.setAccidentOutcome(AccidentOutcome.NEGLIGIBLE);
-            report.setArmsIndex((short) 5);
         }
         return report;
     }

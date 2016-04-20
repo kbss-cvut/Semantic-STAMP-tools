@@ -99,6 +99,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.occurrenceEnd = other.occurrenceEnd;
         this.severityAssessment = other.severityAssessment;
         this.occurrenceCategory = other.occurrenceCategory;
+        this.summary = other.summary;
         if (other.correctiveMeasures != null) {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
                                                               .collect(Collectors.toSet());

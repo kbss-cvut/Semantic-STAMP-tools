@@ -18,6 +18,14 @@ var Utils = require('../../../utils/Utils');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var Vocabulary = require('../../../constants/Vocabulary');
 
+function mapOccurrenceCategory(cat) {
+    return {
+        id: cat['@id'],
+        name: cat[Vocabulary.RDFS_LABEL],
+        description: cat[Vocabulary.RDFS_COMMENT]
+    };
+}
+
 var OccurrenceClassification = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
 
@@ -57,16 +65,14 @@ var OccurrenceClassification = React.createClass({
     onOccurrenceCategoriesLoaded: function () {
         var options = TypeaheadStore.getOccurrenceCategories();
         this.setState({occurrenceCategories: options});
+        var selected = this._resolveSelectedCategory();
+        if (selected) {
+            this.refs.occurrenceCategory.selectOption(mapOccurrenceCategory(selected));
+        }
     },
 
     _transformOccurrenceCategories: function () {
-        return this.state.occurrenceCategories.map(function (item) {
-            return {
-                id: item['@id'],
-                name: item[Vocabulary.RDFS_LABEL],
-                description: item[Vocabulary.RDFS_COMMENT]
-            };
-        });
+        return this.state.occurrenceCategories.map(mapOccurrenceCategory);
     },
 
     onChange: function (e) {
@@ -104,23 +110,28 @@ var OccurrenceClassification = React.createClass({
                                ref='occurrenceCategory' formInputOption='id' optionsButton={true}
                                placeholder={this.i18n('report.occurrence.category.label')}
                                onOptionSelected={this.onCategorySelect} filterOption='name'
-                               value={this._resolveValue(categories)}
+                               value={this._resolveCategoryValue()}
                                displayOption='name' options={categories}
                                customClasses={classes} customListComponent={TypeaheadResultList}/>
                 </div>
             </div>
-        )
+        );
     },
 
-    _resolveValue: function (categories) {
-        var catId = this.props.report.occurrenceCategory;
+    _resolveCategoryValue: function () {
+        var cat = this._resolveSelectedCategory();
+        return cat ? cat[Vocabulary.RDFS_LABEL] : '';
+    },
+
+    _resolveSelectedCategory: function () {
+        var catId = this.props.report.occurrenceCategory,
+            categories = this.state.occurrenceCategories;
         if (!catId || categories.length === 0) {
-            return '';
+            return null;
         }
-        var cat = categories.find((item, ind, arr) => {
-            return item.id === catId;
+        return categories.find((item) => {
+            return item['@id'] === catId;
         });
-        return cat.name;
     }
 });
 
