@@ -23,7 +23,7 @@ public class Event implements FactorGraphItem, Serializable {
     private Set<Event> children;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
-    private URI type;
+    private URI eventType;
 
     @Types
     private Set<String> types;
@@ -71,8 +71,8 @@ public class Event implements FactorGraphItem, Serializable {
         children.add(child);
     }
 
-    public URI getType() {
-        return type;
+    public URI getEventType() {
+        return eventType;
     }
 
     /**
@@ -80,16 +80,16 @@ public class Event implements FactorGraphItem, Serializable {
      * <p>
      * Also adds the event type's URI to this instance's types.
      *
-     * @param type The type to set
+     * @param eventType The type to set
      * @see Vocabulary#p_hasEventType
      */
-    public void setType(URI type) {
-        this.type = type;
-        if (type != null) {
+    public void setEventType(URI eventType) {
+        this.eventType = eventType;
+        if (eventType != null) {
             if (types == null) {
                 this.types = new HashSet<>(4);
             }
-            types.add(type.toString());
+            types.add(eventType.toString());
         }
     }
 

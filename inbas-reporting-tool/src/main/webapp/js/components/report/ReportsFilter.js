@@ -22,7 +22,7 @@ var ReportsFilter = React.createClass({
     getInitialState: function () {
         return {
             'phase': Constants.FILTER_DEFAULT,
-            'occurrenceCategory.id': Constants.FILTER_DEFAULT
+            'occurrence.eventType': Constants.FILTER_DEFAULT
         }
     },
 
@@ -52,7 +52,7 @@ var ReportsFilter = React.createClass({
                 <td>&nbsp;</td>
                 <td >
                     <div style={{margin: '0 0 -15px 0'}}>
-                        <Input type='select' name='occurrenceCategory.id' value={this.state['occurrenceCategory.id']}
+                        <Input type='select' name='occurrence.eventType' value={this.state['occurrence.eventType']}
                                title={this.i18n('reports.table-classification.tooltip')}
                                onChange={this.onSelect}>
                             {this.renderClassificationOptions()}

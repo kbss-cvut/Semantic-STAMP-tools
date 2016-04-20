@@ -1,9 +1,9 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
-import cz.cvut.kbss.inbas.reporting.model.Report;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public interface ReportBusinessService {
      *
      * @return All reports in the system
      */
-    List<Report> findAll();
+    List<ReportDto> findAll();
 
     /**
      * Creates new report.

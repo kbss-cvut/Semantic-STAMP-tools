@@ -89,7 +89,6 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
             final OccurrenceReport r = Generator.generateOccurrenceReport(true);
             r.setOccurrence(occurrence);
             r.setAuthor(author);
-            r.setOccurrenceStart(new Date(System.currentTimeMillis() + i * 1000));
             reports.add(r);
         }
         occurrenceReportDao.persist(reports);
@@ -118,7 +117,8 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final Occurrence occurrence = Generator.generateOccurrence();
         occurrenceDao.persist(occurrence);
         final List<OccurrenceReport> reports = persistReportsForOccurrence(occurrence);
-        Collections.sort(reports, (a, b) -> b.getOccurrenceStart().compareTo(a.getOccurrenceStart()));  // Descending
+        Collections.sort(reports,
+                (a, b) -> b.getOccurrence().getStartTime().compareTo(a.getOccurrence().getStartTime()));  // Descending
 
         final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
         assertTrue(Environment.areEqual(reports, result));
@@ -206,13 +206,13 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     public void updateWorksForReportsWithoutCorrectiveMeasures() {
         final OccurrenceReport report = persistReport();
 
-        report.setOccurrenceStart(new Date());
-        report.setOccurrenceEnd(new Date(System.currentTimeMillis() + 100000));
+        report.setSummary("New updated summary.");
+        report.setArmsIndex((short) 123);
         occurrenceReportDao.update(report);
 
         final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
-        assertEquals(report.getOccurrenceStart(), result.getOccurrenceStart());
-        assertEquals(report.getOccurrenceEnd(), result.getOccurrenceEnd());
+        assertEquals(report.getSummary(), result.getSummary());
+        assertEquals(report.getArmsIndex(), result.getArmsIndex());
     }
 
     @Test

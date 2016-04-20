@@ -107,7 +107,10 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
 
     private void setCompanyIdInCurrentRequest(String companyId) {
         final MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setCookies(new Cookie(Constants.COMPANY_ID_COOKIE, companyId));
+        // This is just so that the company Id cookie isn't the only one in the request. It is more realistic
+        final Cookie anotherCookie = new Cookie("GUEST_LANGUAGE_ID", "en_US");
+        final Cookie companyCookie = new Cookie(Constants.COMPANY_ID_COOKIE, companyId);
+        request.setCookies(anotherCookie, companyCookie);
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
 

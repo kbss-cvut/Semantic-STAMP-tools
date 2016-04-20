@@ -22,7 +22,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.URI;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -115,14 +118,14 @@ public class DtoMapperTest {
         assertNotNull(dto.getBasedOn());
         final EventDto eventDto = dto.getBasedOn();
         assertEquals(req.getBasedOnEvent().getUri(), eventDto.getUri());
-        assertEquals(req.getBasedOnEvent().getType(), eventDto.getType());
+        assertEquals(req.getBasedOnEvent().getEventType(), eventDto.getEventType());
     }
 
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequestBasedOnEvent() {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
         final Event event = new Event();
         event.setUri(URI.create(Vocabulary.Event + "#instance"));
-        event.setType(Generator.generateEventType());
+        event.setEventType(Generator.generateEventType());
         req.setBasedOnEvent(event);
         return req;
     }
@@ -202,13 +205,13 @@ public class DtoMapperTest {
         assertNotNull(req.getBasedOnEvent());
         assertNull(req.getBasedOnOccurrence());
         assertEquals(dto.getBasedOn().getUri(), req.getBasedOnEvent().getUri());
-        assertEquals(dto.getBasedOn().getType(), req.getBasedOnEvent().getType());
+        assertEquals(dto.getBasedOn().getEventType(), req.getBasedOnEvent().getEventType());
     }
 
     private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDtoBasedOnEvent() {
         final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
         final EventDto eventDto = new EventDto();
-        eventDto.setType(Generator.generateEventType());
+        eventDto.setEventType(Generator.generateEventType());
         eventDto.setUri(URI.create(Vocabulary.Event + "#instance"));
         dto.setBasedOn(eventDto);
         return dto;
@@ -233,7 +236,7 @@ public class DtoMapperTest {
         occurrenceDto.setUri(URI.create(Vocabulary.Occurrence + "#instance"));
         occurrenceDto.setKey(IdentificationUtils.generateKey());
         occurrenceDto.setName("Some occurrence");
-        occurrenceDto.setType(Generator.generateEventType());
+        occurrenceDto.setEventType(Generator.generateEventType());
         dto.setBasedOn(occurrenceDto);
         return dto;
     }
@@ -262,17 +265,12 @@ public class DtoMapperTest {
         assertNotNull(doc);
         assertTrue(doc instanceof OccurrenceReport);
         final OccurrenceReport report = (OccurrenceReport) doc;
-        assertEquals(dto.getOccurrenceStart(), report.getOccurrenceStart());
-        assertEquals(dto.getOccurrenceEnd(), report.getOccurrenceEnd());
+
         assertEquals(dto.getCorrectiveMeasures().size(), report.getCorrectiveMeasures().size());
     }
 
     private OccurrenceReportDto generateOccurrenceReportDto() {
         final OccurrenceReportDto dto = new OccurrenceReportDto();
-        dto.setOccurrenceStart(new Date());
-        dto.setOccurrenceEnd(new Date());
-        final Occurrence o = Generator.generateOccurrence();
-        o.setName(o.getName());
         dto.setSummary("Occurrence report summary.");
         dto.setCorrectiveMeasures(new HashSet<>());
         dto.getCorrectiveMeasures().add(generateCorrectiveMeasureRequestDtoBasedOnEvent());

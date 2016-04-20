@@ -28,8 +28,9 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
         return em.createNativeQuery("SELECT ?x WHERE { " +
                 "?x a ?type ; " +
                 "?hasFileNumber ?fileNo ;" +
-                "?hasStartTime ?startTime ;" +
-                "?hasRevision ?revision . " +
+                "?hasRevision ?revision ;" +
+                "?hasOccurrence ?occurrence ." +
+                "?occurrence ?hasStartTime ?startTime ." +
                 "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
                 "{ ?y a ?type; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . } GROUP BY ?iFileNo }" +
                 "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
@@ -37,6 +38,7 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
                  .setParameter("type", typeUri)
                  .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
                  .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
+                 .setParameter("hasOccurrence", URI.create(Vocabulary.p_documents))
                  .setParameter("hasStartTime", URI.create(Vocabulary.p_startTime))
                  .getResultList();
     }

@@ -14,7 +14,7 @@ public class EventDto implements HasUri {
 
     private URI uri;
 
-    private URI type;
+    private URI eventType;
 
     private Set<String> types;
 
@@ -29,12 +29,12 @@ public class EventDto implements HasUri {
         this.uri = uri;
     }
 
-    public URI getType() {
-        return type;
+    public URI getEventType() {
+        return eventType;
     }
 
-    public void setType(URI type) {
-        this.type = type;
+    public void setEventType(URI eventType) {
+        this.eventType = eventType;
     }
 
     public Set<String> getTypes() {

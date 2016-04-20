@@ -6,6 +6,7 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,6 +24,18 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
     @ParticipationConstraints(nonEmpty = true)
     @OWLAnnotationProperty(iri = Vocabulary.p_name)
     private String name;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_startTime)
+    private Date startTime;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_endTime)
+    private Date endTime;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
+    private URI eventType;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
@@ -62,6 +75,30 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public URI getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(URI eventType) {
+        this.eventType = eventType;
     }
 
     public Set<Factor> getFactors() {

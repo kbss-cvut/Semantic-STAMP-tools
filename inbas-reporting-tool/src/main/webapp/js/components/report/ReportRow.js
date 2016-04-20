@@ -55,7 +55,7 @@ var ReportRow = React.createClass({
                 </td>
                 <td style={verticalAlign} className='content-center'>{formattedDate}</td>
                 <td style={verticalAlign}><CollapsibleText text={report.summary}/></td>
-                <td style={verticalAlign}>{report.occurrenceCategory.name}</td>
+                <td style={verticalAlign}>{report.occurrence.eventType}</td>
                 <td style={verticalAlign} className='content-center'><Label>{ReportType.asString(report)}</Label></td>
                 <td style={verticalAlign} className='actions'>
                     <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.edit-tooltip')}

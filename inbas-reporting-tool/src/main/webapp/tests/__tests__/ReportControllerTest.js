@@ -19,8 +19,10 @@ describe('ReportController', function () {
     xit('Uses report passed from router store if it is set', function () {
         var report = {
             initialReports: [{text: 'First Initial Report'}],
-            occurrenceStart: Date.now() - 10000,
-            occurrenceEnd: Date.now()
+            occurrence: {
+                startTime: Date.now() - 10000,
+                endTime: Date.now()
+            }
         };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue(report);
 
@@ -48,10 +50,10 @@ describe('ReportController', function () {
 
         expect(controller.state.loading).toBeFalsy();
         expect(report).toBeDefined();
-        expect(report.occurrenceStart).toBeDefined();
-        expect(report.occurrenceEnd).toBeDefined();
         expect(report.isNew).toBeTruthy();
         expect(report.occurrence).toBeDefined();
+        expect(report.occurrence.startTime).toBeDefined();
+        expect(report.occurrence.endTime).toBeDefined();
     });
 
     xit('Initializes new report with imported initial report', function () {

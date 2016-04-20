@@ -71,7 +71,8 @@ var OccurrenceReport = React.createClass({
             <div>
                 <Panel header={this.renderHeader()} bsStyle='primary'>
                     <form>
-                        <BasicOccurrenceInfo report={report} revisions={this.props.revisions} onAttributeChange={this.onAttributeChange}/>
+                        <BasicOccurrenceInfo report={report} revisions={this.props.revisions}
+                                             onChange={this.props.handlers.onChange}/>
 
                         <div>
                             <Factors ref='factors' report={report} onChange={this.onChanges}/>

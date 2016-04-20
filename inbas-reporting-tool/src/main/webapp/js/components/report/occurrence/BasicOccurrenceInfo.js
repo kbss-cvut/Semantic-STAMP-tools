@@ -19,7 +19,7 @@ var BasicOccurrenceInfo = React.createClass({
 
     propTypes: {
         report: React.PropTypes.object.isRequired,
-        onAttributeChange: React.PropTypes.func.isRequired
+        onChange: React.PropTypes.func.isRequired
     },
 
     getFullName: function (data) {
@@ -33,11 +33,9 @@ var BasicOccurrenceInfo = React.createClass({
         var report = this.props.report;
         return (
             <div>
-                <OccurrenceDetail report={this.props.report}
-                                  onAttributeChange={this.props.onAttributeChange}/>
+                <OccurrenceDetail report={this.props.report} onChange={this.props.onChange}/>
 
-                <OccurrenceClassification onChange={this.props.onAttributeChange}
-                                    report={report}/>
+                <OccurrenceClassification onChange={this.props.onChange} report={report}/>
 
                 <div className='row'>
                     {this.renderAuthor()}
@@ -46,7 +44,7 @@ var BasicOccurrenceInfo = React.createClass({
                     </div>
                 </div>
 
-                {this.renderLastEdited()}
+                {this._renderLastModified()}
             </div>
         );
     },
@@ -61,16 +59,16 @@ var BasicOccurrenceInfo = React.createClass({
             </div>);
     },
 
-    renderLastEdited: function () {
+    _renderLastModified: function () {
         var report = this.props.report;
-        if (report.isNew || !report.lastEdited) {
+        if (report.isNew || !report.lastModified) {
             return null;
         }
-        var formattedDate = Utils.formatDate(new Date(report.lastEdited));
+        var formattedDate = Utils.formatDate(new Date(report.lastModified));
         return (
             <div className='form-group notice-small'>
                 <FormattedMessage id='report.last-edited-msg'
-                                  values={{date: formattedDate, name: this.getFullName(report.lastEditedBy)}}/>
+                                  values={{date: formattedDate, name: this.getFullName(report.lastModifiedBy)}}/>
             </div>
         );
     }

@@ -34,18 +34,6 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     private Occurrence occurrence;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
-    private URI occurrenceCategory;
-
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_startTime)
-    private Date occurrenceStart;
-
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_endTime)
-    private Date occurrenceEnd;
-
-    @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER)
     private Person author;
 
@@ -94,11 +82,9 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this();
         Objects.requireNonNull(other);
         this.fileNumber = other.fileNumber;
+        // TODO Copy occurrence?
         this.occurrence = other.occurrence;
-        this.occurrenceStart = other.occurrenceStart;
-        this.occurrenceEnd = other.occurrenceEnd;
         this.severityAssessment = other.severityAssessment;
-        this.occurrenceCategory = other.occurrenceCategory;
         this.summary = other.summary;
         if (other.correctiveMeasures != null) {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
@@ -137,30 +123,6 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
 
     public void setOccurrence(Occurrence occurrence) {
         this.occurrence = occurrence;
-    }
-
-    public URI getOccurrenceCategory() {
-        return occurrenceCategory;
-    }
-
-    public void setOccurrenceCategory(URI occurrenceCategory) {
-        this.occurrenceCategory = occurrenceCategory;
-    }
-
-    public Date getOccurrenceStart() {
-        return occurrenceStart;
-    }
-
-    public void setOccurrenceStart(Date occurrenceStart) {
-        this.occurrenceStart = occurrenceStart;
-    }
-
-    public Date getOccurrenceEnd() {
-        return occurrenceEnd;
-    }
-
-    public void setOccurrenceEnd(Date occurrenceEnd) {
-        this.occurrenceEnd = occurrenceEnd;
     }
 
     public Person getAuthor() {

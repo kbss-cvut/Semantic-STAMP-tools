@@ -21,6 +21,9 @@ public class Generator {
     public static Occurrence generateOccurrence() {
         final Occurrence occurrence = new Occurrence();
         occurrence.setName(UUID.randomUUID().toString());
+        occurrence.setEventType(generateEventType());
+        occurrence.setStartTime(new Date(System.currentTimeMillis() - 100000));
+        occurrence.setEndTime(new Date());
         return occurrence;
     }
 
@@ -64,9 +67,6 @@ public class Generator {
     public static OccurrenceReport generateOccurrenceReport(boolean setAttributes) {
         final OccurrenceReport report = new OccurrenceReport();
         report.setOccurrence(generateOccurrence());
-        report.setOccurrenceCategory(generateEventType());
-        report.setOccurrenceStart(new Date(System.currentTimeMillis() - 100000));
-        report.setOccurrenceEnd(new Date());
         report.setBarrierEffectiveness(BarrierEffectiveness.EFFECTIVE);
         report.setAccidentOutcome(AccidentOutcome.NEGLIGIBLE);
         report.setArmsIndex((short) 5);
@@ -113,7 +113,7 @@ public class Generator {
                 case 0:
                     cmr.setResponsiblePersons(Collections.singleton(getPerson()));
                     final Event evt = new Event();
-                    evt.setType(generateEventType());
+                    evt.setEventType(generateEventType());
                     cmr.setBasedOnEvent(evt);
                     break;
                 case 1:

@@ -1,63 +1,37 @@
-package cz.cvut.kbss.inbas.reporting.model;
+package cz.cvut.kbss.inbas.reporting.dto.reportlist;
 
-import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
-@OWLClass(iri = Vocabulary.Report)
-public class Report implements LogicalDocument, Serializable {
+public class ReportDto implements LogicalDocument {
 
-    @Id(generated = true)
     private URI uri;
 
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_hasKey, readOnly = true)
     private String key;
 
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_fileNumber, readOnly = true)
     private Long fileNumber;
 
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER, readOnly = true)
     private Person author;
 
-    @OWLDataProperty(iri = Vocabulary.p_dateCreated, readOnly = true)
     private Date dateCreated;
 
-    @OWLDataProperty(iri = Vocabulary.p_lastModified, readOnly = true)
     private Date lastModified;
 
-    @OWLObjectProperty(iri = Vocabulary.p_lastModifiedBy, fetch = FetchType.EAGER, readOnly = true)
     private Person lastModifiedBy;
 
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_revision, readOnly = true)
     private Integer revision;
 
-    @Types(readOnly = true)
     private Set<String> types;
 
-    public Report() {
-    }
+    // Occurrence name, safety issue name, audited organization name
+    private String identification;
 
-    public Report(OccurrenceReport report) {
-        assert report != null;
-        this.uri = report.getUri();
-        this.key = report.getKey();
-        this.fileNumber = report.getFileNumber();
-        this.author = report.getAuthor();
-        this.dateCreated = report.getDateCreated();
-        this.lastModified = report.getLastModified();
-        this.lastModifiedBy = report.getLastModifiedBy();
-        this.revision = report.getRevision();
-        this.types = new HashSet<>();
-        types.add(Vocabulary.OccurrenceReport);
-    }
+    // Occurrence date, audit date, empty for safety issues
+    private Date date;
 
     @Override
     public URI getUri() {
@@ -140,14 +114,29 @@ public class Report implements LogicalDocument, Serializable {
         this.types = types;
     }
 
+    public String getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(String identification) {
+        this.identification = identification;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
-        return "Report{" +
+        return "ReportDto{" +
                 "uri=" + uri +
-                ", key='" + key + '\'' +
                 ", fileNumber=" + fileNumber +
-                ", revision=" + revision +
-                ", author=" + author +
+                ", identification='" + identification + '\'' +
+                ", dateCreated=" + dateCreated +
                 '}';
     }
 }

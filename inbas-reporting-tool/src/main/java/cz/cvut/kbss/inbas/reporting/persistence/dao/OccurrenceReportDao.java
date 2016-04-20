@@ -69,9 +69,9 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
             return em.createNativeQuery(
                     "SELECT ?x WHERE { ?x a ?type ;" +
                             "?hasRevision ?revision ;" +
-                            "?hasStartTime ?startTime ;" +
                             "?hasFileNumber ?fileNo ;" +
                             "?documents ?occurrence . " +
+                            "?occurrence ?hasStartTime ?startTime ." +
                             // Use only the max revision reports
                             "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
                             "{ ?y a ?type ; ?documents ?occurrence ; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . }" +

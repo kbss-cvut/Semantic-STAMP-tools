@@ -55,7 +55,7 @@ public class OccurrenceReportValidatorTest {
         thrown.expect(ValidationException.class);
         thrown.expectMessage("Occurrence start cannot be in the future.");
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setOccurrenceStart(new Date(System.currentTimeMillis() + 10000));
+        report.getOccurrence().setStartTime(new Date(System.currentTimeMillis() + 10000));
         validator.validateForPersist(report);
     }
 
@@ -64,7 +64,7 @@ public class OccurrenceReportValidatorTest {
         thrown.expect(ValidationException.class);
         thrown.expectMessage("Occurrence start cannot be after occurrence end.");
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setOccurrenceEnd(new Date(report.getOccurrenceStart().getTime() - 10000));
+        report.getOccurrence().setEndTime(new Date(report.getOccurrence().getStartTime().getTime() - 10000));
         validator.validateForPersist(report);
     }
 

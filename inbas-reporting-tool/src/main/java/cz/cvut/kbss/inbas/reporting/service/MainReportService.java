@@ -1,11 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.model.Report;
 import cz.cvut.kbss.inbas.reporting.model.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.ReportDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,9 @@ public class MainReportService implements ReportBusinessService {
     }
 
     @Override
-    public List<Report> findAll() {
-        return reportDao.findAll();
+    public List<ReportDto> findAll() {
+        // TODO
+        return null;
     }
 
     @Override

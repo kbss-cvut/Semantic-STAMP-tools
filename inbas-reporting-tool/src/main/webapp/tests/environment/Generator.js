@@ -151,17 +151,13 @@ var Generator = {
     generateOccurrenceReport: function () {
         return {
             key: this.getRandomInt().toString(),
-            occurrenceStart: Date.now() - 10000,
-            occurrenceEnd: Date.now(),
-            occurrenceCategory: {
-                id: 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110',
-                name: '2200110 - Incursions generally',
-                description: 'Blablabla'
-            },
             revision: 1,
             occurrence: {
                 key: this.getRandomInt().toString(),
-                name: 'TestOccurrence'
+                name: 'TestOccurrence',
+                startTime: Date.now() - 10000,
+                endTime: Date.now(),
+                eventType: 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110'
             }
         };
     },
@@ -178,7 +174,7 @@ var Generator = {
     },
 
     /**
-     * Generates a random number of evenly distributed preliminary and investigation reports.
+     * Generates a random number of reports.
      */
     generateReports: function () {
         var count = this.getRandomInt(100),
@@ -188,7 +184,7 @@ var Generator = {
         for (var i = 0; i < count; i++) {
             report = this.generateOccurrenceReport();
             report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
-            report.occurrenceCategory = categories[this.getRandomInt(categories.length)];
+            report.occurrence.eventType = categories[this.getRandomInt(categories.length)].id;
             reports.push(report);
         }
         return reports;

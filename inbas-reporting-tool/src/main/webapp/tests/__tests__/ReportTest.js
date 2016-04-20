@@ -19,8 +19,8 @@ describe('Report', function () {
 
     it('shows not renderable error when report cannot be rendered', function () {
         var report = Generator.generateOccurrenceReport();
-        report.occurrenceStart = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
-        report.occurrenceEnd = Date.now();
+        report.occurrence.startTime = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
+        report.occurrence.endTime = Date.now();
 
         var rendered = Environment.render(<Report loading={false} report={report}/>),
             notRenderableError = TestUtils.findRenderedComponentWithType(rendered, ReportNotRenderable.wrappedComponent);

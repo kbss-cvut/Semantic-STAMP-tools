@@ -30,7 +30,8 @@ var OccurrenceClassification = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
 
     propTypes: {
-        report: React.PropTypes.object.isRequired
+        report: React.PropTypes.object.isRequired,
+        onChange: React.PropTypes.func.isRequired
     },
 
     getInitialState: function () {
@@ -76,12 +77,15 @@ var OccurrenceClassification = React.createClass({
     },
 
     onChange: function (e) {
-        var value = e.target.value;
-        this.props.onChange(e.target.name, value);
+        var change = {};
+        change[e.target.name] = e.target.value;
+        this.props.onChange(change);
     },
 
     onCategorySelect: function (cat) {
-        this.props.onChange('occurrenceCategory', cat.id);
+        var occurrence = this.props.report.occurrence;
+        occurrence.eventType = cat.id;
+        this.props.onChange({'occurrence': occurrence});
     },
 
     _onShowCategories: function () {
@@ -124,7 +128,7 @@ var OccurrenceClassification = React.createClass({
     },
 
     _resolveSelectedCategory: function () {
-        var catId = this.props.report.occurrenceCategory,
+        var catId = this.props.report.occurrence.eventType,
             categories = this.state.occurrenceCategories;
         if (!catId || categories.length === 0) {
             return null;

@@ -12,12 +12,10 @@ var Treemap = rd3.Treemap;
 var PieChart = rd3.PieChart;
 var Input = require('../Input');
 
+var Ajax = require('../../utils/Ajax');
 var injectIntl = require('../../utils/injectIntl');
-
 var I18nMixin = require('../../i18n/I18nMixin');
 var Logger = require('../../utils/Logger');
-
-var request = require('superagent');
 
 var Statistics = React.createClass({
     mixins: [I18nMixin],
@@ -44,16 +42,14 @@ var Statistics = React.createClass({
                 width: width
             }
         );
-        var self = this;
 
-        request.get('rest/statistics/').set('Accept', 'application/json').end(function (err, resp) {
-            var data = JSON.parse(resp.text);
-
-            //Logger.log(resp.text);
-            if (self.isMounted()) {
+        Ajax.get('rest/statistics/').end(function (data) {
+            if (this.isMounted()) {
                 Logger.log("Mounted, fetching setting new state...");
 
-                var rows = [];
+                var rows = [],
+                    dimensions = [],
+                    calculations, activeDimensions;
                 for (var row in data.results.bindings) {
                     var record = data.results.bindings[row];
                     var newRecord = {};
@@ -66,17 +62,15 @@ var Statistics = React.createClass({
 
                 Logger.log(JSON.stringify(rows, null, 2));
 
-                var dimensions = [];
-                var calculations = [];
                 for (var v in data.head.vars) {
                     var vName = data.head.vars[v];
                     if (!vName.startsWith('count'))
                         dimensions.push({value: vName, title: vName.replace('_', ' ')});
                 }
 
-                var activeDimensions = [dimensions[0]];
+                activeDimensions = [dimensions[0]];
 
-                var calculations = [
+                calculations = [
                     {
                         title: 'count', value: 'count',
                         template: function (val, row) {
@@ -86,7 +80,7 @@ var Statistics = React.createClass({
                     }
                 ];
 
-                self.setState(
+                this.setState(
                     {
                         rows: rows,
                         activeDimensions: activeDimensions,
@@ -96,6 +90,8 @@ var Statistics = React.createClass({
                     }
                 );
             }
+        }.bind(this), function(err) {
+            Logger.error('Unable to fetch statistics. Server message: ' + err.message);
         });
     },
 

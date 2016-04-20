@@ -6,10 +6,10 @@
   "occurrence": {
     "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto",
     "uri": "http://krizik.felk.cvut.cz/node-1",
+    "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100100",
     "referenceId": 1,
     "name": "O1"
   },
-  "occurrenceCategory": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100100",
   "factorGraph": {
     "nodes": [
       1,
@@ -17,61 +17,61 @@
         "uri": "http://krizik.felk.cvut.cz/node-2",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 2,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100100"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100100"
       },
       {
         "uri": "http://krizik.felk.cvut.cz/node-3",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 3,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
       },
       {
         "uri": "http://krizik.felk.cvut.cz/node-4",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 4,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
       },
       {
         "uri": "http://krizik.felk.cvut.cz/node-5",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 5,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100105"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100105"
       },
       {
         "uri": "http://krizik.felk.cvut.cz/node-6",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 6,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100106"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100106"
       },
       {
         "uri": "http://krizik.felk.cvut.cz/node-7",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 7,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
       },
       {
         "uri": "http://krizik.felk.cvut.cz/node-8",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 8,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
       },
       {
         "uri": "http://krizik.felk.cvut.cz/node-9",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 9,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100101"
       },
       {
         "uri": "http://krizik.felk.cvut.cz/node-10",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 10,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100111"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100111"
       },
       {
         "uri": "http://krizik.felk.cvut.cz/node-11",
         "javaClass": "cz.cvut.kbss.inbas.reporting.dto.event.EventDto",
         "referenceId": 11,
-        "type": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100121"
+        "eventType": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-100121"
       }
     ],
     "edges": [

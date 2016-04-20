@@ -18,7 +18,7 @@ var Occurrence = React.createClass({
 
     propTypes: {
         report: React.PropTypes.object.isRequired,
-        onAttributeChange: React.PropTypes.func.isRequired
+        onChange: React.PropTypes.func.isRequired
     },
 
     getInitialState: function () {
@@ -30,20 +30,23 @@ var Occurrence = React.createClass({
     onChange: function (e) {
         var occurrence = assign({}, this.props.report.occurrence);
         occurrence[e.target.name] = e.target.value;
-        this.props.onAttributeChange('occurrence', occurrence);
+        this.props.onChange({'occurrence': occurrence});
     },
 
     onStartChange: function (value) {
-        this.props.onAttributeChange('occurrenceStart', Number(value));
+        var occurrence = assign({}, this.props.report.occurrence);
+        occurrence.startTime = Number(value);
         if (this.props.report.isNew && !this.state.startTimeChanged) {
-            var end = Number(value) + Constants.MINUTE;
-            this.onEndChange(end);
+            occurrence.endTime = Number(value) + Constants.MINUTE;
             this.setState({startTimeChanged: true});
         }
+        this.props.onChange({'occurrence': occurrence});
     },
 
     onEndChange: function (value) {
-        this.props.onAttributeChange('occurrenceEnd', Number(value));
+        var occurrence = assign({}, this.props.report.occurrence);
+        occurrence.endTime = Number(value);
+        this.props.onChange({'occurrence': occurrence});
     },
 
     render: function () {
@@ -61,13 +64,13 @@ var Occurrence = React.createClass({
                 <div className='row'>
                     <div className='picker-container form-group form-group-sm col-xs-4'>
                         <label className='control-label'>{this.i18n('occurrence.start-time')}</label>
-                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrenceStart.toString()}
+                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrence.startTime.toString()}
                                         onChange={this.onStartChange}
                                         inputProps={{title: this.i18n('occurrence.start-time-tooltip'), bsSize: 'small'}}/>
                     </div>
                     <div className='picker-container form-group form-group-sm col-xs-4'>
                         <label className='control-label'>{this.i18n('occurrence.end-time')}</label>
-                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrenceEnd.toString()}
+                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrence.startTime.toString()}
                                         onChange={this.onEndChange}
                                         inputProps={{title: this.i18n('occurrence.end-time-tooltip'), bsSize: 'small'}}/>
                     </div>

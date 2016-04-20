@@ -257,7 +257,7 @@ public class EventFactorsSerializationTest {
             assertTrue(childMap.containsKey(URI.create(NODE_URI_PREFIX + exp)));
             final Event e = childMap.get(URI.create(NODE_URI_PREFIX + exp));
             final EventDto dto = dtos.get(e.getUri());
-            assertEquals(dto.getType(), e.getType());
+            assertEquals(dto.getEventType(), e.getEventType());
             assertEquals(dto.getUri(), e.getUri());
         }
     }

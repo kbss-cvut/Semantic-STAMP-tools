@@ -24,12 +24,6 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     private OccurrenceDto occurrence;
 
-    private URI occurrenceCategory;
-
-    private Date occurrenceStart;
-
-    private Date occurrenceEnd;
-
     private FactorGraph factorGraph;
 
     private Person author;
@@ -92,30 +86,6 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     public void setOccurrence(OccurrenceDto occurrence) {
         this.occurrence = occurrence;
-    }
-
-    public URI getOccurrenceCategory() {
-        return occurrenceCategory;
-    }
-
-    public void setOccurrenceCategory(URI occurrenceCategory) {
-        this.occurrenceCategory = occurrenceCategory;
-    }
-
-    public Date getOccurrenceStart() {
-        return occurrenceStart;
-    }
-
-    public void setOccurrenceStart(Date occurrenceStart) {
-        this.occurrenceStart = occurrenceStart;
-    }
-
-    public Date getOccurrenceEnd() {
-        return occurrenceEnd;
-    }
-
-    public void setOccurrenceEnd(Date occurrenceEnd) {
-        this.occurrenceEnd = occurrenceEnd;
     }
 
     public FactorGraph getFactorGraph() {

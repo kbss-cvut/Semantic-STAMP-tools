@@ -32,7 +32,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final OccurrenceReport r = Generator.generateOccurrenceReport(true);
             r.setAuthor(author);
-            r.setOccurrenceStart(new Date(System.currentTimeMillis() + i * 1000));
+            r.getOccurrence().setStartTime(new Date(System.currentTimeMillis() + i * 1000));
             reports.add(r);
         }
         dao.persist(reports);

@@ -17,7 +17,7 @@ public class EventTest {
         final URI et = Generator.generateEventType();
         final Event evt = new Event();
         assertTrue(evt.getTypes() == null || evt.getTypes().isEmpty());
-        evt.setType(et);
+        evt.setEventType(et);
         assertTrue(evt.getTypes().contains(et.toString()));
     }
 }
