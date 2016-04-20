@@ -44,7 +44,7 @@ var ReportRow = React.createClass({
 
     render: function () {
         var report = this.props.report,
-            date = new Date(report.occurrenceStart),
+            date = new Date(report.occurrence.startTime),
             formattedDate = Utils.formatDate(date),
         // Have to set style directly, class style is overridden by the bootstrap styling
             verticalAlign = {verticalAlign: 'middle'};

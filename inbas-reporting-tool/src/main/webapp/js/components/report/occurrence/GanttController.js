@@ -338,19 +338,19 @@ var GanttController = {
         this.props.onDeleteLink(link, source, target);
     },
 
-    updateOccurrenceEvent: function (investigation) {
+    updateOccurrenceEvent: function (report) {
         if (this.applyChangesRunning) {
             return;
         }
         var occurrenceEvt = gantt.getTask(this.occurrenceEventId),
             updates = [];
-        if (occurrenceEvt.text !== investigation.occurrence.name) {
-            occurrenceEvt.text = investigation.occurrence.name;
+        if (occurrenceEvt.text !== report.occurrence.name) {
+            occurrenceEvt.text = report.occurrence.name;
             updates.push(this.occurrenceEventId);
         }
-        if (occurrenceEvt.start_date.getTime() !== investigation.occurrenceStart || occurrenceEvt.end_date.getTime() !== investigation.occurrenceEnd) {
-            occurrenceEvt.start_date = new Date(investigation.occurrenceStart);
-            occurrenceEvt.end_date = new Date(investigation.occurrenceEnd);
+        if (occurrenceEvt.start_date.getTime() !== report.occurrence.startTime || occurrenceEvt.end_date.getTime() !== report.occurrence.endTime) {
+            occurrenceEvt.start_date = new Date(report.occurrence.startTime);
+            occurrenceEvt.end_date = new Date(report.occurrence.endTime);
             occurrenceEvt.duration = gantt.calculateDuration(occurrenceEvt.start_date, occurrenceEvt.end_date);
             this.ensureNonZeroDuration(occurrenceEvt);
             this.updateDescendantsTimeInterval(occurrenceEvt, updates);

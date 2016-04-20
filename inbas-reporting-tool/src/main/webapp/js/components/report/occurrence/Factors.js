@@ -5,6 +5,7 @@
 'use strict';
 
 var React = require('react');
+var assign = require('object-assign');
 var Button = require('react-bootstrap').Button;
 var Modal = require('react-bootstrap').Modal;
 var Panel = require('react-bootstrap').Panel;
@@ -155,10 +156,10 @@ var Factors = React.createClass({
     },
 
     onUpdateOccurrence: function (startTime, endTime) {
-        this.props.onChange({
-            occurrenceStart: startTime,
-            occurrenceEnd: endTime
-        });
+        var occurrence = assign({}, this.props.report.occurrence);
+        occurrence.startTime = startTime;
+        occurrence.endTime = endTime;
+        this.props.onChange({'occurrence': occurrence});
     },
 
     getFactorGraph: function () {

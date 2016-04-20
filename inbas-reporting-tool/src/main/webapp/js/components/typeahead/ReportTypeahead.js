@@ -50,7 +50,6 @@ var ReportTypeahead = React.createClass({
             reports = data.reports;
         for (var i = 0, len = reports.length; i < len; i++) {
             option = assign({}, reports[i].occurrence);
-            option.startTime = reports[i].occurrenceStart;
             option.key = reports[i].key;
             option.types = reports[i].types;
             option.type = ReportType.asString(reports[i]);
