@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.util.DocumentDateAndRevisionComparator;
 import cz.cvut.kbss.inbas.reporting.model.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.ReportDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MainReportService implements ReportBusinessService {
@@ -40,8 +42,11 @@ public class MainReportService implements ReportBusinessService {
 
     @Override
     public List<ReportDto> findAll() {
-        // TODO
-        return null;
+        final List<LogicalDocument> reports = new ArrayList<>();
+        services.values().forEach(service -> reports.addAll(service.findAll()));
+        final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
+        Collections.sort(result, new DocumentDateAndRevisionComparator());
+        return result;
     }
 
     @Override

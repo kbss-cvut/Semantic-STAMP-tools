@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.rest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
@@ -12,7 +13,6 @@ import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
-import cz.cvut.kbss.inbas.reporting.model.Report;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
@@ -62,8 +62,8 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         when(reportServiceMock.findAll()).thenReturn(Collections.emptyList());
         final MvcResult result = mockMvc.perform(get("/reports").accept(MediaType.APPLICATION_JSON_VALUE))
                                         .andExpect(status().isOk()).andReturn();
-        final List<Report> res = objectMapper
-                .readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<Report>>() {
+        final List<ReportDto> res = objectMapper
+                .readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<ReportDto>>() {
                 });
         assertNotNull(res);
         assertTrue(res.isEmpty());

@@ -7,7 +7,7 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-public class ReportDto implements LogicalDocument {
+public abstract class ReportDto implements LogicalDocument {
 
     private URI uri;
 
@@ -128,6 +128,22 @@ public class ReportDto implements LogicalDocument {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ReportDto reportDto = (ReportDto) o;
+
+        return uri.equals(reportDto.uri);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return uri.hashCode();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.cache;
 
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import org.junit.Test;
@@ -29,11 +30,11 @@ public class ReportCacheTest {
         final List<ReportDto> lst = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final Date date = new Date(System.currentTimeMillis() + i * 10000);
-            final ReportDto dtoOne = new ReportDto();
+            final ReportDto dtoOne = new OccurrenceReportDto();
             dtoOne.setFileNumber((long) Generator.randomInt());
             dtoOne.setDateCreated(date);
             dtoOne.setRevision(i + 1);
-            final ReportDto dtoTwo = new ReportDto();
+            final ReportDto dtoTwo = new OccurrenceReportDto();
             dtoTwo.setFileNumber((long) Generator.randomInt());
             dtoTwo.setDateCreated(date);
             dtoTwo.setRevision(dtoOne.getRevision() + 1);
@@ -49,11 +50,11 @@ public class ReportCacheTest {
 
     @Test
     public void putReplacesOldRecord() {
-        final ReportDto oldOne = new ReportDto();
+        final ReportDto oldOne = new OccurrenceReportDto();
         oldOne.setFileNumber(System.currentTimeMillis());
         oldOne.setDateCreated(new Date());
         cache.put(oldOne);
-        final ReportDto newOne = new ReportDto();
+        final ReportDto newOne = new OccurrenceReportDto();
         newOne.setFileNumber(oldOne.getFileNumber());
         newOne.setDateCreated(new Date(System.currentTimeMillis() + 10000));
         cache.put(newOne);

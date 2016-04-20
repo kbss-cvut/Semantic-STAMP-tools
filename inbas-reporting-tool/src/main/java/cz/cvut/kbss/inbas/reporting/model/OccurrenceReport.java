@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
 import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 import cz.cvut.kbss.jopa.model.annotations.*;
@@ -229,5 +231,27 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
                 ", revision=" + revision +
                 ", occurrence=" + occurrence +
                 '}';
+    }
+
+    @Override
+    public ReportDto toReportDto() {
+        final OccurrenceReportDto res = new OccurrenceReportDto();
+        res.setUri(uri);
+        res.setKey(key);
+        res.setFileNumber(fileNumber);
+        res.setAuthor(author);
+        res.setDateCreated(dateCreated);
+        res.setLastModifiedBy(lastModifiedBy);
+        res.setLastModified(lastModified);
+        res.setRevision(revision);
+        if (types != null) {
+            res.setTypes(new HashSet<>(types));
+        }
+        assert occurrence != null;
+        res.setIdentification(occurrence.getName());
+        res.setDate(occurrence.getStartTime());
+        res.setSummary(summary);
+        res.setSeverityAssessment(severityAssessment);
+        return res;
     }
 }

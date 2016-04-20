@@ -1,16 +1,22 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.util.UnsupportedReport;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.UnsupportedReportTypeException;
-import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,7 +59,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test(expected = UnsupportedReportTypeException.class)
     public void persistThrowsUnsupportedReportTypeForUnsupportedReportType() {
-        final Report report = new Report(Generator.generateOccurrenceReport(false));
+        final UnsupportedReport report = new UnsupportedReport();
         reportService.persist(report);
     }
 
@@ -93,9 +99,8 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test(expected = UnsupportedReportTypeException.class)
     public void updateThrowsUnsupportedReportForUnsupportedReportType() {
-        final OccurrenceReport report = persistOccurrenceReport();
-        final Report unsupported = new Report(report);
-        reportService.update(unsupported);
+        final UnsupportedReport report = new UnsupportedReport();
+        reportService.update(report);
     }
 
     @Test
@@ -188,5 +193,29 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Test
     public void findRevisionReturnsNullForUnknownRevision() {
         assertNull(reportService.findRevision(Long.MAX_VALUE, Integer.MAX_VALUE));
+    }
+
+    @Test
+    public void findAllReturnsLatestRevisionsOfAllReportChains() {
+        // Once other report types are added, they should be added into this tests
+        final List<LogicalDocument> latestRevisions = initReportChains();
+
+        final List<ReportDto> result = reportService.findAll();
+        assertTrue(Environment.areEqual(latestRevisions, result));
+    }
+
+    /**
+     * Generates report chains.
+     *
+     * @return List of latest revisions of the generated chains, ordered by date created descending
+     */
+    private List<LogicalDocument> initReportChains() {
+        final List<LogicalDocument> latestRevisions = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final List<OccurrenceReport> chain = persistOccurrenceReportChain();
+            latestRevisions.add(chain.get(chain.size() - 1));
+        }
+        Collections.sort(latestRevisions, (a, b) -> b.getDateCreated().compareTo(a.getDateCreated()));
+        return latestRevisions;
     }
 }

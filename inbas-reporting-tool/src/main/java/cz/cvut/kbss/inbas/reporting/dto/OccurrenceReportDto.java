@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.dto;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
@@ -10,6 +11,7 @@ import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 // It is important that occurrence comes before factorGraph, because it defines a reference to the occurrence, which can the be used
@@ -135,6 +137,28 @@ public class OccurrenceReportDto implements LogicalDocument {
     @Override
     public Integer getRevision() {
         return revision;
+    }
+
+    @Override
+    public ReportDto toReportDto() {
+        final cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto res = new cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto();
+        res.setUri(uri);
+        res.setKey(key);
+        res.setFileNumber(fileNumber);
+        res.setAuthor(author);
+        res.setDateCreated(dateCreated);
+        res.setLastModifiedBy(lastModifiedBy);
+        res.setLastModified(lastModified);
+        res.setRevision(revision);
+        if (types != null) {
+            res.setTypes(new HashSet<>(types));
+        }
+        assert occurrence != null;
+        res.setIdentification(occurrence.getName());
+        res.setDate(occurrence.getStartTime());
+        res.setSummary(summary);
+        res.setSeverityAssessment(severityAssessment);
+        return res;
     }
 
     public void setRevision(Integer revision) {

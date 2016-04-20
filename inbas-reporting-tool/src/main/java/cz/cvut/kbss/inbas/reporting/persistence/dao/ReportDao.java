@@ -1,7 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.reporting.model.Report;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -21,33 +20,6 @@ public class ReportDao {
 
     @Autowired
     private EntityManagerFactory emf;
-
-    /**
-     * Gets latest revisions of all existing report chains.
-     *
-     * @return List of reports
-     */
-    public List<Report> findAll() {
-        final EntityManager em = entityManager();
-        try {
-            return em.createNativeQuery("SELECT ?x WHERE { " +
-                    "?x a ?type ; " +
-                    "?hasFileNumber ?fileNo ;" +
-                    "?hasDateCreated ?dateCreated ;" +
-                    "?hasRevision ?revision . " +
-                    "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
-                    "{ ?y a ?type; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . } GROUP BY ?iFileNo }" +
-                    "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
-                    "} ORDER BY DESC(?dateCreated) DESC(?revision)", Report.class)
-                     .setParameter("type", URI.create(Vocabulary.Report))
-                     .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
-                     .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
-                     .setParameter("hasDateCreated", URI.create(Vocabulary.p_dateCreated))
-                     .getResultList();
-        } finally {
-            em.close();
-        }
-    }
 
     /**
      * Gets a set of OWL classes to which report with the specified key belongs.

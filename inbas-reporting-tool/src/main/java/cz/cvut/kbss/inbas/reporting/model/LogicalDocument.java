@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.model.util.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 
@@ -68,4 +69,12 @@ public interface LogicalDocument extends HasOwlKey, HasUri {
      * @return Revision number
      */
     Integer getRevision();
+
+    /**
+     * Converts this logical document to a {@link ReportDto} instance, which represents an object of condensed
+     * information about the report.
+     *
+     * @return Condensed info about this report
+     */
+    ReportDto toReportDto();
 }

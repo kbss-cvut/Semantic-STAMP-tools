@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import org.junit.Test;
 
@@ -55,5 +57,36 @@ public class OccurrenceReportTest {
                 assertNotSame(r, rr);
             }
         }
+    }
+
+    @Test
+    public void testToReportDto() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+
+        final ReportDto dto = report.toReportDto();
+        assertTrue(dto instanceof OccurrenceReportDto);
+        final OccurrenceReportDto result = (OccurrenceReportDto) dto;
+        assertEquals(report.getUri(), result.getUri());
+        assertEquals(report.getKey(), result.getKey());
+        assertEquals(report.getFileNumber(), result.getFileNumber());
+        assertEquals(report.getAuthor(), result.getAuthor());
+        assertEquals(report.getDateCreated(), result.getDateCreated());
+        assertEquals(report.getLastModified(), result.getLastModified());
+        assertEquals(report.getLastModifiedBy(), result.getLastModifiedBy());
+        assertEquals(report.getRevision(), result.getRevision());
+        assertEquals(report.getOccurrence().getName(), result.getIdentification());
+        assertEquals(report.getOccurrence().getStartTime(), result.getDate());
+        assertEquals(report.getTypes(), result.getTypes());
+        assertEquals(report.getSeverityAssessment(), result.getSeverityAssessment());
+        assertEquals(report.getSummary(), result.getSummary());
+    }
+
+    @Test
+    public void toReportDtoHandlesNullTypes() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setTypes(null);
+
+        final ReportDto dto = report.toReportDto();
+        assertTrue(dto instanceof OccurrenceReportDto);
     }
 }

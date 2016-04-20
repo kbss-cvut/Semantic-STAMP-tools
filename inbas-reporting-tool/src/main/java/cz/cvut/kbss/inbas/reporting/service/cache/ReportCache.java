@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.service.cache;
 
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.inbas.reporting.model.util.DocumentDateAndRevisionComparator;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -43,13 +44,7 @@ public class ReportCache {
      */
     public synchronized List<ReportDto> getAll() {
         final List<ReportDto> reports = new ArrayList<>(cache.values());
-        Collections.sort(reports, (a, b) -> {
-            int res = b.getDateCreated().compareTo(a.getDateCreated());
-            if (res == 0) {
-                res = b.getRevision().compareTo(a.getRevision());
-            }
-            return res;
-        });
+        Collections.sort(reports, new DocumentDateAndRevisionComparator());
         return reports;
     }
 }

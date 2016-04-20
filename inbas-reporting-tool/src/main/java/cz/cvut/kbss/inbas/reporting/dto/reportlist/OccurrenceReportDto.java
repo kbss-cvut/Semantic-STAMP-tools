@@ -23,4 +23,25 @@ public class OccurrenceReportDto extends ReportDto {
     public void setSummary(String summary) {
         this.summary = summary;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OccurrenceReportDto reportDto = (OccurrenceReportDto) o;
+
+        return getUri().equals(reportDto.getUri());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getUri().hashCode();
+    }
+
+    @Override
+    public ReportDto toReportDto() {
+        return this;
+    }
 }

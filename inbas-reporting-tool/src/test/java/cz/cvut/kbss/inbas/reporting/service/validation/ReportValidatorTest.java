@@ -2,8 +2,8 @@ package cz.cvut.kbss.inbas.reporting.service.validation;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
+import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
-import cz.cvut.kbss.inbas.reporting.model.Report;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,16 +27,16 @@ public class ReportValidatorTest {
     @Autowired
     private ReportValidator validator;
 
-    private Report original;
-    private Report copy;
+    private OccurrenceReport original;
+    private OccurrenceReport copy;
 
     @Before
     public void setUp() {
-        this.original = new Report(Generator.generateOccurrenceReport(true));
+        this.original = Generator.generateOccurrenceReport(true);
         original.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/report/original"));
         original.setKey(IdentificationUtils.generateKey());
         original.getAuthor().generateUri();
-        this.copy = new Report();
+        this.copy = new OccurrenceReport();
         copy.setUri(original.getUri());
         copy.setKey(original.getKey());
         copy.setFileNumber(original.getFileNumber());

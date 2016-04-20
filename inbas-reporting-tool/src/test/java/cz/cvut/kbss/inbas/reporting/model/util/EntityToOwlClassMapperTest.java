@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model.util;
 
-import cz.cvut.kbss.inbas.reporting.model.Report;
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ public class EntityToOwlClassMapperTest {
 
     @Test
     public void getOWlClassForEntityExtractsOwlClassIriFromEntityClass() {
-        assertEquals(Vocabulary.Report, EntityToOwlClassMapper.getOwlClassForEntity(Report.class));
+        assertEquals(Vocabulary.Occurrence, EntityToOwlClassMapper.getOwlClassForEntity(Occurrence.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
