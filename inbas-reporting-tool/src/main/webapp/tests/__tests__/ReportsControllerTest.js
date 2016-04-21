@@ -25,12 +25,12 @@ describe('ReportsController', function () {
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports).toEqual(reports);
 
-        filter = {phase: Constants.PRELIMINARY_REPORT_PHASE};
+        filter = {phase: null};
         controller.onFilterChange(filter);
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports.length).toEqual(Math.ceil(reports.length / 2));
         for (var i = 0, len = renderedReports.length; i < len; i++) {
-            expect(renderedReports[i].phase).toEqual(Constants.PRELIMINARY_REPORT_PHASE);
+            expect(renderedReports[i].phase).toEqual(null);
         }
     });
 

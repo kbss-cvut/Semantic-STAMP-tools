@@ -202,19 +202,10 @@ var Factors = React.createClass({
                         </div>
                     </div>
 
-                    <div className='col-xs-5'>&nbsp;</div>
+                    <div className='col-xs-2'>&nbsp;</div>
 
-                    <div className='col-xs-2 gantt-zoom-label'>
-                        <div className='col-xs-6' style={{verticalAlign: 'middle'}}>
-                            <div className='gantt-link-causes'
-                                 style={{height: '4px', width: '2em', float: 'left', margin: '8px'}}/>
-                            <div style={{float: 'left'}}>{this.i18n('factors.causes')}</div>
-                        </div>
-                        <div className='col-xs-6'>
-                            <div className='gantt-link-mitigates'
-                                 style={{height: '4px', width: '2em', float: 'left', margin: '8px'}}/>
-                            <div style={{float: 'left'}}>{this.i18n('factors.mitigates')}</div>
-                        </div>
+                    <div className='col-xs-5 gantt-zoom-label'>
+                        {this._renderLineColors()}
                     </div>
                 </div>
             </Panel>);
@@ -230,10 +221,13 @@ var Factors = React.createClass({
     },
 
     renderLinkTypeDialog: function () {
-        var options = [
-            {value: Constants.LINK_TYPES.CAUSE, label: this.i18n('factors.causes')},
-            {value: Constants.LINK_TYPES.MITIGATE, label: this.i18n('factors.mitigates')}
-        ];
+        var options = Object.getOwnPropertyNames(Constants.LINK_TYPES).map((name) => {
+            var item = Constants.LINK_TYPES[name];
+            return {
+                value: item.value,
+                label: this.i18n(item.message)
+            };
+        });
         return (
             <Modal show={this.state.showLinkTypeDialog} bsSize='small' onHide={this.onCloseLinkTypeDialog}>
                 <Modal.Header closeButton>
@@ -265,6 +259,17 @@ var Factors = React.createClass({
                 </Modal.Footer>
             </Modal>
         );
+    },
+
+    _renderLineColors: function () {
+        return Object.getOwnPropertyNames(Constants.LINK_TYPES).map((name) => {
+            var item = Constants.LINK_TYPES[name];
+            return <div className='col-xs-3' key={item.value}>
+                <div className={item.className}
+                     style={{height: '4px', width: '2em', float: 'left', margin: '8px'}}/>
+                <div style={{float: 'left'}}>{this.i18n(item.message)}</div>
+            </div>;
+        });
     }
 });
 
