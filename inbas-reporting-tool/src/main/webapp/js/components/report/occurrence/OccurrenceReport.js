@@ -104,7 +104,7 @@ var OccurrenceReport = React.createClass({
         }
         return (
             <div>
-                <h2 className='panel-title pull-left'>{this.i18n('occurrencereport.panel-title')}</h2>
+                <h2 className='panel-title pull-left'>{this.i18n('occurrencereport.title')}</h2>
                 {fileNo}
                 <div style={{clear: 'both'}}/>
             </div>

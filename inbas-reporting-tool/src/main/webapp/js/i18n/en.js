@@ -73,8 +73,8 @@ module.exports = {
         'dashboard.create-import-tile': 'Import Report',
         'dashboard.recent-panel-heading': 'Recently Edited/Added Reports',
         'dashboard.recent-table-last-edited': 'Last modified',
-
-        'reports.no-occurrence-reports': 'There are no reports, yet.',
+        'dashboard.recent.no-reports': 'There are no reports, yet.',
+        
         'reports.no-reports': 'There are no reports, yet. You can create one ',
         'reports.no-reports.link': 'here.',
         'reports.no-reports.link-tooltip': 'Go to dashboard',
@@ -130,7 +130,8 @@ module.exports = {
         'report.eventtype.add-tooltip': 'Add an event type assessment',
         
         'report.occurrence.category.label': 'Occurrence category',
-        'occurrencereport.panel-title': 'Occurrence report',
+        'occurrencereport.title': 'Occurrence report',
+        'occurrencereport.label': 'Occurrence',
 
         'preliminary.type': 'Preliminary',
         'preliminary.table-investigate': 'Investigate',

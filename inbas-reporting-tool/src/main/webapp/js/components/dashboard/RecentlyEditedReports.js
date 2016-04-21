@@ -5,6 +5,7 @@
 'use strict';
 
 var React = require('react');
+var Label = require('react-bootstrap').Label;
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 var Reflux = require('reflux');
@@ -79,7 +80,7 @@ var RecentlyEditedReports = React.createClass({
                 </tbody>
             </Table>);
         } else {
-            return (<div>{this.i18n('reports.no-occurrence-reports')}</div>);
+            return (<div>{this.i18n('dashboard.recent.no-reports')}</div>);
         }
     },
 
@@ -101,9 +102,8 @@ var ReportRow = injectIntl(React.createClass({
     },
 
     render: function () {
-        var report = this.props.report,
+        var report = ReportType.getReport(this.props.report),
             vAlign = {verticalAlign: 'middle'},
-            type = ReportType.asString(report),
             dateEdited = report.lastModified ? report.lastModified : report.dateCreated;
         return (
             <tr>
@@ -117,8 +117,7 @@ var ReportRow = injectIntl(React.createClass({
                     className='content-center'>{report.date ? Utils.formatDate(new Date(report.date)) : ''}</td>
                 <td style={vAlign} className='content-center'>{Utils.formatDate(new Date(dateEdited))}</td>
                 <td style={vAlign} className='content-center'>
-                    <img className='report-type-icon centered' src={ReportType.getIconSrc(report)} alt={type}
-                         title={type}/>
+                    <Label title={this.i18n(report.toString())}>{this.i18n(report.getLabel())}</Label>
                 </td>
             </tr>
         );

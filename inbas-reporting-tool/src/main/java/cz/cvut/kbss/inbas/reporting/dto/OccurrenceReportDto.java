@@ -158,6 +158,7 @@ public class OccurrenceReportDto implements LogicalDocument {
         res.setDate(occurrence.getStartTime());
         res.setSummary(summary);
         res.setSeverityAssessment(severityAssessment);
+        res.setOccurrenceCategory(occurrence.getEventType());
         return res;
     }
 

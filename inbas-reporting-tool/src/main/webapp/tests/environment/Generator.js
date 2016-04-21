@@ -2,6 +2,68 @@
 
 var Constants = require('../../js/constants/Constants');
 
+var CATEGORIES = [
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1",
+        "description": "1 - AMAN: Abrupt maneuvre",
+        "name": "1 - AMAN: Abrupt maneuvre"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-10",
+        "description": "10 - ICE: Icing",
+        "name": "10 - ICE: Icing"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-100",
+        "description": "100 - UIMC: Unintended flight in IMC",
+        "name": "100 - UIMC: Unintended flight in IMC"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-101",
+        "description": "101 - EXTL: External load related occurrences",
+        "name": "101 - EXTL: External load related occurrences"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-102",
+        "description": "102 - CTOL: Collision with obstacle(s) during take-off and landing",
+        "name": "102 - CTOL: Collision with obstacle(s) during take-off and landing"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-103",
+        "description": "103 - LOLI: Loss of lifting conditions en-route",
+        "name": "103 - LOLI: Loss of lifting conditions en-route"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-104",
+        "description": "104 - GTOW: Glider towing related events",
+        "name": "104 - GTOW: Glider towing related events"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-11",
+        "description": "11 - LALT: Low altitude operations",
+        "name": "11 - LALT: Low altitude operations"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-12",
+        "description": "12 - LOC-G: Loss of control - ground",
+        "name": "12 - LOC-G: Loss of control - ground"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-13",
+        "description": "13 - LOC-I: Loss of control - inflight",
+        "name": "13 - LOC-I: Loss of control - inflight"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-14",
+        "description": "14 - MAC: Airprox/ ACAS alert/ loss of separation/ (near) midair collisions",
+        "name": "14 - MAC: Airprox/ ACAS alert/ loss of separation/ (near) midair collisions"
+    },
+    {
+        "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-15",
+        "description": "15 - RE: Runway excursion",
+        "name": "15 - RE: Runway excursion"
+    }];
+
 /**
  * Generates test data.
  */
@@ -152,12 +214,14 @@ var Generator = {
         return {
             key: this.getRandomInt().toString(),
             revision: 1,
+            javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS,
             occurrence: {
                 key: this.getRandomInt().toString(),
+                javaClass: Constants.OCCURRENCE_JAVA_CLASS,
                 name: 'TestOccurrence',
                 startTime: Date.now() - 10000,
                 endTime: Date.now(),
-                eventType: 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200110'
+                eventType: CATEGORIES[this.getRandomInt(CATEGORIES.length)].id
             }
         };
     },
@@ -179,79 +243,19 @@ var Generator = {
     generateReports: function () {
         var count = this.getRandomInt(100),
             reports = [],
-            report,
-            categories = this.getCategories();
+            report;
         for (var i = 0; i < count; i++) {
             report = this.generateOccurrenceReport();
             report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
-            report.occurrence.eventType = categories[this.getRandomInt(categories.length)].id;
+            report.occurrenceCategory = report.occurrence.eventType;
+            delete report.occurrence;
             reports.push(report);
         }
         return reports;
     },
 
     getCategories: function () {
-        return [
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1",
-                "description": "1 - AMAN: Abrupt maneuvre",
-                "name": "1 - AMAN: Abrupt maneuvre"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-10",
-                "description": "10 - ICE: Icing",
-                "name": "10 - ICE: Icing"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-100",
-                "description": "100 - UIMC: Unintended flight in IMC",
-                "name": "100 - UIMC: Unintended flight in IMC"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-101",
-                "description": "101 - EXTL: External load related occurrences",
-                "name": "101 - EXTL: External load related occurrences"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-102",
-                "description": "102 - CTOL: Collision with obstacle(s) during take-off and landing",
-                "name": "102 - CTOL: Collision with obstacle(s) during take-off and landing"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-103",
-                "description": "103 - LOLI: Loss of lifting conditions en-route",
-                "name": "103 - LOLI: Loss of lifting conditions en-route"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-104",
-                "description": "104 - GTOW: Glider towing related events",
-                "name": "104 - GTOW: Glider towing related events"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-11",
-                "description": "11 - LALT: Low altitude operations",
-                "name": "11 - LALT: Low altitude operations"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-12",
-                "description": "12 - LOC-G: Loss of control - ground",
-                "name": "12 - LOC-G: Loss of control - ground"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-13",
-                "description": "13 - LOC-I: Loss of control - inflight",
-                "name": "13 - LOC-I: Loss of control - inflight"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-14",
-                "description": "14 - MAC: Airprox/ ACAS alert/ loss of separation/ (near) midair collisions",
-                "name": "14 - MAC: Airprox/ ACAS alert/ loss of separation/ (near) midair collisions"
-            },
-            {
-                "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-15",
-                "description": "15 - RE: Runway excursion",
-                "name": "15 - RE: Runway excursion"
-            }];
+        return CATEGORIES;
     }
 };
 

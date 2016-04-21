@@ -44,15 +44,15 @@ describe('ReportsController', function () {
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports).toEqual(reports);
 
-        filter = {'occurrence.eventType': categories[Generator.getRandomInt(categories.length)].id};
+        filter = {'occurrenceCategory': categories[Generator.getRandomInt(categories.length)].id};
         controller.onFilterChange(filter);
         renderedReports = reportsComponent.props.reports;
         matchingReportsCount = reports.filter(function (item) {
-            return item.occurrence.eventType === filter['occurrence.eventType'];
+            return item.occurrenceCategory === filter['occurrenceCategory'];
         }).length;
         expect(renderedReports.length).toEqual(matchingReportsCount);
         for (var i = 0, len = renderedReports.length; i < len; i++) {
-            expect(renderedReports[i].occurrence.eventType).toEqual(filter['occurrence.eventType']);
+            expect(renderedReports[i].occurrenceCategory).toEqual(filter['occurrenceCategory']);
         }
     });
 
@@ -68,14 +68,14 @@ describe('ReportsController', function () {
         sampleReport = reports[Generator.getRandomInt(reports.length)];
         filter = {
             'phase': sampleReport.phase,
-            'occurrence.eventType': sampleReport.occurrence.eventType
+            'occurrenceCategory': sampleReport.occurrenceCategory
         };
         controller.onFilterChange(filter);
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports.length).not.toBeLessThan(1);
         for (var i = 0, len = renderedReports.length; i < len; i++) {
             expect(renderedReports[i].phase).toEqual(filter['phase']);
-            expect(renderedReports[i].occurrence.eventType).toEqual(filter['occurrence.eventType']);
+            expect(renderedReports[i].occurrenceCategory).toEqual(filter['occurrenceCategory']);
         }
     });
 
@@ -90,14 +90,14 @@ describe('ReportsController', function () {
 
         sampleReport = reports[Generator.getRandomInt(reports.length)];
         filter = {
-            'occurrence.eventType': sampleReport.occurrence.eventType
+            'occurrenceCategory': sampleReport.occurrenceCategory
         };
         controller.onFilterChange(filter);
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports.length).toBeLessThan(reports.length);
 
         filter = {
-            'occurrence.eventType': 'all'
+            'occurrenceCategory': 'all'
         };
         controller.onFilterChange(filter);
         renderedReports = reportsComponent.props.reports;

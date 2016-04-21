@@ -74,8 +74,8 @@ module.exports = {
         'dashboard.create-import-tile': 'Importovat hlášení',
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
+        'dashboard.recent.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
 
-        'reports.no-occurrence-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
         'reports.no-reports': 'Nenalezena žádná hlášení. Nové hlášení můžete vytvořit ',
         'reports.no-reports.link': 'zde.',
         'reports.no-reports.link-tooltip': 'Jít na hlavní stránku',
@@ -132,13 +132,14 @@ module.exports = {
         'report.eventtype.add-tooltip': 'Přidat popis typu události',
         
         'report.occurrence.category.label': 'Klasifikace události',
-        'occurrencereport.panel-title': 'Hlášení o události',
+        'occurrencereport.title': 'Hlášení o události',
+        'occurrencereport.type': 'Událost',
 
         'preliminary.type': 'Předběžné',
         'preliminary.table-investigate': 'Šetřit',
         'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
         'preliminary.detail.panel-title': 'Předběžné hlášení o události',
-        'investigation.type': 'Šetření',
+        'investigation.label': 'Událost',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

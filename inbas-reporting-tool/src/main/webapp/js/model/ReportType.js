@@ -1,33 +1,61 @@
 'use strict';
 
+var React = require('react');
+var assign = require('object-assign');
+var CollapsibleText = require('../components/CollapsibleText');
 var Constants = require('../constants/Constants');
-var I18nStore = require('../stores/I18nStore');
+var Vocabulary = require('../constants/Vocabulary');
 
-var REPORT_TYPES = {
-    'http://onto.fel.cvut.cz/ontologies/documentation/occurrence_report': 'Occurrence report'
-};
+class OccurrenceReport {
+    constructor(data) {
+        assign(this, data);
+    }
 
-var ReportType = {
-
-    getDetailController: function (report) {
+    static getDetailController() {
         // Use require in method call to prevent circular dependencies with RevisionInfo
         return require('../components/report/occurrence/OccurrenceReportController');
+    }
+
+    getLabel() {
+        return 'occurrencereport.label';
+    }
+
+    toString() {
+        return 'occurrencereport.title';
+    }
+
+    renderMoreInfo() {
+        return <CollapsibleText text={this.summary}/>;
+    }
+}
+
+var REPORT_TYPES = {};
+
+REPORT_TYPES[Vocabulary.OCCURRENCE_REPORT] = OccurrenceReport;
+REPORT_TYPES[Constants.OCCURRENCE_REPORT_JAVA_CLASS] = OccurrenceReport;
+
+module.exports = {
+
+    getDetailController: function (report) {
+        return this._getReportClass(report).getDetailController();
     },
 
-    getIconSrc: function (report) {
-        return 'resources/images/icons/investigation.png';
+    getReport: function (data) {
+        var cls = this._getReportClass(data);
+        return new cls(data);
     },
 
-    asString: function (report) {
-        if (report.types) {
-            for (var i = 0, len = report.types.length; i < len; i++) {
-                if (REPORT_TYPES[report.types[i]]) {
-                    return REPORT_TYPES[report.types[i]];
+    _getReportClass: function (data) {
+        if (data.types) {
+            for (var i = 0, len = data.types.length; i < len; i++) {
+                if (REPORT_TYPES[data.types[i]]) {
+                    return REPORT_TYPES[data.types[i]];
                 }
             }
         }
-        return '';
+        if (data.javaClass && REPORT_TYPES[data.javaClass]) {
+            return REPORT_TYPES[data.javaClass];
+        }
+        throw "Data does not contain any supported report type.";
     }
 };
-
-module.exports = ReportType;

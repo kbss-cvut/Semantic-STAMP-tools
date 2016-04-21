@@ -43,7 +43,7 @@ var ReportRow = React.createClass({
     },
 
     render: function () {
-        var report = this.props.report,
+        var report = ReportType.getReport(this.props.report),
             formattedDate = '',
         // Have to set style directly, class style is overridden by the bootstrap styling
             verticalAlign = {verticalAlign: 'middle'};
@@ -56,8 +56,10 @@ var ReportRow = React.createClass({
                                              title={this.i18n('reports.open-tooltip')}>{report.identification}</a>
                 </td>
                 <td style={verticalAlign} className='content-center'>{formattedDate}</td>
-                <td style={verticalAlign}><CollapsibleText text={report.summary}/></td>
-                <td style={verticalAlign} className='content-center'><Label>{ReportType.asString(report)}</Label></td>
+                <td style={verticalAlign}>{report.renderMoreInfo()}</td>
+                <td style={verticalAlign} className='content-center'>
+                    <Label title={this.i18n(report.toString())}>{this.i18n(report.getLabel())}</Label>
+                </td>
                 <td style={verticalAlign} className='actions'>
                     <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.edit-tooltip')}
                             onClick={this.onEditClick}>{this.i18n('table-edit')}</Button>

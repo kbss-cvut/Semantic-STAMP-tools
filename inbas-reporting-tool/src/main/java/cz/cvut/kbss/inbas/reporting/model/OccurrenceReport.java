@@ -251,6 +251,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         res.setDate(occurrence.getStartTime());
         res.setSummary(summary);
         res.setSeverityAssessment(severityAssessment);
+        res.setOccurrenceCategory(occurrence.getEventType());
         return res;
     }
 }

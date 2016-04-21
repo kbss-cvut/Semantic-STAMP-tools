@@ -6,6 +6,8 @@ public class OccurrenceReportDto extends ReportDto {
 
     private URI severityAssessment;
 
+    private URI occurrenceCategory;
+
     private String summary;
 
     public URI getSeverityAssessment() {
@@ -14,6 +16,14 @@ public class OccurrenceReportDto extends ReportDto {
 
     public void setSeverityAssessment(URI severityAssessment) {
         this.severityAssessment = severityAssessment;
+    }
+
+    public URI getOccurrenceCategory() {
+        return occurrenceCategory;
+    }
+
+    public void setOccurrenceCategory(URI occurrenceCategory) {
+        this.occurrenceCategory = occurrenceCategory;
     }
 
     public String getSummary() {
