@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
-import cz.cvut.kbss.inbas.reporting.config.ServiceConfig;
+import cz.cvut.kbss.inbas.reporting.environment.config.TestServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
@@ -13,7 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ServiceConfig.class, TestPersistenceConfig.class})
+@ContextConfiguration(classes = {TestServiceConfig.class, TestPersistenceConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class BaseServiceTestRunner {
 

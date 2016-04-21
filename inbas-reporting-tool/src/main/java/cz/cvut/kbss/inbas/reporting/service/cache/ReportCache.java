@@ -37,6 +37,11 @@ public class ReportCache {
         cache.clear();
     }
 
+    public synchronized void evict(Long fileNumber) {
+        assert fileNumber != null;
+        cache.remove(fileNumber);
+    }
+
     /**
      * Gets the reports from this cache, ordered by date created and revision number, descending.
      *

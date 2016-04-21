@@ -2,9 +2,11 @@ package cz.cvut.kbss.inbas.reporting.service.cache;
 
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -31,10 +33,12 @@ public class ReportCacheTest {
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final Date date = new Date(System.currentTimeMillis() + i * 10000);
             final ReportDto dtoOne = new OccurrenceReportDto();
+            dtoOne.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas#instance-" + i));
             dtoOne.setFileNumber((long) Generator.randomInt());
             dtoOne.setDateCreated(date);
             dtoOne.setRevision(i + 1);
             final ReportDto dtoTwo = new OccurrenceReportDto();
+            dtoTwo.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas#instance-" + (i + 117)));
             dtoTwo.setFileNumber((long) Generator.randomInt());
             dtoTwo.setDateCreated(date);
             dtoTwo.setRevision(dtoOne.getRevision() + 1);
@@ -72,5 +76,15 @@ public class ReportCacheTest {
         assertFalse(cache.getAll().isEmpty());
         cache.evict();
         assertTrue(cache.getAll().isEmpty());
+    }
+
+    @Test
+    public void evictByFileNumberRemovesRecordWithCorrespondingFileNumber() {
+        final List<ReportDto> lst = generateReports();
+        lst.forEach(cache::put);
+        final ReportDto toRemove = Environment.randomElement(lst);
+        assertTrue(cache.getAll().contains(toRemove));
+        cache.evict(toRemove.getFileNumber());
+        assertFalse(cache.getAll().contains(toRemove));
     }
 }
