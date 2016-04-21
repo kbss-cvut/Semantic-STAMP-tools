@@ -2,7 +2,7 @@
 
 describe('Tests for the gantt component controller', function () {
 
-    var GanttController = require('../../js/components/report/occurrence/GanttController'),
+    var GanttController = require('../../js/components/factor/GanttController'),
         gantt, props, report;
 
     beforeEach(function () {

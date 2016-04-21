@@ -3,7 +3,7 @@
 describe('ReportType', function () {
 
     var ReportType = require('../../js/model/ReportType'),
-        Generator = require('../environment/Generator'),
+        Generator = require('../environment/Generator').default,
         ReportFactory = require('../../js/model/ReportFactory'),
         OccurrenceReportController = require('../../js/components/report/occurrence/OccurrenceReportController');
 

@@ -5,7 +5,7 @@ describe('Report', function () {
     var React = require('react'),
         TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
-        Generator = require('../environment/Generator'),
+        Generator = require('../environment/Generator').default,
         Constants = require('../../js/constants/Constants'),
         Report = require('../../js/components/report/Report'),
         ResourceNotFound = require('../../js/components/ResourceNotFound'),

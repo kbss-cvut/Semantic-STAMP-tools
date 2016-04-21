@@ -1,10 +1,10 @@
 'use strict';
 
-xdescribe('FactorRenderer tests', function () {
+describe('FactorRenderer tests', function () {
 
     var rewire = require('rewire'),
-        FactorRenderer = rewire('../../js/components/investigation/FactorRenderer'),
-        Generator = require('../environment/Generator'),
+        FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
+        Generator = require('../environment/Generator').default,
         GanttController,
         report;
 
@@ -16,27 +16,24 @@ xdescribe('FactorRenderer tests', function () {
                 uri: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#Occurrence_instance319360066',
                 key: '25857640490956897',
                 name: 'Runway incursion',
+                eventType: Generator.randomCategory().id,
                 startTime: 1447144734937,
-                endTime: 1447144800937
+                endTime: 1447144800937,
+                referenceId: 1
             },
             created: 1447144867175,
-            lastEdited: 1447147087897,
+            lastModified: 1447147087897,
             summary: 'Short report summary.',
             author: {
                 uri: 'http://www.inbas.cz/ontologies/reporting-tool/people#Catherine+Halsey',
                 firstName: 'Catherine',
                 lastName: 'Halsey',
                 username: 'halsey@unsc.org'
-            },
-            rootFactor: {
-                startTime: 1447144734937,
-                endTime: 1447144800937
-            },
-            links: {}
+            }
         }
     });
 
-    it('Renders occurrence event when no other factors are specified', function () {
+    it('Renders occurrence when factor graph is empty', () => {
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(1);
         expect(GanttController.setOccurrenceEventId).toHaveBeenCalled();
@@ -46,13 +43,46 @@ xdescribe('FactorRenderer tests', function () {
 
     function verifyRoot(arg) {
         expect(arg.text).toEqual(report.occurrence.name);
-        expect(arg.start_date.getTime()).toEqual(report.rootFactor.startTime);
-        expect(arg.end_date.getTime()).toEqual(report.rootFactor.endTime);
-        expect(arg.readonly).toBeTruthy();
+        expect(arg.start_date.getTime()).toEqual(report.occurrence.startTime);
+        expect(arg.end_date.getTime()).toEqual(report.occurrence.endTime);
+        expect(arg.readonly).toBeTruthy();  //TODO
         expect(arg.parent).not.toBeDefined();
     }
 
-    it('Renders factors from new investigation report - it does not contain deeper hierarchy or cause/mitigation links', function () {
+    it('Renders occurrence when it is the only node in factor graph', () => {
+        report.factorGraph = {
+            nodes: [report.occurrence.referenceId]
+        };
+        FactorRenderer.renderFactors(report);
+        expect(GanttController.addFactor.calls.count()).toEqual(1);
+        expect(GanttController.setOccurrenceEventId).toHaveBeenCalled();
+        var arg = GanttController.addFactor.calls.argsFor(0)[0];
+        verifyRoot(arg);
+    });
+
+    it('Renders nodes of the factor graph', () => {
+        report.factorGraph = {
+            nodes: [report.occurrence.referenceId]
+        };
+        report.factorGraph.nodes.push(Generator.generateFactorGraphNodes());
+        FactorRenderer.renderFactors(report);
+        expect(GanttController.addFactor.calls.count()).toEqual(report.factorGraph.nodes.length);
+        verifyAddedNodes();
+    });
+
+    function verifyAddedNodes() {
+        var occurrence = report.occurrence;
+        verifyRoot(GanttController.addFactor.calls.argsFor(0)[0]);
+        for (var i = 1, len = report.factorGraph.nodes.length; i < len; i++) {
+            var node = report.factorGraph.nodes[i];
+            var added = GanttController.addFactor.calls.argsFor(i)[0];
+            expect(added.statement).toEqual(node);
+            expect(added.start_date.getTime()).toEqual(occurrence.startTime);
+            expect(added.end_date.getTime()).toEqual(occurrence.endTime);
+        }
+    }
+
+    xit('Renders factors from new investigation report - it does not contain deeper hierarchy or cause/mitigation links', function () {
         var rootId = null;
         report.rootFactor = Generator.generateFactors(report.occurrence.startTime, report.occurrence.endTime, 1);
         GanttController.addFactor.and.returnValue(Date.now());
@@ -77,7 +107,7 @@ xdescribe('FactorRenderer tests', function () {
         expect(node.parent).toEqual(expectedParentId);
     }
 
-    it('Renders root factor with deeper descendant hierarchy', function () {
+    xit('Renders root factor with deeper descendant hierarchy', function () {
         var rootId = null, childIds = [];
         report.rootFactor = Generator.generateFactors(report.occurrence.startTime, report.occurrence.endTime, 2);
         GanttController.addFactor.and.callFake(function (item, parentId) {
@@ -109,7 +139,7 @@ xdescribe('FactorRenderer tests', function () {
         verifyNode(report.rootFactor.children[1].children[1], secondChildSecondChild, childIds[1]);
     });
 
-    it('Renders factors with causality relationships using references', function () {
+    xit('Renders factors with causality relationships using references', function () {
         var rootId = null, childIds = [], ids = {};
         report.rootFactor = Generator.generateFactors(report.occurrence.startTime, report.occurrence.endTime, 2);
         report.links.causes = [{from: 3, to: 4}];
@@ -137,7 +167,7 @@ xdescribe('FactorRenderer tests', function () {
         });
     }
 
-    it('Renders factors with mitigation relationships using references', function () {
+    xit('Renders factors with mitigation relationships using references', function () {
         var rootId = null, childIds = [], ids = {};
         report.rootFactor = Generator.generateFactors(report.occurrence.startTime, report.occurrence.endTime, 2);
         report.links.mitigates = [{from: 1, to: 2}, {from: 3, to: 4}];
@@ -158,7 +188,7 @@ xdescribe('FactorRenderer tests', function () {
         expect(linkTwo.factorType).toEqual('mitigate');
     });
 
-    it('Stores highest reference id', function () {
+    xit('Stores highest reference id', function () {
         var rootId = null, childIds = [], ids = {};
         report.rootFactor = Generator.generateFactors(report.occurrence.startTime, report.occurrence.endTime, 2);
         GanttController.addFactor.and.callFake(function (item, parentId) {

@@ -6,7 +6,7 @@ describe('Occurrence report controller', function () {
         Button = require('react-bootstrap').Button,
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
-        Generator = require('../environment/Generator'),
+        Generator = require('../environment/Generator').default,
         ReportController = rewire('../../js/components/report/occurrence/OccurrenceReportController'),
         OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),
         Actions = require('../../js/actions/Actions');

@@ -5,7 +5,7 @@ describe('Tests of the factor dialog', function () {
 
     var React = require('react'),
         Environment = require('../environment/Environment'),
-        FactorDetail = require('../../js/components/report/occurrence/FactorDetail'),
+        FactorDetail = require('../../js/components/factor/FactorDetail'),
         assign = require('object-assign'),
         callbacks,
         gantt = {

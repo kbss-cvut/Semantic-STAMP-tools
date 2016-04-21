@@ -260,11 +260,11 @@ td.actions button {
     margin: 10px 0;
 }
 
-.gantt_grid_head_add {
-    background-image: none;
-    cursor: default;
-    pointer-events: none;
-}
+/*.gantt_grid_head_add {*/
+    /*background-image: none;*/
+    /*cursor: default;*/
+    /*pointer-events: none;*/
+/*}*/
 
 .gantt-link-causes {
     background-color: #ff0000;

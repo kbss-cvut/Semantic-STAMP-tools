@@ -4,7 +4,7 @@ xdescribe('Test factor tree hierarchy serialization for JSON', function() {
 
     var GanttController,
         FactorJsonSerializer,
-        Generator = require('../environment/Generator');
+        Generator = require('../environment/Generator').default;
 
     beforeEach(function() {
         GanttController = jasmine.createSpyObj('ganttController', ['getFactor', 'getChildren', 'getLinks']);

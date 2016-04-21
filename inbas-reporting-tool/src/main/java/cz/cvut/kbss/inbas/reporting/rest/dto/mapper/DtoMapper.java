@@ -148,7 +148,7 @@ public abstract class DtoMapper {
 
     public abstract Occurrence occurrenceDtoToOccurrence(OccurrenceDto dto);
 
-    public FactorGraph occurrenceToEventGraph(Occurrence occurrence) {
+    public FactorGraph occurrenceToFactorGraph(Occurrence occurrence) {
         if (occurrence == null) {
             return null;
         }
@@ -221,7 +221,7 @@ public abstract class DtoMapper {
         }
     }
 
-    public Occurrence eventGraphToOccurrence(FactorGraph graph) {
+    public Occurrence factorGraphToOccurrence(FactorGraph graph) {
         if (graph == null) {
             return null;
         }

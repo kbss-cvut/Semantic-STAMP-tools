@@ -13,7 +13,7 @@ var injectIntl = require('../../../utils/injectIntl');
 
 var Actions = require('../../../actions/Actions');
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo');
-var Factors = require('./Factors');
+var Factors = require('../../factor/Factors');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var ReportSummary = require('../ReportSummary').default;
 var MessageMixin = require('../../mixin/MessageMixin');

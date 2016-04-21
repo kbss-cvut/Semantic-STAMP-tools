@@ -5,7 +5,7 @@ describe('OccurrenceReport', function () {
     var React = require('react'),
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
-        Generator = require('../environment/Generator'),
+        Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         ReportFactory = require('../../js/model/ReportFactory'),
         OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),

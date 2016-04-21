@@ -4,7 +4,7 @@ describe('ReportsFilter', function () {
 
     var React = require('react'),
         Environment = require('../environment/Environment'),
-        Generator = require('../environment/Generator'),
+        Generator = require('../environment/Generator').default,
         ReportsFilter = require('../../js/components/report/ReportsFilter'),
         Constants = require('../../js/constants/Constants'),
 

@@ -5,14 +5,14 @@ describe('Factors component tests', function () {
     var React = require('react'),
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
-        Factors = rewire('../../js/components/report/occurrence/Factors'),
-        FactorRenderer = rewire('../../js/components/report/occurrence/FactorRenderer'),
+        Factors = rewire('../../js/components/factor/Factors'),
+        FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
         GanttController = null,
         report = {
             occurrence: {
                 name: 'TestOccurrence',
                 startTime: Date.now() - 10000,
-                endTime: Date.now(),
+                endTime: Date.now()
             },
             rootFactor: {
                 startTime: Date.now() - 10000,

@@ -5,7 +5,7 @@ describe('ReportsController', function () {
     var React = require('react'),
         TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
-        Generator = require('../environment/Generator'),
+        Generator = require('../environment/Generator').default,
 
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),

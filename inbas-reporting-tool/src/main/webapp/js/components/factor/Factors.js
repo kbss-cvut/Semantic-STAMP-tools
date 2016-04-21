@@ -9,18 +9,18 @@ var assign = require('object-assign');
 var Button = require('react-bootstrap').Button;
 var Modal = require('react-bootstrap').Modal;
 var Panel = require('react-bootstrap').Panel;
-var injectIntl = require('../../../utils/injectIntl');
+var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
-var Input = require('../../Input');
-var Select = require('../../Select');
+var Input = require('../Input');
+var Select = require('../Select');
 
 var FactorDetail = require('./FactorDetail');
 var FactorRenderer = require('./FactorRenderer');
 var GanttController = require('./GanttController');
-var FactorJsonSerializer = require('../../../utils/FactorJsonSerializer');
-var Constants = require('../../../constants/Constants');
-var I18nMixin = require('../../../i18n/I18nMixin');
+var FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
+var Constants = require('../../constants/Constants');
+var I18nMixin = require('../../i18n/I18nMixin');
 
 var Factors = React.createClass({
     mixins: [I18nMixin],

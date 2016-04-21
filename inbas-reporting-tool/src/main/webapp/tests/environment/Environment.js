@@ -101,7 +101,7 @@ module.exports = {
     },
 
     mockFactors: function (investigation) {
-        var Factors = rewire('../../js/components/report/occurrence/Factors'),
+        var Factors = rewire('../../js/components/factor/Factors'),
             GanttController = jasmine.createSpyObj('GanttController', ['init', 'setScale', 'expandSubtree', 'updateOccurrenceEvent']),
             FactorRenderer = jasmine.createSpyObj('FactorRenderer', ['renderFactors']),
             FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorGraph', 'getFactorHierarchy', 'getLinks', 'setGanttController']);
