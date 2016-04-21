@@ -49,9 +49,7 @@ var ReportTypeahead = React.createClass({
             option,
             reports = data.reports;
         for (var i = 0, len = reports.length; i < len; i++) {
-            option = assign({}, reports[i].occurrence);
-            option.key = reports[i].key;
-            option.types = reports[i].types;
+            option = assign({}, reports[i]);
             option.type = ReportType.asString(reports[i]);
             options.push(option);
         }
@@ -68,13 +66,13 @@ var ReportTypeahead = React.createClass({
             results: 'dashboard-report-search-results'
         };
         var optionLabel = function (option) {
-            return option.name + ' (' + Utils.formatDate(new Date(option.startTime)) + ' - ' + option.type + ')';
+            return option.identification + ' (' + Utils.formatDate(new Date(option.date)) + ' - ' + option.type + ')';
         };
         return (
             <Typeahead ref='reportTypeahead' className='form-group form-group-sm' name={this.props.name}
                        formInputOption='id' placeholder={this.i18n('dashboard.search-placeholder')}
-                       onOptionSelected={this.onOptionSelected} filterOption='name' displayOption={optionLabel}
-                       options={this.state.options} customClasses={classes}
+                       onOptionSelected={this.onOptionSelected} filterOption='identification'
+                       displayOption={optionLabel} options={this.state.options} customClasses={classes}
                        customListComponent={TypeaheadResultList}/>
         );
     }

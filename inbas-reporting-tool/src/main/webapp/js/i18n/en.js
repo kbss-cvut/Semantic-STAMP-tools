@@ -72,7 +72,7 @@ module.exports = {
         'dashboard.create-empty-tile': 'Start with Empty Report',
         'dashboard.create-import-tile': 'Import Initial Report',
         'dashboard.recent-panel-heading': 'Recently Edited/Added Reports',
-        'dashboard.recent-table-last-edited': 'Last edited',
+        'dashboard.recent-table-last-edited': 'Last modified',
 
         'reports.no-occurrence-reports': 'There are no occurrence reports, yet.',
         'reports.no-reports': 'There are no reports, yet. You can create one ',
