@@ -133,5 +133,24 @@ module.exports = {
      */
     mockLogger: function () {
         return jasmine.createSpyObj('Logger', ['warn', 'log', 'error']);
+    },
+
+    /**
+     * Mocks the Gantt component and sets in as global variable to simulate its ordinary behaviour.
+     *
+     * Returns the mock for possible further use.
+     */
+    mockGantt: function () {
+        var gantt = jasmine.createSpyObj('gantt', ['init', 'open', 'addTask', 'addLink', 'getChildren', 'attachEvent', 'clearAll', 'render', 'calculateDuration']);
+        gantt.config = {
+            links: {}
+        };
+        gantt.templates = {};
+        gantt.date = {};
+        gantt.getChildren.and.callFake(() => {
+            return [];
+        });
+        jasmine.getGlobal().gantt = gantt;
+        return gantt;
     }
 };
