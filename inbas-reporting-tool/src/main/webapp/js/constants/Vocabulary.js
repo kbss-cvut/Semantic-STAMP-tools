@@ -7,5 +7,7 @@ module.exports = {
     RDFS_LABEL: 'http://www.w3.org/2000/01/rdf-schema#label',
     RDFS_COMMENT: 'http://www.w3.org/2000/01/rdf-schema#comment',
 
-    OCCURRENCE_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/occurrence_report'
+    OCCURRENCE_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/occurrence_report',
+
+    HAS_PART: 'http://onto.fel.cvut.cz/ontologies/ufo/has_part'
 };

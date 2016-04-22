@@ -70,7 +70,7 @@ var Occurrence = React.createClass({
                     </div>
                     <div className='picker-container form-group form-group-sm col-xs-4'>
                         <label className='control-label'>{this.i18n('occurrence.end-time')}</label>
-                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrence.startTime.toString()}
+                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrence.endTime.toString()}
                                         onChange={this.onEndChange}
                                         inputProps={{title: this.i18n('occurrence.end-time-tooltip'), bsSize: 'small'}}/>
                     </div>

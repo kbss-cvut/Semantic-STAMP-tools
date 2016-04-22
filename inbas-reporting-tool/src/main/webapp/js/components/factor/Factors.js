@@ -46,7 +46,7 @@ var Factors = React.createClass({
     },
 
     componentDidUpdate: function () {
-        // this.ganttController.updateOccurrenceEvent(this.props.report);
+        this.ganttController.updateOccurrenceEvent(this.props.report);
     },
 
     componentDidMount: function () {
@@ -59,7 +59,7 @@ var Factors = React.createClass({
             onDeleteLink: this.onDeleteLink
         });
         this.ganttController.setScale(this.state.scale);
-        // this.renderFactors();
+        this.renderFactors();
         this.factorReferenceIdCounter = FactorRenderer.greatestReferenceId;
     },
 

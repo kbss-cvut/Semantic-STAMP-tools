@@ -381,6 +381,10 @@ var GanttController = {
         return gantt.addTask(factor, parentId);
     },
 
+    setFactorParent: function(child, parent) {
+        gantt.setParent(child, parent);
+    },
+
     addLink: function (link) {
         link.type = gantt.config.links.finish_to_start;
         gantt.addLink(link);

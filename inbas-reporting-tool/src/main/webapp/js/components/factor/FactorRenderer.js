@@ -1,6 +1,7 @@
 'use strict';
 
 var GanttController = require('./GanttController');
+var Vocabulary = require('../../constants/Vocabulary');
 
 var FactorRenderer = {
     ganttController: GanttController,
@@ -24,10 +25,11 @@ var FactorRenderer = {
         }, null);
         if (report.factorGraph) {
             this.addNodes(root, report.factorGraph.nodes);
+            this.addEdges(report.factorGraph.edges);
         }
     },
 
-    addNodes: function(root, nodes) {
+    addNodes: function (root, nodes) {
         var node,
             startDate = new Date(root.startTime),
             endDate = new Date(root.endTime);
@@ -46,20 +48,29 @@ var FactorRenderer = {
         }
     },
 
-    addLinks: function(links, linkType) {
-        if (!links) {
+    addEdges: function (edges) {
+        if (!edges) {
             return;
         }
-        var from, to;
-        for (var i = 0, len = links.length; i < len; i++) {
-            from = links[i].from;
-            to = links[i].to;
-            this.ganttController.addLink({
-                source: this.referenceIdsToGanttIds[from],
-                target: this.referenceIdsToGanttIds[to],
-                factorType: linkType
-            });
+        for (var i = 0, len = edges.length; i < len; i++) {
+            if (edges[i].linkType === Vocabulary.HAS_PART) {
+                this.addParent(edges[i]);
+            } else {
+                this.addLink(edges[i]);
+            }
         }
+    },
+
+    addParent: function (edge) {
+        this.ganttController.setFactorParent(this.referenceIdsToGanttIds[edge.to], this.referenceIdsToGanttIds[edge.from]);
+    },
+
+    addLinks: function (edge) {
+        this.ganttController.addLink({
+            source: this.referenceIdsToGanttIds[edge.from],
+            target: this.referenceIdsToGanttIds[edge.to],
+            factorType: edge.linkType
+        });
     }
 };
 

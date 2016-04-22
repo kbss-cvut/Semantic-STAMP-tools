@@ -4,12 +4,13 @@ describe('FactorRenderer tests', function () {
 
     var rewire = require('rewire'),
         FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
+        Vocabulary = require('../../js/constants/Vocabulary'),
         Generator = require('../environment/Generator').default,
         GanttController,
         report;
 
     beforeEach(function () {
-        GanttController = jasmine.createSpyObj('GanttController', ['addFactor', 'addLink', 'setOccurrenceEventId']);
+        GanttController = jasmine.createSpyObj('GanttController', ['addFactor', 'addLink', 'setOccurrenceEventId', 'setFactorParent']);
         FactorRenderer.ganttController = GanttController;
         report = {
             occurrence: {
@@ -29,11 +30,16 @@ describe('FactorRenderer tests', function () {
                 firstName: 'Catherine',
                 lastName: 'Halsey',
                 username: 'halsey@unsc.org'
+            },
+            factorGraph: {
+                nodes: [1]  // occurrence referenceId
             }
+
         }
     });
 
     it('Renders occurrence when factor graph is empty', () => {
+        delete report.factorGraph;
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(1);
         expect(GanttController.setOccurrenceEventId).toHaveBeenCalled();
@@ -50,9 +56,6 @@ describe('FactorRenderer tests', function () {
     }
 
     it('Renders occurrence when it is the only node in factor graph', () => {
-        report.factorGraph = {
-            nodes: [report.occurrence.referenceId]
-        };
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(1);
         expect(GanttController.setOccurrenceEventId).toHaveBeenCalled();
@@ -61,10 +64,7 @@ describe('FactorRenderer tests', function () {
     });
 
     it('Renders nodes of the factor graph', () => {
-        report.factorGraph = {
-            nodes: [report.occurrence.referenceId]
-        };
-        report.factorGraph.nodes.push(Generator.generateFactorGraphNodes());
+        Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(report.factorGraph.nodes.length);
         verifyAddedNodes();
@@ -82,62 +82,40 @@ describe('FactorRenderer tests', function () {
         }
     }
 
-    xit('Renders factors from new investigation report - it does not contain deeper hierarchy or cause/mitigation links', function () {
-        var rootId = null;
-        report.rootFactor = Generator.generateFactors(report.occurrence.startTime, report.occurrence.endTime, 1);
-        GanttController.addFactor.and.returnValue(Date.now());
-        GanttController.setOccurrenceEventId.and.callFake(function (id) {
-            rootId = id
-        });
-        FactorRenderer.renderFactors(report);
-        expect(GanttController.addFactor.calls.count()).toEqual(3);
-        var args = GanttController.addFactor.calls.allArgs(),
-            root = args[0][0],
-            firstChild = args[1][0],
-            secondChild = args[2][0];
-        verifyRoot(root);
-        verifyNode(report.rootFactor.children[0], firstChild, rootId);
-        verifyNode(report.rootFactor.children[1], secondChild, rootId);
-    });
-
-    function verifyNode(expected, node, expectedParentId) {
-        expect(node.start_date.getTime()).toEqual(expected.startTime);
-        expect(node.end_date.getTime()).toEqual(expected.endTime);
-        expect(node.statement).toEqual(expected);
-        expect(node.parent).toEqual(expectedParentId);
-    }
-
-    xit('Renders root factor with deeper descendant hierarchy', function () {
-        var rootId = null, childIds = [];
-        report.rootFactor = Generator.generateFactors(report.occurrence.startTime, report.occurrence.endTime, 2);
-        GanttController.addFactor.and.callFake(function (item, parentId) {
+    it('Renders factor graph part-of hierarchy', () => {
+        Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
+        report.factorGraph.edges = Generator.generatePartOfLinksForNodes(report, report.factorGraph.nodes);
+        var referencesToIds = {};
+        GanttController.addFactor.and.callFake((factor) => {
             var id = Generator.getRandomInt();
-            if (parentId === rootId) {
-                childIds.push(id);
+            if (factor.statement === report.occurrence) {
+                id = factor.id;
             }
+            referencesToIds[factor.statement.referenceId] = id;
             return id;
         });
-        GanttController.setOccurrenceEventId.and.callFake(function (id) {
-            rootId = id
-        });
         FactorRenderer.renderFactors(report);
-        expect(GanttController.addFactor.calls.count()).toEqual(7);
-        var args = GanttController.addFactor.calls.allArgs(),
-            root = args[0][0],
-            firstChild = args[1][0],
-            firstChildFirstChild = args[2][0],
-            firstChildSecondChild = args[3][0],
-            secondChild = args[4][0],
-            secondChildFirstChild = args[5][0],
-            secondChildSecondChild = args[6][0];
-        verifyRoot(root);
-        verifyNode(report.rootFactor.children[0], firstChild, rootId);
-        verifyNode(report.rootFactor.children[1], secondChild, rootId);
-        verifyNode(report.rootFactor.children[0].children[0], firstChildFirstChild, childIds[0]);
-        verifyNode(report.rootFactor.children[0].children[1], firstChildSecondChild, childIds[0]);
-        verifyNode(report.rootFactor.children[1].children[0], secondChildFirstChild, childIds[1]);
-        verifyNode(report.rootFactor.children[1].children[1], secondChildSecondChild, childIds[1]);
+        verifyPartOfHierarchy(referencesToIds);
     });
+
+    function verifyPartOfHierarchy(referencesToFactorIds) {
+        var edges = report.factorGraph.edges;
+        for (var i = 0, len = edges.length; i < len; i++) {
+            if (edges[i].linkType !== Vocabulary.HAS_PART) {
+                continue;
+            }
+            expect(GanttController.setFactorParent).toHaveBeenCalledWith(referencesToFactorIds[edges[i].to], referencesToFactorIds[edges[i].from]);
+        }
+    }
+
+    function verifyAddedLinks(referencesToFactorsIds) {
+        var links = report.factorGraph.links;
+        for (var i = 0, len = links.length; i < len; i++) {
+            var added = GanttController.addLink.calls.argsFor(i)[0];
+            expect(added.source).toEqual(referencesToFactorsIds[links[i].from]);
+            expect(added.target).toEqual(referencesToFactorsIds[links[i].to]);
+        }
+    }
 
     xit('Renders factors with causality relationships using references', function () {
         var rootId = null, childIds = [], ids = {};

@@ -1,6 +1,7 @@
 'use strict';
 
 import Constants from "../../js/constants/Constants";
+import Vocabulary from "../../js/constants/Vocabulary";
 
 var CATEGORIES = [
     {
@@ -72,7 +73,7 @@ export default class Generator {
     static generateFactorGraphNodes() {
         var nodes = [],
             referenceIdCounter = Date.now();
-        for (var i = 0, len = Generator.getRandomPositiveInt(10); i < len; i++) {
+        for (var i = 0, len = Generator.getRandomPositiveInt(5, 10); i < len; i++) {
             nodes.push({
                 uri: "http://onto.fel.cvut.cz/ontologies/ufo/Event-" + i,
                 eventType: Generator.randomCategory().id,
@@ -80,6 +81,29 @@ export default class Generator {
             });
         }
         return nodes;
+    }
+
+    static generatePartOfLinksForNodes(report, nodes) {
+        var parents = [report.occurrence],
+            links = [], index = 1,
+            childCount;
+        while (index < nodes.length - 1) {
+            var newParents = [];
+            for (var j = 0, len = parents.length; j < len; j++) {
+                if (nodes.length - 1 < index) {
+                    break;
+                }
+                childCount = Generator.getRandomPositiveInt(1, nodes.length - index);
+                var parent = parents[j];
+                for (var i = index; i < index + childCount; i++) {
+                    links.push({from: parent.referenceId, to: nodes[i].referenceId, linkType: Vocabulary.HAS_PART});
+                    newParents.push(nodes[i]);
+                }
+                index += childCount;
+            }
+            parents = newParents;
+        }
+        return links;
     }
 
     /**
@@ -121,13 +145,16 @@ export default class Generator {
     }
 
     /**
-     * Generates random integer between 1 (included) and max(excluded).
-     * @param max [optional] Maximum generated number, optional. If not specified, max safe integer value is used.
+     * Generates random integer between minimum (included) and max(excluded).
+     * @param min [optional] Minimal generated number, optional. If not specified, 1 is used.
+     * @param max [optional] Maximal generated number, optional. If not specified, max safe integer value is used.
      * @return {number}
      */
-    static getRandomPositiveInt(max) {
-        var min = 1,
-            bound = max ? max : Number.MAX_SAFE_INTEGER;
+    static getRandomPositiveInt(min, max) {
+        var bound = max ? max : Number.MAX_SAFE_INTEGER;
+        if (!min) {
+            min = 1;
+        }
         return Math.floor(Math.random() * (bound - min)) + min;
     }
 
@@ -135,7 +162,7 @@ export default class Generator {
      * Generates a random number of reports.
      */
     static generateReports() {
-        var count = this.getRandomInt(100),
+        var count = this.getRandomPositiveInt(5, 100),
             reports = [],
             report;
         for (var i = 0; i < count; i++) {
