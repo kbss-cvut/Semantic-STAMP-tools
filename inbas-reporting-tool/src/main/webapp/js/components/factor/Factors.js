@@ -22,6 +22,7 @@ var FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
 var Constants = require('../../constants/Constants');
 var I18nMixin = require('../../i18n/I18nMixin');
 
+// TODO We should get rid of references to report.occurrence, because factors will be used also in Safety issue reports and possibly audit reports
 var Factors = React.createClass({
     mixins: [I18nMixin],
 
@@ -105,6 +106,9 @@ var Factors = React.createClass({
     },
 
     addChildFactorToParent: function (child) {
+        if (!child.parent) {
+            return;
+        }
         var parent = this.ganttController.getFactor(child.parent);
         if (!parent.children) {
             parent.children = [];
