@@ -1,0 +1,15 @@
+PREFIX sira: <http://onto.fel.cvut.cz/ontologies/arms/sira/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?level ?label ?comment ?lowerLevel {
+  SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/arms> {
+      sira:accident-outcome sira:has-level ?level .
+      ?level rdfs:label ?label
+      OPTIONAL {
+        ?level rdfs:comment ?comment
+      }
+      OPTIONAL {
+        ?level sira:is-higher-than ?lowerLevel
+      }
+  }
+}
