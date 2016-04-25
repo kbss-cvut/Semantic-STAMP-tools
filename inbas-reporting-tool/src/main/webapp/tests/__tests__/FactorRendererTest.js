@@ -1,6 +1,6 @@
 'use strict';
 
-describe('FactorRenderer tests', function () {
+describe('FactorRenderer', function () {
 
     var rewire = require('rewire'),
         FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
@@ -166,22 +166,10 @@ describe('FactorRenderer tests', function () {
         expect(linkTwo.factorType).toEqual('mitigate');
     });
 
-    xit('Stores highest reference id', function () {
-        var rootId = null, childIds = [], ids = {};
-        report.rootFactor = Generator.generateFactors(report.occurrence.startTime, report.occurrence.endTime, 2);
-        GanttController.addFactor.and.callFake(function (item, parentId) {
-            var id = Date.now();
-            if (parentId === rootId) {
-                childIds.push(id);
-            }
-            ids[item.statement.referenceId] = id;
-            return id;
-        });
-        GanttController.setOccurrenceEventId.and.callFake(function (id) {
-            rootId = id
-        });
+    it('Stores highest reference id', function () {
+        Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         FactorRenderer.renderFactors(report);
 
-        expect(FactorRenderer.greatestReferenceId).toEqual(6);
+        expect(FactorRenderer.greatestReferenceId).toEqual(report.factorGraph.nodes[report.factorGraph.nodes.length - 1].referenceId);
     })
 });

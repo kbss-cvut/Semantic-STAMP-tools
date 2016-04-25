@@ -45,6 +45,9 @@ var FactorRenderer = {
                 statement: node
             }, null);
             this.referenceIdsToGanttIds[node.referenceId] = id;
+            if (this.greatestReferenceId < node.referenceId) {
+                this.greatestReferenceId = node.referenceId;
+            }
         }
     },
 

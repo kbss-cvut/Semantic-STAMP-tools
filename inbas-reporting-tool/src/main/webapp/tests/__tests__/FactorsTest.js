@@ -5,16 +5,13 @@ describe('Factors component tests', function () {
     var React = require('react'),
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
+        Generator = require('../environment/Generator').default,
         Factors = rewire('../../js/components/factor/Factors'),
         FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
         GanttController = null,
         report = {
             occurrence: {
                 name: 'TestOccurrence',
-                startTime: Date.now() - 10000,
-                endTime: Date.now()
-            },
-            rootFactor: {
                 startTime: Date.now() - 10000,
                 endTime: Date.now()
             }
@@ -27,7 +24,7 @@ describe('Factors component tests', function () {
         Factors.__set__('FactorRenderer', FactorRenderer);
         GanttController.getFactor.and.returnValue({
             text: report.occurrence.name,
-            start_date: new Date(report.rootFactor.startTime)
+            start_date: new Date(report.occurrence.startTime)
         });
     });
 
@@ -36,8 +33,8 @@ describe('Factors component tests', function () {
         expect(GanttController.init).toHaveBeenCalled();
         expect(GanttController.setScale).toHaveBeenCalledWith('minute');
     });
-
-    xit('Adds event of the occurrence into gantt on initialization', function () {
+    
+    it('Adds event of the occurrence into gantt on initialization', function () {
         var factor = null;
         GanttController.addFactor.and.callFake(function (arg) {
             factor = arg;
@@ -46,7 +43,7 @@ describe('Factors component tests', function () {
         expect(GanttController.addFactor).toHaveBeenCalled();
         expect(factor).toBeDefined();
         expect(factor.text).toEqual(report.occurrence.name);
-        expect(factor.start_date).toEqual(new Date(report.rootFactor.startTime));
+        expect(factor.start_date).toEqual(new Date(report.occurrence.startTime));
     });
 
     it('Sets scale to seconds when seconds are selected', function () {
@@ -56,7 +53,29 @@ describe('Factors component tests', function () {
         expect(GanttController.setScale).toHaveBeenCalledWith('second');
     });
 
-    xit('Assigns reference id to new factors', function () {
+    it('Adds new factor without parent to gantt when factor at top level is created', () => {
+        var factors = Environment.render(<Factors report={report}/>),
+            newFactor = {
+                duration: 2,
+                durationUnit: 'minute',
+                isNew: true,
+                id: Generator.getRandomInt(),
+                start_date: new Date(Date.now()),
+                end_date: new Date(Date.now() + 2 * 60 * 60 * 1000),
+                text: '2180100 - Loss of Separation',
+                statement: {}
+            };
+        factors.state.currentFactor = newFactor;
+        factors.onSaveFactor();
+        expect(GanttController.addFactor).toHaveBeenCalled();
+        expect(GanttController.getFactor).not.toHaveBeenCalled();
+        // First call is to add the occurrence event itself
+        var added = GanttController.addFactor.calls.argsFor(1)[0];
+        expect(added.id).toEqual(newFactor.id);
+        expect(added.parent).not.toBeDefined();
+    });
+
+    it('Assigns reference id to new factors', () => {
         var newFactor = {
                 isNew: true,
                 text: 'Test',
@@ -64,12 +83,12 @@ describe('Factors component tests', function () {
                 parent: 1
             }, parent = {
                 id: 1,
-                statement: report.rootFactor
+                statement: report.occurrence
             },
             referenceId = 117,
             component;
-        report.rootFactor.referenceId = referenceId;
-        GanttController.getFactor.and.returnValue(report.rootFactor);
+        report.occurrence.referenceId = referenceId;
+        GanttController.getFactor.and.returnValue(parent);
         component = Environment.render(<Factors report={report}/>);
         component.setState({
             currentFactor: newFactor

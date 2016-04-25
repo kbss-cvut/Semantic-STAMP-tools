@@ -65,6 +65,13 @@ var CATEGORIES = [
         "name": "15 - RE: Runway excursion"
     }];
 
+var FACTOR_TYPES = [
+    'http://onto.fel.cvut.cz/ontologies/documentation/mitigates',
+    'http://onto.fel.cvut.cz/ontologies/documentation/causes',
+    'http://onto.fel.cvut.cz/ontologies/documentation/contributes-to',
+    'http://onto.fel.cvut.cz/ontologies/documentation/prevents'
+];
+
 /**
  * Generates test data.
  */
@@ -104,6 +111,14 @@ export default class Generator {
             parents = newParents;
         }
         return links;
+    }
+
+    static generateFactorLinksForNodes(report, nodes) {
+
+    }
+
+    static _getRandomFactorType() {
+        return FACTOR_TYPES[Generator.getRandomInt(FACTOR_TYPES.length)];
     }
 
     /**
