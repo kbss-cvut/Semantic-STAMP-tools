@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.Set;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "javaClass")
@@ -13,6 +14,10 @@ import java.util.Set;
 public class EventDto implements HasUri {
 
     private URI uri;
+
+    private Date startTime;
+
+    private Date endTime;
 
     private URI eventType;
 
@@ -27,6 +32,22 @@ public class EventDto implements HasUri {
 
     public void setUri(URI uri) {
         this.uri = uri;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     public URI getEventType() {

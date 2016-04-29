@@ -104,7 +104,7 @@ module.exports = {
         var Factors = rewire('../../js/components/factor/Factors'),
             GanttController = jasmine.createSpyObj('GanttController', ['init', 'setScale', 'expandSubtree', 'updateOccurrenceEvent']),
             FactorRenderer = jasmine.createSpyObj('FactorRenderer', ['renderFactors']),
-            FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorGraph', 'getFactorHierarchy', 'getLinks', 'setGanttController']);
+            FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorGraph', 'setGanttController']);
         Factors.__set__('GanttController', GanttController);
         Factors.__set__('FactorRenderer', FactorRenderer);
         Factors.__set__('FactorJsonSerializer', FactorJsonSerializer);

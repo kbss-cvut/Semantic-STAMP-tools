@@ -399,6 +399,10 @@ var GanttController = {
         return gantt.getTask(factorId).statement;
     },
 
+    forEach: function(func) {
+        gantt.eachTask(func);
+    },
+
     getChildren: function (factorId) {
         var childIds = gantt.getChildren(factorId);
         var children = [];

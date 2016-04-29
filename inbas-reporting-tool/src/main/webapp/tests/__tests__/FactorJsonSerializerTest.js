@@ -1,59 +1,137 @@
 'use strict';
 
-xdescribe('Test factor tree hierarchy serialization for JSON', function() {
+describe('Test factor tree hierarchy serialization for JSON', function () {
 
     var GanttController,
         FactorJsonSerializer,
-        Generator = require('../environment/Generator').default;
+        Generator = require('../environment/Generator').default,
+        report;
 
-    beforeEach(function() {
-        GanttController = jasmine.createSpyObj('ganttController', ['getFactor', 'getChildren', 'getLinks']);
+    beforeEach(function () {
+        GanttController = jasmine.createSpyObj('ganttController', ['forEach', 'getFactor', 'getChildren', 'getLinks']);
         FactorJsonSerializer = require('../../js/utils/FactorJsonSerializer');
         FactorJsonSerializer.setGanttController(GanttController);
         GanttController.getLinks.and.returnValue([]);
+        report = Generator.generateOccurrenceReport();
+        report.occurrence.referenceId = 117;
     });
 
-    it('Serializes only the root when it has no children', function() {
-        var root = Generator.generateFactors(Date.now(), Date.now(), 0);
-        Generator.generateGanttTasksForFactors(root, GanttController);
-
-        var result = FactorJsonSerializer.getFactorHierarchy();
-        expect(result).toEqual(root);
+    it('Serializes nodes from the Gantt component', () => {
+        var nodes = Generator.generateFactorGraphNodes();
+        initForEachStub(nodes);
+        GanttController.getChildren.and.returnValue([]);
+        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
+        expect(factorGraph.nodes).not.toBeNull();
+        expect(factorGraph.nodes).toEqual(nodes);
     });
 
-    it('Serializes a factor hierarchy with depth equal to 2', function() {
-        var root = Generator.generateFactors(Date.now(), Date.now(), 2);
-        Generator.generateGanttTasksForFactors(root, GanttController);
+    function initForEachStub(nodes) {
+        GanttController.forEach.and.callFake((func) => {
+            for (var i = 0, len = nodes.length; i < len; i++) {
+                func({
+                    id: nodes[i].referenceId,   // Just for the sake of test simplicity
+                    start_date: new Date(nodes[i].startTime),
+                    end_date: new Date(nodes[i].endTime),
+                    statement: nodes[i]
+                });
+            }
+        });
+    }
 
-        var result = FactorJsonSerializer.getFactorHierarchy();
-        expect(result).toEqual(root);
+    it('Serializes part-of hierarchy', () => {
+        var nodes = [report.occurrence];
+        Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
+        var partOfLinks = Generator.generatePartOfLinksForNodes(report, nodes);
+        initGetFactorStub(nodes);
+        initForEachStub(nodes);
+        initGetChildrenStub(nodes, partOfLinks);
+
+        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
+        expect(factorGraph.nodes).not.toBeNull();
+        expect(factorGraph.edges).not.toBeNull();
+        expect(factorGraph.edges.length).toEqual(partOfLinks.length);
+        verifyLinks(partOfLinks, factorGraph.edges);
     });
 
-    it('Omits links attribute if there are no links in the hierarchy', function() {
-        var root = Generator.generateFactors(Date.now(), Date.now(), 2);
-        Generator.generateGanttTasksForFactors(root, GanttController);
+    function initGetFactorStub(nodes) {
+        GanttController.getFactor.and.callFake((id) => {
+            return nodes.find((item) => {
+                return item.referenceId === id;
+            });
+        });
+    }
 
-        var result = FactorJsonSerializer.getLinks();
-        expect(result).toBeNull();
+    function initGetChildrenStub(nodes, partOfLinks) {
+        GanttController.getChildren.and.callFake((id) => {
+            var childLinks = partOfLinks.filter((lnk) => {
+                return lnk.from === id;
+            });
+            var childIds = childLinks.map((item) => {
+                return item.to;
+            });
+            var children = [];
+            for (var i = 0, len = nodes.length; i < len; i++) {
+                if (childIds.indexOf(nodes[i].referenceId) !== -1) {
+                    children.push({
+                        id: nodes[i].referenceId,   // Just for the sake of test simplicity
+                        start_date: new Date(nodes[i].startTime),
+                        end_date: new Date(nodes[i].endTime),
+                        statement: nodes[i],
+                        parent: id
+                    });
+                }
+            }
+            return children;
+        });
+    }
+
+    function verifyLinks(expected, actual) {
+        for (var i = 0, len = expected.length; i < len; i++) {
+            expect(actual.find((item) => {
+                return item.from === expected[i].from && item.to === expected[i].to && item.linkType === expected[i].linkType;
+            })).not.toBeNull();
+        }
+    }
+
+    it('Serializes causality/mitigation relations', () => {
+        var nodes = [report.occurrence];
+        Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
+        var factorLinks = Generator.generateFactorLinksForNodes(nodes);
+        initGetLinksStub(factorLinks);
+        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
+        expect(factorGraph.nodes).not.toBeNull();
+        expect(factorGraph.edges).not.toBeNull();
+        expect(factorGraph.edges.length).toEqual(factorLinks.length);
+        verifyLinks(factorLinks, factorGraph.edges);
     });
 
-    it('Transforms links from the gantt component into simple fields of causes and mitigates', function() {
-        var root = Generator.generateFactors(Date.now(), Date.now(), 2);
-        Generator.generateGanttTasksForFactors(root, GanttController);
-        Generator.generateGanttLinksForFactors(root, GanttController);
+    function initGetLinksStub(factorLinks) {
+        GanttController.getLinks.and.callFake(() => {
+            return factorLinks.map((item) => {
+                return {
+                    source: item.from,
+                    target: item.to,
+                    factorType: item.linkType
+                };
+            });
+        });
+    }
 
-        var result = FactorJsonSerializer.getLinks();
-        expect(result).not.toBeNull();
-        expect(result.causes.length).toEqual(2);
-        expect(result.mitigates.length).toEqual(1);
-        var causeOne = result.causes[0],
-            causeTwo = result.causes[1],
-            mitigate = result.mitigates[0];
-        expect(causeOne.from).toEqual(root.children[0].referenceId);
-        expect(causeOne.to).toEqual(root.children[1].referenceId);
-        expect(causeTwo.from).toEqual(root.children[0].children[0].referenceId);
-        expect(causeTwo.to).toEqual(root.children[0].children[1].referenceId);
-        expect(mitigate.from).toEqual(root.children[1].children[0].referenceId);
-        expect(mitigate.to).toEqual(root.children[1].children[1].referenceId);
+    it('Serializes factor graph', () => {
+        var nodes = [report.occurrence];
+        Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
+        var factorLinks = Generator.generateFactorLinksForNodes(nodes);
+        var partOfLinks = Generator.generatePartOfLinksForNodes(report, nodes);
+        initGetLinksStub(factorLinks);
+        initGetFactorStub(nodes);
+        initForEachStub(nodes);
+        initGetChildrenStub(nodes, partOfLinks);
+
+        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
+        expect(factorGraph.nodes).not.toBeNull();
+        expect(factorGraph.nodes).toEqual(nodes);
+        expect(factorGraph.edges).not.toBeNull();
+        expect(factorGraph.edges.length).toEqual(partOfLinks.length + factorLinks.length);
+        verifyLinks(partOfLinks.concat(factorLinks), factorGraph.edges);
     });
 });

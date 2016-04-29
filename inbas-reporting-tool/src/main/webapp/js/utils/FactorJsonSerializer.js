@@ -1,29 +1,25 @@
 'use strict';
 
-var Constants = require('../constants/Constants');
+var Vocabulary = require('../constants/Vocabulary');
 
 var FactorJsonSerializer = {
     ganttController: null,
+    ganttIdsToNodes: null,
 
     setGanttController: function (controller) {
         this.ganttController = controller;
     },
-    
-    getFactorGraph: function(report) {
-        this.verifyGanttControllerIsSet();
-        report.occurrence.referenceId = 1;
-        // TODO
-        return {
-            nodes: [1],
-            edges: []
-        };
-    },
 
-    getFactorHierarchy: function () {
+    getFactorGraph: function (report) {
         this.verifyGanttControllerIsSet();
-        var root = this.ganttController.getFactor(this.ganttController.occurrenceEventId);
-        root.children = this._getChildren(this.ganttController.occurrenceEventId);
-        return root;
+        this.ganttIdsToNodes = {};
+        var nodes = this._getNodes(),
+            edges = this._getEdges();
+        // TODO We will want to use reference to the occurrence instance, which is already present in report
+        return {
+            nodes: nodes,
+            edges: edges
+        };
     },
 
     verifyGanttControllerIsSet: function () {
@@ -32,49 +28,55 @@ var FactorJsonSerializer = {
         }
     },
 
-    _getChildren: function (parentId) {
-        var childFactors = this.ganttController.getChildren(parentId),
-            children = [];
-        for (var i = 0, len = childFactors.length; i < len; i++) {
-            var factor = childFactors[i];
-            factor.children = this._getChildren(childFactors[i].id);
-            children.push(factor.statement);
-        }
-        return children;
+    _getNodes: function () {
+        var nodes = [],
+            me = this;
+        this.ganttController.forEach((item) => {
+            var node = item.statement;
+            node.startTime = item.start_date.getTime();
+            node.endTime = item.end_date.getTime();
+            me.ganttIdsToNodes[item.id] = node;
+            nodes.push(node);
+        });
+        return nodes;
     },
 
-    getLinks: function () {
-        this.verifyGanttControllerIsSet();
-        var links = {
-            causes: [],
-            mitigates: []
-        };
-        this._resolveLinks(links);
-        if (links.causes.length === 0 && links.mitigates.length === 0) {
-            return null;
-        }
-        return links;
+    _getEdges: function () {
+        var edges = [];
+        Array.prototype.push.apply(edges, this._resolvePartOfHierarchy());
+        Array.prototype.push.apply(edges, this._resolveFactorLinks());
+        return edges;
     },
 
-    _resolveLinks: function (links) {
-        var ganttLinks = this.ganttController.getLinks();
-        for (var i = 0, len = ganttLinks.length; i < len; i++) {
-            var ganttLink = ganttLinks[i],
-                from = this.ganttController.getFactor(ganttLink.source),
-                to = this.ganttController.getFactor(ganttLink.target);
-            if (!from || !to) {
-                console.error('Unable to find source or target of link ' + ganttLink);
+    _resolvePartOfHierarchy: function () {
+        var partOfEdges = [];
+        this.ganttController.forEach((item) => {
+            var children = this.ganttController.getChildren(item.id);
+            if (children.length === 0) {
+                return;
             }
-            var link = {
-                from: from.referenceId,
-                to: to.referenceId
-            };
-            if (ganttLink.factorType === Constants.LINK_TYPES.CAUSE) {
-                links.causes.push(link);
-            } else {
-                links.mitigates.push(link);
+            for (var i = 0, len = children.length; i < len; i++) {
+                partOfEdges.push({
+                    from: this.ganttIdsToNodes[item.id].referenceId,
+                    to: this.ganttIdsToNodes[children[i].id].referenceId,
+                    linkType: Vocabulary.HAS_PART
+                });
             }
+        });
+        return partOfEdges;
+    },
+
+    _resolveFactorLinks: function () {
+        var links = this.ganttController.getLinks(),
+            edges = [];
+        for (var i = 0, len = links.length; i < len; i++) {
+            edges.push({
+                from: this.ganttIdsToNodes[links[i].source],
+                to: this.ganttIdsToNodes[links[i].target],
+                linkType: links[i].factorType
+            });
         }
+        return edges;
     }
 };
 

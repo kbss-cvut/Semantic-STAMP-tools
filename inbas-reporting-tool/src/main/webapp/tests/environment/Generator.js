@@ -83,6 +83,8 @@ export default class Generator {
         for (var i = 0, len = Generator.getRandomPositiveInt(5, 10); i < len; i++) {
             nodes.push({
                 uri: "http://onto.fel.cvut.cz/ontologies/ufo/Event-" + i,
+                startTime: Date.now() - 60000,
+                endTime: Date.now(),
                 eventType: Generator.randomCategory().id,
                 referenceId: referenceIdCounter++
             });

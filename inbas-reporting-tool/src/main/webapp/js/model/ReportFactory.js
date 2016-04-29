@@ -7,6 +7,7 @@ module.exports = {
         return {
             occurrence: {
                 javaClass: Constants.OCCURRENCE_JAVA_CLASS,
+                referenceId: Date.now(),
                 name: '',
                 // Round the time to whole seconds
                 startTime: (Date.now() / 1000) * 1000,
