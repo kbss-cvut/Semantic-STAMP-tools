@@ -14,7 +14,6 @@ var injectIntl = require('../../../utils/injectIntl');
 var Select = require('../../Select');
 var OptionsStore = require('../../../stores/OptionsStore');
 var TypeaheadStore = require('../../../stores/TypeaheadStore');
-var Utils = require('../../../utils/Utils');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var Vocabulary = require('../../../constants/Vocabulary');
 

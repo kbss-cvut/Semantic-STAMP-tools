@@ -7,7 +7,6 @@ var Logger = require('../../utils/Logger');
 var Utils = require('../../utils/Utils');
 var injectIntl = require('../../utils/injectIntl');
 var I18nMixin = require('../../i18n/I18nMixin');
-var ReportType = require('../../model/ReportType');
 
 var RevisionInfo = React.createClass({
     mixins: [I18nMixin],

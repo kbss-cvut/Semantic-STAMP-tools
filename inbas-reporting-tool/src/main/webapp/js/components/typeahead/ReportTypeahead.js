@@ -7,7 +7,6 @@
 var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-bootstrap-typeahead');
-var assign = require('object-assign');
 
 var injectIntl = require('../../utils/injectIntl');
 
