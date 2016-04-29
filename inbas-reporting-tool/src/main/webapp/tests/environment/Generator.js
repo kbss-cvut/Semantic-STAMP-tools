@@ -113,8 +113,22 @@ export default class Generator {
         return links;
     }
 
-    static generateFactorLinksForNodes(report, nodes) {
-
+    /**
+     * Creates random links connecting the graph nodes.
+     * @param nodes Nodes in the factor graph
+     */
+    static generateFactorLinksForNodes(nodes) {
+        var cnt = Generator.getRandomPositiveInt(nodes.length / 2, nodes.length * 2),
+            links = [], lnk;
+        for (var i = 0; i < cnt; i++) {
+            lnk = {
+                from: Generator.getRandomInt(nodes.length),
+                to: Generator.getRandomInt(nodes.length),
+                linkType: Generator._getRandomFactorType()
+            };
+            links.push(lnk);
+        }
+        return links;
     }
 
     static _getRandomFactorType() {

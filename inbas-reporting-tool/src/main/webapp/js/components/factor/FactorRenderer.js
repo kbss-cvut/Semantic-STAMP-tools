@@ -68,7 +68,7 @@ var FactorRenderer = {
         this.ganttController.setFactorParent(this.referenceIdsToGanttIds[edge.to], this.referenceIdsToGanttIds[edge.from]);
     },
 
-    addLinks: function (edge) {
+    addLink: function (edge) {
         this.ganttController.addLink({
             source: this.referenceIdsToGanttIds[edge.from],
             target: this.referenceIdsToGanttIds[edge.to],
