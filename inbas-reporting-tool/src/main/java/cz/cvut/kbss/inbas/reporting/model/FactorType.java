@@ -20,11 +20,6 @@ public enum FactorType {
         return uri;
     }
 
-    @Override
-    public String toString() {
-        return uri.toString();
-    }
-
     public static FactorType fromUri(URI uri) {
         for (FactorType ft : values()) {
             if (ft.uri.equals(uri)) {

@@ -32,7 +32,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     private Long fileNumber;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_documents, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_documents, fetch = FetchType.EAGER)
     private Occurrence occurrence;
 
     @ParticipationConstraints(nonEmpty = true)

@@ -1,6 +1,7 @@
 'use strict';
 
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
+var Factory = require('../../model/ReportFactory');
 
 var DATE_FORMAT = '%d-%m-%y %H:%i';
 var TOOLTIP_DATE_FORMAT = '%d-%m-%y %H:%i:%s';
@@ -157,6 +158,7 @@ var GanttController = {
         factor.isNew = true;
         factor.text = '';
         factor.durationUnit = gantt.config.duration_unit;
+        factor.statement = Factory.createFactor();
         this.props.onCreateFactor(factor);
         return false;
     },

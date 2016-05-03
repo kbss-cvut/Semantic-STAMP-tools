@@ -16,6 +16,7 @@ var OptionsStore = require('../../../stores/OptionsStore');
 var TypeaheadStore = require('../../../stores/TypeaheadStore');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var Vocabulary = require('../../../constants/Vocabulary');
+var EventTypeFactory = require('../../../model/EventTypeFactory');
 
 function mapOccurrenceCategory(cat) {
     return {
@@ -129,12 +130,7 @@ var OccurrenceClassification = React.createClass({
     _resolveSelectedCategory: function () {
         var catId = this.props.report.occurrence.eventType,
             categories = this.state.occurrenceCategories;
-        if (!catId || categories.length === 0) {
-            return null;
-        }
-        return categories.find((item) => {
-            return item['@id'] === catId;
-        });
+        return EventTypeFactory.resolveEventType(catId, categories);
     }
 });
 

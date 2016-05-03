@@ -80,6 +80,34 @@ public class Generator {
         return report;
     }
 
+    public static OccurrenceReport generateOccurrenceReportWithFactorGraph() {
+        final OccurrenceReport report = generateOccurrenceReport(true);
+        final Event childOne = new Event();
+        childOne.setStartTime(report.getOccurrence().getStartTime());
+        childOne.setEndTime(report.getOccurrence().getEndTime());
+        childOne.setEventType(generateEventType());
+        report.getOccurrence().addChild(childOne);
+        final Event childOneOne = new Event();
+        childOneOne.setStartTime(report.getOccurrence().getStartTime());
+        childOneOne.setEndTime(report.getOccurrence().getEndTime());
+        childOneOne.setEventType(generateEventType());
+        childOne.addChild(childOneOne);
+        final Event fOne = new Event();
+        fOne.setStartTime(report.getOccurrence().getStartTime());
+        fOne.setEndTime(report.getOccurrence().getEndTime());
+        fOne.setEventType(generateEventType());
+        final Factor f = new Factor();
+        f.setType(FactorType.CAUSES);
+        f.setEvent(fOne);
+        report.getOccurrence().addFactor(f);
+        final Event fOneChildOne = new Event();
+        fOneChildOne.setStartTime(report.getOccurrence().getStartTime());
+        fOneChildOne.setEndTime(report.getOccurrence().getEndTime());
+        fOneChildOne.setEventType(generateEventType());
+        fOne.addChild(fOneChildOne);
+        return report;
+    }
+
     /**
      * Generates chain of OccurrenceReport instances with the same file number.
      *

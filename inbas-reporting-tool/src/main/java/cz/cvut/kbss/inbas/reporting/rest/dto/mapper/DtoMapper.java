@@ -231,12 +231,12 @@ public abstract class DtoMapper {
             // Won't be necessary. Need it right now because UI does not support factor serialization, yet
             return null;
         }
-        final Map<URI, FactorGraphItem> instanceMap = new HashMap<>(dtoMap.size());
+        final Map<Integer, FactorGraphItem> instanceMap = new HashMap<>(dtoMap.size());
         graph.getNodes().forEach(n -> {
             if (n instanceof OccurrenceDto) {
-                instanceMap.put(n.getUri(), occurrenceDtoToOccurrence((OccurrenceDto) n));
+                instanceMap.put(n.getReferenceId(), occurrenceDtoToOccurrence((OccurrenceDto) n));
             } else {
-                instanceMap.put(n.getUri(), eventDtoToEvent(n));
+                instanceMap.put(n.getReferenceId(), eventDtoToEvent(n));
             }
         });
         transformEdgesToRelations(graph, dtoMap, instanceMap);
@@ -247,19 +247,19 @@ public abstract class DtoMapper {
     }
 
     private void transformEdgesToRelations(FactorGraph graph, Map<Integer, EventDto> dtoMap,
-                                           Map<URI, FactorGraphItem> instanceMap) {
+                                           Map<Integer, FactorGraphItem> instanceMap) {
         for (FactorGraphEdge e : graph.getEdges()) {
             final EventDto source = dtoMap.get(e.getFrom());
             final EventDto target = dtoMap.get(e.getTo());
             if (e.getLinkType().equals(HAS_PART_URI)) {
-                assert instanceMap.get(target.getUri()) instanceof Event;
-                instanceMap.get(source.getUri()).addChild((Event) instanceMap.get(target.getUri()));
+                assert instanceMap.get(target.getReferenceId()) instanceof Event;
+                instanceMap.get(source.getReferenceId()).addChild((Event) instanceMap.get(target.getReferenceId()));
             } else {
                 final FactorType ft = FactorType.fromUri(e.getLinkType());
                 final Factor factor = new Factor();
                 factor.setType(ft);
-                factor.setEvent((Event) instanceMap.get(source.getUri()));
-                instanceMap.get(target.getUri()).addFactor(factor);
+                factor.setEvent((Event) instanceMap.get(source.getReferenceId()));
+                instanceMap.get(target.getReferenceId()).addFactor(factor);
             }
         }
     }

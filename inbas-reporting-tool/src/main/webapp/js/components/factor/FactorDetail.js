@@ -41,10 +41,10 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: factor.statement ? factor.statement.assessment.eventType : null,
+            eventType: factor.statement ? factor.statement.eventType : null,
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
-            assessment: factor.statement ? factor.statement.assessment : null,
+            statement: factor.statement ? factor.statement : null,
 
             isWizardOpen: false,
             wizardProperties: null
@@ -106,16 +106,15 @@ var FactorDetail = React.createClass({
     },
 
     onUpdateFactorDetails: function (data, closeCallback) {
-        var assessment = data.statement;
-        this.setState({assessment: assessment});
+        var statement = data.statement;
+        this.setState({statement: statement});
         closeCallback();
     },
 
     onSave: function () {
         var factor = this.props.factor;
-        factor.statement = {};
-        factor.statement.assessment = this.state.assessment ? this.state.assessment : {};
-        factor.statement.assessment.eventType = this.state.eventType;
+        factor.statement = this.state.statement ? this.state.statement : {};
+        factor.statement.eventType = this.state.eventType.id;
         factor.text = this.state.eventType.name;
         factor.start_date = new Date(this.state.startDate);
         factor.end_date = gantt.calculateEndDate(factor.start_date, this.state.duration, gantt.config.duration_unit);

@@ -24,56 +24,69 @@ var FactorRenderer = {
             readonly: true
         }, null);
         if (report.factorGraph) {
-            this.addNodes(root, report.factorGraph.nodes);
-            this.addEdges(report.factorGraph.edges);
+            this._addNodes(root, report.factorGraph.nodes);
+            this._addEdges(report.factorGraph.edges);
+            this._applyUpdates();
         }
     },
 
-    addNodes: function (root, nodes) {
-        var node,
-            startDate = new Date(root.startTime),
-            endDate = new Date(root.endTime);
+    _addNodes: function (root, nodes) {
+        var node;
         for (var i = 0, len = nodes.length; i < len; i++) {
             if (typeof(nodes[i]) === 'number' && nodes[i] === root.referenceId) {
                 continue;   // JSON reference to the root
             }
             node = nodes[i];
-            var id = this.ganttController.addFactor({
+            this.referenceIdsToGanttIds[node.referenceId] = this.ganttController.addFactor({
                 text: node.eventType,   // TODO We should map event type ids to their name
-                start_date: startDate,
-                end_date: endDate,
+                start_date: new Date(node.startTime),
+                end_date: new Date(node.endTime),
                 statement: node
             }, null);
-            this.referenceIdsToGanttIds[node.referenceId] = id;
             if (this.greatestReferenceId < node.referenceId) {
                 this.greatestReferenceId = node.referenceId;
             }
         }
     },
 
-    addEdges: function (edges) {
+    _addEdges: function (edges) {
         if (!edges) {
             return;
         }
         for (var i = 0, len = edges.length; i < len; i++) {
             if (edges[i].linkType === Vocabulary.HAS_PART) {
-                this.addParent(edges[i]);
+                this._addParent(edges[i]);
             } else {
-                this.addLink(edges[i]);
+                this._addLink(edges[i]);
             }
         }
     },
 
-    addParent: function (edge) {
+    _addParent: function (edge) {
         this.ganttController.setFactorParent(this.referenceIdsToGanttIds[edge.to], this.referenceIdsToGanttIds[edge.from]);
     },
 
-    addLink: function (edge) {
+    _addLink: function (edge) {
         this.ganttController.addLink({
             source: this.referenceIdsToGanttIds[edge.from],
             target: this.referenceIdsToGanttIds[edge.to],
             factorType: edge.linkType
         });
+    },
+
+    /**
+     * Applies updates to the gantt component.
+     *
+     * This is necessary for example for the part-of relationships, which are added to the nodes after rendering
+     * @private
+     */
+    _applyUpdates: function () {
+        var updates = [],
+            keys = Object.getOwnPropertyNames(this.referenceIdsToGanttIds);
+        for (var i = 0, len = keys.length; i < len; i++) {
+            updates.push(this.referenceIdsToGanttIds[keys[i]]);
+        }
+        this.ganttController.applyUpdates(updates, true);
     }
 };
 

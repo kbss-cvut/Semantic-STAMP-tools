@@ -10,7 +10,7 @@ describe('FactorRenderer', function () {
         report;
 
     beforeEach(function () {
-        GanttController = jasmine.createSpyObj('GanttController', ['addFactor', 'addLink', 'setOccurrenceEventId', 'setFactorParent']);
+        GanttController = jasmine.createSpyObj('GanttController', ['addFactor', 'addLink', 'setOccurrenceEventId', 'setFactorParent', 'applyUpdates']);
         FactorRenderer.ganttController = GanttController;
         report = {
             occurrence: {
@@ -77,8 +77,8 @@ describe('FactorRenderer', function () {
             var node = report.factorGraph.nodes[i];
             var added = GanttController.addFactor.calls.argsFor(i)[0];
             expect(added.statement).toEqual(node);
-            expect(added.start_date.getTime()).toEqual(occurrence.startTime);
-            expect(added.end_date.getTime()).toEqual(occurrence.endTime);
+            expect(added.start_date.getTime()).toEqual(node.startTime);
+            expect(added.end_date.getTime()).toEqual(node.endTime);
         }
     }
 

@@ -40,7 +40,8 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
     @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
+            CascadeType.REMOVE})
     private Set<Event> children;
 
     @Types

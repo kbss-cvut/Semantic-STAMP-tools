@@ -16,7 +16,7 @@ public class Event implements FactorGraphItem, Serializable {
     @Id(generated = true)
     private URI uri;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,

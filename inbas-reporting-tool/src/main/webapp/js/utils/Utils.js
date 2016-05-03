@@ -114,6 +114,18 @@ var Utils = {
         var hash = window.location.hash;
         var result = /#[/]?([a-z/0-9]+)\?/.exec(hash);
         return result ? result[1] : '';
+    },
+
+    /**
+     * Generates a random integer value between 0 and 2^30 (approx. max Java integer / 2).
+     *
+     * The reason the number is Java max integer / 2 is to accommodate possible increments of the result.
+     * @return {number}
+     */
+    randomInt: function () {
+        var min = 0,
+            max = 1073741824;   // Max Java Integer / 2
+        return Math.floor(Math.random() * (max - min)) + min;
     }
 };
 
