@@ -1,5 +1,7 @@
 'use strict';
 
+var Constants = require('../constants/Constants');
+
 /**
  * Provides information about factor styles based on their type, e.g. event type, descriptive factor.
  */
@@ -24,6 +26,13 @@ var FactorStyleInfo = {
                     cls: 'factor-event-type'
                 };
         }
+    },
+
+    getLinkStyle: function (link) {
+        var linkType = Object.getOwnPropertyNames(Constants.LINK_TYPES).find((item) => {
+            return Constants.LINK_TYPES[item].value === link.factorType;
+        });
+        return linkType ? Constants.LINK_TYPES[linkType].className : '';
     }
 };
 

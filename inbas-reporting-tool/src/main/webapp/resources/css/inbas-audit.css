@@ -271,7 +271,7 @@ td.actions button {
 }
 
 .gantt-link-contributes {
-    background-color: #ffff00;
+    background-color: #FFDE11;
 }
 
 .gantt-link-mitigates {
@@ -288,7 +288,7 @@ td.actions button {
 }
 
 .gantt_task_link.gantt-link-causes:hover .gantt_line_wrapper div {
-    box-shadow: 0 0 5px 0 #ff0000;
+    box-shadow: 0 0 10px 0 #ff0000;
 }
 
 .gantt_task_link.gantt-link-causes .gantt_link_arrow_right {
@@ -301,19 +301,19 @@ td.actions button {
 
 /* Contributes to */
 .gantt_task_link.gantt-link-contributes .gantt_line_wrapper div {
-    background-color: #ffff00;
+    background-color: #FFDE11;
 }
 
 .gantt_task_link.gantt-link-contributes:hover .gantt_line_wrapper div {
-    box-shadow: 0 0 5px 0 #ffff00;
+    box-shadow: 0 0 10px 0 #FFDE11;
 }
 
 .gantt_task_link.gantt-link-contributes .gantt_link_arrow_right {
-    border-left-color: #ffff00;
+    border-left-color: #FFDE11;
 }
 
 .gantt_task_link.gantt-link-contributes .gantt_link_arrow_left {
-    border-right-color: #ffff00;
+    border-right-color: #FFDE11;
 }
 
 /* Mitigates */
@@ -322,7 +322,7 @@ td.actions button {
 }
 
 .gantt_task_link.gantt-link-mitigates:hover .gantt_line_wrapper div {
-    box-shadow: 0 0 5px 0 #00ff00;
+    box-shadow: 0 0 10px 0 #00ff00;
 }
 
 .gantt_task_link.gantt-link-mitigates .gantt_link_arrow_right {
@@ -339,7 +339,7 @@ td.actions button {
 }
 
 .gantt_task_link.gantt-link-prevents:hover .gantt_line_wrapper div {
-    box-shadow: 0 0 5px 0 #00A000;
+    box-shadow: 0 0 10px 0 #00A000;
 }
 
 .gantt_task_link.gantt-link-prevents .gantt_link_arrow_right {

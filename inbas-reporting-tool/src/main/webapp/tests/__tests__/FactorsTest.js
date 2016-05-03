@@ -28,7 +28,6 @@ describe('Factors component tests', function () {
             start_date: new Date(report.occurrence.startTime)
         });
         spyOn(Actions, 'loadEventTypes');
-        Factors.__set__('Actions', Actions);
     });
 
     it('Initializes gantt with minute scale on component mount', function () {
@@ -43,7 +42,7 @@ describe('Factors component tests', function () {
             factor = arg;
         });
         var factors = Environment.render(<Factors report={report}/>);
-        factors.renderFactors({type: Actions.loadEventTypes, data: []});
+        factors.renderFactors({action: Actions.loadEventTypes, data: []});
         expect(GanttController.addFactor).toHaveBeenCalled();
         expect(factor).toBeDefined();
         expect(factor.text).toEqual(report.occurrence.name);
@@ -69,7 +68,7 @@ describe('Factors component tests', function () {
                 text: '2180100 - Loss of Separation',
                 statement: {}
             };
-        factors.renderFactors({type: Actions.loadEventTypes, data: []});
+        factors.renderFactors({action: Actions.loadEventTypes, data: []});
         factors.state.currentFactor = newFactor;
         factors.onSaveFactor();
         expect(GanttController.addFactor).toHaveBeenCalled();
@@ -95,7 +94,7 @@ describe('Factors component tests', function () {
         report.occurrence.referenceId = referenceId;
         GanttController.getFactor.and.returnValue(parent);
         component = Environment.render(<Factors report={report}/>);
-        component.renderFactors({type: Actions.loadEventTypes, data: []});
+        component.renderFactors({action: Actions.loadEventTypes, data: []});
         component.setState({
             currentFactor: newFactor
         });
@@ -115,7 +114,7 @@ describe('Factors component tests', function () {
         spyOn(TypeaheadStore, 'getEventTypes').and.returnValue(eventTypes);
         expect(FactorRenderer.renderFactors).not.toHaveBeenCalled();
         factors.renderFactors({
-            type: Actions.loadEventTypes,
+            action: Actions.loadEventTypes,
             data: eventTypes
         });
         expect(FactorRenderer.renderFactors).toHaveBeenCalledWith(report, eventTypes);

@@ -115,19 +115,15 @@ var GanttController = {
 
     configureGanttTemplates: function () {
         gantt.templates.link_class = function (link) {
-            if (link.factorType === 'cause') {
-                return 'gantt-link-causes';
-            } else {
-                return 'gantt-link-mitigates';
-            }
+            return FactorStyleInfo.getLinkStyle(link);
         };
         gantt.templates.task_class = function (start, end, task) {
             var eventType;
-            if (!task.statement.assessment) {
+            if (!task.parent) {
                 return 'factor-occurrence-event';
             }
-            eventType = task.statement.assessment.eventType;
-            return FactorStyleInfo.getStyleInfo(eventType.type).cls;
+            eventType = task.statement.eventType;
+            return FactorStyleInfo.getStyleInfo(eventType).cls;
         };
         gantt.templates.tooltip_date_format = function (date) {
             var formatFunc = gantt.date.date_to_str(TOOLTIP_DATE_FORMAT);
@@ -135,8 +131,8 @@ var GanttController = {
         };
         gantt.templates.tooltip_text = function (start, end, task) {
             var tooltip = '<b>' + task.text + '</b><br/>';
-            if (task.statement.assessment) {
-                tooltip += task.statement.assessment.eventType.type + '<br/>';
+            if (task.statement) {
+                tooltip += task.statement.eventType + '<br/>';
             }
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
                 '<br/><b>End date:</b> ' + gantt.templates.tooltip_date_format(end);
@@ -383,7 +379,7 @@ var GanttController = {
         return gantt.addTask(factor, parentId);
     },
 
-    setFactorParent: function(child, parent) {
+    setFactorParent: function (child, parent) {
         gantt.setParent(child, parent);
     },
 
@@ -401,7 +397,7 @@ var GanttController = {
         return gantt.getTask(factorId).statement;
     },
 
-    forEach: function(func) {
+    forEach: function (func) {
         gantt.eachTask(func);
     },
 
