@@ -11,7 +11,7 @@ describe('FactorRenderer', function () {
 
     beforeEach(function () {
         GanttController = jasmine.createSpyObj('GanttController', ['addFactor', 'addLink', 'setOccurrenceEventId', 'setFactorParent', 'applyUpdates']);
-        FactorRenderer.ganttController = GanttController;
+        FactorRenderer.__set__('GanttController', GanttController);
         report = {
             occurrence: {
                 uri: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#Occurrence_instance319360066',
@@ -85,43 +85,28 @@ describe('FactorRenderer', function () {
     it('Renders factor graph part-of hierarchy', () => {
         Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         report.factorGraph.edges = Generator.generatePartOfLinksForNodes(report, report.factorGraph.nodes);
-        var referencesToIds = {};
-        initAddFactorStub(referencesToIds);
         FactorRenderer.renderFactors(report);
-        verifyPartOfHierarchy(referencesToIds);
+        verifyPartOfHierarchy();
     });
 
-    function initAddFactorStub(referencesToIds) {
-        GanttController.addFactor.and.callFake((factor) => {
-            var id = Generator.getRandomInt();
-            if (factor.statement === report.occurrence) {
-                id = factor.id;
-            }
-            referencesToIds[factor.statement.referenceId] = id;
-            return id;
-        });
-    }
-
-    function verifyPartOfHierarchy(referencesToFactorIds) {
+    function verifyPartOfHierarchy() {
         var edges = report.factorGraph.edges;
         for (var i = 0, len = edges.length; i < len; i++) {
             if (edges[i].linkType !== Vocabulary.HAS_PART) {
                 continue;
             }
-            expect(GanttController.setFactorParent).toHaveBeenCalledWith(referencesToFactorIds[edges[i].to], referencesToFactorIds[edges[i].from]);
+            expect(GanttController.addFactor).toHaveBeenCalledWith(jasmine.any(Object), edges[i].from);
         }
     }
 
     it('Renders factor graph with causality/mitigation edges', () => {
         Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         report.factorGraph.edges = Generator.generateFactorLinksForNodes(report.factorGraph.nodes);
-        var referencesToIds = {};
-        initAddFactorStub(referencesToIds);
         FactorRenderer.renderFactors(report);
-        verifyAddedLinks(referencesToIds);
+        verifyAddedLinks();
     });
 
-    function verifyAddedLinks(referencesToFactorsIds) {
+    function verifyAddedLinks() {
         var edges = report.factorGraph.edges,
             counter = 0;
         for (var i = 0, len = edges.length; i < len; i++) {
@@ -129,8 +114,8 @@ describe('FactorRenderer', function () {
                 continue;
             }
             var added = GanttController.addLink.calls.argsFor(counter++)[0];
-            expect(added.source).toEqual(referencesToFactorsIds[edges[i].from]);
-            expect(added.target).toEqual(referencesToFactorsIds[edges[i].to]);
+            expect(added.source).toEqual(edges[i].from);
+            expect(added.target).toEqual(edges[i].to);
         }
     }
 
@@ -139,19 +124,23 @@ describe('FactorRenderer', function () {
         report.factorGraph.edges = [];
         Array.prototype.push.apply(report.factorGraph.edges, Generator.generatePartOfLinksForNodes(report, report.factorGraph.nodes));
         Array.prototype.push.apply(report.factorGraph.edges, Generator.generateFactorLinksForNodes(report.factorGraph.nodes));
-        var referencesToIds = {};
-        initAddFactorStub(referencesToIds);
         FactorRenderer.renderFactors(report);
         verifyAddedNodes();
-        verifyPartOfHierarchy(referencesToIds);
-        verifyAddedLinks(referencesToIds);
+        verifyPartOfHierarchy();
+        verifyAddedLinks();
     });
 
 
     it('Stores highest reference id', function () {
         Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         FactorRenderer.renderFactors(report);
+        var highest = 0;
+        for (var i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
+            if (highest < report.factorGraph.nodes[i].referenceId) {
+                highest = report.factorGraph.nodes[i].referenceId;
+            }
+        }
 
-        expect(FactorRenderer.greatestReferenceId).toEqual(report.factorGraph.nodes[report.factorGraph.nodes.length - 1].referenceId);
+        expect(FactorRenderer.greatestReferenceId).toEqual(highest);
     });
 });

@@ -122,6 +122,7 @@ var Factors = React.createClass({
             delete factor.isNew;
             this.addChildFactorToParent(factor);
             factor.statement.referenceId = ++this.factorReferenceIdCounter;
+            factor.id = factor.statement.referenceId;
             this.ganttController.addFactor(factor);
         } else {
             this.ganttController.updateFactor(factor);

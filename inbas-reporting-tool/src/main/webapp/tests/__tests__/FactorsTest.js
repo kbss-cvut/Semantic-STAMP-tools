@@ -20,8 +20,8 @@ describe('Factors component tests', function () {
 
     beforeEach(function () {
         GanttController = jasmine.createSpyObj('GanttController', ['init', 'getFactor', 'setScale', 'addFactor', 'setOccurrenceEventId', 'expandSubtree', 'updateOccurrenceEvent']);
-        Factors.__set__("GanttController", GanttController);
-        FactorRenderer.ganttController = GanttController;
+        Factors.__set__('GanttController', GanttController);
+        FactorRenderer.__set__('GanttController', GanttController);
         Factors.__set__('FactorRenderer', FactorRenderer);
         GanttController.getFactor.and.returnValue({
             text: report.occurrence.name,
@@ -35,7 +35,7 @@ describe('Factors component tests', function () {
         expect(GanttController.init).toHaveBeenCalled();
         expect(GanttController.setScale).toHaveBeenCalledWith('minute');
     });
-    
+
     it('Adds event of the occurrence into gantt on initialization', function () {
         var factor = null;
         GanttController.addFactor.and.callFake(function (arg) {
@@ -80,16 +80,16 @@ describe('Factors component tests', function () {
     });
 
     it('Assigns reference id to new factors', () => {
-        var newFactor = {
+        var referenceId = 117,
+            newFactor = {
                 isNew: true,
                 text: 'Test',
                 statement: {},
-                parent: 1
+                parent: referenceId
             }, parent = {
-                id: 1,
+                id: referenceId,
                 statement: report.occurrence
             },
-            referenceId = 117,
             component;
         report.occurrence.referenceId = referenceId;
         GanttController.getFactor.and.returnValue(parent);
