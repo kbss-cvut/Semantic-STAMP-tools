@@ -2,6 +2,7 @@
 
 var GanttController = require('./GanttController');
 var Vocabulary = require('../../constants/Vocabulary');
+var EventTypeFactory = require('../../model/EventTypeFactory');
 
 var FactorRenderer = {
     ganttController: GanttController,
@@ -9,7 +10,7 @@ var FactorRenderer = {
     referenceIdsToGanttIds: {},     // JSON reference IDs to task IDs assigned by the GanttController
     greatestReferenceId: Number.MIN_VALUE,
 
-    renderFactors: function (report) {
+    renderFactors: function (report, eventTypes) {
         var root = report.occurrence,
             id = Date.now();
         this.ganttController.setOccurrenceEventId(id);
@@ -24,21 +25,22 @@ var FactorRenderer = {
             readonly: true
         }, null);
         if (report.factorGraph) {
-            this._addNodes(root, report.factorGraph.nodes);
+            this._addNodes(root, report.factorGraph.nodes, eventTypes);
             this._addEdges(report.factorGraph.edges);
             this._applyUpdates();
         }
     },
 
-    _addNodes: function (root, nodes) {
+    _addNodes: function (root, nodes, eventTypes) {
         var node;
         for (var i = 0, len = nodes.length; i < len; i++) {
             if (typeof(nodes[i]) === 'number' && nodes[i] === root.referenceId) {
                 continue;   // JSON reference to the root
             }
             node = nodes[i];
+            var eventType = EventTypeFactory.resolveEventType(node.eventType, eventTypes);
             this.referenceIdsToGanttIds[node.referenceId] = this.ganttController.addFactor({
-                text: node.eventType,   // TODO We should map event type ids to their name
+                text: eventType ? eventType[Vocabulary.RDFS_LABEL] : node.eventType,
                 start_date: new Date(node.startTime),
                 end_date: new Date(node.endTime),
                 statement: node

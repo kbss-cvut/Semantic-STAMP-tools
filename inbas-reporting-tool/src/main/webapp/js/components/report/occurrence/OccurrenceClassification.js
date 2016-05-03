@@ -11,6 +11,7 @@ var TypeaheadResultList = require('../../typeahead/EventTypeTypeaheadResultList'
 
 var injectIntl = require('../../../utils/injectIntl');
 
+var Actions = require('../../../actions/Actions');
 var Select = require('../../Select');
 var OptionsStore = require('../../../stores/OptionsStore');
 var TypeaheadStore = require('../../../stores/TypeaheadStore');
@@ -63,8 +64,11 @@ var OccurrenceClassification = React.createClass({
         });
     },
 
-    onOccurrenceCategoriesLoaded: function () {
-        var options = TypeaheadStore.getOccurrenceCategories();
+    onOccurrenceCategoriesLoaded: function (data) {
+        if (data.action !== Actions.loadOccurrenceCategories) {
+            return;
+        }
+        var options = data.data;
         this.setState({occurrenceCategories: options});
         var selected = this._resolveSelectedCategory();
         if (selected) {

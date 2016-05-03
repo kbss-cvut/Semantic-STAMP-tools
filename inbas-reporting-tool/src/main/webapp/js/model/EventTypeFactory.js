@@ -19,7 +19,7 @@ module.exports = {
      * @return {*} Matching instance or null
      */
     resolveEventType: function (id, items) {
-        if (!id || items.length === 0) {
+        if (!id || !items || items.length === 0) {
             return null;
         }
         return items.find((item) => {

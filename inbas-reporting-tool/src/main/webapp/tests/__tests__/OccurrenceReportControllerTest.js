@@ -14,6 +14,7 @@ describe('Occurrence report controller', function () {
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
         spyOn(Actions, 'loadOccurrenceCategories');
+        spyOn(Actions, 'loadEventTypes');
         Environment.mockFactors(OccurrenceReport);
         ReportController.__set__('ReportDetail', OccurrenceReport);
     });

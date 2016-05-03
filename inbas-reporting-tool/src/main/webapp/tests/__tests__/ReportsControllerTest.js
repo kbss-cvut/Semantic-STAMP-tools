@@ -14,6 +14,7 @@ describe('ReportsController', function () {
 
     beforeEach(function() {
         spyOn(Actions, 'loadAllReports');
+        spyOn(Actions, 'loadEventTypes');
     });
 
     xit('shows only reports of the corresponding type when type filter is triggered', function () {
