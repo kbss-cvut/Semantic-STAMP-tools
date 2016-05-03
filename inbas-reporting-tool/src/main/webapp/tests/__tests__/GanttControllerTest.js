@@ -485,5 +485,14 @@ describe('Tests for the gantt component controller', function () {
         var res = GanttController.onLinkAdded(linkId, link);
         expect(res).toEqual(false);
         expect(props.onLinkAdded).not.toHaveBeenCalled();
-    })
+    });
+
+    it('Returns number of children when getChildCount is called', function() {
+        var id = 117,
+            children = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
+        gantt.getChildren.and.returnValue(children);
+
+        var result = GanttController.getChildCount(id);
+        expect(result).toEqual(children.length);
+    });
 });

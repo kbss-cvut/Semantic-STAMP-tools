@@ -34,6 +34,9 @@ public class Event implements FactorGraphItem, Serializable {
     @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
     private URI eventType;
 
+    @OWLDataProperty(iri = Vocabulary.p_childIndex)
+    private Integer index;
+
     @Types
     private Set<String> types;
 
@@ -116,6 +119,22 @@ public class Event implements FactorGraphItem, Serializable {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    /**
+     * Represents position at among other children of this Event's parent.
+     * <p>
+     * This index can be used to order Event's children.
+     *
+     * @return Integer specifying the position or {@code null}, if the index is not relevant here (e.g. this event has
+     * no parent)
+     */
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     public Set<String> getTypes() {

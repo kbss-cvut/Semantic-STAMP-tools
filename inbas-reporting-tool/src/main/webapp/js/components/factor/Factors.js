@@ -120,40 +120,23 @@ var Factors = React.createClass({
         var factor = this.state.currentFactor;
         if (factor.isNew) {
             delete factor.isNew;
-            this.addChildFactorToParent(factor);
             factor.statement.referenceId = ++this.factorReferenceIdCounter;
+            if (factor.parent) {
+                factor.statement.index = this.ganttController.getChildCount(factor.parent);
+            }
             factor.id = factor.statement.referenceId;
-            this.ganttController.addFactor(factor);
+            this.ganttController.addFactor(factor, factor.parent);
         } else {
             this.ganttController.updateFactor(factor);
         }
         this.onCloseFactorDialog();
     },
 
-    addChildFactorToParent: function (child) {
-        if (!child.parent) {
-            return;
-        }
-        var parent = this.ganttController.getFactor(child.parent);
-        if (!parent.children) {
-            parent.children = [];
-        }
-        parent.children.push(child.statement);
-    },
-
     onDeleteFactor: function () {
         var factor = this.state.currentFactor,
             parentId = factor.parent;
         this.ganttController.deleteFactor(factor.id);
-        this.removeChildFactorFromParent(factor, parentId);
         this.onCloseFactorDialog();
-    },
-
-    removeChildFactorFromParent: function (child, parentId) {
-        var parentFactor = this.ganttController.getFactor(parentId),
-            factor = child.statement;
-        var childIndex = parentFactor.children.indexOf(factor);
-        parentFactor.children.splice(childIndex, 1);
     },
 
     onCloseFactorDialog: function () {

@@ -413,6 +413,10 @@ var GanttController = {
         return children;
     },
 
+    getChildCount: function (factorId) {
+        return gantt.getChildren(factorId).length;
+    },
+
     expandSubtree: function (rootId) {
         gantt.open(rootId);
         var children = gantt.getChildren(rootId);

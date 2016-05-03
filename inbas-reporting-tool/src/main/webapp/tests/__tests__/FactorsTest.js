@@ -19,7 +19,7 @@ describe('Factors component tests', function () {
         };
 
     beforeEach(function () {
-        GanttController = jasmine.createSpyObj('GanttController', ['init', 'getFactor', 'setScale', 'addFactor', 'setOccurrenceEventId', 'expandSubtree', 'updateOccurrenceEvent']);
+        GanttController = jasmine.createSpyObj('GanttController', ['init', 'getFactor', 'setScale', 'addFactor', 'setOccurrenceEventId', 'expandSubtree', 'updateOccurrenceEvent', 'getChildCount']);
         Factors.__set__('GanttController', GanttController);
         FactorRenderer.__set__('GanttController', GanttController);
         Factors.__set__('FactorRenderer', FactorRenderer);
@@ -27,6 +27,7 @@ describe('Factors component tests', function () {
             text: report.occurrence.name,
             start_date: new Date(report.occurrence.startTime)
         });
+        GanttController.getChildCount.and.returnValue(0);
         spyOn(Actions, 'loadEventTypes');
     });
 
@@ -101,7 +102,7 @@ describe('Factors component tests', function () {
         component.onSaveFactor();
 
         expect(newFactor.statement.referenceId).toEqual(referenceId + 1);
-        expect(GanttController.addFactor).toHaveBeenCalledWith(newFactor);
+        expect(GanttController.addFactor).toHaveBeenCalledWith(newFactor, referenceId);
     });
 
     it('Renders factor graph only after event types have been loaded', () => {
@@ -118,5 +119,32 @@ describe('Factors component tests', function () {
             data: eventTypes
         });
         expect(FactorRenderer.renderFactors).toHaveBeenCalledWith(report, eventTypes);
+    });
+
+    it('Sets event position when new child event is added to a parent', () => {
+        var factors = Environment.render(<Factors report={report}/>),
+            childCount = Generator.getRandomPositiveInt(1, 5),
+            referenceId = 117,
+            newFactor = {
+                isNew: true,
+                text: 'Test',
+                statement: {},
+                parent: referenceId
+            }, parent = {
+                id: referenceId,
+                statement: report.occurrence
+            },
+            component;
+        report.occurrence.referenceId = referenceId;
+        GanttController.getChildCount.and.returnValue(childCount);
+        GanttController.getFactor.and.returnValue(parent);
+        component = Environment.render(<Factors report={report}/>);
+        component.renderFactors({action: Actions.loadEventTypes, data: []});
+        component.setState({
+            currentFactor: newFactor
+        });
+        component.onSaveFactor();
+
+        expect(newFactor.statement.index).toEqual(childCount);
     });
 });

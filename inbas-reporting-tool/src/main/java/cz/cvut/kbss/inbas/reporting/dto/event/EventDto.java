@@ -25,6 +25,8 @@ public class EventDto implements HasUri {
 
     private Integer referenceId;
 
+    private Integer index;
+
     @Override
     public URI getUri() {
         return uri;
@@ -72,5 +74,13 @@ public class EventDto implements HasUri {
 
     public void setReferenceId(Integer referenceId) {
         this.referenceId = referenceId;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 }

@@ -90,4 +90,6 @@ public class Vocabulary {
     public static final String p_causes = "http://onto.fel.cvut.cz/ontologies/documentation/causes";
     public static final String p_contributesTo = "http://onto.fel.cvut.cz/ontologies/documentation/contributes-to";
     public static final String p_prevents = "http://onto.fel.cvut.cz/ontologies/documentation/prevents";
+
+    public static final String p_childIndex = "http://onto.fel.cvut.cz/ontologies/inbas-2015/child-index";
 }

@@ -46,6 +46,11 @@ var OccurrenceReportFactorRenderer = {
     }
 };
 
+/**
+ * This does the actual factor graph rendering.
+ *
+ * Use decorators to do any necessary setup before the rendering.
+ */
 var FactorRendererImpl = {
 
     renderFactors: function (factorGraph, eventTypes) {

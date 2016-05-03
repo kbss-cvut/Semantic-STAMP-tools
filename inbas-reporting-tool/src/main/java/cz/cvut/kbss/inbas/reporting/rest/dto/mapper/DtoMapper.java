@@ -10,6 +10,7 @@ import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.util.EventPositionComparator;
 import cz.cvut.kbss.inbas.reporting.model.util.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.util.TriConsumer;
@@ -25,6 +26,8 @@ public abstract class DtoMapper {
 
     private final SplittableRandom random = new SplittableRandom();
     private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
+
+    private final EventPositionComparator childEventComparator = new EventPositionComparator();
 
     private Map<URI, HasUri> dtoRegistry = new HashMap<>();
 
@@ -192,11 +195,18 @@ public abstract class DtoMapper {
             }
         }
         if (occurrence.getChildren() != null) {
+            occurrence.setChildren(sortChildren(occurrence.getChildren()));
             occurrence.getChildren().forEach(child -> {
                 edgeConsumer.accept(occurrence, child, HAS_PART_URI);
                 traverseTree(child, nodeConsumer, edgeConsumer, visited);
             });
         }
+    }
+
+    private Set<Event> sortChildren(Set<Event> children) {
+        final Set<Event> sortedChildren = new TreeSet<>(childEventComparator);
+        sortedChildren.addAll(children);
+        return sortedChildren;
     }
 
     private void traverseTree(Event event, Consumer<EventDto> nodeConsumer,
@@ -214,6 +224,7 @@ public abstract class DtoMapper {
             }
         }
         if (event.getChildren() != null) {
+            event.setChildren(sortChildren(event.getChildren()));
             event.getChildren().forEach(child -> {
                 edgeConsumer.accept(event, child, HAS_PART_URI);
                 traverseTree(child, nodeConsumer, edgeConsumer, visited);
