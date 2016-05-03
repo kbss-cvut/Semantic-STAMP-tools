@@ -19,6 +19,8 @@ var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
+var EventTypeFactory = require('../../model/EventTypeFactory');
+var Vocabulary = require('../../constants/Vocabulary');
 
 
 function convertDurationToCurrentUnit(factor) {
@@ -41,7 +43,7 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: factor.statement ? factor.statement.eventType : null,
+            eventType: factor.statement ? EventTypeFactory.resolveEventType(factor.statement.eventType) : null,
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement ? factor.statement : null,
@@ -114,8 +116,8 @@ var FactorDetail = React.createClass({
     onSave: function () {
         var factor = this.props.factor;
         factor.statement = this.state.statement ? this.state.statement : {};
-        factor.statement.eventType = this.state.eventType.id;
-        factor.text = this.state.eventType.name;
+        factor.statement.eventType = this.state.eventType['@id'];
+        factor.text = this.state.eventType[Vocabulary.RDFS_LABEL];
         factor.start_date = new Date(this.state.startDate);
         factor.end_date = gantt.calculateEndDate(factor.start_date, this.state.duration, gantt.config.duration_unit);
         factor.statement.startTime = this.state.startDate;

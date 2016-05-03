@@ -1,5 +1,6 @@
 'use strict';
 
+var TypeaheadStore = require('../stores/TypeaheadStore');
 var EventTypeStatement = require('./EventTypeStatement');
 var RunwayIncursion = require('./RunwayIncursion');
 
@@ -19,8 +20,11 @@ module.exports = {
      * @return {*} Matching instance or null
      */
     resolveEventType: function (id, items) {
-        if (!id || !items || items.length === 0) {
+        if (!id) {
             return null;
+        }
+        if (!items) {
+            items = TypeaheadStore.getEventTypes();
         }
         return items.find((item) => {
             return item['@id'] === id;
