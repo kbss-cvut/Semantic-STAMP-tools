@@ -42,7 +42,7 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: factor.statement ? EventTypeFactory.resolveEventType(factor.statement.eventType) : null,
+            eventType: factor.statement ? EventTypeFactory.jsonLdToEventType(EventTypeFactory.resolveEventType(factor.statement.eventType)) : null,
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement ? factor.statement : null,

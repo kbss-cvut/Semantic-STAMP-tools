@@ -131,7 +131,7 @@ var GanttController = {
         };
         gantt.templates.tooltip_text = function (start, end, task) {
             var tooltip = '<b>' + task.text + '</b><br/>';
-            if (task.statement) {
+            if (task.statement && task.statement.eventType) {
                 tooltip += task.statement.eventType + '<br/>';
             }
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
@@ -354,6 +354,7 @@ var GanttController = {
             this.updateDescendantsTimeInterval(occurrenceEvt, updates);
             updates.push(this.occurrenceEventId);
         }
+        occurrenceEvt.statement = report.occurrence;
         if (updates.length > 0) {
             this.applyUpdates(updates, true);
         }

@@ -1,6 +1,7 @@
 'use strict';
 
 var Constants = require('../constants/Constants');
+var EventTypeFactory = require('../model/EventTypeFactory');
 
 /**
  * Provides information about factor styles based on their type, e.g. event type, descriptive factor.
