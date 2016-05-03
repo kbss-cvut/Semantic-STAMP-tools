@@ -122,6 +122,7 @@ var OccurrenceClassification = React.createClass({
                                displayOption='name' options={categories}
                                customClasses={classes} customListComponent={TypeaheadResultList}/>
                 </div>
+                {this._renderCategoryLink()}
             </div>
         );
     },
@@ -135,6 +136,11 @@ var OccurrenceClassification = React.createClass({
         var catId = this.props.report.occurrence.eventType,
             categories = this.state.occurrenceCategories;
         return EventTypeFactory.resolveEventType(catId, categories);
+    },
+
+    _renderCategoryLink: function () {
+        var cat = this.props.report.occurrence.eventType;
+        return cat ? <div className='col-xs-1'><a href={cat} title={cat} className='external-link'/></div> : null;
     }
 });
 

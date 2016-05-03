@@ -442,3 +442,12 @@ button.reset-filters {
     margin-left: 0.5em;
     margin-right: 0.5em;
 }
+
+.external-link {
+    display: block;
+    content: url('../images/icons/external.png');
+    width: 16px;
+    height: 16px;
+    margin-top: 28px;
+    margin-left: -15px;
+}
