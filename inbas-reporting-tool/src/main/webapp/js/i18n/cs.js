@@ -166,7 +166,7 @@ module.exports = {
         'factors.link-type-select-tooltip': 'Vyberte typ vztahu',
         'factors.link.delete.title': 'Smazat link?',
         'factors.link.delete.text': 'Určitě chcete smazat spojení vedoucí z faktoru {source} do faktoru {target}?',
-        'factors.detail.title': 'Faktor události',
+        'factors.detail.title': 'Specifikace faktoru',
         'factors.detail.type': 'Typ faktoru',
         'factors.detail.type-placeholder': 'Typ faktoru',
         'factors.detail.time-period': 'Specifikace času',

@@ -18,9 +18,11 @@ module.exports = {
      * Gets the specified JSON-LD object as a simple, more programmatic-friendly object suitable e.g. for typeahead
      * components.
      * @param jsonLd
-     * @return {{id: *, type: *, name: *}}
      */
     jsonLdToEventType: function (jsonLd) {
+        if (!jsonLd) {
+            return null;
+        }
         var res = {
             id: jsonLd['@id'],
             type: jsonLd['@type'],

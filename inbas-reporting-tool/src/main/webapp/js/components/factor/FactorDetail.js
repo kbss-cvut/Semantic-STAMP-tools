@@ -4,6 +4,7 @@
 'use strict';
 
 var React = require('react');
+var classNames = require('classnames');
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
@@ -16,6 +17,7 @@ var Input = require('../Input');
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
 var Utils = require('../../utils/Utils');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
+var ExternalLink = require('../misc/ExternalLink').default;
 
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
@@ -129,7 +131,13 @@ var FactorDetail = React.createClass({
         var eventTypeLabel = this.props.factor.text,
             durationMinus = <Button bsSize='small' disabled={this.state.duration === 0}
                                     onClick={this.onDurationMinus}><Glyphicon glyph='minus'/></Button>,
-            durationPlus = <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon glyph='plus'/></Button>;
+            durationPlus = <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon glyph='plus'/></Button>,
+            eventTypeIcon = this.renderFactorTypeIcon(),
+            eventTypeClassNames = classNames({
+                'col-xs-12': true,
+                'col-xs-11': this.state.eventType,
+                'col-xs-10': this.state.eventType && eventTypeIcon
+            });
 
         return (
             <div>
@@ -142,16 +150,19 @@ var FactorDetail = React.createClass({
 
                     <Modal.Body>
                         {this.renderDeleteDialog()}
+                        <div className='row'>
+                            <div className='col-xs-12'>
+                                <label className='control-label'>{this.i18n('factors.detail.type')}</label>
+                            </div>
+                        </div>
                         <div className='form-group row'>
-                            <div className='col-xs-11'>
-                                <EventTypeTypeahead label={this.i18n('factors.detail.type')}
-                                                    placeholder={this.i18n('factors.detail.type-placeholder')}
+                            {eventTypeIcon}
+                            <div className={eventTypeClassNames}>
+                                <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
                                                     value={eventTypeLabel}
                                                     onSelect={this.onEventTypeChange} focus={true}/>
                             </div>
-                            <div className='col-xs-1'>
-                                {this.renderFactorTypeIcon()}
-                            </div>
+                            {this._renderEventTypeLink()}
                         </div>
                         <div>
                             <div>
@@ -201,8 +212,17 @@ var FactorDetail = React.createClass({
             return null;
         }
         styleInfo = FactorStyleInfo.getStyleInfo(type.type);
-        return (<img src={styleInfo.icon} className={styleInfo.cls} title={styleInfo.title}
-                     style={{margin: '28px 15px 0 -10px', width: '24px', height: '24px'}}/>);
+        return styleInfo.icon ? <div className='col-xs-1'>
+            <img src={styleInfo.icon} className={styleInfo.cls} title={styleInfo.title}/>
+        </div> : null;
+    },
+
+    _renderEventTypeLink: function () {
+        var et = this.state.eventType;
+        return et ?
+            <div className='col-xs-1'>
+                <ExternalLink url={et.id} title={et.name + '\n' + et.id} className='external-link-factor-detail'/>
+            </div> : null;
     },
 
     renderDuration: function () {

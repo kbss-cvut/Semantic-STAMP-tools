@@ -37,7 +37,8 @@ var EventTypeResultList = React.createClass({
         }
         var styleInfo = FactorStyleInfo.getStyleInfo(option.type);
 
-        return (<img src={styleInfo.icon} className={styleInfo.cls} title={styleInfo.title}/>);
+        return styleInfo.icon ? <img src={styleInfo.icon} className={styleInfo.cls + ' autocomplete-results'}
+                                     title={styleInfo.title}/> : null;
     },
 
     getOptionLabel: function (option) {

@@ -13,7 +13,6 @@ var TypeaheadResultList = require('./EventTypeTypeaheadResultList');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var I18nMixin = require('../../i18n/I18nMixin');
 var EventTypeFactory = require('../../model/EventTypeFactory');
-var Vocabulary = require('../../constants/Vocabulary');
 
 var EventTypeTypeahead = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],

@@ -133,8 +133,7 @@ var Factors = React.createClass({
     },
 
     onDeleteFactor: function () {
-        var factor = this.state.currentFactor,
-            parentId = factor.parent;
+        var factor = this.state.currentFactor;
         this.ganttController.deleteFactor(factor.id);
         this.onCloseFactorDialog();
     },

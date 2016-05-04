@@ -18,6 +18,7 @@ var TypeaheadStore = require('../../../stores/TypeaheadStore');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var Vocabulary = require('../../../constants/Vocabulary');
 var EventTypeFactory = require('../../../model/EventTypeFactory');
+var ExternalLink = require('../../misc/ExternalLink').default;
 
 function mapOccurrenceCategory(cat) {
     return {
@@ -140,7 +141,9 @@ var OccurrenceClassification = React.createClass({
 
     _renderCategoryLink: function () {
         var cat = this.props.report.occurrence.eventType;
-        return cat ? <div className='col-xs-1'><a href={cat} title={cat} className='external-link'/></div> : null;
+        return cat ?
+            <div className='col-xs-1'><ExternalLink url={cat} title={this._resolveCategoryValue() + '\n' + cat}/>
+            </div> : null;
     }
 });
 
