@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.dto.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Most probable outcome of an event, in case it escalated into an accident.
@@ -46,5 +47,15 @@ public enum AccidentOutcome {
             lst.add(new Pair<>(val, val.getDescription()));
         }
         return lst;
+    }
+
+    public static AccidentOutcome fromString(String str) {
+        Objects.requireNonNull(str);
+        for (AccidentOutcome ao : values()) {
+            if (ao.name().equalsIgnoreCase(str)) {
+                return ao;
+            }
+        }
+        throw new IllegalArgumentException("Unknown " + AccidentOutcome.class.getSimpleName() + " value " + str);
     }
 }

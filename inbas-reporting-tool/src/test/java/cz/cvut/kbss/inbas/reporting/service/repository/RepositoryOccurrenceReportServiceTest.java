@@ -152,4 +152,14 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         assertEquals(Environment.getCurrentUser().getUri(), result.getLastModifiedBy().getUri());
         assertNotNull(result.getLastModified());
     }
+
+    @Test
+    public void findReturnsOccurrenceWithCalculatedArmsIndex() {
+        final OccurrenceReport report = persistFirstRevision(false);
+        assertNotNull(report.getBarrierEffectiveness());
+        assertNotNull(report.getAccidentOutcome());
+        assertNull(report.getArmsIndex());
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertNotNull(result.getArmsIndex());
+    }
 }

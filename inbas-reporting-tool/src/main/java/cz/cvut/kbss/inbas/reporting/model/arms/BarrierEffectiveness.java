@@ -7,5 +7,14 @@ package cz.cvut.kbss.inbas.reporting.model.arms;
  */
 public enum BarrierEffectiveness {
 
-    EFFECTIVE, LIMITED, MINIMAL, NOT_EFFECTIVE
+    EFFECTIVE, LIMITED, MINIMAL, NOT_EFFECTIVE;
+
+    public static BarrierEffectiveness fromString(String str) {
+        for (BarrierEffectiveness be : values()) {
+            if (be.name().equalsIgnoreCase(str)) {
+                return be;
+            }
+        }
+        throw new IllegalArgumentException("Unknown " + BarrierEffectiveness.class.getSimpleName() + " value " + str);
+    }
 }

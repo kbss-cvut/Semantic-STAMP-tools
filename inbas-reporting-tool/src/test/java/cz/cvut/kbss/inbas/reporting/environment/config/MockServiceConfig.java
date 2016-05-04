@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.environment.config;
 
 import cz.cvut.kbss.inbas.reporting.service.*;
+import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.RemoteDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
@@ -80,5 +81,10 @@ public class MockServiceConfig {
     @Bean
     public OptionsService optionsService() {
         return mock(OptionsService.class);
+    }
+
+    @Bean
+    public ArmsService armsService() {
+        return new ArmsService();
     }
 }

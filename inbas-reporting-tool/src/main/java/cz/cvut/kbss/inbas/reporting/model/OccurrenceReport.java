@@ -69,7 +69,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     @OWLDataProperty(iri = Vocabulary.p_barrierEffectiveness)
     private BarrierEffectiveness barrierEffectiveness;
 
-    @OWLDataProperty(iri = Vocabulary.p_armsIndex)
+    @Transient
     private Short armsIndex;
 
     @Types

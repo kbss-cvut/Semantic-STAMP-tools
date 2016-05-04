@@ -83,7 +83,6 @@ public class Vocabulary {
     // ARMS Attributes
     public static final String p_mostProbableAccidentOutcome = "http://onto.fel.cvut.cz/ontologies/documentation/arms-most-probable-accident-outcome";
     public static final String p_barrierEffectiveness = "http://onto.fel.cvut.cz/ontologies/documentation/arms-barrier-effectiveness";
-    public static final String p_armsIndex = "http://onto.fel.cvut.cz/ontologies/documentation/arms-index";
 
     // Factor types (for now)
     public static final String p_mitigates = "http://onto.fel.cvut.cz/ontologies/documentation/mitigates";

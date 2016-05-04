@@ -67,11 +67,10 @@ public class Generator {
     public static OccurrenceReport generateOccurrenceReport(boolean setAttributes) {
         final OccurrenceReport report = new OccurrenceReport();
         report.setOccurrence(generateOccurrence());
-        report.setBarrierEffectiveness(BarrierEffectiveness.EFFECTIVE);
-        report.setAccidentOutcome(AccidentOutcome.NEGLIGIBLE);
-        report.setArmsIndex((short) 5);
         report.setSummary("Some random summary " + randomInt() + ".");
         if (setAttributes) {
+            report.setBarrierEffectiveness(BarrierEffectiveness.EFFECTIVE);
+            report.setAccidentOutcome(AccidentOutcome.NEGLIGIBLE);
             report.setAuthor(getPerson());
             report.setDateCreated(new Date());
             report.setFileNumber((long) randomInt(Integer.MAX_VALUE));

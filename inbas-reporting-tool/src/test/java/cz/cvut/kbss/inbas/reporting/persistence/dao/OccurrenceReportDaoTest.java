@@ -279,12 +279,10 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final OccurrenceReport report = persistReport();
 
         report.setSummary("New updated summary.");
-        report.setArmsIndex((short) 123);
         occurrenceReportDao.update(report);
 
         final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
         assertEquals(report.getSummary(), result.getSummary());
-        assertEquals(report.getArmsIndex(), result.getArmsIndex());
     }
 
     @Test
