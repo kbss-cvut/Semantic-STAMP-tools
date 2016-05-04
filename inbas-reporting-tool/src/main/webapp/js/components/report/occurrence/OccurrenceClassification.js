@@ -16,6 +16,7 @@ var Select = require('../../Select');
 var OptionsStore = require('../../../stores/OptionsStore');
 var TypeaheadStore = require('../../../stores/TypeaheadStore');
 var I18nMixin = require('../../../i18n/I18nMixin');
+var Constants = require('../../../constants/Constants');
 var Vocabulary = require('../../../constants/Vocabulary');
 var EventTypeFactory = require('../../../model/EventTypeFactory');
 var ExternalLink = require('../../misc/ExternalLink').default;
@@ -38,7 +39,7 @@ var OccurrenceClassification = React.createClass({
 
     getInitialState: function () {
         return {
-            occurrenceClasses: OptionsStore.getOccurrenceClasses(),
+            occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
             occurrenceCategories: TypeaheadStore.getOccurrenceCategories()
         };
     },
@@ -49,7 +50,7 @@ var OccurrenceClassification = React.createClass({
     },
 
     onOccurrenceClassesLoaded: function (type, data) {
-        if (type !== 'occurrenceClass') {
+        if (type !== Constants.OPTIONS.OCCURRENCE_CLASS) {
             return;
         }
         this.setState({occurrenceClasses: data});

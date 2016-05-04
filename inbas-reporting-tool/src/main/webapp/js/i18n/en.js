@@ -189,6 +189,14 @@ module.exports = {
         'revisions.label': 'Revisions',
         'revisions.created': 'Created',
         'revisions.show-tooltip': 'Show this revision',
-        'revisions.readonly-notice': 'Older revisions are read-only.'
+        'revisions.readonly-notice': 'Older revisions are read-only.',
+
+        // ----------- ARMS -------------
+        'arms.title': 'ARMS',
+        'arms.accident-outcome': 'Accident outcome',
+        'arms.accident-outcome.tooltip': 'If this event had escalated into an accident, what would have been the most probable accident outcome?',
+        'arms.barrier-effectiveness': 'Barrier effectiveness',
+        'arms.barrier-effectiveness.tooltip': 'What was the effectiveness of the remaining barriers between this event and the most probable accident scenario?',
+        'arms.index': 'ARMS index'
     }
 };

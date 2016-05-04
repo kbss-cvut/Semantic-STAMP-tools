@@ -15,6 +15,7 @@ var Actions = require('../../../actions/Actions');
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo');
 var Factors = require('../../factor/Factors');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
+var ArmsAttributes = require('../arms/ArmsAttributes').default;
 var ReportSummary = require('../ReportSummary').default;
 var MessageMixin = require('../../mixin/MessageMixin');
 var ReportValidator = require('../../../validation/ReportValidator');
@@ -80,6 +81,10 @@ var OccurrenceReport = React.createClass({
 
                         <div className='form-group'>
                             <CorrectiveMeasures report={report} onChange={this.props.handlers.onChange}/>
+                        </div>
+
+                        <div className='form-group'>
+                            <ArmsAttributes report={report} onChange={this.props.handlers.onChange}/>
                         </div>
 
                         <div className='row'>

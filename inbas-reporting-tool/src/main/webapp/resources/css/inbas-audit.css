@@ -257,9 +257,9 @@ td.actions button {
 }
 
 /*.gantt_grid_head_add {*/
-    /*background-image: none;*/
-    /*cursor: default;*/
-    /*pointer-events: none;*/
+/*background-image: none;*/
+/*cursor: default;*/
+/*pointer-events: none;*/
 /*}*/
 
 .gantt-link-causes {
@@ -451,4 +451,18 @@ button.reset-filters {
 
 .external-link-factor-detail {
     margin-top: 7px;
+}
+
+/* ARMS */
+/* Set it to important so it does not get overridden by the readOnly background color*/
+.arms-index-green {
+    background-color: rgba(68, 157, 68, 0.3) !important;
+}
+
+.arms-index-yellow {
+    background-color: rgba(236, 151, 31, 0.3) !important;
+}
+
+.arms-index-red {
+    background-color: rgba(217, 83, 79, 0.3) !important;
 }

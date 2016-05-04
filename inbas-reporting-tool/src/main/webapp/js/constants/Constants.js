@@ -29,6 +29,9 @@ module.exports = {
             className: 'gantt-link-prevents'
         }
     },
+    OPTIONS: {
+        OCCURRENCE_CLASS: 'occurrenceClass'
+    },
 
     UNAUTHORIZED_USER: {name: 'unauthorized'},
 
