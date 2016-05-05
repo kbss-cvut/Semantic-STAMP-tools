@@ -1,7 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.service.options;
 
-import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
-import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.ConfigReader;
 import cz.cvut.kbss.inbas.reporting.service.data.DataLoader;
@@ -78,10 +76,6 @@ public class OptionsServiceImpl implements OptionsService {
                     return new RawJson(localLoader.loadData("locations.json", Collections.emptyMap()));
                 case "operator":
                     return new RawJson(localLoader.loadData("operators.json", Collections.emptyMap()));
-                case "accidentOutcome":
-                    return AccidentOutcome.toPairs();
-                case "barrierEffectiveness":
-                    return BarrierEffectiveness.values();
                 default:
                     break;
             }

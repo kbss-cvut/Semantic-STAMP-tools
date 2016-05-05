@@ -9,15 +9,32 @@ import Ajax from "../../../utils/Ajax";
 import Input from "../../Input";
 import OptionsStore from "../../../stores/OptionsStore";
 import Select from "../../Select";
-import Utils from "../../../utils/Utils";
+import Vocabulary from "../../../constants/Vocabulary";
 
+const GREATER_THAN = 'http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than';
 const ACCIDENT_OUTCOME = 'accidentOutcome';
 const BARRIER_EFFECTIVENESS = 'barrierEffectiveness';
 
-var ARMS_THRESHOLDS = {
+const ARMS_THRESHOLDS = {
     green: 20,
     yellow: 500
 };
+
+/**
+ * Have to sort the array this way, because every item only knows only its immediate successor
+ * @param arr The array to sort
+ */
+function neighbourSort(arr) {
+    for (var i = 0, len = arr.length; i < len; i++) {
+        for (var j = i; j < len; j++) {
+            if (arr[i][GREATER_THAN] && arr[i][GREATER_THAN]['@id'] === arr[j]['@id']) {
+                var tmp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = tmp;
+            }
+        }
+    }
+}
 
 class ArmsAttributes extends React.Component {
     static propTypes = {
@@ -46,13 +63,34 @@ class ArmsAttributes extends React.Component {
     _onOptionsLoaded = (type, data) => {
         var update = {};
         if (type === ACCIDENT_OUTCOME) {
-            update[ACCIDENT_OUTCOME] = data;
+            neighbourSort(data);
+            update[ACCIDENT_OUTCOME] = this._transformOutcomesOptions(data);
             this.setState(update);
         } else if (type === BARRIER_EFFECTIVENESS) {
-            update[BARRIER_EFFECTIVENESS] = data;
+            neighbourSort(data);
+            update[BARRIER_EFFECTIVENESS] = this._transformBarrierOptions(data);
             this.setState(update);
         }
     };
+
+    _transformBarrierOptions(data) {
+        return data.map((item) => {
+            return {
+                label: item[Vocabulary.RDFS_LABEL]['@value'],
+                value: item['@id']
+            };
+        });
+    }
+
+    _transformOutcomesOptions(data) {
+        return data.map((item) => {
+            return {
+                value: item['@id'],
+                label: item[Vocabulary.RDFS_LABEL]['@value'],
+                title: item[Vocabulary.RDFS_COMMENT]['@value']
+            };
+        });
+    }
 
     _onChange = (e) => {
         var change = {};
@@ -82,14 +120,14 @@ class ArmsAttributes extends React.Component {
                         <Select name='barrierEffectiveness' value={report.barrierEffectiveness}
                                 label={i18n('arms.barrier-effectiveness')}
                                 tooltip={i18n('arms.barrier-effectiveness.tooltip')}
-                                onChange={this._onChange} options={this._renderBarrierOptions()}/>
+                                onChange={this._onChange} options={this.state.barrierEffectiveness}/>
                     </div>
 
                     <div className='col-xs-4' title={i18n('arms.accident-outcome.tooltip')}>
                         <Select name='accidentOutcome' value={report.accidentOutcome}
                                 label={i18n('arms.accident-outcome')}
                                 tooltip={i18n('arms.accident-outcome.tooltip')}
-                                onChange={this._onChange} options={this._renderOutcomesOptions()}/>
+                                onChange={this._onChange} options={this.state.accidentOutcome}/>
                     </div>
                     <div className='col-xs-4'>
                         <Input className={this._resolveArmsIndexCls()} type='number' name='armsIndex' ref='armsIndex'
@@ -98,25 +136,6 @@ class ArmsAttributes extends React.Component {
                 </div>
             </Panel>
         );
-    }
-
-    _renderBarrierOptions() {
-        return this.state.barrierEffectiveness.map((item) => {
-            return {
-                label: Utils.constantToString(item, true),
-                value: item
-            };
-        });
-    }
-
-    _renderOutcomesOptions() {
-        return this.state.accidentOutcome.map((item) => {
-            return {
-                value: item.key,
-                label: Utils.constantToString(item.key, true),
-                title: item.value
-            };
-        });
     }
 
     _resolveArmsIndexCls() {

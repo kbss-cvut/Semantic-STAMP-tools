@@ -31,12 +31,7 @@ var OptionsStore = Reflux.createStore({
         Ajax.get('rest/options?type=' + type).end(function (data) {
             if (data.length > 0) {
                 jsonld.frame(data, {}, null, function (err, framed) {
-                    if (!framed['@graph'] || framed['@graph'].length === 0) {
-                        // TODO temporary
-                        options[type] = data;
-                    } else {
-                        options[type] = framed['@graph'];
-                    }
+                    options[type] = framed['@graph'];
                     this.trigger(type, options[type]);
                 }.bind(this));
             } else {
