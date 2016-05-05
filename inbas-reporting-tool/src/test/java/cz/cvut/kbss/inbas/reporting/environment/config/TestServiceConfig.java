@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.environment.config;
 
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
+import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.repository.RepositoryOccurrenceReportService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 @Configuration
@@ -28,5 +30,10 @@ public class TestServiceConfig {
     @Bean
     public OccurrenceReportService occurrenceReportService() {
         return spy(new RepositoryOccurrenceReportService());
+    }
+
+    @Bean
+    public ArmsService armsService() {
+        return mock(ArmsService.class);
     }
 }

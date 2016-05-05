@@ -1,8 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
 import cz.cvut.kbss.inbas.reporting.model.*;
-import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
-import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 
 import java.net.URI;
 import java.util.*;
@@ -11,6 +9,23 @@ public class Generator {
 
     public static final String USERNAME = "halsey@unsc.org";
     public static final String PASSWORD = "john117";
+
+    public static final URI BARRIER_EFFECTIVE = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/effective");
+    public static final URI BARRIER_LIMITED = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/limited");
+    public static final URI BARRIER_MINIMAL = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/minimal");
+    public static final URI BARRIER_NOT_EFFECTIVE = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/not-effective");
+    public static final URI ACCIDENT_NEGLIGIBLE = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/negligible");
+    public static final URI ACCIDENT_MINOR = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/minor");
+    public static final URI ACCIDENT_MAJOR = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/major");
+    public static final URI ACCIDENT_CATASTROPHIC = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/catastrophic");
 
     private static Random random = new Random();
 
@@ -69,8 +84,8 @@ public class Generator {
         report.setOccurrence(generateOccurrence());
         report.setSummary("Some random summary " + randomInt() + ".");
         if (setAttributes) {
-            report.setBarrierEffectiveness(BarrierEffectiveness.EFFECTIVE);
-            report.setAccidentOutcome(AccidentOutcome.NEGLIGIBLE);
+            report.setBarrierEffectiveness(BARRIER_EFFECTIVE);
+            report.setAccidentOutcome(ACCIDENT_NEGLIGIBLE);
             report.setAuthor(getPerson());
             report.setDateCreated(new Date());
             report.setFileNumber((long) randomInt(Integer.MAX_VALUE));

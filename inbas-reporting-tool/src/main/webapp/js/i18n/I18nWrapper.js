@@ -10,7 +10,7 @@ const I18nWrapper = (Component) => class extends React.Component {
 
     i18n = (id) => {
         return this.props.intl.messages[id];
-    }
+    };
 
     render() {
         return <Component i18n={this.i18n} {...this.props}/>;

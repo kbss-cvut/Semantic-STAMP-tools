@@ -80,7 +80,7 @@ public class OccurrenceReportValidatorTest {
     @Test
     public void negativeArmsIndexIsInvalid() {
         thrown.expect(ValidationException.class);
-        final short armsValue = Short.MIN_VALUE;
+        final int armsValue = Short.MIN_VALUE;
         thrown.expectMessage(
                 "ARMS index value " + armsValue + " is not in the valid range " + Constants.ARMS_INDEX_MIN + " - " +
                         Constants.ARMS_INDEX_MAX);
@@ -92,13 +92,13 @@ public class OccurrenceReportValidatorTest {
     @Test
     public void tooLargeArmsIndexIsInvalid() {
         thrown.expect(ValidationException.class);
-        final short armsValue = Short.MAX_VALUE;
+        final int armsValue = Short.MAX_VALUE;
         assertTrue(armsValue > Constants.ARMS_INDEX_MAX);
         thrown.expectMessage(
                 "ARMS index value " + armsValue + " is not in the valid range " + Constants.ARMS_INDEX_MIN + " - " +
                         Constants.ARMS_INDEX_MAX);
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setArmsIndex((short) 10);
+        report.setArmsIndex(10);
         final OccurrenceReport copy = new OccurrenceReport(report);
         copy.setArmsIndex(armsValue);
         validator.validateForUpdate(copy, report);

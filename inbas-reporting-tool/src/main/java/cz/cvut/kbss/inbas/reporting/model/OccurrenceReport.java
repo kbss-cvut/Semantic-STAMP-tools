@@ -2,8 +2,6 @@ package cz.cvut.kbss.inbas.reporting.model;
 
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
-import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -63,14 +61,14 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
 
     // ARMS Attributes
 
-    @OWLDataProperty(iri = Vocabulary.p_mostProbableAccidentOutcome)
-    private AccidentOutcome accidentOutcome;
+    @OWLObjectProperty(iri = Vocabulary.p_mostProbableAccidentOutcome)
+    private URI accidentOutcome;
 
-    @OWLDataProperty(iri = Vocabulary.p_barrierEffectiveness)
-    private BarrierEffectiveness barrierEffectiveness;
+    @OWLObjectProperty(iri = Vocabulary.p_barrierEffectiveness)
+    private URI barrierEffectiveness;
 
     @Transient
-    private Short armsIndex;
+    private Integer armsIndex;
 
     @Types
     private Set<String> types;
@@ -191,27 +189,27 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.summary = summary;
     }
 
-    public AccidentOutcome getAccidentOutcome() {
+    public URI getAccidentOutcome() {
         return accidentOutcome;
     }
 
-    public void setAccidentOutcome(AccidentOutcome accidentOutcome) {
+    public void setAccidentOutcome(URI accidentOutcome) {
         this.accidentOutcome = accidentOutcome;
     }
 
-    public BarrierEffectiveness getBarrierEffectiveness() {
+    public URI getBarrierEffectiveness() {
         return barrierEffectiveness;
     }
 
-    public void setBarrierEffectiveness(BarrierEffectiveness barrierEffectiveness) {
+    public void setBarrierEffectiveness(URI barrierEffectiveness) {
         this.barrierEffectiveness = barrierEffectiveness;
     }
 
-    public Short getArmsIndex() {
+    public Integer getArmsIndex() {
         return armsIndex;
     }
 
-    public void setArmsIndex(Short armsIndex) {
+    public void setArmsIndex(Integer armsIndex) {
         this.armsIndex = armsIndex;
     }
 

@@ -85,6 +85,6 @@ public class MockServiceConfig {
 
     @Bean
     public ArmsService armsService() {
-        return new ArmsService();
+        return mock(ArmsService.class);
     }
 }
