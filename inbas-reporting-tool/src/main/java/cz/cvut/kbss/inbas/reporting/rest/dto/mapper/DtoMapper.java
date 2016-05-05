@@ -10,16 +10,13 @@ import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model.*;
-import cz.cvut.kbss.inbas.reporting.model.util.EventPositionComparator;
-import cz.cvut.kbss.inbas.reporting.model.util.FactorGraphItem;
-import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
-import cz.cvut.kbss.inbas.reporting.util.TriConsumer;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.net.URI;
 import java.util.*;
-import java.util.function.Consumer;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class DtoMapper {
@@ -27,12 +24,10 @@ public abstract class DtoMapper {
     private final SplittableRandom random = new SplittableRandom();
     private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
 
-    private final EventPositionComparator childEventComparator = new EventPositionComparator();
-
-    private Map<URI, HasUri> dtoRegistry = new HashMap<>();
+    private Map<URI, EventDto> eventDtoRegistry;
 
     private void reset() {
-        this.dtoRegistry = new HashMap<>();
+        this.eventDtoRegistry = new LinkedHashMap<>();
     }
 
     public LogicalDocument reportToReportDto(LogicalDocument report) {
@@ -144,7 +139,10 @@ public abstract class DtoMapper {
         dto.setEndTime(occurrence.getEndTime());
         dto.setEventType(occurrence.getEventType());
         dto.setReferenceId(random.nextInt());
-        dtoRegistry.put(dto.getUri(), dto);
+        if (eventDtoRegistry == null) {
+            reset();
+        }
+        eventDtoRegistry.put(dto.getUri(), dto);
 
         return dto;
     }
@@ -155,81 +153,19 @@ public abstract class DtoMapper {
         if (occurrence == null) {
             return null;
         }
-        final Map<URI, EventDto> instanceMap = new LinkedHashMap<>();
-        final Set<FactorGraphEdge> edges = new HashSet<>();
-        // First run collects nodes and sets reference ids on them
-        traverseTree(occurrence, dto -> {
-            if (dto.getReferenceId() == null) {
-                dto.setReferenceId(random.nextInt());
-            }
-            instanceMap.put(dto.getUri(), dto);
-        }, (a, b, c) -> {
-        }, new HashSet<>());
-        // Second run collects edges
-        traverseTree(occurrence, (n) -> {
-        }, (from, to, uri) -> {
-            final FactorGraphEdge e = new FactorGraphEdge(instanceMap.get(from.getUri()).getReferenceId(),
-                    instanceMap.get(to.getUri()).getReferenceId(), uri);
-            edges.add(e);
-        }, new HashSet<>());
+        if (eventDtoRegistry == null) {
+            reset();
+        }
+        final DtoNodeVisitor nodeVisitor = new DtoNodeVisitor(this, random, eventDtoRegistry);
+        final FactorGraphTraverser traverser = new FactorGraphTraverser(nodeVisitor, null);
+        traverser.traverse(occurrence);
+        final DtoEdgeVisitor edgeVisitor = new DtoEdgeVisitor(nodeVisitor.getInstanceMap());
+        traverser.setFactorGraphEdgeVisitor(edgeVisitor);
+        traverser.traverse(occurrence);
         final FactorGraph graph = new FactorGraph();
-        graph.setEdges(edges);
-        graph.setNodes(new ArrayList<>(instanceMap.values()));
+        graph.setNodes(new ArrayList<>(nodeVisitor.getInstanceMap().values()));
+        graph.setEdges(edgeVisitor.getEdges());
         return graph;
-    }
-
-    private void traverseTree(Occurrence occurrence, Consumer<EventDto> nodeConsumer,
-                              TriConsumer<HasUri, HasUri, URI> edgeConsumer, Set<URI> visited) {
-        if (visited.contains(occurrence.getUri())) {
-            return;
-        }
-        nodeConsumer.accept(dtoRegistry.containsKey(occurrence.getUri()) ?
-                            (EventDto) dtoRegistry.get(occurrence.getUri()) :
-                            occurrenceToOccurrenceDto(occurrence));
-        visited.add(occurrence.getUri());
-        if (occurrence.getFactors() != null) {
-
-            for (Factor f : occurrence.getFactors()) {
-                edgeConsumer.accept(f.getEvent(), occurrence, f.getType().getUri());
-                traverseTree(f.getEvent(), nodeConsumer, edgeConsumer, visited);
-            }
-        }
-        if (occurrence.getChildren() != null) {
-            occurrence.setChildren(sortChildren(occurrence.getChildren()));
-            occurrence.getChildren().forEach(child -> {
-                edgeConsumer.accept(occurrence, child, HAS_PART_URI);
-                traverseTree(child, nodeConsumer, edgeConsumer, visited);
-            });
-        }
-    }
-
-    private Set<Event> sortChildren(Set<Event> children) {
-        final Set<Event> sortedChildren = new TreeSet<>(childEventComparator);
-        sortedChildren.addAll(children);
-        return sortedChildren;
-    }
-
-    private void traverseTree(Event event, Consumer<EventDto> nodeConsumer,
-                              TriConsumer<HasUri, HasUri, URI> edgeConsumer, Set<URI> visited) {
-        if (visited.contains(event.getUri())) {
-            return;
-        }
-        nodeConsumer.accept(eventToEventDto(event));
-        visited.add(event.getUri());
-        if (event.getFactors() != null) {
-
-            for (Factor f : event.getFactors()) {
-                edgeConsumer.accept(f.getEvent(), event, f.getType().getUri());
-                traverseTree(f.getEvent(), nodeConsumer, edgeConsumer, visited);
-            }
-        }
-        if (event.getChildren() != null) {
-            event.setChildren(sortChildren(event.getChildren()));
-            event.getChildren().forEach(child -> {
-                edgeConsumer.accept(event, child, HAS_PART_URI);
-                traverseTree(child, nodeConsumer, edgeConsumer, visited);
-            });
-        }
     }
 
     public Occurrence factorGraphToOccurrence(FactorGraph graph) {

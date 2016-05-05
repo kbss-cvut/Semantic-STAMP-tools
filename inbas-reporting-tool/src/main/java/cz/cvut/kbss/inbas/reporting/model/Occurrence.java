@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.inbas.reporting.model.util.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.HasOwlKey;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
