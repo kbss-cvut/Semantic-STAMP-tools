@@ -3,9 +3,6 @@ package cz.cvut.kbss.inbas.reporting.rest.dto.model;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * @author ledvima1
- */
 public class RawJson {
 
     private String value;

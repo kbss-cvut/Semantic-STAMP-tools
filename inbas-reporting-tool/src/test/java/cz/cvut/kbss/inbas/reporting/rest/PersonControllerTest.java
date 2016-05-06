@@ -4,21 +4,31 @@ import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.inbas.reporting.service.PersonService;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.util.Collections;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class PersonControllerTest extends BaseControllerTestRunner {
@@ -53,5 +63,40 @@ public class PersonControllerTest extends BaseControllerTestRunner {
         final Person res = objectMapper.readValue(result.getResponse().getContentAsString(), Person.class);
         assertEquals(p.getUri(), res.getUri());
         assertTrue(p.nameEquals(res));
+    }
+
+    @Test
+    public void createPersonPersistsNewPersonAndReturnsLocationHeader() throws Exception {
+        authenticateAnonymously();
+        final Person p = Generator.getPerson();
+        MvcResult result = mockMvc.perform(post("/persons").content(toJson(p)).contentType(MediaType.APPLICATION_JSON))
+                                  .andReturn();
+        assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
+        final ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
+        verify(personService).persist(captor.capture());
+        assertTrue(p.nameEquals(captor.getValue()));
+        verifyLocationEquals("/persons/" + p.getUsername(), result);
+    }
+
+    private void authenticateAnonymously() {
+        SecurityContext ctx = SecurityContextHolder.createEmptyContext();
+        SecurityContextHolder.setContext(ctx);
+        ctx.setAuthentication(new UsernamePasswordAuthenticationToken("anonymous", "",
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))));
+    }
+
+    @Test
+    public void createPersonWithoutPasswordReturnsBadRequest() throws Exception {
+        authenticateAnonymously();
+        final Person p = Generator.getPerson();
+        p.setPassword(null);
+        final String err = "Missing password.";
+        doThrow(new ValidationException(err)).when(personService).persist(any(Person.class));
+        MvcResult result = mockMvc.perform(post("/persons").content(toJson(p)).contentType(MediaType.APPLICATION_JSON))
+                                  .andReturn();
+        assertEquals(HttpStatus.CONFLICT, HttpStatus.valueOf(result.getResponse().getStatus()));
+        final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
+        assertNotNull(errorInfo);
+        assertEquals(err, errorInfo.getMessage());
     }
 }

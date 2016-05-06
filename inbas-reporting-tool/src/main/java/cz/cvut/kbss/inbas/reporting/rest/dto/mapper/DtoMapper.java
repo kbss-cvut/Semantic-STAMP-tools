@@ -174,10 +174,6 @@ public abstract class DtoMapper {
         }
         final Map<Integer, EventDto> dtoMap = new HashMap<>();
         graph.getNodes().forEach(n -> dtoMap.put(n.getReferenceId(), n));
-        if (dtoMap.isEmpty()) {
-            // Won't be necessary. Need it right now because UI does not support factor serialization, yet
-            return null;
-        }
         final Map<Integer, FactorGraphItem> instanceMap = new HashMap<>(dtoMap.size());
         graph.getNodes().forEach(n -> {
             if (n instanceof OccurrenceDto) {
