@@ -87,8 +87,9 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
 
     function verifyLinks(expected, actual) {
         for (var i = 0, len = expected.length; i < len; i++) {
+            const index = i;
             expect(actual.find((item) => {
-                return item.from === expected[i].from && item.to === expected[i].to && item.linkType === expected[i].linkType;
+                return item.from === expected[index].from && item.to === expected[index].to && item.linkType === expected[index].linkType;
             })).not.toBeNull();
         }
     }
@@ -98,6 +99,9 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
         Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
         var factorLinks = Generator.generateFactorLinksForNodes(nodes);
         initGetLinksStub(factorLinks);
+        initGetFactorStub(nodes);
+        initForEachStub(nodes);
+        initGetChildrenStub(nodes, []);
         var factorGraph = FactorJsonSerializer.getFactorGraph(report);
         expect(factorGraph.nodes).not.toBeNull();
         expect(factorGraph.edges).not.toBeNull();
@@ -118,6 +122,27 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
     }
 
     it('Serializes factor graph', () => {
+        var nodes = [report.occurrence],
+            expected;
+        Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
+        var factorLinks = Generator.generateFactorLinksForNodes(nodes);
+        var partOfLinks = Generator.generatePartOfLinksForNodes(report, nodes);
+        initGetLinksStub(factorLinks);
+        initGetFactorStub(nodes);
+        initForEachStub(nodes);
+        initGetChildrenStub(nodes, partOfLinks);
+        expected = nodes.slice();
+        expected[0] = report.occurrence.referenceId; // Occurrence is represented by ids reference id, see the next test
+
+        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
+        expect(factorGraph.nodes).not.toBeNull();
+        expect(factorGraph.nodes).toEqual(expected);
+        expect(factorGraph.edges).not.toBeNull();
+        expect(factorGraph.edges.length).toEqual(partOfLinks.length + factorLinks.length);
+        verifyLinks(partOfLinks.concat(factorLinks), factorGraph.edges);
+    });
+
+    it('Uses occurrence reference id in factor graph for an occurrence report', () => {
         var nodes = [report.occurrence];
         Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
         var factorLinks = Generator.generateFactorLinksForNodes(nodes);
@@ -128,10 +153,7 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
         initGetChildrenStub(nodes, partOfLinks);
 
         var factorGraph = FactorJsonSerializer.getFactorGraph(report);
-        expect(factorGraph.nodes).not.toBeNull();
-        expect(factorGraph.nodes).toEqual(nodes);
-        expect(factorGraph.edges).not.toBeNull();
-        expect(factorGraph.edges.length).toEqual(partOfLinks.length + factorLinks.length);
-        verifyLinks(partOfLinks.concat(factorLinks), factorGraph.edges);
+        var occurrenceRefId = report.occurrence.referenceId;
+        expect(factorGraph.nodes.indexOf(occurrenceRefId)).not.toEqual(-1);
     });
 });

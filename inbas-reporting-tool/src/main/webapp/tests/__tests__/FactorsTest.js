@@ -8,6 +8,7 @@ describe('Factors component tests', function () {
         Generator = require('../environment/Generator').default,
         Factors = rewire('../../js/components/factor/Factors'),
         FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
+        Actions = require('../../js/actions/Actions'),
         GanttController = null,
         report = {
             occurrence: {
@@ -18,14 +19,16 @@ describe('Factors component tests', function () {
         };
 
     beforeEach(function () {
-        GanttController = jasmine.createSpyObj('GanttController', ['init', 'getFactor', 'setScale', 'addFactor', 'setOccurrenceEventId', 'expandSubtree', 'updateOccurrenceEvent']);
-        Factors.__set__("GanttController", GanttController);
-        FactorRenderer.ganttController = GanttController;
+        GanttController = jasmine.createSpyObj('GanttController', ['init', 'getFactor', 'setScale', 'addFactor', 'setOccurrenceEventId', 'expandSubtree', 'updateOccurrenceEvent', 'getChildCount']);
+        Factors.__set__('GanttController', GanttController);
+        FactorRenderer.__set__('GanttController', GanttController);
         Factors.__set__('FactorRenderer', FactorRenderer);
         GanttController.getFactor.and.returnValue({
             text: report.occurrence.name,
             start_date: new Date(report.occurrence.startTime)
         });
+        GanttController.getChildCount.and.returnValue(0);
+        spyOn(Actions, 'loadEventTypes');
     });
 
     it('Initializes gantt with minute scale on component mount', function () {
@@ -33,13 +36,14 @@ describe('Factors component tests', function () {
         expect(GanttController.init).toHaveBeenCalled();
         expect(GanttController.setScale).toHaveBeenCalledWith('minute');
     });
-    
+
     it('Adds event of the occurrence into gantt on initialization', function () {
         var factor = null;
         GanttController.addFactor.and.callFake(function (arg) {
             factor = arg;
         });
-        Environment.render(<Factors report={report}/>);
+        var factors = Environment.render(<Factors report={report}/>);
+        factors.renderFactors({action: Actions.loadEventTypes, data: []});
         expect(GanttController.addFactor).toHaveBeenCalled();
         expect(factor).toBeDefined();
         expect(factor.text).toEqual(report.occurrence.name);
@@ -65,6 +69,7 @@ describe('Factors component tests', function () {
                 text: '2180100 - Loss of Separation',
                 statement: {}
             };
+        factors.renderFactors({action: Actions.loadEventTypes, data: []});
         factors.state.currentFactor = newFactor;
         factors.onSaveFactor();
         expect(GanttController.addFactor).toHaveBeenCalled();
@@ -76,26 +81,70 @@ describe('Factors component tests', function () {
     });
 
     it('Assigns reference id to new factors', () => {
-        var newFactor = {
+        var referenceId = 117,
+            newFactor = {
                 isNew: true,
                 text: 'Test',
                 statement: {},
-                parent: 1
+                parent: referenceId
             }, parent = {
-                id: 1,
+                id: referenceId,
                 statement: report.occurrence
             },
-            referenceId = 117,
             component;
         report.occurrence.referenceId = referenceId;
         GanttController.getFactor.and.returnValue(parent);
         component = Environment.render(<Factors report={report}/>);
+        component.renderFactors({action: Actions.loadEventTypes, data: []});
         component.setState({
             currentFactor: newFactor
         });
         component.onSaveFactor();
 
         expect(newFactor.statement.referenceId).toEqual(referenceId + 1);
-        expect(GanttController.addFactor).toHaveBeenCalledWith(newFactor);
+        expect(GanttController.addFactor).toHaveBeenCalledWith(newFactor, referenceId);
+    });
+
+    it('Renders factor graph only after event types have been loaded', () => {
+        spyOn(FactorRenderer, 'renderFactors');
+        var factors = Environment.render(<Factors report={report}/>),
+            eventTypes = [
+                {id: 'test'}
+            ],
+            TypeaheadStore = require('../../js/stores/TypeaheadStore');
+        spyOn(TypeaheadStore, 'getEventTypes').and.returnValue(eventTypes);
+        expect(FactorRenderer.renderFactors).not.toHaveBeenCalled();
+        factors.renderFactors({
+            action: Actions.loadEventTypes,
+            data: eventTypes
+        });
+        expect(FactorRenderer.renderFactors).toHaveBeenCalledWith(report, eventTypes);
+    });
+
+    it('Sets event position when new child event is added to a parent', () => {
+        var factors = Environment.render(<Factors report={report}/>),
+            childCount = Generator.getRandomPositiveInt(1, 5),
+            referenceId = 117,
+            newFactor = {
+                isNew: true,
+                text: 'Test',
+                statement: {},
+                parent: referenceId
+            }, parent = {
+                id: referenceId,
+                statement: report.occurrence
+            },
+            component;
+        report.occurrence.referenceId = referenceId;
+        GanttController.getChildCount.and.returnValue(childCount);
+        GanttController.getFactor.and.returnValue(parent);
+        component = Environment.render(<Factors report={report}/>);
+        component.renderFactors({action: Actions.loadEventTypes, data: []});
+        component.setState({
+            currentFactor: newFactor
+        });
+        component.onSaveFactor();
+
+        expect(newFactor.statement.index).toEqual(childCount);
     });
 });

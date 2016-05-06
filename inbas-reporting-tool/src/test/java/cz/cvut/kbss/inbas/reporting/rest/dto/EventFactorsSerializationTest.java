@@ -3,11 +3,12 @@ package cz.cvut.kbss.inbas.reporting.rest.dto;
 import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
+import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.*;
-import cz.cvut.kbss.inbas.reporting.model.util.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapperImpl;
 import org.junit.Before;
@@ -215,6 +216,45 @@ public class EventFactorsSerializationTest {
             }
         }
         siblings.stream().filter(e -> e.getChildren() != null).forEach(e -> addCrossSubtreeFactors(e.getChildren()));
+    }
+
+    @Test
+    public void serializationOfEventSiblingsOrdersThemByIndex() {
+        final Occurrence occurrence = prepareOccurrenceWithChildren(true);
+
+        final FactorGraph result = dtoMapper.occurrenceToFactorGraph(occurrence);
+        Integer previousIndex = -1;
+        for (EventDto node : result.getNodes()) {
+            if (!(node instanceof OccurrenceDto)) {
+                assertTrue(node.getIndex() > previousIndex);
+                previousIndex = node.getIndex();
+            }
+        }
+        assertEquals(1 + occurrence.getChildren().size(), result.getNodes().size());
+    }
+
+    private Occurrence prepareOccurrenceWithChildren(boolean withIndex) {
+        final Occurrence occurrence = occurrence();
+        final List<Event> events = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final Event evt = event();
+            if (withIndex) {
+                evt.setIndex(i);
+            }
+            events.add(evt);
+        }
+        // Shuffle before insertion into HashSet to increase chances of non-sequence order
+        Collections.shuffle(events);
+        occurrence.setChildren(new HashSet<>(events));
+        return occurrence;
+    }
+
+    @Test
+    public void serializationOfEventsWithNullIndexIsLossLess() {
+        final Occurrence occurrence = prepareOccurrenceWithChildren(false);
+        final int expectedSize = 1 + occurrence.getChildren().size();
+        final FactorGraph result = dtoMapper.occurrenceToFactorGraph(occurrence);
+        assertEquals(expectedSize, result.getNodes().size());
     }
 
     /**

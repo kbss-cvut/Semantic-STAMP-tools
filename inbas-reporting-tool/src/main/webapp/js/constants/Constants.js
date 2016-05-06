@@ -9,25 +9,28 @@ module.exports = {
     HOME_ROUTE: Routes.dashboard,
     LINK_TYPES: {
         CAUSE: {
-            value: 'cause',
+            value: 'http://onto.fel.cvut.cz/ontologies/documentation/causes',
             message: 'factors.causes',
             className: 'gantt-link-causes'
         },
         CONTRIBUTE_TO: {
-            value: 'contribute_to',
+            value: 'http://onto.fel.cvut.cz/ontologies/documentation/contributes-to',
             message: 'factors.contributes_to',
             className: 'gantt-link-contributes'
         },
         MITIGATE: {
-            value: 'mitigate',
+            value: 'http://onto.fel.cvut.cz/ontologies/documentation/mitigates',
             message: 'factors.mitigates',
             className: 'gantt-link-mitigates'
         },
         PREVENT: {
-            value: 'prevent',
+            value: 'http://onto.fel.cvut.cz/ontologies/documentation/prevents',
             message: 'factors.prevents',
             className: 'gantt-link-prevents'
         }
+    },
+    OPTIONS: {
+        OCCURRENCE_CLASS: 'occurrenceClass'
     },
 
     UNAUTHORIZED_USER: {name: 'unauthorized'},
@@ -45,5 +48,6 @@ module.exports = {
     MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24,
 
     OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
+    EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
     OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto'
 };

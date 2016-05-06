@@ -55,20 +55,75 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
-    public void persistReportWithExistingOccurrenceReusesOccurrenceInstance() {
-        final OccurrenceReport report = persistReport();
+    public void persistReportWithFactorGraphCascadesPersistToAppropriateEventInstances() {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        report.setAuthor(author);
+        occurrenceReportDao.persist(report);
 
-        final OccurrenceReport newReport = new OccurrenceReport(report);
-        assertSame(report.getOccurrence(), newReport.getOccurrence());
-        newReport.setAuthor(author);
-        newReport.setRevision(report.getRevision() + 1);
-        occurrenceReportDao.persist(newReport);
+        final OccurrenceReport res = occurrenceReportDao.find(report.getUri());
+        verifyFactorGraph(report.getOccurrence(), res.getOccurrence());
+    }
 
-        final OccurrenceReport resOrig = occurrenceReportDao.find(report.getUri());
-        assertNotNull(resOrig);
-        final OccurrenceReport resCopy = occurrenceReportDao.find(newReport.getUri());
-        assertNotNull(resCopy);
-        assertEquals(resOrig.getOccurrence().getUri(), resCopy.getOccurrence().getUri());
+    private void verifyFactorGraph(Occurrence expected, Occurrence actual) {
+        assertEquals(expected.getUri(), actual.getUri());
+        if (expected.getChildren() != null) {
+            assertEquals(expected.getChildren().size(), actual.getChildren().size());
+        }
+        if (expected.getFactors() != null) {
+            assertEquals(expected.getFactors().size(), actual.getFactors().size());
+        }
+        final Set<URI> visited = new HashSet<>();
+        visited.add(actual.getUri());
+        verifyChildren(expected.getChildren(), actual.getChildren(), visited);
+        verifyFactors(expected.getFactors(), actual.getFactors(), visited);
+    }
+
+    private void verifyChildren(Set<Event> expected, Set<Event> actual, Set<URI> visited) {
+        final List<Event> lExpected = new ArrayList<>(expected);
+        Collections.sort(lExpected, (a, b) -> a.getUri().compareTo(b.getUri()));
+        final List<Event> lActual = new ArrayList<>(actual);
+        Collections.sort(lActual, (a, b) -> a.getUri().compareTo(b.getUri()));
+        final Iterator<Event> itExp = lExpected.iterator();
+        final Iterator<Event> itAct = lActual.iterator();
+        while (itExp.hasNext() && itAct.hasNext()) {
+            verifyFactorGraph(itExp.next(), itAct.next(), visited);
+        }
+    }
+
+    private void verifyFactors(Set<Factor> expected, Set<Factor> actual, Set<URI> visited) {
+        final List<Factor> lExpected = new ArrayList<>(expected);
+        Collections.sort(lExpected, (a, b) -> a.getUri().compareTo(b.getUri()));
+        final List<Factor> lActual = new ArrayList<>(actual);
+        Collections.sort(lActual, (a, b) -> a.getUri().compareTo(b.getUri()));
+        final Iterator<Factor> itExp = lExpected.iterator();
+        final Iterator<Factor> itAct = lActual.iterator();
+        while (itExp.hasNext() && itAct.hasNext()) {
+            verifyFactorGraph(itExp.next().getEvent(), itAct.next().getEvent(), visited);
+        }
+    }
+
+    private void verifyFactorGraph(Event expected, Event actual, Set<URI> visited) {
+        if (visited.contains(actual.getUri())) {
+            return;
+        }
+        visited.add(actual.getUri());
+        assertEquals(expected.getUri(), actual.getUri());
+        if (expected.getChildren() != null) {
+            if (expected.getChildren().isEmpty()) {
+                assertTrue(actual.getChildren() == null || actual.getChildren().isEmpty());
+            } else {
+                assertEquals(expected.getChildren().size(), actual.getChildren().size());
+                verifyChildren(expected.getChildren(), actual.getChildren(), visited);
+            }
+        }
+        if (expected.getFactors() != null) {
+            if (expected.getFactors().isEmpty()) {
+                assertTrue(actual.getFactors() == null || actual.getFactors().isEmpty());
+            } else {
+                assertEquals(expected.getFactors().size(), actual.getFactors().size());
+                verifyFactors(expected.getFactors(), actual.getFactors(), visited);
+            }
+        }
     }
 
     @Test
@@ -207,12 +262,10 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final OccurrenceReport report = persistReport();
 
         report.setSummary("New updated summary.");
-        report.setArmsIndex((short) 123);
         occurrenceReportDao.update(report);
 
         final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
         assertEquals(report.getSummary(), result.getSummary());
-        assertEquals(report.getArmsIndex(), result.getArmsIndex());
     }
 
     @Test
@@ -225,6 +278,54 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
         final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
         assertEquals(newName, result.getOccurrence().getName());
+    }
+
+    @Test
+    public void updateReportByAddingItemsIntoFactorGraph() {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        report.setAuthor(author);
+        occurrenceReportDao.persist(report);
+
+        final Event addedOne = new Event();
+        addedOne.setStartTime(report.getOccurrence().getStartTime());
+        addedOne.setEndTime(report.getOccurrence().getEndTime());
+        addedOne.setEventType(Generator.generateEventType());
+        final Factor newF = new Factor();
+        newF.setEvent(addedOne);
+        newF.setType(FactorType.CONTRIBUTES_TO);
+        report.getOccurrence().addFactor(newF);
+        final Event addedChild = new Event();
+        addedChild.setStartTime(report.getOccurrence().getStartTime());
+        addedChild.setEndTime(report.getOccurrence().getEndTime());
+        addedChild.setEventType(Generator.generateEventType());
+        report.getOccurrence().getChildren().iterator().next().addChild(addedChild);
+
+        occurrenceReportDao.update(report);
+
+        final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
+        verifyFactorGraph(report.getOccurrence(), result.getOccurrence());
+    }
+
+    @Test
+    public void updateReportByRemovingItemsFromFactorGraph() {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        report.setAuthor(author);
+        occurrenceReportDao.persist(report);
+
+        final Iterator<Event> evtRemove = report.getOccurrence().getChildren().iterator().next().getChildren()
+                                                .iterator();
+        evtRemove.next();
+        evtRemove.remove();
+
+        final Iterator<Event> factRemove = report.getOccurrence().getFactors().iterator().next().getEvent()
+                                                 .getChildren().iterator();
+        factRemove.next();
+        factRemove.remove();
+
+        occurrenceReportDao.update(report);
+
+        final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
+        verifyFactorGraph(report.getOccurrence(), result.getOccurrence());
     }
 
     @Test

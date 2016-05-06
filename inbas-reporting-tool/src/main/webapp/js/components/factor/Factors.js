@@ -15,6 +15,7 @@ var FormattedMessage = require('react-intl').FormattedMessage;
 var Input = require('../Input');
 var Select = require('../Select');
 
+var Actions = require('../../actions/Actions');
 var FactorDetail = require('./FactorDetail');
 var FactorRenderer = require('./FactorRenderer');
 var GanttController = require('./GanttController');
@@ -22,7 +23,10 @@ var FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
 var Constants = require('../../constants/Constants');
 var I18nMixin = require('../../i18n/I18nMixin');
 
-// TODO We should get rid of references to report.occurrence, because factors will be used also in Safety issue reports and possibly audit reports
+var TypeaheadStore = require('../../stores/TypeaheadStore');
+
+// TODO We should get rid of references to report.occurrence, because factors will be used also in Safety issue reports
+// and possibly audit reports
 var Factors = React.createClass({
     mixins: [I18nMixin],
 
@@ -47,7 +51,14 @@ var Factors = React.createClass({
     },
 
     componentDidUpdate: function () {
-        this.ganttController.updateOccurrenceEvent(this.props.report);
+        if (this.factorsRendered) {
+            this.ganttController.updateOccurrenceEvent(this.props.report);
+        }
+    },
+
+    componentWillMount: function () {
+        this.eventTypesUnsubscribe = TypeaheadStore.listen(this.renderFactors);
+        Actions.loadEventTypes();
     },
 
     componentDidMount: function () {
@@ -60,13 +71,26 @@ var Factors = React.createClass({
             onDeleteLink: this.onDeleteLink
         });
         this.ganttController.setScale(this.state.scale);
-        this.renderFactors();
+        if (TypeaheadStore.getEventTypes().length !== 0) {
+            this.renderFactors();
+        }
+    },
+
+    renderFactors: function (data) {
+        if (this.factorsRendered) {
+            return;
+        }
+        if (data && data.action !== Actions.loadEventTypes) {
+            return;
+        }
+        this.factorsRendered = true;
+        FactorRenderer.renderFactors(this.props.report, TypeaheadStore.getEventTypes());
+        this.ganttController.expandSubtree(this.ganttController.occurrenceEventId);
         this.factorReferenceIdCounter = FactorRenderer.greatestReferenceId;
     },
 
-    renderFactors: function () {
-        FactorRenderer.renderFactors(this.props.report);
-        this.ganttController.expandSubtree(this.ganttController.occurrenceEventId);
+    componentWillUnmount: function () {
+        this.eventTypesUnsubscribe();
     },
 
     onLinkAdded: function (link) {
@@ -96,39 +120,22 @@ var Factors = React.createClass({
         var factor = this.state.currentFactor;
         if (factor.isNew) {
             delete factor.isNew;
-            this.addChildFactorToParent(factor);
             factor.statement.referenceId = ++this.factorReferenceIdCounter;
-            this.ganttController.addFactor(factor);
+            if (factor.parent) {
+                factor.statement.index = this.ganttController.getChildCount(factor.parent);
+            }
+            factor.id = factor.statement.referenceId;
+            this.ganttController.addFactor(factor, factor.parent);
         } else {
             this.ganttController.updateFactor(factor);
         }
         this.onCloseFactorDialog();
     },
 
-    addChildFactorToParent: function (child) {
-        if (!child.parent) {
-            return;
-        }
-        var parent = this.ganttController.getFactor(child.parent);
-        if (!parent.children) {
-            parent.children = [];
-        }
-        parent.children.push(child.statement);
-    },
-
     onDeleteFactor: function () {
-        var factor = this.state.currentFactor,
-            parentId = factor.parent;
+        var factor = this.state.currentFactor;
         this.ganttController.deleteFactor(factor.id);
-        this.removeChildFactorFromParent(factor, parentId);
         this.onCloseFactorDialog();
-    },
-
-    removeChildFactorFromParent: function (child, parentId) {
-        var parentFactor = this.ganttController.getFactor(parentId),
-            factor = child.statement;
-        var childIndex = parentFactor.children.indexOf(factor);
-        parentFactor.children.splice(childIndex, 1);
     },
 
     onCloseFactorDialog: function () {

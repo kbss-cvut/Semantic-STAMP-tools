@@ -52,6 +52,7 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
                 original.getCorrectiveMeasures().stream().filter(m -> !measureUris.contains(m.getUri()))
                         .collect(Collectors.toSet());
         em.merge(entity);
+        occurrenceDao.update(entity.getOccurrence(), em);
         orphans.forEach(em::remove);
     }
 

@@ -34,8 +34,8 @@ module.exports = {
         'detail.saving': 'Ukládám...',
         'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
         'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký',
-        'detail.submit': 'Odeslat úřadu',
-        'detail.submit-tooltip': 'Odeslat současnou revizi zprávy úřadu',
+        'detail.submit': 'Nová revize',
+        'detail.submit-tooltip': 'Vytvořit novou revizi tohoto hlášení',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
         'detail.submit-failed-message': 'Hlášení se nepodařilo odeslat. Odpověď serveru: ',
         'detail.loading': 'Načítám hlášení...',
@@ -166,7 +166,7 @@ module.exports = {
         'factors.link-type-select-tooltip': 'Vyberte typ vztahu',
         'factors.link.delete.title': 'Smazat link?',
         'factors.link.delete.text': 'Určitě chcete smazat spojení vedoucí z faktoru {source} do faktoru {target}?',
-        'factors.detail.title': 'Faktor události',
+        'factors.detail.title': 'Specifikace faktoru',
         'factors.detail.type': 'Typ faktoru',
         'factors.detail.type-placeholder': 'Typ faktoru',
         'factors.detail.time-period': 'Specifikace času',
@@ -190,6 +190,14 @@ module.exports = {
         'revisions.label': 'Revize zprávy',
         'revisions.created': 'Vytvořeno',
         'revisions.show-tooltip': 'Zobrazit tuto revizi',
-        'revisions.readonly-notice': 'Starší revize jsou pouze ke čtení.'
+        'revisions.readonly-notice': 'Starší revize jsou pouze ke čtení.',
+
+        // ----------- ARMS -------------
+        'arms.title': 'ARMS',
+        'arms.accident-outcome': 'Výsledek nehody',
+        'arms.accident-outcome.tooltip': 'Pokud by tato událost vedla až nehodě, jaký by byl její nejpravděpodobnější výsledek?',
+        'arms.barrier-effectiveness': 'Efektivita bariér',
+        'arms.barrier-effectiveness.tooltip': 'Jaká byla efektivita bariér zbývajících mezi touto událostí a nejpravděpodobnějším nehodovým scénářem?',
+        'arms.index': 'ARMS index'
     }
 };

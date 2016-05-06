@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.service.repository;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.exception.UsernameExistsException;
+import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.service.PersonService;
@@ -38,6 +39,13 @@ public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
         duplicate.setLastName("duplicated");
         duplicate.setPassword(Generator.PASSWORD);
         personService.persist(duplicate);
+    }
+
+    @Test(expected = ValidationException.class)
+    public void persistThrowsValidationExceptionForInstanceWithoutPassword() {
+        final Person p = Generator.getPerson();
+        p.setPassword("");
+        personService.persist(p);
     }
 
     @Test

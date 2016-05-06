@@ -11,11 +11,15 @@ var TypeaheadResultList = require('../../typeahead/EventTypeTypeaheadResultList'
 
 var injectIntl = require('../../../utils/injectIntl');
 
+var Actions = require('../../../actions/Actions');
 var Select = require('../../Select');
 var OptionsStore = require('../../../stores/OptionsStore');
 var TypeaheadStore = require('../../../stores/TypeaheadStore');
 var I18nMixin = require('../../../i18n/I18nMixin');
+var Constants = require('../../../constants/Constants');
 var Vocabulary = require('../../../constants/Vocabulary');
+var EventTypeFactory = require('../../../model/EventTypeFactory');
+var ExternalLink = require('../../misc/ExternalLink').default;
 
 function mapOccurrenceCategory(cat) {
     return {
@@ -35,7 +39,7 @@ var OccurrenceClassification = React.createClass({
 
     getInitialState: function () {
         return {
-            occurrenceClasses: OptionsStore.getOccurrenceClasses(),
+            occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
             occurrenceCategories: TypeaheadStore.getOccurrenceCategories()
         };
     },
@@ -46,7 +50,7 @@ var OccurrenceClassification = React.createClass({
     },
 
     onOccurrenceClassesLoaded: function (type, data) {
-        if (type !== 'occurrenceClass') {
+        if (type !== Constants.OPTIONS.OCCURRENCE_CLASS) {
             return;
         }
         this.setState({occurrenceClasses: data});
@@ -62,8 +66,11 @@ var OccurrenceClassification = React.createClass({
         });
     },
 
-    onOccurrenceCategoriesLoaded: function () {
-        var options = TypeaheadStore.getOccurrenceCategories();
+    onOccurrenceCategoriesLoaded: function (data) {
+        if (data.action !== Actions.loadOccurrenceCategories) {
+            return;
+        }
+        var options = data.data;
         this.setState({occurrenceCategories: options});
         var selected = this._resolveSelectedCategory();
         if (selected) {
@@ -117,6 +124,7 @@ var OccurrenceClassification = React.createClass({
                                displayOption='name' options={categories}
                                customClasses={classes} customListComponent={TypeaheadResultList}/>
                 </div>
+                {this._renderCategoryLink()}
             </div>
         );
     },
@@ -129,12 +137,14 @@ var OccurrenceClassification = React.createClass({
     _resolveSelectedCategory: function () {
         var catId = this.props.report.occurrence.eventType,
             categories = this.state.occurrenceCategories;
-        if (!catId || categories.length === 0) {
-            return null;
-        }
-        return categories.find((item) => {
-            return item['@id'] === catId;
-        });
+        return EventTypeFactory.resolveEventType(catId, categories);
+    },
+
+    _renderCategoryLink: function () {
+        var cat = this.props.report.occurrence.eventType;
+        return cat ?
+            <div className='col-xs-1'><ExternalLink url={cat} title={this._resolveCategoryValue() + '\n' + cat}/>
+            </div> : null;
     }
 });
 

@@ -1,6 +1,7 @@
 'use strict';
 
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
+var Factory = require('../../model/ReportFactory');
 
 var DATE_FORMAT = '%d-%m-%y %H:%i';
 var TOOLTIP_DATE_FORMAT = '%d-%m-%y %H:%i:%s';
@@ -114,19 +115,15 @@ var GanttController = {
 
     configureGanttTemplates: function () {
         gantt.templates.link_class = function (link) {
-            if (link.factorType === 'cause') {
-                return 'gantt-link-causes';
-            } else {
-                return 'gantt-link-mitigates';
-            }
+            return FactorStyleInfo.getLinkStyle(link);
         };
         gantt.templates.task_class = function (start, end, task) {
             var eventType;
-            if (!task.statement.assessment) {
+            if (!task.parent) {
                 return 'factor-occurrence-event';
             }
-            eventType = task.statement.assessment.eventType;
-            return FactorStyleInfo.getStyleInfo(eventType.type).cls;
+            eventType = task.statement.eventType;
+            return FactorStyleInfo.getStyleInfo(eventType).cls;
         };
         gantt.templates.tooltip_date_format = function (date) {
             var formatFunc = gantt.date.date_to_str(TOOLTIP_DATE_FORMAT);
@@ -134,8 +131,8 @@ var GanttController = {
         };
         gantt.templates.tooltip_text = function (start, end, task) {
             var tooltip = '<b>' + task.text + '</b><br/>';
-            if (task.statement.assessment) {
-                tooltip += task.statement.assessment.eventType.type + '<br/>';
+            if (task.statement && task.statement.eventType) {
+                tooltip += task.statement.eventType + '<br/>';
             }
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
                 '<br/><b>End date:</b> ' + gantt.templates.tooltip_date_format(end);
@@ -157,6 +154,7 @@ var GanttController = {
         factor.isNew = true;
         factor.text = '';
         factor.durationUnit = gantt.config.duration_unit;
+        factor.statement = Factory.createFactor();
         this.props.onCreateFactor(factor);
         return false;
     },
@@ -356,6 +354,7 @@ var GanttController = {
             this.updateDescendantsTimeInterval(occurrenceEvt, updates);
             updates.push(this.occurrenceEventId);
         }
+        occurrenceEvt.statement = report.occurrence;
         if (updates.length > 0) {
             this.applyUpdates(updates, true);
         }
@@ -381,7 +380,7 @@ var GanttController = {
         return gantt.addTask(factor, parentId);
     },
 
-    setFactorParent: function(child, parent) {
+    setFactorParent: function (child, parent) {
         gantt.setParent(child, parent);
     },
 
@@ -399,7 +398,7 @@ var GanttController = {
         return gantt.getTask(factorId).statement;
     },
 
-    forEach: function(func) {
+    forEach: function (func) {
         gantt.eachTask(func);
     },
 
@@ -413,6 +412,10 @@ var GanttController = {
             children.push(task);
         }
         return children;
+    },
+
+    getChildCount: function (factorId) {
+        return gantt.getChildren(factorId).length;
     },
 
     expandSubtree: function (rootId) {

@@ -34,8 +34,8 @@ module.exports = {
         'detail.saving': 'Saving...',
         'detail.invalid-tooltip': 'Some of the required values are missing',
         'detail.large-time-diff-tooltip': 'Occurrence start and end time difference is too large',
-        'detail.submit': 'Submit to authority',
-        'detail.submit-tooltip': 'Submit the current revision to authority',
+        'detail.submit': 'Create new revision',
+        'detail.submit-tooltip': 'Create new revision of this report',
         'detail.submit-success-message': 'Report successfully submitted.',
         'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
         'detail.loading': 'Loading report...',
@@ -165,7 +165,7 @@ module.exports = {
         'factors.link-type-select-tooltip': 'Select link type',
         'factors.link.delete.title': 'Delete link?',
         'factors.link.delete.text': 'Are you sure you want to delete the link from {source} to {target}?',
-        'factors.detail.title': 'Occurrence factor',
+        'factors.detail.title': 'Factor assessment',
         'factors.detail.type': 'Type',
         'factors.detail.type-placeholder': 'Factor type',
         'factors.detail.time-period': 'Time period',
@@ -189,6 +189,14 @@ module.exports = {
         'revisions.label': 'Revisions',
         'revisions.created': 'Created',
         'revisions.show-tooltip': 'Show this revision',
-        'revisions.readonly-notice': 'Older revisions are read-only.'
+        'revisions.readonly-notice': 'Older revisions are read-only.',
+
+        // ----------- ARMS -------------
+        'arms.title': 'ARMS',
+        'arms.accident-outcome': 'Accident outcome',
+        'arms.accident-outcome.tooltip': 'If this event had escalated into an accident, what would have been the most probable accident outcome?',
+        'arms.barrier-effectiveness': 'Barrier effectiveness',
+        'arms.barrier-effectiveness.tooltip': 'What was the effectiveness of the remaining barriers between this event and the most probable accident scenario?',
+        'arms.index': 'ARMS index'
     }
 };

@@ -10,15 +10,13 @@ import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model.*;
-import cz.cvut.kbss.inbas.reporting.model.util.FactorGraphItem;
-import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
-import cz.cvut.kbss.inbas.reporting.util.TriConsumer;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.net.URI;
 import java.util.*;
-import java.util.function.Consumer;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class DtoMapper {
@@ -26,10 +24,10 @@ public abstract class DtoMapper {
     private final SplittableRandom random = new SplittableRandom();
     private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
 
-    private Map<URI, HasUri> dtoRegistry = new HashMap<>();
+    private Map<URI, EventDto> eventDtoRegistry;
 
     private void reset() {
-        this.dtoRegistry = new HashMap<>();
+        this.eventDtoRegistry = new LinkedHashMap<>();
     }
 
     public LogicalDocument reportToReportDto(LogicalDocument report) {
@@ -141,7 +139,10 @@ public abstract class DtoMapper {
         dto.setEndTime(occurrence.getEndTime());
         dto.setEventType(occurrence.getEventType());
         dto.setReferenceId(random.nextInt());
-        dtoRegistry.put(dto.getUri(), dto);
+        if (eventDtoRegistry == null) {
+            reset();
+        }
+        eventDtoRegistry.put(dto.getUri(), dto);
 
         return dto;
     }
@@ -152,73 +153,19 @@ public abstract class DtoMapper {
         if (occurrence == null) {
             return null;
         }
-        final Map<URI, EventDto> instanceMap = new LinkedHashMap<>();
-        final Set<FactorGraphEdge> edges = new HashSet<>();
-        // First run collects nodes and sets reference ids on them
-        traverseTree(occurrence, dto -> {
-            if (dto.getReferenceId() == null) {
-                dto.setReferenceId(random.nextInt());
-            }
-            instanceMap.put(dto.getUri(), dto);
-        }, (a, b, c) -> {
-        }, new HashSet<>());
-        // Second run collects edges
-        traverseTree(occurrence, (n) -> {
-        }, (from, to, uri) -> {
-            final FactorGraphEdge e = new FactorGraphEdge(instanceMap.get(from.getUri()).getReferenceId(),
-                    instanceMap.get(to.getUri()).getReferenceId(), uri);
-            edges.add(e);
-        }, new HashSet<>());
+        if (eventDtoRegistry == null) {
+            reset();
+        }
+        final DtoNodeVisitor nodeVisitor = new DtoNodeVisitor(this, random, eventDtoRegistry);
+        final FactorGraphTraverser traverser = new FactorGraphTraverser(nodeVisitor, null);
+        traverser.traverse(occurrence);
+        final DtoEdgeVisitor edgeVisitor = new DtoEdgeVisitor(nodeVisitor.getInstanceMap());
+        traverser.setFactorGraphEdgeVisitor(edgeVisitor);
+        traverser.traverse(occurrence);
         final FactorGraph graph = new FactorGraph();
-        graph.setEdges(edges);
-        graph.setNodes(new ArrayList<>(instanceMap.values()));
+        graph.setNodes(new ArrayList<>(nodeVisitor.getInstanceMap().values()));
+        graph.setEdges(edgeVisitor.getEdges());
         return graph;
-    }
-
-    private void traverseTree(Occurrence occurrence, Consumer<EventDto> nodeConsumer,
-                              TriConsumer<HasUri, HasUri, URI> edgeConsumer, Set<URI> visited) {
-        if (visited.contains(occurrence.getUri())) {
-            return;
-        }
-        nodeConsumer.accept(dtoRegistry.containsKey(occurrence.getUri()) ?
-                            (EventDto) dtoRegistry.get(occurrence.getUri()) :
-                            occurrenceToOccurrenceDto(occurrence));
-        visited.add(occurrence.getUri());
-        if (occurrence.getFactors() != null) {
-
-            for (Factor f : occurrence.getFactors()) {
-                edgeConsumer.accept(f.getEvent(), occurrence, f.getType().getUri());
-                traverseTree(f.getEvent(), nodeConsumer, edgeConsumer, visited);
-            }
-        }
-        if (occurrence.getChildren() != null) {
-            occurrence.getChildren().forEach(child -> {
-                edgeConsumer.accept(occurrence, child, HAS_PART_URI);
-                traverseTree(child, nodeConsumer, edgeConsumer, visited);
-            });
-        }
-    }
-
-    private void traverseTree(Event event, Consumer<EventDto> nodeConsumer,
-                              TriConsumer<HasUri, HasUri, URI> edgeConsumer, Set<URI> visited) {
-        if (visited.contains(event.getUri())) {
-            return;
-        }
-        nodeConsumer.accept(eventToEventDto(event));
-        visited.add(event.getUri());
-        if (event.getFactors() != null) {
-
-            for (Factor f : event.getFactors()) {
-                edgeConsumer.accept(f.getEvent(), event, f.getType().getUri());
-                traverseTree(f.getEvent(), nodeConsumer, edgeConsumer, visited);
-            }
-        }
-        if (event.getChildren() != null) {
-            event.getChildren().forEach(child -> {
-                edgeConsumer.accept(event, child, HAS_PART_URI);
-                traverseTree(child, nodeConsumer, edgeConsumer, visited);
-            });
-        }
     }
 
     public Occurrence factorGraphToOccurrence(FactorGraph graph) {
@@ -227,16 +174,12 @@ public abstract class DtoMapper {
         }
         final Map<Integer, EventDto> dtoMap = new HashMap<>();
         graph.getNodes().forEach(n -> dtoMap.put(n.getReferenceId(), n));
-        if (dtoMap.isEmpty()) {
-            // Won't be necessary. Need it right now because UI does not support factor serialization, yet
-            return null;
-        }
-        final Map<URI, FactorGraphItem> instanceMap = new HashMap<>(dtoMap.size());
+        final Map<Integer, FactorGraphItem> instanceMap = new HashMap<>(dtoMap.size());
         graph.getNodes().forEach(n -> {
             if (n instanceof OccurrenceDto) {
-                instanceMap.put(n.getUri(), occurrenceDtoToOccurrence((OccurrenceDto) n));
+                instanceMap.put(n.getReferenceId(), occurrenceDtoToOccurrence((OccurrenceDto) n));
             } else {
-                instanceMap.put(n.getUri(), eventDtoToEvent(n));
+                instanceMap.put(n.getReferenceId(), eventDtoToEvent(n));
             }
         });
         transformEdgesToRelations(graph, dtoMap, instanceMap);
@@ -247,19 +190,19 @@ public abstract class DtoMapper {
     }
 
     private void transformEdgesToRelations(FactorGraph graph, Map<Integer, EventDto> dtoMap,
-                                           Map<URI, FactorGraphItem> instanceMap) {
+                                           Map<Integer, FactorGraphItem> instanceMap) {
         for (FactorGraphEdge e : graph.getEdges()) {
             final EventDto source = dtoMap.get(e.getFrom());
             final EventDto target = dtoMap.get(e.getTo());
             if (e.getLinkType().equals(HAS_PART_URI)) {
-                assert instanceMap.get(target.getUri()) instanceof Event;
-                instanceMap.get(source.getUri()).addChild((Event) instanceMap.get(target.getUri()));
+                assert instanceMap.get(target.getReferenceId()) instanceof Event;
+                instanceMap.get(source.getReferenceId()).addChild((Event) instanceMap.get(target.getReferenceId()));
             } else {
                 final FactorType ft = FactorType.fromUri(e.getLinkType());
                 final Factor factor = new Factor();
                 factor.setType(ft);
-                factor.setEvent((Event) instanceMap.get(source.getUri()));
-                instanceMap.get(target.getUri()).addFactor(factor);
+                factor.setEvent((Event) instanceMap.get(source.getReferenceId()));
+                instanceMap.get(target.getReferenceId()).addFactor(factor);
             }
         }
     }

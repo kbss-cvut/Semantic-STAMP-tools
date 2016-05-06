@@ -1,7 +1,8 @@
-package cz.cvut.kbss.inbas.reporting.model.util;
+package cz.cvut.kbss.inbas.reporting.model.util.factorgraph;
 
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Factor;
+import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 
 import java.util.Set;
 

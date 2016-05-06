@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.inbas.reporting.model.util.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -16,7 +16,7 @@ public class Event implements FactorGraphItem, Serializable {
     @Id(generated = true)
     private URI uri;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
@@ -34,8 +34,24 @@ public class Event implements FactorGraphItem, Serializable {
     @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
     private URI eventType;
 
+    @OWLDataProperty(iri = Vocabulary.p_childIndex)
+    private Integer index;
+
     @Types
     private Set<String> types;
+
+    public Event() {
+    }
+
+    public Event(Event other) {
+        this.startTime = other.startTime;
+        this.endTime = other.endTime;
+        this.eventType = other.eventType;
+        this.index = other.index;
+        if (other.types != null) {
+            this.types = new HashSet<>(other.types);
+        }
+    }
 
     @Override
     public URI getUri() {
@@ -116,6 +132,22 @@ public class Event implements FactorGraphItem, Serializable {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    /**
+     * Represents position at among other children of this Event's parent.
+     * <p>
+     * This index can be used to order Event's children.
+     *
+     * @return Integer specifying the position or {@code null}, if the index is not relevant here (e.g. this event has
+     * no parent)
+     */
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
     }
 
     public Set<String> getTypes() {

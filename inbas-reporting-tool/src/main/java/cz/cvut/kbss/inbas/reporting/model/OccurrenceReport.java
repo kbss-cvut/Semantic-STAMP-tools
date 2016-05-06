@@ -2,8 +2,6 @@ package cz.cvut.kbss.inbas.reporting.model;
 
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
-import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -32,7 +30,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     private Long fileNumber;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_documents, cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_documents, fetch = FetchType.EAGER)
     private Occurrence occurrence;
 
     @ParticipationConstraints(nonEmpty = true)
@@ -63,14 +61,14 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
 
     // ARMS Attributes
 
-    @OWLDataProperty(iri = Vocabulary.p_mostProbableAccidentOutcome)
-    private AccidentOutcome accidentOutcome;
+    @OWLObjectProperty(iri = Vocabulary.p_mostProbableAccidentOutcome)
+    private URI accidentOutcome;
 
-    @OWLDataProperty(iri = Vocabulary.p_barrierEffectiveness)
-    private BarrierEffectiveness barrierEffectiveness;
+    @OWLObjectProperty(iri = Vocabulary.p_barrierEffectiveness)
+    private URI barrierEffectiveness;
 
-    @OWLDataProperty(iri = Vocabulary.p_armsIndex)
-    private Short armsIndex;
+    @Transient
+    private Integer armsIndex;
 
     @Types
     private Set<String> types;
@@ -84,14 +82,15 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this();
         Objects.requireNonNull(other);
         this.fileNumber = other.fileNumber;
-        // TODO Copy occurrence?
-        this.occurrence = other.occurrence;
+        this.occurrence = Occurrence.copyOf(other.occurrence);
         this.severityAssessment = other.severityAssessment;
         this.summary = other.summary;
         if (other.correctiveMeasures != null) {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
                                                               .collect(Collectors.toSet());
         }
+        this.barrierEffectiveness = other.barrierEffectiveness;
+        this.accidentOutcome = other.accidentOutcome;
     }
 
     @Override
@@ -191,27 +190,27 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.summary = summary;
     }
 
-    public AccidentOutcome getAccidentOutcome() {
+    public URI getAccidentOutcome() {
         return accidentOutcome;
     }
 
-    public void setAccidentOutcome(AccidentOutcome accidentOutcome) {
+    public void setAccidentOutcome(URI accidentOutcome) {
         this.accidentOutcome = accidentOutcome;
     }
 
-    public BarrierEffectiveness getBarrierEffectiveness() {
+    public URI getBarrierEffectiveness() {
         return barrierEffectiveness;
     }
 
-    public void setBarrierEffectiveness(BarrierEffectiveness barrierEffectiveness) {
+    public void setBarrierEffectiveness(URI barrierEffectiveness) {
         this.barrierEffectiveness = barrierEffectiveness;
     }
 
-    public Short getArmsIndex() {
+    public Integer getArmsIndex() {
         return armsIndex;
     }
 
-    public void setArmsIndex(Short armsIndex) {
+    public void setArmsIndex(Integer armsIndex) {
         this.armsIndex = armsIndex;
     }
 

@@ -12,7 +12,7 @@ var Actions = require('../../actions/Actions');
 var TypeaheadResultList = require('./EventTypeTypeaheadResultList');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var I18nMixin = require('../../i18n/I18nMixin');
-var Vocabulary = require('../../constants/Vocabulary');
+var EventTypeFactory = require('../../model/EventTypeFactory');
 
 var EventTypeTypeahead = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
@@ -37,19 +37,7 @@ var EventTypeTypeahead = React.createClass({
     onEventsLoaded: function () {
         var options = TypeaheadStore.getEventTypes();
         options = options.map(function (item) {
-            var res = {
-                id: item['@id'],
-                type: item['@type'],
-                name: typeof(item[Vocabulary.RDFS_LABEL]) === 'string' ? item[Vocabulary.RDFS_LABEL] : item[Vocabulary.RDFS_LABEL]['@value']
-            };
-            if (item[Vocabulary.RDFS_COMMENT]) {
-                if (typeof(item[Vocabulary.RDFS_COMMENT]) === 'string') {
-                    res.description = item[Vocabulary.RDFS_COMMENT];
-                } else {
-                    res.description = item[Vocabulary.RDFS_COMMENT]['@value'];
-                }
-            }
-            return res;
+            return EventTypeFactory.jsonLdToEventType(item);
         });
         this.setState({options: options});
     },

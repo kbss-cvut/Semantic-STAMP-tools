@@ -123,9 +123,11 @@ export default class Generator {
         var cnt = Generator.getRandomPositiveInt(nodes.length / 2, nodes.length * 2),
             links = [], lnk;
         for (var i = 0; i < cnt; i++) {
+            var fromInd = Generator.getRandomInt(nodes.length),
+                toInd = Generator.getRandomInt(nodes.length);
             lnk = {
-                from: Generator.getRandomInt(nodes.length),
-                to: Generator.getRandomInt(nodes.length),
+                from: nodes[fromInd].referenceId,
+                to: nodes[toInd].referenceId,
                 linkType: Generator._getRandomFactorType()
             };
             links.push(lnk);

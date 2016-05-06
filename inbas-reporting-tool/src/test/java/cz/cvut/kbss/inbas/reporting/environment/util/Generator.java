@@ -1,8 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
 import cz.cvut.kbss.inbas.reporting.model.*;
-import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
-import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 
 import java.net.URI;
 import java.util.*;
@@ -11,6 +10,23 @@ public class Generator {
 
     public static final String USERNAME = "halsey@unsc.org";
     public static final String PASSWORD = "john117";
+
+    public static final URI BARRIER_EFFECTIVE = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/effective");
+    public static final URI BARRIER_LIMITED = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/limited");
+    public static final URI BARRIER_MINIMAL = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/minimal");
+    public static final URI BARRIER_NOT_EFFECTIVE = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/not-effective");
+    public static final URI ACCIDENT_NEGLIGIBLE = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/negligible");
+    public static final URI ACCIDENT_MINOR = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/minor");
+    public static final URI ACCIDENT_MAJOR = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/major");
+    public static final URI ACCIDENT_CATASTROPHIC = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/catastrophic");
 
     private static Random random = new Random();
 
@@ -33,7 +49,7 @@ public class Generator {
      * @return EventType instance
      */
     public static URI generateEventType() {
-        return URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-" + randomInt(100000));
+        return URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-" + randomInt());
     }
 
     public static Person getPerson() {
@@ -67,16 +83,43 @@ public class Generator {
     public static OccurrenceReport generateOccurrenceReport(boolean setAttributes) {
         final OccurrenceReport report = new OccurrenceReport();
         report.setOccurrence(generateOccurrence());
-        report.setBarrierEffectiveness(BarrierEffectiveness.EFFECTIVE);
-        report.setAccidentOutcome(AccidentOutcome.NEGLIGIBLE);
-        report.setArmsIndex((short) 5);
         report.setSummary("Some random summary " + randomInt() + ".");
         if (setAttributes) {
+            report.setBarrierEffectiveness(BARRIER_EFFECTIVE);
+            report.setAccidentOutcome(ACCIDENT_NEGLIGIBLE);
             report.setAuthor(getPerson());
             report.setDateCreated(new Date());
             report.setFileNumber((long) randomInt(Integer.MAX_VALUE));
             report.setRevision(1);
         }
+        return report;
+    }
+
+    public static OccurrenceReport generateOccurrenceReportWithFactorGraph() {
+        final OccurrenceReport report = generateOccurrenceReport(true);
+        final Event childOne = new Event();
+        childOne.setStartTime(report.getOccurrence().getStartTime());
+        childOne.setEndTime(report.getOccurrence().getEndTime());
+        childOne.setEventType(generateEventType());
+        report.getOccurrence().addChild(childOne);
+        final Event childOneOne = new Event();
+        childOneOne.setStartTime(report.getOccurrence().getStartTime());
+        childOneOne.setEndTime(report.getOccurrence().getEndTime());
+        childOneOne.setEventType(generateEventType());
+        childOne.addChild(childOneOne);
+        final Event fOne = new Event();
+        fOne.setStartTime(report.getOccurrence().getStartTime());
+        fOne.setEndTime(report.getOccurrence().getEndTime());
+        fOne.setEventType(generateEventType());
+        final Factor f = new Factor();
+        f.setType(FactorType.CAUSES);
+        f.setEvent(fOne);
+        report.getOccurrence().addFactor(f);
+        final Event fOneChildOne = new Event();
+        fOneChildOne.setStartTime(report.getOccurrence().getStartTime());
+        fOneChildOne.setEndTime(report.getOccurrence().getEndTime());
+        fOneChildOne.setEventType(generateEventType());
+        fOne.addChild(fOneChildOne);
         return report;
     }
 
@@ -128,6 +171,32 @@ public class Generator {
             set.add(cmr);
         }
         return set;
+    }
+
+    public static Occurrence generateOccurrenceWithDescendantEvents() {
+        final Occurrence occurrence = generateOccurrence();
+        occurrence.setUri(URI.create("http://rootOccurrence"));
+        final int maxDepth = randomInt(5);
+        final int childCount = randomInt(5);
+        generateChildEvents(occurrence, 0, maxDepth, childCount);
+        return occurrence;
+    }
+
+    private static void generateChildEvents(FactorGraphItem parent, int depth, int maxDepth, int childCount) {
+        if (depth >= maxDepth) {
+            return;
+        }
+        parent.setChildren(new LinkedHashSet<>());
+        for (int i = 0; i < childCount; i++) {
+            final Event child = new Event();
+            child.setStartTime(new Date());
+            child.setEndTime(new Date());
+            child.setUri(URI.create(Vocabulary.Event + "-instance" + randomInt()));
+            child.setEventType(generateEventType());
+            child.setIndex(i);
+            parent.getChildren().add(child);
+            generateChildEvents(child, depth + 1, maxDepth, childCount);
+        }
     }
 
     /**

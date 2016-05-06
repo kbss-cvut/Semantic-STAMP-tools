@@ -2,14 +2,15 @@ package cz.cvut.kbss.inbas.reporting.rest.handler;
 
 /**
  * Class which contains information about an error and can be send to client as JSON to let him know what is wrong.
- *
- * @author ledvima1
  */
 public class ErrorInfo {
 
     private String message;
 
     private String requestUri;
+
+    public ErrorInfo() {
+    }
 
     public ErrorInfo(String message, String requestUri) {
         this.message = message;
