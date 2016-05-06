@@ -453,6 +453,21 @@ button.reset-filters {
     margin-top: 7px;
 }
 
+.table-sorter-wrapper {
+    position: relative !important;
+}
+
+.table-sorter-icon {
+    position: absolute;
+    right: 0.5em;
+    line-height: 14px;
+    width: 14px;
+    height: 14px;
+    margin-top: -7px;
+    top: 50%;
+    cursor: pointer;
+}
+
 /* ARMS */
 /* Set it to important so it does not get overridden by the readOnly background color*/
 .arms-index-green {

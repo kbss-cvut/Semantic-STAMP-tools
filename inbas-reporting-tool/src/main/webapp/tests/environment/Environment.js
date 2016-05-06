@@ -152,5 +152,45 @@ module.exports = {
         });
         jasmine.getGlobal().gantt = gantt;
         return gantt;
+    },
+
+    /**
+     * Returns true if the arrays are equal, i.e. they have the same size and contain the same elements.
+     */
+    arraysEqual: function (a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length != b.length) return false;
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) {
+                return false;
+            }
+        }
+        return true;
+    },
+
+    /**
+     * Custom Jasmine matchers
+     */
+    customMatchers: {
+
+        toBeLexGreaterOrEqual: function (util, customEqualityTesters) {
+            return {
+                compare: function (actual, expected) {
+                    if (expected === undefined) {
+                        expected = '';
+                    }
+                    var result = {};
+                    result.pass = actual.toUpperCase().localeCompare(expected.toUpperCase()) >= 0;
+                    if (result.pass) {
+                        result.message = 'Expected ' + actual + ' not to be lexicographically greater or equal to ' + expected;
+                    } else {
+                        result.message = 'Expected ' + actual + ' to be lexicographically greater or equal to ' + expected;
+                    }
+                    return result;
+                }
+            }
+        }
     }
 };

@@ -65,16 +65,7 @@ var Reports = React.createClass({
     },
 
     _areReportsFiltered: function () {
-        var filter = this.props.filter;
-        if (!filter) {
-            return false;
-        }
-        for (var key in filter) {
-            if (filter[key] !== Constants.FILTER_DEFAULT) {
-                return true;
-            }
-        }
-        return false;
+        return this.props.reports.length !== this.props.allReports.length;
     }
 });
 

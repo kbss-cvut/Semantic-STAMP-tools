@@ -190,6 +190,10 @@ module.exports = {
         'revisions.created': 'Created',
         'revisions.show-tooltip': 'Show this revision',
         'revisions.readonly-notice': 'Older revisions are read-only.',
+        
+        'sort.no': 'Click to sort records by this column',
+        'sort.asc': 'Records are sorted in ascending order',
+        'sort.desc': 'Records are sorted in descending order',
 
         // ----------- ARMS -------------
         'arms.title': 'ARMS',

@@ -192,6 +192,10 @@ module.exports = {
         'revisions.show-tooltip': 'Zobrazit tuto revizi',
         'revisions.readonly-notice': 'Starší revize jsou pouze ke čtení.',
 
+        'sort.no': 'Kliknutím seřadíte záznamy podle tohoto sloupce',
+        'sort.asc': 'Záznamy jsou seřazeny vzestupně',
+        'sort.desc': 'Záznamy jsou seřazeny sestupně',
+
         // ----------- ARMS -------------
         'arms.title': 'ARMS',
         'arms.accident-outcome': 'Výsledek nehody',

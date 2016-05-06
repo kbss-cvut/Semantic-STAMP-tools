@@ -22,7 +22,7 @@ describe('Reports', function () {
     });
 
     it('shows message informing that there are no matching reports when filter finds no reports.', function () {
-        var result = Environment.render(<Reports allReports={[]} reports={[]} actions={actions}
+        var result = Environment.render(<Reports allReports={[{key: 1}]} reports={[]} actions={actions}
                                                  filter={{'occurrenceCategory.id': 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1'}}/>),
             filter = TestUtils.scryRenderedComponentsWithType(result, ReportsFilter.wrappedComponent),
             message = Environment.getComponentByTagAndText(result, 'div', en.messages['reports.filter.no-matching-found']);
