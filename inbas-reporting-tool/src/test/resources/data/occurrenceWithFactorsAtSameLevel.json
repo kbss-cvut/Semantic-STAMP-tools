@@ -79,22 +79,22 @@
     {
       "from": 2,
       "to": 1,
-      "linkType": "http://onto.fel.cvut.cz/ontologies/documentation/causes"
+      "linkType": "http://onto.fel.cvut.cz/ontologies/aviation-safety/causes"
     },
     {
       "from": 3,
       "to": 4,
-      "linkType": "http://onto.fel.cvut.cz/ontologies/documentation/contributes-to"
+      "linkType": "http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes-to"
     },
     {
       "from": 5,
       "to": 1,
-      "linkType": "http://onto.fel.cvut.cz/ontologies/documentation/causes"
+      "linkType": "http://onto.fel.cvut.cz/ontologies/aviation-safety/causes"
     },
     {
       "from": 6,
       "to": 7,
-      "linkType": "http://onto.fel.cvut.cz/ontologies/documentation/contributes-to"
+      "linkType": "http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes-to"
     }
   ]
 }

@@ -105,6 +105,8 @@ public class Vocabulary {
     public static final String p_username = "http://xmlns.com/foaf/0.1/accountName";
     public static final String p_password = "http://onto.fel.cvut.cz/ontologies/documentation/password";
 
+    public static final String p_childIndex = "http://onto.fel.cvut.cz/ontologies/inbas-2015/child-index";
+
     // ARMS Attributes
     // the hipothethical consiquence of events unfold in this occurrence.
     // should mapped to a hipothethical event that could have happened but it didn't for some reasone
