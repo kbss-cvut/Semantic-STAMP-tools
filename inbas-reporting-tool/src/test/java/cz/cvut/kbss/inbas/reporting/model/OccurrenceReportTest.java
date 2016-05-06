@@ -88,4 +88,12 @@ public class OccurrenceReportTest {
         final ReportDto dto = report.toReportDto();
         assertTrue(dto.getTypes().contains(Vocabulary.OccurrenceReport));
     }
+
+    @Test
+    public void copyConstructorCopiesArmsValues() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport copy = new OccurrenceReport(report);
+        assertEquals(report.getAccidentOutcome(), copy.getAccidentOutcome());
+        assertEquals(report.getBarrierEffectiveness(), copy.getBarrierEffectiveness());
+    }
 }

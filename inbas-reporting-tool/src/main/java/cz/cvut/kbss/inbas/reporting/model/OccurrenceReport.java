@@ -89,6 +89,8 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
                                                               .collect(Collectors.toSet());
         }
+        this.barrierEffectiveness = other.barrierEffectiveness;
+        this.accidentOutcome = other.accidentOutcome;
     }
 
     @Override
