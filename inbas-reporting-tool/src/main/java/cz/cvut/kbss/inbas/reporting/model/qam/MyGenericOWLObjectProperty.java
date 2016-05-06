@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.kbss.inbas.reporting.model_new.qam;
+package cz.cvut.kbss.inbas.reporting.model.qam;
 
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import java.lang.annotation.Documented;
