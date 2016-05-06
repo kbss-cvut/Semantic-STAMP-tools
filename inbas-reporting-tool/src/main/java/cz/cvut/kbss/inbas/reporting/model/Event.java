@@ -40,6 +40,19 @@ public class Event implements FactorGraphItem, Serializable {
     @Types
     private Set<String> types;
 
+    public Event() {
+    }
+
+    public Event(Event other) {
+        this.startTime = other.startTime;
+        this.endTime = other.endTime;
+        this.eventType = other.eventType;
+        this.index = other.index;
+        if (other.types != null) {
+            this.types = new HashSet<>(other.types);
+        }
+    }
+
     @Override
     public URI getUri() {
         return uri;

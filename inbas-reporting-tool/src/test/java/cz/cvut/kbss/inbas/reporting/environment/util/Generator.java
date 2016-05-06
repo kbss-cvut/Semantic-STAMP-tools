@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 
 import java.net.URI;
 import java.util.*;
@@ -48,7 +49,7 @@ public class Generator {
      * @return EventType instance
      */
     public static URI generateEventType() {
-        return URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-" + randomInt(100000));
+        return URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-" + randomInt());
     }
 
     public static Person getPerson() {
@@ -170,6 +171,32 @@ public class Generator {
             set.add(cmr);
         }
         return set;
+    }
+
+    public static Occurrence generateOccurrenceWithDescendantEvents() {
+        final Occurrence occurrence = generateOccurrence();
+        occurrence.setUri(URI.create("http://rootOccurrence"));
+        final int maxDepth = randomInt(5);
+        final int childCount = randomInt(5);
+        generateChildEvents(occurrence, 0, maxDepth, childCount);
+        return occurrence;
+    }
+
+    private static void generateChildEvents(FactorGraphItem parent, int depth, int maxDepth, int childCount) {
+        if (depth >= maxDepth) {
+            return;
+        }
+        parent.setChildren(new LinkedHashSet<>());
+        for (int i = 0; i < childCount; i++) {
+            final Event child = new Event();
+            child.setStartTime(new Date());
+            child.setEndTime(new Date());
+            child.setUri(URI.create(Vocabulary.Event + "-instance" + randomInt()));
+            child.setEventType(generateEventType());
+            child.setIndex(i);
+            parent.getChildren().add(child);
+            generateChildEvents(child, depth + 1, maxDepth, childCount);
+        }
     }
 
     /**

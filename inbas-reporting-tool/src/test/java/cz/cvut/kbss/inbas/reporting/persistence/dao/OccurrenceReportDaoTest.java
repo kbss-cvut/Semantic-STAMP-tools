@@ -55,23 +55,6 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
-    public void persistReportWithExistingOccurrenceReusesOccurrenceInstance() {
-        final OccurrenceReport report = persistReport();
-
-        final OccurrenceReport newReport = new OccurrenceReport(report);
-        assertSame(report.getOccurrence(), newReport.getOccurrence());
-        newReport.setAuthor(author);
-        newReport.setRevision(report.getRevision() + 1);
-        occurrenceReportDao.persist(newReport);
-
-        final OccurrenceReport resOrig = occurrenceReportDao.find(report.getUri());
-        assertNotNull(resOrig);
-        final OccurrenceReport resCopy = occurrenceReportDao.find(newReport.getUri());
-        assertNotNull(resCopy);
-        assertEquals(resOrig.getOccurrence().getUri(), resCopy.getOccurrence().getUri());
-    }
-
-    @Test
     public void persistReportWithFactorGraphCascadesPersistToAppropriateEventInstances() {
         final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
         report.setAuthor(author);

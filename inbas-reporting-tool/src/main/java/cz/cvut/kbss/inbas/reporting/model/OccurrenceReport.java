@@ -82,8 +82,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this();
         Objects.requireNonNull(other);
         this.fileNumber = other.fileNumber;
-        // TODO Copy occurrence?
-        this.occurrence = other.occurrence;
+        this.occurrence = Occurrence.copyOf(other.occurrence);
         this.severityAssessment = other.severityAssessment;
         this.summary = other.summary;
         if (other.correctiveMeasures != null) {
