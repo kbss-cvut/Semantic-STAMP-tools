@@ -85,7 +85,52 @@ describe('ReportsController', () => {
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
     });
 
-    // TODO Add tests of combined sort
+    it('sorts reports descending, ascending by identification and date', () => {
+        var controller = Environment.render(<ReportsController />),
+            reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
+            renderedReports;
+        randomShuffle(reports);
+        setEqualIdentifications();
+        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        renderedReports = reportsComponent.props.reports;
+        expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
+        // Descending
+        controller.onSort('date');
+        controller.onSort('identification');
+        verifyCombinedOrder(reportsComponent, true);
+        // Ascending
+        controller.onSort('date');
+        controller.onSort('identification');
+        verifyCombinedOrder(reportsComponent, false);
+    });
+
+    function setEqualIdentifications() {
+        var ind,
+            identification = 'AAAA';
+        for (var i = 0, cnt = Generator.getRandomPositiveInt(1, reports.length); i < cnt; i++) {
+            ind = Generator.getRandomInt(reports.length);
+            reports[ind].identification = identification;
+        }
+    }
+
+    function verifyCombinedOrder(component, descending) {
+        var renderedReports = component.props.reports;
+        expect(renderedReports.length).toEqual(reports.length);
+        for (var i = 1, len = renderedReports.length; i < len; i++) {
+            if (descending) {
+                expect(renderedReports[i].identification).not.toBeLexGreaterThan(renderedReports[i - 1].identification);
+            } else {
+                expect(renderedReports[i].identification).toBeLexGreaterOrEqual(renderedReports[i - 1].identification);
+            }
+            if (renderedReports[i].identification === renderedReports[i - 1].identification) {
+                if (descending) {
+                    expect(renderedReports[i].date).not.toBeGreaterThan(renderedReports[i - 1].date);
+                } else {
+                    expect(renderedReports[i].date).not.toBeLessThan(renderedReports[i - 1].date);
+                }
+            }
+        }
+    }
 
     /**
      * Knuth shuffle algorithm.
