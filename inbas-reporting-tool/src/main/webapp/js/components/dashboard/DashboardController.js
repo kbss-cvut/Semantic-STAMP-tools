@@ -26,8 +26,7 @@ var DashboardController = React.createClass({
     ],
     getInitialState: function () {
         return {
-            firstName: UserStore.getCurrentUser() ? UserStore.getCurrentUser().firstName : '',
-            initialReportImportOpen: false
+            firstName: UserStore.getCurrentUser() ? UserStore.getCurrentUser().firstName : ''
         }
     },
 
@@ -42,26 +41,14 @@ var DashboardController = React.createClass({
     createEmptyReport: function () {
         Routing.transitionTo(Routes.createReport, {
             handlers: {
-                onSuccess: Routes.preliminary,
+                onSuccess: Routes.reports,
                 onCancel: Routes.dashboard
             }
         });
     },
 
-    cancelInitialReportImport: function () {
-        this.setState({initialReportImportOpen: false});
-    },
-
-    openInitialReportImport: function () {
-        this.setState({initialReportImportOpen: true});
-    },
-
-    importInitialReport: function (data, closeCallback) {
-        Routing.transitionTo(Routes.createReport, {
-            payload: {initialReports: [data.initialReport]},
-            handlers: {onSuccess: Routes.preliminary, onCancel: Routes.dashboard}
-        });
-        closeCallback();
+    importE5Report: function() {
+            
     },
 
     openReport: function (report) {
@@ -89,8 +76,8 @@ var DashboardController = React.createClass({
                               onHide={this.cancelInitialReportImport}/>
                 <Dashboard userFirstName={this.state.firstName}
                            showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
-                           importInitialReport={this.openInitialReportImport} openReport={this.openReport}
-                           dashboard={this._resolveDashboard()}/>
+                           importE5Report={this.importE5Report}
+                           openReport={this.openReport} dashboard={this._resolveDashboard()}/>
             </div>
         );
     },

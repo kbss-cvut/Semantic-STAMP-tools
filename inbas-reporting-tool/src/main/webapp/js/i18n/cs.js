@@ -75,6 +75,10 @@ module.exports = {
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
         'dashboard.recent.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
+        'dashboard.import.import-e5': 'Importovat hlášení ve formátu E5X/E5F',
+
+        'dropzone.title': 'Přetáhněte soubor sem nebo klikněte pro výběr souboru k nahrání.',
+        'dropzone-tooltip': 'Klikněte zde pro výber souboru k nahrání',
 
         'reports.no-reports': 'Nenalezena žádná hlášení. Nové hlášení můžete vytvořit ',
         'reports.no-reports.link': 'zde.',

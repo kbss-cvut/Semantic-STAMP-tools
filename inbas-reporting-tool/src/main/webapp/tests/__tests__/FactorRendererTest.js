@@ -51,7 +51,7 @@ describe('FactorRenderer', function () {
         expect(arg.text).toEqual(report.occurrence.name);
         expect(arg.start_date.getTime()).toEqual(report.occurrence.startTime);
         expect(arg.end_date.getTime()).toEqual(report.occurrence.endTime);
-        expect(arg.readonly).toBeTruthy();  //TODO
+        expect(arg.readonly).toBeTruthy();
         expect(arg.parent).not.toBeDefined();
     }
 

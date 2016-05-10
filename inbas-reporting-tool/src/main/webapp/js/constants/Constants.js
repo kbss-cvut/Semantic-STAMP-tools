@@ -46,8 +46,27 @@ module.exports = {
     FILTER_DEFAULT: 'all',
 
     DASHBOARDS: {
-        MAIN: 'main',
-        CREATE_REPORT: 'createReport'
+        MAIN: {
+            id: 'main',
+            title: 'dashboard.welcome'
+        },
+        CREATE_REPORT: {
+            id: 'createReport',
+            title: 'dashboard.create-tile'
+        },
+        IMPORT_REPORT: {
+            id: 'importReport',
+            title: 'dashboard.create-import-tile'
+        }
+    },
+
+    /**
+     * Navigation between dashboards. Key is the current dashboard, value is the target to navigate to on goBack
+     */
+    DASHBOARD_GO_BACK: {
+        'main': 'main',
+        'createReport': 'main',
+        'importReport': 'createReport'
     },
 
     MINUTE: 60 * 1000,   // Minute in milliseconds

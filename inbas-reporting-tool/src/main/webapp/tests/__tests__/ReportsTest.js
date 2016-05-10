@@ -51,6 +51,6 @@ describe('Reports', function () {
         expect(RouterStore.getTransitionPayload(Routes.dashboard.name)).not.toBeDefined();
         result.createReport();
         expect(RouterStore.getTransitionPayload(Routes.dashboard.name)).toBeDefined();
-        expect(RouterStore.getTransitionPayload(Routes.dashboard.name).dashboard).toEqual(Constants.DASHBOARDS.CREATE_REPORT);
+        expect(RouterStore.getTransitionPayload(Routes.dashboard.name).dashboard).toEqual(Constants.DASHBOARDS.CREATE_REPORT.id);
     });
 });

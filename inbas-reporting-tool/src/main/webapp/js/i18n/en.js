@@ -74,6 +74,10 @@ module.exports = {
         'dashboard.recent-panel-heading': 'Recently Edited/Added Reports',
         'dashboard.recent-table-last-edited': 'Last modified',
         'dashboard.recent.no-reports': 'There are no reports, yet.',
+        'dashboard.import.import-e5': 'Import E5X/E5F report',
+        
+        'dropzone.title': 'Drop the file here or click to select a file to upload.',
+        'dropzone-tooltip': 'Click here to select a file to upload',
         
         'reports.no-reports': 'There are no reports, yet. You can create one ',
         'reports.no-reports.link': 'here.',

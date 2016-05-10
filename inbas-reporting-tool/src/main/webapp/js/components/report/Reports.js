@@ -27,7 +27,7 @@ var Reports = React.createClass({
     },
 
     createReport: function () {
-        Routing.transitionToHome({payload: {dashboard: Constants.DASHBOARDS.CREATE_REPORT}});
+        Routing.transitionToHome({payload: {dashboard: Constants.DASHBOARDS.CREATE_REPORT.id}});
     },
 
 
