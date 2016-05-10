@@ -5,7 +5,6 @@ import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.RemoteDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
-import cz.cvut.kbss.inbas.reporting.service.security.PortalSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -71,11 +70,6 @@ public class MockServiceConfig {
     @Bean
     public StatisticsService statisticsService() {
         return mock(StatisticsService.class);
-    }
-
-    @Bean
-    public PortalSessionManager portalSessionManager() {
-        return mock(PortalSessionManager.class);
     }
 
     @Bean
