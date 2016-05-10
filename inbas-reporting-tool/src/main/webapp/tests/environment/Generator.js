@@ -66,10 +66,10 @@ var CATEGORIES = [
     }];
 
 var FACTOR_TYPES = [
-    'http://onto.fel.cvut.cz/ontologies/documentation/mitigates',
-    'http://onto.fel.cvut.cz/ontologies/documentation/causes',
-    'http://onto.fel.cvut.cz/ontologies/documentation/contributes-to',
-    'http://onto.fel.cvut.cz/ontologies/documentation/prevents'
+    Constants.LINK_TYPES.MITIGATE.value,
+    Constants.LINK_TYPES.CAUSE.value,
+    Constants.LINK_TYPES.CONTRIBUTE_TO.value,
+    Constants.LINK_TYPES.PREVENT.value
 ];
 
 /**
