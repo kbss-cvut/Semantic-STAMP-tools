@@ -501,6 +501,10 @@ button.reset-filters {
     vertical-align: bottom;
 }
 
+.import-error {
+    margin: 15px 15px -35px 15px;
+}
+
 /* ARMS */
 /* Set it to important so it does not get overridden by the readOnly background color*/
 .arms-index-green {

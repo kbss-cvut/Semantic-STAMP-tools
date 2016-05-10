@@ -29,6 +29,7 @@ module.exports = {
         'yes': 'Ano',
         'no': 'Ne',
         'unknown': 'Neznámé',
+        'uploading-mask': 'Nahrávám',
 
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',

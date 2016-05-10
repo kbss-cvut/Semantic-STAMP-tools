@@ -31,6 +31,14 @@ var Ajax = {
         return this;
     },
 
+    attach: function (file) {
+        // Remove the content type to force the browser to fill it in for us
+        // See http://uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs, section Making the
+        // multipart/form-data request
+        this.req = this.req.attach('file', file, file.name).type(null);
+        return this;
+    },
+
     put: function (url, data) {
         this.req = request.put(url).type('json');
         if (data) {

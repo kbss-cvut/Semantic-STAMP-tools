@@ -15,8 +15,6 @@ var Routes = require('../../utils/Routes');
 var UserStore = require('../../stores/UserStore');
 var RouterStore = require('../../stores/RouterStore');
 var Dashboard = require('./Dashboard');
-var WizardWindow = require('./../wizard/WizardWindow');
-var InitialReportImportSteps = require('../initialreport/Steps');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var DashboardController = React.createClass({
@@ -47,8 +45,14 @@ var DashboardController = React.createClass({
         });
     },
 
-    importE5Report: function() {
-            
+    importE5Report: function (file, onFinish, onError) {
+        Actions.importE5Report(file, function (key) {
+            onFinish();
+            Routing.transitionTo(Routes.editReport, {
+                params: {reportKey: key},
+                handlers: {onCancel: Routes.dashboard}
+            });
+        }, onError);
     },
 
     openReport: function (report) {
@@ -64,22 +68,12 @@ var DashboardController = React.createClass({
 
 
     render: function () {
-        var wizardProperties = {
-            steps: InitialReportImportSteps,
-            initialReport: {},
-            title: this.i18n('initial.wizard-add-title'),
-            onFinish: this.importInitialReport
-        };
-        return (
-            <div>
-                <WizardWindow show={this.state.initialReportImportOpen} {...wizardProperties}
-                              onHide={this.cancelInitialReportImport}/>
-                <Dashboard userFirstName={this.state.firstName}
-                           showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
-                           importE5Report={this.importE5Report}
-                           openReport={this.openReport} dashboard={this._resolveDashboard()}/>
-            </div>
-        );
+        return <div>
+            <Dashboard userFirstName={this.state.firstName}
+                       showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
+                       importE5Report={this.importE5Report}
+                       openReport={this.openReport} dashboard={this._resolveDashboard()}/>
+        </div>;
     },
 
     _resolveDashboard: function () {
