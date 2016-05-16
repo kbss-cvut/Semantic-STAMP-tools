@@ -15,15 +15,9 @@ public class Vocabulary {
     public static final String Report = "http://onto.fel.cvut.cz/ontologies/documentation/report";
     public static final String OccurrenceReport = "http://onto.fel.cvut.cz/ontologies/documentation/occurrence_report";
 
-    public static final String EventType = "http://onto.fel.cvut.cz/ontologies/ufo/ufo-b#event-type";
     public static final String Event = "http://onto.fel.cvut.cz/ontologies/ufo/Event";
     public static final String Occurrence = "http://onto.fel.cvut.cz/ontologies/aviation-safety/Occurrence";
     public static final String Factor = "http://onto.fel.cvut.cz/ontologies/aviation#Factor";
-    
-    public static final String Contribution = "http://onto.fel.cvut.cz/ontologies/safety-management/contribution";
-    public static final String Cause = "http://onto.fel.cvut.cz/ontologies/safety-management/cause";
-    public static final String Mitigation = "http://onto.fel.cvut.cz/ontologies/safety-management/mitigation";
-    public static final String Prevention = "http://onto.fel.cvut.cz/ontologies/safety-management/prevention";
 
     public static final String CorrectiveMeasureRequest = "http://onto.fel.cvut.cz/ontologies/documentation/corrective_measure_request";
     public static final String CorrectiveMeasure = "http://onto.fel.cvut.cz/ontologies/documentation/aviation-safety-documents/corrective_measure";
@@ -113,8 +107,6 @@ public class Vocabulary {
     public static final String p_mostProbableAccidentOutcome = "http://onto.fel.cvut.cz/ontologies/documentation/arms-most-probable-accident-outcome";
     // the barier effectiveness should be assessed for a particular event, not only for the occurrence.
     public static final String p_barrierEffectiveness = "http://onto.fel.cvut.cz/ontologies/documentation/arms-barrier-effectiveness";
-    // TODO - what is the definition of ARMS related terms? based on the ARMS related term sepecification. Basd on the specification design a UFO integration model.
-    public static final String p_armsIndex = "http://onto.fel.cvut.cz/ontologies/documentation/arms-index";
 
     // Factor types (for now)
     public static final String p_mitigates = "http://onto.fel.cvut.cz/ontologies/aviation-safety/mitigates";

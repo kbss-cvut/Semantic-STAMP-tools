@@ -135,4 +135,12 @@ public class OccurrenceTest {
         e.setUri(URI.create(Vocabulary.Event + "-instance" + Generator.randomInt()));
         return e;
     }
+
+    @Test
+    public void setEventTypeAddsEventTypeToTypesToo() {
+        final Occurrence occurrence = Generator.generateOccurrence();
+        final URI eventType = Generator.generateEventType();
+        occurrence.setEventType(eventType);
+        assertTrue(occurrence.getTypes().contains(eventType.toString()));
+    }
 }
