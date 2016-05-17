@@ -53,4 +53,9 @@ public class RestExceptionHandler {
                                                                    UnsupportedOperationException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.NOT_IMPLEMENTED);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorInfo> illegalArgumentException(HttpServletRequest request, IllegalArgumentException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.CONFLICT);
+    }
 }

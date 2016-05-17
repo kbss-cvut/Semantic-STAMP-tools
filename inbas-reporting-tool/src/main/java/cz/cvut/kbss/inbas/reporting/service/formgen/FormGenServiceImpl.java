@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class FormGenServiceImpl implements FormGenService {
@@ -45,6 +46,7 @@ public class FormGenServiceImpl implements FormGenService {
 
     @Override
     public <T> RawJson generateForm(T data) {
+        Objects.requireNonNull(data);
         final FormGenDao<T> dao = resolveDao(data);
         final URI context = dao.persist(data);
         return loadFormStructure(context);
