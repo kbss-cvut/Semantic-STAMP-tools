@@ -22,6 +22,11 @@ public final class Constants {
     public static final String ORGANIZATION_BASE_URI = "http://www.inbas.cz/ontologies/reporting-tool/organizations#";
 
     /**
+     * Base URI for temporary contexts used by the form generation.
+     */
+    public static final String FORM_GEN_CONTEXT_BASE = "http://www.inbas.cz/ontologies/reporting-tool/formGen";
+
+    /**
      * Initial revision number for reports.
      */
     public static final Integer INITIAL_REVISION = 1;
@@ -84,6 +89,8 @@ public final class Constants {
      * File with a query for getting report statistics.
      */
     public static final String STATISTICS_QUERY_FILE = "query/statistics.sparql";
+
+    // ARMS
 
     /**
      * Minimum ARMS index value, as per <a href="http://essi.easa.europa.eu/documents/ARMS.pdf">http://essi.easa.europa.eu/documents/ARMS.pdf</a>,

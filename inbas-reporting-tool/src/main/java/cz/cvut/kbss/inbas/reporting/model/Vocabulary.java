@@ -19,6 +19,11 @@ public class Vocabulary {
     public static final String Occurrence = "http://onto.fel.cvut.cz/ontologies/aviation-safety/Occurrence";
     public static final String Factor = "http://onto.fel.cvut.cz/ontologies/aviation#Factor";
 
+    public static final String Contribution = "http://onto.fel.cvut.cz/ontologies/safety-management/contribution";
+    public static final String Cause = "http://onto.fel.cvut.cz/ontologies/safety-management/cause";
+    public static final String Mitigation = "http://onto.fel.cvut.cz/ontologies/safety-management/mitigation";
+    public static final String Prevention = "http://onto.fel.cvut.cz/ontologies/safety-management/prevention";
+
     public static final String CorrectiveMeasureRequest = "http://onto.fel.cvut.cz/ontologies/documentation/corrective_measure_request";
     public static final String CorrectiveMeasure = "http://onto.fel.cvut.cz/ontologies/documentation/aviation-safety-documents/corrective_measure";
     public static final String Request = "http://onto.fel.cvut.cz/ontologies/aviation-safety/request";
