@@ -82,4 +82,10 @@ public class RemoteDataLoaderTest extends BaseServiceTestRunner {
         final String result = dataLoader.loadData(URL, params);
         assertEquals(DATA, result);
     }
+
+    @Test(expected = WebServiceIntegrationException.class)
+    public void loadDataThrowsWebServiceIntegrationExceptionWhenNonSuccessResponseIsReceived() {
+        mockServer.expect(requestTo(URL)).andExpect(method(HttpMethod.GET)).andRespond(withBadRequest());
+        dataLoader.loadData(URL, Collections.emptyMap());
+    }
 }

@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.Random;
 
-abstract class FormGenDao<T> {
+public abstract class FormGenDao<T> {
 
     private final Random random = new Random();
 

@@ -7,6 +7,7 @@ public enum ConfigParam {
     EVENT_TYPE_REPOSITORY_URL("eventTypesRepository"),
     PORTAL_URL("portalUrl"),
     FORM_GEN_REPOSITORY_URL("formGenRepositoryUrl"),
+    FORM_GEN_SERVICE_URL("formGenServiceUrl"),
 
     INDEX_FILE("indexFile");    // index.html location, used by Portal authentication
 

@@ -16,6 +16,7 @@ public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
 
     @Override
     void prePersist(OccurrenceReport instance, EntityManager em, Descriptor descriptor) {
+        // We need to set some default values (if necessary), so that the instance passes IC validation
         if (instance.getKey() == null || instance.getKey().isEmpty()) {
             instance.setKey(IdentificationUtils.generateKey());
         }
