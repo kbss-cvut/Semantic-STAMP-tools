@@ -63,6 +63,9 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
         this.endTime = other.endTime;
         this.eventType = other.eventType;
         this.types = new HashSet<>(other.types);
+        if (other.question != null) {
+            this.question = new Question(other.question);
+        }
     }
 
     @Override
