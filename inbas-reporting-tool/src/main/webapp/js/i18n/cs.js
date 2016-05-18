@@ -36,8 +36,6 @@ module.exports = {
         'detail.submit': 'Odeslat do SAG',
         'detail.submit-tooltip': 'Odeslat současnou revizi zprávy do SAG a vytvořit novou revizi',
         'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký',
-        'detail.submit': 'Odeslat úřadu',
-        'detail.submit-tooltip': 'Odeslat současnou revizi zprávy úřadu',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
         'detail.submit-failed-message': 'Hlášení se nepodařilo odeslat. Odpověď serveru: ',
         'detail.loading': 'Načítám hlášení...',

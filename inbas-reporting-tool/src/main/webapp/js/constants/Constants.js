@@ -49,7 +49,6 @@ module.exports = {
             'MINIMAL': 500,
             'NOT_EFFECTIVE': 2500
         }
-    }
     },
 
     MINUTE: 60 * 1000,   // Minute in milliseconds

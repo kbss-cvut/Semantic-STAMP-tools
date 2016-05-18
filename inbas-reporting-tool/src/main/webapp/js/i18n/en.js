@@ -36,8 +36,6 @@ module.exports = {
         'detail.submit': 'Submit to SAG',
         'detail.submit-tooltip': 'Submit the current revision to SAG and create new revision',
         'detail.large-time-diff-tooltip': 'Occurrence start and end time difference is too large',
-        'detail.submit': 'Submit to authority',
-        'detail.submit-tooltip': 'Submit the current revision to authority',
         'detail.submit-success-message': 'Report successfully submitted.',
         'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
         'detail.loading': 'Loading report...',
