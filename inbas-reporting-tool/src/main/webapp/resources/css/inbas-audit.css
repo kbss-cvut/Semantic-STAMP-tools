@@ -468,6 +468,43 @@ button.reset-filters {
     cursor: pointer;
 }
 
+.dropzone {
+    border-radius: 6px;
+    color: #fff;
+    background-color: #337ab7;
+    border: 2px dashed #adadad;
+    min-height: 7.5em;
+    width: 100%;
+    max-width: 20em;
+    padding: 10px 16px;
+    line-height: 1.3;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.dropzone-active {
+    border-radius: 6px;
+    color: #fff;
+    background-color: #337ab7;
+    border: 2px solid #adadad;
+    min-height: 7.5em;
+    width: 100%;
+    max-width: 20em;
+    padding: 10px 16px;
+    line-height: 1.3;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.dropzone .message {
+    margin: 2em 0 1.3em 0;
+    vertical-align: bottom;
+}
+
+.import-error {
+    margin: 15px 15px -35px 15px;
+}
+
 /* ARMS */
 /* Set it to important so it does not get overridden by the readOnly background color*/
 .arms-index-green {

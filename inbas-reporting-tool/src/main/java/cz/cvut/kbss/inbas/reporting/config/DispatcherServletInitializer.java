@@ -1,14 +1,12 @@
 package cz.cvut.kbss.inbas.reporting.config;
 
 import cz.cvut.kbss.inbas.reporting.security.SecurityConstants;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import java.util.EnumSet;
 
 public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -43,5 +41,18 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
                 DelegatingFilterProxy.class);
         final EnumSet<DispatcherType> es = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
         securityFilter.addMappingForUrlPatterns(es, true, "/*");
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        registration.setMultipartConfig(getMultipartConfigElement());
+    }
+
+    /**
+     * Configures multipart processing (for uploaded files).
+     */
+    private MultipartConfigElement getMultipartConfigElement() {
+        return new MultipartConfigElement(Constants.UPLOADED_FILE_LOCATION, Constants.MAX_UPLOADED_FILE_SIZE,
+                Constants.MAX_UPLOAD_REQUEST_SIZE, Constants.UPLOADED_FILE_SIZE_THRESHOLD);
     }
 }

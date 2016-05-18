@@ -64,24 +64,6 @@ function sortFactory(sortSpec) {
     }
 }
 
-function descSortFactory(prop) {
-    return function (a, b) {
-        if (typeof(a[prop]) === 'string') {
-            return b[prop].localeCompare(a[prop]);
-        }
-        return b[prop] < a[prop] ? -1 : (b[prop] === a[prop] ? 0 : 1);
-    }
-}
-
-function ascSortFactory(prop) {
-    return function (a, b) {
-        if (typeof(a[prop]) === 'string') {
-            return a[prop].localeCompare(b[prop]);
-        }
-        return b[prop] < a[prop] ? 1 : (b[prop] === a[prop] ? 0 : -1);
-    }
-}
-
 var ReportsController = React.createClass({
     mixins: [Reflux.listenTo(ReportStore, 'onReportsLoaded')],
 

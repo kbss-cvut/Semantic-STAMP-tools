@@ -11,6 +11,7 @@ module.exports = {
         'add': 'Přidat',
         'back': 'Zpět',
         'cancel': 'Zrušit',
+        'open': 'Otevřít',
         'close': 'Zavřít',
         'cancel-tooltip': 'Zrušit a zahodit změny',
         'save': 'Uložit',
@@ -29,6 +30,7 @@ module.exports = {
         'yes': 'Ano',
         'no': 'Ne',
         'unknown': 'Neznámé',
+        'uploading-mask': 'Nahrávám',
 
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',
@@ -75,12 +77,15 @@ module.exports = {
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
         'dashboard.recent.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
+        'dashboard.import.import-e5': 'Importovat hlášení ve formátu E5X/E5F',
+
+        'dropzone.title': 'Přetáhněte soubor sem nebo klikněte pro výběr souboru k nahrání.',
+        'dropzone-tooltip': 'Klikněte zde pro výber souboru k nahrání',
 
         'reports.no-reports': 'Nenalezena žádná hlášení. Nové hlášení můžete vytvořit ',
         'reports.no-reports.link': 'zde.',
         'reports.no-reports.link-tooltip': 'Jít na hlavní stránku',
-        'reports.open-tooltip': 'Kliknutím zobrazíte detail hlášení',
-        'reports.edit-tooltip': 'Editovat toto hlášení',
+        'reports.open-tooltip': 'Kliknutím zobrazíte detail hlášení a můžete hlášení upravovat',
         'reports.delete-tooltip': 'Smazat toto hlášení',
         'reports.loading-mask': 'Nahrávám hlášení...',
         'reports.panel-title': 'Hlášení',
@@ -134,12 +139,6 @@ module.exports = {
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',
         'occurrencereport.type': 'Událost',
-
-        'preliminary.type': 'Předběžné',
-        'preliminary.table-investigate': 'Šetřit',
-        'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
-        'preliminary.detail.panel-title': 'Předběžné hlášení o události',
-        'investigation.label': 'Událost',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

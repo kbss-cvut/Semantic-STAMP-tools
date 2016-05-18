@@ -191,6 +191,23 @@ module.exports = {
                     return result;
                 }
             }
+        },
+        toBeLexGreaterThan: function (util, customEqualityTesters) {
+            return {
+                compare: function (actual, expected) {
+                    if (expected === undefined) {
+                        expected = '';
+                    }
+                    var result = {};
+                    result.pass = actual.toUpperCase().localeCompare(expected.toUpperCase()) > 0;
+                    if (result.pass) {
+                        result.message = 'Expected ' + actual + ' not to be lexicographically greater than ' + expected;
+                    } else {
+                        result.message = 'Expected ' + actual + ' to be lexicographically greater than ' + expected;
+                    }
+                    return result;
+                }
+            }
         }
     }
 };

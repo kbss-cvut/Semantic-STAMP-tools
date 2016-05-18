@@ -9,22 +9,22 @@ module.exports = {
     HOME_ROUTE: Routes.dashboard,
     LINK_TYPES: {
         CAUSE: {
-            value: 'http://onto.fel.cvut.cz/ontologies/documentation/causes',
+            value: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/causes',
             message: 'factors.causes',
             className: 'gantt-link-causes'
         },
         CONTRIBUTE_TO: {
-            value: 'http://onto.fel.cvut.cz/ontologies/documentation/contributes-to',
+            value: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes-to',
             message: 'factors.contributes_to',
             className: 'gantt-link-contributes'
         },
         MITIGATE: {
-            value: 'http://onto.fel.cvut.cz/ontologies/documentation/mitigates',
+            value: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/mitigates',
             message: 'factors.mitigates',
             className: 'gantt-link-mitigates'
         },
         PREVENT: {
-            value: 'http://onto.fel.cvut.cz/ontologies/documentation/prevents',
+            value: 'http://onto.fel.cvut.cz/ontologies/aviation/core#prevents',
             message: 'factors.prevents',
             className: 'gantt-link-prevents'
         }
@@ -46,8 +46,27 @@ module.exports = {
     FILTER_DEFAULT: 'all',
 
     DASHBOARDS: {
-        MAIN: 'main',
-        CREATE_REPORT: 'createReport'
+        MAIN: {
+            id: 'main',
+            title: 'dashboard.welcome'
+        },
+        CREATE_REPORT: {
+            id: 'createReport',
+            title: 'dashboard.create-tile'
+        },
+        IMPORT_REPORT: {
+            id: 'importReport',
+            title: 'dashboard.create-import-tile'
+        }
+    },
+
+    /**
+     * Navigation between dashboards. Key is the current dashboard, value is the target to navigate to on goBack
+     */
+    DASHBOARD_GO_BACK: {
+        'main': 'main',
+        'createReport': 'main',
+        'importReport': 'createReport'
     },
 
     MINUTE: 60 * 1000,   // Minute in milliseconds

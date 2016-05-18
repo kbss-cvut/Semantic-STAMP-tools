@@ -22,6 +22,11 @@ public final class Constants {
     public static final String ORGANIZATION_BASE_URI = "http://www.inbas.cz/ontologies/reporting-tool/organizations#";
 
     /**
+     * Base URI for temporary contexts used by the form generation.
+     */
+    public static final String FORM_GEN_CONTEXT_BASE = "http://www.inbas.cz/ontologies/reporting-tool/formGen";
+
+    /**
      * Initial revision number for reports.
      */
     public static final Integer INITIAL_REVISION = 1;
@@ -51,6 +56,28 @@ public final class Constants {
      */
     public static final String INDEX_FILE_LOCATION = "../../index.html";
 
+    // File upload
+
+    /**
+     * Temporary location where uploaded files will be stored
+     */
+    public static final String UPLOADED_FILE_LOCATION = "/tmp/";
+
+    /**
+     * Max uploaded file size. Currently 10MB.
+     */
+    public static final long MAX_UPLOADED_FILE_SIZE = 10 * 1024 * 1024;
+
+    /**
+     * Total request size containing Multi part. 20MB.
+     */
+    public static final long MAX_UPLOAD_REQUEST_SIZE = 20 * 1024 * 1024;
+
+    /**
+     * Size threshold after which files will be written to disk.
+     */
+    public static final int UPLOADED_FILE_SIZE_THRESHOLD = 0;
+
     // Query files
 
     /**
@@ -62,6 +89,8 @@ public final class Constants {
      * File with a query for getting report statistics.
      */
     public static final String STATISTICS_QUERY_FILE = "query/statistics.sparql";
+
+    // ARMS
 
     /**
      * Minimum ARMS index value, as per <a href="http://essi.easa.europa.eu/documents/ARMS.pdf">http://essi.easa.europa.eu/documents/ARMS.pdf</a>,

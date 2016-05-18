@@ -11,6 +11,7 @@ module.exports = {
         'add': 'Add',
         'back': 'Go Back',
         'cancel': 'Cancel',
+        'open': 'Open',
         'close': 'Close',
         'cancel-tooltip': 'Discard changes',
         'save': 'Save',
@@ -29,6 +30,7 @@ module.exports = {
         'yes': 'Yes',
         'no': 'No',
         'unknown': 'Unknown',
+        'uploading-mask': 'Uploading',
 
         'detail.save-tooltip': 'Save changes',
         'detail.saving': 'Saving...',
@@ -74,12 +76,15 @@ module.exports = {
         'dashboard.recent-panel-heading': 'Recently Edited/Added Reports',
         'dashboard.recent-table-last-edited': 'Last modified',
         'dashboard.recent.no-reports': 'There are no reports, yet.',
+        'dashboard.import.import-e5': 'Import E5X/E5F report',
+        
+        'dropzone.title': 'Drop the file here or click to select a file to upload.',
+        'dropzone-tooltip': 'Click here to select a file to upload',
         
         'reports.no-reports': 'There are no reports, yet. You can create one ',
         'reports.no-reports.link': 'here.',
         'reports.no-reports.link-tooltip': 'Go to dashboard',
-        'reports.open-tooltip': 'Click to see report detail',
-        'reports.edit-tooltip': 'Edit this report',
+        'reports.open-tooltip': 'Click to see report detail and edit it',
         'reports.delete-tooltip': 'Delete this report',
         'reports.loading-mask': 'Loading reports...',
         'reports.panel-title': 'Reports',
@@ -115,7 +120,7 @@ module.exports = {
         'initial.label': 'Initial report',
         'initial.tooltip': 'Initial report text - this field is required',
         
-        'report.last-edited-msg': 'Last edited {date} by {name}.',
+        'report.last-edited-msg': 'Last modified {date} by {name}.',
         'report.narrative-tooltip': 'Narrative - this field is required',
         'report.table-edit-tooltip': 'Edit statement',
         'report.table-delete-tooltip': 'Delete statement',
@@ -132,12 +137,6 @@ module.exports = {
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
         'occurrencereport.label': 'Occurrence',
-
-        'preliminary.type': 'Preliminary',
-        'preliminary.table-investigate': 'Investigate',
-        'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
-        'preliminary.detail.panel-title': 'Preliminary occurrence report',
-        'investigation.type': 'Investigation',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',

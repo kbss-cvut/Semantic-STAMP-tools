@@ -15,8 +15,6 @@ var Routes = require('../../utils/Routes');
 var UserStore = require('../../stores/UserStore');
 var RouterStore = require('../../stores/RouterStore');
 var Dashboard = require('./Dashboard');
-var WizardWindow = require('./../wizard/WizardWindow');
-var InitialReportImportSteps = require('../initialreport/Steps');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var DashboardController = React.createClass({
@@ -26,8 +24,7 @@ var DashboardController = React.createClass({
     ],
     getInitialState: function () {
         return {
-            firstName: UserStore.getCurrentUser() ? UserStore.getCurrentUser().firstName : '',
-            initialReportImportOpen: false
+            firstName: UserStore.getCurrentUser() ? UserStore.getCurrentUser().firstName : ''
         }
     },
 
@@ -42,26 +39,20 @@ var DashboardController = React.createClass({
     createEmptyReport: function () {
         Routing.transitionTo(Routes.createReport, {
             handlers: {
-                onSuccess: Routes.preliminary,
+                onSuccess: Routes.reports,
                 onCancel: Routes.dashboard
             }
         });
     },
 
-    cancelInitialReportImport: function () {
-        this.setState({initialReportImportOpen: false});
-    },
-
-    openInitialReportImport: function () {
-        this.setState({initialReportImportOpen: true});
-    },
-
-    importInitialReport: function (data, closeCallback) {
-        Routing.transitionTo(Routes.createReport, {
-            payload: {initialReports: [data.initialReport]},
-            handlers: {onSuccess: Routes.preliminary, onCancel: Routes.dashboard}
-        });
-        closeCallback();
+    importE5Report: function (file, onFinish, onError) {
+        Actions.importE5Report(file, function (key) {
+            onFinish();
+            Routing.transitionTo(Routes.editReport, {
+                params: {reportKey: key},
+                handlers: {onCancel: Routes.dashboard}
+            });
+        }, onError);
     },
 
     openReport: function (report) {
@@ -77,22 +68,12 @@ var DashboardController = React.createClass({
 
 
     render: function () {
-        var wizardProperties = {
-            steps: InitialReportImportSteps,
-            initialReport: {},
-            title: this.i18n('initial.wizard-add-title'),
-            onFinish: this.importInitialReport
-        };
-        return (
-            <div>
-                <WizardWindow show={this.state.initialReportImportOpen} {...wizardProperties}
-                              onHide={this.cancelInitialReportImport}/>
-                <Dashboard userFirstName={this.state.firstName}
-                           showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
-                           importInitialReport={this.openInitialReportImport} openReport={this.openReport}
-                           dashboard={this._resolveDashboard()}/>
-            </div>
-        );
+        return <div>
+            <Dashboard userFirstName={this.state.firstName}
+                       showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
+                       importE5Report={this.importE5Report}
+                       openReport={this.openReport} dashboard={this._resolveDashboard()}/>
+        </div>;
     },
 
     _resolveDashboard: function () {

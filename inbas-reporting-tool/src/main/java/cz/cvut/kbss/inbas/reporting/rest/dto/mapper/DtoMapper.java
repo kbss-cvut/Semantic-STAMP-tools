@@ -24,10 +24,42 @@ public abstract class DtoMapper {
     private final SplittableRandom random = new SplittableRandom();
     private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
 
+    private static final Map<Class<?>, Class<?>> mappedClasses = initMappedClasses();
+
     private Map<URI, EventDto> eventDtoRegistry;
 
     private void reset() {
         this.eventDtoRegistry = new LinkedHashMap<>();
+    }
+
+    // Don't forget to add the classes here when adding new mapping methods
+    private static Map<Class<?>, Class<?>> initMappedClasses() {
+        final Map<Class<?>, Class<?>> map = new HashMap<>();
+        map.put(OccurrenceReport.class, OccurrenceReportDto.class);
+        map.put(OccurrenceReportDto.class, OccurrenceReport.class);
+        map.put(CorrectiveMeasureRequest.class, CorrectiveMeasureRequestDto.class);
+        map.put(CorrectiveMeasureRequestDto.class, CorrectiveMeasureRequest.class);
+        map.put(Person.class, PersonDto.class);
+        map.put(PersonDto.class, Person.class);
+        map.put(Organization.class, OrganizationDto.class);
+        map.put(OrganizationDto.class, Organization.class);
+        map.put(Event.class, EventDto.class);
+        map.put(EventDto.class, Event.class);
+        map.put(Occurrence.class, OccurrenceDto.class);
+        map.put(Occurrence.class, FactorGraph.class);
+        map.put(OccurrenceDto.class, Occurrence.class);
+        map.put(FactorGraph.class, Occurrence.class);
+        return map;
+    }
+
+    /**
+     * Returns true if the specified classes can be mapped by this mapper.
+     *
+     * @param cls The class to map
+     * @return Whether the class can be mapped
+     */
+    public boolean canMap(Class<?> cls) {
+        return mappedClasses.containsKey(cls);
     }
 
     public LogicalDocument reportToReportDto(LogicalDocument report) {
@@ -206,6 +238,4 @@ public abstract class DtoMapper {
             }
         }
     }
-
-
 }

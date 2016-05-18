@@ -126,6 +126,7 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         assertTrue(auth.isAuthenticated());
         final PortalUserDetails userDetails = (PortalUserDetails) auth.getDetails();
         assertEquals(userData.getEmailAddress(), userDetails.getUsername());
+        mockServer.verify();
     }
 
     private PortalUser getPortalUser() {
@@ -153,6 +154,7 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         assertEquals(userData.getLastName(), res.getLastName());
         assertEquals(userData.getEmailAddress(), res.getUsername());
         assertTrue(encoder.matches(PASSWORD, res.getPassword()));
+        mockServer.verify();
     }
 
     @Test
@@ -169,6 +171,7 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         // This means it didn't persist the new person got from portal, because
         // it would have a different, generated, uri
         assertEquals(p.getUri(), res.getUri());
+        mockServer.verify();
     }
 
     private Person persistUser(PortalUser userData) {
@@ -197,6 +200,7 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         provider.authenticate(auth);
         final Person result = personDao.findByUsername(p.getUsername());
         assertTrue(encoder.matches(updatedPassword, result.getPassword()));
+        mockServer.verify();
         final EntityManager em = emf.createEntityManager();
         try {
             final Integer res = em

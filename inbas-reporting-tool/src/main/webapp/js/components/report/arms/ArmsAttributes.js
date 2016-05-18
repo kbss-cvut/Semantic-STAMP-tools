@@ -131,7 +131,7 @@ class ArmsAttributes extends React.Component {
                     </div>
                     <div className='col-xs-4'>
                         <Input className={this._resolveArmsIndexCls()} type='number' name='armsIndex' ref='armsIndex'
-                               value={report.armsIndex} label={i18n('arms.index')} readOnly/>
+                               value={report.armsIndex ? report.armsIndex : ''} label={i18n('arms.index')} readOnly/>
                     </div>
                 </div>
             </Panel>

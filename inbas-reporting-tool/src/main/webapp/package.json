@@ -24,6 +24,7 @@
     "halogen": "~0.2.0",
     "react-intl": "~2.0.1",
     "jsonld": "~0.4.6",
+    "react-dropzone": "~3.4.0",
     "react-pivot": "1.14.1",
     "react-d3": "0.4.0"
   },
@@ -54,7 +55,7 @@
     "start": "watchify -o js/bundle.js -v -d js/app.js",
     "browserify": "browserify . -t [envify --NODE_ENV production] -o js/bundle.js",
     "build-js": "browserify . -t [envify --NODE_ENV production] | uglifyjs -cm > ../../../profiles/production/js/bundle.min.js",
-    "build-css": "cleancss -d -o ../../../profiles/production/resources/css/inbas-audit.min.css resources/css/inbas-audit.css",
+    "build-css": "cleancss --skip-rebase -d -o ../../../profiles/production/resources/css/inbas-audit.min.css resources/css/inbas-audit.css",
     "build": "npm run build-css & npm run build-js",
     "prebuild": "npm install",
     "test": "jasmine JASMINE_CONFIG_PATH=tests/jasmine.json"

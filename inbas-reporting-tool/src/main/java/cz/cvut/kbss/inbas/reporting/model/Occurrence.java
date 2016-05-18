@@ -106,8 +106,22 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
         return eventType;
     }
 
+    /**
+     * Sets type of this occurrence.
+     * <p>
+     * Also adds the event type's URI to this instance's types.
+     *
+     * @param eventType The type to set
+     * @see Vocabulary#p_hasEventType
+     */
     public void setEventType(URI eventType) {
         this.eventType = eventType;
+        if (eventType != null) {
+            if (types == null) {
+                this.types = new HashSet<>(4);
+            }
+            types.add(eventType.toString());
+        }
     }
 
     public Set<Factor> getFactors() {

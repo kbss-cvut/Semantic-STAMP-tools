@@ -241,4 +241,13 @@ public class Generator {
         assert !col.isEmpty();
         return random.nextInt(col.size());
     }
+
+    /**
+     * Gets a random factor type.
+     *
+     * @return FactorType
+     */
+    public static FactorType randomFactorType() {
+        return FactorType.values()[random.nextInt(FactorType.values().length)];
+    }
 }
