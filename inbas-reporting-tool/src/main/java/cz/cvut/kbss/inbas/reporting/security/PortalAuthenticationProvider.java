@@ -64,7 +64,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         final String password = authentication.getCredentials().toString();
         final Person authenticatedUser = authenticateAgainstPortal(username, password);
         saveUser(authenticatedUser);
-        final UserDetails userDetails = new PortalUserDetails(authenticatedUser, encodeBase64(username, password));
+        final UserDetails userDetails = new PortalUserDetails(authenticatedUser);
         userDetails.eraseCredentials();
         final AuthenticationToken token = new AuthenticationToken(userDetails.getAuthorities(), userDetails);
         token.setAuthenticated(true);

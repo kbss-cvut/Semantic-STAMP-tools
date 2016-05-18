@@ -155,6 +155,11 @@ public class DtoMapperTest {
     }
 
     @Test
+    public void correctiveMeasureRequestToDtoReturnsNullForNullArgument() {
+        assertNull(mapper.correctiveMeasureRequestToDto(null));
+    }
+
+    @Test
     public void dtoToCorrectiveMeasureRequestCopiesBasicAttributes() {
         final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
         final CorrectiveMeasureRequest req = mapper.dtoToCorrectiveMeasureRequest(dto);
@@ -244,6 +249,11 @@ public class DtoMapperTest {
     }
 
     @Test
+    public void dtoToCorrectiveMeasureRequestReturnsNullForNullArgument() {
+        assertNull(mapper.dtoToCorrectiveMeasureRequest(null));
+    }
+
+    @Test
     public void reportToReportDtoTransformsOccurrenceReportToOccurrenceReportDto() {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
         report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
@@ -279,6 +289,26 @@ public class DtoMapperTest {
         dto.getCorrectiveMeasures().add(generateCorrectiveMeasureRequestDtoBasedOnOccurrence());
         dto.getCorrectiveMeasures().add(generateCorrectiveMeasureRequestDtoWithAgents());
         return dto;
+    }
+
+    @Test
+    public void occurrenceToOccurrenceDtoReturnsNullForNullArgument() {
+        assertNull(mapper.occurrenceToOccurrenceDto(null));
+    }
+
+    @Test
+    public void occurrenceToFactorGraphReturnsNullForNullArgument() {
+        assertNull(mapper.occurrenceToFactorGraph(null));
+    }
+
+    @Test
+    public void reportToReportDtoReturnsNullForNullArgument() {
+        assertNull(mapper.reportToReportDto(null));
+    }
+
+    @Test
+    public void reportDtoToReportReturnsNullForNullArgument() {
+        assertNull(mapper.reportDtoToReport(null));
     }
 
     @Test
