@@ -36,8 +36,8 @@ public class LoadDataFromE5XIT {
             fail("can't cnfigure test.");
         }
         
-        Question q = LoadDataFromE5X.transformToQuestion(r);
-        LoadDataFromE5X.processQuestions(q);
+//        Question q = LoadDataFromE5X.transformToQuestion(r);
+//        LoadDataFromE5X.processQuestions(q);
         System.out.println("Done");
         
 //        Entity oe = r.getOccurrence();
