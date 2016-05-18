@@ -5,15 +5,16 @@
  */
 package cz.cvut.kbss.inbas.reporting.service.data.eccairs;
 
-import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.ucl.eccairs.e5x.E5XXMLReader;
 import cz.cvut.kbss.ucl.eccairs.report.model.Report;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -36,8 +37,8 @@ public class LoadDataFromE5XIT {
             fail("can't cnfigure test.");
         }
         
-        Question q = LoadDataFromE5X.transformToQuestion(r);
-        LoadDataFromE5X.processQuestions(q);
+//        Question q = LoadDataFromE5X.transformToQuestion(r);
+//        LoadDataFromE5X.processQuestions(q);
         System.out.println("Done");
         
 //        Entity oe = r.getOccurrence();
