@@ -35,6 +35,9 @@ module.exports = {
         'detail.invalid-tooltip': 'Some of the required values are missing',
         'detail.submit': 'Submit to SAG',
         'detail.submit-tooltip': 'Submit the current revision to SAG and create new revision',
+        'detail.large-time-diff-tooltip': 'Occurrence start and end time difference is too large',
+        'detail.submit': 'Submit to authority',
+        'detail.submit-tooltip': 'Submit the current revision to authority',
         'detail.submit-success-message': 'Report successfully submitted.',
         'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
         'detail.loading': 'Loading report...',
@@ -252,6 +255,10 @@ module.exports = {
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',
         'notfound.msg': '{resource} not found.',
+
+        'notrenderable.title': 'Unable to display report',
+        'notrenderable.error': 'Error: {message}',
+        'notrenderable.error-generic': 'Please verify report validity.',
 
         'revisions.label': 'Revisions',
         'revisions.created': 'Created',

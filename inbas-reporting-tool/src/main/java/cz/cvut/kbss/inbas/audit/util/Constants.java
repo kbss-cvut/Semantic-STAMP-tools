@@ -31,6 +31,16 @@ public final class Constants {
      */
     public static final String APPLICATION_JSON_LD_TYPE = "application/ld+json";
 
+    /**
+     * Prefix for basic authentication for the Authorization HTTP header.
+     */
+    public static final String BASIC_AUTHORIZATION_PREFIX = "Basic ";
+
+    /**
+     * Company ID cookie name, used for portal authentication.
+     */
+    public static final String COMPANY_ID_COOKIE = "COMPANY_ID";
+
     // Query files
 
     /**

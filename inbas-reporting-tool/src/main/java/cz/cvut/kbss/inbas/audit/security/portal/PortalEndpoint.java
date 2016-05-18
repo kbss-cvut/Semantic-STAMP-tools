@@ -2,10 +2,9 @@ package cz.cvut.kbss.inbas.audit.security.portal;
 
 public abstract class PortalEndpoint {
 
-    protected static final String COMPANY_ID_PARAM = "companyId";
+    private static final String COMPANY_ID_PARAM = "companyId";
 
-
-    protected PortalEndpoint() {
+    private PortalEndpoint() {
     }
 
     public abstract String constructPath(String identification, String companyId);

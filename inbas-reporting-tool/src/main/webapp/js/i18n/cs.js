@@ -35,6 +35,9 @@ module.exports = {
         'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
         'detail.submit': 'Odeslat do SAG',
         'detail.submit-tooltip': 'Odeslat současnou revizi zprávy do SAG a vytvořit novou revizi',
+        'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký',
+        'detail.submit': 'Odeslat úřadu',
+        'detail.submit-tooltip': 'Odeslat současnou revizi zprávy úřadu',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
         'detail.submit-failed-message': 'Hlášení se nepodařilo odeslat. Odpověď serveru: ',
         'detail.loading': 'Načítám hlášení...',
@@ -254,6 +257,10 @@ module.exports = {
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',
         'notfound.msg': 'Záznam \'{resource}\' nenalezen.',
+
+        'notrenderable.title': 'Nelze zobrazit záznam',
+        'notrenderable.error': 'Chyba: {message}',
+        'notrenderable.error-generic': 'Zkontrolujte, prosím, zda je záznam validní.',
 
         'revisions.label': 'Revize zprávy',
         'revisions.created': 'Vytvořeno',

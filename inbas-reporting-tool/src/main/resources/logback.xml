@@ -10,12 +10,12 @@
     </appender>
 
     <!-- Just DEBUG for JOPA -->
-    <logger name="cz.cvut.kbss.jopa" level="DEBUG" additivity="false">
+    <logger name="cz.cvut.kbss.jopa" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
     <!-- and OntoDriver -->
-    <logger name="cz.cvut.kbss.ontodriver" level="DEBUG" additivity="false">
+    <logger name="cz.cvut.kbss.ontodriver" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 
