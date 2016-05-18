@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
+import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.model.util.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.EdgeCloningVisitor;
@@ -43,6 +44,9 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
     @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE})
     private Set<Event> children;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Question question;
 
     @Types
     private Set<String> types;
@@ -156,6 +160,14 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
             this.children = new HashSet<>();
         }
         children.add(child);
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     public Set<String> getTypes() {
