@@ -24,6 +24,7 @@ import java.net.URI;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -50,14 +51,14 @@ public class FormGenControllerTest extends BaseControllerTestRunner {
     public void generateFormPassesDataToFormGenService() throws Exception {
         final OccurrenceReportDto dto = Environment
                 .loadData("data/occurrenceReportWithFactorGraph.json", OccurrenceReportDto.class);
-        when(formGenService.generateForm(any(Object.class))).thenReturn(new RawJson(MOCK_FORM_STRUCTURE));
+        when(formGenService.generateForm(any(Object.class), anyMap())).thenReturn(new RawJson(MOCK_FORM_STRUCTURE));
         final MvcResult result = mockMvc
                 .perform(post(PATH).content(toJson(dto)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
         final String json = result.getResponse().getContentAsString();
         assertEquals(MOCK_FORM_STRUCTURE, json);
         final ArgumentCaptor<OccurrenceReport> captor = ArgumentCaptor.forClass(OccurrenceReport.class);
-        verify(formGenService).generateForm(captor.capture());
+        verify(formGenService).generateForm(captor.capture(), anyMap());
         assertNotNull(captor.getValue());
         assertTrue(captor.getValue() instanceof OccurrenceReport);
     }
@@ -67,7 +68,8 @@ public class FormGenControllerTest extends BaseControllerTestRunner {
         final FormGenDataInvalid data = new FormGenDataInvalid();
         data.setUri(URI.create("http://testData"));
         final String errorMessage = "Unsupported data type.";
-        when(formGenService.generateForm(any(FormGenData.class))).thenThrow(new IllegalArgumentException(errorMessage));
+        when(formGenService.generateForm(any(FormGenData.class), anyMap()))
+                .thenThrow(new IllegalArgumentException(errorMessage));
         final MvcResult result = mockMvc
                 .perform(post(PATH).content(toJson(data)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict()).andReturn();

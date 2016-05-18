@@ -15,10 +15,17 @@ var FormTypeahead = require('./FormTypeahead');
 
 var WizardGenerator = {
 
-    generateWizard: function (report, title, renderCallback) {
-        Ajax.post('rest/formGen', report).end(function
+    generateWizard: function (report, parameters, wizardTitle, renderCallback) {
+        var uri = 'rest/formGen';
+        if (parameters) {
+            uri += '?';
+            Object.getOwnPropertyNames(parameters).forEach(function (param) {
+                uri += param + '=' + parameters[param] + '&';   // '&' at the end of request URI should not be a problem
+            });
+        }
+        Ajax.post(uri, report).end(function
             (data) {
-            this._createWizard(data, title, renderCallback);
+            this._createWizard(data, wizardTitle, renderCallback);
         }.bind(this));
     },
 

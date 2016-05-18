@@ -5,11 +5,8 @@
  */
 package cz.cvut.kbss.inbas.reporting.model.qam;
 
-import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
-import cz.cvut.kbss.jopa.model.annotations.Types;
+import cz.cvut.kbss.jopa.model.annotations.*;
+
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +27,7 @@ public class Answer {
     protected String textValue;
     
     @OWLObjectProperty(iri = Vocabulary.hasURIValue)
-    protected URI codValue;
+    protected URI codeValue;
 
     public Set<String> getTypes() {
         return types;
@@ -60,12 +57,12 @@ public class Answer {
         this.textValue = textValue;
     }
 
-    public URI getCodValue() {
-        return codValue;
+    public URI getCodeValue() {
+        return codeValue;
     }
 
-    public void setCodValue(URI codValue) {
-        this.codValue = codValue;
+    public void setCodeValue(URI codeValue) {
+        this.codeValue = codeValue;
     }
     
 }
