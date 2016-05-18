@@ -1,7 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
-import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
-import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
+import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.GenericMapper;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +17,10 @@ public class FormGenController extends BaseController {
     private FormGenService formGenService;
 
     @Autowired
-    private DtoMapper dtoMapper;
+    private GenericMapper mapper;
 
     @RequestMapping(method = RequestMethod.POST)
     public RawJson generateForm(@RequestBody Object data) {
-        // TODO Generify mapping of DTOs of unknown type
-        if (data instanceof OccurrenceReportDto) {
-            return formGenService.generateForm(dtoMapper.occurrenceReportDtoToOccurrenceReport(
-                    (OccurrenceReportDto) data));
-        }
-        return formGenService.generateForm(data);
+        return formGenService.generateForm(mapper.map(data));
     }
 }

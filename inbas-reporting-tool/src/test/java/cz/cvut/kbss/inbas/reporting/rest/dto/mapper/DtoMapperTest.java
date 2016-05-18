@@ -7,12 +7,14 @@ import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
+import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Test;
@@ -277,5 +279,21 @@ public class DtoMapperTest {
         dto.getCorrectiveMeasures().add(generateCorrectiveMeasureRequestDtoBasedOnOccurrence());
         dto.getCorrectiveMeasures().add(generateCorrectiveMeasureRequestDtoWithAgents());
         return dto;
+    }
+
+    @Test
+    public void canMapReturnsTrueForMappableClasses() {
+        assertTrue(mapper.canMap(Occurrence.class));
+        assertTrue(mapper.canMap(OccurrenceReport.class));
+        assertTrue(mapper.canMap(Event.class));
+        assertTrue(mapper.canMap(OccurrenceReportDto.class));
+        assertTrue(mapper.canMap(EventDto.class));
+    }
+
+    @Test
+    public void canMapReturnsFalseForNonMappableClasses() {
+        assertFalse(mapper.canMap(String.class));
+        assertFalse(mapper.canMap(FactorGraphEdge.class));
+        assertFalse(mapper.canMap(FactorGraphItem.class));
     }
 }

@@ -45,6 +45,8 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
             connection = repository.getConnection();
             assertFalse(connection.getContextIDs().hasNext());
             final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+            report.setFileNumber(null);
+            report.setRevision(null);
             report.getAuthor().generateUri();
             final URI ctx = dao.persist(report);
             assertTrue(connection.getContextIDs().hasNext());
