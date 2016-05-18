@@ -165,11 +165,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.erchu</groupId>
-            <artifactId>beancp</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>cz.cvut.inbas.eccairs</groupId>
             <artifactId>e5xml</artifactId>
             <version>1.0-SNAPSHOT</version>
