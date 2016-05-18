@@ -76,5 +76,16 @@ module.exports = {
 
     OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
     EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
-    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto'
+    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
+
+    // Form Generator
+    SECTION: 'http://onto.fel.cvut.cz/ontologies/form/section',
+    FORM: 'http://onto.fel.cvut.cz/ontologies/form/form',
+    HAS_SECTION: 'http://onto.fel.cvut.cz/ontologies/form/has-section',
+    QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
+    LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/layout-class',
+    HAS_SUBSECTION: 'http://onto.fel.cvut.cz/ontologies/form/has-subsection',
+    HAS_QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/has-question',
+    HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
+    IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled'
 };

@@ -19,7 +19,7 @@ describe('Tests of the factor dialog', function () {
         factor;
 
     beforeEach(function () {
-        callbacks = jasmine.createSpyObj('callbacks', ['onSave', 'onClose', 'onDelete']);
+        callbacks = jasmine.createSpyObj('callbacks', ['onSave', 'onClose', 'onDelete', 'getReport']);
         jasmine.getGlobal().gantt = gantt;
         factor = {
             id: 1,
@@ -38,7 +38,8 @@ describe('Tests of the factor dialog', function () {
         spyOn(gantt, 'calculateEndDate').and.callThrough();
         detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
                                                   onClose={callbacks.onClose}
-                                                  onDelete={callbacks.onDelete}/>);
+                                                  onDelete={callbacks.onDelete}
+                                                  getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
         detail.onSave();
@@ -62,7 +63,8 @@ describe('Tests of the factor dialog', function () {
             };
         detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
                                                   onClose={callbacks.onClose}
-                                                  onDelete={callbacks.onDelete}/>);
+                                                  onDelete={callbacks.onDelete}
+                                                  getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
         detail.onUpdateFactorDetails({statement: details}, function () {

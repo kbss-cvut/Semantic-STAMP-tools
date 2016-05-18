@@ -7,6 +7,7 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.rest.dto.model.FormGenData;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
@@ -19,8 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.net.URI;
+
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,18 +59,32 @@ public class FormGenControllerTest extends BaseControllerTestRunner {
         final ArgumentCaptor<OccurrenceReport> captor = ArgumentCaptor.forClass(OccurrenceReport.class);
         verify(formGenService).generateForm(captor.capture());
         assertNotNull(captor.getValue());
+        assertTrue(captor.getValue() instanceof OccurrenceReport);
     }
 
     @Test
     public void generateFormReturnsConflictForUnsupportedData() throws Exception {
-        final Person person = Generator.getPerson();
+        final FormGenDataInvalid data = new FormGenDataInvalid();
+        data.setUri(URI.create("http://testData"));
         final String errorMessage = "Unsupported data type.";
-        when(formGenService.generateForm(any(Person.class))).thenThrow(new IllegalArgumentException(errorMessage));
+        when(formGenService.generateForm(any(FormGenData.class))).thenThrow(new IllegalArgumentException(errorMessage));
         final MvcResult result = mockMvc
-                .perform(post(PATH).content(toJson(person)).contentType(MediaType.APPLICATION_JSON))
+                .perform(post(PATH).content(toJson(data)).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict()).andReturn();
         final ErrorInfo error = readValue(result, ErrorInfo.class);
         assertNotNull(error);
         assertEquals(errorMessage, error.getMessage());
+    }
+
+    public static class FormGenDataInvalid implements FormGenData {
+        private URI uri;
+
+        public URI getUri() {
+            return uri;
+        }
+
+        public void setUri(URI uri) {
+            this.uri = uri;
+        }
     }
 }

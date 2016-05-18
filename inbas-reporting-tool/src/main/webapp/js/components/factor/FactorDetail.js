@@ -19,6 +19,7 @@ var Utils = require('../../utils/Utils');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 var ExternalLink = require('../misc/ExternalLink').default;
 
+var WizardGenerator = require('../wizard/generator/WizardGenerator');
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
 var EventTypeFactory = require('../../model/EventTypeFactory');
@@ -37,7 +38,8 @@ var FactorDetail = React.createClass({
         onClose: React.PropTypes.func.isRequired,
         onDelete: React.PropTypes.func.isRequired,
         scale: React.PropTypes.string.isRequired,
-        factor: React.PropTypes.object.isRequired
+        factor: React.PropTypes.object.isRequired,
+        getReport: React.PropTypes.func.isRequired
     },
 
     getInitialState: function () {
@@ -92,12 +94,11 @@ var FactorDetail = React.createClass({
     },
 
     onOpenDetails: function () {
-        var wizardProps = {};
-        wizardProps.onFinish = this.onUpdateFactorDetails;
-        this.openDetailsWizard(wizardProps);
+        WizardGenerator.generateWizard(this.props.getReport(), this.props.factor.text, this.openDetailsWizard);
     },
 
     openDetailsWizard: function (wizardProperties) {
+        wizardProperties.onFinish = this.onUpdateFactorDetails;
         this.setState({
             isWizardOpen: true,
             wizardProperties: wizardProperties

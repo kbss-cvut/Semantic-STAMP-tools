@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.GenericMapper;
+import cz.cvut.kbss.inbas.reporting.rest.dto.model.FormGenData;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class FormGenController extends BaseController {
     private GenericMapper mapper;
 
     @RequestMapping(method = RequestMethod.POST)
-    public RawJson generateForm(@RequestBody Object data) {
+    public RawJson generateForm(@RequestBody FormGenData data) {
         return formGenService.generateForm(mapper.map(data));
     }
 }
