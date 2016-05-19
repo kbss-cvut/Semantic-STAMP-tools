@@ -31,6 +31,7 @@ module.exports = {
         'no': 'Ne',
         'unknown': 'Neznámé',
         'uploading-mask': 'Nahrávám',
+        'please-wait': 'Prosím čekejte...',
 
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',

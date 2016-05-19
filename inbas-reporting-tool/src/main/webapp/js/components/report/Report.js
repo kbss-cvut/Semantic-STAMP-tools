@@ -4,7 +4,7 @@ var React = require('react');
 
 var I18nMixin = require('../../i18n/I18nMixin');
 var injectIntl = require('../../utils/injectIntl');
-var Mask = require('../Mask');
+var Mask = require('../Mask').default;
 var ReportType = require('../../model/ReportType');
 var ResourceNotFound = require('../ResourceNotFound');
 var ReportNotRenderable = require('../ReportNotRenderable');
