@@ -83,9 +83,12 @@ module.exports = {
     FORM: 'http://onto.fel.cvut.cz/ontologies/form/form',
     HAS_SECTION: 'http://onto.fel.cvut.cz/ontologies/form/has-section',
     QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
-    LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/layout-class',
-    HAS_SUBSECTION: 'http://onto.fel.cvut.cz/ontologies/form/has-subsection',
-    HAS_QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/has-question',
+    HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/form/has-subsection',
+    HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/form/has-question',
     HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
-    IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled'
+    IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
+    LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/layout-class',
+    QUESTION_TYPEAHEAD: 'type-ahead',
+
+    GENERATED_ROW_SIZE: 1
 };
