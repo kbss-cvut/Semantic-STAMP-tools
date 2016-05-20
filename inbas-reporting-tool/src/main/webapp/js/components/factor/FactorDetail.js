@@ -96,7 +96,7 @@ var FactorDetail = React.createClass({
     },
 
     onOpenDetails: function () {
-        WizardGenerator.generateWizard(this.props.getReport(), {'eventType': this.state.eventType}, this.props.factor.text, this.openDetailsWizard);
+        WizardGenerator.generateWizard(this.props.getReport(), {'eventType': this.state.eventType.id}, this.props.factor.text, this.openDetailsWizard);
     },
 
     openDetailsWizard: function (wizardProperties) {
