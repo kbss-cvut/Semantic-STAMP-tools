@@ -4,6 +4,7 @@
 'use strict';
 
 var React = require('react');
+var assign = require('object-assign');
 var classNames = require('classnames');
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
@@ -46,7 +47,7 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: factor.statement ? EventTypeFactory.jsonLdToEventType(EventTypeFactory.resolveEventType(factor.statement.eventType)) : null,
+            eventType: factor.statement ? Utils.jsonLdToTypeaheadOption(EventTypeFactory.resolveEventType(factor.statement.eventType)) : null,
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement ? factor.statement : null,
@@ -110,7 +111,8 @@ var FactorDetail = React.createClass({
     },
 
     onUpdateFactorDetails: function (data, closeCallback) {
-        var statement = data.statement;
+        var statement = assign({}, this.state.statement);
+        statement.question = data.question;
         this.setState({statement: statement});
         closeCallback();
     },

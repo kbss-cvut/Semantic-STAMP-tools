@@ -2,14 +2,16 @@
 
 import React from "react";
 import assign from "object-assign";
-import FormTypeahead from "./FormTypeahead";
+import Typeahead from "react-bootstrap-typeahead";
+import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 import Input from "../../Input";
 import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
 import OptionsStore from "../../../stores/OptionsStore";
-import Vocabulary from "../../../constants/Vocabulary";    // Perhaps we could use a standard typeahead here
+import Utils from "../../../utils/Utils";
+import Vocabulary from "../../../constants/Vocabulary";
 
-export default class Question extends React.Component {
+export default class Answer extends React.Component {
     static propTypes = {
         answer: React.PropTypes.object.isRequired,
         question: React.PropTypes.object.isRequired,
@@ -43,37 +45,54 @@ export default class Question extends React.Component {
         if (type !== this.props.question['@id']) {
             return;
         }
-        this.setState({options: options});
+        this.setState({options: Utils.processTypeaheadOptions(options)});
     };
 
     onChange = (e) => {
         var change = assign({}, this.props.answer);
-        change.textValue = e.target.value;   // TODO Determine whether this is text or code value
+        // TODO If the change is from a select, then the value might be a code, not text
+        change.textValue = e.target.value;
+        this.props.onChange(this.props.index, change);
+    };
+
+    _onOptionSelected = (option) => {
+        var change = assign({}, this.props.answer);
+        // Assuming that if a typeahead is used, the answer value will be a code, not literal text
+        change.codeValue = option.id;
+        delete change.textValue;    // Just to be sure that both values are not set
         this.props.onChange(this.props.index, change);
     };
 
     render() {
         var question = this.props.question,
+            cls = Constants.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.GENERATED_ROW_SIZE);
+        return <div className={cls}>{this._renderInputComponent()}</div>;
+    }
+
+    _renderInputComponent() {
+        var question = this.props.question,
             value = this.props.answer.textValue ? this.props.answer.textValue : this.props.answer.codeValue,
             label = question[Vocabulary.RDFS_LABEL],
-            cls = Constants.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (12 / Constants.GENERATED_ROW_SIZE),
             component;
 
-        if (this._hasOptions(question)) {
+        if (Answer._hasOptions(question)) {
             component =
                 <Input type='select' label={label} value={value} disabled={question[Constants.IS_DISABLED]}>
                     {this._generateSelectOptions(question[Constants.HAS_OPTION])}
                 </Input>;
-        } else if (question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS]['@id'] === 'type-ahead') {
-            component = <FormTypeahead item={question} options={this.state.options}/>;
+        } else if (question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS]['@id'] === Constants.QUESTION_TYPEAHEAD) {
+            component = <Typeahead className='form-group form-group-sm' formInputOption='id'
+                                   title={question[Vocabulary.RDFS_COMMENT]} value={value}
+                                   placeholder={question[Vocabulary.RDFS_LABEL]} filterOption='name'
+                                   displayOption='name' onOptionSelected={this._onOptionSelected}
+                                   options={this.state.options} customListComponent={TypeaheadResultList}/>;
         } else {
-            component = <Input type='text' label={label} value={value}
-                               disabled={question[Constants.IS_DISABLED]}/>;
+            component = <Input type='text' label={label} value={value} disabled={question[Constants.IS_DISABLED]}/>;
         }
-        return <div className={cls} key={question['@id']}>{component}</div>;
+        return component;
     }
 
-    _hasOptions(item) {
+    static _hasOptions(item) {
         if (item[Constants.HAS_OPTION] && item[Constants.HAS_OPTION].length !== 0) {
             return true;
         }

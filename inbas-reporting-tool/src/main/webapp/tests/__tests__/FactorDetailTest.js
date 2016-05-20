@@ -1,7 +1,7 @@
 'use strict';
 
 
-describe('Tests of the factor dialog', function () {
+describe('Factor detail dialog', function () {
 
     var React = require('react'),
         Environment = require('../environment/Environment'),
@@ -34,6 +34,11 @@ describe('Tests of the factor dialog', function () {
             eventType = {
                 name: 'Runway Incursion',
                 id: 'http://incursion'
+            },
+            question = {
+                answer: {
+                    textValue: 'Blabla'
+                }
             };
         spyOn(gantt, 'calculateEndDate').and.callThrough();
         detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
@@ -42,10 +47,13 @@ describe('Tests of the factor dialog', function () {
                                                   getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
+        detail.onUpdateFactorDetails({question: question}, function () {
+        });
         detail.onSave();
         expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, 'minute');
         expect(factor.end_date).toBeDefined();
         expect(callbacks.onSave).toHaveBeenCalled();
+        expect(factor.statement.question).toEqual(question);
     });
 
     it('Preserves factor state until save is called', function () {
@@ -56,10 +64,9 @@ describe('Tests of the factor dialog', function () {
             },
             origFactor = assign({}, factor),
             details = {
-                eventType: eventType,
-                intruder: {},
-                lvp: 'none',
-                location: 'LKPR31'
+                answer: {
+                    textValue: 'Blabla'
+                }
             };
         detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
                                                   onClose={callbacks.onClose}
@@ -67,13 +74,9 @@ describe('Tests of the factor dialog', function () {
                                                   getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
-        detail.onUpdateFactorDetails({statement: details}, function () {
+        detail.onUpdateFactorDetails({question: details}, function () {
         });
 
         expect(factor).toEqual(origFactor);
-        detail.onSave();
-        expect(factor.end_date).toBeDefined();
-        expect(factor.statement).toBeDefined();
-        expect(factor.statement).toEqual(details);
     });
 });

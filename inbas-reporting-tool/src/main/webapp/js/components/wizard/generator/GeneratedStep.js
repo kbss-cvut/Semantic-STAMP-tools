@@ -19,6 +19,7 @@ export default class GeneratedStep extends React.Component {
     onChange = (index, change) => {
         var newState = assign(this.state.question, change);
         this.setState({question: newState});
+        this.props.data.question = newState;
     };
 
     render() {

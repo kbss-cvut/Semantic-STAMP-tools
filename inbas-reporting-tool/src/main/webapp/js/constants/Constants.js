@@ -71,6 +71,9 @@ module.exports = {
 
     MINUTE: 60 * 1000,   // Minute in milliseconds
 
+    // Maximum number of columns supported by Bootstrap
+    COLUMN_COUNT: 12,
+
     // Maximum time difference between occurrence start and end. 24 hours in millis
     MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24,
 
