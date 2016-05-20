@@ -11,6 +11,7 @@ module.exports = {
         'add': 'Add',
         'back': 'Go Back',
         'cancel': 'Cancel',
+        'open': 'Open',
         'close': 'Close',
         'cancel-tooltip': 'Discard changes',
         'save': 'Save',
@@ -29,13 +30,15 @@ module.exports = {
         'yes': 'Yes',
         'no': 'No',
         'unknown': 'Unknown',
+        'uploading-mask': 'Uploading',
+        'please-wait': 'Please wait...',
 
         'detail.save-tooltip': 'Save changes',
         'detail.saving': 'Saving...',
         'detail.invalid-tooltip': 'Some of the required values are missing',
         'detail.large-time-diff-tooltip': 'Occurrence start and end time difference is too large',
-        'detail.submit': 'Submit to authority',
-        'detail.submit-tooltip': 'Submit the current revision to authority',
+        'detail.submit': 'Create new revision',
+        'detail.submit-tooltip': 'Create new revision of this report',
         'detail.submit-success-message': 'Report successfully submitted.',
         'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
         'detail.loading': 'Loading report...',
@@ -74,12 +77,15 @@ module.exports = {
         'dashboard.recent-panel-heading': 'Recently Edited/Added Reports',
         'dashboard.recent-table-last-edited': 'Last modified',
         'dashboard.recent.no-reports': 'There are no reports, yet.',
+        'dashboard.import.import-e5': 'Import E5X/E5F report',
+        
+        'dropzone.title': 'Drop the file here or click to select a file to upload.',
+        'dropzone-tooltip': 'Click here to select a file to upload',
         
         'reports.no-reports': 'There are no reports, yet. You can create one ',
         'reports.no-reports.link': 'here.',
         'reports.no-reports.link-tooltip': 'Go to dashboard',
-        'reports.open-tooltip': 'Click to see report detail',
-        'reports.edit-tooltip': 'Edit this report',
+        'reports.open-tooltip': 'Click to see report detail and edit it',
         'reports.delete-tooltip': 'Delete this report',
         'reports.loading-mask': 'Loading reports...',
         'reports.panel-title': 'Reports',
@@ -115,7 +121,7 @@ module.exports = {
         'initial.label': 'Initial report',
         'initial.tooltip': 'Initial report text - this field is required',
         
-        'report.last-edited-msg': 'Last edited {date} by {name}.',
+        'report.last-edited-msg': 'Last modified {date} by {name}.',
         'report.narrative-tooltip': 'Narrative - this field is required',
         'report.table-edit-tooltip': 'Edit statement',
         'report.table-delete-tooltip': 'Delete statement',
@@ -132,12 +138,6 @@ module.exports = {
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
         'occurrencereport.label': 'Occurrence',
-
-        'preliminary.type': 'Preliminary',
-        'preliminary.table-investigate': 'Investigate',
-        'preliminary.table-investigate-tooltip': 'Investigate this occurrence',
-        'preliminary.detail.panel-title': 'Preliminary occurrence report',
-        'investigation.type': 'Investigation',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',
@@ -165,7 +165,7 @@ module.exports = {
         'factors.link-type-select-tooltip': 'Select link type',
         'factors.link.delete.title': 'Delete link?',
         'factors.link.delete.text': 'Are you sure you want to delete the link from {source} to {target}?',
-        'factors.detail.title': 'Occurrence factor',
+        'factors.detail.title': 'Factor assessment',
         'factors.detail.type': 'Type',
         'factors.detail.type-placeholder': 'Factor type',
         'factors.detail.time-period': 'Time period',
@@ -189,6 +189,18 @@ module.exports = {
         'revisions.label': 'Revisions',
         'revisions.created': 'Created',
         'revisions.show-tooltip': 'Show this revision',
-        'revisions.readonly-notice': 'Older revisions are read-only.'
+        'revisions.readonly-notice': 'Older revisions are read-only.',
+        
+        'sort.no': 'Click to sort records by this column',
+        'sort.asc': 'Records are sorted in ascending order',
+        'sort.desc': 'Records are sorted in descending order',
+
+        // ----------- ARMS -------------
+        'arms.title': 'ARMS',
+        'arms.accident-outcome': 'Accident outcome',
+        'arms.accident-outcome.tooltip': 'If this event had escalated into an accident, what would have been the most probable accident outcome?',
+        'arms.barrier-effectiveness': 'Barrier effectiveness',
+        'arms.barrier-effectiveness.tooltip': 'What was the effectiveness of the remaining barriers between this event and the most probable accident scenario?',
+        'arms.index': 'ARMS index'
     }
 };

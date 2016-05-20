@@ -62,6 +62,15 @@ var ReportStore = Reflux.createStore({
         }.bind(this), onError);
     },
 
+    onImportE5Report: function (file, onSuccess, onError) {
+        Ajax.post(BASE_URL_WITH_SLASH + 'importE5').attach(file).end(function (data, resp) {
+            if (onSuccess) {
+                var key = Utils.extractKeyFromLocationHeader(resp);
+                onSuccess(key);
+            }
+        }.bind(this), onError);
+    },
+
     onUpdateReport: function (report, onSuccess, onError) {
         Ajax.put(BASE_URL_WITH_SLASH + report.key).send(report).end(function () {
             if (onSuccess) {

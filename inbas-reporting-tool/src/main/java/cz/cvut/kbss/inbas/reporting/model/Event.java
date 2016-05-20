@@ -1,10 +1,12 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.inbas.reporting.model.util.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.qam.Question;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,18 +17,48 @@ public class Event implements FactorGraphItem, Serializable {
     @Id(generated = true)
     private URI uri;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE})
     private Set<Event> children;
 
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_startTime)
+    private Date startTime;
+
+    @ParticipationConstraints(nonEmpty = true)
+    @OWLDataProperty(iri = Vocabulary.p_endTime)
+    private Date endTime;
+
     @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
     private URI eventType;
 
+    @OWLDataProperty(iri = Vocabulary.p_childIndex)
+    private Integer index;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Question question;
+
     @Types
     private Set<String> types;
+
+    public Event() {
+    }
+
+    public Event(Event other) {
+        this.startTime = other.startTime;
+        this.endTime = other.endTime;
+        this.eventType = other.eventType;
+        this.index = other.index;
+        if (other.types != null) {
+            this.types = new HashSet<>(other.types);
+        }
+        if (other.question != null) {
+            this.question = new Question(other.question);
+        }
+    }
 
     @Override
     public URI getUri() {
@@ -91,6 +123,46 @@ public class Event implements FactorGraphItem, Serializable {
             }
             types.add(eventType.toString());
         }
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    /**
+     * Represents position at among other children of this Event's parent.
+     * <p>
+     * This index can be used to order Event's children.
+     *
+     * @return Integer specifying the position or {@code null}, if the index is not relevant here (e.g. this event has
+     * no parent)
+     */
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     public Set<String> getTypes() {

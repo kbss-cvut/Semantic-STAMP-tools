@@ -1,15 +1,16 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.inbas.reporting.model.util.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.model.util.HasOwlKey;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.EdgeCloningVisitor;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.NodeCloningVisitor;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @OWLClass(iri = Vocabulary.Occurrence)
 public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
@@ -40,8 +41,12 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
     @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
+            CascadeType.REMOVE})
     private Set<Event> children;
+
+    @OWLObjectProperty(iri = Vocabulary.p_hasQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Question question;
 
     @Types
     private Set<String> types;
@@ -50,6 +55,17 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
         this.types = new HashSet<>();
         // Occurrence is a subclass of Event
         types.add(Vocabulary.Event);
+    }
+
+    public Occurrence(Occurrence other) {
+        this.name = other.name;
+        this.startTime = other.startTime;
+        this.endTime = other.endTime;
+        this.eventType = other.eventType;
+        this.types = new HashSet<>(other.types);
+        if (other.question != null) {
+            this.question = new Question(other.question);
+        }
     }
 
     @Override
@@ -97,8 +113,22 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
         return eventType;
     }
 
+    /**
+     * Sets type of this occurrence.
+     * <p>
+     * Also adds the event type's URI to this instance's types.
+     *
+     * @param eventType The type to set
+     * @see Vocabulary#p_hasEventType
+     */
     public void setEventType(URI eventType) {
         this.eventType = eventType;
+        if (eventType != null) {
+            if (types == null) {
+                this.types = new HashSet<>(4);
+            }
+            types.add(eventType.toString());
+        }
     }
 
     public Set<Factor> getFactors() {
@@ -135,6 +165,14 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
         children.add(child);
     }
 
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
     public Set<String> getTypes() {
         return types;
     }
@@ -146,5 +184,16 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
     @Override
     public String toString() {
         return "Occurrence{" + name + " <" + uri + ">, types=" + types + '}';
+    }
+
+    public static Occurrence copyOf(Occurrence original) {
+        final Map<URI, FactorGraphItem> instanceMap = new HashMap<>();
+        final NodeCloningVisitor nodeVisitor = new NodeCloningVisitor(instanceMap);
+        final FactorGraphTraverser traverser = new FactorGraphTraverser(nodeVisitor, null);
+        traverser.traverse(original);
+        final EdgeCloningVisitor edgeVisitor = new EdgeCloningVisitor(instanceMap);
+        traverser.setFactorGraphEdgeVisitor(edgeVisitor);
+        traverser.traverse(original);
+        return (Occurrence) instanceMap.get(original.getUri());
     }
 }

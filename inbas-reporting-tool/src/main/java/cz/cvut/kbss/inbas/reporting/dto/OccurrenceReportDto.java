@@ -7,8 +7,7 @@ import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
-import cz.cvut.kbss.inbas.reporting.model.arms.AccidentOutcome;
-import cz.cvut.kbss.inbas.reporting.model.arms.BarrierEffectiveness;
+import cz.cvut.kbss.inbas.reporting.rest.dto.model.FormGenData;
 
 import java.net.URI;
 import java.util.Date;
@@ -17,7 +16,7 @@ import java.util.Set;
 
 // It is important that occurrence comes before factorGraph, because it defines a reference to the occurrence, which can the be used
 @JsonPropertyOrder(value = {"uri, key, occurrence, factorGraph"})
-public class OccurrenceReportDto implements LogicalDocument {
+public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     private URI uri;
 
@@ -47,11 +46,11 @@ public class OccurrenceReportDto implements LogicalDocument {
 
     // ARMS Attributes
 
-    private AccidentOutcome accidentOutcome;
+    private URI accidentOutcome;
 
-    private BarrierEffectiveness barrierEffectiveness;
+    private URI barrierEffectiveness;
 
-    private Short armsIndex;
+    private Integer armsIndex;
 
     private Set<String> types;
 
@@ -190,27 +189,27 @@ public class OccurrenceReportDto implements LogicalDocument {
         this.summary = summary;
     }
 
-    public AccidentOutcome getAccidentOutcome() {
+    public URI getAccidentOutcome() {
         return accidentOutcome;
     }
 
-    public void setAccidentOutcome(AccidentOutcome accidentOutcome) {
+    public void setAccidentOutcome(URI accidentOutcome) {
         this.accidentOutcome = accidentOutcome;
     }
 
-    public BarrierEffectiveness getBarrierEffectiveness() {
+    public URI getBarrierEffectiveness() {
         return barrierEffectiveness;
     }
 
-    public void setBarrierEffectiveness(BarrierEffectiveness barrierEffectiveness) {
+    public void setBarrierEffectiveness(URI barrierEffectiveness) {
         this.barrierEffectiveness = barrierEffectiveness;
     }
 
-    public Short getArmsIndex() {
+    public Integer getArmsIndex() {
         return armsIndex;
     }
 
-    public void setArmsIndex(Short armsIndex) {
+    public void setArmsIndex(Integer armsIndex) {
         this.armsIndex = armsIndex;
     }
 

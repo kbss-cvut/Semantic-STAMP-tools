@@ -14,6 +14,7 @@ describe('ReportController', function () {
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
         spyOn(Actions, 'loadOccurrenceCategories');
+        spyOn(Actions, 'loadEventTypes');
         Environment.mockGantt();
     });
 

@@ -22,7 +22,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
@@ -190,11 +189,6 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                 .andReturn();
         verifyLocationEquals("/reports/" + key, result);
         verify(reportServiceMock).persist(any(OccurrenceReport.class));
-    }
-
-    private void verifyLocationEquals(String expectedPath, MvcResult result) {
-        final String locationHeader = result.getResponse().getHeader(HttpHeaders.LOCATION);
-        assertEquals("http://localhost" + expectedPath, locationHeader);
     }
 
     @Test

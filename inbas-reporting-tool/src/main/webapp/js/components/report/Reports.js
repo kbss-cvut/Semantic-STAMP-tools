@@ -12,7 +12,7 @@ var injectIntl = require('../../utils/injectIntl');
 
 var Constants = require('../../constants/Constants');
 var ReportsTable = require('./ReportsTable');
-var Mask = require('./../Mask');
+var Mask = require('./../Mask').default;
 var Routing = require('../../utils/Routing');
 var I18nMixin = require('../../i18n/I18nMixin');
 
@@ -27,7 +27,7 @@ var Reports = React.createClass({
     },
 
     createReport: function () {
-        Routing.transitionToHome({payload: {dashboard: Constants.DASHBOARDS.CREATE_REPORT}});
+        Routing.transitionToHome({payload: {dashboard: Constants.DASHBOARDS.CREATE_REPORT.id}});
     },
 
 
@@ -65,16 +65,7 @@ var Reports = React.createClass({
     },
 
     _areReportsFiltered: function () {
-        var filter = this.props.filter;
-        if (!filter) {
-            return false;
-        }
-        for (var key in filter) {
-            if (filter[key] !== Constants.FILTER_DEFAULT) {
-                return true;
-            }
-        }
-        return false;
+        return this.props.reports.length !== this.props.allReports.length;
     }
 });
 

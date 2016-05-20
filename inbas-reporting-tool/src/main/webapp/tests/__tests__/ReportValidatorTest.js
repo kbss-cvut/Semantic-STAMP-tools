@@ -32,14 +32,14 @@ describe('Report validator', function () {
     it('marks report without occurrence as invalid', () => {
         delete report.occurrence;
         expect(ReportValidator.isValid(report)).toBeFalsy();
-    })
+    });
 
     it('marks report without headline as invalid', function () {
         report.occurrence.name = '';
         expect(ReportValidator.isValid(report)).toBeFalsy();
     });
 
-    it('marks report without occurrence class as invalid', function () {
+    it('marks report without severity assessment as invalid', function () {
         delete report.severityAssessment;
         expect(ReportValidator.isValid(report)).toBeFalsy();
     });

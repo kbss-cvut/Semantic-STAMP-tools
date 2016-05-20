@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.persistence;
 
+import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.Persistence;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -10,6 +11,7 @@ import cz.cvut.kbss.ontodriver.sesame.config.SesameOntoDriverProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
@@ -18,15 +20,12 @@ import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * @author ledvima1
- */
 @Configuration
 @PropertySource("classpath:config.properties")
 public class TestPersistenceFactory {
 
-    private static final String URL_PROPERTY = "test.repositoryUrl";
-    private static final String DRIVER_PROPERTY = "test.driver";
+    private static final String URL_PROPERTY = "test." + ConfigParam.REPOSITORY_URL;
+    private static final String DRIVER_PROPERTY = "test." + ConfigParam.DRIVER.toString();
     private static final String USERNAME_PROPERTY = "test.username";
     private static final String PASSWORD_PROPERTY = "test.password";
 
@@ -36,18 +35,14 @@ public class TestPersistenceFactory {
     private EntityManagerFactory emf;
 
     @Bean
+    @Primary
     public EntityManagerFactory getEntityManagerFactory() {
         return emf;
     }
 
     @PostConstruct
     private void init() {
-        final Map<String, String> properties = new HashMap<>();
-        properties.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, Constants.PU_LANGUAGE);
-        properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.reporting.model");
-        properties.put(SesameOntoDriverProperties.SESAME_USE_VOLATILE_STORAGE, Boolean.TRUE.toString());
-        properties.put(SesameOntoDriverProperties.SESAME_USE_INFERENCE, Boolean.FALSE.toString());
-        properties.put(JOPAPersistenceProperties.JPA_PERSISTENCE_PROVIDER, JOPAPersistenceProvider.class.getName());
+        final Map<String, String> properties = getDefaultProperties();
         properties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(URL_PROPERTY));
         properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, environment.getProperty(DRIVER_PROPERTY));
         if (environment.getProperty(USERNAME_PROPERTY) != null) {
@@ -60,5 +55,15 @@ public class TestPersistenceFactory {
     @PreDestroy
     private void close() {
         emf.close();
+    }
+
+    static Map<String, String> getDefaultProperties() {
+        final Map<String, String> properties = new HashMap<>();
+        properties.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, Constants.PU_LANGUAGE);
+        properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.reporting.model");
+        properties.put(SesameOntoDriverProperties.SESAME_USE_VOLATILE_STORAGE, Boolean.TRUE.toString());
+        properties.put(SesameOntoDriverProperties.SESAME_USE_INFERENCE, Boolean.FALSE.toString());
+        properties.put(JOPAPersistenceProperties.JPA_PERSISTENCE_PROVIDER, JOPAPersistenceProvider.class.getName());
+        return properties;
     }
 }

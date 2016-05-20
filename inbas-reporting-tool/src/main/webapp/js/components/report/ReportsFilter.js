@@ -5,7 +5,6 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
-var Input = require('../Input');
 
 var Constants = require('../../constants/Constants');
 var injectIntl = require('../../utils/injectIntl');

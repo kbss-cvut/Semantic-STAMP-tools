@@ -91,7 +91,7 @@ public class AuthenticationSuccessTest extends BaseServiceTestRunner {
     }
 
     private Authentication generatePortalAuthenticationToken() {
-        final UserDetails details = new PortalUserDetails(person, "");
+        final UserDetails details = new PortalUserDetails(person);
         return new AuthenticationToken(details.getAuthorities(), details);
     }
 

@@ -66,10 +66,10 @@ var CATEGORIES = [
     }];
 
 var FACTOR_TYPES = [
-    'http://onto.fel.cvut.cz/ontologies/documentation/mitigates',
-    'http://onto.fel.cvut.cz/ontologies/documentation/causes',
-    'http://onto.fel.cvut.cz/ontologies/documentation/contributes-to',
-    'http://onto.fel.cvut.cz/ontologies/documentation/prevents'
+    Constants.LINK_TYPES.MITIGATE.value,
+    Constants.LINK_TYPES.CAUSE.value,
+    Constants.LINK_TYPES.CONTRIBUTE_TO.value,
+    Constants.LINK_TYPES.PREVENT.value
 ];
 
 /**
@@ -83,6 +83,8 @@ export default class Generator {
         for (var i = 0, len = Generator.getRandomPositiveInt(5, 10); i < len; i++) {
             nodes.push({
                 uri: "http://onto.fel.cvut.cz/ontologies/ufo/Event-" + i,
+                startTime: Date.now() - 60000,
+                endTime: Date.now(),
                 eventType: Generator.randomCategory().id,
                 referenceId: referenceIdCounter++
             });
@@ -113,8 +115,24 @@ export default class Generator {
         return links;
     }
 
-    static generateFactorLinksForNodes(report, nodes) {
-
+    /**
+     * Creates random links connecting the graph nodes.
+     * @param nodes Nodes in the factor graph
+     */
+    static generateFactorLinksForNodes(nodes) {
+        var cnt = Generator.getRandomPositiveInt(nodes.length / 2, nodes.length * 2),
+            links = [], lnk;
+        for (var i = 0; i < cnt; i++) {
+            var fromInd = Generator.getRandomInt(nodes.length),
+                toInd = Generator.getRandomInt(nodes.length);
+            lnk = {
+                from: nodes[fromInd].referenceId,
+                to: nodes[toInd].referenceId,
+                linkType: Generator._getRandomFactorType()
+            };
+            links.push(lnk);
+        }
+        return links;
     }
 
     static _getRandomFactorType() {
@@ -183,7 +201,8 @@ export default class Generator {
         for (var i = 0; i < count; i++) {
             report = Generator.generateOccurrenceReport();
             report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
-            report.occurrenceCategory = report.occurrence.eventType;
+            report.identification = report.occurrence.name + i;
+            report.date = report.occurrence.startTime + i * 1000;
             delete report.occurrence;
             reports.push(report);
         }

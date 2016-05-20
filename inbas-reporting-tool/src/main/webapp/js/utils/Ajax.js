@@ -31,6 +31,14 @@ var Ajax = {
         return this;
     },
 
+    attach: function (file) {
+        // Remove the content type to force the browser to fill it in for us
+        // See http://uncorkedstudios.com/blog/multipartformdata-file-upload-with-angularjs, section Making the
+        // multipart/form-data request
+        this.req = this.req.attach('file', file, file.name).type(null);
+        return this;
+    },
+
     put: function (url, data) {
         this.req = request.put(url).type('json');
         if (data) {
@@ -57,6 +65,7 @@ var Ajax = {
      *     parseable JSON object, it is passed to the handler
      */
     end: function (onSuccess, onError) {
+        this._extendPortalSession();
         this.req.set(csrfTokenHeader, this.getCsrfToken()).end(function (err, resp) {
             if (err) {
                 if (err.status === 401) {
@@ -80,6 +89,17 @@ var Ajax = {
                 onSuccess(resp.body, resp);
             }
         }.bind(this));
+    },
+
+    /**
+     * Extends portal session if the application is running on Liferay.
+     * @private
+     */
+    _extendPortalSession: function () {
+        if (!top.Liferay) {
+            return;
+        }
+        top.Liferay.Session.extend();
     },
 
     _handleError: function (err) {

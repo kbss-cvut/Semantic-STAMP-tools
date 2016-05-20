@@ -104,7 +104,7 @@ module.exports = {
         var Factors = rewire('../../js/components/factor/Factors'),
             GanttController = jasmine.createSpyObj('GanttController', ['init', 'setScale', 'expandSubtree', 'updateOccurrenceEvent']),
             FactorRenderer = jasmine.createSpyObj('FactorRenderer', ['renderFactors']),
-            FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorGraph', 'getFactorHierarchy', 'getLinks', 'setGanttController']);
+            FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorGraph', 'setGanttController']);
         Factors.__set__('GanttController', GanttController);
         Factors.__set__('FactorRenderer', FactorRenderer);
         Factors.__set__('FactorJsonSerializer', FactorJsonSerializer);
@@ -152,5 +152,62 @@ module.exports = {
         });
         jasmine.getGlobal().gantt = gantt;
         return gantt;
+    },
+
+    /**
+     * Returns true if the arrays are equal, i.e. they have the same size and contain the same elements.
+     */
+    arraysEqual: function (a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length != b.length) return false;
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) {
+                return false;
+            }
+        }
+        return true;
+    },
+
+    /**
+     * Custom Jasmine matchers
+     */
+    customMatchers: {
+
+        toBeLexGreaterOrEqual: function (util, customEqualityTesters) {
+            return {
+                compare: function (actual, expected) {
+                    if (expected === undefined) {
+                        expected = '';
+                    }
+                    var result = {};
+                    result.pass = actual.toUpperCase().localeCompare(expected.toUpperCase()) >= 0;
+                    if (result.pass) {
+                        result.message = 'Expected ' + actual + ' not to be lexicographically greater or equal to ' + expected;
+                    } else {
+                        result.message = 'Expected ' + actual + ' to be lexicographically greater or equal to ' + expected;
+                    }
+                    return result;
+                }
+            }
+        },
+        toBeLexGreaterThan: function (util, customEqualityTesters) {
+            return {
+                compare: function (actual, expected) {
+                    if (expected === undefined) {
+                        expected = '';
+                    }
+                    var result = {};
+                    result.pass = actual.toUpperCase().localeCompare(expected.toUpperCase()) > 0;
+                    if (result.pass) {
+                        result.message = 'Expected ' + actual + ' not to be lexicographically greater than ' + expected;
+                    } else {
+                        result.message = 'Expected ' + actual + ' to be lexicographically greater than ' + expected;
+                    }
+                    return result;
+                }
+            }
+        }
     }
 };

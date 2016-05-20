@@ -1,27 +1,15 @@
-/**
- * @jsx
- */
-
 'use strict';
 
-var React = require('react');
+import React from "react";
 
-var DashboardTile = React.createClass({
-    propTypes: {
-        onClick: React.PropTypes.func
-    },
+const DashboardTile = (props) => {
+    return <button className='dashboard-tile btn-primary btn'
+                onClick={props.onClick} disabled={props.disabled}>{props.children}</button>;
+};
 
-    onClick: function (e) {
-        e.preventDefault();
-        this.props.onClick(e);
-    },
+DashboardTile.propTypes = {
+    onClick: React.PropTypes.func.isRequired,
+    disabled: React.PropTypes.bool
+};
 
-    render: function () {
-        return (
-            <button className='dashboard-tile btn-primary btn'
-                    onClick={this.props.onClick} disabled={this.props.disabled}>{this.props.children}</button>
-        )
-    }
-});
-
-module.exports = DashboardTile;
+export default DashboardTile;

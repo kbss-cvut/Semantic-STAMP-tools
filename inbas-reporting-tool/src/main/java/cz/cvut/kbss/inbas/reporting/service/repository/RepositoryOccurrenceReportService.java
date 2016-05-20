@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
+import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.reporting.service.validation.OccurrenceReportValidator;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
@@ -12,6 +13,7 @@ import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -29,9 +31,33 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     @Autowired
     private OccurrenceReportValidator validator;
 
+    @Autowired
+    private ArmsService armsService;
+
     @Override
     protected OwlKeySupportingDao<OccurrenceReport> getPrimaryDao() {
         return reportDao;
+    }
+
+    @Override
+    public OccurrenceReport findByKey(String key) {
+        final OccurrenceReport r = super.findByKey(key);
+        setArmsIndex(r);
+        return r;
+    }
+
+    @Override
+    public Collection<OccurrenceReport> findAll() {
+        final Collection<OccurrenceReport> reports = super.findAll();
+        reports.forEach(this::setArmsIndex);
+        return reports;
+    }
+
+    @Override
+    public OccurrenceReport find(URI uri) {
+        final OccurrenceReport r = super.find(uri);
+        setArmsIndex(r);
+        return r;
     }
 
     @Override
@@ -67,7 +93,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         Objects.requireNonNull(instance);
         instance.setLastModifiedBy(securityUtils.getCurrentUser());
         instance.setLastModified(new Date());
-        validator.validateForUpdate(instance,find(instance.getUri()));
+        validator.validateForUpdate(instance, find(instance.getUri()));
         super.update(instance);
     }
 
@@ -88,14 +114,24 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     @Override
     public OccurrenceReport findLatestRevision(Long fileNumber) {
         Objects.requireNonNull(fileNumber);
-        return reportDao.findLatestRevision(fileNumber);
+        final OccurrenceReport r = reportDao.findLatestRevision(fileNumber);
+        setArmsIndex(r);
+        return r;
+    }
+
+    private void setArmsIndex(OccurrenceReport report) {
+        if (report != null) {
+            report.setArmsIndex(armsService.calculateArmsIndex(report));
+        }
     }
 
     @Override
     public OccurrenceReport findRevision(Long fileNumber, Integer revision) {
         Objects.requireNonNull(fileNumber);
         Objects.requireNonNull(revision);
-        return reportDao.findRevision(fileNumber, revision);
+        final OccurrenceReport r = reportDao.findRevision(fileNumber, revision);
+        setArmsIndex(r);
+        return r;
     }
 
     @Override

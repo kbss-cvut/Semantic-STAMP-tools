@@ -47,4 +47,15 @@ public class RestExceptionHandler {
                                                                     WebServiceIntegrationException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<ErrorInfo> unsupportedOperationException(HttpServletRequest request,
+                                                                   UnsupportedOperationException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorInfo> illegalArgumentException(HttpServletRequest request, IllegalArgumentException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.CONFLICT);
+    }
 }

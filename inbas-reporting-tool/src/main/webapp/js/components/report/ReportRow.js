@@ -11,7 +11,6 @@ var Label = require('react-bootstrap').Label;
 var injectIntl = require('../../utils/injectIntl');
 
 var Utils = require('../../utils/Utils.js');
-var CollapsibleText = require('../CollapsibleText');
 var ReportType = require('../../model/ReportType');
 var DeleteReportDialog = require('./DeleteReportDialog');
 var I18nMixin = require('../../i18n/I18nMixin');
@@ -61,8 +60,8 @@ var ReportRow = React.createClass({
                     <Label title={this.i18n(report.toString())}>{this.i18n(report.getLabel())}</Label>
                 </td>
                 <td style={verticalAlign} className='actions'>
-                    <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.edit-tooltip')}
-                            onClick={this.onEditClick}>{this.i18n('table-edit')}</Button>
+                    <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.open-tooltip')}
+                            onClick={this.onEditClick}>{this.i18n('open')}</Button>
                     <Button bsStyle='warning' bsSize='small' title={this.i18n('reports.delete-tooltip')}
                             onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>
 

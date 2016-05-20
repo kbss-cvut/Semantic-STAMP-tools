@@ -6,9 +6,11 @@
 
 var React = require('react');
 var Table = require('react-bootstrap').Table;
+var Glyphicon = require('react-bootstrap').Glyphicon;
 
 var injectIntl = require('../../utils/injectIntl');
 
+var Constants = require('../../constants/Constants');
 var ReportFilter = require('./ReportsFilter');
 var ReportRow = require('./ReportRow');
 var I18nMixin = require('../../i18n/I18nMixin');
@@ -19,7 +21,8 @@ var ReportsTable = React.createClass({
 
     propTypes: {
         reports: React.PropTypes.array.isRequired,
-        actions: React.PropTypes.object
+        actions: React.PropTypes.object,
+        sort: React.PropTypes.object
     },
 
     _onFilterChange: function (change) {
@@ -57,9 +60,14 @@ var ReportsTable = React.createClass({
         return (
             <thead>
             <tr>
-                <th className='col-xs-2 content-center'>{this.i18n('headline')}</th>
-                <th className='col-xs-1 content-center' title={this.i18n('reports.table-date.tooltip')}>
+                <th className='col-xs-2 content-center table-sorter-wrapper'>
+                    {this.i18n('headline')}
+                    {this._renderSortIcon('identification')}
+                </th>
+                <th className='col-xs-1 content-center table-sorter-wrapper'
+                    title={this.i18n('reports.table-date.tooltip')}>
                     {this.i18n('reports.table-date')}
+                    {this._renderSortIcon('date')}
                 </th>
                 <th className='col-xs-4 content-center'>{this.i18n('reports.table-moreinfo')}</th>
                 <th className='col-xs-1 content-center'>{this.i18n('reports.table-type')}</th>
@@ -67,6 +75,15 @@ var ReportsTable = React.createClass({
             </tr>
             </thead>
         );
+    },
+
+    _renderSortIcon: function (column) {
+        if (!this.props.sort) {
+            return null;
+        }
+        var glyph = this.props.sort[column] ? this.props.sort[column] : Constants.SORTING.NO;
+        return <Glyphicon bsClass={'glyphicon table-sorter-icon column-' + column} glyph={glyph.glyph}
+                          title={this.i18n(glyph.title)} onClick={this.props.actions.onSort.bind(null, column)}/>
     }
 });
 

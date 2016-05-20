@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.config;
 
+import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
+import cz.cvut.kbss.inbas.reporting.service.arms.ArmsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -19,5 +21,10 @@ public class ServiceConfig {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public ArmsService armsService() {
+        return new ArmsServiceImpl();
     }
 }

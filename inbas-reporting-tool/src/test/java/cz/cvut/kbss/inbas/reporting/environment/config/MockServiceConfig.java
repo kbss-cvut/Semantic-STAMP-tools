@@ -1,10 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.environment.config;
 
 import cz.cvut.kbss.inbas.reporting.service.*;
+import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.RemoteDataLoader;
+import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
-import cz.cvut.kbss.inbas.reporting.service.security.PortalSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -73,12 +74,17 @@ public class MockServiceConfig {
     }
 
     @Bean
-    public PortalSessionManager portalSessionManager() {
-        return mock(PortalSessionManager.class);
+    public OptionsService optionsService() {
+        return mock(OptionsService.class);
     }
 
     @Bean
-    public OptionsService optionsService() {
-        return mock(OptionsService.class);
+    public ArmsService armsService() {
+        return mock(ArmsService.class);
+    }
+
+    @Bean
+    public FormGenService formGenService() {
+        return mock(FormGenService.class);
     }
 }

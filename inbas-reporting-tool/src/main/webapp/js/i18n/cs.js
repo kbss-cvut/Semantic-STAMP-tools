@@ -11,6 +11,7 @@ module.exports = {
         'add': 'Přidat',
         'back': 'Zpět',
         'cancel': 'Zrušit',
+        'open': 'Otevřít',
         'close': 'Zavřít',
         'cancel-tooltip': 'Zrušit a zahodit změny',
         'save': 'Uložit',
@@ -29,13 +30,15 @@ module.exports = {
         'yes': 'Ano',
         'no': 'Ne',
         'unknown': 'Neznámé',
+        'uploading-mask': 'Nahrávám',
+        'please-wait': 'Prosím čekejte...',
 
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',
         'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
         'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký',
-        'detail.submit': 'Odeslat úřadu',
-        'detail.submit-tooltip': 'Odeslat současnou revizi zprávy úřadu',
+        'detail.submit': 'Nová revize',
+        'detail.submit-tooltip': 'Vytvořit novou revizi tohoto hlášení',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
         'detail.submit-failed-message': 'Hlášení se nepodařilo odeslat. Odpověď serveru: ',
         'detail.loading': 'Načítám hlášení...',
@@ -75,12 +78,15 @@ module.exports = {
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
         'dashboard.recent.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
+        'dashboard.import.import-e5': 'Importovat hlášení ve formátu E5X/E5F',
+
+        'dropzone.title': 'Přetáhněte soubor sem nebo klikněte pro výběr souboru k nahrání.',
+        'dropzone-tooltip': 'Klikněte zde pro výber souboru k nahrání',
 
         'reports.no-reports': 'Nenalezena žádná hlášení. Nové hlášení můžete vytvořit ',
         'reports.no-reports.link': 'zde.',
         'reports.no-reports.link-tooltip': 'Jít na hlavní stránku',
-        'reports.open-tooltip': 'Kliknutím zobrazíte detail hlášení',
-        'reports.edit-tooltip': 'Editovat toto hlášení',
+        'reports.open-tooltip': 'Kliknutím zobrazíte detail hlášení a můžete hlášení upravovat',
         'reports.delete-tooltip': 'Smazat toto hlášení',
         'reports.loading-mask': 'Nahrávám hlášení...',
         'reports.panel-title': 'Hlášení',
@@ -135,12 +141,6 @@ module.exports = {
         'occurrencereport.title': 'Hlášení o události',
         'occurrencereport.type': 'Událost',
 
-        'preliminary.type': 'Předběžné',
-        'preliminary.table-investigate': 'Šetřit',
-        'preliminary.table-investigate-tooltip': 'Zahájit šetření události',
-        'preliminary.detail.panel-title': 'Předběžné hlášení o události',
-        'investigation.label': 'Událost',
-
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',
         'wizard.previous': 'Předchozí',
@@ -166,7 +166,7 @@ module.exports = {
         'factors.link-type-select-tooltip': 'Vyberte typ vztahu',
         'factors.link.delete.title': 'Smazat link?',
         'factors.link.delete.text': 'Určitě chcete smazat spojení vedoucí z faktoru {source} do faktoru {target}?',
-        'factors.detail.title': 'Faktor události',
+        'factors.detail.title': 'Specifikace faktoru',
         'factors.detail.type': 'Typ faktoru',
         'factors.detail.type-placeholder': 'Typ faktoru',
         'factors.detail.time-period': 'Specifikace času',
@@ -190,6 +190,18 @@ module.exports = {
         'revisions.label': 'Revize zprávy',
         'revisions.created': 'Vytvořeno',
         'revisions.show-tooltip': 'Zobrazit tuto revizi',
-        'revisions.readonly-notice': 'Starší revize jsou pouze ke čtení.'
+        'revisions.readonly-notice': 'Starší revize jsou pouze ke čtení.',
+
+        'sort.no': 'Kliknutím seřadíte záznamy podle tohoto sloupce',
+        'sort.asc': 'Záznamy jsou seřazeny vzestupně',
+        'sort.desc': 'Záznamy jsou seřazeny sestupně',
+
+        // ----------- ARMS -------------
+        'arms.title': 'ARMS',
+        'arms.accident-outcome': 'Výsledek nehody',
+        'arms.accident-outcome.tooltip': 'Pokud by tato událost vedla až nehodě, jaký by byl její nejpravděpodobnější výsledek?',
+        'arms.barrier-effectiveness': 'Efektivita bariér',
+        'arms.barrier-effectiveness.tooltip': 'Jaká byla efektivita bariér zbývajících mezi touto událostí a nejpravděpodobnějším nehodovým scénářem?',
+        'arms.index': 'ARMS index'
     }
 };

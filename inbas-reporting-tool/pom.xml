@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <cz.cvut.kbss.jopa.version>0.7.6</cz.cvut.kbss.jopa.version>
+        <cz.cvut.kbss.jopa.version>0.7.8</cz.cvut.kbss.jopa.version>
         <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.7.3</com.fasterxml.jackson.version>
@@ -165,14 +165,19 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.erchu</groupId>
-            <artifactId>beancp</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>cz.cvut.inbas.eccairs</groupId>
             <artifactId>e5xml</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

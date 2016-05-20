@@ -40,9 +40,10 @@ var Select = React.createClass({
         var options = this.generateOptions();
         return (
             <Input ref='select' type='select' name={this.props.name} title={this.props.title} label={this.props.label}
-                   value={this.props.value} onChange={this.props.onChange}>
-                <option key='opt_default' value='' disabled defaultValue
-                        style={{display: 'none'}}>{this.i18n('select.default')}</option>
+                   value={this.props.value ? this.props.value : ''} onChange={this.props.onChange}>
+                <option key='opt_default' value='' disabled style={{display: 'none'}}>
+                    {this.i18n('select.default')}
+                </option>
                 {options}
             </Input>
         );

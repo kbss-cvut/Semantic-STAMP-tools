@@ -56,7 +56,7 @@ public class RemoteDataLoader implements DataLoader {
                     String.class);
             return result.getBody();
         } catch (Exception e) {
-            LOG.error("Error when requesting remote data, url: " + urlWithQuery.toString(), e);
+            LOG.error("Error when requesting remote data, url: {}.", urlWithQuery.toString(), e);
             throw new WebServiceIntegrationException("Unable to fetch remote data.", e);
         }
     }

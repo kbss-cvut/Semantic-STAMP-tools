@@ -6,9 +6,6 @@ import org.mapstruct.TargetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * @author ledvima1
- */
 @Service
 public class ReferenceMapper {
 

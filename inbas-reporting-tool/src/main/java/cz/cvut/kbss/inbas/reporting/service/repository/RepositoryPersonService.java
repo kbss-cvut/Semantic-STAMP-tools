@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
 import cz.cvut.kbss.inbas.reporting.exception.UsernameExistsException;
+import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
@@ -32,7 +33,11 @@ public class RepositoryPersonService extends BaseRepositoryService<Person> imple
         if (findByUsername(person.getUsername()) != null) {
             throw new UsernameExistsException("Username " + person.getUsername() + " already exists.");
         }
-        person.encodePassword(passwordEncoder);
+        try {
+            person.encodePassword(passwordEncoder);
+        } catch (IllegalStateException e) {
+            throw new ValidationException(e.getMessage());
+        }
         personDao.persist(person);
     }
 
@@ -40,7 +45,7 @@ public class RepositoryPersonService extends BaseRepositoryService<Person> imple
     public void update(Person instance) {
         final Person orig = personDao.find(instance.getUri());
         if (orig == null) {
-            throw new IllegalArgumentException("Cannot update person URI");
+            throw new IllegalArgumentException("Cannot update person URI.");
         }
         if (!orig.getPassword().equals(instance.getPassword())) {
             instance.encodePassword(passwordEncoder);
