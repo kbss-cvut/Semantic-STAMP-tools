@@ -36,11 +36,12 @@ export default class QuestionAnswerProcessor {
 
     static processAnswer(answer, question) {
         var result = {};
+        result.uri = answer['@id'];
         // TODO
         if (question['code-answer']) {
-            result.codeValue = answer.value;
+            result.codeValue = answer['@value'];
         } else {
-            result.textValue = answer.value;
+            result.textValue = answer['@value'];
         }
         return result;
     }

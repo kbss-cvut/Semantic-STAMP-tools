@@ -50,13 +50,13 @@ export default class Answer extends React.Component {
 
     onChange = (e) => {
         var change = assign({}, this.props.answer);
-        change.value = e.target.value;
+        change['@value'] = e.target.value;
         this.props.onChange(this.props.index, change);
     };
 
     _onOptionSelected = (option) => {
         var change = assign({}, this.props.answer);
-        change.value = option.id;
+        change['@value'] = option.id;
         this.props.onChange(this.props.index, change);
     };
 
@@ -68,7 +68,7 @@ export default class Answer extends React.Component {
 
     _renderInputComponent() {
         var question = this.props.question,
-            value = this.props.answer.value,
+            value = this.props.answer['@value'],
             label = question[Vocabulary.RDFS_LABEL],
             component;
 

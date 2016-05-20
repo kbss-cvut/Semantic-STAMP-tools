@@ -81,15 +81,13 @@ module.exports = {
     OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
 
     // Form Generator
-    SECTION: 'http://onto.fel.cvut.cz/ontologies/form/section',
     FORM: 'http://onto.fel.cvut.cz/ontologies/form/form',
-    HAS_SECTION: 'http://onto.fel.cvut.cz/ontologies/form/has-section',
     QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
-    HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/form/has-subsection',
+    HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
     HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/form/has-answer',
     HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
     IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
-    LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/layout-class',
+    LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class',
     QUESTION_TYPEAHEAD: 'type-ahead',
 
     GENERATED_ROW_SIZE: 1
