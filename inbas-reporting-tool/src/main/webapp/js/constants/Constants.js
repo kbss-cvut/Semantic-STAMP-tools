@@ -4,7 +4,6 @@ var Routes = require('../utils/Routes');
 
 module.exports = {
     APP_NAME: 'INBAS Reporting Tool',
-    CONFLICTING_AIRCRAFT_STEP_ID: 'conflictingAircraft',
     ECCAIRS_URL: 'http://www.icao.int/safety/airnavigation/AIG/Documents/ADREP%20Taxonomy/ECCAIRS%20Aviation%201.3.0.12%20(Entities%20and%20Attributes).en.id.pdf',
     HOME_ROUTE: Routes.dashboard,
     LINK_TYPES: {
@@ -87,7 +86,7 @@ module.exports = {
     HAS_SECTION: 'http://onto.fel.cvut.cz/ontologies/form/has-section',
     QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
     HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/form/has-subsection',
-    HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/form/has-question',
+    HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/form/has-answer',
     HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
     IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
     LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/layout-class',

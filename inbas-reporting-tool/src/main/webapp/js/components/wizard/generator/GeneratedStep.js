@@ -12,7 +12,7 @@ export default class GeneratedStep extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            question: this.props.data.structure
+            question: this.props.data.stepData.structure
         }
     }
 

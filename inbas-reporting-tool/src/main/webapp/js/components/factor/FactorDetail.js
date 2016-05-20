@@ -24,6 +24,7 @@ var WizardGenerator = require('../wizard/generator/WizardGenerator');
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
 var EventTypeFactory = require('../../model/EventTypeFactory');
+var QuestionAnswerProcessor = require('../../model/QuestionAnswerProcessor').default;
 
 
 function convertDurationToCurrentUnit(factor) {
@@ -112,7 +113,14 @@ var FactorDetail = React.createClass({
 
     onUpdateFactorDetails: function (data, closeCallback) {
         var statement = assign({}, this.state.statement);
-        statement.question = data.question;
+        statement.question = {
+            subQuestions: []
+        };
+        if (data.stepData) {
+            for (var i = 0, len = data.stepData.length; i < len; i++) {
+                statement.question.subQuestions[i] = QuestionAnswerProcessor.processQuestionAnswerHierarchy(data.stepData[i].question);
+            }
+        }
         this.setState({statement: statement});
         closeCallback();
     },

@@ -18,12 +18,16 @@ export default class Question extends React.Component {
         super(props);
     }
 
+    _createQuestion() {
+        var ldQuestion = this.props.question;
+    }
+
     onAnswerChange = (answerIndex, change) => {
-        this._onChange('answers', answerIndex, change);
+        this._onChange(Constants.HAS_ANSWER, answerIndex, change);
     };
 
     onSubQuestionChange = (subQuestionIndex, change) => {
-        this._onChange('subQuestions', subQuestionIndex, change);
+        this._onChange(Constants.HAS_SUBQUESTION, subQuestionIndex, change);
     };
 
     _onChange(att, valueIndex, newValue) {
@@ -33,7 +37,7 @@ export default class Question extends React.Component {
     }
 
     render() {
-        var label = this.props.section[Vocabulary.RDFS_LABEL];
+        var label = this.props.question[Vocabulary.RDFS_LABEL];
         return <Panel title={<h3>{label}</h3>} bsStyle='info'>
             {this.renderAnswers()}
             {this.renderSubQuestions()}

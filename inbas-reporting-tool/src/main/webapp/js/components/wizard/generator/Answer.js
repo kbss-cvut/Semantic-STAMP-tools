@@ -50,16 +50,13 @@ export default class Answer extends React.Component {
 
     onChange = (e) => {
         var change = assign({}, this.props.answer);
-        // TODO If the change is from a select, then the value might be a code, not text
-        change.textValue = e.target.value;
+        change.value = e.target.value;
         this.props.onChange(this.props.index, change);
     };
 
     _onOptionSelected = (option) => {
         var change = assign({}, this.props.answer);
-        // Assuming that if a typeahead is used, the answer value will be a code, not literal text
-        change.codeValue = option.id;
-        delete change.textValue;    // Just to be sure that both values are not set
+        change.value = option.id;
         this.props.onChange(this.props.index, change);
     };
 
@@ -71,7 +68,7 @@ export default class Answer extends React.Component {
 
     _renderInputComponent() {
         var question = this.props.question,
-            value = this.props.answer.textValue ? this.props.answer.textValue : this.props.answer.codeValue,
+            value = this.props.answer.value,
             label = question[Vocabulary.RDFS_LABEL],
             component;
 

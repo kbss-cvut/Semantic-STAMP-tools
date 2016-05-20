@@ -1,6 +1,5 @@
 'use strict';
 
-var React = require('react');
 var jsonld = require('jsonld');
 
 var Ajax = require('../../../utils/Ajax');

@@ -5,6 +5,7 @@
 'use strict';
 
 var React = require('react');
+var assign = require('object-assign');
 var ListGroup = require('react-bootstrap').ListGroup;
 var ListGroupItem = require('react-bootstrap').ListGroupItem;
 
@@ -18,9 +19,11 @@ var Wizard = React.createClass({
     },
 
     getInitialState: function () {
+        var data = assign({}, this.props);
+        data.stepData = [];
         return {
             currentStep: this.props.start || 0,
-            data: this.props,
+            data: data,
             nextDisabled: false,
             previousDisabled: false
         };
@@ -115,6 +118,9 @@ var Wizard = React.createClass({
     },
     initComponent: function () {
         var step = this.props.steps[this.state.currentStep];
+        if (step.data && !this.state.data.stepData[this.state.currentStep]) {
+            this.state.data.stepData[this.state.currentStep] = step.data;
+        }
         return React.createElement(WizardStep, {
             key: 'step' + this.state.currentStep,
             onClose: this.props.onClose,
