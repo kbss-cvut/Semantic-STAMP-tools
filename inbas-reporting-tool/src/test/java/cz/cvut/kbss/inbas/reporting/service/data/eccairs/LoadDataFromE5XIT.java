@@ -6,7 +6,7 @@
 package cz.cvut.kbss.inbas.reporting.service.data.eccairs;
 
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
-import cz.cvut.kbss.ucl.eccairs.e5x.E5XXMLReader;
+import cz.cvut.kbss.ucl.eccairs.e5x.E5XXMLParser;
 import cz.cvut.kbss.ucl.eccairs.report.model.Report;
 import java.io.IOException;
 import java.net.URL;
@@ -64,7 +64,7 @@ public class LoadDataFromE5XIT {
 //            String cfg = getClass().getResource("/config-1.properties").getFile();
 //            System.setProperty("eccairs-tools-config-file", cfg);
 //        System.out.println(System.getProperty("eccairs-tools-config-file", "hahahahah"));
-            E5XXMLReader c = new E5XXMLReader();
+            E5XXMLParser c = new E5XXMLParser();
             String doc = getClass().getResource("/data/eccairs/16FEDEF0BC91E511B897002655546824-anon.xml").getFile();
             System.out.println(doc);
             c.parseDocument(doc);
