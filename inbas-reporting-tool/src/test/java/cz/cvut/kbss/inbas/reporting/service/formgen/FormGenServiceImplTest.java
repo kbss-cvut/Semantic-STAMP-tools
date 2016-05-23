@@ -27,6 +27,9 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -64,10 +67,10 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
 
     @Test
     public void formGenServicePersistsSpecifiedOccurrenceReportWhenFormIsRequested() {
-        setupRemoteFormGenServiceMock();
+        setupRemoteFormGenServiceMock(Collections.emptyMap());
         final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
         report.getAuthor().generateUri();   // This won't be necessary in code, the user is already persisted
-        formGenService.generateForm(report);
+        formGenService.generateForm(report, Collections.emptyMap());
         final EntityManager em = emf.createEntityManager();
         try {
             assertTrue(em.createNativeQuery("ASK { ?x a ?report .} ", Boolean.class).setParameter("report", URI.create(
@@ -81,61 +84,88 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
     public void formGenServiceThrowsIllegalArgumentForUnsupportedDataType() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Unsupported data type for form generation.");
-        formGenService.generateForm(Generator.getPerson());
+        formGenService.generateForm(Generator.getPerson(), Collections.emptyMap());
     }
 
     @Test
     public void formGenPassesRepositoryUrlAndContextUrlToRemoteFormGenerator() throws Exception {
-        setupRemoteFormGenServiceMock();
+        setupRemoteFormGenServiceMock(Collections.emptyMap());
 
         final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
         report.getAuthor().generateUri();
-        final RawJson result = formGenService.generateForm(report);
+        final RawJson result = formGenService.generateForm(report, Collections.emptyMap());
         assertNotNull(result);
         assertEquals(MOCK_FORM_STRUCTURE, result.getValue());
         mockServer.verify();
     }
 
-    private void setupRemoteFormGenServiceMock() {
+    @Test
+    public void formGenPassesParametersToRemoteFormGenerator() throws Exception {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final Map<String, String> params = Collections
+                .singletonMap("eventType", report.getOccurrence().getEventType().toString());
+        setupRemoteFormGenServiceMock(params);
+
+        report.getAuthor().generateUri();
+        final RawJson result = formGenService.generateForm(report, params);
+        assertNotNull(result);
+    }
+
+    private void setupRemoteFormGenServiceMock(Map<String, String> params) {
         final String serviceUrl = environment.getProperty(ConfigParam.FORM_GEN_SERVICE_URL.toString());
         final String repoUrl = environment.getProperty("test." + ConfigParam.FORM_GEN_REPOSITORY_URL.toString());
         ((MockEnvironment) environment).setProperty(ConfigParam.FORM_GEN_REPOSITORY_URL.toString(), repoUrl);
+        final Map<String, String> expectedParams = new HashMap<>(params);
+        expectedParams.put(FormGenServiceImpl.REPOSITORY_URL_PARAM, repoUrl);
+        expectedParams.put(FormGenServiceImpl.CONTEXT_URI_PARAM, "");   // We don't know the context, it is random
 
-        mockServer.expect(requestTo(new UrlWithParamsMatcher(serviceUrl, repoUrl))).andExpect(method(HttpMethod.GET))
+        mockServer.expect(requestTo(new UrlWithParamsMatcher(serviceUrl, expectedParams)))
+                  .andExpect(method(HttpMethod.GET))
                   .andRespond(withSuccess(MOCK_FORM_STRUCTURE, MediaType.APPLICATION_JSON));
     }
 
     @Test
     public void generateFormReturnsEmptyJsonWhenRemoteServiceUrlIsMissing() {
-        setupRemoteFormGenServiceMock();
+        setupRemoteFormGenServiceMock(Collections.emptyMap());
         ((MockEnvironment) environment).setProperty(ConfigParam.FORM_GEN_SERVICE_URL.toString(), "");
         final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
         report.getAuthor().generateUri();
 
-        assertEquals("", formGenService.generateForm(report).getValue());
+        assertEquals("", formGenService.generateForm(report, Collections.emptyMap()).getValue());
     }
 
     private static final class UrlWithParamsMatcher extends BaseMatcher<String> {
 
         private final String url;
-        private final String repoUrl;
+        private final Map<String, String> params;
 
-        private UrlWithParamsMatcher(String url, String repoUrl) {
+        private UrlWithParamsMatcher(String url, Map<String, String> params) {
             this.url = url;
-            this.repoUrl = repoUrl;
+            this.params = params;
         }
 
         @Override
         public boolean matches(Object item) {
             final String actual = item.toString();
-            return actual.startsWith(url) && actual.contains(FormGenServiceImpl.REPOSITORY_URL_PARAM + "=" + repoUrl) &&
-                    actual.contains(FormGenServiceImpl.CONTEXT_URI_PARAM + "=");
+            if (!actual.startsWith(url)) {
+                return false;
+            }
+            for (Map.Entry<String, String> e : params.entrySet()) {
+                if (!actual.contains(e.getKey() + "=" + e.getValue())) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         @Override
         public void describeTo(Description description) {
-            description.appendValue(url + "?" + FormGenServiceImpl.REPOSITORY_URL_PARAM + "=" + url + "&" +
-                    FormGenServiceImpl.CONTEXT_URI_PARAM + "=$CONTEXT$");
+            description.appendValue(url);
+            boolean first = true;
+            for (Map.Entry<String, String> e : params.entrySet()) {
+                description.appendValue((first ? "?" : "&") + e.getKey() + "=" + e.getValue());
+                first = false;
+            }
         }
     }
 }

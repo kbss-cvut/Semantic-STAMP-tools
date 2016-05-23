@@ -4,6 +4,7 @@
 'use strict';
 
 var React = require('react');
+var assign = require('object-assign');
 var classNames = require('classnames');
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
@@ -19,9 +20,11 @@ var Utils = require('../../utils/Utils');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 var ExternalLink = require('../misc/ExternalLink').default;
 
+var WizardGenerator = require('../wizard/generator/WizardGenerator');
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
 var EventTypeFactory = require('../../model/EventTypeFactory');
+var QuestionAnswerProcessor = require('../../model/QuestionAnswerProcessor').default;
 
 
 function convertDurationToCurrentUnit(factor) {
@@ -37,14 +40,15 @@ var FactorDetail = React.createClass({
         onClose: React.PropTypes.func.isRequired,
         onDelete: React.PropTypes.func.isRequired,
         scale: React.PropTypes.string.isRequired,
-        factor: React.PropTypes.object.isRequired
+        factor: React.PropTypes.object.isRequired,
+        getReport: React.PropTypes.func.isRequired
     },
 
     getInitialState: function () {
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: factor.statement ? EventTypeFactory.jsonLdToEventType(EventTypeFactory.resolveEventType(factor.statement.eventType)) : null,
+            eventType: factor.statement ? Utils.jsonLdToTypeaheadOption(EventTypeFactory.resolveEventType(factor.statement.eventType)) : null,
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement ? factor.statement : null,
@@ -92,12 +96,11 @@ var FactorDetail = React.createClass({
     },
 
     onOpenDetails: function () {
-        var wizardProps = {};
-        wizardProps.onFinish = this.onUpdateFactorDetails;
-        this.openDetailsWizard(wizardProps);
+        WizardGenerator.generateWizard(this.props.getReport(), {'eventType': this.state.eventType.id}, this.props.factor.text, this.openDetailsWizard);
     },
 
     openDetailsWizard: function (wizardProperties) {
+        wizardProperties.onFinish = this.onUpdateFactorDetails;
         this.setState({
             isWizardOpen: true,
             wizardProperties: wizardProperties
@@ -109,7 +112,15 @@ var FactorDetail = React.createClass({
     },
 
     onUpdateFactorDetails: function (data, closeCallback) {
-        var statement = data.statement;
+        var statement = assign({}, this.state.statement);
+        statement.question = {
+            subQuestions: []
+        };
+        if (data.stepData) {
+            for (var i = 0, len = data.stepData.length; i < len; i++) {
+                statement.question.subQuestions[i] = QuestionAnswerProcessor.processQuestionAnswerHierarchy(data.stepData[i].question);
+            }
+        }
         this.setState({statement: statement});
         closeCallback();
     },

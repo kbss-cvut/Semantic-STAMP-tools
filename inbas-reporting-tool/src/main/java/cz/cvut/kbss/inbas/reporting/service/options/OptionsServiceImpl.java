@@ -55,6 +55,9 @@ public class OptionsServiceImpl implements OptionsService {
                 return;
             }
             for (File f : queryFiles) {
+                if (f.isDirectory()) {
+                    continue;
+                }
                 String category = f.getName();
                 category = category.substring(0, category.lastIndexOf('.'));
                 optionsCategories.put(category, Constants.QUERY_FILES_DIRECTORY + File.separator + f.getName());

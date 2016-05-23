@@ -5,43 +5,39 @@
  */
 package cz.cvut.kbss.inbas.reporting.model.qam;
 
-import cz.cvut.kbss.jopa.model.annotations.Id;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
-import cz.cvut.kbss.jopa.model.annotations.Types;
+import cz.cvut.kbss.jopa.model.annotations.*;
+
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @OWLClass(iri = Vocabulary.Answer)
 public class Answer {
+
+    @Id(generated = true)
+    private URI uri;
+
+    @OWLDataProperty(iri = Vocabulary.hasValue)
+    private String textValue;
+
+    @OWLObjectProperty(iri = Vocabulary.hasURIValue)
+    private URI codeValue;
+
     @Types
     private Set<String> types = new HashSet<>();
-    
-    @Id(generated = true)
-    protected URI uri;
-    
-    @OWLDataProperty(iri = Vocabulary.hasValue)
-    protected String textValue;
-    
-    @OWLObjectProperty(iri = Vocabulary.hasURIValue)
-    protected URI codValue;
 
-    public Set<String> getTypes() {
-        return types;
+    public Answer() {
     }
 
-    public void setTypes(Set<String> types) {
-        this.types = types;
-    }
-    
-    public void addType(String type){
-        types.add(type);
+    public Answer(Answer other) {
+        this.textValue = other.textValue;
+        this.codeValue = other.codeValue;
+        if (other.types != null) {
+            this.types.addAll(other.types);
+        }
     }
 
     public URI getUri() {
@@ -60,12 +56,34 @@ public class Answer {
         this.textValue = textValue;
     }
 
-    public URI getCodValue() {
-        return codValue;
+    public URI getCodeValue() {
+        return codeValue;
     }
 
-    public void setCodValue(URI codValue) {
-        this.codValue = codValue;
+    public void setCodeValue(URI codeValue) {
+        this.codeValue = codeValue;
     }
-    
+
+    public Set<String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<String> types) {
+        this.types = types;
+    }
+
+    public void addType(String type) {
+        types.add(type);
+    }
+
+    @Override
+    public String toString() {
+        if (textValue != null && codeValue != null) {
+            return "value=" + textValue + ", code=" + codeValue;
+        } else if (textValue == null) {
+            return "code=" + codeValue;
+        } else {
+            return "text=" + textValue;
+        }
+    }
 }

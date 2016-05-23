@@ -25,7 +25,7 @@ public class FormGenServiceImpl implements FormGenService {
     private static final Logger LOG = LoggerFactory.getLogger(FormGenServiceImpl.class);
 
     static final String REPOSITORY_URL_PARAM = "repositoryUrl";
-    static final String CONTEXT_URI_PARAM = "context";
+    static final String CONTEXT_URI_PARAM = "graphId";
 
     @Autowired
     private OccurrenceReportFormGenDao occurrenceReportFormGenDao;
@@ -45,11 +45,12 @@ public class FormGenServiceImpl implements FormGenService {
     }
 
     @Override
-    public <T> RawJson generateForm(T data) {
+    public <T> RawJson generateForm(T data, Map<String, String> params) {
         Objects.requireNonNull(data);
+        Objects.requireNonNull(params);
         final FormGenDao<T> dao = resolveDao(data);
         final URI context = dao.persist(data);
-        return loadFormStructure(context);
+        return loadFormStructure(context, new HashMap<>(params));
     }
 
     private <T> FormGenDao<T> resolveDao(Object data) {
@@ -59,7 +60,7 @@ public class FormGenServiceImpl implements FormGenService {
         return (FormGenDao<T>) daoMap.get(data.getClass());
     }
 
-    private RawJson loadFormStructure(URI context) {
+    private RawJson loadFormStructure(URI context, Map<String, String> params) {
         final String serviceUrl = environment.getProperty(ConfigParam.FORM_GEN_SERVICE_URL.toString(), "");
         final String repoUrl = environment.getProperty(ConfigParam.FORM_GEN_REPOSITORY_URL.toString(), "");
         if (serviceUrl.isEmpty() || repoUrl.isEmpty()) {
@@ -67,7 +68,6 @@ public class FormGenServiceImpl implements FormGenService {
                     serviceUrl, repoUrl);
             return new RawJson("");
         }
-        final Map<String, String> params = new HashMap<>();
         params.put(CONTEXT_URI_PARAM, context.toString());
         params.put(REPOSITORY_URL_PARAM, repoUrl);
         return new RawJson(dataLoader.loadData(serviceUrl, params));

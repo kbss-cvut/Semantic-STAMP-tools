@@ -178,6 +178,12 @@ var Factors = React.createClass({
         return FactorJsonSerializer.getFactorGraph(this.props.report);
     },
 
+    getReport: function () {
+        var report = assign({}, this.props.report);
+        report.factorGraph = this.getFactorGraph();
+        return report;
+    },
+
 
     render: function () {
         var scaleTooltip = this.i18n('factors.scale-tooltip');
@@ -226,9 +232,9 @@ var Factors = React.createClass({
         if (!this.state.showFactorDialog) {
             return null;
         }
-        return (<FactorDetail show={this.state.showFactorDialog} factor={this.state.currentFactor}
-                              onClose={this.onCloseFactorDialog} onSave={this.onSaveFactor}
-                              onDelete={this.onDeleteFactor} scale={this.state.scale}/>);
+        return (<FactorDetail show={this.state.showFactorDialog} getReport={this.getReport}
+                              factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
+                              onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}/>);
     },
 
     renderLinkTypeDialog: function () {

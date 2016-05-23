@@ -4,7 +4,6 @@ var Routes = require('../utils/Routes');
 
 module.exports = {
     APP_NAME: 'INBAS Reporting Tool',
-    CONFLICTING_AIRCRAFT_STEP_ID: 'conflictingAircraft',
     ECCAIRS_URL: 'http://www.icao.int/safety/airnavigation/AIG/Documents/ADREP%20Taxonomy/ECCAIRS%20Aviation%201.3.0.12%20(Entities%20and%20Attributes).en.id.pdf',
     HOME_ROUTE: Routes.dashboard,
     LINK_TYPES: {
@@ -71,10 +70,25 @@ module.exports = {
 
     MINUTE: 60 * 1000,   // Minute in milliseconds
 
+    // Maximum number of columns supported by Bootstrap
+    COLUMN_COUNT: 12,
+
     // Maximum time difference between occurrence start and end. 24 hours in millis
     MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24,
 
     OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
     EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
-    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto'
+    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
+
+    // Form Generator
+    FORM: 'http://onto.fel.cvut.cz/ontologies/form/form',
+    QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
+    HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
+    HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/form/has-answer',
+    HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
+    IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
+    LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class',
+    QUESTION_TYPEAHEAD: 'type-ahead',
+
+    GENERATED_ROW_SIZE: 1
 };

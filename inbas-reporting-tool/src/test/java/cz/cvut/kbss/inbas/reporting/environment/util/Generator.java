@@ -217,7 +217,7 @@ public class Generator {
     }
 
     /**
-     * Generates a (pseudo-) random integer.
+     * Generates a (pseudo) random integer.
      * <p>
      * This version has no bounds (aside from the integer range), so the returned number may be negative or zero.
      *
@@ -229,7 +229,7 @@ public class Generator {
     }
 
     /**
-     * Generates a (pseudo-)random index of an element in the collection.
+     * Generates a (pseudo)random index of an element in the collection.
      * <p>
      * I.e. the returned number is in the interval <0, col.size()).
      *
@@ -240,6 +240,15 @@ public class Generator {
         assert col != null;
         assert !col.isEmpty();
         return random.nextInt(col.size());
+    }
+
+    /**
+     * Generators a (pseudo) random boolean.
+     *
+     * @return Random boolean
+     */
+    public static boolean randomBoolean() {
+        return random.nextBoolean();
     }
 
     /**

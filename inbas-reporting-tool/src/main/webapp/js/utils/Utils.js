@@ -1,7 +1,6 @@
-/**
- * @author ledvima1
- */
 'use strict';
+
+var Vocabulary = require('../constants/Vocabulary');
 
 /**
  * Common propositions that should not be capitalized
@@ -14,7 +13,7 @@ var PROPOSITIONS = [
 ];
 var WORD_LENGTH_THRESHOLD = 4;
 
-var Utils = {
+module.exports = {
     /**
      * Formats the specified date into DD-MM-YY HH:mm
      * @param date The date to format
@@ -126,7 +125,47 @@ var Utils = {
         var min = 0,
             max = 1073741824;   // Max Java Integer / 2
         return Math.floor(Math.random() * (max - min)) + min;
+    },
+
+    /**
+     * Transforms JSON-LD (framed) based options list into a list of options suitable for the Typeahead component.
+     * @param options The options to process
+     */
+    processTypeaheadOptions: function (options) {
+        return options.map(function (item) {
+            return this.jsonLdToTypeaheadOption(item);
+        }.bind(this));
+    },
+
+    /**
+     * Gets the specified JSON-LD object as a simple, more programmatic-friendly object suitable e.g. for typeahead
+     * components.
+     *
+     * The transformation is as follows:
+     * <ul>
+     *     <li>'@id' -> id</li>
+     *     <li>'@type' -> type</li>
+     *     <li>rdfs:label -> name</li>
+     *     <li>rdfs:comment -> description</li>
+     * </ul>
+     * @param jsonLd
+     */
+    jsonLdToTypeaheadOption: function (jsonLd) {
+        if (!jsonLd) {
+            return null;
+        }
+        var res = {
+            id: jsonLd['@id'],
+            type: jsonLd['@type'],
+            name: typeof(jsonLd[Vocabulary.RDFS_LABEL]) === 'string' ? jsonLd[Vocabulary.RDFS_LABEL] : jsonLd[Vocabulary.RDFS_LABEL]['@value']
+        };
+        if (jsonLd[Vocabulary.RDFS_COMMENT]) {
+            if (typeof(jsonLd[Vocabulary.RDFS_COMMENT]) === 'string') {
+                res.description = jsonLd[Vocabulary.RDFS_COMMENT];
+            } else {
+                res.description = jsonLd[Vocabulary.RDFS_COMMENT]['@value'];
+            }
+        }
+        return res;
     }
 };
-
-module.exports = Utils;

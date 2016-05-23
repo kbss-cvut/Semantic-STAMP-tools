@@ -1,6 +1,3 @@
-/**
- * @jsx
- */
 'use strict';
 
 var React = require('react');
@@ -12,7 +9,7 @@ var Actions = require('../../actions/Actions');
 var TypeaheadResultList = require('./EventTypeTypeaheadResultList');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var I18nMixin = require('../../i18n/I18nMixin');
-var EventTypeFactory = require('../../model/EventTypeFactory');
+var Utils = require('../../utils/Utils');
 
 var EventTypeTypeahead = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
@@ -36,10 +33,7 @@ var EventTypeTypeahead = React.createClass({
     },
     onEventsLoaded: function () {
         var options = TypeaheadStore.getEventTypes();
-        options = options.map(function (item) {
-            return EventTypeFactory.jsonLdToEventType(item);
-        });
-        this.setState({options: options});
+        this.setState({options: Utils.processTypeaheadOptions(options)});
     },
 
     focus: function () {

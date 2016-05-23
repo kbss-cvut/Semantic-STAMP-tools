@@ -31,6 +31,7 @@ module.exports = {
         'no': 'No',
         'unknown': 'Unknown',
         'uploading-mask': 'Uploading',
+        'please-wait': 'Please wait...',
 
         'detail.save-tooltip': 'Save changes',
         'detail.saving': 'Saving...',

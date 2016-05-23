@@ -44,7 +44,8 @@ public class Vocabulary {
     public static final String p_hasFactor = "http://onto.fel.cvut.cz/ontologies/aviation-safety/has_factor";// this is goining to be moved to a safety-management ontology
     
     // see in the classes, under the Factor class
-    public static final String p_factorType = "http://onto.fel.cvut.cz/ontologies/documentation/factor-type"; 
+    public static final String p_factorType = "http://onto.fel.cvut.cz/ontologies/documentation/factor-type";
+    public static final String p_hasQuestion = "http://onto.fel.cvut.cz/ontologies/documentation/has_question";
     // I assume that the value for this properties are taken from the query occurrenceClass.sparql. This is however the type of the occurrence.
     // Is it possible to do this using the @Types annotation, for example :
     // @Types
