@@ -53,9 +53,9 @@ describe('Factor detail dialog', function () {
         expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, 'minute');
         expect(factor.end_date).toBeDefined();
         expect(callbacks.onSave).toHaveBeenCalled();
-        expect(factor.statement.form.subQuestions[0]).toBeDefined();
-        expect(factor.statement.form.subQuestions[0].answers[0]).toBeDefined();
-        expect(factor.statement.form.subQuestions[0].answers[0].textValue).toEqual(value);
+        expect(factor.statement.question.subQuestions[0]).toBeDefined();
+        expect(factor.statement.question.subQuestions[0].answers[0]).toBeDefined();
+        expect(factor.statement.question.subQuestions[0].answers[0].textValue).toEqual(value);
     });
 
     it('Preserves factor state until save is called', function () {
