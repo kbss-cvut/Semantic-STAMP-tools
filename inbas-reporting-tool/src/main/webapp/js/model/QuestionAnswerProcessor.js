@@ -45,4 +45,14 @@ export default class QuestionAnswerProcessor {
         }
         return result;
     }
+
+    /**
+     * Generates an empty answer for the specified question
+     * @param question
+     */
+    static generateAnswer(question) {
+        var answer = {};
+        answer['@value'] = '';
+        return answer;
+    }
 }

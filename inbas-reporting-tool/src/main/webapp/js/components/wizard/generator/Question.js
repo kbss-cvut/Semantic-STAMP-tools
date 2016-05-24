@@ -5,6 +5,7 @@ import assign from "object-assign";
 import {Panel} from "react-bootstrap";
 import Answer from "./Answer";
 import Constants from "../../../constants/Constants";
+import QuestionAnswerProcessor from "../../../model/QuestionAnswerProcessor";
 import Vocabulary from "../../../constants/Vocabulary";
 
 export default class Question extends React.Component {
@@ -16,10 +17,6 @@ export default class Question extends React.Component {
 
     constructor(props) {
         super(props);
-    }
-
-    _createQuestion() {
-        var ldQuestion = this.props.question;
     }
 
     onAnswerChange = (answerIndex, change) => {
@@ -48,7 +45,7 @@ export default class Question extends React.Component {
         var question = this.props.question,
             children = [], row = [];
         if (!question[Constants.HAS_ANSWER]) {
-            return children;
+            question[Constants.HAS_ANSWER] = [QuestionAnswerProcessor.generateAnswer(question)];
         }
         var answers = question[Constants.HAS_ANSWER];
         // TODO It should always be an array (to conform to the object model)

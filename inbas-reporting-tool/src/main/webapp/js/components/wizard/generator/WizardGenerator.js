@@ -47,7 +47,7 @@ var WizardGenerator = {
         for (i = 0, len = form.length; i < len; i++) {
             item = form[i];
             if (item['@type'] && this._isForm(item)) {
-                form = item[Constants.HAS_SECTION];
+                form = item[Constants.HAS_SUBQUESTION];
                 break;
             }
         }
@@ -70,7 +70,7 @@ var WizardGenerator = {
     },
 
     _isFormElement: function (item) {
-        return item['@type'] && (this._isSection(item) || this._isQuestion(item));
+        return item['@type'] && this._isQuestion(item);
     },
 
     _isForm: function (item) {
@@ -78,12 +78,8 @@ var WizardGenerator = {
     },
 
     _isWizardStep: function (item) {
-        //TODO layout-class is not string (add type)
-        return this._isSection(item) && item[Constants.LAYOUT_CLASS];
-    },
-
-    _isSection: function (item) {
-        return item['@type'].indexOf(Constants.SECTION) !== -1;
+        //TODO
+        return true;
     },
 
     _isQuestion: function (item) {

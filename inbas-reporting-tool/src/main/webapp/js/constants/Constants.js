@@ -89,6 +89,7 @@ module.exports = {
     IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
     LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class',
     QUESTION_TYPEAHEAD: 'type-ahead',
+    QUESTION_SECTION: 'section',
 
     GENERATED_ROW_SIZE: 1
 };

@@ -61,8 +61,7 @@ export default class Answer extends React.Component {
     };
 
     render() {
-        var question = this.props.question,
-            cls = Constants.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.GENERATED_ROW_SIZE);
+        var cls = Constants.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.GENERATED_ROW_SIZE);
         return <div className={cls}>{this._renderInputComponent()}</div>;
     }
 
