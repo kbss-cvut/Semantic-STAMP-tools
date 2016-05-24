@@ -14,8 +14,9 @@ var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
 var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
-var Input = require('../Input');
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
+var Input = require('../Input');
+var Mask = require('../Mask').default;
 var Utils = require('../../utils/Utils');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 var ExternalLink = require('../misc/ExternalLink').default;
@@ -54,7 +55,8 @@ var FactorDetail = React.createClass({
             statement: factor.statement ? factor.statement : null,
 
             isWizardOpen: false,
-            wizardProperties: null
+            wizardProperties: null,
+            showMask: false
         };
     },
 
@@ -96,12 +98,14 @@ var FactorDetail = React.createClass({
     },
 
     onOpenDetails: function () {
+        this.setState({showMask: true});
         WizardGenerator.generateWizard(this.props.getReport(), {'eventType': this.state.eventType.id}, this.props.factor.text, this.openDetailsWizard);
     },
 
     openDetailsWizard: function (wizardProperties) {
         wizardProperties.onFinish = this.onUpdateFactorDetails;
         this.setState({
+            showMask: false,
             isWizardOpen: true,
             wizardProperties: wizardProperties
         });
@@ -160,6 +164,7 @@ var FactorDetail = React.createClass({
                     </Modal.Header>
 
                     <Modal.Body>
+                        {this._renderMask()}
                         {this.renderDeleteDialog()}
                         <div className='row'>
                             <div className='col-xs-12'>
@@ -214,6 +219,10 @@ var FactorDetail = React.createClass({
                 </Modal>
             </div>
         )
+    },
+
+    _renderMask: function() {
+        return this.state.showMask ? <Mask text={this.i18n('factors.detail.wizard-loading')} /> : null;
     },
 
     renderFactorTypeIcon: function () {

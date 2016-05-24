@@ -18,7 +18,6 @@ var TypeaheadStore = require('../../../stores/TypeaheadStore');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var Constants = require('../../../constants/Constants');
 var Vocabulary = require('../../../constants/Vocabulary');
-var EventTypeFactory = require('../../../model/EventTypeFactory');
 var ExternalLink = require('../../misc/ExternalLink').default;
 var Utils = require('../../../utils/Utils');
 

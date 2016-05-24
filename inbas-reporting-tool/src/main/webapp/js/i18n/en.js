@@ -177,6 +177,7 @@ module.exports = {
         'factors.detail.details': 'Details',
         'factors.detail.delete.title': 'Delete factor?',
         'factors.detail.delete.text': 'Are you sure you want to remove this factor?',
+        'factors.detail.wizard-loading': 'Generating form...',
 
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',

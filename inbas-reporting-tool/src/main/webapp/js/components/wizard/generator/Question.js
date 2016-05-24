@@ -93,8 +93,7 @@ export default class Question extends React.Component {
 
     renderSubQuestions() {
         var children = [],
-            question = this.props.question;
-        var subQuestions = this._getSubQuestions();
+            subQuestions = this._getSubQuestions();
         for (var i = 0, len = subQuestions.length; i < len; i++) {
             children.push(<Question key={'sub-question-' + i} index={i} question={subQuestions[i]}
                                     onChange={this.onSubQuestionChange}/>);
