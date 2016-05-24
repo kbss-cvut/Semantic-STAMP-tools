@@ -86,11 +86,14 @@ module.exports = {
     HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
     HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/form/has-answer',
     HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
+    HAS_VALUE_TYPE: 'http://onto.fel.cvut.cz/ontologies/form/has-value-type',
     IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
     LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class',
     QUESTION_TYPEAHEAD: 'type-ahead',
     QUESTION_SECTION: 'section',
     WIZARD_STEP: 'wizard-step',
+    VALUE_TYPE_CODE: 'code',
+    VALUE_TYPE_TEXT: 'text',
 
     GENERATED_ROW_SIZE: 1
 };

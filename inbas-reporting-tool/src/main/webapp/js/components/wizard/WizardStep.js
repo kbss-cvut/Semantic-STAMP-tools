@@ -18,7 +18,7 @@ var WizardStep = React.createClass({
 
     propTypes: {
         onClose: React.PropTypes.func,
-        onFinish: React.PropTypes.func,
+        onFinish: React.PropTypes.func.isRequired,
         onAdvance: React.PropTypes.func,
         onRetreat: React.PropTypes.func,
         onNext: React.PropTypes.func,
@@ -75,7 +75,7 @@ var WizardStep = React.createClass({
     },
 
     onFinish: function () {
-        this.props.onFinish();
+        this.props.onFinish(this.getStepData);
     },
 
     enableNext: function () {
@@ -94,8 +94,8 @@ var WizardStep = React.createClass({
                                       bsSize='small'>{this.i18n('wizard.previous')}</Button>);
         }
         var advanceButton = this.renderAdvanceButton();
-        var cancelButton = (<Button onClick={this.props.onClose} bsStyle='primary'
-                                    bsSize='small'>{this.i18n('cancel')}</Button>);
+        var cancelButton = (
+            <Button onClick={this.props.onClose} bsStyle='primary' bsSize='small'>{this.i18n('cancel')}</Button>);
         var error = null;
         if (this.state.currentError) {
             error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);

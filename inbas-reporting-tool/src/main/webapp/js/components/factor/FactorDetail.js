@@ -122,7 +122,7 @@ var FactorDetail = React.createClass({
         };
         if (data.stepData) {
             for (var i = 0, len = data.stepData.length; i < len; i++) {
-                statement.question.subQuestions[i] = QuestionAnswerProcessor.processQuestionAnswerHierarchy(data.stepData[i].question);
+                statement.question.subQuestions[i] = QuestionAnswerProcessor.processQuestionAnswerHierarchy(data.stepData[i]);
             }
         }
         this.setState({statement: statement});

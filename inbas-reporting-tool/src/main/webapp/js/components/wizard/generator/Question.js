@@ -32,7 +32,7 @@ export default class Question extends React.Component {
     _onChange(att, valueIndex, newValue) {
         var newState = assign({}, this.props.question);
         newState[att][valueIndex] = newValue;
-        this.props.onChange(newState);
+        this.props.onChange(this.props.index, newState);
     }
 
     render() {

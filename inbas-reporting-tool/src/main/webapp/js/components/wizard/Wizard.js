@@ -36,16 +36,15 @@ var Wizard = React.createClass({
     },
 
     onAdvance: function (dataCallback) {
-        if (this.state.currentStep === this.props.steps.length - 1) {
-            return;
+        var change = {};
+        if (this.state.currentStep !== this.props.steps.length - 1) {
+            this.props.steps[this.state.currentStep + 1].visited = true;
+            change.currentStep = this.state.currentStep + 1;
         }
-        this.props.steps[this.state.currentStep + 1].visited = true;
         var stepData = this.state.stepData.slice();
         stepData[this.state.currentStep] = dataCallback();
-        this.setState({
-            currentStep: this.state.currentStep + 1,
-            stepData: stepData
-        });
+        change.stepData = stepData;
+        this.setState(change);
     },
 
     onRetreat: function () {
@@ -57,11 +56,13 @@ var Wizard = React.createClass({
         });
     },
 
-    onFinish: function (errCallback) {
+    onFinish: function (dataCallback, errCallback) {
         var data = {
             data: this.state.data,
-            stepData: this.state.stepData
+            stepData: this.state.stepData.slice()
         };
+        // Get data from the last executed step, as they may not have been merged into the wizard's state, yet
+        data.stepData[this.state.currentStep] = dataCallback();
         this.props.onFinish(data, this.props.onClose, errCallback);
     },
 
@@ -137,7 +138,8 @@ var Wizard = React.createClass({
     },
 
     initComponent: function () {
-        var step = this.props.steps[this.state.currentStep];
+        var step = this.props.steps[this.state.currentStep],
+            stepData = this.state.stepData[this.state.currentStep] ? assign({}, step.data, this.state.stepData[this.state.currentStep]) : step.data;
 
         return React.createElement(WizardStep, {
             key: 'step' + this.state.currentStep,
@@ -153,7 +155,7 @@ var Wizard = React.createClass({
             component: step.component,
             title: step.name,
             data: this.state.data,
-            stepData: step.data,
+            stepData: stepData,
             isFirstStep: this.state.currentStep === 0,
             isLastStep: this.state.currentStep === this.props.steps.length - 1,
             defaultNextDisabled: step.defaultNextDisabled
