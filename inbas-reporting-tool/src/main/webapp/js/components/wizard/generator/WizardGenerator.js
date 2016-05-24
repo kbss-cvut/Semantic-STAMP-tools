@@ -5,6 +5,7 @@ var jsonld = require('jsonld');
 var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
 var Logger = require('../../../utils/Logger');
+var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
 
 var GeneratedStep = require('./GeneratedStep').default;
@@ -40,22 +41,21 @@ var WizardGenerator = {
 
     _constructWizardSteps: function (structure) {
         var form = structure['@graph'],
+            formElements,
             item,
             steps = [],
             i, len;
 
         for (i = 0, len = form.length; i < len; i++) {
             item = form[i];
-            if (item['@type'] && this._isForm(item)) {
-                form = item[Constants.HAS_SUBQUESTION];
+            if (this._isForm(item)) {
+                form = item;
                 break;
             }
         }
-        for (i = 0, len = form.length; i < len; i++) {
-            item = form[i];
-            if (!this._isFormElement(item)) {
-                continue;
-            }
+        formElements = form[Constants.HAS_SUBQUESTION];
+        for (i = 0, len = formElements.length; i < len; i++) {
+            item = formElements[i];
             if (this._isWizardStep(item)) {
                 steps.push({
                     name: item[Vocabulary.RDFS_LABEL],
@@ -69,21 +69,12 @@ var WizardGenerator = {
         return steps;
     },
 
-    _isFormElement: function (item) {
-        return item['@type'] && this._isQuestion(item);
-    },
-
     _isForm: function (item) {
-        return item['@type'].indexOf(Constants.FORM) !== -1;
+        return Utils.hasValue(item, '@type', Constants.FORM);
     },
 
     _isWizardStep: function (item) {
-        //TODO
-        return true;
-    },
-
-    _isQuestion: function (item) {
-        return item['@type'].indexOf(Constants.QUESTION) !== -1;
+        return Utils.hasValue(item, Constants.LAYOUT_CLASS, Constants.WIZARD_STEP);
     }
 };
 

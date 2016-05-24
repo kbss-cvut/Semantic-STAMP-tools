@@ -20,14 +20,7 @@ var Constants = require('../../../constants/Constants');
 var Vocabulary = require('../../../constants/Vocabulary');
 var EventTypeFactory = require('../../../model/EventTypeFactory');
 var ExternalLink = require('../../misc/ExternalLink').default;
-
-function mapOccurrenceCategory(cat) {
-    return {
-        id: cat['@id'],
-        name: cat[Vocabulary.RDFS_LABEL],
-        description: cat[Vocabulary.RDFS_COMMENT]
-    };
-}
+var Utils = require('../../../utils/Utils');
 
 var OccurrenceClassification = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
@@ -71,15 +64,11 @@ var OccurrenceClassification = React.createClass({
             return;
         }
         var options = data.data;
-        this.setState({occurrenceCategories: options});
+        this.setState({occurrenceCategories: Utils.processTypeaheadOptions(options)});
         var selected = this._resolveSelectedCategory();
         if (selected) {
-            this.refs.occurrenceCategory.selectOption(mapOccurrenceCategory(selected));
+            this.refs.occurrenceCategory.selectOption(selected);
         }
-    },
-
-    _transformOccurrenceCategories: function () {
-        return this.state.occurrenceCategories.map(mapOccurrenceCategory);
     },
 
     onChange: function (e) {
@@ -102,8 +91,7 @@ var OccurrenceClassification = React.createClass({
         var classes = {
                 input: 'form-control'
             },
-            report = this.props.report,
-            categories = this._transformOccurrenceCategories();
+            report = this.props.report;
         return (
             <div className='row'>
                 <div className='col-xs-4'>
@@ -121,7 +109,7 @@ var OccurrenceClassification = React.createClass({
                                placeholder={this.i18n('report.occurrence.category.label')}
                                onOptionSelected={this.onCategorySelect} filterOption='name'
                                value={this._resolveCategoryValue()}
-                               displayOption='name' options={categories}
+                               displayOption='name' options={this.state.occurrenceCategories}
                                customClasses={classes} customListComponent={TypeaheadResultList}/>
                 </div>
                 {this._renderCategoryLink()}
@@ -131,13 +119,15 @@ var OccurrenceClassification = React.createClass({
 
     _resolveCategoryValue: function () {
         var cat = this._resolveSelectedCategory();
-        return cat ? cat[Vocabulary.RDFS_LABEL] : '';
+        return cat ? cat.name : '';
     },
 
     _resolveSelectedCategory: function () {
         var catId = this.props.report.occurrence.eventType,
             categories = this.state.occurrenceCategories;
-        return EventTypeFactory.resolveEventType(catId, categories);
+        return categories.find(function(item) {
+            return item.id === catId;
+        });
     },
 
     _renderCategoryLink: function () {

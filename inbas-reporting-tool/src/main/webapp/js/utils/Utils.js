@@ -167,5 +167,40 @@ module.exports = {
             }
         }
         return res;
+    },
+
+    /**
+     * Checks whether the specified JSON-LD object has the specified property value.
+     *
+     * The property can either have single value, or it can be an array (in which case the value is searched for in the
+     * array).
+     * @param object The object to test
+     * @param property The property to test
+     * @param value The value to look for
+     * @return {*|boolean}
+     */
+    hasValue: function (object, property, value) {
+        return object[property] && (object[property] === value || object[property].indexOf(value) !== -1);
+    },
+
+    /**
+     * Maps the specified id to a name based on a matching item.
+     *
+     * This function assumes that the items have been processed by {@link #jsonLdToTypeaheadOption), so the id should
+     * be equal to one of the item's 'id' attribute, and if it is, the item's 'name' is returned.
+     * @param items The items containing also mapping for the specified value (presumably)
+     * @param id The id to map, probably a URI
+     * @return {*}
+     */
+    idToName: function (items, id) {
+        if (!items) {
+            return id;
+        }
+        for (var i = 0, len = items.length; i < len; i++) {
+            if (items[i].id === id) {
+                return items[i].name;
+            }
+        }
+        return id;
     }
 };

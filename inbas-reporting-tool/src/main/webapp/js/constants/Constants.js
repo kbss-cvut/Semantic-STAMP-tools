@@ -81,7 +81,7 @@ module.exports = {
     OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
 
     // Form Generator
-    FORM: 'http://onto.fel.cvut.cz/ontologies/form/form',
+    FORM: 'http://onto.fel.cvut.cz/ontologies/documentation/form',
     QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
     HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
     HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/form/has-answer',
@@ -90,6 +90,7 @@ module.exports = {
     LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class',
     QUESTION_TYPEAHEAD: 'type-ahead',
     QUESTION_SECTION: 'section',
+    WIZARD_STEP: 'wizard-step',
 
     GENERATED_ROW_SIZE: 1
 };

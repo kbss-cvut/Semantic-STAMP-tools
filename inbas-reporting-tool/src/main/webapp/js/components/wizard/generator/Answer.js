@@ -28,9 +28,17 @@ export default class Answer extends React.Component {
 
     componentWillMount() {
         var question = this.props.question;
-        if (question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS]['@id'] === Constants.QUESTION_TYPEAHEAD) {
-            Actions.loadOptions(question['@id']);
+        if (Answer._isTypeahead(question)) {
+            if (!question[Constants.HAS_OPTION] || question[Constants.HAS_OPTION].length === 0) {
+                Actions.loadOptions(question['@id']);
+            } else {
+                this.setState({options: Utils.processTypeaheadOptions(question[Constants.HAS_OPTION])});
+            }
         }
+    }
+
+    static _isTypeahead(question) {
+        return Utils.hasValue(question, Constants.LAYOUT_CLASS, Constants.QUESTION_TYPEAHEAD);
     }
 
     componentDidMount() {
@@ -69,21 +77,27 @@ export default class Answer extends React.Component {
         var question = this.props.question,
             value = this.props.answer['@value'],
             label = question[Vocabulary.RDFS_LABEL],
+            title = question[Vocabulary.RDFS_COMMENT] ? question[Vocabulary.RDFS_COMMENT] : null,
             component;
 
-        if (Answer._hasOptions(question)) {
+        if (Answer._isTypeahead(question)) {
+            value = Utils.idToName(this.state.options, value);
+            component = <div>
+                <label className='control-label'>{label}</label>
+                <Typeahead className='form-group form-group-sm' formInputOption='id'
+                           title={title} value={value} label={label} placeholder={label} filterOption='name'
+                           displayOption='name' onOptionSelected={this._onOptionSelected}
+                           options={this.state.options} customListComponent={TypeaheadResultList}/>
+            </div>;
+        } else if (Answer._hasOptions(question)) {
             component =
-                <Input type='select' label={label} value={value} disabled={question[Constants.IS_DISABLED]}>
+                <Input type='select' label={label} value={value} title={title}
+                       disabled={question[Constants.IS_DISABLED]}>
                     {this._generateSelectOptions(question[Constants.HAS_OPTION])}
                 </Input>;
-        } else if (question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS]['@id'] === Constants.QUESTION_TYPEAHEAD) {
-            component = <Typeahead className='form-group form-group-sm' formInputOption='id'
-                                   title={question[Vocabulary.RDFS_COMMENT]} value={value}
-                                   placeholder={question[Vocabulary.RDFS_LABEL]} filterOption='name'
-                                   displayOption='name' onOptionSelected={this._onOptionSelected}
-                                   options={this.state.options} customListComponent={TypeaheadResultList}/>;
         } else {
-            component = <Input type='text' label={label} value={value} disabled={question[Constants.IS_DISABLED]}/>;
+            component = <Input type='text' label={label} title={title} value={value}
+                               disabled={question[Constants.IS_DISABLED]}/>;
         }
         return component;
     }

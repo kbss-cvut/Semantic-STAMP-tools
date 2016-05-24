@@ -113,12 +113,12 @@ var FactorDetail = React.createClass({
 
     onUpdateFactorDetails: function (data, closeCallback) {
         var statement = assign({}, this.state.statement);
-        statement.question = {
+        statement.form = {
             subQuestions: []
         };
         if (data.stepData) {
             for (var i = 0, len = data.stepData.length; i < len; i++) {
-                statement.question.subQuestions[i] = QuestionAnswerProcessor.processQuestionAnswerHierarchy(data.stepData[i].question);
+                statement.form.subQuestions[i] = QuestionAnswerProcessor.processQuestionAnswerHierarchy(data.stepData[i].question);
             }
         }
         this.setState({statement: statement});
