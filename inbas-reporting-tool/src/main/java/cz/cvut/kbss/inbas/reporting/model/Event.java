@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.inbas.reporting.model.qam.Question;
+import cz.cvut.kbss.inbas.reporting.model.qam.Form;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -39,7 +39,7 @@ public class Event implements FactorGraphItem, Serializable {
     private Integer index;
 
     @OWLObjectProperty(iri = Vocabulary.p_hasQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Question question;
+    private Form form;
 
     @Types
     private Set<String> types;
@@ -55,8 +55,8 @@ public class Event implements FactorGraphItem, Serializable {
         if (other.types != null) {
             this.types = new HashSet<>(other.types);
         }
-        if (other.question != null) {
-            this.question = new Question(other.question);
+        if (other.form != null) {
+            this.form = new Form(other.form);
         }
     }
 
@@ -157,12 +157,12 @@ public class Event implements FactorGraphItem, Serializable {
         this.index = index;
     }
 
-    public Question getQuestion() {
-        return question;
+    public Form getForm() {
+        return form;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setForm(Form form) {
+        this.form = form;
     }
 
     public Set<String> getTypes() {

@@ -170,7 +170,7 @@ public abstract class DtoMapper {
         dto.setStartTime(occurrence.getStartTime());
         dto.setEndTime(occurrence.getEndTime());
         dto.setEventType(occurrence.getEventType());
-        dto.setQuestion(occurrence.getQuestion());
+        dto.setForm(occurrence.getForm());
         dto.setReferenceId(random.nextInt());
         if (eventDtoRegistry == null) {
             reset();

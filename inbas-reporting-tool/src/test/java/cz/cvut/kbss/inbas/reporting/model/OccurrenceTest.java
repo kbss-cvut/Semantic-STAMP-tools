@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.model.qam.Form;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.model.util.EventPositionComparator;
 import org.junit.Test;
@@ -150,10 +151,13 @@ public class OccurrenceTest {
         final Occurrence occurrence = Generator.generateOccurrence();
         final Question question = new Question();
         question.setUri(URI.create(cz.cvut.kbss.inbas.reporting.model.qam.Vocabulary.Question + "instance117"));
-        occurrence.setQuestion(question);
+        final Form form = new Form();
+        form.setSubQuestions(Collections.singleton(question));
+        occurrence.setForm(form);
 
         final Occurrence copy = new Occurrence(occurrence);
-        assertNotNull(copy.getQuestion());
-        assertNotSame(question, copy.getQuestion());
+        assertNotNull(copy.getForm());
+        assertNotSame(question, copy.getForm());
+        assertEquals(form.getSubQuestions().size(), copy.getForm().getSubQuestions().size());
     }
 }

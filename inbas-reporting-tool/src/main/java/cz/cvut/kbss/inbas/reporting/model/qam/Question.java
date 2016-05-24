@@ -7,6 +7,7 @@ package cz.cvut.kbss.inbas.reporting.model.qam;
 
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @OWLClass(iri = Vocabulary.Question)
-public class Question {
+public class Question implements Serializable, HasQuestions {
 
     @Id(generated = true)
     private URI uri;
@@ -54,10 +55,12 @@ public class Question {
         this.uri = uri;
     }
 
+    @Override
     public Set<Question> getSubQuestions() {
         return subQuestions;
     }
 
+    @Override
     public void setSubQuestions(Set<Question> subQuestions) {
         this.subQuestions = subQuestions;
     }
