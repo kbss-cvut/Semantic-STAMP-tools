@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.reporting.dto.event;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import cz.cvut.kbss.inbas.reporting.model.qam.Form;
+import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 
 import java.net.URI;
@@ -26,7 +26,7 @@ public class EventDto implements HasUri {
 
     private Integer referenceId;
 
-    private Form form;
+    private Question question;
 
     private Integer index;
 
@@ -79,12 +79,12 @@ public class EventDto implements HasUri {
         this.referenceId = referenceId;
     }
 
-    public Form getForm() {
-        return form;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setForm(Form form) {
-        this.form = form;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     public Integer getIndex() {

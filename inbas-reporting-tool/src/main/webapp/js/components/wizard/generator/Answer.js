@@ -91,12 +91,12 @@ export default class Answer extends React.Component {
             </div>;
         } else if (Answer._hasOptions(question)) {
             component =
-                <Input type='select' label={label} value={value} title={title}
+                <Input type='select' label={label} value={value} title={title} onChange={this.onChange}
                        disabled={question[Constants.IS_DISABLED]}>
                     {this._generateSelectOptions(question[Constants.HAS_OPTION])}
                 </Input>;
         } else {
-            component = <Input type='text' label={label} title={title} value={value}
+            component = <Input type='text' label={label} title={title} value={value} onChange={this.onChange}
                                disabled={question[Constants.IS_DISABLED]}/>;
         }
         return component;

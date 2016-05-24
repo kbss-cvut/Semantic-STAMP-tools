@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @OWLClass(iri = Vocabulary.Question)
-public class Question implements Serializable, HasQuestions {
+public class Question implements Serializable {
 
     @Id(generated = true)
     private URI uri;
@@ -55,12 +55,10 @@ public class Question implements Serializable, HasQuestions {
         this.uri = uri;
     }
 
-    @Override
     public Set<Question> getSubQuestions() {
         return subQuestions;
     }
 
-    @Override
     public void setSubQuestions(Set<Question> subQuestions) {
         this.subQuestions = subQuestions;
     }

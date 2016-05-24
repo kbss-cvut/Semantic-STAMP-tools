@@ -5,8 +5,6 @@ import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Factor;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.qam.Answer;
-import cz.cvut.kbss.inbas.reporting.model.qam.Form;
-import cz.cvut.kbss.inbas.reporting.model.qam.HasQuestions;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -106,7 +104,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
         dao.persist(occurrence);
         final EntityManager em = emf.createEntityManager();
         try {
-            verifyQuestions(occurrence.getForm(), question -> {
+            verifyQuestions(occurrence.getQuestion(), question -> {
                 final Question res = em.find(Question.class, question.getUri());
                 assertNotNull(res);
                 assertEquals(question.getTypes().size(), res.getTypes().size());
@@ -127,9 +125,10 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
 
     private void generateQuestions(Occurrence occurrence) {
         final int maxDepth = Generator.randomInt(10);
-        final Form form = new Form();
-        occurrence.setForm(form);
-        generateQuestions(form, 0, maxDepth);
+        final Question root = question();
+        occurrence.setQuestion(root);
+        root.setAnswers(Collections.singleton(answer()));
+        generateQuestions(root, 0, maxDepth);
     }
 
     private Question question() {
@@ -148,7 +147,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
         return a;
     }
 
-    private void generateQuestions(HasQuestions parent, int depth, int maxDepth) {
+    private void generateQuestions(Question parent, int depth, int maxDepth) {
         if (depth >= maxDepth) {
             return;
         }
@@ -158,10 +157,6 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
             parent.getSubQuestions().add(child);
             generateQuestions(child, depth + 1, maxDepth);
         }
-    }
-
-    private void verifyQuestions(Form form, Consumer<Question> verification) {
-        form.getSubQuestions().forEach(q -> verifyQuestions(q, verification));
     }
 
     private void verifyQuestions(Question question, Consumer<Question> verification) {
@@ -178,7 +173,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
         dao.remove(occurrence);
         final EntityManager em = emf.createEntityManager();
         try {
-            verifyQuestions(occurrence.getForm(), question -> {
+            verifyQuestions(occurrence.getQuestion(), question -> {
                 assertNull(em.find(Question.class, question.getUri()));
                 question.getAnswers().forEach(a -> assertNull(em.find(Answer.class, a.getUri())));
             });

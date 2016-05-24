@@ -21,7 +21,6 @@ public class Vocabulary {
     public static final String Answer = "http://onto.fel.cvut.cz/ontologies/documentation/logical_record";
     public static final String Question = "http://onto.fel.cvut.cz/ontologies/documentation/question";
     public static final String Value = "http://onto.fel.cvut.cz/ontologies/documentation/value";
-    public static final String Form = "http://onto.fel.cvut.cz/ontologies/documentation/form";
     
     // import metadata
     public static final String isMappedToASO = "http://onto.fel.cvut.cz/ontologies/integration/integrated";
