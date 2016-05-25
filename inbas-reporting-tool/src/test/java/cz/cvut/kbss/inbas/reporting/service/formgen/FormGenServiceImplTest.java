@@ -74,7 +74,7 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
         final EntityManager em = emf.createEntityManager();
         try {
             assertTrue(em.createNativeQuery("ASK { ?x a ?report .} ", Boolean.class).setParameter("report", URI.create(
-                    Vocabulary.OccurrenceReport)).getSingleResult());
+                    Vocabulary.s_c_occurrence_report)).getSingleResult());
         } finally {
             em.close();
         }

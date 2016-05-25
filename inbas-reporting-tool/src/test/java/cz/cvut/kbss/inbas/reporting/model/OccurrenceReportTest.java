@@ -16,7 +16,7 @@ public class OccurrenceReportTest {
     @Test
     public void newInstanceContainsReportInTypes() {
         final OccurrenceReport report = new OccurrenceReport();
-        assertTrue(report.getTypes().contains(Vocabulary.Report));
+        assertTrue(report.getTypes().contains(Vocabulary.s_c_report));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class OccurrenceReportTest {
     public void toReportDtoAddsOccurrenceReportToTypes() {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
         final ReportDto dto = report.toReportDto();
-        assertTrue(dto.getTypes().contains(Vocabulary.OccurrenceReport));
+        assertTrue(dto.getTypes().contains(Vocabulary.s_c_occurrence_report));
     }
 
     @Test

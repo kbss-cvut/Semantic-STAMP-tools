@@ -107,7 +107,7 @@ public class DtoMapperTest {
 
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequest() {
         final CorrectiveMeasureRequest request = new CorrectiveMeasureRequest();
-        request.setUri(URI.create(Vocabulary.CorrectiveMeasureRequest + "#req"));
+        request.setUri(URI.create(Vocabulary.s_c_corrective_measure_request + "#req"));
         request.setDescription("Sample corrective measure.");
         return request;
     }
@@ -126,7 +126,7 @@ public class DtoMapperTest {
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequestBasedOnEvent() {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
         final Event event = new Event();
-        event.setUri(URI.create(Vocabulary.Event + "#instance"));
+        event.setUri(URI.create(Vocabulary.s_c_Event + "#instance"));
         event.setEventType(Generator.generateEventType());
         req.setBasedOnEvent(event);
         return req;
@@ -149,7 +149,7 @@ public class DtoMapperTest {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
         final Occurrence occurrence = Generator.generateOccurrence();
         occurrence.setKey(IdentificationUtils.generateKey());
-        occurrence.setUri(URI.create(Vocabulary.Occurrence + "#instance"));
+        occurrence.setUri(URI.create(Vocabulary.s_c_Occurrence + "#instance"));
         req.setBasedOnOccurrence(occurrence);
         return req;
     }
@@ -170,7 +170,7 @@ public class DtoMapperTest {
 
     private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDto() {
         final CorrectiveMeasureRequestDto dto = new CorrectiveMeasureRequestDto();
-        dto.setUri(URI.create(Vocabulary.CorrectiveMeasureRequest + "#req"));
+        dto.setUri(URI.create(Vocabulary.s_c_corrective_measure_request + "#req"));
         dto.setDescription("Sample corrective measure.");
         return dto;
     }
@@ -219,7 +219,7 @@ public class DtoMapperTest {
         final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
         final EventDto eventDto = new EventDto();
         eventDto.setEventType(Generator.generateEventType());
-        eventDto.setUri(URI.create(Vocabulary.Event + "#instance"));
+        eventDto.setUri(URI.create(Vocabulary.s_c_Event + "#instance"));
         dto.setBasedOn(eventDto);
         return dto;
     }
@@ -240,7 +240,7 @@ public class DtoMapperTest {
     private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDtoBasedOnOccurrence() {
         final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
         final OccurrenceDto occurrenceDto = new OccurrenceDto();
-        occurrenceDto.setUri(URI.create(Vocabulary.Occurrence + "#instance"));
+        occurrenceDto.setUri(URI.create(Vocabulary.s_c_Occurrence + "#instance"));
         occurrenceDto.setKey(IdentificationUtils.generateKey());
         occurrenceDto.setName("Some occurrence");
         occurrenceDto.setEventType(Generator.generateEventType());

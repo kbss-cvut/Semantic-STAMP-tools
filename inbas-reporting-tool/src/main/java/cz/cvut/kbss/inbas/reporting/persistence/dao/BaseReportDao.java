@@ -36,10 +36,10 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
                 "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
                 "} ORDER BY DESC(?startTime) DESC(?revision)", type)
                  .setParameter("type", typeUri)
-                 .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
-                 .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
-                 .setParameter("hasOccurrence", URI.create(Vocabulary.p_documents))
-                 .setParameter("hasStartTime", URI.create(Vocabulary.p_startTime))
+                 .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
+                 .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
+                 .setParameter("hasOccurrence", URI.create(Vocabulary.s_p_documents))
+                 .setParameter("hasStartTime", URI.create(Vocabulary.s_p_has_start_time))
                  .getResultList();
     }
 
@@ -62,8 +62,8 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
                     "{ SELECT (MAX(?rev) AS ?maxRev) WHERE " +
                     "{ ?y ?hasFileNumber ?fileNo ; ?hasRevision ?rev . } } FILTER (?revision = ?maxRev) }", type)
                      .setParameter("type", typeUri)
-                     .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
-                     .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
+                     .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
+                     .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                      .setParameter("fileNo", fileNumber).getSingleResult();
         } catch (NoResultException e) {
             return null;
@@ -90,9 +90,9 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
                     "?hasFileNumber ?fileNo ;" +
                     "?hasRevision ?revision . }", type)
                      .setParameter("type", typeIri)
-                     .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
+                     .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                      .setParameter("fileNo", fileNumber)
-                     .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
+                     .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
                      .setParameter("revision", revision)
                      .getSingleResult();
         } catch (NoResultException e) {
@@ -131,7 +131,7 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
 
     private List<T> loadChain(Long fileNumber, EntityManager em) {
         return em.createNativeQuery("SELECT ?x WHERE { ?x a ?type; ?hasFileNumber ?fileNo . }", type)
-                 .setParameter("type", typeIri).setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
+                 .setParameter("type", typeIri).setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                  .setParameter("fileNo", fileNumber).getResultList();
     }
 }

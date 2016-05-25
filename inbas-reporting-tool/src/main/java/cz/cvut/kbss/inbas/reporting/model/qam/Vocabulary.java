@@ -18,24 +18,24 @@ public class Vocabulary {
     // |            Classes         |
     // ------------------------------
 
-    public static final String Answer = "http://onto.fel.cvut.cz/ontologies/documentation/logical_record";
-    public static final String Question = "http://onto.fel.cvut.cz/ontologies/documentation/question";
-    public static final String Value = "http://onto.fel.cvut.cz/ontologies/documentation/value";
+    public static final String Answer = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_c_answer;
+    public static final String Question = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_c_question;
+//    public static final String Value = "http://onto.fel.cvut.cz/ontologies/documentation/value";
     
     // import metadata
-    public static final String isMappedToASO = "http://onto.fel.cvut.cz/ontologies/integration/integrated";
+//    public static final String isMappedToASO = "http://onto.fel.cvut.cz/ontologies/integration/integrated";
             
     // ------------------------------
     // |         Properties         |
     // ------------------------------
 
-    public static final String hasValue = "http://onto.fel.cvut.cz/ontologies/documentation/has_value";
-    public static final String hasURIValue = "http://onto.fel.cvut.cz/ontologies/documentation/has_uri_value";
-    public static final String hasRelationToAnswer = "http://onto.fel.cvut.cz/ontologies/documentation/has_relation_to_answer";
-    public static final String hasAnswer = "http://onto.fel.cvut.cz/ontologies/documentation/has_answer";
-    public static final String hasRelatedQuestion = "http://onto.fel.cvut.cz/ontologies/documentation/has_related_question";
-    public static final String hasContext = "http://onto.fel.cvut.cz/ontologies/documentation/has_context";
-    public static final String hasRelationToContext = "http://onto.fel.cvut.cz/ontologies/documentation/has_context";
-    public static final String hasPart = "http://onto.fel.cvut.cz/ontologies/ufo/has_part";
+    public static final String hasValue = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_data_value;// "http://onto.fel.cvut.cz/ontologies/documentation/has_value";
+    public static final String hasURIValue = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_object_value;
+//    public static final String hasRelationToAnswer = "http://onto.fel.cvut.cz/ontologies/documentation/has_relation_to_answer";
+    public static final String hasAnswer = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_answer;
+    public static final String hasRelatedQuestion = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_related_question;
+//    public static final String hasContext = "http://onto.fel.cvut.cz/ontologies/documentation/has_context";
+//    public static final String hasRelationToContext = "http://onto.fel.cvut.cz/ontologies/documentation/has_context";
+//    public static final String hasPart = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_part;
     
 }

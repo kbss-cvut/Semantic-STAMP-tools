@@ -14,25 +14,25 @@ import java.util.Set;
  * inheritance in JOPA. This should be handled on DTO level, where these fields should be replaced with ones using
  * inheritance between agent - Person/Organization and Event - Occurrence.
  */
-@OWLClass(iri = Vocabulary.CorrectiveMeasureRequest)
+@OWLClass(iri = Vocabulary.s_c_corrective_measure_request)
 public class CorrectiveMeasureRequest implements HasUri, Serializable {
 
     @Id(generated = true)
     private URI uri;
 
-    @OWLDataProperty(iri = Vocabulary.p_description)
+    @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String description;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasResponsiblePerson, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_responsible_person, fetch = FetchType.EAGER)
     private Set<Person> responsiblePersons;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasResponsibleOrganization, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_responsible_organization, fetch = FetchType.EAGER)
     private Set<Organization> responsibleOrganizations;
 
-    @OWLObjectProperty(iri = Vocabulary.p_basedOnEvent, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_based_on_event, fetch = FetchType.EAGER)
     private Event basedOnEvent;
 
-    @OWLObjectProperty(iri = Vocabulary.p_basedOnOccurrence, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_based_on_occurrence, fetch = FetchType.EAGER)
     private Occurrence basedOnOccurrence;
 
     public CorrectiveMeasureRequest() {

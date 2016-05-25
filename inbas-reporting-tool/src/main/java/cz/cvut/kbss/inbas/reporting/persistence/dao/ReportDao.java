@@ -32,7 +32,7 @@ public class ReportDao {
         try {
             final List<String> types = em
                     .createNativeQuery("SELECT ?type WHERE { ?x a ?type ; ?hasKey ?key . }", String.class)
-                    .setParameter("hasKey", URI.create(Vocabulary.p_hasKey))
+                    .setParameter("hasKey", URI.create(Vocabulary.s_p_has_key))
                     .setParameter("key", key, Constants.PU_LANGUAGE)
                     .getResultList();
             return new HashSet<>(types);
@@ -55,7 +55,7 @@ public class ReportDao {
         try {
             final List<String> types = em
                     .createNativeQuery("SELECT DISTINCT ?type WHERE { ?x a ?type ; ?hasFileNumber ?fileNo . }",
-                            String.class).setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
+                            String.class).setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                     .setParameter("fileNo", fileNumber).getResultList();
             return new HashSet<>(types);
         } finally {
@@ -80,11 +80,11 @@ public class ReportDao {
                             "?hasFileNumber ?fileNo ;" +
                             "?hasKey ?key ." +
                             "} ORDER BY DESC(?revision)")
-                                .setParameter("type", URI.create(Vocabulary.Report))
-                                .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
-                                .setParameter("wasCreated", URI.create(Vocabulary.p_dateCreated))
-                                .setParameter("hasKey", URI.create(Vocabulary.p_hasKey))
-                                .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
+                                .setParameter("type", URI.create(Vocabulary.s_c_report))
+                                .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
+                                .setParameter("wasCreated", URI.create(Vocabulary.s_p_created))
+                                .setParameter("hasKey", URI.create(Vocabulary.s_p_has_key))
+                                .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                                 .setParameter("fileNo", fileNumber)
                                 .getResultList();
             final List<ReportRevisionInfo> result = new ArrayList<>(rows.size());

@@ -151,7 +151,7 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
         res.setLastModified(lastModified);
         res.setRevision(revision);
         res.setTypes(types != null ? new HashSet<>(types) : new HashSet<>());
-        res.getTypes().add(Vocabulary.OccurrenceReport);
+        res.getTypes().add(Vocabulary.s_c_occurrence_report);
         assert occurrence != null;
         res.setIdentification(occurrence.getName());
         res.setDate(occurrence.getStartTime());

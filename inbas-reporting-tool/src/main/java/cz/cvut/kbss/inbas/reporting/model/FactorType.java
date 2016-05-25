@@ -7,8 +7,8 @@ import java.net.URI;
  */
 public enum FactorType {
 
-    CAUSES(Vocabulary.p_causes), CONTRIBUTES_TO(Vocabulary.p_contributesTo), MITIGATES(
-            Vocabulary.p_mitigates), PREVENTS(Vocabulary.p_prevents);
+    CAUSES(Vocabulary.s_p_causes), CONTRIBUTES_TO(Vocabulary.s_p_contributes_to), MITIGATES(
+            Vocabulary.s_p_mitigates), PREVENTS(Vocabulary.s_p_prevents);
 
     private final URI uri;
 

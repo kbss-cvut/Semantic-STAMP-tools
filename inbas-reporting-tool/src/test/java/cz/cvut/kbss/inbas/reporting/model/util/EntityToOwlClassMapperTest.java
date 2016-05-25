@@ -10,7 +10,7 @@ public class EntityToOwlClassMapperTest {
 
     @Test
     public void getOWlClassForEntityExtractsOwlClassIriFromEntityClass() {
-        assertEquals(Vocabulary.Occurrence, EntityToOwlClassMapper.getOwlClassForEntity(Occurrence.class));
+        assertEquals(Vocabulary.s_c_Occurrence, EntityToOwlClassMapper.getOwlClassForEntity(Occurrence.class));
     }
 
     @Test(expected = IllegalArgumentException.class)

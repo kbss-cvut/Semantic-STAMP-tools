@@ -29,7 +29,7 @@ public class OrganizationDao extends DerivableUriDao<Organization> {
         final EntityManager em = entityManager();
         try {
             return em.createNativeQuery("SELECT ?x WHERE { ?x ?hasName ?name . }", Organization.class)
-                     .setParameter("hasName", URI.create(Vocabulary.p_name))
+                     .setParameter("hasName", URI.create(Vocabulary.s_p_label))
                      .setParameter("name", name, Constants.PU_LANGUAGE).getSingleResult();
         } catch (NoResultException e) {
             return null;

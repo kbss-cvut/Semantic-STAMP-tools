@@ -6,18 +6,18 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 
-@OWLClass(iri = Vocabulary.Factor)
+@OWLClass(iri = Vocabulary.s_c_factor)
 public class Factor implements HasUri, Serializable {
 
     @Id(generated = true)
     private URI uri;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER)
     private Event event;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_factorType)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_factor_type)
     private FactorType type;
 
     @Override

@@ -26,7 +26,7 @@ public class PersonTest {
 
     @Test
     public void newInstanceHasAgentInTypes() {
-        assertTrue(person.getTypes().contains(Vocabulary.Agent));
+        assertTrue(person.getTypes().contains(Vocabulary.s_c_Agent));
     }
 
     @Test

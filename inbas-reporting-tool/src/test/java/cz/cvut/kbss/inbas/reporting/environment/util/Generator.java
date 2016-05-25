@@ -191,7 +191,7 @@ public class Generator {
             final Event child = new Event();
             child.setStartTime(new Date());
             child.setEndTime(new Date());
-            child.setUri(URI.create(Vocabulary.Event + "-instance" + randomInt()));
+            child.setUri(URI.create(Vocabulary.s_c_Event + "-instance" + randomInt()));
             child.setEventType(generateEventType());
             child.setIndex(i);
             parent.getChildren().add(child);

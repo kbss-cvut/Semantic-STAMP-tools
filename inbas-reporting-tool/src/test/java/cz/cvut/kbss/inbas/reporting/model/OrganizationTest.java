@@ -12,7 +12,7 @@ public class OrganizationTest {
     @Test
     public void newInstanceHasAgentInTypes() {
         final Organization organization = new Organization();
-        assertTrue(organization.getTypes().contains(Vocabulary.Agent));
+        assertTrue(organization.getTypes().contains(Vocabulary.s_c_Agent));
     }
 
     @Test(expected = IllegalStateException.class)

@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
  */
 public class EventFactorsSerializationTest {
 
-    private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
+    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part);
     private static final String NODE_URI_PREFIX = "http://krizik.felk.cvut.cz/node-";
 
     private DtoMapper dtoMapper;
@@ -56,7 +56,7 @@ public class EventFactorsSerializationTest {
     private static Occurrence occurrence() {
         final Occurrence occurrence = new Occurrence();
         occurrence.setName("Test");
-        occurrence.setUri(URI.create(Vocabulary.Occurrence + "#instance-" + Generator.randomInt()));
+        occurrence.setUri(URI.create(Vocabulary.s_c_Occurrence + "#instance-" + Generator.randomInt()));
         return occurrence;
     }
 
@@ -74,7 +74,7 @@ public class EventFactorsSerializationTest {
 
     private static Event event() {
         final Event evt = new Event();
-        evt.setUri(URI.create(Vocabulary.Event + "#instance-" + Generator.randomInt()));
+        evt.setUri(URI.create(Vocabulary.s_c_Event + "#instance-" + Generator.randomInt()));
         return evt;
     }
 

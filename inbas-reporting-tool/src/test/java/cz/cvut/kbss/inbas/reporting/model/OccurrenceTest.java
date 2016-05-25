@@ -17,7 +17,7 @@ public class OccurrenceTest {
     @Test
     public void newInstanceHasEventInTypes() {
         final Occurrence o = new Occurrence();
-        assertTrue(o.getTypes().contains(Vocabulary.Event));
+        assertTrue(o.getTypes().contains(Vocabulary.s_c_Event));
     }
 
     @Test
@@ -133,7 +133,7 @@ public class OccurrenceTest {
         e.setEventType(Generator.generateEventType());
         e.setStartTime(new Date());
         e.setEndTime(new Date());
-        e.setUri(URI.create(Vocabulary.Event + "-instance" + Generator.randomInt()));
+        e.setUri(URI.create(Vocabulary.s_c_Event + "-instance" + Generator.randomInt()));
         return e;
     }
 
@@ -149,7 +149,7 @@ public class OccurrenceTest {
     public void copyConstructorCopiesQuestionInstance() {
         final Occurrence occurrence = Generator.generateOccurrence();
         final Question question = new Question();
-        question.setUri(URI.create(cz.cvut.kbss.inbas.reporting.model.qam.Vocabulary.Question + "instance117"));
+        question.setUri(URI.create(Vocabulary.s_c_question + "instance117"));
         occurrence.setQuestion(question);
 
         final Occurrence copy = new Occurrence(occurrence);

@@ -250,7 +250,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         try {
             final Integer cnt = em
                     .createNativeQuery("SELECT (count(?x) as ?count) WHERE {?x a ?measureType . }", Integer.class)
-                    .setParameter("measureType", URI.create(Vocabulary.CorrectiveMeasureRequest)).getSingleResult();
+                    .setParameter("measureType", URI.create(Vocabulary.s_c_corrective_measure_request)).getSingleResult();
             assertEquals(report.getCorrectiveMeasures().size(), cnt.intValue());
         } finally {
             em.close();
@@ -340,7 +340,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
             for (CorrectiveMeasureRequest cmr : report.getCorrectiveMeasures()) {
                 final Boolean res = em.createNativeQuery("ASK WHERE { ?x a ?type . }", Boolean.class)
                                       .setParameter("x", cmr.getUri())
-                                      .setParameter("type", URI.create(Vocabulary.CorrectiveMeasureRequest))
+                                      .setParameter("type", URI.create(Vocabulary.s_c_corrective_measure_request))
                                       .getSingleResult();
                 assertFalse(res);
             }

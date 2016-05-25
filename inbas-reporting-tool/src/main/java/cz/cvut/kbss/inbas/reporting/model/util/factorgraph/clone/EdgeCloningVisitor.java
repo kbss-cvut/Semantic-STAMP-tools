@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class EdgeCloningVisitor implements FactorGraphEdgeVisitor {
 
-    private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
+    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part);
 
     private final Map<URI, FactorGraphItem> instanceMap;
 

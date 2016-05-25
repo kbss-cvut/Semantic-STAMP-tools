@@ -11,25 +11,25 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@OWLClass(iri = Vocabulary.Person)
+@OWLClass(iri = Vocabulary.s_c_Person)
 public class Person implements HasDerivableUri, Serializable {
 
     @Id
     private URI uri;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_firstName)
+    @OWLDataProperty(iri = Vocabulary.s_p_firstName)
     private String firstName;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_lastName)
+    @OWLDataProperty(iri = Vocabulary.s_p_lastName)
     private String lastName;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_username)
+    @OWLDataProperty(iri = Vocabulary.s_p_accountName)
     private String username;
 
-    @OWLDataProperty(iri = Vocabulary.p_password)
+    @OWLDataProperty(iri = Vocabulary.s_p_password)
     private String password;
 
     @Properties
@@ -41,7 +41,7 @@ public class Person implements HasDerivableUri, Serializable {
     public Person() {
         this.types = new HashSet<>(4);
         // Person is an Agent
-        types.add(Vocabulary.Agent);
+        types.add(Vocabulary.s_c_Agent);
     }
 
     @Override
