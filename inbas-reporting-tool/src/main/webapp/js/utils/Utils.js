@@ -132,6 +132,9 @@ module.exports = {
      * @param options The options to process
      */
     processTypeaheadOptions: function (options) {
+        if (!options) {
+            return [];
+        }
         return options.map(function (item) {
             return this.jsonLdToTypeaheadOption(item);
         }.bind(this));
