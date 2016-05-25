@@ -99,7 +99,7 @@ var FactorDetail = React.createClass({
 
     onOpenDetails: function () {
         this.setState({showMask: true});
-        WizardGenerator.generateWizard(this.props.getReport(), {'eventType': this.state.eventType.id}, this.props.factor.text, this.openDetailsWizard);
+        WizardGenerator.generateWizard(this.props.getReport(), {'event-type': this.state.eventType.id}, this.props.factor.text, this.openDetailsWizard);
     },
 
     openDetailsWizard: function (wizardProperties) {
