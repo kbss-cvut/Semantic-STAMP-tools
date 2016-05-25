@@ -12,7 +12,7 @@ public class QuestionTest {
     public void copyConstructorCopiesSubQuestions() {
         final Question q = new Question();
         q.setUri(Generator.generateEventType());
-        q.getTypes().add(Generator.generateEventType());
+        q.getTypes().add(Generator.generateEventType().toString());
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final Question child = new Question();
             child.setUri(Generator.generateEventType());

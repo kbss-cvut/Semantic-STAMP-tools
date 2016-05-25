@@ -76,11 +76,11 @@ public class RemoteDataLoader implements DataLoader {
 
     private URI prepareUri(String remoteUrl, Map<String, String> queryParams) {
         final StringBuilder sb = new StringBuilder(remoteUrl);
-        int index = 0;
+        boolean containsQueryString = remoteUrl.matches("^.+\\?.+=.+$");
         for (Map.Entry<String, String> e : queryParams.entrySet()) {
-            sb.append(index == 0 ? '?' : '&');
+            sb.append(!containsQueryString ? '?' : '&');
             sb.append(e.getKey()).append('=').append(e.getValue());
-            index++;
+            containsQueryString = true;
         }
         return URI.create(sb.toString());
     }

@@ -22,7 +22,7 @@ import java.util.*;
 public abstract class DtoMapper {
 
     private final SplittableRandom random = new SplittableRandom();
-    private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
+    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part);
 
     private static final Map<Class<?>, Class<?>> mappedClasses = initMappedClasses();
 

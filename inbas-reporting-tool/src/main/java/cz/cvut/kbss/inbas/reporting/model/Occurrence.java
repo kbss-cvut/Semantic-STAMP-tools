@@ -12,49 +12,52 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.*;
 
-@OWLClass(iri = Vocabulary.Occurrence)
+@OWLClass(iri = Vocabulary.s_c_Occurrence)
 public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
 
     @Id(generated = true)
     private URI uri;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_hasKey)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_key)
     private String key;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLAnnotationProperty(iri = Vocabulary.p_name)
+    @OWLAnnotationProperty(iri = Vocabulary.s_p_label)
     private String name;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_startTime)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_start_time)
     private Date startTime;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_endTime)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_end_time)
     private Date endTime;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_event_type)
     private URI eventType;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_part, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE})
     private Set<Event> children;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Question question;
 
     @Types
     private Set<String> types;
 
+    @Transient
+    private Integer referenceId;
+
     public Occurrence() {
         this.types = new HashSet<>();
         // Occurrence is a subclass of Event
-        types.add(Vocabulary.Event);
+        types.add(Vocabulary.s_c_Event);
     }
 
     public Occurrence(Occurrence other) {
@@ -119,7 +122,7 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
      * Also adds the event type's URI to this instance's types.
      *
      * @param eventType The type to set
-     * @see Vocabulary#p_hasEventType
+     * @see Vocabulary#s_p_has_event_type
      */
     public void setEventType(URI eventType) {
         this.eventType = eventType;
@@ -179,6 +182,24 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    /**
+     * Reference id which was used by the corresponding DTO instance (if it was used).
+     * <p>
+     * Can be useful for identification of this instance in case we cannot rely on URI (e.g. when it has not been
+     * generated, yet).
+     * <p>
+     * Note that in most cases the return value will be {@code null}. This is a non-persistent field.
+     *
+     * @return Reference id, can be {@code null}
+     */
+    public Integer getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(Integer referenceId) {
+        this.referenceId = referenceId;
     }
 
     @Override

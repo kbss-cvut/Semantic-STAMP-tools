@@ -109,6 +109,7 @@ var Factors = React.createClass({
     },
 
     onCreateFactor: function (factor) {
+        factor.statement.referenceId = ++this.factorReferenceIdCounter;
         this.setState({showFactorDialog: true, currentFactor: factor});
     },
 
@@ -120,7 +121,6 @@ var Factors = React.createClass({
         var factor = this.state.currentFactor;
         if (factor.isNew) {
             delete factor.isNew;
-            factor.statement.referenceId = ++this.factorReferenceIdCounter;
             if (factor.parent) {
                 factor.statement.index = this.ganttController.getChildCount(factor.parent);
             }

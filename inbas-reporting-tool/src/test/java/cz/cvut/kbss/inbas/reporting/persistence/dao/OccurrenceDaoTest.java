@@ -125,15 +125,15 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
 
     private void generateQuestions(Occurrence occurrence) {
         final int maxDepth = Generator.randomInt(10);
-        final Question q = question();
-        occurrence.setQuestion(q);
-        q.setAnswers(Collections.singleton(answer()));
-        generateQuestions(q, 0, maxDepth);
+        final Question root = question();
+        occurrence.setQuestion(root);
+        root.setAnswers(Collections.singleton(answer()));
+        generateQuestions(root, 0, maxDepth);
     }
 
     private Question question() {
         final Question q = new Question();
-        q.getTypes().add(Generator.generateEventType());
+        q.getTypes().add(Generator.generateEventType().toString());
         return q;
     }
 

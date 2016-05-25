@@ -33,7 +33,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
     public void getReportTypesReturnsClassesOfOccurrenceReport() {
         final OccurrenceReport report = persistReport();
         // At least these
-        final Set<String> minExpected = new HashSet<>(Arrays.asList(Vocabulary.Report, Vocabulary.OccurrenceReport));
+        final Set<String> minExpected = new HashSet<>(Arrays.asList(Vocabulary.s_c_report, Vocabulary.s_c_occurrence_report));
         final Set<String> types = reportDao.getReportTypes(report.getKey());
         assertTrue(types.containsAll(minExpected));
     }
@@ -58,7 +58,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         final List<OccurrenceReport> chain = persistReportChain();
         // At least these
         final Set<String> minExpected = new HashSet<>();
-        minExpected.add(Vocabulary.OccurrenceReport);
+        minExpected.add(Vocabulary.s_c_occurrence_report);
         chain.forEach(r -> minExpected.addAll(r.getTypes()));
 
         final Set<String> types = reportDao.getChainTypes(chain.get(0).getFileNumber());
@@ -68,8 +68,8 @@ public class ReportDaoTest extends BaseDaoTestRunner {
     private List<OccurrenceReport> persistReportChain() {
         persistPerson(author);
         final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
-        chain.get(0).getTypes().add(Vocabulary.LogicalDocument);
-        chain.get(chain.size() - 1).getTypes().add(Vocabulary.LogicalRecord);
+        chain.get(0).getTypes().add(Vocabulary.s_c_logical_document);
+        chain.get(chain.size() - 1).getTypes().add(Vocabulary.s_c_logical_record);
         occurrenceReportDao.persist(chain);
         return chain;
     }

@@ -82,10 +82,10 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
                     OccurrenceReport.class)
                      .setParameter("type", typeIri)
                      .setParameter("occurrence", occurrence.getUri())
-                     .setParameter("hasRevision", URI.create(Vocabulary.p_revision))
-                     .setParameter("documents", URI.create(Vocabulary.p_documents))
-                     .setParameter("hasStartTime", URI.create(Vocabulary.p_startTime))
-                     .setParameter("hasFileNumber", URI.create(Vocabulary.p_fileNumber))
+                     .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
+                     .setParameter("documents", URI.create(Vocabulary.s_p_documents))
+                     .setParameter("hasStartTime", URI.create(Vocabulary.s_p_has_start_time))
+                     .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                      .getResultList();
         } finally {
             em.close();

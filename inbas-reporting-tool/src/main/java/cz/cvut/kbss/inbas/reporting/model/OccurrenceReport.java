@@ -12,59 +12,59 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@OWLClass(iri = Vocabulary.OccurrenceReport)
+@OWLClass(iri = Vocabulary.s_c_occurrence_report)
 public class OccurrenceReport implements LogicalDocument, Serializable {
 
     @Id(generated = true)
     private URI uri;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_hasKey)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_key)
     private String key;
 
     /**
      * File number identifies a particular report chain, i.e. revisions of the same report.
      */
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_fileNumber)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_file_number)
     private Long fileNumber;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_documents, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_documents, fetch = FetchType.EAGER)
     private Occurrence occurrence;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.p_hasAuthor, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_author, fetch = FetchType.EAGER)
     private Person author;
 
-    @OWLDataProperty(iri = Vocabulary.p_dateCreated)
+    @OWLDataProperty(iri = Vocabulary.s_p_created)
     private Date dateCreated;
 
-    @OWLDataProperty(iri = Vocabulary.p_lastModified)
+    @OWLDataProperty(iri = Vocabulary.s_p_modified)
     private Date lastModified;
 
-    @OWLObjectProperty(iri = Vocabulary.p_lastModifiedBy, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_last_editor, fetch = FetchType.EAGER)
     private Person lastModifiedBy;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_revision)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_revision)
     private Integer revision;
 
-    @OWLObjectProperty(iri = Vocabulary.p_severityAssessment)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_severity_assessment)
     private URI severityAssessment;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasCorrectiveMeasure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
-    @OWLDataProperty(iri = Vocabulary.p_description)
+    @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String summary;
 
     // ARMS Attributes
 
-    @OWLObjectProperty(iri = Vocabulary.p_mostProbableAccidentOutcome)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_most_probable_accident_outcome)
     private URI accidentOutcome;
 
-    @OWLObjectProperty(iri = Vocabulary.p_barrierEffectiveness)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_barrier_effectiveness_evaluation)
     private URI barrierEffectiveness;
 
     @Transient
@@ -75,7 +75,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
 
     public OccurrenceReport() {
         this.types = new HashSet<>(4);
-        types.add(Vocabulary.Report);
+        types.add(Vocabulary.s_c_report);
     }
 
     public OccurrenceReport(OccurrenceReport other) {
@@ -244,7 +244,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         res.setLastModified(lastModified);
         res.setRevision(revision);
         res.setTypes(types != null ? new HashSet<>(types) : new HashSet<>());
-        res.getTypes().add(Vocabulary.OccurrenceReport);
+        res.getTypes().add(Vocabulary.s_c_occurrence_report);
         assert occurrence != null;
         res.setIdentification(occurrence.getName());
         res.setDate(occurrence.getStartTime());

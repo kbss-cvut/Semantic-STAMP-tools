@@ -37,12 +37,21 @@ export default class QuestionAnswerProcessor {
     static processAnswer(answer, question) {
         var result = {};
         result.uri = answer['@id'];
-        // TODO
-        if (question['code-answer']) {
+        if (question[Constants.HAS_VALUE_TYPE] && question[Constants.HAS_VALUE_TYPE] === Constants.VALUE_TYPE_CODE) {
             result.codeValue = answer['@value'];
         } else {
             result.textValue = answer['@value'];
         }
         return result;
+    }
+
+    /**
+     * Generates an empty answer for the specified question
+     * @param question
+     */
+    static generateAnswer(question) {
+        var answer = {};
+        answer['@value'] = '';
+        return answer;
     }
 }

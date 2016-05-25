@@ -78,9 +78,9 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void testGetReportForOccurrenceReport() throws Exception {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.getOccurrence().setUri(URI.create(Vocabulary.Occurrence + "#32145"));
+        report.getOccurrence().setUri(URI.create(Vocabulary.s_c_Occurrence + "#32145"));
         report.setKey(IdentificationUtils.generateKey());
-        report.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance12345"));
+        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance12345"));
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
         final MvcResult result = mockMvc.perform(get("/reports/" + report.getKey())).andExpect(status().isOk())
                                         .andReturn();
@@ -118,7 +118,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final List<ReportRevisionInfo> revisions = new ArrayList<>(chain.size());
         for (int i = 0; i < chain.size(); i++) {
             final OccurrenceReport r = chain.get(i);
-            r.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance-" + i));
+            r.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance-" + i));
             r.setKey(IdentificationUtils.generateKey());
             final ReportRevisionInfo revision = new ReportRevisionInfo();
             revision.setUri(r.getUri());
@@ -148,7 +148,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     public void testGetOccurrenceReportRevisionByChainIdentifierAndRevisionNumber() throws Exception {
         final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
         chain.forEach(r -> {
-            r.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance-" + Generator.randomInt()));
+            r.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance-" + Generator.randomInt()));
             r.setKey(IdentificationUtils.generateKey());
         });
         final OccurrenceReport report = chain.get(Generator.randomInt(chain.size()) - 1);
@@ -230,7 +230,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void updateReportPassesReportToServiceForUpdate() throws Exception {
         final OccurrenceReport report = Generator.generateOccurrenceReport(false);
-        report.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance"));
+        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
         mockMvc.perform(
@@ -248,7 +248,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void updateReportThrowsBadRequestWhenKeyInPathDoesNotMatchReportKey() throws Exception {
         final OccurrenceReport report = Generator.generateOccurrenceReport(false);
-        report.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance"));
+        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
         final String otherKey = IdentificationUtils.generateKey();
         mockMvc.perform(
@@ -260,7 +260,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void updateReportThrowsNotFoundForUnknownReportKey() throws Exception {
         final OccurrenceReport report = Generator.generateOccurrenceReport(false);
-        report.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance"));
+        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(null);
         mockMvc.perform(
@@ -274,7 +274,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void updateReportReturnsValidationExceptionAsResponseWhenUpdateValidationFails() throws Exception {
         final OccurrenceReport report = Generator.generateOccurrenceReport(false);
-        report.setUri(URI.create(Vocabulary.OccurrenceReport + "#instance"));
+        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
         doThrow(new ValidationException("Invalid report.")).when(reportServiceMock).update(any(OccurrenceReport.class));

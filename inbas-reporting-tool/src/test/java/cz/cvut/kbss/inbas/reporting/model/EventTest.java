@@ -23,7 +23,7 @@ public class EventTest {
     }
 
     @Test
-    public void copyConstructorCreatesNewQuestionInstance() {
+    public void copyConstructorCreatesNewFormInstance() {
         final URI et = Generator.generateEventType();
         final Event evt = new Event();
         evt.setEventType(et);

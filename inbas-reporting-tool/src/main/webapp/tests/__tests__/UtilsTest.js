@@ -2,7 +2,9 @@
 
 describe('Utility functions tests', function () {
 
-    var Utils = require('../../js/utils/Utils');
+    var Utils = require('../../js/utils/Utils'),
+        Vocabulary = require('../../js/constants/Vocabulary'),
+        Generator = require('../environment/Generator').default;
 
     it('Transforms a constant made of text with underscores into text with spaces', function () {
         var constant = 'CONSTANT_WITH_UNDERSCORES';
@@ -77,5 +79,31 @@ describe('Utility functions tests', function () {
             }
         };
         expect(Utils.getPathFromLocation()).toEqual('reports/1234567890');
+    });
+
+    it('transforms JSON-LD input into Typeahead-friendly format', () => {
+        var jsonLd = Generator.getJsonLdSample(),
+            result = Utils.processTypeaheadOptions(jsonLd);
+        expect(result.length).toEqual(jsonLd.length);
+        for (var i = 0, len = jsonLd.length; i < len; i++) {
+            expect(result[i].id).toEqual(jsonLd[i]['@id']);
+            expect(result[i].type).toEqual(jsonLd[i]['@type']);
+            expect(result[i].name).toEqual(jsonLd[i][Vocabulary.RDFS_LABEL]);
+            if (jsonLd[i][Vocabulary.RDFS_COMMENT]) {
+                expect(result[i].description).toEqual(jsonLd[i][Vocabulary.RDFS_COMMENT]);
+            }
+        }
+    });
+    
+    it('handles transformation of an empty array', () => {
+        var result = Utils.processTypeaheadOptions([]);
+        expect(result).toEqual([]);
+    });
+    
+    it('handles transformation of null/undefined', () => {
+        var result = Utils.processTypeaheadOptions(null);
+        expect(result).toEqual([]);
+        result = Utils.processTypeaheadOptions();
+        expect(result).toEqual([]);
     });
 });

@@ -14,11 +14,13 @@ var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
 var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
-var Input = require('../Input');
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
+var Input = require('../Input');
+var Mask = require('../Mask').default;
 var Utils = require('../../utils/Utils');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 var ExternalLink = require('../misc/ExternalLink').default;
+var Vocabulary = require('../../constants/Vocabulary');
 
 var WizardGenerator = require('../wizard/generator/WizardGenerator');
 var WizardWindow = require('../wizard/WizardWindow');
@@ -26,6 +28,8 @@ var I18nMixin = require('../../i18n/I18nMixin');
 var EventTypeFactory = require('../../model/EventTypeFactory');
 var QuestionAnswerProcessor = require('../../model/QuestionAnswerProcessor').default;
 
+var EVENT_PARAM = 'event';
+var EVENT_TYPE_PARAM = 'event-type';
 
 function convertDurationToCurrentUnit(factor) {
     var targetUnit = gantt.config.duration_unit;
@@ -54,7 +58,8 @@ var FactorDetail = React.createClass({
             statement: factor.statement ? factor.statement : null,
 
             isWizardOpen: false,
-            wizardProperties: null
+            wizardProperties: null,
+            showMask: false
         };
     },
 
@@ -96,12 +101,47 @@ var FactorDetail = React.createClass({
     },
 
     onOpenDetails: function () {
-        WizardGenerator.generateWizard(this.props.getReport(), {'eventType': this.state.eventType.id}, this.props.factor.text, this.openDetailsWizard);
+        this.setState({showMask: true});
+        var params = {}, report = this.props.getReport();
+        this._updateReportForFormGen(report);
+        params[EVENT_TYPE_PARAM] = this.state.eventType.id;
+        params[EVENT_PARAM] = this.state.statement.referenceId;
+        WizardGenerator.generateWizard(report, params, this.props.factor.text, this.openDetailsWizard);
+    },
+
+    /**
+     * If the edited event is an existing one, merges the current state into it, so that the form generator works with
+     * latest data.
+     *
+     * If the event is a new one, adds it to the factor graph with an edge to its parent.
+     * @private
+     */
+    _updateReportForFormGen: function (report) {
+        var nodes = report.factorGraph.nodes,
+            item;
+        for (var i = 0, len = nodes.length; i < len; i++) {
+            if (nodes[i] === this.state.statement.referenceId || (nodes[i].referenceId && nodes[i].referenceId === this.state.statement.referenceId)) {
+                item = nodes[i];
+                break;
+            }
+        }
+        if (!item) {
+            item = this.state.statement;
+            nodes.push(item);
+            report.factorGraph.edges.push({
+                from: Number(this.props.factor.parent),
+                to: item.referenceId,
+                linkType: Vocabulary.HAS_PART
+            });
+        }
+        this._mergeStatementState(item);
+
     },
 
     openDetailsWizard: function (wizardProperties) {
         wizardProperties.onFinish = this.onUpdateFactorDetails;
         this.setState({
+            showMask: false,
             isWizardOpen: true,
             wizardProperties: wizardProperties
         });
@@ -112,13 +152,18 @@ var FactorDetail = React.createClass({
     },
 
     onUpdateFactorDetails: function (data, closeCallback) {
-        var statement = assign({}, this.state.statement);
+        var statement = assign({}, this.state.statement),
+            processedQuestion;
         statement.question = {
             subQuestions: []
         };
         if (data.stepData) {
             for (var i = 0, len = data.stepData.length; i < len; i++) {
-                statement.question.subQuestions[i] = QuestionAnswerProcessor.processQuestionAnswerHierarchy(data.stepData[i].question);
+                // This will skip questions corresponding to empty steps in the wizard
+                processedQuestion = QuestionAnswerProcessor.processQuestionAnswerHierarchy(data.stepData[i]);
+                if (processedQuestion) {
+                    statement.question.subQuestions.push(processedQuestion);
+                }
             }
         }
         this.setState({statement: statement});
@@ -128,13 +173,17 @@ var FactorDetail = React.createClass({
     onSave: function () {
         var factor = this.props.factor;
         factor.statement = this.state.statement ? this.state.statement : {};
-        factor.statement.eventType = this.state.eventType.id;
         factor.text = this.state.eventType.name;
-        factor.start_date = new Date(this.state.startDate);
-        factor.end_date = gantt.calculateEndDate(factor.start_date, this.state.duration, gantt.config.duration_unit);
-        factor.statement.startTime = this.state.startDate;
-        factor.statement.endTime = factor.end_date.getTime();
+        this._mergeStatementState(factor.statement);
+        factor.start_date = new Date(factor.statement.startTime);
+        factor.end_date = new Date(factor.statement.endTime);
         this.props.onSave();
+    },
+
+    _mergeStatementState(statement) {
+        statement.eventType = this.state.eventType.id;
+        statement.startTime = this.state.startDate;
+        statement.endTime = gantt.calculateEndDate(new Date(statement.startTime), this.state.duration, gantt.config.duration_unit).getTime();
     },
 
 
@@ -160,6 +209,7 @@ var FactorDetail = React.createClass({
                     </Modal.Header>
 
                     <Modal.Body>
+                        {this._renderMask()}
                         {this.renderDeleteDialog()}
                         <div className='row'>
                             <div className='col-xs-12'>
@@ -214,6 +264,10 @@ var FactorDetail = React.createClass({
                 </Modal>
             </div>
         )
+    },
+
+    _renderMask: function () {
+        return this.state.showMask ? <Mask text={this.i18n('factors.detail.wizard-loading')}/> : null;
     },
 
     renderFactorTypeIcon: function () {

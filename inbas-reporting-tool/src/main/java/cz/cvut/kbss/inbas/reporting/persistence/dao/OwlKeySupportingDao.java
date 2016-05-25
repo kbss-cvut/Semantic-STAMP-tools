@@ -54,7 +54,7 @@ public abstract class OwlKeySupportingDao<T extends HasOwlKey> extends BaseDao<T
         try {
             return em.createNativeQuery("SELECT ?x WHERE { ?x ?hasKey ?key ;" +
                     "a ?type }", type)
-                     .setParameter("hasKey", URI.create(Vocabulary.p_hasKey))
+                     .setParameter("hasKey", URI.create(Vocabulary.s_p_has_key))
                      .setParameter("key", key, Constants.PU_LANGUAGE).setParameter("type", typeUri).getSingleResult();
         } catch (NoResultException e) {
             return null;

@@ -68,16 +68,21 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
     @Test
     public void formGenServicePersistsSpecifiedOccurrenceReportWhenFormIsRequested() {
         setupRemoteFormGenServiceMock(Collections.emptyMap());
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
-        report.getAuthor().generateUri();   // This won't be necessary in code, the user is already persisted
+        final OccurrenceReport report = getOccurrenceReport();
         formGenService.generateForm(report, Collections.emptyMap());
         final EntityManager em = emf.createEntityManager();
         try {
             assertTrue(em.createNativeQuery("ASK { ?x a ?report .} ", Boolean.class).setParameter("report", URI.create(
-                    Vocabulary.OccurrenceReport)).getSingleResult());
+                    Vocabulary.s_c_occurrence_report)).getSingleResult());
         } finally {
             em.close();
         }
+    }
+
+    private OccurrenceReport getOccurrenceReport() {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        report.getAuthor().generateUri();   // This won't be necessary in code, the user is already persisted
+        return report;
     }
 
     @Test
@@ -91,8 +96,7 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
     public void formGenPassesRepositoryUrlAndContextUrlToRemoteFormGenerator() throws Exception {
         setupRemoteFormGenServiceMock(Collections.emptyMap());
 
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
-        report.getAuthor().generateUri();
+        final OccurrenceReport report = getOccurrenceReport();
         final RawJson result = formGenService.generateForm(report, Collections.emptyMap());
         assertNotNull(result);
         assertEquals(MOCK_FORM_STRUCTURE, result.getValue());
@@ -128,8 +132,7 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
     public void generateFormReturnsEmptyJsonWhenRemoteServiceUrlIsMissing() {
         setupRemoteFormGenServiceMock(Collections.emptyMap());
         ((MockEnvironment) environment).setProperty(ConfigParam.FORM_GEN_SERVICE_URL.toString(), "");
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
-        report.getAuthor().generateUri();
+        final OccurrenceReport report = getOccurrenceReport();
 
         assertEquals("", formGenService.generateForm(report, Collections.emptyMap()).getValue());
     }

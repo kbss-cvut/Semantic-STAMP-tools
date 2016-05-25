@@ -18,7 +18,7 @@ import java.util.TreeSet;
  */
 public class FactorGraphTraverser {
 
-    private static final URI HAS_PART_URI = URI.create(Vocabulary.p_hasPart);
+    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part);
 
     private EventPositionComparator childEventComparator = new EventPositionComparator();
 

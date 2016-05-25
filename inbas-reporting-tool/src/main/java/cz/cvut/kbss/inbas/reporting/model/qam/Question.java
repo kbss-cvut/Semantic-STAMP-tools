@@ -7,6 +7,7 @@ package cz.cvut.kbss.inbas.reporting.model.qam;
 
 import cz.cvut.kbss.jopa.model.annotations.*;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,14 +17,14 @@ import java.util.stream.Collectors;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @OWLClass(iri = Vocabulary.Question)
-public class Question {
+public class Question implements Serializable {
 
     @Id(generated = true)
     private URI uri;
 
     // eccairs entity/attribute
     @Types
-    private Set<URI> types = new HashSet<>();
+    private Set<String> types = new HashSet<>();
 
     @OWLObjectProperty(iri = Vocabulary.hasRelatedQuestion, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<Question> subQuestions = new HashSet<>();
@@ -70,11 +71,11 @@ public class Question {
         this.answers = answers;
     }
 
-    public Set<URI> getTypes() {
+    public Set<String> getTypes() {
         return types;
     }
 
-    public void setTypes(Set<URI> types) {
+    public void setTypes(Set<String> types) {
         this.types = types;
     }
 

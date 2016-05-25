@@ -206,7 +206,7 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
             final Integer res = em
                     .createNativeQuery("SELECT(count(?p) as ?cnt) WHERE { ?x ?password ?p .}", Integer.class)
                     .setParameter("x", p.getUri()).setParameter("password", URI.create(
-                            Vocabulary.p_password)).getSingleResult();
+                            Vocabulary.s_p_password)).getSingleResult();
             assertEquals(1, res.intValue());
         } finally {
             em.close();

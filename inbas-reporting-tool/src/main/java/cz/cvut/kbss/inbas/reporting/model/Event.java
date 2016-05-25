@@ -11,38 +11,41 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@OWLClass(iri = Vocabulary.Event)
+@OWLClass(iri = Vocabulary.s_c_Event)
 public class Event implements FactorGraphItem, Serializable {
 
     @Id(generated = true)
     private URI uri;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasFactor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasPart, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_part, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE})
     private Set<Event> children;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_startTime)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_start_time)
     private Date startTime;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.p_endTime)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_end_time)
     private Date endTime;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasEventType)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_event_type)
     private URI eventType;
 
-    @OWLDataProperty(iri = Vocabulary.p_childIndex)
+    @OWLDataProperty(iri = Vocabulary.s_p_child_index)
     private Integer index;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Question question;
 
     @Types
     private Set<String> types;
+
+    @Transient
+    private Integer referenceId;
 
     public Event() {
     }
@@ -113,7 +116,7 @@ public class Event implements FactorGraphItem, Serializable {
      * Also adds the event type's URI to this instance's types.
      *
      * @param eventType The type to set
-     * @see Vocabulary#p_hasEventType
+     * @see Vocabulary#s_p_has_event_type
      */
     public void setEventType(URI eventType) {
         this.eventType = eventType;
@@ -171,6 +174,24 @@ public class Event implements FactorGraphItem, Serializable {
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    /**
+     * Reference id which was used by the corresponding DTO instance (if it was used).
+     * <p>
+     * Can be useful for identification of this instance in case we cannot rely on URI (e.g. when it has not been
+     * generated, yet).
+     * <p>
+     * Note that in most cases the return value will be {@code null}. This is a non-persistent field.
+     *
+     * @return Reference id, can be {@code null}
+     */
+    public Integer getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(Integer referenceId) {
+        this.referenceId = referenceId;
     }
 
     @Override

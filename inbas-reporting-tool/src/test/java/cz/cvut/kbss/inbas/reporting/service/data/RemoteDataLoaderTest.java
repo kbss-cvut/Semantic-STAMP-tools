@@ -83,6 +83,21 @@ public class RemoteDataLoaderTest extends BaseServiceTestRunner {
         assertEquals(DATA, result);
     }
 
+    @Test
+    public void loadDataPassesQueryParamsCorrectlyIfTheUrlAlreadyContainsQueryParam() {
+        final String url = "http://localhost/formGen?id=generate376Forms-0.2";
+        final String expectedUrl = url + "&a=1&b=2";
+        mockServer.expect(requestTo(expectedUrl)).andExpect(method(HttpMethod.GET)).andExpect(MockRestRequestMatchers.header(
+                HttpHeaders.ACCEPT, MediaType.APPLICATION_XML_VALUE))
+                  .andRespond(withSuccess(DATA, MediaType.APPLICATION_JSON));
+        final Map<String, String> params = new HashMap<>();
+        params.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_XML_VALUE);
+        params.put("a", "1");
+        params.put("b", "2");
+        final String result = dataLoader.loadData(url, params);
+        assertEquals(DATA, result);
+    }
+
     @Test(expected = WebServiceIntegrationException.class)
     public void loadDataThrowsWebServiceIntegrationExceptionWhenNonSuccessResponseIsReceived() {
         mockServer.expect(requestTo(URL)).andExpect(method(HttpMethod.GET)).andRespond(withBadRequest());

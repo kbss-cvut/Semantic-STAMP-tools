@@ -21,7 +21,7 @@ public class PersonDao extends DerivableUriDao<Person> {
         try {
             return em.createNativeQuery(
                     "SELECT ?x WHERE { ?x ?hasUsername ?username . }", Person.class)
-                     .setParameter("hasUsername", URI.create(Vocabulary.p_username))
+                     .setParameter("hasUsername", URI.create(Vocabulary.s_p_accountName))
                      .setParameter("username", username, Constants.PU_LANGUAGE)
                      .getSingleResult();
         } catch (NoResultException e) {

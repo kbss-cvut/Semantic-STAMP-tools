@@ -9,14 +9,14 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
-@OWLClass(iri = Vocabulary.Organization)
+@OWLClass(iri = Vocabulary.s_c_Organization)
 public class Organization implements HasDerivableUri, Serializable {
 
     @Id
     private URI uri;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLAnnotationProperty(iri = Vocabulary.p_name)
+    @OWLAnnotationProperty(iri = Vocabulary.s_p_label)
     private String name;
 
     @Types
@@ -24,7 +24,7 @@ public class Organization implements HasDerivableUri, Serializable {
 
     public Organization() {
         this.types = new HashSet<>(4);
-        types.add(Vocabulary.Agent);
+        types.add(Vocabulary.s_c_Agent);
     }
 
     public Organization(String name) {
