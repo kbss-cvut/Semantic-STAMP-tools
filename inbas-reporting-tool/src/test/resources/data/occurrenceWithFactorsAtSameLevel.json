@@ -84,7 +84,7 @@
     {
       "from": 3,
       "to": 4,
-      "linkType": "http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes-to"
+      "linkType": "http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes_to"
     },
     {
       "from": 5,
@@ -94,7 +94,7 @@
     {
       "from": 6,
       "to": 7,
-      "linkType": "http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes-to"
+      "linkType": "http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes_to"
     }
   ]
 }

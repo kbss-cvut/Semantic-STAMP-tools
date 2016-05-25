@@ -75,8 +75,6 @@ public class OptionsServiceImpl implements OptionsService {
         } else {
             // This is temporary. Once we get rid of the json files, we won't need this else branch
             switch (type) {
-                case "location":
-                    return new RawJson(localLoader.loadData("locations.json", Collections.emptyMap()));
                 case "operator":
                     return new RawJson(localLoader.loadData("operators.json", Collections.emptyMap()));
                 default:
