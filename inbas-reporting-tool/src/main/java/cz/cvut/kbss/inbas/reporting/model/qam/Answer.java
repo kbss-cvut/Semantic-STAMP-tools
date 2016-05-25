@@ -20,10 +20,10 @@ public class Answer {
     @Id(generated = true)
     private URI uri;
 
-    @OWLDataProperty(iri = Vocabulary.hasValue)
+    @OWLDataProperty(iri = Vocabulary.hasDataValue)
     private String textValue;
 
-    @OWLObjectProperty(iri = Vocabulary.hasURIValue)
+    @OWLObjectProperty(iri = Vocabulary.hasObjectValue)
     private URI codeValue;
 
     @Types

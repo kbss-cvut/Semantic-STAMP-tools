@@ -29,8 +29,8 @@ public class Vocabulary {
     // |         Properties         |
     // ------------------------------
 
-    public static final String hasValue = "http://onto.fel.cvut.cz/ontologies/documentation/has_value";
-    public static final String hasURIValue = "http://onto.fel.cvut.cz/ontologies/documentation/has_uri_value";
+    public static final String hasDataValue = "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value";
+    public static final String hasObjectValue = "http://onto.fel.cvut.cz/ontologies/documentation/has_object_value";
     public static final String hasRelationToAnswer = "http://onto.fel.cvut.cz/ontologies/documentation/has_relation_to_answer";
     public static final String hasAnswer = "http://onto.fel.cvut.cz/ontologies/documentation/has_answer";
     public static final String hasRelatedQuestion = "http://onto.fel.cvut.cz/ontologies/documentation/has_related_question";
