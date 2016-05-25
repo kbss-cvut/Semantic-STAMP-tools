@@ -51,6 +51,9 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
     @Types
     private Set<String> types;
 
+    @Transient
+    private Integer referenceId;
+
     public Occurrence() {
         this.types = new HashSet<>();
         // Occurrence is a subclass of Event
@@ -179,6 +182,24 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    /**
+     * Reference id which was used by the corresponding DTO instance (if it was used).
+     * <p>
+     * Can be useful for identification of this instance in case we cannot rely on URI (e.g. when it has not been
+     * generated, yet).
+     * <p>
+     * Note that in most cases the return value will be {@code null}. This is a non-persistent field.
+     *
+     * @return Reference id, can be {@code null}
+     */
+    public Integer getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(Integer referenceId) {
+        this.referenceId = referenceId;
     }
 
     @Override
