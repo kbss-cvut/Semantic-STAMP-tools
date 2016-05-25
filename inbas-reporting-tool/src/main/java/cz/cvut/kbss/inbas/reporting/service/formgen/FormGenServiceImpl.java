@@ -1,7 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.formgen;
 
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.FormGenDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.data.DataLoader;
@@ -14,7 +13,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -37,30 +35,30 @@ public class FormGenServiceImpl implements FormGenService {
     @Autowired
     private Environment environment;
 
-    private final Map<Class<?>, FormGenDao<?>> daoMap = new HashMap<>(2);
+    private final Map<Class<?>, FormGenDataProcessor<?>> dataProcessors = new HashMap<>(2);
 
     @PostConstruct
-    private void registerDaos() {
-        daoMap.put(OccurrenceReport.class, occurrenceReportFormGenDao);
+    private void registerProcessors() {
+        dataProcessors.put(OccurrenceReport.class, new EventFormGenDataProcessor(occurrenceReportFormGenDao));
     }
 
     @Override
     public <T> RawJson generateForm(T data, Map<String, String> params) {
         Objects.requireNonNull(data);
         Objects.requireNonNull(params);
-        final FormGenDao<T> dao = resolveDao(data);
-        final URI context = dao.persist(data);
-        return loadFormStructure(context, new HashMap<>(params));
+        final FormGenDataProcessor<T> processor = resolveProcessor(data);
+        processor.process(data, params);
+        return loadFormStructure(processor);
     }
 
-    private <T> FormGenDao<T> resolveDao(Object data) {
-        if (!daoMap.containsKey(data.getClass())) {
+    private <T> FormGenDataProcessor<T> resolveProcessor(Object data) {
+        if (!dataProcessors.containsKey(data.getClass())) {
             throw new IllegalArgumentException("Unsupported data type for form generation.");
         }
-        return (FormGenDao<T>) daoMap.get(data.getClass());
+        return (FormGenDataProcessor<T>) dataProcessors.get(data.getClass());
     }
 
-    private RawJson loadFormStructure(URI context, Map<String, String> params) {
+    private RawJson loadFormStructure(FormGenDataProcessor<?> processor) {
         final String serviceUrl = environment.getProperty(ConfigParam.FORM_GEN_SERVICE_URL.toString(), "");
         final String repoUrl = environment.getProperty(ConfigParam.FORM_GEN_REPOSITORY_URL.toString(), "");
         if (serviceUrl.isEmpty() || repoUrl.isEmpty()) {
@@ -68,7 +66,8 @@ public class FormGenServiceImpl implements FormGenService {
                     serviceUrl, repoUrl);
             return new RawJson("");
         }
-        params.put(CONTEXT_URI_PARAM, context.toString());
+        final Map<String, String> params = new HashMap<>(processor.getParams());
+        params.put(CONTEXT_URI_PARAM, processor.getContext().toString());
         params.put(REPOSITORY_URL_PARAM, repoUrl);
         return new RawJson(dataLoader.loadData(serviceUrl, params));
     }

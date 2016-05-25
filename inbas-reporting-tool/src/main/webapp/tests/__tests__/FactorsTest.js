@@ -85,6 +85,8 @@ describe('Factors component tests', function () {
             newFactor = {
                 isNew: true,
                 text: 'Test',
+                start_date: new Date(),
+                end_date: new Date(),
                 statement: {},
                 parent: referenceId
             }, parent = {
@@ -96,13 +98,10 @@ describe('Factors component tests', function () {
         GanttController.getFactor.and.returnValue(parent);
         component = Environment.render(<Factors report={report}/>);
         component.renderFactors({action: Actions.loadEventTypes, data: []});
-        component.setState({
-            currentFactor: newFactor
-        });
-        component.onSaveFactor();
+        component.onCreateFactor(newFactor);
 
         expect(newFactor.statement.referenceId).toEqual(referenceId + 1);
-        expect(GanttController.addFactor).toHaveBeenCalledWith(newFactor, referenceId);
+        expect(component.state.currentFactor).toEqual(newFactor);
     });
 
     it('Renders factor graph only after event types have been loaded', () => {
