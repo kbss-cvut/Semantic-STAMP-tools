@@ -24,7 +24,7 @@ public class Question implements Serializable {
 
     // eccairs entity/attribute
     @Types
-    private Set<URI> types = new HashSet<>();
+    private Set<String> types = new HashSet<>();
 
     @OWLObjectProperty(iri = Vocabulary.hasRelatedQuestion, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<Question> subQuestions = new HashSet<>();
@@ -71,11 +71,11 @@ public class Question implements Serializable {
         this.answers = answers;
     }
 
-    public Set<URI> getTypes() {
+    public Set<String> getTypes() {
         return types;
     }
 
-    public void setTypes(Set<URI> types) {
+    public void setTypes(Set<String> types) {
         this.types = types;
     }
 

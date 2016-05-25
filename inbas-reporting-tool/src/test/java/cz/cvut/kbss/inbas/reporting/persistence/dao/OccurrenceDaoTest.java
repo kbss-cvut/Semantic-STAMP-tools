@@ -108,13 +108,6 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
                 final Question res = em.find(Question.class, question.getUri());
                 assertNotNull(res);
                 assertEquals(question.getTypes().size(), res.getTypes().size());
-                if (!question.getTypes().containsAll(res.getTypes())) { // TODO Remove once problem is fixed
-                    System.out.println("Types are not equal. Expected " + question.getTypes() + ", but actual are " +
-                            res.getTypes());
-                    System.out.println(
-                            "Expected class: " + question.getTypes().getClass().toString() + " actual class: " +
-                                    res.getTypes().getClass().toString());
-                }
                 assertTrue(question.getTypes().containsAll(res.getTypes()));
                 final Set<URI> childUris = question.getSubQuestions().stream().map(Question::getUri)
                                                    .collect(Collectors.toSet());
@@ -140,7 +133,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
 
     private Question question() {
         final Question q = new Question();
-        q.getTypes().add(Generator.generateEventType());
+        q.getTypes().add(Generator.generateEventType().toString());
         return q;
     }
 
