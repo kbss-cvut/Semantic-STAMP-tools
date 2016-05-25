@@ -2,14 +2,16 @@
 
 import React from "react";
 import assign from "object-assign";
-import FormTypeahead from "./FormTypeahead";
+import Typeahead from "react-bootstrap-typeahead";
+import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 import Input from "../../Input";
 import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
 import OptionsStore from "../../../stores/OptionsStore";
-import Vocabulary from "../../../constants/Vocabulary";    // Perhaps we could use a standard typeahead here
+import Utils from "../../../utils/Utils";
+import Vocabulary from "../../../constants/Vocabulary";
 
-export default class Question extends React.Component {
+export default class Answer extends React.Component {
     static propTypes = {
         answer: React.PropTypes.object.isRequired,
         question: React.PropTypes.object.isRequired,
@@ -26,9 +28,17 @@ export default class Question extends React.Component {
 
     componentWillMount() {
         var question = this.props.question;
-        if (question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS]['@id'] === Constants.QUESTION_TYPEAHEAD) {
-            Actions.loadOptions(question['@id']);
+        if (Answer._isTypeahead(question)) {
+            if (!question[Constants.HAS_OPTION] || question[Constants.HAS_OPTION].length === 0) {
+                Actions.loadOptions(question['@id']);
+            } else {
+                this.setState({options: Utils.processTypeaheadOptions(question[Constants.HAS_OPTION])});
+            }
         }
+    }
+
+    static _isTypeahead(question) {
+        return Utils.hasValue(question, Constants.LAYOUT_CLASS, Constants.QUESTION_TYPEAHEAD);
     }
 
     componentDidMount() {
@@ -43,37 +53,56 @@ export default class Question extends React.Component {
         if (type !== this.props.question['@id']) {
             return;
         }
-        this.setState({options: options});
+        this.setState({options: Utils.processTypeaheadOptions(options)});
     };
 
     onChange = (e) => {
         var change = assign({}, this.props.answer);
-        change.textValue = e.target.value;   // TODO Determine whether this is text or code value
+        change['@value'] = e.target.value;
+        this.props.onChange(this.props.index, change);
+    };
+
+    _onOptionSelected = (option) => {
+        var change = assign({}, this.props.answer);
+        change['@value'] = option.id;
         this.props.onChange(this.props.index, change);
     };
 
     render() {
-        var question = this.props.question,
-            value = this.props.answer.textValue ? this.props.answer.textValue : this.props.answer.codeValue,
-            label = question[Vocabulary.RDFS_LABEL],
-            cls = Constants.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (12 / Constants.GENERATED_ROW_SIZE),
-            component;
-
-        if (this._hasOptions(question)) {
-            component =
-                <Input type='select' label={label} value={value} disabled={question[Constants.IS_DISABLED]}>
-                    {this._generateSelectOptions(question[Constants.HAS_OPTION])}
-                </Input>;
-        } else if (question[Constants.LAYOUT_CLASS] && question[Constants.LAYOUT_CLASS]['@id'] === 'type-ahead') {
-            component = <FormTypeahead item={question} options={this.state.options}/>;
-        } else {
-            component = <Input type='text' label={label} value={value}
-                               disabled={question[Constants.IS_DISABLED]}/>;
-        }
-        return <div className={cls} key={question['@id']}>{component}</div>;
+        var cls = Constants.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.GENERATED_ROW_SIZE);
+        return <div className={cls}>{this._renderInputComponent()}</div>;
     }
 
-    _hasOptions(item) {
+    _renderInputComponent() {
+        var question = this.props.question,
+            value = this.props.answer['@value'],
+            label = question[Vocabulary.RDFS_LABEL],
+            title = question[Vocabulary.RDFS_COMMENT] ? question[Vocabulary.RDFS_COMMENT] : null,
+            component;
+
+        if (Answer._isTypeahead(question)) {
+            value = Utils.idToName(this.state.options, value);
+            component = <div>
+                <label className='control-label'>{label}</label>
+                <Typeahead className='form-group form-group-sm' formInputOption='id'
+                           title={title} value={value} label={label} placeholder={label} filterOption='name'
+                           displayOption='name' onOptionSelected={this._onOptionSelected}
+                           options={this.state.options} customListComponent={TypeaheadResultList}/>
+            </div>;
+        } else if (Answer._hasOptions(question)) {
+            component =
+                <Input type='select' label={label} value={value} title={title} onChange={this.onChange}
+                       disabled={question[Constants.IS_DISABLED]}>
+                    {this._generateSelectOptions(question[Constants.HAS_OPTION])}
+                </Input>;
+        } else {
+            component = <Input type='text' label={label} title={title} value={value} onChange={this.onChange}
+                               disabled={question[Constants.IS_DISABLED]}/>;
+        }
+        return component;
+    }
+
+    static _hasOptions(item) {
         if (item[Constants.HAS_OPTION] && item[Constants.HAS_OPTION].length !== 0) {
             return true;
         }

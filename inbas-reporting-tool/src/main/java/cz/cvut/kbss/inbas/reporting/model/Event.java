@@ -38,7 +38,7 @@ public class Event implements FactorGraphItem, Serializable {
     @OWLDataProperty(iri = Vocabulary.p_childIndex)
     private Integer index;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = cz.cvut.kbss.inbas.reporting.model.qam.Vocabulary.hasRelatedQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Question question;
 
     @Types

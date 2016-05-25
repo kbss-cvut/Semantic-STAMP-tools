@@ -77,6 +77,8 @@ var FACTOR_TYPES = [
  */
 export default class Generator {
 
+    static _uriBase = 'http://onto.fel.cvut.cz/ontologies/inbas';
+
     static generateFactorGraphNodes() {
         var nodes = [],
             referenceIdCounter = Date.now();
@@ -211,5 +213,9 @@ export default class Generator {
 
     static getCategories() {
         return CATEGORIES;
+    }
+
+    static getRandomUri() {
+        return Generator._uriBase + Generator.getRandomInt();
     }
 }

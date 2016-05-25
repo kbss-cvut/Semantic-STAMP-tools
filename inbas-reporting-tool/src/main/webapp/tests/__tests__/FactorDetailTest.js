@@ -1,10 +1,11 @@
 'use strict';
 
 
-describe('Tests of the factor dialog', function () {
+describe('Factor detail dialog', function () {
 
     var React = require('react'),
         Environment = require('../environment/Environment'),
+        Constants = require('../../js/constants/Constants'),
         FactorDetail = require('../../js/components/factor/FactorDetail'),
         assign = require('object-assign'),
         callbacks,
@@ -34,7 +35,11 @@ describe('Tests of the factor dialog', function () {
             eventType = {
                 name: 'Runway Incursion',
                 id: 'http://incursion'
-            };
+            },
+            question = {},
+            value = 'SomeImportantValue';
+        question[Constants.HAS_ANSWER] = [{}];
+        question[Constants.HAS_ANSWER][0]['@value'] = value;
         spyOn(gantt, 'calculateEndDate').and.callThrough();
         detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
                                                   onClose={callbacks.onClose}
@@ -42,10 +47,15 @@ describe('Tests of the factor dialog', function () {
                                                   getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
+        detail.onUpdateFactorDetails({stepData: [question]}, function () {
+        });
         detail.onSave();
         expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, 'minute');
         expect(factor.end_date).toBeDefined();
         expect(callbacks.onSave).toHaveBeenCalled();
+        expect(factor.statement.question.subQuestions[0]).toBeDefined();
+        expect(factor.statement.question.subQuestions[0].answers[0]).toBeDefined();
+        expect(factor.statement.question.subQuestions[0].answers[0].textValue).toEqual(value);
     });
 
     it('Preserves factor state until save is called', function () {
@@ -55,25 +65,19 @@ describe('Tests of the factor dialog', function () {
                 id: 'http://incursion'
             },
             origFactor = assign({}, factor),
-            details = {
-                eventType: eventType,
-                intruder: {},
-                lvp: 'none',
-                location: 'LKPR31'
-            };
+            question = {};
+        question[Constants.HAS_ANSWER] = [{
+            value: 'someValue'
+        }];
         detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
                                                   onClose={callbacks.onClose}
                                                   onDelete={callbacks.onDelete}
                                                   getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
-        detail.onUpdateFactorDetails({statement: details}, function () {
+        detail.onUpdateFactorDetails({stepData: [{question: question}]}, function () {
         });
 
         expect(factor).toEqual(origFactor);
-        detail.onSave();
-        expect(factor.end_date).toBeDefined();
-        expect(factor.statement).toBeDefined();
-        expect(factor.statement).toEqual(details);
     });
 });

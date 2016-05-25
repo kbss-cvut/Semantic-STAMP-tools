@@ -45,7 +45,7 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
             CascadeType.REMOVE})
     private Set<Event> children;
 
-    @OWLObjectProperty(iri = Vocabulary.p_hasQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = cz.cvut.kbss.inbas.reporting.model.qam.Vocabulary.hasRelatedQuestion, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Question question;
 
     @Types
