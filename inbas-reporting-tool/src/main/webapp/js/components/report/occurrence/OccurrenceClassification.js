@@ -32,7 +32,7 @@ var OccurrenceClassification = React.createClass({
     getInitialState: function () {
         return {
             occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
-            occurrenceCategories: TypeaheadStore.getOccurrenceCategories()
+            occurrenceCategories: Utils.processTypeaheadOptions(TypeaheadStore.getOccurrenceCategories())
         };
     },
 

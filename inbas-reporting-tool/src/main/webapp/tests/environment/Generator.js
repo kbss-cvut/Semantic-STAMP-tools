@@ -73,6 +73,36 @@ var FACTOR_TYPES = [
 ];
 
 /**
+ * JSON-LD example, framed.
+ * @type {*[]}
+ */
+var JSON_LD = [
+    {
+        "@id": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-430/v-1",
+        "@type": "http://onto.fel.cvut.cz/ontologies/eccairs/occurrence-category",
+        "http://www.w3.org/2000/01/rdf-schema#comment": "Usage Notes:\r\n• This category includes the intentional maneuvering of the aircraft to avoid a collision with terrain, objects/obstacles, weather or other aircraft (Note: The effect of intentional maneuvering is the key consideration).\r\n• Abrupt maneuvering may also result in a loss of control or system/component failure or malfunction. In this case, the event is coded under both categories (e.g., AMAN and Loss of Control–Inflight (LOC–I), AMAN and System/Component Failure or Malfunction (Non- Powerplant) (SCF–NP), or AMAN and System/Component Failure or Malfunction\r\n(Powerplant) (SCF–PP)).\r\n• Abrupt maneuvering may also occur on ground; examples include hard braking maneuver, rapid change of direction to avoid collisions, etc.",
+        "http://www.w3.org/2000/01/rdf-schema#label": "1 - AMAN: Abrupt maneuvre"
+    },
+    {
+        "@id": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-430/v-10",
+        "@type": "http://onto.fel.cvut.cz/ontologies/eccairs/occurrence-category",
+        "http://www.w3.org/2000/01/rdf-schema#comment": "Usage Notes:\r\n• Includes accumulations that occur inflight or on the ground (i.e., deicing-related).\r\n• Carburetor and induction icing events are coded in the FUEL Related (FUEL) category.\r\n• Windscreen icing which restricts visibility is also covered here.\r\n• Includes ice accumulation on sensors, antennae, and other external surfaces.\r\n• Includes ice accumulation on external surfaces including those directly in front of the engine intakes.",
+        "http://www.w3.org/2000/01/rdf-schema#label": "10 - ICE: Icing"
+    },
+    {
+        "@id": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-430/v-100",
+        "@type": "http://onto.fel.cvut.cz/ontologies/eccairs/occurrence-category",
+        "http://www.w3.org/2000/01/rdf-schema#comment": "Usage Notes:\r\n• May be used as a precursor to CFIT, LOC-I or LALT.\r\n• Applicable if the pilot was flying according to Visual Flight Rules (VFR), as defined in Annex 2 – Rules of the Air – to the Convention on International Civil Aviation and by any reason found oneself inadvertently in IMC\r\n• Only to be used when loss of visual references is encountered,\r\n• Only to be used if pilot not qualified to fly in IMC and/or aircraft not equipped to fly in IMC",
+        "http://www.w3.org/2000/01/rdf-schema#label": "100 - UIMC: Unintended flight in IMC"
+    },
+    {
+        "@id": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-430/v-101",
+        "@type": "http://onto.fel.cvut.cz/ontologies/eccairs/occurrence-category",
+        "http://www.w3.org/2000/01/rdf-schema#label": "101 - EXTL: External load related occurrences"
+    }
+];
+
+/**
  * Generates test data.
  */
 export default class Generator {
@@ -217,5 +247,9 @@ export default class Generator {
 
     static getRandomUri() {
         return Generator._uriBase + Generator.getRandomInt();
+    }
+    
+    static getJsonLdSample() {
+        return JSON_LD;
     }
 }
