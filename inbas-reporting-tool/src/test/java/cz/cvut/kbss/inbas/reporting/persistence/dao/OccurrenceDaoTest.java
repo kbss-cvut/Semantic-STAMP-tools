@@ -108,6 +108,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
                 final Question res = em.find(Question.class, question.getUri());
                 assertNotNull(res);
                 assertEquals(question.getTypes().size(), res.getTypes().size());
+                System.out.println(question.getTypes());
                 System.out.println(res.getTypes()); // TODO Remove once problem is fixed
                 assertTrue(question.getTypes().containsAll(res.getTypes()));
                 final Set<URI> childUris = question.getSubQuestions().stream().map(Question::getUri)
