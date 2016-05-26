@@ -32,6 +32,7 @@ public class OccurrenceReportTest {
         assertNull(copy.getLastModifiedBy());
 
         assertEquals(original.getFileNumber(), copy.getFileNumber());
+        assertEquals(original.getPhase(), copy.getPhase());
         assertEquals(original.getOccurrence().getName(), copy.getOccurrence().getName());
         assertEquals(original.getSummary(), copy.getSummary());
     }

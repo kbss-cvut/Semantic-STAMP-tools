@@ -15,6 +15,8 @@ public abstract class ReportDto implements LogicalDocument {
 
     private Long fileNumber;
 
+    private URI phase;
+
     private Person author;
 
     private Date dateCreated;
@@ -59,6 +61,14 @@ public abstract class ReportDto implements LogicalDocument {
 
     public void setFileNumber(Long fileNumber) {
         this.fileNumber = fileNumber;
+    }
+
+    public URI getPhase() {
+        return phase;
+    }
+
+    public void setPhase(URI phase) {
+        this.phase = phase;
     }
 
     @Override

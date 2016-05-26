@@ -85,6 +85,8 @@ public class Generator {
         report.setOccurrence(generateOccurrence());
         report.setSummary("Some random summary " + randomInt() + ".");
         if (setAttributes) {
+            // Some random URI as report phase (not really important now)
+            report.setPhase(generateEventType());
             report.setBarrierEffectiveness(BARRIER_EFFECTIVE);
             report.setAccidentOutcome(ACCIDENT_NEGLIGIBLE);
             report.setAuthor(getPerson());

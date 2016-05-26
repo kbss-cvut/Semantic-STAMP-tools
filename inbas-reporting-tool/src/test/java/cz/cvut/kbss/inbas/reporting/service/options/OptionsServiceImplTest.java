@@ -24,8 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -68,7 +67,7 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
                           MediaType.APPLICATION_JSON));
         final Object res = optionsService.getOptions(category);
         assertTrue(res instanceof RawJson);
-        assertEquals(DATA, ((RawJson) res).getValue());
+        assertEquals(new RawJson(DATA), res);
     }
 
     private String expectedUrl(String fileName) throws Exception {
@@ -96,9 +95,37 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         expected.add("eventType");
         expected.add("occurrenceClass");
         expected.add("occurrenceCategory");
-        final Field optionCategoriesField = OptionsServiceImpl.class.getDeclaredField("optionsCategories");
+        final Field optionCategoriesField = OptionsServiceImpl.class.getDeclaredField("remoteOptions");
         optionCategoriesField.setAccessible(true);
         final Map<String, String> optionCategories = (Map<String, String>) optionCategoriesField.get(optionsService);
         expected.forEach(key -> assertTrue(optionCategories.containsKey(key)));
+    }
+
+    @Test
+    public void optionsServiceDiscoversLocalOptionsFilesOnStartup() throws Exception {
+        final Set<String> expected = new HashSet<>();
+        expected.add("reportingPhase");
+        final Field optionCategoriesField = OptionsServiceImpl.class.getDeclaredField("localOptions");
+        optionCategoriesField.setAccessible(true);
+        final Map<String, String> optionCategories = (Map<String, String>) optionCategoriesField.get(optionsService);
+        expected.forEach(key -> assertTrue(optionCategories.containsKey(key)));
+    }
+
+    @Test
+    public void getOptionsLoadsLocalOptions() throws Exception {
+        final String type = "reportingPhase";
+        final String content = cz.cvut.kbss.inbas.reporting.environment.util.Environment
+                .loadData("option/reportingPhase.json", String.class);
+        final RawJson result = (RawJson) optionsService.getOptions(type);
+        assertNotNull(result);
+        assertEquals(content, result.getValue());
+    }
+
+    @Test
+    public void getRemoteOptionsThrowsIllegalStateWhenOptionsRepoUrlIsNotSet() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Missing repository URL configuration.");
+        ((MockEnvironment) environment).setProperty(ConfigParam.EVENT_TYPE_REPOSITORY_URL.toString(), "");
+        optionsService.getOptions("eventType");
     }
 }

@@ -17,8 +17,14 @@ public class ConfigReader {
 
     private final Properties defaultConfig = new Properties();
 
+    /**
+     * Gets value of the specified configuration parameter.
+     *
+     * @param param Configuration parameter
+     * @return Configuration parameter value, empty string if the parameter is not set
+     */
     public String getConfig(ConfigParam param) {
-        return getConfig(param, null);
+        return getConfig(param, "");
     }
 
     public String getConfig(ConfigParam param, String defaultValue) {

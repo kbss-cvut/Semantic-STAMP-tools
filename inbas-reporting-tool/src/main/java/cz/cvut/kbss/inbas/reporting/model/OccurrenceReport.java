@@ -29,6 +29,9 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     @OWLDataProperty(iri = Vocabulary.s_p_has_file_number)
     private Long fileNumber;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_reporting_phase)
+    private URI phase;
+
     @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.s_p_documents, fetch = FetchType.EAGER)
     private Occurrence occurrence;
@@ -82,6 +85,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this();
         Objects.requireNonNull(other);
         this.fileNumber = other.fileNumber;
+        this.phase = other.phase;
         this.occurrence = Occurrence.copyOf(other.occurrence);
         this.severityAssessment = other.severityAssessment;
         this.summary = other.summary;
@@ -116,6 +120,14 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
 
     public void setFileNumber(Long fileNumber) {
         this.fileNumber = fileNumber;
+    }
+
+    public URI getPhase() {
+        return phase;
+    }
+
+    public void setPhase(URI phase) {
+        this.phase = phase;
     }
 
     public Occurrence getOccurrence() {

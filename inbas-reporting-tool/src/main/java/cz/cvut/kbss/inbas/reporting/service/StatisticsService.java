@@ -32,7 +32,7 @@ public class StatisticsService {
 
     public RawJson getStatistics() {
         final String repositoryUrl = configReader.getConfig(ConfigParam.REPOSITORY_URL);
-        if (repositoryUrl == null) {
+        if (repositoryUrl.isEmpty()) {
             throw new IllegalStateException("Missing repository URL configuration.");
         }
         String query = localLoader.loadData(Constants.STATISTICS_QUERY_FILE, Collections.emptyMap());
