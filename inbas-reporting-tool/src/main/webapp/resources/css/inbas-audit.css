@@ -429,6 +429,10 @@ button.reset-filters {
     margin-right: 0.5em;
 }
 
+.filter td select {
+    margin-bottom: -15px !important;
+}
+
 .external-link {
     display: block;
     content: url('../images/icons/external.png');

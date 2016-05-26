@@ -95,7 +95,7 @@ var OccurrenceClassification = React.createClass({
             <div className='row'>
                 <div className='col-xs-4'>
                     <Select label={this.i18n('occurrence.class') + '*'} name='severityAssessment'
-                            title={this.i18n('occurrence.class-tooltip')}
+                            title={this.i18n('occurrence.class-tooltip')} addDefault={true}
                             value={report.severityAssessment} options={this._transformOccurrenceClasses()}
                             onChange={this.onChange}/>
                 </div>
@@ -124,7 +124,7 @@ var OccurrenceClassification = React.createClass({
     _resolveSelectedCategory: function () {
         var catId = this.props.report.occurrence.eventType,
             categories = this.state.occurrenceCategories;
-        return categories.find(function(item) {
+        return categories.find(function (item) {
             return item.id === catId;
         });
     },
