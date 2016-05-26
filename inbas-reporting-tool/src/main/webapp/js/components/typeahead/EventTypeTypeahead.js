@@ -6,7 +6,7 @@ var Typeahead = require('react-bootstrap-typeahead');
 var injectIntl = require('../../utils/injectIntl');
 
 var Actions = require('../../actions/Actions');
-var TypeaheadResultList = require('./EventTypeTypeaheadResultList');
+var TypeaheadResultList = require('./EventTypeTypeaheadResultList').default;
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var I18nMixin = require('../../i18n/I18nMixin');
 var Utils = require('../../utils/Utils');

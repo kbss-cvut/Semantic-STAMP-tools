@@ -9,6 +9,7 @@ var classNames = require('classnames');
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
+var Label = require('react-bootstrap').Label;
 // require().default is needed for default-exported components using the ES6 syntax
 var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
 var injectIntl = require('../../utils/injectIntl');
@@ -192,11 +193,11 @@ var FactorDetail = React.createClass({
             durationMinus = <Button bsSize='small' disabled={this.state.duration === 0}
                                     onClick={this.onDurationMinus}><Glyphicon glyph='minus'/></Button>,
             durationPlus = <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon glyph='plus'/></Button>,
-            eventTypeIcon = this.renderFactorTypeIcon(),
+            eventTypeBadge = this.renderFactorTypeIcon(),
             eventTypeClassNames = classNames({
                 'col-xs-12': true,
                 'col-xs-11': this.state.eventType,
-                'col-xs-10': this.state.eventType && eventTypeIcon
+                'col-xs-10': this.state.eventType && eventTypeBadge
             });
 
         return (
@@ -217,7 +218,7 @@ var FactorDetail = React.createClass({
                             </div>
                         </div>
                         <div className='form-group row'>
-                            {eventTypeIcon}
+                            {eventTypeBadge}
                             <div className={eventTypeClassNames}>
                                 <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
                                                     value={eventTypeLabel}
@@ -277,8 +278,9 @@ var FactorDetail = React.createClass({
             return null;
         }
         styleInfo = FactorStyleInfo.getStyleInfo(type.type);
-        return styleInfo.icon ? <div className='col-xs-1'>
-            <img src={styleInfo.icon} className={styleInfo.cls} title={styleInfo.title}/>
+        return styleInfo.value ? <div className='col-xs-1'>
+            <Label bsStyle={styleInfo.bsStyle} title={styleInfo.title}
+                   className='event-type-label'>{styleInfo.value}</Label>
         </div> : null;
     },
 

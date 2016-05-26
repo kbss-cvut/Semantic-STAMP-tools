@@ -13,7 +13,7 @@ module.exports = {
             className: 'gantt-link-causes'
         },
         CONTRIBUTE_TO: {
-            value: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes-to',
+            value: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes_to',
             message: 'factors.contributes_to',
             className: 'gantt-link-contributes'
         },
