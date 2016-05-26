@@ -450,9 +450,9 @@
                 <version>${cz.cvut.kbss.jopa.version}</version>
                 <configuration>
                     <package>cz.cvut.kbss.inbas.reporting.model</package>
-                    <output-directory>src/main/generated-sources</output-directory>
+                    <output-directory>${project.basedir}/src/main/generated-sources</output-directory>
                     <ontology-iri>http://onto.fel.cvut.cz/ontologies/reporting-tool/model</ontology-iri>
-                    <mapping-file>src/main/resources/mapping</mapping-file>
+                    <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
                     <whole-ontology-as-ics>true</whole-ontology-as-ics>
                     <!--<context-name>eccairs-model</context-name>-->
                     <vocabulary-only>true</vocabulary-only>
