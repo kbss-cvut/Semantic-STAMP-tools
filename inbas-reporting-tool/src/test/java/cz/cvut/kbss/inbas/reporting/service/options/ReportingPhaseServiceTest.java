@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ReportingPhaseServiceTest extends BaseServiceTestRunner {
 
@@ -55,6 +56,11 @@ public class ReportingPhaseServiceTest extends BaseServiceTestRunner {
     public void nextPhaseGetsTheSamePhaseForTheLastPhase() {
         final URI lastPhase = PHASES.get(PHASES.size() - 1);
         assertEquals(lastPhase, service.nextPhase(lastPhase));
+    }
+
+    @Test
+    public void nextPhaseReturnsNullForNullPhase() {
+        assertNull(service.nextPhase(null));
     }
 
     @Test

@@ -156,4 +156,11 @@ public class MainReportService implements ReportBusinessService {
         final BaseReportService<T> service = resolveService(types);
         return service.findRevision(fileNumber, revision);
     }
+
+    @Override
+    public <T extends LogicalDocument> void transitionToNextPhase(T report) {
+        Objects.requireNonNull(report);
+        resolveService(report).transitionToNextPhase(report);
+        reportCache.put(report.toReportDto());
+    }
 }

@@ -49,6 +49,9 @@ public class ReportingPhaseService {
      * @return Next reporting phase
      */
     public URI nextPhase(URI currentPhase) {
+        if (currentPhase == null) {
+            return null;
+        }
         final int i = phases.indexOf(currentPhase);
         if (i == -1) {
             throw new IllegalArgumentException("Unsupported reporting phase " + currentPhase);

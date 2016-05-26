@@ -7,6 +7,7 @@ import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
+import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,9 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.*;
 
 public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner {
+
+    @Autowired
+    private ReportingPhaseService phaseService;
 
     @Autowired
     private RepositoryOccurrenceReportService occurrenceReportService;
@@ -161,5 +165,47 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         assertNull(report.getArmsIndex());
         final OccurrenceReport result = occurrenceReportService.find(report.getUri());
         assertNotNull(result.getArmsIndex());
+    }
+
+    @Test
+    public void transitionToNextPhaseSetsNewPhaseOnReport() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        report.setPhase(phaseService.getInitialPhase());
+        occurrenceReportService.persist(report);
+        occurrenceReportService.transitionToNextPhase(report);
+
+        final URI expected = phaseService.nextPhase(phaseService.getInitialPhase());
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertEquals(expected, result.getPhase());
+    }
+
+    @Test
+    public void transitionToNextPhaseDoesNothingWhenReportHasNoPhase() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        report.setAuthor(author);
+        assertNull(report.getPhase());
+        occurrenceReportService.persist(report);
+        occurrenceReportService.transitionToNextPhase(report);
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertEquals(report.getPhase(), result.getPhase());
+    }
+
+    @Test
+    public void transitionToNextPhaseDoesNothingIfAlreadyInLatestPhase() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        report.setPhase(phaseService.getInitialPhase());
+        URI oldPhase;
+        do {
+            oldPhase = report.getPhase();
+            report.setPhase(phaseService.nextPhase(report.getPhase()));
+        } while (!oldPhase.equals(report.getPhase()));
+        occurrenceReportService.persist(report);
+        occurrenceReportService.transitionToNextPhase(report);
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertEquals(report.getPhase(), result.getPhase());
     }
 }

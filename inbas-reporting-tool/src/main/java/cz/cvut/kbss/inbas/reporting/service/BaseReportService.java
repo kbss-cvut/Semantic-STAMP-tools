@@ -52,4 +52,13 @@ interface BaseReportService<T extends LogicalDocument> extends BaseService<T> {
      * @return Matching report or {@code null}
      */
     T findRevision(Long fileNumber, Integer revision);
+
+    /**
+     * Transitions the specified report to the next phase (if possible).
+     * <p>
+     * If the report has no phase or it is in the latest possible phase, no action occurs.
+     *
+     * @param report The report to transition
+     */
+    void transitionToNextPhase(T report);
 }
