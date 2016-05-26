@@ -11,19 +11,21 @@ var FactorStyleInfo = {
         switch (type) {
             case 'http://onto.fel.cvut.cz/ontologies/eccairs/event-type':
                 return {
-                    icon: 'resources/images/icons/event_type.gif',
-                    cls: 'factor-event-type',
+                    value: 'ET',
+                    bsStyle: 'default',
+                    ganttCls: 'factor-event-type',
                     title: 'Event type'
                 };
             case 'http://onto.fel.cvut.cz/ontologies/eccairs/descriptive-factor':
                 return {
-                    icon: 'resources/images/icons/descriptive_factor.gif',
-                    cls: 'factor-descriptive-factor',
+                    value: 'DF',
+                    bsStyle: 'success',
+                    ganttCls: 'factor-descriptive-factor',
                     title: 'Descriptive factor'
                 };
             default:
                 return {
-                    cls: 'factor-event-type'
+                    ganttCls: 'factor-event-type'
                 };
         }
     },

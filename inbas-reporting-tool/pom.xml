@@ -20,6 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
         <cz.cvut.kbss.jopa.version>0.7.9</cz.cvut.kbss.jopa.version>
         <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
@@ -42,6 +43,20 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <!-- For the JOPA maven plugin -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>kbss</id>
+            <name>KBSS Maven 2 Repository</name>
+            <url>http://kbss.felk.cvut.cz/m2repo</url>
+            <snapshots>
+                <checksumPolicy>warn</checksumPolicy>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <!-- Spring -->
@@ -164,6 +179,8 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- E5X/F report parsing -->
         <dependency>
             <groupId>cz.cvut.inbas.eccairs</groupId>
             <artifactId>e5xml</artifactId>
@@ -435,12 +452,12 @@
                 <!-- Generate entity classes from OWL integrity constraints -->
                 <groupId>cz.cvut.kbss.jopa</groupId>
                 <artifactId>jopa-maven-plugin</artifactId>
-                <version>0.7.9</version>
+                <version>${cz.cvut.kbss.jopa.version}</version>
                 <configuration>
                     <package>cz.cvut.kbss.inbas.reporting.model</package>
-                    <output-directory>src/main/generated-sources</output-directory>
+                    <output-directory>${project.basedir}/src/main/generated-sources</output-directory>
                     <ontology-iri>http://onto.fel.cvut.cz/ontologies/reporting-tool/model</ontology-iri>
-                    <mapping-file>src/main/resources/mapping</mapping-file>
+                    <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
                     <whole-ontology-as-ics>true</whole-ontology-as-ics>
                     <!--<context-name>eccairs-model</context-name>-->
                     <vocabulary-only>true</vocabulary-only>

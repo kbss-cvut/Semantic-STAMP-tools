@@ -1,6 +1,7 @@
 'use strict';
 
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
+var EventTypeFactory = require('../../model/EventTypeFactory');
 var Factory = require('../../model/ReportFactory');
 
 var DATE_FORMAT = '%d-%m-%y %H:%i';
@@ -122,8 +123,8 @@ var GanttController = {
             if (!task.parent) {
                 return 'factor-occurrence-event';
             }
-            eventType = task.statement.eventType;
-            return FactorStyleInfo.getStyleInfo(eventType).cls;
+            eventType = EventTypeFactory.resolveEventType(task.statement.eventType);
+            return FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls;
         };
         gantt.templates.tooltip_date_format = function (date) {
             var formatFunc = gantt.date.date_to_str(TOOLTIP_DATE_FORMAT);

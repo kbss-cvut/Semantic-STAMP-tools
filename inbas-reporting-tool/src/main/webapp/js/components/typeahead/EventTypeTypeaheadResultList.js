@@ -1,58 +1,62 @@
-/**
- * @jsx
- */
-
 'use strict';
 
-var React = require('react');
-var FactorStyleInfo = require('../../utils/FactorStyleInfo');
+import React from "react";
+import {Label} from "react-bootstrap";
+import FactorStyleInfo from "../../utils/FactorStyleInfo";
 
-var EventTypeResultList = React.createClass({
+const ResultListItem = (props) => {
+    var option = props.option,
+        label = typeof props.displayOption === 'function' ? props.displayOption(option) : option[props.displayOption],
+        styleInfo = FactorStyleInfo.getStyleInfo(option.type);
 
-    render: function () {
-        var listCls = this.props.options.length < 21 ? 'autocomplete-results event-type' : 'autocomplete-results extended event-type';
+    return <li className='btn-link item' title={option.description} onClick={props.onClick}>
+        {styleInfo.value ?
+            <Label bsStyle={styleInfo.bsStyle} title={styleInfo.title}
+                   className='autocomplete-results-item'>{styleInfo.value}</Label> : null}
+        {label}
+    </li>;
+};
+
+ResultListItem.propTypes = {
+    option: React.PropTypes.object.isRequired,
+    displayOption: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]).isRequired,
+    onClick: React.PropTypes.func.isRequired
+};
+
+class EventTypeTypeaheadResultList extends React.Component {
+    static propTypes = {
+        options: React.PropTypes.array.isRequired,
+        customClasses: React.PropTypes.object.isRequired,
+        onOptionSelected: React.PropTypes.func.isRequired,
+        displayOption: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.func]).isRequired
+    };
+
+    constructor(props) {
+        super(props);
+    }
+
+    _onClick(option, evt) {
+        evt.preventDefault();
+        this.props.onOptionSelected(option);
+    }
+
+    render() {
+        var options = this.props.options,
+            listCls = options.length < 21 ? 'autocomplete-results event-type' : 'autocomplete-results extended event-type';
         if (this.props.customClasses.results) {
             listCls += ' ' + this.props.customClasses.results;
         }
         var items = [];
-        for (var i = 0, len = this.props.options.length; i < len; i++) {
-            var option = this.props.options[i];
-            var onClick = this.onClick.bind(this, option);
-            items.push(<li className='btn-link item' key={'typeahead-result-' + i} title={option.description}
-                           onClick={onClick}>
-                {this.renderIcon(option)}
-                {this.getOptionLabel(option)}
-            </li>);
+        for (var i = 0, len = options.length; i < len; i++) {
+            const option = options[i];
+            var onClick = this._onClick.bind(this, option);
+            items.push(<ResultListItem option={option} displayOption={this.props.displayOption} onClick={onClick}
+                                       key={'option-' + i}/>);
         }
-        return (
-            <ul className={listCls}>
-                {items}
-            </ul>
-        );
-    },
-
-    renderIcon: function (option) {
-        if (!option.type) {
-            return null;
-        }
-        var styleInfo = FactorStyleInfo.getStyleInfo(option.type);
-
-        return styleInfo.icon ? <img src={styleInfo.icon} className={styleInfo.cls + ' autocomplete-results'}
-                                     title={styleInfo.title}/> : null;
-    },
-
-    getOptionLabel: function (option) {
-        if (typeof this.props.displayOption === 'function') {
-            return this.props.displayOption(option);
-        } else {
-            return option[this.props.displayOption];
-        }
-    },
-
-    onClick: function (option, event) {
-        event.preventDefault();
-        this.props.onOptionSelected(option);
+        return <ul className={listCls}>
+            {items}
+        </ul>;
     }
-});
+}
 
-module.exports = EventTypeResultList;
+export default EventTypeTypeaheadResultList;
