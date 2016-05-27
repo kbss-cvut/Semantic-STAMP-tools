@@ -8,8 +8,6 @@ import ReportStore from "../../stores/ReportStore";
 import Routes from "../../utils/Routes";
 import Routing from "../../utils/Routing";
 
-const UNPROCESSED_PHASE = 'http://onto.fel.cvut.cz/ontologies/aviation-safety/not_processed';
-
 export default class UnprocessedReports extends React.Component {
     constructor(props) {
         super(props);
@@ -17,6 +15,8 @@ export default class UnprocessedReports extends React.Component {
             count: 0
         };
     }
+
+    static UNPROCESSED_PHASE = 'http://onto.fel.cvut.cz/ontologies/aviation-safety/not_processed';
 
     componentWillMount() {
         this.unsubscribe = ReportStore.listen(this._onReportsLoaded);
@@ -32,7 +32,7 @@ export default class UnprocessedReports extends React.Component {
         }
         var unprocessed = 0;
         for (var i = 0, len = data.reports.length; i < len; i++) {
-            if (data.reports[i].phase === UNPROCESSED_PHASE) {
+            if (data.reports[i].phase === UnprocessedReports.UNPROCESSED_PHASE) {
                 unprocessed++;
             }
         }
@@ -40,7 +40,7 @@ export default class UnprocessedReports extends React.Component {
     };
 
     static _goToReports() {
-        Routing.transitionTo(Routes.reports, {payload: {filter: {'phase': UNPROCESSED_PHASE}}});
+        Routing.transitionTo(Routes.reports, {payload: {filter: {'phase': UnprocessedReports.UNPROCESSED_PHASE}}});
     }
 
     render() {

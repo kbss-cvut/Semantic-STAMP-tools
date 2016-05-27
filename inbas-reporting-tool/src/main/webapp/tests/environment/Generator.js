@@ -223,6 +223,10 @@ export default class Generator {
         return Math.floor(Math.random() * (bound - min)) + min;
     }
 
+    static getRandomBoolean() {
+        return Math.random() < 0.5;
+    }
+
     /**
      * Generates a random number of reports.
      */
@@ -248,7 +252,7 @@ export default class Generator {
     static getRandomUri() {
         return Generator._uriBase + Generator.getRandomInt();
     }
-    
+
     static getJsonLdSample() {
         return JSON_LD;
     }
