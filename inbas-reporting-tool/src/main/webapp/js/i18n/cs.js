@@ -80,6 +80,8 @@ module.exports = {
         'dashboard.recent.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
         'dashboard.import.import-e5': 'Importovat hlášení ve formátu E5X/E5F',
 
+        'dashboard.unprocessed': 'Máte {count} nezpracovaných hlášení.',
+
         'dropzone.title': 'Přetáhněte soubor sem nebo klikněte pro výběr souboru k nahrání.',
         'dropzone-tooltip': 'Klikněte zde pro výber souboru k nahrání',
 
@@ -96,6 +98,7 @@ module.exports = {
         'reports.table-type': 'Typ hlášení',
         'reports.table-classification': 'Kategorie',
         'reports.table-classification.tooltip': 'Vyberte kategorií událostí, kterou chcete zobrazit',
+        'reports.phase': 'Stav hlášení',
         'reports.filter.label': 'Zobrazit',
         'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',
         'reports.filter.type.all': 'Všechna',

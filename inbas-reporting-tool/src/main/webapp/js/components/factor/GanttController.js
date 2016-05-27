@@ -124,7 +124,7 @@ var GanttController = {
                 return 'factor-occurrence-event';
             }
             eventType = EventTypeFactory.resolveEventType(task.statement.eventType);
-            return FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls;
+            return eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '';
         };
         gantt.templates.tooltip_date_format = function (date) {
             var formatFunc = gantt.date.date_to_str(TOOLTIP_DATE_FORMAT);

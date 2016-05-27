@@ -250,6 +250,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         res.setUri(uri);
         res.setKey(key);
         res.setFileNumber(fileNumber);
+        res.setPhase(phase);
         res.setAuthor(author);
         res.setDateCreated(dateCreated);
         res.setLastModifiedBy(lastModifiedBy);

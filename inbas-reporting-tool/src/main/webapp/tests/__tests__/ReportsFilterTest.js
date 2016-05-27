@@ -25,7 +25,7 @@ describe('ReportsFilter', function () {
             filter = Environment.renderIntoTable(<ReportsFilter onFilterChange={onFilterChange} reports={reports}/>);
 
         var options = filter._getReportTypeOptions();
-        expect(options.length).toEqual(uniqueTypes.length + 1);
+        expect(options.length).toEqual(uniqueTypes.length);
         for (var i = 0, len = options.length; i < len; i++) {
             if (options[i].value !== 'all') {
                 expect(uniqueTypes.indexOf(options[i].value)).not.toEqual(-1);

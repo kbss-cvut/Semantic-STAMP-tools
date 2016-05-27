@@ -79,6 +79,8 @@ module.exports = {
         'dashboard.recent.no-reports': 'There are no reports, yet.',
         'dashboard.import.import-e5': 'Import E5X/E5F report',
         
+        'dashboard.unprocessed': 'You have {count} unprocessed report(s).',
+        
         'dropzone.title': 'Drop the file here or click to select a file to upload.',
         'dropzone-tooltip': 'Click here to select a file to upload',
         
@@ -95,6 +97,7 @@ module.exports = {
         'reports.table-type': 'Report type',
         'reports.table-classification': 'Category',
         'reports.table-classification.tooltip': 'Select occurrence category to show',
+        'reports.phase': 'Report state',
         'reports.filter.label': 'Filter',
         'reports.filter.type.tooltip': 'Select report type',
         'reports.filter.type.all': 'All',

@@ -44,7 +44,7 @@ class CorrectiveMeasures extends React.Component {
     };
 
     addCorrectiveMeasure = (data, closeCallback) => {
-        var measure = data.statement;
+        var measure = data.data.statement;
         var measures = this.props.report.correctiveMeasures != null ? this.props.report.correctiveMeasures : [];
         measures.push(measure);
         this.props.onChange({correctiveMeasures: measures});
@@ -52,7 +52,7 @@ class CorrectiveMeasures extends React.Component {
     };
 
     updateCorrectiveMeasure = (data, closeCallback) => {
-        var measure = data.statement,
+        var measure = data.data.statement,
             measures = this.props.report.correctiveMeasures;
         measures.splice(measure.index, 1, measure);
 

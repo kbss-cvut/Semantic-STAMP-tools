@@ -6,7 +6,6 @@ var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
 var FormUtils = require('./FormUtils').default;
 var Logger = require('../../../utils/Logger');
-var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
 
 var GeneratedStep = require('./GeneratedStep').default;

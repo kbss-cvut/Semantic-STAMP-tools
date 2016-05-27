@@ -33,7 +33,6 @@ var ReportTypeahead = React.createClass({
 
     componentWillMount: function () {
         this.listenTo(ReportStore, this.onReportsLoaded);
-        Actions.loadAllReports();
     },
 
     componentDidMount: function () {

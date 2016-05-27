@@ -160,16 +160,16 @@ module.exports = {
         var res = {
             id: jsonLd['@id'],
             type: jsonLd['@type'],
-            name: typeof(jsonLd[Vocabulary.RDFS_LABEL]) === 'string' ? jsonLd[Vocabulary.RDFS_LABEL] : jsonLd[Vocabulary.RDFS_LABEL]['@value']
+            name: this.getJsonAttValue(jsonLd, Vocabulary.RDFS_LABEL)
         };
         if (jsonLd[Vocabulary.RDFS_COMMENT]) {
-            if (typeof(jsonLd[Vocabulary.RDFS_COMMENT]) === 'string') {
-                res.description = jsonLd[Vocabulary.RDFS_COMMENT];
-            } else {
-                res.description = jsonLd[Vocabulary.RDFS_COMMENT]['@value'];
-            }
+            res.description = this.getJsonAttValue(jsonLd, Vocabulary.RDFS_COMMENT);
         }
         return res;
+    },
+
+    getJsonAttValue: function (obj, att) {
+        return typeof(obj[att]) === 'string' ? obj[att] : obj[att]['@value']
     },
 
     /**

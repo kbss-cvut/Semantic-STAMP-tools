@@ -16,6 +16,18 @@ class OccurrenceReport {
         return require('../components/report/occurrence/OccurrenceReportController');
     }
 
+    getPhase(phaseMapping) {
+        if (!this.phase) {
+            return '';
+        }
+        for (var i = 0, len = phaseMapping.length; i < len; i++) {
+            if (phaseMapping[i]['@id'] === this.phase) {
+                return phaseMapping[i][Vocabulary.RDFS_LABEL];
+            }
+        }
+        return this.phase;
+    }
+
     getLabel() {
         return 'occurrencereport.label';
     }

@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class Environment {
@@ -33,7 +34,7 @@ public class Environment {
      */
     public static void setCurrentUser(Person user) {
         currentUser = user;
-        final UserDetails userDetails = new UserDetails(user);
+        final UserDetails userDetails = new UserDetails(user, new HashSet<>());
         SecurityContext context = new SecurityContextImpl();
         context.setAuthentication(new AuthenticationToken(userDetails.getAuthorities(), userDetails));
         SecurityContextHolder.setContext(context);
