@@ -9,7 +9,6 @@ import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.util.DocumentDateAndRevisionComparator;
 import cz.cvut.kbss.inbas.reporting.model.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.ReportDao;
-import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +22,13 @@ public class MainReportService implements ReportBusinessService {
     @Autowired
     private ReportDao reportDao;
 
-    @Autowired
-    private ReportCache reportCache;
+//    @Autowired
+//    private ReportCache reportCache;
 
     @Autowired
     private OccurrenceReportService occurrenceReportService;
 
-    private volatile boolean cacheLoaded;
+//    private volatile boolean cacheLoaded;
 
     private final Map<String, Class<? extends LogicalDocument>> entitiesToOwlClasses = new HashMap<>();
 
@@ -48,17 +47,13 @@ public class MainReportService implements ReportBusinessService {
 
     @Override
     public List<ReportDto> findAll() {
-        if (cacheLoaded) {
-            return reportCache.getAll();
-        }
+//        if (cacheLoaded) {
+//            return reportCache.getAll();
+//        }
         final List<LogicalDocument> reports = new ArrayList<>();
         services.values().forEach(service -> reports.addAll(service.findAll()));
-        final List<ReportDto> result = reports.stream().map(report -> {
-            final ReportDto dto = report.toReportDto();
-            reportCache.put(dto);
-            return dto;
-        }).collect(Collectors.toList());
-        cacheLoaded = true;
+        final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
+//        cacheLoaded = true;
         Collections.sort(result, new DocumentDateAndRevisionComparator());
         return result;
     }
@@ -67,7 +62,7 @@ public class MainReportService implements ReportBusinessService {
     public <T extends LogicalDocument> void persist(T report) {
         Objects.requireNonNull(report);
         resolveService(report).persist(report);
-        reportCache.put(report.toReportDto());
+//        reportCache.put(report.toReportDto());
     }
 
     private <T extends LogicalDocument> BaseReportService<T> resolveService(T instance) {
@@ -101,7 +96,7 @@ public class MainReportService implements ReportBusinessService {
     public <T extends LogicalDocument> void update(T report) {
         Objects.requireNonNull(report);
         resolveService(report).update(report);
-        reportCache.put(report.toReportDto());
+//        reportCache.put(report.toReportDto());
     }
 
     @Override
@@ -123,7 +118,7 @@ public class MainReportService implements ReportBusinessService {
             return;
         }
         resolveService(types).removeReportChain(fileNumber);
-        reportCache.evict(fileNumber);
+//        reportCache.evict(fileNumber);
     }
 
     @Override
@@ -140,9 +135,8 @@ public class MainReportService implements ReportBusinessService {
             throw NotFoundException.create("Report chain", fileNumber);
         }
         final BaseReportService<T> service = resolveService(types);
-        final T newRevision = service.createNewRevision(fileNumber);
-        reportCache.put(newRevision.toReportDto());
-        return newRevision;
+        //        reportCache.put(newRevision.toReportDto());
+        return service.createNewRevision(fileNumber);
     }
 
     @Override
@@ -161,6 +155,6 @@ public class MainReportService implements ReportBusinessService {
     public <T extends LogicalDocument> void transitionToNextPhase(T report) {
         Objects.requireNonNull(report);
         resolveService(report).transitionToNextPhase(report);
-        reportCache.put(report.toReportDto());
+//        reportCache.put(report.toReportDto());
     }
 }
