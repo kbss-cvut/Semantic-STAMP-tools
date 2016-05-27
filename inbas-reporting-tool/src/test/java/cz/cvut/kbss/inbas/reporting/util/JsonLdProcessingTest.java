@@ -12,10 +12,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class JsonLdProcessingTest {
 
     private static final String ORDER_PROPERTY = "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than";
+    private static final String TYPE = "http://onto.fel.cvut.cz/ontologies/aviation-safety/default-phase";
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -30,7 +32,7 @@ public class JsonLdProcessingTest {
     }
 
     @Test
-    public void getOrderedOptionsThrowsProcessingExceptionWhenInvalidJsonIsPassedIn() throws Exception {
+    public void getOrderedOptionsThrowsProcessingExceptionForInvalidJson() throws Exception {
         final String invalidJson = "This is definitely not a valid JSON.";
         thrown.expect(JsonProcessingException.class);
         thrown.expectMessage("The specified JSON is not valid. JSON: " + invalidJson);
@@ -43,5 +45,38 @@ public class JsonLdProcessingTest {
         thrown.expect(JsonProcessingException.class);
         thrown.expectMessage("The specified JSON does not contain options that can be sorted.");
         JsonLdProcessing.getOrderedOptions(json, ORDER_PROPERTY);
+    }
+
+    @Test
+    public void getItemWithTypeReturnsFirstItemWithTheSpecifiedType() throws Exception {
+        final URI expected = URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second");
+
+        final RawJson json = new RawJson(Environment.loadData("option/reportingPhase.json", String.class));
+        final URI result = JsonLdProcessing.getItemWithType(json, TYPE);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void getItemWithTypeHandlesItemWithTypeNotAnArray() throws Exception {
+        final URI expected = URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second");
+        final String json = "[{\"@id\": \"" + expected.toString() + "\", \"@type\": \"" + TYPE + "\"}]";
+
+        final URI result = JsonLdProcessing.getItemWithType(new RawJson(json), TYPE);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void getItemWithTypeReturnsNullIfNoMatchingItemIsFound() throws Exception {
+        final RawJson json = new RawJson(Environment.loadData("option/reportingPhase.json", String.class));
+        // Order property is definitely not it types of any of the items
+        assertNull(JsonLdProcessing.getItemWithType(json, ORDER_PROPERTY));
+    }
+
+    @Test
+    public void getItemWithTypeThrowsProcessingExceptionForInvalidJson() throws Exception {
+        final String invalidJson = "This is definitely not a valid JSON.";
+        thrown.expect(JsonProcessingException.class);
+        thrown.expectMessage("The specified JSON is not valid. JSON: " + invalidJson);
+        JsonLdProcessing.getItemWithType(new RawJson(invalidJson), TYPE);
     }
 }

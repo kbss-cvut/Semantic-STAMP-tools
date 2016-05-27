@@ -77,6 +77,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         instance.setDateCreated(new Date());
         instance.setFileNumber(IdentificationUtils.generateFileNumber());
         instance.setRevision(Constants.INITIAL_REVISION);
+        if (instance.getPhase() == null) {
+            instance.setPhase(phaseService.getDefaultPhase());
+        }
     }
 
     @Override

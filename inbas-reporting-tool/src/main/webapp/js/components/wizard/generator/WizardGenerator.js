@@ -4,6 +4,7 @@ var jsonld = require('jsonld');
 
 var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
+var FormUtils = require('./FormUtils').default;
 var Logger = require('../../../utils/Logger');
 var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
@@ -48,15 +49,15 @@ var WizardGenerator = {
 
         for (i = 0, len = form.length; i < len; i++) {
             item = form[i];
-            if (this._isForm(item)) {
+            if (FormUtils.isForm(item)) {
                 form = item;
                 break;
             }
         }
-        formElements = form[Constants.HAS_SUBQUESTION];
+        formElements = form[Constants.FORM.HAS_SUBQUESTION];
         for (i = 0, len = formElements.length; i < len; i++) {
             item = formElements[i];
-            if (this._isWizardStep(item)) {
+            if (FormUtils.isWizardStep(item) && !FormUtils.isHidden(item)) {
                 steps.push({
                     name: item[Vocabulary.RDFS_LABEL],
                     component: GeneratedStep,
@@ -67,14 +68,6 @@ var WizardGenerator = {
             }
         }
         return steps;
-    },
-
-    _isForm: function (item) {
-        return Utils.hasValue(item, '@type', Constants.FORM);
-    },
-
-    _isWizardStep: function (item) {
-        return Utils.hasValue(item, Constants.LAYOUT_CLASS, Constants.WIZARD_STEP);
     }
 };
 

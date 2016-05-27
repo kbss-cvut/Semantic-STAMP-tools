@@ -5,8 +5,8 @@ import assign from "object-assign";
 import {Panel} from "react-bootstrap";
 import Answer from "./Answer";
 import Constants from "../../../constants/Constants";
+import FormUtils from "./FormUtils";
 import QuestionAnswerProcessor from "../../../model/QuestionAnswerProcessor";
-import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 
 export default class Question extends React.Component {
@@ -22,11 +22,11 @@ export default class Question extends React.Component {
     }
 
     onAnswerChange = (answerIndex, change) => {
-        this._onChange(Constants.HAS_ANSWER, answerIndex, change);
+        this._onChange(Constants.FORM.HAS_ANSWER, answerIndex, change);
     };
 
     onSubQuestionChange = (subQuestionIndex, change) => {
-        this._onChange(Constants.HAS_SUBQUESTION, subQuestionIndex, change);
+        this._onChange(Constants.FORM.HAS_SUBQUESTION, subQuestionIndex, change);
     };
 
     _onChange(att, valueIndex, newValue) {
@@ -36,7 +36,10 @@ export default class Question extends React.Component {
     }
 
     render() {
-        if (Question._isSection(this.props.question)) {
+        if (FormUtils.isHidden(this.props.question)) {
+            return null;
+        }
+        if (FormUtils.isSection(this.props.question)) {
             if (this.props.withoutPanel) {
                 return <div>
                     {this.renderAnswers()}
@@ -54,10 +57,6 @@ export default class Question extends React.Component {
         }
     }
 
-    static _isSection(question) {
-        return Utils.hasValue(question, Constants.LAYOUT_CLASS, Constants.QUESTION_SECTION);
-    }
-
     renderAnswers() {
         var question = this.props.question,
             children = [], row = [];
@@ -65,7 +64,7 @@ export default class Question extends React.Component {
         for (var i = 0, len = answers.length; i < len; i++) {
             row.push(<Answer key={'row-item-' + i} index={i} answer={answers[i]} question={question}
                              onChange={this.onAnswerChange}/>);
-            if (row.length === Constants.GENERATED_ROW_SIZE) {
+            if (row.length === Constants.FORM.GENERATED_ROW_SIZE) {
                 children.push(<div className='row' key={'question-row-' + i}>{row}</div>);
                 row = [];
             }
@@ -78,17 +77,17 @@ export default class Question extends React.Component {
 
     _getAnswers() {
         var question = this.props.question;
-        if (!question[Constants.HAS_ANSWER]) {
-            if (Question._isSection(question)) {
-                question[Constants.HAS_ANSWER] = [];
+        if (!question[Constants.FORM.HAS_ANSWER]) {
+            if (FormUtils.isSection(question)) {
+                question[Constants.FORM.HAS_ANSWER] = [];
             } else {
-                question[Constants.HAS_ANSWER] = [QuestionAnswerProcessor.generateAnswer(question)];
+                question[Constants.FORM.HAS_ANSWER] = [QuestionAnswerProcessor.generateAnswer(question)];
             }
         }
-        if (!Array.isArray(question[Constants.HAS_ANSWER])) {
-            question[Constants.HAS_ANSWER] = [question[Constants.HAS_ANSWER]];
+        if (!Array.isArray(question[Constants.FORM.HAS_ANSWER])) {
+            question[Constants.FORM.HAS_ANSWER] = [question[Constants.FORM.HAS_ANSWER]];
         }
-        return question[Constants.HAS_ANSWER];
+        return question[Constants.FORM.HAS_ANSWER];
     }
 
     renderSubQuestions() {
@@ -103,12 +102,12 @@ export default class Question extends React.Component {
 
     _getSubQuestions() {
         var question = this.props.question;
-        if (!question[Constants.HAS_SUBQUESTION]) {
-            question[Constants.HAS_SUBQUESTION] = [];
+        if (!question[Constants.FORM.HAS_SUBQUESTION]) {
+            question[Constants.FORM.HAS_SUBQUESTION] = [];
         }
-        if (!Array.isArray(question[Constants.HAS_SUBQUESTION])) {
-            question[Constants.HAS_SUBQUESTION] = [question[Constants.HAS_SUBQUESTION]];
+        if (!Array.isArray(question[Constants.FORM.HAS_SUBQUESTION])) {
+            question[Constants.FORM.HAS_SUBQUESTION] = [question[Constants.FORM.HAS_SUBQUESTION]];
         }
-        return question[Constants.HAS_SUBQUESTION];
+        return question[Constants.FORM.HAS_SUBQUESTION];
     }
 }

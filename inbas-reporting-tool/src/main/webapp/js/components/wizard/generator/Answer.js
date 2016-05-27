@@ -7,6 +7,7 @@ import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 import Input from "../../Input";
 import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
+import FormUtils from "./FormUtils";
 import OptionsStore from "../../../stores/OptionsStore";
 import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
@@ -28,17 +29,13 @@ export default class Answer extends React.Component {
 
     componentWillMount() {
         var question = this.props.question;
-        if (Answer._isTypeahead(question)) {
-            if (!question[Constants.HAS_OPTION] || question[Constants.HAS_OPTION].length === 0) {
+        if (FormUtils.isTypeahead(question)) {
+            if (!question[Constants.FORM.HAS_OPTION] || question[Constants.FORM.HAS_OPTION].length === 0) {
                 Actions.loadOptions(question['@id']);
             } else {
-                this.setState({options: Utils.processTypeaheadOptions(question[Constants.HAS_OPTION])});
+                this.setState({options: Utils.processTypeaheadOptions(question[Constants.FORM.HAS_OPTION])});
             }
         }
-    }
-
-    static _isTypeahead(question) {
-        return Utils.hasValue(question, Constants.LAYOUT_CLASS, Constants.QUESTION_TYPEAHEAD);
     }
 
     componentDidMount() {
@@ -69,7 +66,7 @@ export default class Answer extends React.Component {
     };
 
     render() {
-        var cls = Constants.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.GENERATED_ROW_SIZE);
+        var cls = Constants.FORM.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.FORM.GENERATED_ROW_SIZE);
         return <div className={cls}>{this._renderInputComponent()}</div>;
     }
 
@@ -80,11 +77,14 @@ export default class Answer extends React.Component {
             title = question[Vocabulary.RDFS_COMMENT] ? question[Vocabulary.RDFS_COMMENT] : null,
             component;
 
-        if (Answer._isTypeahead(question)) {
+        if (FormUtils.isTypeahead(question)) {
             value = Utils.idToName(this.state.options, value);
+            var inputProps = {
+                disabled: FormUtils.isDisabled(question)
+            };
             component = <div>
                 <label className='control-label'>{label}</label>
-                <Typeahead className='form-group form-group-sm' formInputOption='id'
+                <Typeahead className='form-group form-group-sm' formInputOption='id' inputProps={inputProps}
                            title={title} value={value} label={label} placeholder={label} filterOption='name'
                            displayOption='name' onOptionSelected={this._onOptionSelected}
                            options={this.state.options} customListComponent={TypeaheadResultList}/>
@@ -92,20 +92,18 @@ export default class Answer extends React.Component {
         } else if (Answer._hasOptions(question)) {
             component =
                 <Input type='select' label={label} value={value} title={title} onChange={this.onChange}
-                       disabled={question[Constants.IS_DISABLED]}>
-                    {this._generateSelectOptions(question[Constants.HAS_OPTION])}
+                       disabled={FormUtils.isDisabled(question)}>
+                    {this._generateSelectOptions(question[Constants.FORM.HAS_OPTION])}
                 </Input>;
         } else {
             component = <Input type='text' label={label} title={title} value={value} onChange={this.onChange}
-                               disabled={question[Constants.IS_DISABLED]}/>;
+                               disabled={FormUtils.isDisabled(question)}/>;
         }
         return component;
     }
 
     static _hasOptions(item) {
-        if (item[Constants.HAS_OPTION] && item[Constants.HAS_OPTION].length !== 0) {
-            return true;
-        }
+        return item[Constants.FORM.HAS_OPTION] && item[Constants.FORM.HAS_OPTION].length !== 0;
     }
 
     _generateSelectOptions(options) {

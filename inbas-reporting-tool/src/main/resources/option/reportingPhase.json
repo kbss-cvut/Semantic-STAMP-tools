@@ -10,7 +10,10 @@
   } ],
   "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than" : [ {
     "@id" : "http://onto.fel.cvut.cz/ontologies/aviation-safety/not_processed"
-  } ]
+  } ],
+  "@type" : [
+    "http://onto.fel.cvut.cz/ontologies/aviation-safety/default-phase"
+  ]
 }, {
   "@id" : "http://onto.fel.cvut.cz/ontologies/aviation-safety/sent_to_sag",
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {

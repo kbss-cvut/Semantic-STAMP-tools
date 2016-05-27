@@ -70,4 +70,10 @@ public class ReportingPhaseServiceTest extends BaseServiceTestRunner {
         thrown.expectMessage("Unsupported reporting phase " + unsupportedPhase);
         service.nextPhase(URI.create(unsupportedPhase));
     }
+
+    @Test
+    public void getDefaultPhaseReturnsDefaultReportPhase() {
+        final URI expected = URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second");
+        assertEquals(expected, service.getDefaultPhase());
+    }
 }

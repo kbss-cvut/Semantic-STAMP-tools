@@ -66,6 +66,30 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     }
 
     @Test
+    public void persistSetsDefaultReportPhase() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        assertNull(report.getPhase());
+        occurrenceReportService.persist(report);
+        assertNotNull(report.getPhase());
+        assertEquals(phaseService.getDefaultPhase(), report.getPhase());
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertEquals(phaseService.getDefaultPhase(), result.getPhase());
+    }
+
+    @Test
+    public void persistDoesNotSetDefaultPhaseIfPhaseIsAlreadySet() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        assertNotEquals(phaseService.getInitialPhase(), phaseService.getDefaultPhase());
+        report.setPhase(phaseService.getInitialPhase());
+        occurrenceReportService.persist(report);
+        assertEquals(phaseService.getInitialPhase(), report.getPhase());
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertEquals(phaseService.getInitialPhase(), result.getPhase());
+    }
+
+    @Test
     public void createNewRevisionPersistsNewReportWithIncreasedRevisionNumberSameFileNumberCurrentUserAsAuthorCurrentTimeAsCreationDate() {
         final OccurrenceReport firstRevision = persistFirstRevision(false);
 
