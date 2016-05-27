@@ -3,6 +3,7 @@
 var GanttController = require('./GanttController');
 var Vocabulary = require('../../constants/Vocabulary');
 var EventTypeFactory = require('../../model/EventTypeFactory');
+var Utils = require('../../utils/Utils');
 
 var FactorRenderer = {
 
@@ -89,7 +90,7 @@ var FactorRendererImpl = {
                 text = node.name;
             } else {
                 var eventType = EventTypeFactory.resolveEventType(node.eventType, eventTypes);
-                text = eventType ? eventType[Vocabulary.RDFS_LABEL] : node.eventType;
+                text = eventType ? Utils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
             }
             GanttController.addFactor({
                 id: node.referenceId,
