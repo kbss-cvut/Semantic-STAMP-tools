@@ -63,6 +63,7 @@ public class OccurrenceReportTest {
     @Test
     public void testToReportDto() {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setPhase(Generator.generateEventType());
 
         final ReportDto dto = report.toReportDto();
         assertTrue(dto instanceof OccurrenceReportDto);
@@ -70,6 +71,7 @@ public class OccurrenceReportTest {
         assertEquals(report.getUri(), result.getUri());
         assertEquals(report.getKey(), result.getKey());
         assertEquals(report.getFileNumber(), result.getFileNumber());
+        assertEquals(report.getPhase(), result.getPhase());
         assertEquals(report.getAuthor(), result.getAuthor());
         assertEquals(report.getDateCreated(), result.getDateCreated());
         assertEquals(report.getLastModified(), result.getLastModified());

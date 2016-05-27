@@ -1,6 +1,3 @@
-/**
- * @jsx
- */
 'use strict';
 
 var React = require('react');
@@ -80,6 +77,7 @@ var ReportsController = React.createClass({
 
     componentDidMount: function () {
         Actions.loadAllReports();
+        Actions.loadOptions('reportingPhase');
     },
 
     onReportsLoaded: function (data) {

@@ -95,6 +95,7 @@ module.exports = {
         'reports.table-type': 'Report type',
         'reports.table-classification': 'Category',
         'reports.table-classification.tooltip': 'Select occurrence category to show',
+        'reports.phase': 'Report state',
         'reports.filter.label': 'Filter',
         'reports.filter.type.tooltip': 'Select report type',
         'reports.filter.type.all': 'All',

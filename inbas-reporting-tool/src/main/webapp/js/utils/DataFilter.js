@@ -23,7 +23,7 @@ var DataFilter = {
                 for (var i = 0, len = path.length; i < len; i++) {
                     value = value[path[i]];
                 }
-                if ((Array.isArray(value) && value.indexOf(filter[key]) === -1) || (!Array.isArray && value !== filter[key])) {
+                if ((Array.isArray(value) && value.indexOf(filter[key]) === -1) || (!Array.isArray(value) && value !== filter[key])) {
                     return false;
                 }
             }

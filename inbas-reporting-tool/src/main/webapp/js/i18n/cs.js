@@ -96,6 +96,7 @@ module.exports = {
         'reports.table-type': 'Typ hlášení',
         'reports.table-classification': 'Kategorie',
         'reports.table-classification.tooltip': 'Vyberte kategorií událostí, kterou chcete zobrazit',
+        'reports.phase': 'Stav hlášení',
         'reports.filter.label': 'Zobrazit',
         'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',
         'reports.filter.type.all': 'Všechna',
