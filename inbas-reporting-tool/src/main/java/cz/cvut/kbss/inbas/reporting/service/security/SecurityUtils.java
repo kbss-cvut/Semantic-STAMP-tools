@@ -28,7 +28,7 @@ public class SecurityUtils {
      */
     public UserDetails getCurrentUserDetails() {
         final SecurityContext context = SecurityContextHolder.getContext();
-        if (context != null && context.getAuthentication().getDetails() instanceof UserDetails) {
+        if (context.getAuthentication() != null && context.getAuthentication().getDetails() instanceof UserDetails) {
             return (UserDetails) context.getAuthentication().getDetails();
         } else {
             return null;
