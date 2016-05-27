@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
+import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.inbas.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.reporting.service.validation.OccurrenceReportValidator;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
@@ -30,6 +31,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
 
     @Autowired
     private OccurrenceReportValidator validator;
+
+    @Autowired
+    private ReportingPhaseService phaseService;
 
     @Autowired
     private ArmsService armsService;
@@ -132,6 +136,13 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         final OccurrenceReport r = reportDao.findRevision(fileNumber, revision);
         setArmsIndex(r);
         return r;
+    }
+
+    @Override
+    public void transitionToNextPhase(OccurrenceReport report) {
+        Objects.requireNonNull(report);
+        report.setPhase(phaseService.nextPhase(report.getPhase()));
+        update(report);
     }
 
     @Override

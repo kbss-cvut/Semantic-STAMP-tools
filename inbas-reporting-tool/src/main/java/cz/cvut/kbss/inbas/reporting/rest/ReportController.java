@@ -76,6 +76,13 @@ public class ReportController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/{key}/phase", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void transitionToNextPhase(@PathVariable("key") String key) {
+        final LogicalDocument report = getReportInternal(key);
+        reportService.transitionToNextPhase(report);
+    }
+
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeChain(@PathVariable("fileNumber") Long fileNumber) {

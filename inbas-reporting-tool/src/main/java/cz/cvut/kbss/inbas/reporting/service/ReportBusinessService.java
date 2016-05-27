@@ -89,4 +89,13 @@ public interface ReportBusinessService {
      * @return Matching report or {@code null}
      */
     <T extends LogicalDocument> T findRevision(Long fileNumber, Integer revision);
+
+    /**
+     * Transitions the specified report to the next phase (if possible).
+     * <p>
+     * If the report has no phase or it is in the latest possible phase, no action occurs.
+     *
+     * @param report The report to transition
+     */
+    <T extends LogicalDocument> void transitionToNextPhase(T report);
 }

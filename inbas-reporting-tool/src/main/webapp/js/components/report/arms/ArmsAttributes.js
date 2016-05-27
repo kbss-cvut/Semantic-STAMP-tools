@@ -118,14 +118,14 @@ class ArmsAttributes extends React.Component {
                 <div className='row'>
                     <div className='col-xs-4' title={i18n('arms.barrier-effectiveness.tooltip')}>
                         <Select name='barrierEffectiveness' value={report.barrierEffectiveness}
-                                label={i18n('arms.barrier-effectiveness')}
+                                label={i18n('arms.barrier-effectiveness')} addDefault={true}
                                 tooltip={i18n('arms.barrier-effectiveness.tooltip')}
                                 onChange={this._onChange} options={this.state.barrierEffectiveness}/>
                     </div>
 
                     <div className='col-xs-4' title={i18n('arms.accident-outcome.tooltip')}>
                         <Select name='accidentOutcome' value={report.accidentOutcome}
-                                label={i18n('arms.accident-outcome')}
+                                label={i18n('arms.accident-outcome')} addDefault={true}
                                 tooltip={i18n('arms.accident-outcome.tooltip')}
                                 onChange={this._onChange} options={this.state.accidentOutcome}/>
                     </div>

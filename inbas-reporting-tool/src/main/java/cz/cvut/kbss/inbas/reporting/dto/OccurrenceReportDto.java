@@ -24,6 +24,8 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     private Long fileNumber;
 
+    private URI phase;
+
     private OccurrenceDto occurrence;
 
     private FactorGraph factorGraph;
@@ -80,6 +82,14 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     public void setFileNumber(Long fileNumber) {
         this.fileNumber = fileNumber;
+    }
+
+    public URI getPhase() {
+        return phase;
+    }
+
+    public void setPhase(URI phase) {
+        this.phase = phase;
     }
 
     public OccurrenceDto getOccurrence() {
@@ -145,6 +155,7 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
         res.setUri(uri);
         res.setKey(key);
         res.setFileNumber(fileNumber);
+        res.setPhase(phase);
         res.setAuthor(author);
         res.setDateCreated(dateCreated);
         res.setLastModifiedBy(lastModifiedBy);

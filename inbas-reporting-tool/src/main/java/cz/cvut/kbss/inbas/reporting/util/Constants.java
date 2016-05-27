@@ -86,21 +86,14 @@ public final class Constants {
     public static final String QUERY_FILES_DIRECTORY = "query";
 
     /**
+     * Folder containing options files for the application.
+     *
+     * Some options can be stored directly in the application.
+     */
+    public static final String OPTION_FILES_DIRECTORY = "option";
+
+    /**
      * File with a query for getting report statistics.
      */
     public static final String STATISTICS_QUERY_FILE = "query/statistics.sparql";
-
-    // ARMS
-
-    /**
-     * Minimum ARMS index value, as per <a href="http://essi.easa.europa.eu/documents/ARMS.pdf">http://essi.easa.europa.eu/documents/ARMS.pdf</a>,
-     * slide 27.
-     */
-    public static final short ARMS_INDEX_MIN = 1;
-
-    /**
-     * Maximum ARMS index value, as per <a href="http://essi.easa.europa.eu/documents/ARMS.pdf">http://essi.easa.europa.eu/documents/ARMS.pdf</a>,
-     * slide 27.
-     */
-    public static final short ARMS_INDEX_MAX = 2500;
 }

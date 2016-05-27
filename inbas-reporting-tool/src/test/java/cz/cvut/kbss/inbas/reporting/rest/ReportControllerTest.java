@@ -40,6 +40,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class ReportControllerTest extends BaseControllerTestRunner {
 
+    private static final String REPORTS_PATH = "/reports/";
+
     @Autowired
     private ReportBusinessService reportServiceMock;
 
@@ -72,7 +74,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     public void getReportReturnsNotFoundForUnknownKey() throws Exception {
         final String key = "unknownKey";
         when(reportServiceMock.findByKey(key)).thenReturn(null);
-        mockMvc.perform(get("/reports/" + key)).andExpect(status().isNotFound());
+        mockMvc.perform(get(REPORTS_PATH + key)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -82,7 +84,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         report.setKey(IdentificationUtils.generateKey());
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance12345"));
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
-        final MvcResult result = mockMvc.perform(get("/reports/" + report.getKey())).andExpect(status().isOk())
+        final MvcResult result = mockMvc.perform(get(REPORTS_PATH + report.getKey())).andExpect(status().isOk())
                                         .andReturn();
         final OccurrenceReportDto res = readValue(result, OccurrenceReportDto.class);
         assertNotNull(res);
@@ -95,7 +97,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final OccurrenceReport latestRevision = Generator.generateOccurrenceReport(true);
         latestRevision.setRevision(Generator.randomInt(10));
         when(reportServiceMock.findLatestRevision(latestRevision.getFileNumber())).thenReturn(latestRevision);
-        final MvcResult result = mockMvc.perform(get("/reports/chain/" + latestRevision.getFileNumber()))
+        final MvcResult result = mockMvc.perform(get(REPORTS_PATH + "chain/" + latestRevision.getFileNumber()))
                                         .andExpect(status().isOk()).andReturn();
         final OccurrenceReportDto res = readValue(result, OccurrenceReportDto.class);
         assertNotNull(res);
@@ -107,7 +109,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     public void getLatestRevisionThrowsNotFoundWhenReportChainIsNotFound() throws Exception {
         final Long fileNumber = 12345L;
         when(reportServiceMock.findLatestRevision(fileNumber)).thenReturn(null);
-        mockMvc.perform(get("/reports/chain/" + fileNumber)).andExpect(status().isNotFound());
+        mockMvc.perform(get(REPORTS_PATH + "chain/" + fileNumber)).andExpect(status().isNotFound());
     }
 
     @Test
@@ -128,7 +130,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
             revisions.add(revision);
         }
         when(reportServiceMock.getReportChainRevisions(fileNumber)).thenReturn(revisions);
-        final MvcResult result = mockMvc.perform(get("/reports/chain/" + fileNumber + "/revisions"))
+        final MvcResult result = mockMvc.perform(get(REPORTS_PATH + "chain/" + fileNumber + "/revisions"))
                                         .andExpect(status().isOk()).andReturn();
         final List<ReportRevisionInfo> res = readValue(result, new TypeReference<List<ReportRevisionInfo>>() {
         });
@@ -140,7 +142,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     public void getReportChainRevisionsThrowsNotFoundForUnknownReportChainIdentifier() throws Exception {
         final Long fileNumber = Long.MAX_VALUE;
         when(reportServiceMock.getReportChainRevisions(fileNumber)).thenReturn(Collections.emptyList());
-        mockMvc.perform(get("/reports/chain/" + fileNumber + "/revisions")).andExpect(status().isNotFound());
+        mockMvc.perform(get(REPORTS_PATH + "chain/" + fileNumber + "/revisions")).andExpect(status().isNotFound());
         verify(reportServiceMock).getReportChainRevisions(fileNumber);
     }
 
@@ -154,7 +156,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final OccurrenceReport report = chain.get(Generator.randomInt(chain.size()) - 1);
         when(reportServiceMock.findRevision(report.getFileNumber(), report.getRevision())).thenReturn(report);
         final MvcResult result = mockMvc
-                .perform(get("/reports/chain/" + report.getFileNumber() + "/revisions/" + report.getRevision()))
+                .perform(get(REPORTS_PATH + "chain/" + report.getFileNumber() + "/revisions/" + report.getRevision()))
                 .andExpect(status().isOk()).andReturn();
         final OccurrenceReportDto res = readValue(result, OccurrenceReportDto.class);
         assertNotNull(res);
@@ -169,7 +171,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final Integer revision = 3;
         when(reportServiceMock.findRevision(fileNumber, revision)).thenReturn(null);
 
-        mockMvc.perform(get("/reports/chain/" + fileNumber + "/revisions/" + revision))
+        mockMvc.perform(get(REPORTS_PATH + "chain/" + fileNumber + "/revisions/" + revision))
                .andExpect(status().isNotFound());
     }
 
@@ -187,7 +189,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                 .perform(post("/reports").content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
                                          .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
-        verifyLocationEquals("/reports/" + key, result);
+        verifyLocationEquals(REPORTS_PATH + key, result);
         verify(reportServiceMock).persist(any(OccurrenceReport.class));
     }
 
@@ -213,9 +215,9 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         newRevision.setRevision(chain.get(0).getRevision() + 1);
         when(reportServiceMock.createNewRevision(fileNumber)).thenReturn(newRevision);
 
-        final MvcResult result = mockMvc.perform(post("/reports/chain/" + fileNumber + "/revisions"))
+        final MvcResult result = mockMvc.perform(post(REPORTS_PATH + "chain/" + fileNumber + "/revisions"))
                                         .andExpect(status().isCreated()).andReturn();
-        verifyLocationEquals("/reports/" + newRevision.getKey(), result);
+        verifyLocationEquals(REPORTS_PATH + newRevision.getKey(), result);
     }
 
     @Test
@@ -223,19 +225,17 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final Long fileNumber = Long.MAX_VALUE;
         when(reportServiceMock.createNewRevision(fileNumber))
                 .thenThrow(NotFoundException.create("Report chain", fileNumber));
-        mockMvc.perform(post("/reports/chain/" + fileNumber + "/revisions")).andExpect(status().isNotFound());
+        mockMvc.perform(post(REPORTS_PATH + "chain/" + fileNumber + "/revisions")).andExpect(status().isNotFound());
         verify(reportServiceMock).createNewRevision(fileNumber);
     }
 
     @Test
     public void updateReportPassesReportToServiceForUpdate() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
-        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
-        report.setKey(IdentificationUtils.generateKey());
-        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final OccurrenceReport report = prepareReport();
         mockMvc.perform(
-                put("/reports/" + report.getKey()).content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
-                                                  .contentType(MediaType.APPLICATION_JSON_VALUE))
+                put(REPORTS_PATH + report.getKey())
+                        .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isNoContent());
         final ArgumentCaptor<OccurrenceReport> captor = ArgumentCaptor.forClass(OccurrenceReport.class);
         verify(reportServiceMock).update(captor.capture());
@@ -245,6 +245,14 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         assertEquals(report.getKey(), argument.getKey());
     }
 
+    private OccurrenceReport prepareReport() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
+        report.setKey(IdentificationUtils.generateKey());
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        return report;
+    }
+
     @Test
     public void updateReportThrowsBadRequestWhenKeyInPathDoesNotMatchReportKey() throws Exception {
         final OccurrenceReport report = Generator.generateOccurrenceReport(false);
@@ -252,8 +260,8 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         report.setKey(IdentificationUtils.generateKey());
         final String otherKey = IdentificationUtils.generateKey();
         mockMvc.perform(
-                put("/reports/" + otherKey).content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
-                                           .contentType(MediaType.APPLICATION_JSON_VALUE))
+                put(REPORTS_PATH + otherKey).content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                                            .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isBadRequest());
     }
 
@@ -264,8 +272,9 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         report.setKey(IdentificationUtils.generateKey());
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(null);
         mockMvc.perform(
-                put("/reports/" + report.getKey()).content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
-                                                  .contentType(MediaType.APPLICATION_JSON_VALUE))
+                put(REPORTS_PATH + report.getKey())
+                        .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isNotFound());
         verify(reportServiceMock).findByKey(report.getKey());
         verify(reportServiceMock, never()).update(any(OccurrenceReport.class));
@@ -273,21 +282,26 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void updateReportReturnsValidationExceptionAsResponseWhenUpdateValidationFails() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
-        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
-        report.setKey(IdentificationUtils.generateKey());
-        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final OccurrenceReport report = prepareReport();
         doThrow(new ValidationException("Invalid report.")).when(reportServiceMock).update(any(OccurrenceReport.class));
         mockMvc.perform(
-                put("/reports/" + report.getKey()).content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
-                                                  .contentType(MediaType.APPLICATION_JSON_VALUE))
+                put(REPORTS_PATH + report.getKey())
+                        .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void transitionToNextPhaseCallsService() throws Exception {
+        final OccurrenceReport report = prepareReport();
+        mockMvc.perform(put(REPORTS_PATH + report.getKey() + "/phase")).andExpect(status().isNoContent());
+        verify(reportServiceMock).transitionToNextPhase(report);
     }
 
     @Test
     public void removeChainCallsService() throws Exception {
         final Long fileNumber = IdentificationUtils.generateFileNumber();
-        mockMvc.perform(delete("/reports/chain/" + fileNumber)).andExpect(status().isNoContent());
+        mockMvc.perform(delete(REPORTS_PATH + "chain/" + fileNumber)).andExpect(status().isNoContent());
         verify(reportServiceMock).removeReportChain(fileNumber);
     }
 }

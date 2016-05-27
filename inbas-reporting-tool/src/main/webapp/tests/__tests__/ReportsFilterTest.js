@@ -3,27 +3,32 @@
 describe('ReportsFilter', function () {
 
     var React = require('react'),
+        rewire = require('rewire'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
-        ReportsFilter = require('../../js/components/report/ReportsFilter'),
+        ReportsFilter = rewire('../../js/components/report/ReportsFilter'),
         Constants = require('../../js/constants/Constants'),
+        Vocabulary = require('../../js/constants/Vocabulary'),
+        ReportType,
 
         onFilterChange;
 
     beforeEach(function () {
+        ReportType = jasmine.createSpyObj('ReportType', ['getTypeLabel']);
+        ReportsFilter.__set__('ReportType', ReportType);
         onFilterChange = jasmine.createSpy('onFilterChange');
     });
 
-    it('shows a set of existing report categories in the filter', function () {
+    it('shows a set of existing report types in the filter', function () {
         var reports = prepareReports(),
-            uniqueCategories = resolveCategories(reports),
+            uniqueTypes = resolveReportTypes(reports),
             filter = Environment.renderIntoTable(<ReportsFilter onFilterChange={onFilterChange} reports={reports}/>);
 
-        var options = filter.renderClassificationOptions();
-        expect(options.length).toEqual(uniqueCategories.length + 1);
+        var options = filter._getReportTypeOptions();
+        expect(options.length).toEqual(uniqueTypes.length + 1);
         for (var i = 0, len = options.length; i < len; i++) {
-            if (options[i].props.value !== 'all') {
-                expect(uniqueCategories.indexOf(options[i].props.value)).not.toEqual(-1);
+            if (options[i].value !== 'all') {
+                expect(uniqueTypes.indexOf(options[i].value)).not.toEqual(-1);
             }
         }
     });
@@ -32,40 +37,32 @@ describe('ReportsFilter', function () {
         return [
             {
                 key: '123345',
-                occurrenceCategory: {
-                    "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1",
-                    "name": "1 - AMAN: Abrupt maneuvre"
-                }
+                types: [Vocabulary.OCCURRENCE_REPORT]
             },
             {
                 key: '542321',
-                occurrenceCategory: {
-                    "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1",
-                    "name": "1 - AMAN: Abrupt maneuvre"
-                }
+                types: [Vocabulary.OCCURRENCE_REPORT]
             },
             {
                 key: '555444',
-                occurrenceCategory: {
-                    "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-10",
-                    "name": "10 - ICE: Icing"
-                }
+                types: ['http://onto.fel.cvut.cz/ontologies/documentation/safety_issue_report']
             },
             {
                 key: '111222',
-                occurrenceCategory: {
-                    "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-100",
-                    "name": "100 - UIMC: Unintended flight in IMC"
-                }
+                types: ['http://onto.fel.cvut.cz/ontologies/documentation/audit_report']
             }
         ]
     }
 
-    function resolveCategories(reports) {
-        var cats = [];
-        for (var i = 0, len = reports.length; i < len; i++) {
-            if (cats.indexOf(reports[i].occurrenceCategory.id) === -1) {
-                cats.push(reports[i].occurrenceCategory.id);
+    function resolveReportTypes(reports) {
+        var cats = [], report, i, j, len;
+        for (i = 0, len = reports.length; i < len; i++) {
+            report = reports[i];
+            for (j = 0; j < report.types.length; j++) {
+                if (cats.indexOf(report.types[j]) === -1) {
+                    cats.push(report.types[j]);
+                    ReportType.getTypeLabel.and.returnValue(report.types[j]);
+                }
             }
         }
         return cats;
@@ -73,32 +70,32 @@ describe('ReportsFilter', function () {
 
     it('calls filter change when filter value changes', function () {
         var reports = prepareReports(),
-            uniqueCategories = resolveCategories(reports),
+            uniqueTypes = resolveReportTypes(reports),
             filter = Environment.renderIntoTable(<ReportsFilter onFilterChange={onFilterChange} reports={reports}/>),
             evt = {
                 target: {
-                    name: 'occurrenceCategory.id',
-                    value: uniqueCategories[0]
+                    name: 'types',
+                    value: uniqueTypes[0]
                 }
             };
 
         filter.onSelect(evt);
-        expect(filter.state[evt.target.name]).toEqual(uniqueCategories[0]);
-        expect(onFilterChange).toHaveBeenCalledWith({'occurrenceCategory.id': uniqueCategories[0]});
+        expect(filter.state[evt.target.name]).toEqual(uniqueTypes[0]);
+        expect(onFilterChange).toHaveBeenCalledWith({'types': uniqueTypes[0]});
     });
 
     it('sets filter to default value on reset filter trigger', function () {
         var reports = prepareReports(),
-            uniqueCategories = resolveCategories(reports),
-            filter = Environment.renderIntoTable(<ReportsFilter onFilterChange={onFilterChange} reports={reports}/>);
+            filter = Environment.renderIntoTable(<ReportsFilter onFilterChange={onFilterChange} reports={reports}/>),
+            key;
 
-        for (var key in filter.state) {
+        Object.getOwnPropertyNames(filter.state).forEach((key) => {
             filter.state[key] = Generator.getRandomInt();
-        }
+        });
         filter.onResetFilters();
-        for (var key in filter.state) {
+        Object.getOwnPropertyNames(filter.state).forEach((key) => {
             expect(filter.state[key]).toEqual(Constants.FILTER_DEFAULT);
-        }
+        });
         expect(onFilterChange).toHaveBeenCalled();
     });
 });

@@ -14,10 +14,12 @@ import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
+import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +45,9 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private ReportCache reportCache;
+
+    @Autowired
+    private ReportingPhaseService phaseService;
 
     private Person author;
 
@@ -295,5 +300,19 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         }
         Collections.sort(latestRevisions, (a, b) -> b.getDateCreated().compareTo(a.getDateCreated()));
         return latestRevisions;
+    }
+
+    @Test
+    public void transitionToNextPhaseTransitionsReportPhase() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        report.setPhase(phaseService.getInitialPhase());
+        occurrenceReportService.persist(report);
+
+        final URI expected = phaseService.nextPhase(report.getPhase());
+        reportService.transitionToNextPhase(report);
+
+        final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
+        assertEquals(expected, result.getPhase());
     }
 }

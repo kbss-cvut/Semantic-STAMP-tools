@@ -251,7 +251,7 @@ var Factors = React.createClass({
                     <Modal.Title>{this.i18n('factors.link-type-select')}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Select ref='linkType' title={this.i18n('factors.link-type-select-tooltip')}
+                    <Select ref='linkType' title={this.i18n('factors.link-type-select-tooltip')} addDefault={true}
                             onChange={this.onLinkTypeSelect} options={options}/>
                 </Modal.Body>
             </Modal>

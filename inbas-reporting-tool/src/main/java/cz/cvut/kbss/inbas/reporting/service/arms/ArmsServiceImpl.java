@@ -1,10 +1,10 @@
 package cz.cvut.kbss.inbas.reporting.service.arms;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.cvut.kbss.inbas.reporting.exception.JsonProcessingException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
+import cz.cvut.kbss.inbas.reporting.util.JsonLdProcessing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URI;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Service for ARMS-related business logic.
@@ -34,8 +36,6 @@ public class ArmsServiceImpl implements ArmsService {
     @Autowired
     private OptionsService optionsService;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     private List<URI> accidents;
     private List<URI> barriers;
 
@@ -44,7 +44,7 @@ public class ArmsServiceImpl implements ArmsService {
         try {
             this.accidents = initAccidents();
             this.barriers = initBarriers();
-        } catch (IOException e) {
+        } catch (IOException | JsonProcessingException e) {
             LOG.error("Unable to initialize ARMS values.", e);
             this.accidents = Collections.emptyList();
             this.barriers = Collections.emptyList();
@@ -53,47 +53,12 @@ public class ArmsServiceImpl implements ArmsService {
 
     private List<URI> initAccidents() throws IOException {
         final RawJson json = (RawJson) optionsService.getOptions(ACCIDENT_OUTCOME_PARAM);
-        return readAndOrderElements(json);
-    }
-
-    private List<URI> readAndOrderElements(RawJson json) throws IOException {
-        final List<URI[]> lst = new ArrayList<>();
-        final JsonNode root = objectMapper.readTree(json.getValue());
-        if (root == null) {
-            return Collections.emptyList();
-        }
-        Iterator<JsonNode> elements = root.elements();
-        while (elements.hasNext()) {
-            final JsonNode n = elements.next();
-            final URI id = URI.create(n.path("@id").asText());
-            final JsonNode gt = n.path(GREATER_THAN_URI);
-            URI gtNode = null;
-            if (!gt.isMissingNode()) {
-                gtNode = URI.create(gt.elements().next().path("@id").asText());
-            }
-            lst.add(new URI[]{id, gtNode});
-        }
-        return sortElements(lst);
-    }
-
-    private List<URI> sortElements(List<URI[]> elements) {
-        final List<URI> res = new ArrayList<>();
-        while (res.size() < elements.size()) {
-            for (URI[] el : elements) {
-                // Either the result is empty and we are looking for the lowest one
-                // Or we take the one whose predecessor is currently last in the result list
-                if ((res.size() == 0 && el[1] == null) || (res.size() > 0 && res.get(res.size() - 1).equals(el[1]))) {
-                    res.add(el[0]);
-                    break;
-                }
-            }
-        }
-        return res;
+        return JsonLdProcessing.getOrderedOptions(json, GREATER_THAN_URI);
     }
 
     private List<URI> initBarriers() throws IOException {
         final RawJson json = (RawJson) optionsService.getOptions(BARRIER_EFFECTIVENESS_PARAM);
-        return readAndOrderElements(json);
+        return JsonLdProcessing.getOrderedOptions(json, GREATER_THAN_URI);
     }
 
     @Override

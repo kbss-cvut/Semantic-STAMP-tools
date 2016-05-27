@@ -40,9 +40,16 @@ module.exports = {
         return this._getReportClass(report).getDetailController();
     },
 
-    getReport: function (data) {
+    getTypeLabel: function (type) {
+        return REPORT_TYPES[type] ? new REPORT_TYPES[type]().getLabel() : null;
+    },
+
+    getReport: function (data, suppressError) {
         var cls = this._getReportClass(data);
-        return new cls(data);
+        if (!suppressError && !cls) {
+            throw 'Unsupported report type ' + data;
+        }
+        return cls ? new cls(data) : null;
     },
 
     _getReportClass: function (data) {
@@ -56,6 +63,6 @@ module.exports = {
         if (data.javaClass && REPORT_TYPES[data.javaClass]) {
             return REPORT_TYPES[data.javaClass];
         }
-        throw "Data does not contain any supported report type.";
+        return null;
     }
 };
