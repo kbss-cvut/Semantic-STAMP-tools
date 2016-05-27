@@ -52,8 +52,8 @@ var OccurrenceClassification = React.createClass({
         return this.state.occurrenceClasses.map((item) => {
             return {
                 value: item['@id'],
-                label: item[Vocabulary.RDFS_LABEL],
-                title: item[Vocabulary.RDFS_COMMENT]
+                label: item[Vocabulary.RDFS_LABEL]['@value'],
+                title: item[Vocabulary.RDFS_COMMENT]['@value']
             };
         });
     },
