@@ -9,6 +9,7 @@ var Constants = require('../../constants/Constants');
 var DataFilter = require('../../utils/DataFilter');
 var ReportStore = require('../../stores/ReportStore');
 var Reports = require('./Reports');
+var RouterStore = require('../../stores/RouterStore');
 var Routes = require('../../utils/Routes');
 var Routing = require('../../utils/Routing');
 
@@ -67,7 +68,7 @@ var ReportsController = React.createClass({
     getInitialState: function () {
         return {
             reports: null,
-            filter: null,
+            filter: RouterStore.getTransitionPayload(Routes.reports.name) ? RouterStore.getTransitionPayload(Routes.reports.name).filter : null,
             sort: {
                 identification: Constants.SORTING.NO,
                 date: Constants.SORTING.NO

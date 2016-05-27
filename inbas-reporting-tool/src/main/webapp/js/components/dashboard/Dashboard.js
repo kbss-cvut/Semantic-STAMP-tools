@@ -19,6 +19,7 @@ var ImportReportDashboard = require('./ImportReportDashboard').default;
 var Tile = require('./DashboardTile').default;
 var ReportTypeahead = require('../typeahead/ReportTypeahead');
 var RecentlyEdited = require('./RecentlyEditedReports');
+var UnprocessedReports = require('./UnprocessedReports').default;
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var Dashboard = React.createClass({
@@ -72,7 +73,12 @@ var Dashboard = React.createClass({
                     </Jumbotron>
                 </div>
                 <div className='col-xs-4'>
-                    <RecentlyEdited reports={this.props.reports} onOpenReport={this.props.openReport}/>
+                    <div>
+                        <RecentlyEdited reports={this.props.reports} onOpenReport={this.props.openReport}/>
+                    </div>
+                    <div>
+                        <UnprocessedReports />
+                    </div>
                 </div>
             </div>
 

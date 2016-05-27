@@ -80,6 +80,8 @@ module.exports = {
         'dashboard.recent.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
         'dashboard.import.import-e5': 'Importovat hlášení ve formátu E5X/E5F',
 
+        'dashboard.unprocessed': 'Máte {count} nezpracovaných hlášení.',
+
         'dropzone.title': 'Přetáhněte soubor sem nebo klikněte pro výběr souboru k nahrání.',
         'dropzone-tooltip': 'Klikněte zde pro výber souboru k nahrání',
 

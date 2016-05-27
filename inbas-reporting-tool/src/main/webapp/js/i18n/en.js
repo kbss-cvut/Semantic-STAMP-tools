@@ -79,6 +79,8 @@ module.exports = {
         'dashboard.recent.no-reports': 'There are no reports, yet.',
         'dashboard.import.import-e5': 'Import E5X/E5F report',
         
+        'dashboard.unprocessed': 'You have {count} unprocessed report(s).',
+        
         'dropzone.title': 'Drop the file here or click to select a file to upload.',
         'dropzone-tooltip': 'Click here to select a file to upload',
         

@@ -9,6 +9,8 @@ describe('ReportsController', () => {
 
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
+        RouterStore = require('../../js/stores/RouterStore'),
+        Routes = require('../../js/utils/Routes'),
         ReportsController = require('../../js/components/report/ReportsController'),
         Reports = require('../../js/components/report/Reports'),
         reports;
@@ -103,6 +105,15 @@ describe('ReportsController', () => {
         controller.onSort('date');
         controller.onSort('identification');
         verifyCombinedOrder(reportsComponent, false);
+    });
+
+    it('uses filter passed in in transition payload', () => {
+        var filter = {
+            phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
+        }, controller;
+        spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
+        controller = Environment.render(<ReportsController/>);
+        expect(controller.state.filter).toEqual(filter);
     });
 
     function setEqualIdentifications() {
