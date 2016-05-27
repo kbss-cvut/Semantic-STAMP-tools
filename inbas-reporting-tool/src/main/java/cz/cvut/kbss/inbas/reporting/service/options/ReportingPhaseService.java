@@ -2,6 +2,8 @@ package cz.cvut.kbss.inbas.reporting.service.options;
 
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.util.JsonLdProcessing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +15,26 @@ import java.util.List;
 @Service
 public class ReportingPhaseService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ReportingPhaseService.class);
+
     private static final String PHASE_OPTION_TYPE = "reportingPhase";
     private static final String GREATER_THAN_PROPERTY = "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than";
+    private static final String DEFAULT_PHASE_TYPE = "http://onto.fel.cvut.cz/ontologies/aviation-safety/default-phase";
 
     @Autowired
     private OptionsService optionsService;
 
     private final List<URI> phases = new ArrayList<>();
+    private URI defaultPhase;
 
     @PostConstruct
     private void loadPhases() {
         final RawJson json = (RawJson) optionsService.getOptions(PHASE_OPTION_TYPE);
         this.phases.addAll(JsonLdProcessing.getOrderedOptions(json, GREATER_THAN_PROPERTY));
+        this.defaultPhase = JsonLdProcessing.getItemWithType(json, DEFAULT_PHASE_TYPE);
+        if (defaultPhase == null) {
+            LOG.warn("Default reporting phase not found.");
+        }
     }
 
     /**
@@ -37,6 +47,19 @@ public class ReportingPhaseService {
             throw new IllegalStateException("No reporting phases have been found.");
         }
         return phases.get(0);
+    }
+
+    /**
+     * Gets the default phase with which reports should be normally created.
+     * <p>
+     * Note that this phase can be different from the phase returned by {@link #getInitialPhase()} and it can also be
+     * {@code null}.
+     *
+     * @return Default reporting phase
+     * @see #getInitialPhase()
+     */
+    public URI getDefaultPhase() {
+        return defaultPhase;
     }
 
     /**

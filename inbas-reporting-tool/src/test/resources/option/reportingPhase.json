@@ -8,6 +8,9 @@
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@value" : "Second"
   } ],
+  "@type" : [
+    "http://onto.fel.cvut.cz/ontologies/aviation-safety/default-phase"
+  ],
   "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than" : [ {
     "@id" : "http://onto.fel.cvut.cz/ontologies/inbas-test/first"
   } ]
