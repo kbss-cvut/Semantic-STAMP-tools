@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
+import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import org.junit.Before;
 import org.junit.Rule;
@@ -53,7 +54,7 @@ public class EventFormGenDataProcessorTest extends BaseServiceTestRunner {
     private void checkForUri(URI uri) {
         final Map<String, String> params = processor.getParams();
         assertEquals(1, params.size());
-        assertEquals(uri.toString(), params.get(EventFormGenDataProcessor.EVENT_PARAM));
+        assertEquals(RestUtils.encodeUrl(uri.toString()), params.get(EventFormGenDataProcessor.EVENT_PARAM));
     }
 
     private OccurrenceReport getOccurrenceReport() {

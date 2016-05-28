@@ -105,7 +105,7 @@ var FactorDetail = React.createClass({
         this.setState({showMask: true});
         var params = {}, report = this.props.getReport();
         this._updateReportForFormGen(report);
-        params[EVENT_TYPE_PARAM] = this.state.eventType.id;
+        params[EVENT_TYPE_PARAM] = encodeURIComponent(this.state.eventType.id);
         params[EVENT_PARAM] = this.state.statement.referenceId;
         WizardGenerator.generateWizard(report, params, this.props.factor.text, this.openDetailsWizard);
     },

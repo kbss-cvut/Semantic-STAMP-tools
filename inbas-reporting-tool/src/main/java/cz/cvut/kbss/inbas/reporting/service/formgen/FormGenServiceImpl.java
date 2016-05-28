@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.service.formgen;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
+import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.data.DataLoader;
 import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
 import org.slf4j.Logger;
@@ -67,8 +68,8 @@ public class FormGenServiceImpl implements FormGenService {
             return new RawJson("");
         }
         final Map<String, String> params = new HashMap<>(processor.getParams());
-        params.put(CONTEXT_URI_PARAM, processor.getContext().toString());
-        params.put(REPOSITORY_URL_PARAM, repoUrl);
+        params.put(CONTEXT_URI_PARAM, RestUtils.encodeUrl(processor.getContext().toString()));
+        params.put(REPOSITORY_URL_PARAM, RestUtils.encodeUrl(repoUrl));
         return new RawJson(dataLoader.loadData(serviceUrl, params));
     }
 }
