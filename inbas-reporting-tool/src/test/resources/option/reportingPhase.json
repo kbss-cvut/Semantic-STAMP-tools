@@ -9,9 +9,9 @@
     "@value" : "Second"
   } ],
   "@type" : [
-    "http://onto.fel.cvut.cz/ontologies/aviation-safety/default-phase"
+    "http://onto.fel.cvut.cz/ontologies/documentation/default_phase"
   ],
-  "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than" : [ {
+  "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than" : [ {
     "@id" : "http://onto.fel.cvut.cz/ontologies/inbas-test/first"
   } ]
 }, {
@@ -19,7 +19,7 @@
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@value" : "Third"
   } ],
-  "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than" : [ {
+  "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than" : [ {
     "@id" : "http://onto.fel.cvut.cz/ontologies/inbas-test/second"
   } ]
 }]
