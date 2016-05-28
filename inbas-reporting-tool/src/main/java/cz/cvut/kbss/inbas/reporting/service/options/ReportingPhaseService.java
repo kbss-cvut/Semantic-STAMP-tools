@@ -18,8 +18,8 @@ public class ReportingPhaseService {
     private static final Logger LOG = LoggerFactory.getLogger(ReportingPhaseService.class);
 
     private static final String PHASE_OPTION_TYPE = "reportingPhase";
-    private static final String GREATER_THAN_PROPERTY = "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than";
-    private static final String DEFAULT_PHASE_TYPE = "http://onto.fel.cvut.cz/ontologies/aviation-safety/default-phase";
+    private static final String GREATER_THAN_PROPERTY = "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than";
+    private static final String DEFAULT_PHASE_TYPE = "http://onto.fel.cvut.cz/ontologies/documentation/default_phase";
 
     @Autowired
     private OptionsService optionsService;
