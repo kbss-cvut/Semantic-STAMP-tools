@@ -30,7 +30,7 @@ var EventTypeFactory = require('../../model/EventTypeFactory');
 var QuestionAnswerProcessor = require('../../model/QuestionAnswerProcessor').default;
 
 var EVENT_PARAM = 'event';
-var EVENT_TYPE_PARAM = 'event-type';
+var EVENT_TYPE_PARAM = 'eventType';
 
 function convertDurationToCurrentUnit(factor) {
     var targetUnit = gantt.config.duration_unit;
