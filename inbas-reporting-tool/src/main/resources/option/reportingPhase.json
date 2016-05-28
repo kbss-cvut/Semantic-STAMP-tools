@@ -1,25 +1,25 @@
 [ {
-  "@id" : "http://onto.fel.cvut.cz/ontologies/aviation-safety/not_processed",
+  "@id" : "http://onto.fel.cvut.cz/ontologies/documentation/not_processed",
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@value" : "Not processed"
   } ]
 }, {
-  "@id" : "http://onto.fel.cvut.cz/ontologies/aviation-safety/processed",
+  "@id" : "http://onto.fel.cvut.cz/ontologies/documentation/processed",
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@value" : "Processed"
   } ],
-  "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than" : [ {
-    "@id" : "http://onto.fel.cvut.cz/ontologies/aviation-safety/not_processed"
+  "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than" : [ {
+    "@id" : "http://onto.fel.cvut.cz/ontologies/documentation/not_processed"
   } ],
   "@type" : [
-    "http://onto.fel.cvut.cz/ontologies/aviation-safety/default-phase"
+    "http://onto.fel.cvut.cz/ontologies/documentation/default_phase"
   ]
 }, {
-  "@id" : "http://onto.fel.cvut.cz/ontologies/aviation-safety/sent_to_sag",
+  "@id" : "http://onto.fel.cvut.cz/ontologies/documentation/sent_to_sag",
   "http://www.w3.org/2000/01/rdf-schema#label" : [ {
     "@value" : "Submitted to SAG"
   } ],
-  "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than" : [ {
-    "@id" : "http://onto.fel.cvut.cz/ontologies/aviation-safety/processed"
+  "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than" : [ {
+    "@id" : "http://onto.fel.cvut.cz/ontologies/documentation/processed"
   } ]
 }]
