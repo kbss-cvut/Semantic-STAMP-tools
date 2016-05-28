@@ -29,7 +29,7 @@ public class Vocabulary {
     // |         Properties         |
     // ------------------------------
 
-    public static final String hasValue = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_data_value;// "http://onto.fel.cvut.cz/ontologies/documentation/has_value";
+    public static final String hasDataValue = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_data_value;// "http://onto.fel.cvut.cz/ontologies/documentation/has_value";
     public static final String hasURIValue = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_object_value;
 //    public static final String hasRelationToAnswer = "http://onto.fel.cvut.cz/ontologies/documentation/has_relation_to_answer";
     public static final String hasAnswer = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_answer;

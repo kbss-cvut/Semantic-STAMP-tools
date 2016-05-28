@@ -23,7 +23,7 @@ public class Answer {
     @OWLDataProperty(iri = Vocabulary.hasDataValue)
     private String textValue;
 
-    @OWLObjectProperty(iri = Vocabulary.hasObjectValue)
+    @OWLObjectProperty(iri = Vocabulary.hasURIValue)
     private URI codeValue;
 
     @Types

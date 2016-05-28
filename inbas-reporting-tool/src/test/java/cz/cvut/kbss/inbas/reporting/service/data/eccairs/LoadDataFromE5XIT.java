@@ -7,7 +7,7 @@ package cz.cvut.kbss.inbas.reporting.service.data.eccairs;
 
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.ucl.eccairs.e5x.E5XXMLParser;
-import cz.cvut.kbss.ucl.eccairs.report.model.Report;
+import cz.cvut.kbss.ucl.eccairs.report.model.EccairsReport;
 import java.io.IOException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -27,11 +27,11 @@ public class LoadDataFromE5XIT {
     /**
      * Test of loadData1 method, of class LoadDataFromE5X.
      */
-    @Test
+//    @Test
     public void testLoadData1_String() {
         System.out.println("processing test file /data/eccairs/16FEDEF0BC91E511B897002655546824-anon.xml");
         URL doc = getClass().getResource("/data/eccairs/16FEDEF0BC91E511B897002655546824-anon.xml");
-        Report r = loadReport();
+        EccairsReport r = loadReport();
         if(r == null){
             fail("can't cnfigure test.");
         }
@@ -59,7 +59,7 @@ public class LoadDataFromE5XIT {
     }
     
     
-    protected Report loadReport(){
+    protected EccairsReport loadReport(){
         try {
 //            String cfg = getClass().getResource("/config-1.properties").getFile();
 //            System.setProperty("eccairs-tools-config-file", cfg);

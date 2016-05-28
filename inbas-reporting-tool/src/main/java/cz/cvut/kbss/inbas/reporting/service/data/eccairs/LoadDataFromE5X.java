@@ -5,6 +5,9 @@
  */
 package cz.cvut.kbss.inbas.reporting.service.data.eccairs;
 
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.jopa.Persistence;
 import cz.cvut.kbss.jopa.model.EntityManagerFactoryImpl;
@@ -13,8 +16,11 @@ import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProvider;
 import cz.cvut.kbss.ontodriver.config.OntoDriverProperties;
 import cz.cvut.kbss.ontodriver.sesame.SesameDataSource;
+import cz.cvut.kbss.ucl.eccairs.report.model.EccairsReport;
 import info.aduna.iteration.Iterations;
 import java.io.InputStream;
+import java.net.URI;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,6 +45,41 @@ import org.openrdf.rio.Rio;
  */
 public class LoadDataFromE5X {
     public static void main(String[] args) {
+        
+    }
+    
+    
+    public void loadReport(EccairsReport r){
+        OccurrenceReport or = new OccurrenceReport();
+        // mandatory fields, automatically handled
+        // or.setFileNumber(1);
+        // or.setKey("");
+        
+        // a ??? save an entity if the uri alredy exists
+        // b ??? can JOPA read an entity that violates constraints
+        
+        or.setUri(URI.create(r.getUri()));
+        Occurrence oc = new Occurrence();
+        oc.setUri(URI.create(r.getOccurrence().getUri()));
+        or.setOccurrence(oc);
+        
+        // import this from report
+        // for the occurrence
+//        oc.setName("");
+//        oc.setStartTime(d);
+//        oc.setEndTime(d);
+//        oc.setEventType(URI.create(""));
+
+        // for events
+//        oc.setStartTime(d);
+//        oc.setEndTime(d);
+
+        
+        Person p = new Person();
+        p.setFirstName("");
+        p.setLastName("");
+        p.setUsername("e5xml-importer");
+        or.setAuthor(p);
         
     }
     

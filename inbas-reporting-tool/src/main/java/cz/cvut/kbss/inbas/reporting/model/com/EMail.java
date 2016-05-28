@@ -5,14 +5,11 @@
  */
 package cz.cvut.kbss.inbas.reporting.model.com;
 
-import cz.cvut.kbss.datatools.mail.model.Message;
-import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+//import cz.cvut.kbss.datatools.mail.model.Message;
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 import cz.cvut.kbss.jopa.model.annotations.Transient;
-import java.util.Set;
 
 /**
  *
@@ -24,8 +21,8 @@ public class EMail {
     @Id(generated = true)
     protected String uri;
     
-    @Transient
-    protected Message message;
+//    @Transient
+//    protected Message message;
     
     @OWLDataProperty(iri = Vocabulary.hasId)
     protected String id;
@@ -37,14 +34,14 @@ public class EMail {
     public void setId(String id) {
         this.id = id;
     }
-
-    public Message getMessage() {
-        return message;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
-    }
+//
+//    public Message getMessage() {
+//        return message;
+//    }
+//
+//    public void setMessage(Message message) {
+//        this.message = message;
+//    }
 
     public String getUri() {
         return uri;
