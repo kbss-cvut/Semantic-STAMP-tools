@@ -16,24 +16,24 @@ describe('Question answer processor', () => {
     });
 
     function generateAnswers(question) {
-        question[Constants.HAS_ANSWER] = [];
+        question[Constants.FORM.HAS_ANSWER] = [];
         for (var i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
             var answer = {};
             answer['@id'] = Generator.getRandomUri();
             answer['@value'] = i;
-            question[Constants.HAS_ANSWER].push(answer);
+            question[Constants.FORM.HAS_ANSWER].push(answer);
         }
     }
 
     function verifyAnswers(expectedQuestion, actualQuestion) {
-        if (!expectedQuestion[Constants.HAS_ANSWER]) {
+        if (!expectedQuestion[Constants.FORM.HAS_ANSWER]) {
             return;
         }
         expect(actualQuestion.answers).toBeDefined();
-        expect(actualQuestion.answers.length).toEqual(expectedQuestion[Constants.HAS_ANSWER].length);
+        expect(actualQuestion.answers.length).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER].length);
         for (var i = 0, len = actualQuestion.answers.length; i < len; i++) {
-            expect(actualQuestion.answers[i].textValue).toEqual(expectedQuestion[Constants.HAS_ANSWER][i]['@value']);
-            expect(actualQuestion.answers[i].uri).toEqual(expectedQuestion[Constants.HAS_ANSWER][i]['@id']);
+            expect(actualQuestion.answers[i].textValue).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i]['@value']);
+            expect(actualQuestion.answers[i].uri).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i]['@id']);
         }
     }
 
@@ -50,9 +50,9 @@ describe('Question answer processor', () => {
         question['@id'] = Generator.getRandomUri();
         question[Vocabulary.RDFS_LABEL] = 'Test0';
         question[Vocabulary.RDFS_COMMENT] = 'Test0 Comment';
-        question[Constants.HAS_SUBQUESTION] = [];
+        question[Constants.FORM.HAS_SUBQUESTION] = [];
         for (var i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
-            question[Constants.HAS_SUBQUESTION].push(generateSubQuestions(0, 5));        
+            question[Constants.FORM.HAS_SUBQUESTION].push(generateSubQuestions(0, 5));        
         }
         return question;
     }
@@ -63,9 +63,9 @@ describe('Question answer processor', () => {
         question[Vocabulary.RDFS_LABEL] = 'Test' + Generator.getRandomInt();
         question[Vocabulary.RDFS_COMMENT] = 'Test Comment';
         if (depth < maxDepth) {
-            question[Constants.HAS_SUBQUESTION] = [];
+            question[Constants.FORM.HAS_SUBQUESTION] = [];
             for (var i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
-                question[Constants.HAS_SUBQUESTION].push(generateSubQuestions(depth + 1, maxDepth));
+                question[Constants.FORM.HAS_SUBQUESTION].push(generateSubQuestions(depth + 1, maxDepth));
             }
         }
         generateAnswers(question);
@@ -75,11 +75,11 @@ describe('Question answer processor', () => {
     function verifyQuestions(expected, actual) {
         expect(actual.types.indexOf(expected['@id'])).not.toEqual(-1);
         verifyAnswers(expected, actual);
-        if (expected[Constants.HAS_SUBQUESTION]) {
+        if (expected[Constants.FORM.HAS_SUBQUESTION]) {
             expect(actual.subQuestions).toBeDefined();
-            expect(actual.subQuestions.length).toEqual(expected[Constants.HAS_SUBQUESTION].length);
+            expect(actual.subQuestions.length).toEqual(expected[Constants.FORM.HAS_SUBQUESTION].length);
             for (var i = 0, len = actual.subQuestions.length; i < len; i++) {
-                verifyQuestions(expected[Constants.HAS_SUBQUESTION][i], actual.subQuestions[i]);
+                verifyQuestions(expected[Constants.FORM.HAS_SUBQUESTION][i], actual.subQuestions[i]);
             }
         }
     }
