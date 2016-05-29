@@ -7,7 +7,7 @@ var Constants = require('../../../constants/Constants');
 var FormUtils = require('./FormUtils').default;
 var Logger = require('../../../utils/Logger');
 var Vocabulary = require('../../../constants/Vocabulary');
-
+var Utils = require("../../../utils/Utils");
 var GeneratedStep = require('./GeneratedStep').default;
 
 var WizardGenerator = {
@@ -58,7 +58,7 @@ var WizardGenerator = {
             item = formElements[i];
             if (FormUtils.isWizardStep(item) && !FormUtils.isHidden(item)) {
                 steps.push({
-                    name: item[Vocabulary.RDFS_LABEL],
+                    name: Utils.getJsonAttValue(item, Vocabulary.RDFS_LABEL),
                     component: GeneratedStep,
                     data: {
                         structure: item

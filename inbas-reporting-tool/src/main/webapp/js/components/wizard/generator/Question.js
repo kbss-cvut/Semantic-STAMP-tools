@@ -8,6 +8,7 @@ import Constants from "../../../constants/Constants";
 import FormUtils from "./FormUtils";
 import QuestionAnswerProcessor from "../../../model/QuestionAnswerProcessor";
 import Vocabulary from "../../../constants/Vocabulary";
+import Utils from "../../../utils/Utils";
 
 export default class Question extends React.Component {
     static propTypes = {
@@ -46,7 +47,7 @@ export default class Question extends React.Component {
                     {this.renderSubQuestions()}
                 </div>;
             } else {
-                var label = this.props.question[Vocabulary.RDFS_LABEL];
+                var label = Utils.getJsonAttValue(this.props.question, Vocabulary.RDFS_LABEL);
                 return <Panel header={<h5>{label}</h5>} bsStyle='info'>
                     {this.renderAnswers()}
                     {this.renderSubQuestions()}

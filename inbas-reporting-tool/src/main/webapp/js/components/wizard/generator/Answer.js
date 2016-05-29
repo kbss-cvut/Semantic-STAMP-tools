@@ -73,8 +73,8 @@ export default class Answer extends React.Component {
     _renderInputComponent() {
         var question = this.props.question,
             value = this.props.answer['@value'],
-            label = question[Vocabulary.RDFS_LABEL],
-            title = question[Vocabulary.RDFS_COMMENT] ? question[Vocabulary.RDFS_COMMENT] : null,
+            label = Utils.getJsonAttValue(question, Vocabulary.RDFS_LABEL),
+            title = question[Vocabulary.RDFS_COMMENT] ? Utils.getJsonAttValue(question, Vocabulary.RDFS_COMMENT) : null,
             component;
 
         if (FormUtils.isTypeahead(question)) {
