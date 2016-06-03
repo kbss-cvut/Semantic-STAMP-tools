@@ -109,6 +109,17 @@ export default class Question extends React.Component {
         if (!Array.isArray(question[Constants.FORM.HAS_SUBQUESTION])) {
             question[Constants.FORM.HAS_SUBQUESTION] = [question[Constants.FORM.HAS_SUBQUESTION]];
         }
+        // TODO Temporary sorting
+        question[Constants.FORM.HAS_SUBQUESTION].sort(function(a, b) {
+            var aLabel = Utils.getJsonAttValue(a, Vocabulary.RDFS_LABEL),
+                bLabel = Utils.getJsonAttValue(b, Vocabulary.RDFS_LABEL);
+            if (aLabel < bLabel) {
+                return -1;
+            } else if (aLabel > bLabel) {
+                return 1;
+            }
+            return 0;
+        });
         return question[Constants.FORM.HAS_SUBQUESTION];
     }
 }

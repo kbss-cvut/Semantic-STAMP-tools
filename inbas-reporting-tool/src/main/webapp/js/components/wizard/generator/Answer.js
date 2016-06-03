@@ -117,6 +117,11 @@ export default class Answer extends React.Component {
                     {this._generateSelectOptions(question[Constants.FORM.HAS_OPTION])}
                 </Input>;
         } else {
+            var answer = this.props.answer;
+            // TODO This is temporary to show labels for IRI-based values
+            if (answer[Constants.FORM.HAS_OBJECT_VALUE] && answer[Constants.FORM.HAS_OBJECT_VALUE][Vocabulary.RDFS_LABEL]) {
+                value = Utils.getJsonAttValue(answer[Constants.FORM.HAS_OBJECT_VALUE], Vocabulary.RDFS_LABEL);
+            }
             component = <Input type='text' label={label} title={title} value={value} onChange={this.onChange}
                                disabled={FormUtils.isDisabled(question)}/>;
         }
