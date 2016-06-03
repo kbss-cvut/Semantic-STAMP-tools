@@ -55,15 +55,36 @@ export default class Answer extends React.Component {
 
     onChange = (e) => {
         var change = assign({}, this.props.answer);
-        change['@value'] = e.target.value;
+        this._setValue(change, e.target.value);
         this.props.onChange(this.props.index, change);
     };
 
+    _setValue(change, value) {
+        if (this.props.answer[Constants.FORM.HAS_OBJECT_VALUE]) {
+            change[Constants.FORM.HAS_OBJECT_VALUE] = {
+                '@id': value
+            };
+        } else {
+            change[Constants.FORM.HAS_DATA_VALUE] = {
+                '@value': value
+            };
+        }
+    }
+
     _onOptionSelected = (option) => {
         var change = assign({}, this.props.answer);
-        change['@value'] = option.id;
+        this._setValue(change, option.id);
         this.props.onChange(this.props.index, change);
     };
+
+    _resolveValue() {
+        var answer = this.props.answer;
+        if (answer[Constants.FORM.HAS_OBJECT_VALUE]) {
+            return answer[Constants.FORM.HAS_OBJECT_VALUE]['@id'];
+        } else {
+            return Utils.getJsonAttValue(answer, Constants.FORM.HAS_DATA_VALUE);
+        }
+    }
 
     render() {
         var cls = Constants.FORM.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.FORM.GENERATED_ROW_SIZE);
@@ -72,9 +93,9 @@ export default class Answer extends React.Component {
 
     _renderInputComponent() {
         var question = this.props.question,
-            value = this.props.answer['@value'],
-            label = question[Vocabulary.RDFS_LABEL],
-            title = question[Vocabulary.RDFS_COMMENT] ? question[Vocabulary.RDFS_COMMENT] : null,
+            value = this._resolveValue(),
+            label = Utils.getJsonAttValue(question, Vocabulary.RDFS_LABEL),
+            title = Utils.getJsonAttValue(question, Vocabulary.RDFS_COMMENT),
             component;
 
         if (FormUtils.isTypeahead(question)) {
@@ -109,17 +130,19 @@ export default class Answer extends React.Component {
     _generateSelectOptions(options) {
         var rendered = [];
         options.sort(function (a, b) {
-            if (a[Vocabulary.RDFS_LABEL] < b[Vocabulary.RDFS_LABEL]) {
+            var aLabel = Utils.getJsonAttValue(a, Vocabulary.RDFS_LABEL),
+                bLabel = Utils.getJsonAttValue(b, Vocabulary.RDFS_LABEL);
+            if (aLabel < bLabel) {
                 return -1;
             }
-            if (a[Vocabulary.RDFS_LABEL] > b[Vocabulary.RDFS_LABEL]) {
+            if (aLabel > bLabel) {
                 return 1;
             }
             return 0;
         });
         for (var i = 0, len = options.length; i < len; i++) {
-            rendered.push(<option value={options[i][Vocabulary.RDFS_LABEL]}
-                                  key={'opt-' + i}>{options[i][Vocabulary.RDFS_LABEL]}</option>);
+            rendered.push(<option value={Utils.getJsonAttValue(options[i], Vocabulary.RDFS_LABEL)}
+                                  key={'opt-' + i}>{Utils.getJsonAttValue(options[i], Vocabulary.RDFS_LABEL)}</option>);
         }
         return rendered;
     }

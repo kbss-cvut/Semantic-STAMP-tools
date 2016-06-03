@@ -85,7 +85,7 @@ module.exports = {
         FORM: 'http://onto.fel.cvut.cz/ontologies/documentation/form',
         QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
         HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
-        HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/form/has-answer',
+        HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/documentation/has_answer',
         HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
         HAS_VALUE_TYPE: 'http://onto.fel.cvut.cz/ontologies/form/has-value-type',
         IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
@@ -100,6 +100,9 @@ module.exports = {
         },
         VALUE_TYPE_CODE: 'code',
         VALUE_TYPE_TEXT: 'text',
-        GENERATED_ROW_SIZE: 1
+        GENERATED_ROW_SIZE: 1,
+
+        HAS_DATA_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_data_value',
+        HAS_OBJECT_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_object_value'
     }
 };

@@ -20,7 +20,9 @@ describe('Question answer processor', () => {
         for (var i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
             var answer = {};
             answer['@id'] = Generator.getRandomUri();
-            answer['@value'] = i;
+            answer[Constants.FORM.HAS_DATA_VALUE] = {
+                '@value': i
+            };
             question[Constants.FORM.HAS_ANSWER].push(answer);
         }
     }
@@ -32,7 +34,7 @@ describe('Question answer processor', () => {
         expect(actualQuestion.answers).toBeDefined();
         expect(actualQuestion.answers.length).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER].length);
         for (var i = 0, len = actualQuestion.answers.length; i < len; i++) {
-            expect(actualQuestion.answers[i].textValue).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i]['@value']);
+            expect(actualQuestion.answers[i].textValue).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i][Constants.FORM.HAS_DATA_VALUE]['@value']);
             expect(actualQuestion.answers[i].uri).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i]['@id']);
         }
     }
@@ -41,7 +43,7 @@ describe('Question answer processor', () => {
         var question = generateQuestions(),
             result;
         result = QuestionAnswerProcessor.processQuestionAnswerHierarchy(question);
-        
+
         verifyQuestions(question, result);
     });
 
@@ -52,11 +54,11 @@ describe('Question answer processor', () => {
         question[Vocabulary.RDFS_COMMENT] = 'Test0 Comment';
         question[Constants.FORM.HAS_SUBQUESTION] = [];
         for (var i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
-            question[Constants.FORM.HAS_SUBQUESTION].push(generateSubQuestions(0, 5));        
+            question[Constants.FORM.HAS_SUBQUESTION].push(generateSubQuestions(0, 5));
         }
         return question;
     }
-    
+
     function generateSubQuestions(depth, maxDepth) {
         var question = {};
         question['@id'] = Generator.getRandomUri();
@@ -71,7 +73,7 @@ describe('Question answer processor', () => {
         generateAnswers(question);
         return question;
     }
-    
+
     function verifyQuestions(expected, actual) {
         expect(actual.types.indexOf(expected['@id'])).not.toEqual(-1);
         verifyAnswers(expected, actual);

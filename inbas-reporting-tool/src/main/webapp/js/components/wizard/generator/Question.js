@@ -7,6 +7,7 @@ import Answer from "./Answer";
 import Constants from "../../../constants/Constants";
 import FormUtils from "./FormUtils";
 import QuestionAnswerProcessor from "../../../model/QuestionAnswerProcessor";
+import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 
 export default class Question extends React.Component {
@@ -46,7 +47,7 @@ export default class Question extends React.Component {
                     {this.renderSubQuestions()}
                 </div>;
             } else {
-                var label = this.props.question[Vocabulary.RDFS_LABEL];
+                var label = Utils.getJsonAttValue(this.props.question, Vocabulary.RDFS_LABEL);
                 return <Panel header={<h5>{label}</h5>} bsStyle='info'>
                     {this.renderAnswers()}
                     {this.renderSubQuestions()}
@@ -78,7 +79,7 @@ export default class Question extends React.Component {
     _getAnswers() {
         var question = this.props.question;
         if (!question[Constants.FORM.HAS_ANSWER]) {
-            if (FormUtils.isSection(question)) {
+            if (FormUtils.isSection(question) || FormUtils.isWizardStep(question)) {
                 question[Constants.FORM.HAS_ANSWER] = [];
             } else {
                 question[Constants.FORM.HAS_ANSWER] = [QuestionAnswerProcessor.generateAnswer(question)];

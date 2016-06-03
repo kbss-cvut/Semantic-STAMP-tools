@@ -6,6 +6,7 @@ var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
 var FormUtils = require('./FormUtils').default;
 var Logger = require('../../../utils/Logger');
+var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
 
 var GeneratedStep = require('./GeneratedStep').default;
@@ -20,10 +21,15 @@ var WizardGenerator = {
                 uri += param + '=' + parameters[param] + '&';   // '&' at the end of request URI should not be a problem
             });
         }
-        Ajax.post(uri, report).end(function
-            (data) {
+        var data = require('../../../../sample-eccairs-form.json');
+        if (!data) {
+            Ajax.post(uri, report).end(function
+                (data) {
+                this._createWizard(data, wizardTitle, renderCallback);
+            }.bind(this));
+        } else {
             this._createWizard(data, wizardTitle, renderCallback);
-        }.bind(this));
+        }
     },
 
     _createWizard: function (structure, title, renderCallback) {
@@ -58,7 +64,7 @@ var WizardGenerator = {
             item = formElements[i];
             if (FormUtils.isWizardStep(item) && !FormUtils.isHidden(item)) {
                 steps.push({
-                    name: item[Vocabulary.RDFS_LABEL],
+                    name: Utils.getJsonAttValue(item, Vocabulary.RDFS_LABEL),
                     component: GeneratedStep,
                     data: {
                         structure: item
