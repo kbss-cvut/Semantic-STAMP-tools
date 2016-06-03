@@ -122,8 +122,9 @@ export default class Answer extends React.Component {
             if (answer[Constants.FORM.HAS_OBJECT_VALUE] && answer[Constants.FORM.HAS_OBJECT_VALUE][Vocabulary.RDFS_LABEL]) {
                 value = Utils.getJsonAttValue(answer[Constants.FORM.HAS_OBJECT_VALUE], Vocabulary.RDFS_LABEL);
             }
-            component = <Input type='text' label={label} title={title} value={value} onChange={this.onChange}
-                               disabled={FormUtils.isDisabled(question)}/>;
+            var inputType = value.length > Constants.INPUT_LENGTH_THRESHOLD ? 'textarea' : 'text';
+            component = <Input type={inputType} label={label} title={title} value={value} onChange={this.onChange}
+                               disabled={FormUtils.isDisabled(question)} rows={5}/>;
         }
         return component;
     }
