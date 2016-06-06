@@ -48,3 +48,7 @@ repository which is queried for supported event types. For development purposes,
     `cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper` for more info.
 - JOPA is set up in `cz.cvut.kbss.inbas.audit.persistence.PersistenceFactory`.
 - Write tests!
+
+## Deployment
+
+Building on CI server and deployment is described in detail at [https://www.inbas.cz/group/guest/external-data-sources/-/wiki/Main/Reporting+Tool+Deployment](https://www.inbas.cz/group/guest/external-data-sources/-/wiki/Main/Reporting+Tool+Deployment)
