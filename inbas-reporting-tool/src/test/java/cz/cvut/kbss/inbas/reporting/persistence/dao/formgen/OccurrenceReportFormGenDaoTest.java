@@ -96,4 +96,14 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
             em.close();
         }
     }
+
+    @Test
+    public void testPersistReportWithAuthorAndLastModifiedBySame() throws Exception {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        personDao.persist(report.getAuthor());
+        reportDao.persist(report);
+        report.setLastModifiedBy(report.getAuthor());
+        final URI ctx = dao.persist(report);
+        assertNotNull(ctx);
+    }
 }
