@@ -7,6 +7,7 @@ import Answer from "./Answer";
 import Constants from "../../../constants/Constants";
 import FormUtils from "./FormUtils";
 import QuestionAnswerProcessor from "../../../model/QuestionAnswerProcessor";
+import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 import Utils from "../../../utils/Utils";
 
@@ -79,7 +80,7 @@ export default class Question extends React.Component {
     _getAnswers() {
         var question = this.props.question;
         if (!question[Constants.FORM.HAS_ANSWER]) {
-            if (FormUtils.isSection(question)) {
+            if (FormUtils.isSection(question) || FormUtils.isWizardStep(question)) {
                 question[Constants.FORM.HAS_ANSWER] = [];
             } else {
                 question[Constants.FORM.HAS_ANSWER] = [QuestionAnswerProcessor.generateAnswer(question)];
@@ -109,6 +110,17 @@ export default class Question extends React.Component {
         if (!Array.isArray(question[Constants.FORM.HAS_SUBQUESTION])) {
             question[Constants.FORM.HAS_SUBQUESTION] = [question[Constants.FORM.HAS_SUBQUESTION]];
         }
+        // TODO Temporary sorting
+        question[Constants.FORM.HAS_SUBQUESTION].sort(function(a, b) {
+            var aLabel = Utils.getJsonAttValue(a, Vocabulary.RDFS_LABEL),
+                bLabel = Utils.getJsonAttValue(b, Vocabulary.RDFS_LABEL);
+            if (aLabel < bLabel) {
+                return -1;
+            } else if (aLabel > bLabel) {
+                return 1;
+            }
+            return 0;
+        });
         return question[Constants.FORM.HAS_SUBQUESTION];
     }
 }

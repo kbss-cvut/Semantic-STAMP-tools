@@ -6,6 +6,7 @@ var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
 var FormUtils = require('./FormUtils').default;
 var Logger = require('../../../utils/Logger');
+var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
 var Utils = require("../../../utils/Utils");
 var GeneratedStep = require('./GeneratedStep').default;
@@ -20,10 +21,15 @@ var WizardGenerator = {
                 uri += param + '=' + parameters[param] + '&';   // '&' at the end of request URI should not be a problem
             });
         }
-        Ajax.post(uri, report).end(function
-            (data) {
+        var data = require('../../../../sample-eccairs-form.json');
+        if (!data) {
+            Ajax.post(uri, report).end(function
+                (data) {
+                this._createWizard(data, wizardTitle, renderCallback);
+            }.bind(this));
+        } else {
             this._createWizard(data, wizardTitle, renderCallback);
-        }.bind(this));
+        }
     },
 
     _createWizard: function (structure, title, renderCallback) {
@@ -66,6 +72,15 @@ var WizardGenerator = {
                 });
             }
         }
+        // TODO Temporary sorting
+        steps.sort(function (a, b) {
+            if (a.name < b.name) {
+                return 1;
+            } else if (a.name > b.name) {
+                return -1;
+            }
+            return 0;
+        });
         return steps;
     }
 };

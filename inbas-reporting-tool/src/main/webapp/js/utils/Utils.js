@@ -168,6 +168,15 @@ module.exports = {
         return res;
     },
 
+    /**
+     * Gets value of the specified attribute.
+     *
+     * If the attribute value is a string, it is returned, otherwise a '@value' attribute is retrieved from the nested
+     * object.
+     * @param obj Object from which the attribute value will be extracted
+     * @param att Attribute name
+     * @return {*} Attribute value (possibly null)
+     */
     getJsonAttValue: function (obj, att) {
         return typeof(obj[att]) === 'string' ? obj[att] : obj[att]['@value']
     },
