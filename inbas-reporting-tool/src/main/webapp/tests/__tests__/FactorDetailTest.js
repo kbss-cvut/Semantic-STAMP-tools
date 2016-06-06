@@ -38,8 +38,10 @@ describe('Factor detail dialog', function () {
             },
             question = {},
             value = 'SomeImportantValue';
-        question[Constants.HAS_ANSWER] = [{}];
-        question[Constants.HAS_ANSWER][0]['@value'] = value;
+        question[Constants.FORM.HAS_ANSWER] = [{}];
+        question[Constants.FORM.HAS_ANSWER][0][Constants.FORM.HAS_DATA_VALUE] = {
+            '@value': value
+        };
         spyOn(gantt, 'calculateEndDate').and.callThrough();
         detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
                                                   onClose={callbacks.onClose}

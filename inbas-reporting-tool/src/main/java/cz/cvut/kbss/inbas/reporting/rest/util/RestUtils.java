@@ -1,9 +1,13 @@
 package cz.cvut.kbss.inbas.reporting.rest.util;
 
+import cz.cvut.kbss.inbas.reporting.exception.WebServiceIntegrationException;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 
 public class RestUtils {
 
@@ -50,5 +54,13 @@ public class RestUtils {
         final HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.LOCATION, location.toASCIIString());
         return headers;
+    }
+
+    public static String encodeUrl(String value) {
+        try {
+            return URLEncoder.encode(value, Constants.UTF_8_ENCODING);
+        } catch (UnsupportedEncodingException e) {
+            throw new WebServiceIntegrationException("Encoding not found.", e);
+        }
     }
 }

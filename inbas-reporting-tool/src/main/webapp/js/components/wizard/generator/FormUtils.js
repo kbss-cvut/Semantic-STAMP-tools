@@ -6,7 +6,7 @@ import Utils from "../../../utils/Utils";
 export default class FormUtils {
     
     static isForm(structure) {
-        return Utils.hasValue(structure, '@type', Constants.FORM.FORM);
+        return Utils.hasValue(structure, Constants.FORM.LAYOUT_CLASS, Constants.FORM.LAYOUT.FORM);
     }
     
     static isWizardStep(structure) {

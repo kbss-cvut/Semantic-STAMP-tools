@@ -13,6 +13,7 @@ describe('FormUtils', () => {
                     {}, {}
                 ]
             };
+            form[Constants.FORM.LAYOUT_CLASS] = [Constants.FORM.LAYOUT.FORM];
             expect(FormUtils.isForm(form)).toBeTruthy();
         });
 

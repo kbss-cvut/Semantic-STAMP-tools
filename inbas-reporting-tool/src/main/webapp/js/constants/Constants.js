@@ -76,6 +76,9 @@ module.exports = {
     // Maximum time difference between occurrence start and end. 24 hours in millis
     MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24,
 
+    // Maximum input value length, for which input of type text should be displayed
+    INPUT_LENGTH_THRESHOLD: 70,
+
     OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
     EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
     OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
@@ -85,12 +88,13 @@ module.exports = {
         FORM: 'http://onto.fel.cvut.cz/ontologies/documentation/form',
         QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
         HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
-        HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/form/has-answer',
+        HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/documentation/has_answer',
         HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
         HAS_VALUE_TYPE: 'http://onto.fel.cvut.cz/ontologies/form/has-value-type',
         IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
         LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class',
         LAYOUT: {
+            FORM: 'form',
             QUESTION_TYPEAHEAD: 'type-ahead',
             QUESTION_SECTION: 'section',
             WIZARD_STEP: 'wizard-step',
@@ -99,6 +103,9 @@ module.exports = {
         },
         VALUE_TYPE_CODE: 'code',
         VALUE_TYPE_TEXT: 'text',
-        GENERATED_ROW_SIZE: 1
+        GENERATED_ROW_SIZE: 1,
+
+        HAS_DATA_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_data_value',
+        HAS_OBJECT_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_object_value'
     }
 };

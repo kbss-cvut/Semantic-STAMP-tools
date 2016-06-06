@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.options;
 
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.util.JsonLdProcessing;
 import org.slf4j.Logger;
@@ -18,8 +19,6 @@ public class ReportingPhaseService {
     private static final Logger LOG = LoggerFactory.getLogger(ReportingPhaseService.class);
 
     private static final String PHASE_OPTION_TYPE = "reportingPhase";
-    private static final String GREATER_THAN_PROPERTY = "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than";
-    private static final String DEFAULT_PHASE_TYPE = "http://onto.fel.cvut.cz/ontologies/documentation/default_phase";
 
     @Autowired
     private OptionsService optionsService;
@@ -30,8 +29,8 @@ public class ReportingPhaseService {
     @PostConstruct
     private void loadPhases() {
         final RawJson json = (RawJson) optionsService.getOptions(PHASE_OPTION_TYPE);
-        this.phases.addAll(JsonLdProcessing.getOrderedOptions(json, GREATER_THAN_PROPERTY));
-        this.defaultPhase = JsonLdProcessing.getItemWithType(json, DEFAULT_PHASE_TYPE);
+        this.phases.addAll(JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than));
+        this.defaultPhase = JsonLdProcessing.getItemWithType(json, Vocabulary.s_c_default_phase);
         if (defaultPhase == null) {
             LOG.warn("Default reporting phase not found.");
         }

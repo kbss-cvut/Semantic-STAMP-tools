@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.util;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.exception.JsonProcessingException;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,9 +17,6 @@ import static org.junit.Assert.assertNull;
 
 public class JsonLdProcessingTest {
 
-    private static final String ORDER_PROPERTY = "http://onto.fel.cvut.cz/ontologies/aviation-safety/is-higher-than";
-    private static final String TYPE = "http://onto.fel.cvut.cz/ontologies/aviation-safety/default-phase";
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -28,7 +26,7 @@ public class JsonLdProcessingTest {
         final List<URI> expected = Arrays.asList(URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/first"),
                 URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second"),
                 URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/third"));
-        assertEquals(expected, JsonLdProcessing.getOrderedOptions(json, ORDER_PROPERTY));
+        assertEquals(expected, JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than));
     }
 
     @Test
@@ -36,7 +34,7 @@ public class JsonLdProcessingTest {
         final String invalidJson = "This is definitely not a valid JSON.";
         thrown.expect(JsonProcessingException.class);
         thrown.expectMessage("The specified JSON is not valid. JSON: " + invalidJson);
-        JsonLdProcessing.getOrderedOptions(new RawJson(invalidJson), ORDER_PROPERTY);
+        JsonLdProcessing.getOrderedOptions(new RawJson(invalidJson), Vocabulary.s_p_is_higher_than);
     }
 
     @Test
@@ -44,7 +42,7 @@ public class JsonLdProcessingTest {
         final RawJson json = new RawJson(Environment.loadData("data/occurrenceWithSubEvents.json", String.class));
         thrown.expect(JsonProcessingException.class);
         thrown.expectMessage("The specified JSON does not contain options that can be sorted.");
-        JsonLdProcessing.getOrderedOptions(json, ORDER_PROPERTY);
+        JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than);
     }
 
     @Test
@@ -52,16 +50,16 @@ public class JsonLdProcessingTest {
         final URI expected = URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second");
 
         final RawJson json = new RawJson(Environment.loadData("option/reportingPhase.json", String.class));
-        final URI result = JsonLdProcessing.getItemWithType(json, TYPE);
+        final URI result = JsonLdProcessing.getItemWithType(json, Vocabulary.s_c_default_phase);
         assertEquals(expected, result);
     }
 
     @Test
     public void getItemWithTypeHandlesItemWithTypeNotAnArray() throws Exception {
         final URI expected = URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second");
-        final String json = "[{\"@id\": \"" + expected.toString() + "\", \"@type\": \"" + TYPE + "\"}]";
+        final String json = "[{\"@id\": \"" + expected.toString() + "\", \"@type\": \"" + Vocabulary.s_c_default_phase + "\"}]";
 
-        final URI result = JsonLdProcessing.getItemWithType(new RawJson(json), TYPE);
+        final URI result = JsonLdProcessing.getItemWithType(new RawJson(json), Vocabulary.s_c_default_phase);
         assertEquals(expected, result);
     }
 
@@ -69,7 +67,7 @@ public class JsonLdProcessingTest {
     public void getItemWithTypeReturnsNullIfNoMatchingItemIsFound() throws Exception {
         final RawJson json = new RawJson(Environment.loadData("option/reportingPhase.json", String.class));
         // Order property is definitely not it types of any of the items
-        assertNull(JsonLdProcessing.getItemWithType(json, ORDER_PROPERTY));
+        assertNull(JsonLdProcessing.getItemWithType(json, Vocabulary.s_p_is_higher_than));
     }
 
     @Test
@@ -77,6 +75,6 @@ public class JsonLdProcessingTest {
         final String invalidJson = "This is definitely not a valid JSON.";
         thrown.expect(JsonProcessingException.class);
         thrown.expectMessage("The specified JSON is not valid. JSON: " + invalidJson);
-        JsonLdProcessing.getItemWithType(new RawJson(invalidJson), TYPE);
+        JsonLdProcessing.getItemWithType(new RawJson(invalidJson), Vocabulary.s_c_default_phase);
     }
 }

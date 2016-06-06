@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.FormGenDao;
+import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 
 import java.net.URI;
 import java.util.Map;
@@ -36,7 +37,7 @@ class EventFormGenDataProcessor extends FormGenDataProcessor<OccurrenceReport> {
             throw new IllegalArgumentException(
                     "Event with reference id " + referenceId + " not found in the factor graph.");
         }
-        this.params.put(EVENT_PARAM, visitor.uri.toString());
+        this.params.put(EVENT_PARAM, RestUtils.encodeUrl(visitor.uri.toString()));
     }
 
     private Integer getReferenceId(Map<String, String> params) {
