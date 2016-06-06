@@ -137,6 +137,7 @@ module.exports = {
         'report.corrective.wizard.step-title': 'Corrective Measure Assessment',
         'report.eventtype.table-type': 'Event type',
         'report.eventtype.add-tooltip': 'Add an event type assessment',
+        'report.responsible-department': 'Responsible department',
         
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
