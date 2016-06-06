@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao.formgen;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
@@ -76,5 +77,23 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
         reportDao.persist(report);
         final URI ctx = dao.persist(report);
         assertNotNull(ctx);
+    }
+
+    @Test
+    public void persistRemovesCorrectiveMeasuresFromReport() throws Exception {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
+        report.getAuthor().generateUri();
+        assertFalse(report.getCorrectiveMeasures().isEmpty());
+        dao.persist(report);
+        assertTrue(report.getCorrectiveMeasures().isEmpty());
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertFalse(
+                    em.createNativeQuery("ASK { ?x a ?measure . }", Boolean.class).setParameter("measure", URI.create(
+                            Vocabulary.s_c_corrective_measure_request)).getSingleResult());
+        } finally {
+            em.close();
+        }
     }
 }
