@@ -5,6 +5,9 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_factor)
 public class Factor implements HasUri, Serializable {
@@ -17,8 +20,8 @@ public class Factor implements HasUri, Serializable {
     private Event event;
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.s_p_has_factor_type)
-    private FactorType type;
+    @Types
+    private Set<URI> types;
 
     @Override
     public URI getUri() {
@@ -37,16 +40,24 @@ public class Factor implements HasUri, Serializable {
         this.event = event;
     }
 
-    public FactorType getType() {
-        return type;
+    public Set<URI> getTypes() {
+        return types;
     }
 
-    public void setType(FactorType type) {
-        this.type = type;
+    public void setTypes(Set<URI> types) {
+        this.types = types;
+    }
+
+    public void addType(URI type) {
+        Objects.requireNonNull(type);
+        if (types == null) {
+            this.types = new HashSet<>();
+        }
+        getTypes().add(type);
     }
 
     @Override
     public String toString() {
-        return event + "(" + type + ')';
+        return event + types.toString();
     }
 }
