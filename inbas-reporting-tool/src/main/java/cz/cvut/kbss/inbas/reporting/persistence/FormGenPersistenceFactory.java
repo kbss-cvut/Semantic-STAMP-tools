@@ -15,8 +15,7 @@ import java.util.Map;
 
 import static cz.cvut.kbss.inbas.reporting.util.ConfigParam.DRIVER;
 import static cz.cvut.kbss.inbas.reporting.util.ConfigParam.FORM_GEN_REPOSITORY_URL;
-import static cz.cvut.kbss.jopa.model.JOPAPersistenceProperties.DATA_SOURCE_CLASS;
-import static cz.cvut.kbss.jopa.model.JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY;
+import static cz.cvut.kbss.jopa.model.JOPAPersistenceProperties.*;
 
 @Configuration
 @PropertySource("classpath:config.properties")
@@ -37,6 +36,7 @@ public class FormGenPersistenceFactory {
         final Map<String, String> properties = new HashMap<>(PersistenceFactory.getDefaultParams());
         properties.put(ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(FORM_GEN_REPOSITORY_URL.toString()));
         properties.put(DATA_SOURCE_CLASS, environment.getProperty(DRIVER.toString()));
+        properties.put(CACHE_ENABLED, Boolean.FALSE.toString());
         this.emf = Persistence.createEntityManagerFactory("formGenPU", properties);
     }
 

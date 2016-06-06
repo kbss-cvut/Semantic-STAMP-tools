@@ -35,6 +35,9 @@ public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
         }
         persistEventsIfNecessary(instance.getOccurrence(), em, descriptor);
         em.persist(instance.getOccurrence(), descriptor);
+        if (instance.getCorrectiveMeasures() != null) {
+            instance.getCorrectiveMeasures().clear();
+        }
         super.prePersist(instance, em, descriptor);
     }
 
