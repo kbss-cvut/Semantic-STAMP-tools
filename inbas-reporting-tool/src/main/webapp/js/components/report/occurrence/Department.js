@@ -4,7 +4,8 @@ import React from "react";
 import injectIntl from "../../../utils/injectIntl";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import OptionsStore from "../../../stores/OptionsStore";
-import Select from "../../Select";
+import Typeahead from "react-bootstrap-typeahead";
+import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 import Utils from "../../../utils/Utils";
 
 class Department extends React.Component {
@@ -17,8 +18,16 @@ class Department extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            options: Utils.processSelectOptions(OptionsStore.getOptions('department'))
+            options: Department._processOptions(OptionsStore.getOptions('department'))
         };
+    }
+
+    static _processOptions(options) {
+        var opts = Utils.processTypeaheadOptions(options);
+        opts.sort((a, b) => {
+            return a.name.localeCompare(b.name);
+        });
+        return opts;
     }
 
     componentDidMount() {
@@ -32,22 +41,41 @@ class Department extends React.Component {
     _onOptionsLoaded = (type, data) => {
         if (type === 'department') {
             this.setState({
-                options: Utils.processSelectOptions(data)
+                options: Department._processOptions(data)
             });
         }
     };
 
-    _onChange = (evt) => {
-        var change = {};
-        change[evt.target.name] = evt.target.value;
-        this.props.onChange(change);
+    _onChange = (dept) => {
+        this.props.onChange({responsibleDepartment: dept.id});
     };
+
+    _resolveDepartment() {
+        var dept = this.props.report.responsibleDepartment;
+        if (dept) {
+            var option = this.state.options.find((item) => {
+                return item.id === dept;
+            });
+            return option ? option.name : '';
+        }
+        return '';
+    }
 
     render() {
         var i18n = this.props.i18n,
             report = this.props.report;
-        return <Select name='responsibleDepartment' label={i18n('report.responsible-department')} addDefault={true}
-                       value={report.responsibleDepartment} onChange={this._onChange} options={this.state.options}/>
+        return <div>
+            <label className='control-label'>
+                {i18n('report.responsible-department')}
+            </label>
+            <Typeahead className='form-group form-group-sm' name='responsibleDepartment'
+                       ref='responsibleDepartment' formInputOption='id' optionsButton={true}
+                       placeholder={i18n('report.responsible-department')}
+                       onOptionSelected={this._onChange} filterOption='name'
+                       value={this._resolveDepartment()}
+                       displayOption='name' options={this.state.options}
+                       customClasses={{input: 'form-control'}} customListComponent={TypeaheadResultList}/>
+        </div>;
     }
 }
 
