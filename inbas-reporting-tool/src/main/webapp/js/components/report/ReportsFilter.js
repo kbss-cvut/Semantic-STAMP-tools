@@ -20,13 +20,15 @@ var ReportsFilter = React.createClass({
 
     propTypes: {
         onFilterChange: React.PropTypes.func.isRequired,
-        reports: React.PropTypes.array
+        reports: React.PropTypes.array,
+        filter: React.PropTypes.object
     },
 
     getInitialState: function () {
+        var filterInit = this.props.filter ? this.props.filter : {};
         return {
-            'phase': Constants.FILTER_DEFAULT,
-            'types': Constants.FILTER_DEFAULT
+            'phase': filterInit['phase'] ? filterInit['phase'] : Constants.FILTER_DEFAULT,
+            'types': filterInit['types'] ? filterInit['types'] : Constants.FILTER_DEFAULT
         }
     },
 
