@@ -116,7 +116,7 @@ var GanttController = {
 
     configureGanttTemplates: function () {
         gantt.templates.link_class = function (link) {
-            return FactorStyleInfo.getLinkStyle(link);
+            return FactorStyleInfo.getLinkClass(link);
         };
         gantt.templates.task_class = function (start, end, task) {
             var eventType;

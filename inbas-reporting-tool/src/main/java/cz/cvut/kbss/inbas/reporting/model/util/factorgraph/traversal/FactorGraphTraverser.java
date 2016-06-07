@@ -65,6 +65,8 @@ public class FactorGraphTraverser {
         if (item.getFactors() != null) {
             item.getFactors().forEach(f -> {
                 if (factorGraphEdgeVisitor != null) {
+                    // Assuming there is exactly one factor type
+                    assert f.getTypes().size() == 1;
                     factorGraphEdgeVisitor.visit(f.getEvent().getUri(), item.getUri(), f.getTypes().iterator().next());
                 }
                 traverse(f.getEvent(), visited);

@@ -5,6 +5,7 @@
 'use strict';
 
 var React = require('react');
+var Reflux = require('reflux');
 var assign = require('object-assign');
 var Button = require('react-bootstrap').Button;
 var Modal = require('react-bootstrap').Modal;
@@ -20,15 +21,16 @@ var FactorDetail = require('./FactorDetail');
 var FactorRenderer = require('./FactorRenderer');
 var GanttController = require('./GanttController');
 var FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
-var Constants = require('../../constants/Constants');
 var I18nMixin = require('../../i18n/I18nMixin');
+var Utils = require('../../utils/Utils');
 
+var OptionsStore = require('../../stores/OptionsStore');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 
 // TODO We should get rid of references to report.occurrence, because factors will be used also in Safety issue reports
 // and possibly audit reports
 var Factors = React.createClass({
-    mixins: [I18nMixin],
+    mixins: [I18nMixin, Reflux.listenTo(TypeaheadStore, 'renderFactors'), Reflux.listenTo(OptionsStore, '_factorTypesLoaded')],
 
     propTypes: {
         report: React.PropTypes.object.isRequired
@@ -46,6 +48,7 @@ var Factors = React.createClass({
             currentLinkTarget: null,
             showFactorDialog: false,
             currentFactor: null,
+            factorTypeOptions: Utils.processSelectOptions(OptionsStore.getOptions('factorType')),
             showDeleteLinkDialog: false
         }
     },
@@ -57,7 +60,6 @@ var Factors = React.createClass({
     },
 
     componentWillMount: function () {
-        this.eventTypesUnsubscribe = TypeaheadStore.listen(this.renderFactors);
         Actions.loadEventTypes();
     },
 
@@ -76,6 +78,12 @@ var Factors = React.createClass({
         }
     },
 
+    _factorTypesLoaded: function (type, data) {
+        if (type === 'factorType') {
+            this.setState({factorTypeOptions: Utils.processSelectOptions(data)});
+        }
+    },
+
     renderFactors: function (data) {
         if (this.factorsRendered) {
             return;
@@ -87,10 +95,6 @@ var Factors = React.createClass({
         FactorRenderer.renderFactors(this.props.report, TypeaheadStore.getEventTypes());
         this.ganttController.expandSubtree(this.ganttController.occurrenceEventId);
         this.factorReferenceIdCounter = FactorRenderer.greatestReferenceId;
-    },
-
-    componentWillUnmount: function () {
-        this.eventTypesUnsubscribe();
     },
 
     onLinkAdded: function (link) {
@@ -238,13 +242,6 @@ var Factors = React.createClass({
     },
 
     renderLinkTypeDialog: function () {
-        var options = Object.getOwnPropertyNames(Constants.LINK_TYPES).map((name) => {
-            var item = Constants.LINK_TYPES[name];
-            return {
-                value: item.value,
-                label: this.i18n(item.message)
-            };
-        });
         return (
             <Modal show={this.state.showLinkTypeDialog} bsSize='small' onHide={this.onCloseLinkTypeDialog}>
                 <Modal.Header closeButton>
@@ -252,7 +249,7 @@ var Factors = React.createClass({
                 </Modal.Header>
                 <Modal.Body>
                     <Select ref='linkType' title={this.i18n('factors.link-type-select-tooltip')} addDefault={true}
-                            onChange={this.onLinkTypeSelect} options={options}/>
+                            onChange={this.onLinkTypeSelect} options={this.state.factorTypeOptions}/>
                 </Modal.Body>
             </Modal>
         );
@@ -279,12 +276,13 @@ var Factors = React.createClass({
     },
 
     _renderLineColors: function () {
-        return Object.getOwnPropertyNames(Constants.LINK_TYPES).map((name) => {
-            var item = Constants.LINK_TYPES[name];
-            return <div className='col-xs-3' key={item.value}>
-                <div className={item.className}
+        var size = 12 / this.state.factorTypeOptions.length;
+        return this.state.factorTypeOptions.map((item) => {
+            var simpleName = Utils.getLastPathFragment(item.value);
+            return <div className={'col-xs-' + size} key={item.value}>
+                <div className={'gantt-link-' + simpleName}
                      style={{height: '4px', width: '2em', float: 'left', margin: '8px'}}/>
-                <div style={{float: 'left'}}>{this.i18n(item.message)}</div>
+                <div style={{float: 'left'}}>{item.label}</div>
             </div>;
         });
     }

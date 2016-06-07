@@ -6,28 +6,6 @@ module.exports = {
     APP_NAME: 'INBAS Reporting Tool',
     ECCAIRS_URL: 'http://www.icao.int/safety/airnavigation/AIG/Documents/ADREP%20Taxonomy/ECCAIRS%20Aviation%201.3.0.12%20(Entities%20and%20Attributes).en.id.pdf',
     HOME_ROUTE: Routes.dashboard,
-    LINK_TYPES: {
-        CAUSE: {
-            value: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/causes',
-            message: 'factors.causes',
-            className: 'gantt-link-causes'
-        },
-        CONTRIBUTE_TO: {
-            value: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes_to',
-            message: 'factors.contributes_to',
-            className: 'gantt-link-contributes'
-        },
-        MITIGATE: {
-            value: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/mitigates',
-            message: 'factors.mitigates',
-            className: 'gantt-link-mitigates'
-        },
-        PREVENT: {
-            value: 'http://onto.fel.cvut.cz/ontologies/aviation/core#prevents',
-            message: 'factors.prevents',
-            className: 'gantt-link-prevents'
-        }
-    },
     OPTIONS: {
         OCCURRENCE_CLASS: 'occurrenceClass'
     },
