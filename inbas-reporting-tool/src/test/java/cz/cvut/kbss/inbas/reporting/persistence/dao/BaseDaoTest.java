@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
+import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -76,5 +77,22 @@ public class BaseDaoTest extends BaseDaoTestRunner {
 
         personDao.remove(Collections.emptyList());
         persons.forEach(p -> assertNotNull(personDao.find(p.getUri())));
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void persistThrowsPersistenceExceptionWhenExceptionIsThrownByPersistenceProvider() {
+        final Person p = new Person();
+        p.setFirstName("Catherine");
+        p.setLastName("Halsey");
+        // No username -> IC violation
+        personDao.persist(p);
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void updateThrowsPersistenceExceptionWhenExceptionIsThrownByPersistenceProvider() {
+        final Person person = Generator.getPerson();
+        personDao.persist(person);
+        person.setUsername(null);
+        personDao.update(person);
     }
 }

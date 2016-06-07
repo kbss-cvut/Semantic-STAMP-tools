@@ -14,9 +14,12 @@ import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
+import cz.cvut.kbss.inbas.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
+import cz.cvut.kbss.jopa.exceptions.RollbackException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -303,5 +306,19 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final Long fileNumber = IdentificationUtils.generateFileNumber();
         mockMvc.perform(delete(REPORTS_PATH + "chain/" + fileNumber)).andExpect(status().isNoContent());
         verify(reportServiceMock).removeReportChain(fileNumber);
+    }
+
+    @Test
+    public void persistenceExceptionIsWrappedInJsonObjectWithReadableMessage() throws Exception {
+        final OccurrenceReport report = prepareReport();
+        final String message = "Expected some value in attribute blabla, but found none.";
+        doThrow(new PersistenceException(new RollbackException(message))).when(reportServiceMock)
+                                                                         .persist(any(OccurrenceReport.class));
+        final MvcResult result = mockMvc.perform(
+                post(REPORTS_PATH).content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                                  .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                        .andExpect(status().isInternalServerError()).andReturn();
+        final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
+        assertEquals(message, errorInfo.getMessage());
     }
 }
