@@ -131,9 +131,11 @@ var GanttController = {
             return formatFunc(date);
         };
         gantt.templates.tooltip_text = function (start, end, task) {
-            var tooltip = '<b>' + task.text + '</b><br/>';
+            var tooltip;
             if (task.statement && task.statement.eventType) {
-                tooltip += task.statement.eventType + '<br/>';
+                tooltip = '<a href="' + task.statement.eventType + '" target="_blank">' + task.text + '</a><br/>';
+            } else {
+                tooltip = '<b>' + task.text + '</b><br/>';
             }
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
                 '<br/><b>End date:</b> ' + gantt.templates.tooltip_date_format(end);

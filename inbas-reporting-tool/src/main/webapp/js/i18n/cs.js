@@ -126,6 +126,7 @@ module.exports = {
         'initial.label': 'Prvotní hlášení',
         'initial.tooltip': 'Text prvotního hlášení - pole je povinné',
 
+        'report.created-by-msg': 'Vytvořil(a) {name} {date}.',
         'report.last-edited-msg': 'Naposledy upravil(a) {name} {date}.',
         'report.narrative-tooltip': 'Popis - pole je povinné',
         'report.table-edit-tooltip': 'Editovat položku',

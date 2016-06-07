@@ -438,6 +438,7 @@
                                 <resource>
                                     <directory>profiles/${profile.name}</directory>
                                     <includes>
+                                        <includes>option/*.json</includes>
                                         <include>query/*.sparql</include>
                                         <include>logback.xml</include>
                                         <include>config.properties</include>

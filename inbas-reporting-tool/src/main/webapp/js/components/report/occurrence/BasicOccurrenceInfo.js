@@ -23,13 +23,6 @@ var BasicOccurrenceInfo = React.createClass({
         onChange: React.PropTypes.func.isRequired
     },
 
-    getFullName: function (data) {
-        if (!data) {
-            return '';
-        }
-        return data.firstName + ' ' + data.lastName;
-    },
-
     render: function () {
         var report = this.props.report;
         return (
@@ -44,38 +37,36 @@ var BasicOccurrenceInfo = React.createClass({
                     </div>
                 </div>
 
-                <div className='row'>
-                    {this.renderAuthor()}
-                    <div className='col-xs-4'>
-                        {this.props.revisions}
-                    </div>
-                </div>
-
-                {this._renderLastModified()}
+                {this._renderProvenanceInfo()}
             </div>
         );
     },
 
-    renderAuthor: function () {
+    _renderProvenanceInfo: function () {
         var report = this.props.report;
-        return report.isNew ? null : (
-            <div className='col-xs-4'>
-                <Input type='text' value={this.getFullName(report.author)} label={this.i18n('author')}
-                       title={this.i18n('author-title')}
-                       disabled/>
-            </div>);
-    },
-
-    _renderLastModified: function () {
-        var report = this.props.report;
-        if (report.isNew || !report.lastModified) {
+        if (report.isNew) {
             return null;
         }
-        var formattedDate = Utils.formatDate(new Date(report.lastModified));
+        var author = report.author ? report.author.firstName + ' ' + report.author.lastName : '',
+            created = Utils.formatDate(new Date(report.dateCreated)),
+            lastEditor, lastModified;
+        if (!report.lastModified) {
+            return (
+                <div className='form-group notice-small'>
+                    <FormattedMessage id='report.created-by-msg'
+                                      values={{date: created, name: <b>{author}</b>}}/>
+                </div>
+            );
+        }
+        lastEditor = report.lastModifiedBy ? report.lastModifiedBy.firstName + ' ' + report.lastModifiedBy.lastName : '',
+            lastModified = Utils.formatDate(new Date(report.lastModified));
         return (
             <div className='form-group notice-small'>
+                <FormattedMessage id='report.created-by-msg'
+                                  values={{date: created, name: <b>{author}</b>}}/>
+                &nbsp;
                 <FormattedMessage id='report.last-edited-msg'
-                                  values={{date: formattedDate, name: this.getFullName(report.lastModifiedBy)}}/>
+                                  values={{date: lastModified, name: <b>{lastEditor}</b>}}/>
             </div>
         );
     }

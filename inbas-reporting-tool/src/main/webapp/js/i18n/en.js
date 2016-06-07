@@ -123,7 +123,8 @@ module.exports = {
         'initial.wizard.edit-title': 'Edit initial report',
         'initial.label': 'Initial report',
         'initial.tooltip': 'Initial report text - this field is required',
-        
+
+        'report.created-by-msg': 'Created {date} by {name}.',
         'report.last-edited-msg': 'Last modified {date} by {name}.',
         'report.narrative-tooltip': 'Narrative - this field is required',
         'report.table-edit-tooltip': 'Edit statement',
