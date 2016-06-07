@@ -139,6 +139,7 @@ module.exports = {
         'report.corrective.wizard.step-title': 'Popis nápravného opatření',
         'report.eventtype.table-type': 'Typ události',
         'report.eventtype.add-tooltip': 'Přidat popis typu události',
+        'report.responsible-department': 'Zodpovědné oddělení',
         
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',

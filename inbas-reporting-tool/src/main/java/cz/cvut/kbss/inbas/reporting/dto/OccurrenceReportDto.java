@@ -42,6 +42,8 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     private URI severityAssessment;
 
+    private URI responsibleDepartment;
+
     private Set<CorrectiveMeasureRequestDto> correctiveMeasures;
 
     private String summary;
@@ -149,29 +151,6 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
         return revision;
     }
 
-    @Override
-    public ReportDto toReportDto() {
-        final cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto res = new cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto();
-        res.setUri(uri);
-        res.setKey(key);
-        res.setFileNumber(fileNumber);
-        res.setPhase(phase);
-        res.setAuthor(author);
-        res.setDateCreated(dateCreated);
-        res.setLastModifiedBy(lastModifiedBy);
-        res.setLastModified(lastModified);
-        res.setRevision(revision);
-        res.setTypes(types != null ? new HashSet<>(types) : new HashSet<>());
-        res.getTypes().add(Vocabulary.s_c_occurrence_report);
-        assert occurrence != null;
-        res.setIdentification(occurrence.getName());
-        res.setDate(occurrence.getStartTime());
-        res.setSummary(summary);
-        res.setSeverityAssessment(severityAssessment);
-        res.setOccurrenceCategory(occurrence.getEventType());
-        return res;
-    }
-
     public void setRevision(Integer revision) {
         this.revision = revision;
     }
@@ -182,6 +161,14 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     public void setSeverityAssessment(URI severityAssessment) {
         this.severityAssessment = severityAssessment;
+    }
+
+    public URI getResponsibleDepartment() {
+        return responsibleDepartment;
+    }
+
+    public void setResponsibleDepartment(URI responsibleDepartment) {
+        this.responsibleDepartment = responsibleDepartment;
     }
 
     public Set<CorrectiveMeasureRequestDto> getCorrectiveMeasures() {
@@ -230,5 +217,28 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    @Override
+    public ReportDto toReportDto() {
+        final cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto res = new cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto();
+        res.setUri(uri);
+        res.setKey(key);
+        res.setFileNumber(fileNumber);
+        res.setPhase(phase);
+        res.setAuthor(author);
+        res.setDateCreated(dateCreated);
+        res.setLastModifiedBy(lastModifiedBy);
+        res.setLastModified(lastModified);
+        res.setRevision(revision);
+        res.setTypes(types != null ? new HashSet<>(types) : new HashSet<>());
+        res.getTypes().add(Vocabulary.s_c_occurrence_report);
+        assert occurrence != null;
+        res.setIdentification(occurrence.getName());
+        res.setDate(occurrence.getStartTime());
+        res.setSummary(summary);
+        res.setSeverityAssessment(severityAssessment);
+        res.setOccurrenceCategory(occurrence.getEventType());
+        return res;
     }
 }

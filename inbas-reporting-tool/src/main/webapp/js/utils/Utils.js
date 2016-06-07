@@ -178,7 +178,24 @@ module.exports = {
      * @return {*} Attribute value (possibly null)
      */
     getJsonAttValue: function (obj, att) {
-        return typeof(obj[att]) === 'string' ? obj[att] : obj[att]['@value']
+        return obj[att] ? (typeof(obj[att]) !== 'object' ? obj[att] : obj[att]['@value']) : null;
+    },
+
+    /**
+     * Transforms the specified JSON-LD input to a list of objects suitable as options for a Select component.
+     *
+     * This means, that the resulting list consists of objects with value, label and title attributes.
+     * @param jsonLd The JSON-LD to process
+     * @return {*} List of options
+     */
+    processSelectOptions: function (jsonLd) {
+        return jsonLd.map(function (item) {
+            return {
+                value: item['@id'],
+                label: this.getJsonAttValue(item, Vocabulary.RDFS_LABEL),
+                title: this.getJsonAttValue(item, Vocabulary.RDFS_COMMENT)
+            }
+        }.bind(this));
     },
 
     /**

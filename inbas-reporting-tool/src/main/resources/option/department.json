@@ -1,0 +1,6 @@
+[ {
+  "@id" : "http://onto.fel.cvut.cz/ontologies/caa/old",
+  "http://www.w3.org/2000/01/rdf-schema#label" : [ {
+    "@value" : "Odbor obchodní letecké dopravy"
+  } ]
+}]

@@ -8,6 +8,7 @@ var React = require('react');
 var injectIntl = require('../../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
+var Department = require('./Department').default;
 var Input = require('../../Input');
 var Utils = require('../../../utils/Utils');
 var OccurrenceClassification = require('./OccurrenceClassification');
@@ -33,9 +34,15 @@ var BasicOccurrenceInfo = React.createClass({
         var report = this.props.report;
         return (
             <div>
-                <OccurrenceDetail report={this.props.report} onChange={this.props.onChange}/>
+                <OccurrenceDetail report={report} onChange={this.props.onChange}/>
 
                 <OccurrenceClassification onChange={this.props.onChange} report={report}/>
+
+                <div className='row'>
+                    <div className='col-xs-4'>
+                        <Department report={report} onChange={this.props.onChange}/>
+                    </div>
+                </div>
 
                 <div className='row'>
                     {this.renderAuthor()}
