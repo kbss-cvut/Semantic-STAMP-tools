@@ -10,7 +10,10 @@ import Vocabulary from "../../constants/Vocabulary";
 
 class PhaseTransition extends React.Component {
     static propTypes = {
-        report: React.PropTypes.object.isRequired
+        report: React.PropTypes.object.isRequired,
+        onLoading: React.PropTypes.func.isRequired,
+        onSuccess: React.PropTypes.func.isRequired,
+        onError: React.PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -40,10 +43,8 @@ class PhaseTransition extends React.Component {
     };
 
     _onPhaseTransition = () => {
-        var key = this.props.report.key;
-        Actions.phaseTransition(this.props.report, () => {
-            Actions.loadReport(key);
-        });
+        this.props.onLoading();
+        Actions.phaseTransition(this.props.report, this.props.onSuccess, this.props.onError);
     };
 
     _determinePhase() {

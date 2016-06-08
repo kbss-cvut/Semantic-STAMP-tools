@@ -41,6 +41,8 @@ module.exports = {
         'detail.submit-tooltip': 'Create new revision of this report',
         'detail.submit-success-message': 'Report successfully submitted.',
         'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
+        'detail.phase-transition-success-message': 'Report phase transition successful.',
+        'detail.phase-transition-failed-message': 'Report phase transition failed with error: ',
         'detail.loading': 'Loading report...',
         'detail.not-found.title': 'Report not found',
 

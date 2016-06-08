@@ -11,9 +11,13 @@ describe('PhaseTransition', () => {
         Vocabulary = require('../../js/constants/Vocabulary'),
 
         PhaseTransition = require('../../js/components/misc/PhaseTransition').default,
+        onLoading, onSuccess, onError,
         phases, report;
 
     beforeEach(() => {
+        onLoading = jasmine.createSpy('onLoading');
+        onSuccess = jasmine.createSpy('onSuccess');
+        onError = jasmine.createSpy('onError');
         spyOn(Actions, 'loadOptions');
         phases = [
             {
@@ -55,7 +59,8 @@ describe('PhaseTransition', () => {
     it('shows button for phase transition', () => {
         spyOn(OptionsStore, 'getOptions').and.returnValue(phases);
         var transitionLabel = phases[0][Vocabulary.TRANSITION_LABEL][0]['@value'],
-            component = Environment.render(<PhaseTransition report={report}/>),
+            component = Environment.render(<PhaseTransition report={report} onLoading={onLoading} onSuccess={onSuccess}
+                                                            onError={onError}/>),
 
             button = TestUtils.findRenderedComponentWithType(component, require('react-bootstrap').Button);
         expect(button).toBeDefined();
@@ -65,7 +70,8 @@ describe('PhaseTransition', () => {
     it('shows button for phase transition when phases are loaded asynchronously', () => {
         spyOn(OptionsStore, 'getOptions').and.returnValue([]);
         var transitionLabel = phases[0][Vocabulary.TRANSITION_LABEL][0]['@value'],
-            component = Environment.render(<PhaseTransition report={report}/>),
+            component = Environment.render(<PhaseTransition report={report} onLoading={onLoading} onSuccess={onSuccess}
+                                                            onError={onError}/>),
 
             buttons = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').Button),
             button;
@@ -83,7 +89,8 @@ describe('PhaseTransition', () => {
         // The last phase
         report.phase = phases[phases.length - 1]['@id'];
         spyOn(OptionsStore, 'getOptions').and.returnValue(phases);
-        var component = Environment.render(<PhaseTransition report={report}/>),
+        var component = Environment.render(<PhaseTransition report={report} onLoading={onLoading} onSuccess={onSuccess}
+                                                            onError={onError}/>),
 
             buttons = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').Button);
         expect(buttons.length).toEqual(0);
@@ -96,11 +103,12 @@ describe('PhaseTransition', () => {
             expect(rep).toEqual(report);
             callback();
         });
-        var component = Environment.render(<PhaseTransition report={report}/>),
+        var component = Environment.render(<PhaseTransition report={report} onLoading={onLoading} onSuccess={onSuccess}
+                                                            onError={onError}/>),
 
             button = TestUtils.findRenderedComponentWithType(component, require('react-bootstrap').Button);
         TestUtils.Simulate.click(ReactDOM.findDOMNode(button));
         expect(Actions.phaseTransition).toHaveBeenCalled();
-        expect(Actions.loadReport).toHaveBeenCalledWith(report.key);
+        expect(onSuccess).toHaveBeenCalled();
     });
 });

@@ -46,11 +46,10 @@ var OccurrenceReport = React.createClass({
         this.props.handlers.onChange(changes);
     },
 
-    onSave: function (e) {
+    onSave: function () {
         var report = this.props.report,
             factors = this.refs.factors.getWrappedInstance();
-        e.preventDefault();
-        this.setState(assign(this.state, {submitting: true}));
+        this.onLoading();
         report.factorGraph = factors.getFactorGraph();
         if (report.isNew) {
             Actions.createReport(report, this.onSaveSuccess, this.onSaveError);
@@ -60,7 +59,7 @@ var OccurrenceReport = React.createClass({
     },
 
     onSubmit: function () {
-        this.setState({submitting: true});
+        this.onLoading();
         Actions.submitReport(this.props.report, this.onSubmitSuccess, this.onSubmitError);
     },
 
@@ -138,7 +137,8 @@ var OccurrenceReport = React.createClass({
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this.renderSubmitButton()}
-            <PhaseTransition report={this.props.report}/>
+            <PhaseTransition report={this.props.report} onLoading={this.onLoading}
+                             onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
         </ButtonToolbar>;
     },
 

@@ -41,6 +41,8 @@ module.exports = {
         'detail.submit-tooltip': 'Vytvořit novou revizi tohoto hlášení',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
         'detail.submit-failed-message': 'Hlášení se nepodařilo odeslat. Odpověď serveru: ',
+        'detail.phase-transition-success-message': 'Hlášení úspěšně převedeno do další fáze.',
+        'detail.phase-transition-failed-message': 'Přechod do další fáze se nezdařil. Zachycena chyba: ',
         'detail.loading': 'Načítám hlášení...',
         'detail.not-found.title': 'Hlášení nenalezeno',
 
