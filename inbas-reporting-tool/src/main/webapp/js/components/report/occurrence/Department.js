@@ -62,8 +62,7 @@ class Department extends React.Component {
     }
 
     render() {
-        var i18n = this.props.i18n,
-            report = this.props.report;
+        var i18n = this.props.i18n;
         return <div>
             <label className='control-label'>
                 {i18n('report.responsible-department')}

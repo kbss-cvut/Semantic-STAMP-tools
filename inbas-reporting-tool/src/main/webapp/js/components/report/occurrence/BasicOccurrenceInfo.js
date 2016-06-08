@@ -1,6 +1,3 @@
-/**
- * @jsx
- */
 'use strict';
 
 var React = require('react');
@@ -9,7 +6,6 @@ var injectIntl = require('../../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Department = require('./Department').default;
-var Input = require('../../Input');
 var Utils = require('../../../utils/Utils');
 var OccurrenceClassification = require('./OccurrenceClassification');
 var OccurrenceDetail = require('./Occurrence');
