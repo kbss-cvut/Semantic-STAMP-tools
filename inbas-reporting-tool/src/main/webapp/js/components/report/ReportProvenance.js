@@ -23,24 +23,20 @@ export default class ReportProvenance extends React.Component {
             created = Utils.formatDate(new Date(report.dateCreated)),
             lastEditor, lastModified;
         if (!report.lastModified) {
-            return (
-                <div className='form-group notice-small'>
-                    <FormattedMessage id='report.created-by-msg'
-                                      values={{date: created, name: <b>{author}</b>}}/>
-                </div>
-            );
+            return <div className='notice-small'>
+                <FormattedMessage id='report.created-by-msg'
+                                  values={{date: created, name: <b>{author}</b>}}/>
+            </div>;
         }
         lastEditor = report.lastModifiedBy ? report.lastModifiedBy.firstName + ' ' + report.lastModifiedBy.lastName : '';
         lastModified = Utils.formatDate(new Date(report.lastModified));
-        return (
-            <div className='notice-small'>
-                <FormattedMessage id='report.created-by-msg'
-                                  values={{date: created, name: <b>{author}</b>}}/>
-                &nbsp;
-                <FormattedMessage id='report.last-edited-msg'
-                                  values={{date: lastModified, name: <b>{lastEditor}</b>}}/>
-            </div>
-        )
+        return <div className='notice-small'>
+            <FormattedMessage id='report.created-by-msg'
+                              values={{date: created, name: <b>{author}</b>}}/>
+            &nbsp;
+            <FormattedMessage id='report.last-edited-msg'
+                              values={{date: lastModified, name: <b>{lastEditor}</b>}}/>
+        </div>;
     }
 
     render() {

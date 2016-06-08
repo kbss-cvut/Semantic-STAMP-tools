@@ -47,7 +47,7 @@ repository which is queried for supported event types. For development purposes,
 - DTO <-> Entity transformation is done using the _MapStruct_ library. It is executed as a maven plugin during build. See
     `cz.cvut.kbss.inbas.audit.rest.dto.mapper.ReportMapper` for more info.
 - Options for the UI - remotely loaded options supersede locally loaded options. So the algorithm works like this:
-    - If a local file with options exists (see for example those in `src/main/resources/option`), it is used,
+    - If a local file with options exists (see for example those in `profiles/ucl/option`), it is used,
     - If a matching query file exists (in `src/main/resources/query` or corresponding profile directories), it supersedes the local file and is used.
     - See `OptionsServiceImpl`.
 - JOPA is set up in `cz.cvut.kbss.inbas.audit.persistence.PersistenceFactory`.

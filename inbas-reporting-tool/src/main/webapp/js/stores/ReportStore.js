@@ -88,6 +88,14 @@ var ReportStore = Reflux.createStore({
         }, onError);
     },
 
+    onPhaseTransition: function (report, onSuccess) {
+        Ajax.put(BASE_URL_WITH_SLASH + report.key + '/phase').end(function () {
+            if (onSuccess) {
+                onSuccess();
+            }
+        });
+    },
+
     onDeleteReportChain: function (fileNumber, onSuccess, onError) {
         Ajax.del(BASE_URL_WITH_SLASH + 'chain/' + fileNumber).end(function () {
             if (onSuccess) {

@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -17,6 +13,7 @@ var Department = require('./Department').default;
 var Factors = require('../../factor/Factors');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var ArmsAttributes = require('../arms/ArmsAttributes').default;
+var PhaseTransition = require('../../misc/PhaseTransition').default;
 var ReportProvenance = require('../ReportProvenance').default;
 var ReportSummary = require('../ReportSummary').default;
 var MessageMixin = require('../../mixin/MessageMixin');
@@ -135,13 +132,14 @@ var OccurrenceReport = React.createClass({
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return (<ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
+        return <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this.renderSubmitButton()}
-        </ButtonToolbar>);
+            <PhaseTransition report={this.props.report}/>
+        </ButtonToolbar>;
     },
 
     getSaveButtonTitle: function () {
