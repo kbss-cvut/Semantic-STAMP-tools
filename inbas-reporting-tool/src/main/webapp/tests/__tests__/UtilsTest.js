@@ -2,7 +2,9 @@
 
 describe('Utility functions tests', function () {
 
-    var Utils = require('../../js/utils/Utils');
+    var Utils = require('../../js/utils/Utils'),
+        Vocabulary = require('../../js/constants/Vocabulary'),
+        Generator = require('../environment/Generator').default;
 
     it('Transforms a constant with known preposition/auxiliary word into text with spaces and correctly capitalized words', function () {
         expect(Utils.constantToString('BARRIER_NOT_EFFECTIVE', true)).toEqual('Barrier not Effective');
@@ -78,5 +80,69 @@ describe('Utility functions tests', function () {
             }
         };
         expect(Utils.getPathFromLocation()).toEqual('reports/1234567890');
+    });
+
+    it('transforms JSON-LD input into Typeahead-friendly format', () => {
+        var jsonLd = Generator.getJsonLdSample(),
+            result = Utils.processTypeaheadOptions(jsonLd);
+        expect(result.length).toEqual(jsonLd.length);
+        for (var i = 0, len = jsonLd.length; i < len; i++) {
+            expect(result[i].id).toEqual(jsonLd[i]['@id']);
+            expect(result[i].type).toEqual(jsonLd[i]['@type']);
+            expect(result[i].name).toEqual(jsonLd[i][Vocabulary.RDFS_LABEL]);
+            if (jsonLd[i][Vocabulary.RDFS_COMMENT]) {
+                expect(result[i].description).toEqual(jsonLd[i][Vocabulary.RDFS_COMMENT]);
+            }
+        }
+    });
+
+    it('handles transformation of an empty array', () => {
+        var result = Utils.processTypeaheadOptions([]);
+        expect(result).toEqual([]);
+    });
+
+    it('handles transformation of null/undefined', () => {
+        var result = Utils.processTypeaheadOptions(null);
+        expect(result).toEqual([]);
+        result = Utils.processTypeaheadOptions();
+        expect(result).toEqual([]);
+    });
+
+    describe('getJsonAttValue', () => {
+        it('extracts value of a JSON literal value', () => {
+            var a = 'a',
+                b = true,
+                c = 12345,
+                d = 'Label',
+                obj = {
+                    'a': a,
+                    'b': b,
+                    'c': c
+                };
+            obj[Vocabulary.RDFS_LABEL] = d;
+            expect(Utils.getJsonAttValue(obj, 'a')).toEqual(a);
+            expect(Utils.getJsonAttValue(obj, 'b')).toEqual(b);
+            expect(Utils.getJsonAttValue(obj, 'c')).toEqual(c);
+            expect(Utils.getJsonAttValue(obj, Vocabulary.RDFS_LABEL)).toEqual(d);
+        });
+
+        it('extracts value from a JSON value object with tag', () => {
+            var label = 'Label',
+                obj = {};
+            obj[Vocabulary.RDFS_LABEL] = {
+                '@language': 'en',
+                '@value': label
+            };
+            expect(Utils.getJsonAttValue(obj, Vocabulary.RDFS_LABEL)).toEqual(label);
+        });
+
+        it('returns null if the attribute is not present', () => {
+            var obj = {};
+            obj[Vocabulary.RDFS_LABEL] = {
+                '@language': 'en',
+                '@value': 'Label'
+            };
+            expect(Utils.getJsonAttValue(obj, Vocabulary.RDFS_COMMENT)).toBeNull();
+        });
     });
 });

@@ -9,7 +9,7 @@
         </encoder>
     </appender>
 
-    <!-- Just DEBUG for JOPA -->
+    <!-- Just INFO for JOPA -->
     <logger name="cz.cvut.kbss.jopa" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>

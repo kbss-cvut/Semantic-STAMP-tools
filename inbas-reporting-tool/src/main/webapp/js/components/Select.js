@@ -18,7 +18,8 @@ var Select = React.createClass({
         name: React.PropTypes.string,
         title: React.PropTypes.string,
         label: React.PropTypes.string,
-        onChange: React.PropTypes.func
+        onChange: React.PropTypes.func,
+        addDefault: React.PropTypes.bool    // Specifies whether the default '----Select----' option should be added
     },
 
     focus: function () {
@@ -42,11 +43,14 @@ var Select = React.createClass({
 
     render: function () {
         var options = this.generateOptions();
+        if (this.props.addDefault) {
+            options.unshift(<option key='opt_default' value='' disabled style={{display: 'none'}}>
+                {this.i18n('select.default')}
+            </option>);
+        }
         return (
             <Input ref='select' type='select' name={this.props.name} title={this.props.title} label={this.props.label}
-                   defaultValue='' value={this.props.value} onChange={this.props.onChange}>
-                <option key='opt_default' value='' disabled defaultValue
-                        style={{display: 'none'}}>{this.i18n('select.default')}</option>
+                   value={this.props.value ? this.props.value : ''} onChange={this.props.onChange}>
                 {options}
             </Input>
         );

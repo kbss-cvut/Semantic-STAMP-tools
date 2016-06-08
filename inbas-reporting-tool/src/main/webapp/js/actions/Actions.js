@@ -5,7 +5,8 @@ var Reflux = require('reflux');
 var Actions = Reflux.createActions([
     'loadUser',
 
-    'loadAllReports', 'deleteReportChain', 'createPreliminary', 'createInvestigation', 'updateReport', 'submitReport',
+    'loadAllReports', 'deleteReportChain', 'createReport', 'updateReport', 'submitReport', 'importE5Report',
+    'phaseTransition',
     'loadRevisions', 'loadReport',
 
     'loadOptions', 'loadEventTypes', 'loadLocations', 'loadOperators', 'loadOccurrenceCategories',

@@ -19,6 +19,7 @@ describe('Ajax utility', function () {
         Ajax.__set__('Routing', RoutingMock);
         Ajax.__set__('Logger', Environment.mockLogger());
         Ajax.__set__('Utils', UtilsMock);
+        jasmine.getGlobal().top = {};
     });
 
     it('transitions to login screen when 401 status is returned', function () {
@@ -149,5 +150,18 @@ describe('Ajax utility', function () {
 
         expect(Ajax._handleError).toHaveBeenCalledWith(err);
         expect(successHandler).not.toHaveBeenCalled();
+    });
+
+    it('extends portal session when the application is running on Liferay', () => {
+        var top = {
+            Liferay: {
+                Session: {}
+            }
+        }, extend = jasmine.createSpy('extend'), successHandler = jasmine.createSpy('successHandler');
+        top.Liferay.Session.extend = extend;
+        jasmine.getGlobal().top = top;
+
+        Ajax.get('rest/reports').end(successHandler);
+        expect(extend).toHaveBeenCalled();
     });
 });

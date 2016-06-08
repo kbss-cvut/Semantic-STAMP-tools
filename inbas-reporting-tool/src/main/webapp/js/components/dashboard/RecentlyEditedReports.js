@@ -5,6 +5,7 @@
 'use strict';
 
 var React = require('react');
+var Label = require('react-bootstrap').Label;
 var Panel = require('react-bootstrap').Panel;
 var Table = require('react-bootstrap').Table;
 var Reflux = require('reflux');
@@ -14,7 +15,7 @@ var injectIntl = require('../../utils/injectIntl');
 var Actions = require('../../actions/Actions');
 var Utils = require('../../utils/Utils');
 var CollapsibleText = require('../CollapsibleText');
-var Mask = require('../Mask');
+var Mask = require('../Mask').default;
 var ReportType = require('../../model/ReportType');
 var ReportStore = require('../../stores/ReportStore');
 var I18nMixin = require('../../i18n/I18nMixin');
@@ -65,8 +66,10 @@ var RecentlyEditedReports = React.createClass({
             return (<Table striped bordered condensed hover>
                 <thead>
                 <tr>
-                    <th className='col-xs-5'>{this.i18n('dashboard.recent-table-headline')}</th>
-                    <th className='col-xs-3' className='content-center'>{this.i18n('dashboard.recent-table-date')}</th>
+                    <th className='col-xs-5'>{this.i18n('headline')}</th>
+                    <th className='col-xs-3' className='content-center' title={this.i18n('reports.table-date.tooltip')}>
+                        {this.i18n('reports.table-date')}
+                    </th>
                     <th className='col-xs-3'
                         className='content-center'>{this.i18n('dashboard.recent-table-last-edited')}</th>
                     <th className='col-xs-1' className='content-center'>{this.i18n('reports.table-type')}</th>
@@ -77,7 +80,7 @@ var RecentlyEditedReports = React.createClass({
                 </tbody>
             </Table>);
         } else {
-            return (<div>{this.i18n('reports.no-occurrence-reports')}</div>);
+            return (<div>{this.i18n('dashboard.recent.no-reports')}</div>);
         }
     },
 
@@ -99,24 +102,22 @@ var ReportRow = injectIntl(React.createClass({
     },
 
     render: function () {
-        var report = this.props.report,
+        var report = ReportType.getReport(this.props.report),
             vAlign = {verticalAlign: 'middle'},
-            type = ReportType.asString(report),
-            dateEdited = report.lastEdited ? report.lastEdited : report.created;
+            dateEdited = report.lastModified ? report.lastModified : report.dateCreated;
         return (
             <tr>
                 <td style={vAlign}>
                     <a href='javascript:void(0);' onClick={this.onOpenClick}
                        title={this.i18n('reports.open-tooltip')}><CollapsibleText
-                        text={report.occurrence.name}
+                        text={report.identification}
                         maxLength={20}/></a>
                 </td>
                 <td style={vAlign}
-                    className='content-center'>{Utils.formatDate(new Date(report.occurrenceStart))}</td>
+                    className='content-center'>{report.date ? Utils.formatDate(new Date(report.date)) : ''}</td>
                 <td style={vAlign} className='content-center'>{Utils.formatDate(new Date(dateEdited))}</td>
                 <td style={vAlign} className='content-center'>
-                    <img className='report-type-icon centered' src={ReportType.getIconSrc(report)} alt={type}
-                         title={type}/>
+                    <Label title={this.i18n(report.toString())}>{this.i18n(report.getLabel())}</Label>
                 </td>
             </tr>
         );

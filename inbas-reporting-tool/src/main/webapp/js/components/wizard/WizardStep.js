@@ -18,13 +18,14 @@ var WizardStep = React.createClass({
 
     propTypes: {
         onClose: React.PropTypes.func,
-        onFinish: React.PropTypes.func,
+        onFinish: React.PropTypes.func.isRequired,
         onAdvance: React.PropTypes.func,
         onRetreat: React.PropTypes.func,
         onNext: React.PropTypes.func,
         onPrevious: React.PropTypes.func,
         title: React.PropTypes.string,
-        data: React.PropTypes.object,
+        data: React.PropTypes.object,       // Global wizard data
+        stepData: React.PropTypes.object,   // Data specific for this step
         isFirstStep: React.PropTypes.bool,
         isLastStep: React.PropTypes.bool,
         defaultNextDisabled: React.PropTypes.bool
@@ -36,6 +37,7 @@ var WizardStep = React.createClass({
             retreatDisabled: false
         };
     },
+
     onAdvance: function (err) {
         if (err) {
             this.setState({
@@ -44,9 +46,14 @@ var WizardStep = React.createClass({
                 currentError: err
             });
         } else {
-            this.props.onAdvance();
+            this.props.onAdvance(this.getStepData);
         }
     },
+
+    getStepData: function () {
+        return this.refs.component.getData ? this.refs.component.getData() : null;
+    },
+
     onNext: function () {
         this.setState({
             advanceDisabled: true,
@@ -55,9 +62,10 @@ var WizardStep = React.createClass({
         if (this.props.onNext) {
             this.props.onNext.apply(this, [this.onAdvance]);
         } else {
-            this.props.onAdvance();
+            this.props.onAdvance(this.getStepData);
         }
     },
+
     onPrevious: function () {
         if (this.props.onPrevious) {
             this.props.onPrevious.apply(this, [this.props.onRetreat]);
@@ -65,12 +73,9 @@ var WizardStep = React.createClass({
             this.props.onRetreat();
         }
     },
+
     onFinish: function () {
-        if (this.props.onFinish) {
-            this.props.onFinish.apply(this, [this.props.data, this.props.onClose, this.onAdvance]);
-        } else {
-            this.props.onClose();
-        }
+        this.props.onFinish(this.getStepData);
     },
 
     enableNext: function () {
@@ -81,6 +86,7 @@ var WizardStep = React.createClass({
         this.setState({advanceDisabled: true});
     },
 
+
     render: function () {
         var previousButton;
         if (!this.props.isFirstStep) {
@@ -88,8 +94,8 @@ var WizardStep = React.createClass({
                                       bsSize='small'>{this.i18n('wizard.previous')}</Button>);
         }
         var advanceButton = this.renderAdvanceButton();
-        var cancelButton = (<Button onClick={this.props.onClose} bsStyle='primary'
-                                    bsSize='small'>{this.i18n('cancel')}</Button>);
+        var cancelButton = (
+            <Button onClick={this.props.onClose} bsStyle='primary' bsSize='small'>{this.i18n('cancel')}</Button>);
         var error = null;
         if (this.state.currentError) {
             error = (<Alert bsStyle='danger'><p>{this.state.currentError.message}</p></Alert>);
@@ -127,7 +133,9 @@ var WizardStep = React.createClass({
 
     renderComponent: function () {
         return React.createElement(this.props.component, {
+            ref: 'component',
             data: this.props.data,
+            stepData: this.props.stepData,
             enableNext: this.enableNext,
             disableNext: this.disableNext,
             next: this.onNext,

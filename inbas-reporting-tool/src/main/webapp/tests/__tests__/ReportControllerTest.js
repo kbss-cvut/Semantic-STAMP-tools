@@ -4,23 +4,27 @@ describe('ReportController', function () {
 
     var React = require('react'),
         Environment = require('../environment/Environment'),
-        Generator = require('../environment/Generator'),
+        Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
-        ReportController = require('../../js/components/reports/ReportController'),
+        ReportController = require('../../js/components/report/ReportController'),
         Routes = require('../../js/utils/Routes'),
         Constants = require('../../js/constants/Constants');
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
         spyOn(Actions, 'loadOccurrenceCategories');
+        spyOn(Actions, 'loadEventTypes');
+        Environment.mockGantt();
     });
 
-    it('Uses report passed from router store if it is set', function () {
+    xit('Uses report passed from router store if it is set', function () {
         var report = {
             initialReports: [{text: 'First Initial Report'}],
-            occurrenceStart: Date.now() - 10000,
-            occurrenceEnd: Date.now()
+            occurrence: {
+                startTime: Date.now() - 10000,
+                endTime: Date.now()
+            }
         };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue(report);
 
@@ -48,14 +52,13 @@ describe('ReportController', function () {
 
         expect(controller.state.loading).toBeFalsy();
         expect(report).toBeDefined();
-        expect(report.occurrenceStart).toBeDefined();
-        expect(report.occurrenceEnd).toBeDefined();
         expect(report.isNew).toBeTruthy();
         expect(report.occurrence).toBeDefined();
-        expect(report.occurrence.reportingPhase).toEqual(Constants.PRELIMINARY_REPORT_PHASE);
+        expect(report.occurrence.startTime).toBeDefined();
+        expect(report.occurrence.endTime).toBeDefined();
     });
 
-    it('Initializes new report with imported initial report', function () {
+    xit('Initializes new report with imported initial report', function () {
         var payload = {
             initialReports: [{
                 text: 'Initial report'

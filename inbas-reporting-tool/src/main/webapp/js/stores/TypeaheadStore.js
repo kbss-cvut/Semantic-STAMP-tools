@@ -24,21 +24,30 @@ var TypeaheadStore = Reflux.createStore({
 
     onLoadEventTypes: function () {
         var self = this;
-        this.load('eventType', 'event types', eventTypes, function (data) {
+        this.load(Actions.loadEventTypes, 'eventType', 'event types', eventTypes, function (data) {
             if (data.length === 0) {
-                self.trigger();
+                self.trigger({
+                    action: Actions.loadEventTypes,
+                    data: eventTypes
+                });
                 return;
             }
             jsonld.frame(data, {}, null, function (err, framed) {
                 eventTypes = framed['@graph'];
-                self.trigger();
+                self.trigger({
+                    action: Actions.loadEventTypes,
+                    data: eventTypes
+                });
             });
         });
     },
 
-    load: function (type, resourceName, requiredData, success) {
+    load: function (action, type, resourceName, requiredData, success) {
         if (requiredData.length !== 0) {
-            this.trigger();
+            this.trigger({
+                action: action,
+                data: requiredData
+            });
             return;
         }
         Ajax.get(URL + type).end(function (data) {
@@ -53,7 +62,7 @@ var TypeaheadStore = Reflux.createStore({
     },
 
     onLoadLocations: function () {
-        this.load('location', 'locations', locations, function (data) {
+        this.load(Actions.loadLocations, 'location', 'locations', locations, function (data) {
             locations = data;
             this.trigger();
         }.bind(this));
@@ -64,7 +73,7 @@ var TypeaheadStore = Reflux.createStore({
     },
 
     onLoadOperators: function () {
-        this.load('operator', 'operators', operators, function (data) {
+        this.load(Actions.loadOperators, 'operator', 'operators', operators, function (data) {
             operators = data;
             this.trigger();
         }.bind(this));
@@ -76,14 +85,20 @@ var TypeaheadStore = Reflux.createStore({
 
     onLoadOccurrenceCategories: function () {
         var self = this;
-        this.load('occurrenceCategory', 'occurrenceCategories', occurrenceCategories, function (data) {
+        this.load(Actions.loadOccurrenceCategories, 'occurrenceCategory', 'occurrenceCategories', occurrenceCategories, function (data) {
             if (data.length === 0) {
-                self.trigger();
+                self.trigger({
+                    action: Actions.loadOccurrenceCategories,
+                    data: occurrenceCategories
+                });
                 return;
             }
             jsonld.frame(data, {}, null, function (err, framed) {
                 occurrenceCategories = framed['@graph'];
-                self.trigger();
+                self.trigger({
+                    action: Actions.loadOccurrenceCategories,
+                    data: occurrenceCategories
+                });
             });
         });
     },

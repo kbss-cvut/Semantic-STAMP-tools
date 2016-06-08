@@ -1,6 +1,3 @@
-/**
- * @jsx
- */
 'use strict';
 
 var React = require('react');
@@ -9,10 +6,10 @@ var Typeahead = require('react-bootstrap-typeahead');
 var injectIntl = require('../../utils/injectIntl');
 
 var Actions = require('../../actions/Actions');
-var TypeaheadResultList = require('./EventTypeTypeaheadResultList');
+var TypeaheadResultList = require('./EventTypeTypeaheadResultList').default;
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var I18nMixin = require('../../i18n/I18nMixin');
-var Vocabulary = require('../../constants/Vocabulary');
+var Utils = require('../../utils/Utils');
 
 var EventTypeTypeahead = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
@@ -36,22 +33,7 @@ var EventTypeTypeahead = React.createClass({
     },
     onEventsLoaded: function () {
         var options = TypeaheadStore.getEventTypes();
-        options = options.map(function (item) {
-            var res = {
-                id: item['@id'],
-                type: item['@type'],
-                name: typeof(item[Vocabulary.RDFS_LABEL]) === 'string' ? item[Vocabulary.RDFS_LABEL] : item[Vocabulary.RDFS_LABEL]['@value']
-            };
-            if (item[Vocabulary.RDFS_COMMENT]) {
-                if (typeof(item[Vocabulary.RDFS_COMMENT]) === 'string') {
-                    res.description = item[Vocabulary.RDFS_COMMENT];
-                } else {
-                    res.description = item[Vocabulary.RDFS_COMMENT]['@value'];
-                }
-            }
-            return res;
-        });
-        this.setState({options: options});
+        this.setState({options: Utils.processTypeaheadOptions(options)});
     },
 
     focus: function () {

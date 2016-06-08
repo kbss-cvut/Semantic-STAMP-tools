@@ -1,38 +1,81 @@
 'use strict';
 
+var React = require('react');
+var assign = require('object-assign');
+var CollapsibleText = require('../components/CollapsibleText');
 var Constants = require('../constants/Constants');
-var I18nStore = require('../stores/I18nStore');
+var JsonLdUtils = require('../utils/JsonLdUtils').default;
+var Vocabulary = require('../constants/Vocabulary');
 
-var ReportType = {
+class OccurrenceReport {
+    constructor(data) {
+        assign(this, data);
+    }
+
+    static getDetailController() {
+        // Use require in method call to prevent circular dependencies with RevisionInfo
+        return require('../components/report/occurrence/OccurrenceReportController');
+    }
+
+    getPhase(phaseMapping, intl) {
+        if (!this.phase) {
+            return '';
+        }
+        for (var i = 0, len = phaseMapping.length; i < len; i++) {
+            if (phaseMapping[i]['@id'] === this.phase) {
+                return JsonLdUtils.getLocalized(phaseMapping[i][Vocabulary.RDFS_LABEL], intl);
+            }
+        }
+        return this.phase;
+    }
+
+    getLabel() {
+        return 'occurrencereport.label';
+    }
+
+    toString() {
+        return 'occurrencereport.title';
+    }
+
+    renderMoreInfo() {
+        return <CollapsibleText text={this.summary}/>;
+    }
+}
+
+var REPORT_TYPES = {};
+
+REPORT_TYPES[Vocabulary.OCCURRENCE_REPORT] = OccurrenceReport;
+REPORT_TYPES[Constants.OCCURRENCE_REPORT_JAVA_CLASS] = OccurrenceReport;
+
+module.exports = {
 
     getDetailController: function (report) {
-        // Use require in method call to prevent circular dependencies with RevisionInfo
-        if (this._isPreliminary(report)) {
-            return require('../components/preliminary/ReportDetailController');
-        } else {
-            return require('../components/investigation/InvestigationController');
-        }
+        return this._getReportClass(report).getDetailController();
     },
 
-    _isPreliminary: function (report) {
-        return !report.phase || report.phase === Constants.PRELIMINARY_REPORT_PHASE;
+    getTypeLabel: function (type) {
+        return REPORT_TYPES[type] ? new REPORT_TYPES[type]().getLabel() : null;
     },
 
-    getIconSrc: function (report) {
-        if (this._isPreliminary(report)) {
-            return 'resources/images/icons/preliminary.png';
-        } else {
-            return 'resources/images/icons/investigation.png';
+    getReport: function (data, suppressError) {
+        var cls = this._getReportClass(data);
+        if (!suppressError && !cls) {
+            throw 'Unsupported report type ' + data;
         }
+        return cls ? new cls(data) : null;
     },
 
-    asString: function (report) {
-        if (this._isPreliminary(report)) {
-            return I18nStore.i18n('preliminary.type');
-        } else {
-            return I18nStore.i18n('investigation.type');
+    _getReportClass: function (data) {
+        if (data.types) {
+            for (var i = 0, len = data.types.length; i < len; i++) {
+                if (REPORT_TYPES[data.types[i]]) {
+                    return REPORT_TYPES[data.types[i]];
+                }
+            }
         }
+        if (data.javaClass && REPORT_TYPES[data.javaClass]) {
+            return REPORT_TYPES[data.javaClass];
+        }
+        return null;
     }
 };
-
-module.exports = ReportType;

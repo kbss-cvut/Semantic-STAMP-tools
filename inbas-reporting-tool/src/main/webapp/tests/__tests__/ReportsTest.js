@@ -7,8 +7,8 @@ describe('Reports', function () {
         TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
 
-        Reports = rewire('../../js/components/reports/Reports'),
-        ReportsFilter = require('../../js/components/reports/ReportsFilter'),
+        Reports = rewire('../../js/components/report/Reports'),
+        ReportsFilter = require('../../js/components/report/ReportsFilter'),
         RouterStore = require('../../js/stores/RouterStore'),
         Routes = require('../../js/utils/Routes'),
         Constants = require('../../js/constants/Constants'),
@@ -22,8 +22,8 @@ describe('Reports', function () {
     });
 
     it('shows message informing that there are no matching reports when filter finds no reports.', function () {
-        var result = Environment.render(<Reports allReports={[]} reports={[]} actions={actions}
-                                                 filter={{type: 'INVESTIGATION'}}/>),
+        var result = Environment.render(<Reports allReports={[{key: 1}]} reports={[]} actions={actions}
+                                                 filter={{'occurrenceCategory.id': 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1'}}/>),
             filter = TestUtils.scryRenderedComponentsWithType(result, ReportsFilter.wrappedComponent),
             message = Environment.getComponentByTagAndText(result, 'div', en.messages['reports.filter.no-matching-found']);
 
@@ -51,6 +51,6 @@ describe('Reports', function () {
         expect(RouterStore.getTransitionPayload(Routes.dashboard.name)).not.toBeDefined();
         result.createReport();
         expect(RouterStore.getTransitionPayload(Routes.dashboard.name)).toBeDefined();
-        expect(RouterStore.getTransitionPayload(Routes.dashboard.name).dashboard).toEqual(Constants.DASHBOARDS.CREATE_REPORT);
+        expect(RouterStore.getTransitionPayload(Routes.dashboard.name).dashboard).toEqual(Constants.DASHBOARDS.CREATE_REPORT.id);
     });
 });

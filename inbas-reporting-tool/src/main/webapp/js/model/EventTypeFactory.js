@@ -1,18 +1,24 @@
-/**
- * Created by kidney on 7/7/15.
- */
-
 'use strict';
 
-var EventTypeStatement = require('./EventTypeStatement');
-var RunwayIncursion = require('./RunwayIncursion');
+var TypeaheadStore = require('../stores/TypeaheadStore');
 
 module.exports = {
-    create: function (data) {
-        if (data.intruder) {
-            return new RunwayIncursion(data);
-        } else {
-            return new EventTypeStatement(data);
+
+    /**
+     * Gets event type (occurrence category) instance with the specified id.
+     * @param id Event type id
+     * @param items Event types
+     * @return {*} Matching instance or null
+     */
+    resolveEventType: function (id, items) {
+        if (!id) {
+            return null;
         }
+        if (!items) {
+            items = TypeaheadStore.getEventTypes();
+        }
+        return items.find((item) => {
+            return item['@id'] === id;
+        });
     }
 };

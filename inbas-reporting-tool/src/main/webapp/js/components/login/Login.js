@@ -11,7 +11,7 @@ var Alert = require('react-bootstrap').Alert;
 
 var injectIntl = require('../../utils/injectIntl');
 
-var Mask = require('../Mask');
+var Mask = require('../Mask').default;
 var Input = require('../Input');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');

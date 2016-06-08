@@ -7,7 +7,6 @@
 var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-bootstrap-typeahead');
-var assign = require('object-assign');
 
 var injectIntl = require('../../utils/injectIntl');
 
@@ -34,7 +33,6 @@ var ReportTypeahead = React.createClass({
 
     componentWillMount: function () {
         this.listenTo(ReportStore, this.onReportsLoaded);
-        Actions.loadAllReports();
     },
 
     componentDidMount: function () {
@@ -49,11 +47,7 @@ var ReportTypeahead = React.createClass({
             option,
             reports = data.reports;
         for (var i = 0, len = reports.length; i < len; i++) {
-            option = assign({}, reports[i].occurrence);
-            option.startTime = reports[i].occurrenceStart;
-            option.key = reports[i].key;
-            option.types = reports[i].types;
-            option.type = ReportType.asString(reports[i]);
+            option = ReportType.getReport(reports[i]);
             options.push(option);
         }
         this.setState({options: options});
@@ -69,13 +63,13 @@ var ReportTypeahead = React.createClass({
             results: 'dashboard-report-search-results'
         };
         var optionLabel = function (option) {
-            return option.name + ' (' + Utils.formatDate(new Date(option.startTime)) + ' - ' + option.type + ')';
-        };
+            return option.identification + ' (' + Utils.formatDate(new Date(option.date)) + ' - ' + this.i18n(option.toString()) + ')';
+        }.bind(this);
         return (
             <Typeahead ref='reportTypeahead' className='form-group form-group-sm' name={this.props.name}
                        formInputOption='id' placeholder={this.i18n('dashboard.search-placeholder')}
-                       onOptionSelected={this.onOptionSelected} filterOption='name' displayOption={optionLabel}
-                       options={this.state.options} customClasses={classes}
+                       onOptionSelected={this.onOptionSelected} filterOption='identification'
+                       displayOption={optionLabel} options={this.state.options} customClasses={classes}
                        customListComponent={TypeaheadResultList}/>
         );
     }

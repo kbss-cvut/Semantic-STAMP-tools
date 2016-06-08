@@ -2,11 +2,11 @@
 
 describe('Tests for the gantt component controller', function () {
 
-    var GanttController = require('../../js/components/investigation/GanttController'),
-        gantt, props, investigation;
+    var GanttController = require('../../js/components/factor/GanttController'),
+        gantt, props, report;
 
     beforeEach(function () {
-        gantt = jasmine.createSpyObj('gantt', ['init', 'clearAll', 'attachEvent', 'updateTask', 'refreshData', 'getChildren', 'open']);
+        gantt = jasmine.createSpyObj('gantt', ['init', 'clearAll', 'attachEvent', 'updateTask', 'refreshData', 'getChildren', 'open', 'render']);
         props = jasmine.createSpyObj('props', ['onLinkAdded', 'onCreateFactor', 'onEditFactor', 'onDeleteLink', 'updateOccurrence']);
         gantt.config = {
             scale_unit: 'second',
@@ -38,12 +38,12 @@ describe('Tests for the gantt component controller', function () {
             "start_to_finish": "3"
         };
         jasmine.getGlobal().gantt = gantt;
-        investigation = {
+        report = {
             occurrence: {
-                name: 'Test occurrence'
-            },
-            occurrenceStart: Date.now(),
-            occurrenceEnd: Date.now() + 10000
+                name: 'Test occurrence',
+                startTime: Date.now(),
+                endTime: Date.now() + 10000
+            }
         };
         GanttController.init(props);
     });
@@ -71,44 +71,44 @@ describe('Tests for the gantt component controller', function () {
     });
 
     it('Updates occurrence event when occurrence name is updated', function () {
-        var occurrence = investigation.occurrence, occurrenceEvent = {
-            start_date: new Date(investigation.occurrenceStart),
-            end_date: new Date(investigation.occurrenceEnd),
+        var occurrence = report.occurrence, occurrenceEvent = {
+            start_date: new Date(report.occurrence.startTime),
+            end_date: new Date(report.occurrence.endTime),
             text: 'Test'
         };
         spyOn(gantt, 'getTask').and.returnValue(occurrenceEvent);
         spyOn(GanttController, 'applyUpdates').and.callThrough();
         occurrence.name = 'Updated text';
-        GanttController.updateOccurrenceEvent(investigation);
+        GanttController.updateOccurrenceEvent(report);
 
         expect(occurrenceEvent.text).toEqual(occurrence.name);
-        expect(occurrenceEvent.start_date.getTime()).toEqual(investigation.occurrenceStart);
+        expect(occurrenceEvent.start_date.getTime()).toEqual(report.occurrence.startTime);
         expect(GanttController.applyUpdates).toHaveBeenCalled();
     });
 
     it('Updates occurrence event when occurrence time is updated', function () {
-        var occurrence = investigation.occurrence, occurrenceEvent = {
-            start_date: new Date(investigation.occurrenceStart),
-            end_date: new Date(investigation.occurrenceEnd),
+        var occurrence = report.occurrence, occurrenceEvent = {
+            start_date: new Date(report.occurrence.startTime),
+            end_date: new Date(report.occurrence.endTime),
             text: occurrence.name
         };
         spyOn(gantt, 'getTask').and.returnValue(occurrenceEvent);
         gantt.getChildren.and.returnValue([]);
         spyOn(GanttController, 'applyUpdates').and.callThrough();
-        investigation.occurrenceEnd = Date.now() + 100000;
-        GanttController.updateOccurrenceEvent(investigation);
+        report.occurrence.endTime = Date.now() + 100000;
+        GanttController.updateOccurrenceEvent(report);
 
         expect(occurrenceEvent.text).toEqual(occurrence.name);
-        expect(occurrenceEvent.start_date.getTime()).toEqual(investigation.occurrenceStart);
-        expect(occurrenceEvent.end_date.getTime()).toEqual(investigation.occurrenceEnd);
+        expect(occurrenceEvent.start_date.getTime()).toEqual(report.occurrence.startTime);
+        expect(occurrenceEvent.end_date.getTime()).toEqual(report.occurrence.endTime);
         expect(GanttController.applyUpdates).toHaveBeenCalled();
     });
 
     it('Ensures that the occurrence event has never a duration less than 1 time unit', function () {
         gantt.config.scale_unit = "second";
         var occurrenceEvent = {
-            start_date: new Date(investigation.occurrenceStart),
-            end_date: new Date(investigation.occurrenceEnd),
+            start_date: new Date(report.occurrence.startTime),
+            end_date: new Date(report.occurrence.endTime),
             text: 'Test'
         };
         gantt.getChildren.and.returnValue([]);
@@ -119,11 +119,11 @@ describe('Tests for the gantt component controller', function () {
         spyOn(gantt, 'calculateEndDate').and.callFake(function (start, duration) {
             return new Date(start.getTime() + duration * 1000);
         });
-        investigation.occurrenceEnd = investigation.occurrenceStart + 100;    // Less than 1 second
-        GanttController.updateOccurrenceEvent(investigation);
+        report.occurrence.endTime = report.occurrence.startTime + 100;    // Less than 1 second
+        GanttController.updateOccurrenceEvent(report);
 
         expect(gantt.calculateEndDate).toHaveBeenCalled();
-        expect(occurrenceEvent.end_date.getTime()).toEqual(investigation.occurrenceStart + 1000);
+        expect(occurrenceEvent.end_date.getTime()).toEqual(report.occurrence.startTime + 1000);
     });
 
     it('Ensures parent event contains a newly added child event by expanding its time interval', function () {
@@ -238,11 +238,11 @@ describe('Tests for the gantt component controller', function () {
     });
 
     it('Shrinks the occurrence event to span exactly its children', function () {
-        var start = new Date(investigation.occurrenceStart),
+        var start = new Date(report.occurrence.startTime),
             occurrenceEvt = {
                 id: 1,
                 start_date: start,
-                end_date: new Date(investigation.occurrenceEnd)
+                end_date: new Date(report.occurrence.endTime)
             }, child = {
                 id: 2,
                 parent: 1,
@@ -286,8 +286,8 @@ describe('Tests for the gantt component controller', function () {
     });
 
     it('Resizes factors when occurrence start time changes (forward)', function () {
-        var occurrence = investigation.occurrence,
-            start = new Date(investigation.occurrenceStart),
+        var occurrence = report.occurrence,
+            start = new Date(report.occurrence.startTime),
             occurrenceEvt = {
                 id: 1,
                 text: occurrence.name,
@@ -302,16 +302,16 @@ describe('Tests for the gantt component controller', function () {
                 end_date: new Date(start.getTime() + 2000)
             },
             timeDiff = 1000;
-        investigation.occurrenceEnd = investigation.occurrenceStart + 2000;
+        report.occurrence.endTime = report.occurrence.startTime + 2000;
         initSpies(occurrenceEvt, child);
 
-        investigation.occurrenceStart += timeDiff;
-        GanttController.updateOccurrenceEvent(investigation);
+        report.occurrence.startTime += timeDiff;
+        GanttController.updateOccurrenceEvent(report);
 
-        expect(occurrenceEvt.start_date).toEqual(new Date(investigation.occurrenceStart));
-        expect(occurrenceEvt.end_date).toEqual(new Date(investigation.occurrenceEnd));
+        expect(occurrenceEvt.start_date).toEqual(new Date(report.occurrence.startTime));
+        expect(occurrenceEvt.end_date).toEqual(new Date(report.occurrence.endTime));
         expect(occurrenceEvt.duration).toEqual(1);
-        expect(child.start_date).toEqual(new Date(investigation.occurrenceStart));
+        expect(child.start_date).toEqual(new Date(report.occurrence.startTime));
         expect(props.updateOccurrence).not.toHaveBeenCalled();
     });
 
@@ -326,8 +326,8 @@ describe('Tests for the gantt component controller', function () {
     }
 
     it('Resizes child factors when occurrence end time changes (backward)', function () {
-        var occurrence = investigation.occurrence,
-            start = new Date(investigation.occurrenceStart),
+        var occurrence = report.occurrence,
+            start = new Date(report.occurrence.startTime),
             occurrenceEvt = {
                 id: 1,
                 text: occurrence.name,
@@ -342,69 +342,69 @@ describe('Tests for the gantt component controller', function () {
                 end_date: new Date(start.getTime() + 2000)
             },
             timeDiff = 1000;
-        investigation.occurrenceEnd = investigation.occurrenceStart + 2000;
+        report.occurrence.endTime = report.occurrence.startTime + 2000;
         initSpies(occurrenceEvt, child);
 
-        investigation.occurrenceEnd -= timeDiff;
-        GanttController.updateOccurrenceEvent(investigation);
+        report.occurrence.endTime -= timeDiff;
+        GanttController.updateOccurrenceEvent(report);
 
         expect(occurrenceEvt.start_date).toEqual(start);
-        expect(occurrenceEvt.end_date).toEqual(new Date(investigation.occurrenceEnd));
+        expect(occurrenceEvt.end_date).toEqual(new Date(report.occurrence.endTime));
         expect(occurrenceEvt.duration).toEqual(1);
         expect(child.start_date).toEqual(start);
-        expect(child.end_date).toEqual(new Date(investigation.occurrenceEnd));
+        expect(child.end_date).toEqual(new Date(report.occurrence.endTime));
         expect(props.updateOccurrence).not.toHaveBeenCalled();
     });
 
     it('Prevents child event duration to get below 1 time unit when occurrence start time changes by moving it forward', function () {
-        var occurrence = investigation.occurrence,
+        var occurrence = report.occurrence,
             occurrenceEvt = {
                 id: 1,
-                start_date: new Date(investigation.occurrenceStart),
-                duration: investigation.occurrenceEnd - investigation.occurrenceEnd / 1000,    // to seconds
+                start_date: new Date(report.occurrence.startTime),
+                duration: report.occurrence.endTime - report.occurrence.endTime / 1000,    // to seconds
                 end_date: new Date(occurrence.endTime)
             }, child = {
                 id: 2,
                 parent: 1,
-                start_date: new Date(investigation.occurrenceStart),
+                start_date: new Date(report.occurrence.startTime),
                 duration: 1,
-                end_date: new Date(investigation.occurrenceStart + 1000)
+                end_date: new Date(report.occurrence.startTime + 1000)
             };
         initSpies(occurrenceEvt, child);
         occurrence.startTime += 1000;   // Causes child duration to become 0
 
-        GanttController.updateOccurrenceEvent(investigation);
+        GanttController.updateOccurrenceEvent(report);
 
-        expect(occurrenceEvt.start_date).toEqual(new Date(investigation.occurrenceStart));
-        expect(occurrenceEvt.end_date).toEqual(new Date(investigation.occurrenceEnd));
-        expect(child.start_date).toEqual(new Date(investigation.occurrenceStart));
+        expect(occurrenceEvt.start_date).toEqual(new Date(report.occurrence.startTime));
+        expect(occurrenceEvt.end_date).toEqual(new Date(report.occurrence.endTime));
+        expect(child.start_date).toEqual(new Date(report.occurrence.startTime));
         expect(child.end_date).toEqual(new Date(child.start_date.getTime() + 1000));
         expect(child.duration).toEqual(1);
     });
 
     it('Prevents child event duration to get below 1 time unit when occurrence end time change by moving it backward', function () {
-        var occurrence = investigation.occurrence,
+        var occurrence = report.occurrence,
             occurrenceEvt = {
                 id: 1,
-                start_date: new Date(investigation.occurrenceStart),
-                duration: investigation.occurrenceEnd - investigation.occurrenceEnd / 1000,    // to seconds
-                end_date: new Date(investigation.occurrenceEnd)
+                start_date: new Date(report.occurrence.startTime),
+                duration: report.occurrence.endTime - report.occurrence.endTime / 1000,    // to seconds
+                end_date: new Date(report.occurrence.endTime)
             }, child = {
                 id: 2,
                 parent: 1,
-                start_date: new Date(investigation.occurrenceEnd - 1000),
+                start_date: new Date(report.occurrence.endTime - 1000),
                 duration: 1,
-                end_date: new Date(investigation.occurrenceEnd)
+                end_date: new Date(report.occurrence.endTime)
             };
         initSpies(occurrenceEvt, child);
         occurrence.endTime -= 1000;   // Causes child duration to become 0
 
-        GanttController.updateOccurrenceEvent(investigation);
+        GanttController.updateOccurrenceEvent(report);
 
-        expect(occurrenceEvt.start_date).toEqual(new Date(investigation.occurrenceStart));
-        expect(occurrenceEvt.end_date).toEqual(new Date(investigation.occurrenceEnd));
-        expect(child.start_date).toEqual(new Date(investigation.occurrenceEnd - 1000));
-        expect(child.end_date).toEqual(new Date(investigation.occurrenceEnd));
+        expect(occurrenceEvt.start_date).toEqual(new Date(report.occurrence.startTime));
+        expect(occurrenceEvt.end_date).toEqual(new Date(report.occurrence.endTime));
+        expect(child.start_date).toEqual(new Date(report.occurrence.endTime - 1000));
+        expect(child.end_date).toEqual(new Date(report.occurrence.endTime));
         expect(child.duration).toEqual(1);
     });
 
@@ -424,7 +424,7 @@ describe('Tests for the gantt component controller', function () {
         props.updateOccurrence.and.callFake(function () {
             occurrence.name = 'Updated name';
             expect(GanttController.applyChangesRunning).toBeTruthy();
-            GanttController.updateOccurrenceEvent(investigation);
+            GanttController.updateOccurrenceEvent(report);
         });
 
         GanttController.applyUpdates([occurrenceEvt.id], false);
@@ -438,21 +438,21 @@ describe('Tests for the gantt component controller', function () {
         var root = {
                 id: 1,
                 text: 'Root',
-                start_date: new Date(investigation.occurrenceStart),
-                end_date: new Date(investigation.occurrenceEnd)
+                start_date: new Date(report.occurrence.startTime),
+                end_date: new Date(report.occurrence.endTime)
             }, child = {
                 id: 2,
                 parent: 1,
                 text: 'Child',
-                start_date: new Date(investigation.occurrenceStart),
-                end_date: new Date(investigation.occurrenceEnd)
+                start_date: new Date(report.occurrence.startTime),
+                end_date: new Date(report.occurrence.endTime)
             },
             grandChild = {
                 id: 3,
                 parent: 2,
                 text: 'GrandChild',
-                start_date: new Date(investigation.occurrenceStart),
-                end_date: new Date(investigation.occurrenceEnd)
+                start_date: new Date(report.occurrence.startTime),
+                end_date: new Date(report.occurrence.endTime)
             };
         gantt.getChildren.and.callFake(function (nodeId) {
             switch (nodeId) {
@@ -485,5 +485,14 @@ describe('Tests for the gantt component controller', function () {
         var res = GanttController.onLinkAdded(linkId, link);
         expect(res).toEqual(false);
         expect(props.onLinkAdded).not.toHaveBeenCalled();
-    })
+    });
+
+    it('Returns number of children when getChildCount is called', function() {
+        var id = 117,
+            children = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
+        gantt.getChildren.and.returnValue(children);
+
+        var result = GanttController.getChildCount(id);
+        expect(result).toEqual(children.length);
+    });
 });

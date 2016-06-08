@@ -13,24 +13,27 @@
 
     <name>INBAS Reporting Tool</name>
     <artifactId>inbas-reporting-tool</artifactId>
-    <version>0.5.4</version>
+    <version>0.6.0</version>
     <packaging>war</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <cz.cvut.kbss.jopa.version>0.7.4</cz.cvut.kbss.jopa.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <cz.cvut.kbss.jopa.version>0.7.11</cz.cvut.kbss.jopa.version>
         <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
-        <com.fasterxml.jackson.version>2.3.3</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.version>2.7.3</com.fasterxml.jackson.version>
         <junit.version>4.12</junit.version>
         <ch.qos.logback.version>1.1.6</ch.qos.logback.version>
-        <org.mapstruct.version>1.0.0.CR1</org.mapstruct.version>
+        <org.mapstruct.version>1.0.0.Final</org.mapstruct.version>
     </properties>
 
 
     <repositories>
         <repository>
-            <id>krizik</id>
+            <id>kbss</id>
             <name>KBSS Maven 2 Repository</name>
             <url>http://kbss.felk.cvut.cz/m2repo</url>
             <snapshots>
@@ -40,6 +43,20 @@
             </snapshots>
         </repository>
     </repositories>
+
+    <!-- For the JOPA maven plugin -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>kbss</id>
+            <name>KBSS Maven 2 Repository</name>
+            <url>http://kbss.felk.cvut.cz/m2repo</url>
+            <snapshots>
+                <checksumPolicy>warn</checksumPolicy>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <!-- Spring -->
@@ -158,9 +175,41 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <artifactId>mockito-all</artifactId>
             <version>1.10.19</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- E5X/F report parsing -->
+        <dependency>
+            <groupId>cz.cvut.inbas.eccairs</groupId>
+            <artifactId>e5xml</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+<!--        <dependency>
+            <groupId>cz.cvut.kbss.datatools</groupId>
+            <artifactId>caa-email2rdf</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>-->
+        <dependency>
+            <groupId>cz.cvut.kbss.datatools</groupId>
+            <artifactId>mail-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss.datatools</groupId>
+            <artifactId>caa-email2rdf</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -183,6 +232,9 @@
 
         <profile>
             <id>production</id>
+            <properties>
+                <profile.name>production</profile.name>
+            </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -276,12 +328,44 @@
                                 **/js/actions/,**/js/components/,**/js/constants/,**/js/stores/,**/js/utils/,**/js/model/,
                                 **/js/validation/, **/js/i18n/,
                                 **/js/app.js,**/js/bundle.js,**/js/.bundle.js,**/css/inbas-audit.css,tests/,node_modules/,
-                                package.json,TODO.txt,webpack.conf.js,.babelrc
+                                package.json,.babelrc,.eslintrc,**/mapping
                             </packagingExcludes>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <!-- Profiles for individual organizations. Should be used in conjunction with the production profile -->
+        <profile>
+            <id>fd</id>
+            <properties>
+                <profile.name>fd</profile.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>ucl</id>
+            <properties>
+                <profile.name>ucl</profile.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>lkpr</id>
+            <properties>
+                <profile.name>lkpr</profile.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>csat</id>
+            <properties>
+                <profile.name>csat</profile.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>rlp</id>
+            <properties>
+                <profile.name>rlp</profile.name>
+            </properties>
         </profile>
     </profiles>
 
@@ -291,10 +375,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -316,7 +396,7 @@
                 <executions>
                     <execution>
                         <id>process</id>
-                        <phase>generate-sources</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>process</goal>
                         </goals>
@@ -347,6 +427,78 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <overwrite>true</overwrite>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>profiles/${profile.name}</directory>
+                                    <includes>
+                                        <includes>option/*.json</includes>
+                                        <include>query/*.sparql</include>
+                                        <include>logback.xml</include>
+                                        <include>config.properties</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Generate entity classes from OWL integrity constraints -->
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>jopa-maven-plugin</artifactId>
+                <version>${cz.cvut.kbss.jopa.version}</version>
+                <configuration>
+                    <package>cz.cvut.kbss.inbas.reporting.model</package>
+                    <output-directory>${project.basedir}/src/main/generated-sources</output-directory>
+                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/reporting-tool/model</ontology-iri>
+                    <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
+                    <whole-ontology-as-ics>true</whole-ontology-as-ics>
+                    <!--<context-name>eccairs-model</context-name>-->
+                    <vocabulary-only>true</vocabulary-only>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-vocabulary</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>owl2java-transform</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/generated-sources</source>
+                            </sources>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

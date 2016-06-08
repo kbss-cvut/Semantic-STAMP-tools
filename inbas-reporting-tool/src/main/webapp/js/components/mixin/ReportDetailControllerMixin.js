@@ -3,7 +3,7 @@
 var React = require('react');
 var assign = require('object-assign');
 
-var RevisionInfo = require('../reports/RevisionInfo');
+var RevisionInfo = require('../report/RevisionInfo');
 
 /**
  * Aggregates some of the methods that are common to both Investigation and Preliminary report detail controllers.
@@ -32,8 +32,8 @@ var ReportDetailControllerMixin = {
         if (!this.props.revisions || this.props.revisions.length === 0) {
             return null;
         }
-        return (<RevisionInfo revisions={this.props.revisions} selectedRevision={this.props.report.revision}
-                              onSelect={this.onRevisionSelected}/>);
+        return <RevisionInfo revisions={this.props.revisions} selectedRevision={this.props.report.revision}
+                             onSelect={this.onRevisionSelected}/>;
     }
 };
 

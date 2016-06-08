@@ -30,7 +30,7 @@ var ReportValidator = {
         if (!report.occurrence.name || report.occurrence.name.length === 0) {
             return 'detail.invalid-tooltip';
         }
-        if (!report.occurrenceStart) {
+        if (!report.occurrence.startTime) {
             return 'detail.invalid-tooltip';   // Don't expect this to happen, but just to be sure
         }
         if (!report.severityAssessment) {
@@ -39,7 +39,7 @@ var ReportValidator = {
         if (!report.summary || report.summary.length === 0) {
             return 'detail.invalid-tooltip';
         }
-        if (!report.occurrenceCategory) {
+        if (!report.occurrence.eventType) {
             return 'detail.invalid-tooltip';
         }
         if (!this._isOccurrenceStartEndTimeDiffValid(report)) {
@@ -49,7 +49,7 @@ var ReportValidator = {
     },
 
     _isOccurrenceStartEndTimeDiffValid: function (report) {
-        return report.occurrenceEnd - report.occurrenceStart <= Constants.MAX_OCCURRENCE_START_END_DIFF;
+        return report.occurrence.endTime - report.occurrence.startTime <= Constants.MAX_OCCURRENCE_START_END_DIFF;
     },
 
     /**

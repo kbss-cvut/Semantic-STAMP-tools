@@ -2,7 +2,7 @@
 
 //var createBrowserHistory = require('history/lib/createBrowserHistory');
 //var useBasename = require('history').useBasename;
-var createHashHistory = require('history/lib/createHashHistory');
+var hashHistory = require('react-router').hashHistory;
 
 var Constants = require('../constants/Constants');
 var RouterStore = require('../stores/RouterStore');
@@ -11,7 +11,7 @@ var Routing = {
     //history: useBasename(createBrowserHistory)({
     //    basename: window.location.pathname
     //}),
-    history: createHashHistory(),
+    history: hashHistory,
 
     originalTarget: null,
 
@@ -30,7 +30,10 @@ var Routing = {
         }
         RouterStore.setTransitionPayload(route.name, options.payload);
         RouterStore.setViewHandlers(route.name, options.handlers);
-        this.history.pushState(null, path, options.query);
+        this.history.push({
+            pathname: path,
+            search: options.query
+        });
     },
 
     setPathParams: function (path, params) {

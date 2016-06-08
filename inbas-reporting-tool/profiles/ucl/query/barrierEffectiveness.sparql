@@ -1,0 +1,15 @@
+PREFIX sira: <http://onto.fel.cvut.cz/ontologies/arms/sira/model/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+  ?level rdfs:label ?label ;
+         sira:is-higher-than ?lowerLevel .
+} WHERE {
+  SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/arms> {
+    sira:barrier-effectiveness sira:has-level ?level .
+    ?level rdfs:label ?label
+    OPTIONAL {
+      ?level sira:is-higher-than ?lowerLevel
+    }
+  }
+}

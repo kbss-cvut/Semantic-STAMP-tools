@@ -4,14 +4,18 @@ var Routes = require('../utils/Routes');
 
 module.exports = {
     APP_NAME: 'SAFety Reporting and Analysis',
-    CONFLICTING_AIRCRAFT_STEP_ID: 'conflictingAircraft',
     ECCAIRS_URL: 'http://www.icao.int/safety/airnavigation/AIG/Documents/ADREP%20Taxonomy/ECCAIRS%20Aviation%201.3.0.12%20(Entities%20and%20Attributes).en.id.pdf',
     HOME_ROUTE: Routes.dashboard,
-    PRELIMINARY_REPORT_PHASE: 'PRELIMINARY',
-    INVESTIGATION_REPORT_PHASE: 'INVESTIGATION',
-    LINK_TYPES: {
-        CAUSE: 'cause',
-        MITIGATE: 'mitigate'
+    OPTIONS: {
+        OCCURRENCE_CLASS: 'occurrenceClass'
+    },
+    /**
+     * Sorting glyph icons
+     */
+    SORTING: {
+        NO: {glyph: 'sort', title: 'sort.no'},
+        ASC: {glyph: 'chevron-up', title: 'sort.asc'},
+        DESC: {glyph: 'chevron-down', title: 'sort.desc'}
     },
 
     UNAUTHORIZED_USER: {name: 'unauthorized'},
@@ -19,40 +23,67 @@ module.exports = {
     FILTER_DEFAULT: 'all',
 
     DASHBOARDS: {
-        MAIN: 'main',
-        CREATE_REPORT: 'createReport'
-    },
-
-    // ARMS Index values, according to https://www.easa.europa.eu/essi/documents/ARMS.pdf, slide 27
-    ARMS_INDEX: {
-        'NEGLIGIBLE': {
-            'EFFECTIVE': 1,
-            'LIMITED': 1,
-            'MINIMAL': 1,
-            'NOT_EFFECTIVE': 1
+        MAIN: {
+            id: 'main',
+            title: 'dashboard.welcome'
         },
-        'MINOR': {
-            'EFFECTIVE': 2,
-            'LIMITED': 4,
-            'MINIMAL': 20,
-            'NOT_EFFECTIVE': 100
+        CREATE_REPORT: {
+            id: 'createReport',
+            title: 'dashboard.create-tile'
         },
-        'MAJOR': {
-            'EFFECTIVE': 10,
-            'LIMITED': 20,
-            'MINIMAL': 100,
-            'NOT_EFFECTIVE': 500
-        },
-        'CATASTROPHIC': {
-            'EFFECTIVE': 50,
-            'LIMITED': 100,
-            'MINIMAL': 500,
-            'NOT_EFFECTIVE': 2500
+        IMPORT_REPORT: {
+            id: 'importReport',
+            title: 'dashboard.create-import-tile'
         }
     },
 
+    /**
+     * Navigation between dashboards. Key is the current dashboard, value is the target to navigate to on goBack
+     */
+    DASHBOARD_GO_BACK: {
+        'main': 'main',
+        'createReport': 'main',
+        'importReport': 'createReport'
+    },
+
     MINUTE: 60 * 1000,   // Minute in milliseconds
-    
+
+    // Maximum number of columns supported by Bootstrap
+    COLUMN_COUNT: 12,
+
     // Maximum time difference between occurrence start and end. 24 hours in millis
-    MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24
+    MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24,
+
+    // Maximum input value length, for which input of type text should be displayed
+    INPUT_LENGTH_THRESHOLD: 70,
+
+    OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
+    EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
+    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
+
+    // Form Generator
+    FORM: {
+        FORM: 'http://onto.fel.cvut.cz/ontologies/documentation/form',
+        QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
+        HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
+        HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/documentation/has_answer',
+        HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
+        HAS_VALUE_TYPE: 'http://onto.fel.cvut.cz/ontologies/form/has-value-type',
+        IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
+        LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class',
+        LAYOUT: {
+            FORM: 'form',
+            QUESTION_TYPEAHEAD: 'type-ahead',
+            QUESTION_SECTION: 'section',
+            WIZARD_STEP: 'wizard-step',
+            DISABLED: 'disabled',
+            HIDDEN: 'hidden'
+        },
+        VALUE_TYPE_CODE: 'code',
+        VALUE_TYPE_TEXT: 'text',
+        GENERATED_ROW_SIZE: 1,
+
+        HAS_DATA_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_data_value',
+        HAS_OBJECT_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_object_value'
+    }
 };

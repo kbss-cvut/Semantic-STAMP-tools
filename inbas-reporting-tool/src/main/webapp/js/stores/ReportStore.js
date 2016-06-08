@@ -8,7 +8,6 @@ var Utils = require('../utils/Utils');
 
 var BASE_URL = 'rest/reports';
 var BASE_URL_WITH_SLASH = 'rest/reports/';
-var PRELIMINARY_DTO = '.PreliminaryReportDto';
 
 var ReportStore = Reflux.createStore({
     listenables: [Actions],
@@ -53,31 +52,27 @@ var ReportStore = Reflux.createStore({
         }.bind(this));
     },
 
-    onCreatePreliminary: function (report, onSuccess, onError) {
-        report.dtoClass = PRELIMINARY_DTO;
-        Ajax.post(BASE_URL, report).end(function () {
+    onCreateReport: function (report, onSuccess, onError) {
+        Ajax.post(BASE_URL, report).end(function (data, resp) {
             if (onSuccess) {
-                onSuccess();
+                var key = Utils.extractKeyFromLocationHeader(resp);
+                onSuccess(key);
             }
             this.onLoadAllReports();
         }.bind(this), onError);
     },
 
-    onCreateInvestigation: function (fileNumber, onSuccess, onError) {
-        Ajax.post(BASE_URL_WITH_SLASH + 'chain/' + fileNumber + '/revisions?investigate=true').end(function (data, resp) {
+    onImportE5Report: function (file, onSuccess, onError) {
+        Ajax.post(BASE_URL_WITH_SLASH + 'importE5').attach(file).end(function (data, resp) {
             if (onSuccess) {
                 var key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);
             }
-        }, onError);
+        }.bind(this), onError);
     },
 
     onUpdateReport: function (report, onSuccess, onError) {
-        Ajax.put(BASE_URL_WITH_SLASH + report.key).send(report).end(function () {
-            if (onSuccess) {
-                onSuccess();
-            }
-        }, onError);
+        Ajax.put(BASE_URL_WITH_SLASH + report.key).send(report).end(onSuccess, onError);
     },
 
     onSubmitReport: function (report, onSuccess, onError) {
@@ -87,6 +82,10 @@ var ReportStore = Reflux.createStore({
                 onSuccess(key);
             }
         }, onError);
+    },
+
+    onPhaseTransition: function (report, onSuccess, onError) {
+        Ajax.put(BASE_URL_WITH_SLASH + report.key + '/phase').end(onSuccess, onError);
     },
 
     onDeleteReportChain: function (fileNumber, onSuccess, onError) {

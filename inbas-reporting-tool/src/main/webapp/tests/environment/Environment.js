@@ -59,13 +59,15 @@ module.exports = {
      */
     getComponentByText: function (root, component, text) {
         var components = TestUtils.scryRenderedComponentsWithType(root, component);
-        return this._getNodeByText(components, text);
+        return this._getNodeByText(components, text, true);
     },
 
-    _getNodeByText: function (components, text) {
+    _getNodeByText: function (components, text, strict) {
         for (var i = 0, len = components.length; i < len; i++) {
             var node = ReactDOM.findDOMNode(components[i]);
-            if (node.textContent === text) {
+            if (strict && node.textContent === text) {
+                return node;
+            } else if (!strict && node.textContent.indexOf(text) !== -1) {
                 return node;
             }
         }
@@ -82,14 +84,27 @@ module.exports = {
      */
     getComponentByTagAndText: function (root, tag, text) {
         var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag);
-        return this._getNodeByText(components, text);
+        return this._getNodeByText(components, text, true);
+    },
+
+    /**
+     * Finds component which contains the specified text.
+     *
+     * This version searches components by tag, so it will catch also simple components like div.
+     * @param root Root of the tree where the component is searched for
+     * @param tag Tag name
+     * @param text Text contained in the component's text content
+     */
+    getComponentByTagAndContainedText: function (root, tag, text) {
+        var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag);
+        return this._getNodeByText(components, text, false);
     },
 
     mockFactors: function (investigation) {
-        var Factors = rewire('../../js/components/investigation/Factors'),
+        var Factors = rewire('../../js/components/factor/Factors'),
             GanttController = jasmine.createSpyObj('GanttController', ['init', 'setScale', 'expandSubtree', 'updateOccurrenceEvent']),
             FactorRenderer = jasmine.createSpyObj('FactorRenderer', ['renderFactors']),
-            FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorHierarchy', 'getLinks', 'setGanttController']);
+            FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorGraph', 'setGanttController']);
         Factors.__set__('GanttController', GanttController);
         Factors.__set__('FactorRenderer', FactorRenderer);
         Factors.__set__('FactorJsonSerializer', FactorJsonSerializer);
@@ -118,5 +133,81 @@ module.exports = {
      */
     mockLogger: function () {
         return jasmine.createSpyObj('Logger', ['warn', 'log', 'error']);
+    },
+
+    /**
+     * Mocks the Gantt component and sets in as global variable to simulate its ordinary behaviour.
+     *
+     * Returns the mock for possible further use.
+     */
+    mockGantt: function () {
+        var gantt = jasmine.createSpyObj('gantt', ['init', 'open', 'addTask', 'addLink', 'getChildren', 'attachEvent', 'clearAll', 'render', 'calculateDuration']);
+        gantt.config = {
+            links: {}
+        };
+        gantt.templates = {};
+        gantt.date = {};
+        gantt.getChildren.and.callFake(() => {
+            return [];
+        });
+        jasmine.getGlobal().gantt = gantt;
+        return gantt;
+    },
+
+    /**
+     * Returns true if the arrays are equal, i.e. they have the same size and contain the same elements.
+     */
+    arraysEqual: function (a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length != b.length) return false;
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) {
+                return false;
+            }
+        }
+        return true;
+    },
+
+    /**
+     * Custom Jasmine matchers
+     */
+    customMatchers: {
+
+        toBeLexGreaterOrEqual: function (util, customEqualityTesters) {
+            return {
+                compare: function (actual, expected) {
+                    if (expected === undefined) {
+                        expected = '';
+                    }
+                    var result = {};
+                    result.pass = actual.toUpperCase().localeCompare(expected.toUpperCase()) >= 0;
+                    if (result.pass) {
+                        result.message = 'Expected ' + actual + ' not to be lexicographically greater or equal to ' + expected;
+                    } else {
+                        result.message = 'Expected ' + actual + ' to be lexicographically greater or equal to ' + expected;
+                    }
+                    return result;
+                }
+            }
+        },
+        toBeLexGreaterThan: function (util, customEqualityTesters) {
+            return {
+                compare: function (actual, expected) {
+                    if (expected === undefined) {
+                        expected = '';
+                    }
+                    var result = {};
+                    result.pass = actual.toUpperCase().localeCompare(expected.toUpperCase()) > 0;
+                    if (result.pass) {
+                        result.message = 'Expected ' + actual + ' not to be lexicographically greater than ' + expected;
+                    } else {
+                        result.message = 'Expected ' + actual + ' to be lexicographically greater than ' + expected;
+                    }
+                    return result;
+                }
+            }
+        }
     }
 };
