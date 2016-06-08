@@ -50,22 +50,20 @@ var ReportDetailController = require('./components/report/ReportController');
 // Wrapping router in a React component to allow Intl to initialize
 var App = React.createClass({
     render: function () {
-        return (
-            <IntlProvider {...intlData}>
-                <Router history={history}>
-                    <Route path='/' component={MainView}>
-                        <IndexRoute component={DashboardController}/>
-                        <Route path={Routes.login.path} component={Login}/>
-                        <Route path={Routes.register.path} component={Register}/>
-                        <Route path={Routes.dashboard.path} component={DashboardController}/>
-                        <Route path={Routes.reports.path} component={ReportsController}/>
-                        <Route path={Routes.statistics.path} component={StatisticsController}/>
-                        <Route path={Routes.createReport.path} component={ReportDetailController}/>
-                        <Route path={Routes.editReport.path} component={ReportDetailController}/>
-                    </Route>
-                </Router>
-            </IntlProvider>
-        );
+        return <IntlProvider {...intlData}>
+            <Router history={history}>
+                <Route path='/' component={MainView}>
+                    <IndexRoute component={DashboardController}/>
+                    <Route path={Routes.login.path} component={Login}/>
+                    <Route path={Routes.register.path} component={Register}/>
+                    <Route path={Routes.dashboard.path} component={DashboardController}/>
+                    <Route path={Routes.reports.path} component={ReportsController}/>
+                    <Route path={Routes.statistics.path} component={StatisticsController}/>
+                    <Route path={Routes.createReport.path} component={ReportDetailController}/>
+                    <Route path={Routes.editReport.path} component={ReportDetailController}/>
+                </Route>
+            </Router>
+        </IntlProvider>;
     }
 });
 
