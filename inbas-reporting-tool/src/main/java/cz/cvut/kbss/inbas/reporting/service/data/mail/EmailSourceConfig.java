@@ -10,17 +10,16 @@ import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLProcessor;
 import cz.cvut.kbss.datatools.mail.imap.idle.IDLEMailMessageReader;
 import cz.cvut.kbss.datatools.mail.model.javaapi.MessageWrapperJavaAPI;
 import cz.cvut.kbss.inbas.reporting.model.com.EMail;
-import java.util.Properties;
-import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+
+import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
+import java.util.Properties;
+import java.util.stream.Stream;
 
 /**
  *

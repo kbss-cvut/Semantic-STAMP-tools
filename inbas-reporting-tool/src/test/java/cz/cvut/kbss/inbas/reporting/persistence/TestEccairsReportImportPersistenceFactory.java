@@ -5,8 +5,10 @@
  */
 package cz.cvut.kbss.inbas.reporting.persistence;
 
+import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
 import cz.cvut.kbss.jopa.Persistence;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import cz.cvut.kbss.jopa.model.JOPAPersistenceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,24 +17,20 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.util.HashMap;
 import java.util.Map;
 
-import static cz.cvut.kbss.inbas.reporting.util.ConfigParam.DRIVER;
-import static cz.cvut.kbss.inbas.reporting.util.ConfigParam.REPOSITORY_URL;
-import static cz.cvut.kbss.jopa.model.JOPAPersistenceProperties.*;
-
 /**
- *
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @Configuration
 @PropertySource("classpath:config.properties")
-public class EccairsReportImportPersistenceFactory {
-    
-    private static final String USERNAME_PROPERTY = "username";
-    private static final String PASSWORD_PROPERTY = "password";
-    
+public class TestEccairsReportImportPersistenceFactory {
+
+    private static final String URL_PROPERTY = "test." + ConfigParam.REPOSITORY_URL;
+    private static final String DRIVER_PROPERTY = "test." + ConfigParam.DRIVER.toString();
+    private static final String USERNAME_PROPERTY = "test.username";
+    private static final String PASSWORD_PROPERTY = "test.password";
+
     @Autowired
     private Environment environment;
 
@@ -45,15 +43,14 @@ public class EccairsReportImportPersistenceFactory {
 
     @PostConstruct
     private void init() {
-        final Map<String, String> properties = new HashMap<>(PersistenceFactory.getDefaultParams());
-        properties.put(ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(REPOSITORY_URL.toString()));
-        properties.put(DATA_SOURCE_CLASS, environment.getProperty(DRIVER.toString()));
+        final Map<String, String> properties = TestPersistenceFactory.getDefaultProperties();
+        properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.ucl.eccairs.report.model");
+        properties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(URL_PROPERTY));
+        properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, environment.getProperty(DRIVER_PROPERTY));
         if (environment.getProperty(USERNAME_PROPERTY) != null) {
-            properties.put(DATA_SOURCE_USERNAME, environment.getProperty(USERNAME_PROPERTY));
-            properties.put(DATA_SOURCE_PASSWORD, environment.getProperty(PASSWORD_PROPERTY));
+            properties.put(JOPAPersistenceProperties.DATA_SOURCE_USERNAME, environment.getProperty(USERNAME_PROPERTY));
+            properties.put(JOPAPersistenceProperties.DATA_SOURCE_PASSWORD, environment.getProperty(PASSWORD_PROPERTY));
         }
-        // override the existing setting
-        properties.put(SCAN_PACKAGE, "cz.cvut.kbss.ucl.eccairs.report.model");
         this.emf = Persistence.createEntityManagerFactory("eccairsPU", properties);
     }
 
