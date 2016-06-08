@@ -17,6 +17,7 @@ module.exports = {
         'save': 'Save',
         'delete': 'Delete',
         'headline': 'Headline',
+        'summary': 'Summary',
         'narrative': 'Narrative',
         'fileNo': 'File number',
         'table-actions': 'Actions',
@@ -126,6 +127,7 @@ module.exports = {
         'initial.label': 'Initial report',
         'initial.tooltip': 'Initial report text - this field is required',
 
+        'report.summary': 'Report summary',
         'report.created-by-msg': 'Created {date} by {name}.',
         'report.last-edited-msg': 'Last modified {date} by {name}.',
         'report.narrative-tooltip': 'Narrative - this field is required',

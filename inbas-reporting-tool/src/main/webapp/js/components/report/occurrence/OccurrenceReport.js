@@ -20,6 +20,8 @@ var MessageMixin = require('../../mixin/MessageMixin');
 var ReportValidator = require('../../../validation/ReportValidator');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
+var WizardGenerator = require('../../wizard/generator/WizardGenerator');
+var WizardWindow = require('../../wizard/WizardWindow');
 
 var OccurrenceReport = React.createClass({
     mixins: [MessageMixin, I18nMixin, ReportDetailMixin],
@@ -32,7 +34,10 @@ var OccurrenceReport = React.createClass({
 
     getInitialState: function () {
         return {
-            submitting: false
+            submitting: false,
+            loadingWizard: false,
+            isWizardOpen: false,
+            wizardProperties: null
         };
     },
 
@@ -63,49 +68,75 @@ var OccurrenceReport = React.createClass({
         Actions.submitReport(this.props.report, this.onSubmitSuccess, this.onSubmitError);
     },
 
+    _reportSummary: function () {
+        this.setState({loadingWizard: true});
+        var report = assign({}, this.props.report);
+        report.factorGraph = this.refs.factors.getWrappedInstance().getFactorGraph();
+        WizardGenerator.generateWizard(report, {}, this.i18n('report.summary'), this.openSummaryWizard);
+    },
+
+    openSummaryWizard: function (wizardProperties) {
+        wizardProperties.onFinish = this.closeSummaryWizard;
+        this.setState({
+            loadingWizard: false,
+            isWizardOpen: true,
+            wizardProperties: wizardProperties
+        });
+    },
+
+    closeSummaryWizard: function () {
+        this.setState({isWizardOpen: false});
+    },
+
     render: function () {
         var report = this.props.report;
 
-        return (
-            <div>
-                <Panel header={this.renderHeader()} bsStyle='primary'>
-                    <form>
-                        <BasicOccurrenceInfo report={report} revisions={this.props.revisions}
-                                             onChange={this.props.handlers.onChange}/>
+        return <div>
+            <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
+                                                           onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
 
-                        <div>
-                            <Factors ref='factors' report={report} onChange={this.onChanges}/>
+            <Panel header={this.renderHeader()} bsStyle='primary'>
+                <ButtonToolbar className='float-right'>
+                    <Button bsStyle='primary' onClick={this._reportSummary} disabled={this.state.loadingWizard}>
+                        {this.i18n(this.state.loadingWizard ? 'please-wait' : 'summary')}
+                    </Button>
+                </ButtonToolbar>
+                <form>
+                    <BasicOccurrenceInfo report={report} revisions={this.props.revisions}
+                                         onChange={this.props.handlers.onChange}/>
+
+                    <div>
+                        <Factors ref='factors' report={report} onChange={this.onChanges}/>
+                    </div>
+
+                    <div className='form-group'>
+                        <CorrectiveMeasures report={report} onChange={this.props.handlers.onChange}/>
+                    </div>
+
+                    <div className='form-group'>
+                        <ArmsAttributes report={report} onChange={this.props.handlers.onChange}/>
+                    </div>
+
+                    <div className='row'>
+                        <div className='col-xs-12'>
+                            <ReportSummary report={report} onChange={this.onChange}/>
                         </div>
+                    </div>
 
-                        <div className='form-group'>
-                            <CorrectiveMeasures report={report} onChange={this.props.handlers.onChange}/>
-                        </div>
-
-                        <div className='form-group'>
-                            <ArmsAttributes report={report} onChange={this.props.handlers.onChange}/>
-                        </div>
-
+                    <Panel>
                         <div className='row'>
-                            <div className='col-xs-12'>
-                                <ReportSummary report={report} onChange={this.onChange}/>
+                            <div className='col-xs-4'>
+                                <Department report={report} onChange={this.props.handlers.onChange}/>
                             </div>
                         </div>
+                        <ReportProvenance report={report} revisions={this.props.revisions}/>
+                    </Panel>
 
-                        <Panel>
-                            <div className='row'>
-                                <div className='col-xs-4'>
-                                    <Department report={report} onChange={this.props.handlers.onChange}/>
-                                </div>
-                            </div>
-                            <ReportProvenance report={report} revisions={this.props.revisions}/>
-                        </Panel>
-
-                        {this.renderButtons()}
-                    </form>
-                </Panel>
-                {this.renderMessage()}
-            </div>
-        );
+                    {this.renderButtons()}
+                </form>
+            </Panel>
+            {this.renderMessage()}
+        </div>;
     },
 
     renderHeader: function () {

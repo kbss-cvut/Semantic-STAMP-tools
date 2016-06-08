@@ -17,6 +17,7 @@ module.exports = {
         'save': 'Uložit',
         'delete': 'Smazat',
         'headline': 'Název',
+        'summary': 'Shrnutí',
         'narrative': 'Popis',
         'fileNo': 'Číslo záznamu',
         'table-actions': 'Akce',
@@ -128,6 +129,7 @@ module.exports = {
         'initial.label': 'Prvotní hlášení',
         'initial.tooltip': 'Text prvotního hlášení - pole je povinné',
 
+        'report.summary': 'Shrnutí hlášení',
         'report.created-by-msg': 'Vytvořil(a) {name} {date}.',
         'report.last-edited-msg': 'Naposledy upravil(a) {name} {date}.',
         'report.narrative-tooltip': 'Popis - pole je povinné',
