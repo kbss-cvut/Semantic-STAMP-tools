@@ -231,5 +231,16 @@ module.exports = {
             }
         }
         return id;
+    },
+
+    /**
+     * Gets the last path fragment from the specified URL.
+     *
+     * I.e. it returns the portion after the last '/'
+     * @param url
+     * @return {string|*}
+     */
+    getLastPathFragment: function (url) {
+        return url.substring(url.lastIndexOf('/') + 1);
     }
 };

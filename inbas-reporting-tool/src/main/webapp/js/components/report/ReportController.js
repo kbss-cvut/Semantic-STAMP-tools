@@ -47,6 +47,7 @@ var ReportController = React.createClass({
         Actions.loadOptions();
         Actions.loadOccurrenceCategories();
         Actions.loadOptions('department');
+        Actions.loadOptions('factorType');
     },
 
     _loadReport: function (reportKey) {

@@ -1,24 +1,16 @@
-/**
- * @jsx
- */
 'use strict';
 
-var React = require('react');
+import React from "react";
+import {ECCAIRS_URL} from "../constants/Constants";
 
-var ECCAIRS_URL = require('../constants/Constants').ECCAIRS_URL;
+const EccairsLink = (props) => {
+    var title = 'ECCAIRS ' + (props.type ? props.type : 'attribute') + ' ' + props.text;
+    return <a href={ECCAIRS_URL} title={title} target='_blank'>#{props.text}</a>;
+};
 
-var EccairsLink = React.createClass({
+EccairsLink.propTypes = {
+    text: React.PropTypes.string.isRequired,
+    type: React.PropTypes.string
+};
 
-    propTypes: {
-        text: React.PropTypes.string.isRequired,
-        type: React.PropTypes.string
-    },
-
-    render: function () {
-        var title = 'ECCAIRS ' + (this.props.type ? this.props.type : 'attribute') + ' ' + this.props.text;
-        return (
-            <a href={ECCAIRS_URL} title={title} target='_blank'>#{this.props.text}</a>);
-    }
-});
-
-module.exports = EccairsLink;
+export default EccairsLink;

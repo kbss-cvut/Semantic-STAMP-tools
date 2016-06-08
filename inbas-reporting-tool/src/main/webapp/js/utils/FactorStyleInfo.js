@@ -1,6 +1,7 @@
 'use strict';
 
-var Constants = require('../constants/Constants');
+var OptionsStore = require('../stores/OptionsStore');
+var Utils = require('../utils/Utils');
 
 /**
  * Provides information about factor styles based on their type, e.g. event type, descriptive factor.
@@ -30,11 +31,17 @@ var FactorStyleInfo = {
         }
     },
 
-    getLinkStyle: function (link) {
-        var linkType = Object.getOwnPropertyNames(Constants.LINK_TYPES).find((item) => {
-            return Constants.LINK_TYPES[item].value === link.factorType;
-        });
-        return linkType ? Constants.LINK_TYPES[linkType].className : '';
+    getLinkClass: function (link) {
+        if (!link.factorType) {
+            return '';
+        }
+        var factorTypes = OptionsStore.getOptions('factorType');
+        for (var i = 0, len = factorTypes.length; i < len; i++) {
+            if (link.factorType === factorTypes[i]['@id']) {
+                return 'gantt-link-' + Utils.getLastPathFragment(factorTypes[i]['@id']);
+            }
+        }
+        return '';
     }
 };
 

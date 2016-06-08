@@ -28,6 +28,12 @@ public class Generator {
     public static final URI ACCIDENT_CATASTROPHIC = URI
             .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/catastrophic");
 
+    private static final URI[] FACTOR_TYPES = {
+            URI.create("http://onto.fel.cvut.cz/ontologies/aviation-safety/causes"),
+            URI.create("http://onto.fel.cvut.cz/ontologies/aviation-safety/mitigates"),
+            URI.create("http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes_to")
+    };
+
     private static Random random = new Random();
 
     private Generator() {
@@ -87,7 +93,8 @@ public class Generator {
         if (setAttributes) {
             report.setBarrierEffectiveness(BARRIER_EFFECTIVE);
             report.setAccidentOutcome(ACCIDENT_NEGLIGIBLE);
-            report.setSeverityAssessment(URI.create("http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100"));
+            report.setSeverityAssessment(
+                    URI.create("http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100"));
             report.setResponsibleDepartment(URI.create("http://kbss.felk.cvut.cz"));
             report.setAuthor(getPerson());
             report.setDateCreated(new Date());
@@ -114,7 +121,7 @@ public class Generator {
         fOne.setEndTime(report.getOccurrence().getEndTime());
         fOne.setEventType(generateEventType());
         final Factor f = new Factor();
-        f.setType(FactorType.CAUSES);
+        f.addType(randomFactorType());
         f.setEvent(fOne);
         report.getOccurrence().addFactor(f);
         final Event fOneChildOne = new Event();
@@ -256,9 +263,9 @@ public class Generator {
     /**
      * Gets a random factor type.
      *
-     * @return FactorType
+     * @return FactorType URI as String
      */
-    public static FactorType randomFactorType() {
-        return FactorType.values()[random.nextInt(FactorType.values().length)];
+    public static URI randomFactorType() {
+        return FACTOR_TYPES[random.nextInt(FACTOR_TYPES.length)];
     }
 }

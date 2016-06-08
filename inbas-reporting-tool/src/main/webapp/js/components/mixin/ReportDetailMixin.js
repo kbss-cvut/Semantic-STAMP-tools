@@ -13,8 +13,16 @@ var ReportDetailMixin = {
         this.onAttributeChange(attributeName, e.target.value);
     },
 
-    onSaveSuccess: function () {
+    onLoading: function() {
+        this.setState({submitting: true});
+    },
+    
+    onLoadingEnd: function() {
         this.setState({submitting: false});
+    },
+
+    onSaveSuccess: function () {
+        this.onLoadingEnd();
         this.props.handlers.onSuccess();
         if (!this.props.report || !this.props.report.isNew) {
             this.showSuccessMessage(this.i18n('save-success-message'));
@@ -22,19 +30,30 @@ var ReportDetailMixin = {
     },
 
     onSaveError: function (error) {
-        this.setState({submitting: false});
+        this.onLoadingEnd();
         this.showErrorMessage(this.i18n('save-failed-message') + error.message);
     },
 
     onSubmitSuccess: function (key) {
-        this.setState({submitting: false});
+        this.onLoadingEnd();
         this.showSuccessMessage(this.i18n('detail.submit-success-message'));
         this.props.handlers.onSuccess(key);
     },
 
     onSubmitError: function (error) {
-        this.setState({submitting: false});
+        this.onLoadingEnd();
         this.showErrorMessage(this.i18n('detail.submit-failed-message') + error.message);
+    },
+    
+    onPhaseTransitionSuccess: function() {
+        this.onLoadingEnd();
+        this.showSuccessMessage(this.i18n('detail.phase-transition-success-message'));
+        this.props.handlers.onSuccess();
+    },
+    
+    onPhaseTransitionError: function(error) {
+        this.onLoadingEnd();
+        this.showErrorMessage(this.i18n('detail.phase-transition-failed-message') + error.message);
     },
 
 

@@ -32,8 +32,8 @@ var ReportDetailControllerMixin = {
         if (!this.props.revisions || this.props.revisions.length === 0) {
             return null;
         }
-        return (<RevisionInfo revisions={this.props.revisions} selectedRevision={this.props.report.revision}
-                              onSelect={this.onRevisionSelected}/>);
+        return <RevisionInfo revisions={this.props.revisions} selectedRevision={this.props.report.revision}
+                             onSelect={this.onRevisionSelected}/>;
     }
 };
 

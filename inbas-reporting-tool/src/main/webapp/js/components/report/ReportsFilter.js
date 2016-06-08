@@ -10,6 +10,7 @@ var Button = require('react-bootstrap').Button;
 var Constants = require('../../constants/Constants');
 var injectIntl = require('../../utils/injectIntl');
 var I18nMixin = require('../../i18n/I18nMixin');
+var JsonLdUtils = require('../../utils/JsonLdUtils').default;
 var OptionsStore = require('../../stores/OptionsStore');
 var ReportType = require('../../model/ReportType');
 var Select = require('../Select');
@@ -20,13 +21,15 @@ var ReportsFilter = React.createClass({
 
     propTypes: {
         onFilterChange: React.PropTypes.func.isRequired,
-        reports: React.PropTypes.array
+        reports: React.PropTypes.array,
+        filter: React.PropTypes.object
     },
 
     getInitialState: function () {
+        var filterInit = this.props.filter ? this.props.filter : {};
         return {
-            'phase': Constants.FILTER_DEFAULT,
-            'types': Constants.FILTER_DEFAULT
+            'phase': filterInit['phase'] ? filterInit['phase'] : Constants.FILTER_DEFAULT,
+            'types': filterInit['types'] ? filterInit['types'] : Constants.FILTER_DEFAULT
         }
     },
 
@@ -106,7 +109,7 @@ var ReportsFilter = React.createClass({
         for (var i = 0, len = phases.length; i < len; i++) {
             options.push({
                 value: phases[i]['@id'],
-                label: phases[i][Vocabulary.RDFS_LABEL]
+                label: JsonLdUtils.getLocalized(phases[i][Vocabulary.RDFS_LABEL], this.props.intl)
             });
         }
         return options;

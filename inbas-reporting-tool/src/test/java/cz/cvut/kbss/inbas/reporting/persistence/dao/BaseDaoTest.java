@@ -2,10 +2,15 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
+import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +21,9 @@ public class BaseDaoTest extends BaseDaoTestRunner {
 
     @Autowired
     private PersonDao personDao;
+
+    @Autowired
+    private EntityManagerFactory emf;
 
     @Test
     public void existsForExistingInstanceReturnsTrue() throws Exception {
@@ -61,6 +69,16 @@ public class BaseDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
+    public void existsReturnsFalseForNullUriWithEntityManager() {
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertFalse(personDao.exists(null, em));
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
     public void removeCollectionRemovesEveryInstanceInIt() {
         final List<Person> persons = generateInstances();
         personDao.persist(persons);
@@ -76,5 +94,73 @@ public class BaseDaoTest extends BaseDaoTestRunner {
 
         personDao.remove(Collections.emptyList());
         persons.forEach(p -> assertNotNull(personDao.find(p.getUri())));
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void persistThrowsPersistenceExceptionWhenExceptionIsThrownByPersistenceProvider() {
+        final Person p = new Person();
+        p.setFirstName("Catherine");
+        p.setLastName("Halsey");
+        // No username -> IC violation
+        personDao.persist(p);
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void persistCollectionThrowsPersistenceExceptionWhenExceptionIsThrownByPersistenceProvider() {
+        final List<Person> persons = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(5); i++) {
+            final Person p = new Person();
+            p.setFirstName("Catherine" + i);
+            p.setLastName("Halsey" + i);
+            // no username
+            persons.add(p);
+        }
+        final EntityManager em = emf.createEntityManager();
+        try {
+            personDao.persist(persons);
+        } finally {
+            assertFalse(em.createNativeQuery("ASK { ?x a ?person . }", Boolean.class).setParameter("person",
+                    URI.create(Vocabulary.s_c_Person)).getSingleResult());
+            em.close();
+        }
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void updateThrowsPersistenceExceptionWhenExceptionIsThrownByPersistenceProvider() {
+        final Person person = Generator.getPerson();
+        personDao.persist(person);
+        person.setUsername(null);
+        personDao.update(person);
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void removeThrowsPersistenceExceptionWhenExceptionIsThrownByPersistenceProvider() {
+        final Person person = Generator.getPerson();
+        personDao.remove(person);
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void removeCollectionThrowsPersistenceExceptionWhenExceptionIsThrownByPersistenceProvider() {
+        final List<Person> persons = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(5); i++) {
+            final Person p = new Person();
+            p.setFirstName("Catherine" + i);
+            p.setLastName("Halsey" + i);
+            p.setUsername("halsey" + i + "@unsc.org");
+            // no username
+            persons.add(p);
+        }
+        personDao.persist(persons);
+        persons.forEach(p -> p.setUri(null));
+        final EntityManager em = emf.createEntityManager();
+        try {
+            personDao.remove(persons);
+        } finally {
+            persons.forEach(p -> {
+                p.generateUri();
+                assertNotNull(em.find(Person.class, p.getUri()));
+            });
+            em.close();
+        }
     }
 }

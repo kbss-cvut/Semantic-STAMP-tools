@@ -80,7 +80,7 @@ public class OccurrenceTest {
             for (Factor cf : copy) {
                 if (of.getEvent().getEventType().equals(cf.getEvent().getEventType())) {
                     found = true;
-                    assertEquals(of.getType(), cf.getType());
+                    assertEquals(of.getTypes(), cf.getTypes());
                     verifyEvents(of.getEvent(), cf.getEvent(), visited);
                     break;
                 }
@@ -102,7 +102,7 @@ public class OccurrenceTest {
         final Event e1 = event();
         final Factor f1 = new Factor();
         f1.setEvent(e1);
-        f1.setType(FactorType.CONTRIBUTES_TO);
+        f1.addType(Generator.randomFactorType());
         o.addFactor(f1);
         final Event e2 = event();
         e2.setIndex(0);
@@ -112,7 +112,7 @@ public class OccurrenceTest {
         e1.addChild(e3);
         final Factor f2 = new Factor();
         f2.setEvent(e2);
-        f2.setType(FactorType.CAUSES);
+        f2.addType(Generator.randomFactorType());
         e3.addFactor(f2);
         if (o.getChildren() != null && o.getChildren().size() > 2) {
             final List<Event> lst = new ArrayList<>(o.getChildren());
@@ -120,7 +120,7 @@ public class OccurrenceTest {
             final Event end = lst.get(Generator.randomIndex(lst));
             if (start != end) {
                 final Factor f3 = new Factor();
-                f3.setType(FactorType.MITIGATES);
+                f3.addType(Generator.randomFactorType());
                 f3.setEvent(start);
                 end.addFactor(f3);
             }

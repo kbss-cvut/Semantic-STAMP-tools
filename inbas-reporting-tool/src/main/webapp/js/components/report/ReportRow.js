@@ -66,7 +66,7 @@ var ReportRow = React.createClass({
             <td className='report-row content-center'>
                 <Label title={this.i18n(report.toString())}>{this.i18n(report.getLabel())}</Label>
             </td>
-            <td className='report-row content-center'>{report.getPhase(OptionsStore.getOptions('reportingPhase'))}</td>
+            <td className='report-row content-center'>{report.getPhase(OptionsStore.getOptions('reportingPhase'), this.props.intl)}</td>
             <td className='report-row actions'>
                 <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.open-tooltip')}
                         onClick={this.onEditClick}>{this.i18n('open')}</Button>
