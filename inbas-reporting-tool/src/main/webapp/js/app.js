@@ -44,7 +44,7 @@ var Register = require('./components/register/Register').default;
 var MainView = require('./components/MainView');
 var DashboardController = require('./components/dashboard/DashboardController');
 var ReportsController = require('./components/report/ReportsController');
-var StatisticsController = require('./components/statistics/Statistics');
+var StatisticsController = require('./components/statistics/Statistics').default;
 var ReportDetailController = require('./components/report/ReportController');
 
 // Wrapping router in a React component to allow Intl to initialize
