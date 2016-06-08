@@ -5,16 +5,17 @@
  */
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model.com.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model.com.EMail;
+import cz.cvut.kbss.inbas.reporting.model.com.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.descriptors.Descriptor;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
+import org.springframework.stereotype.Repository;
+
 import java.net.URI;
 import java.util.Objects;
-import org.springframework.stereotype.Repository;
 
 /**
  *

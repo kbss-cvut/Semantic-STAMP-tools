@@ -5,8 +5,6 @@
  */
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
@@ -16,6 +14,9 @@ import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.config.RepositoryConfigException;
 import org.openrdf.repository.manager.RepositoryProvider;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *

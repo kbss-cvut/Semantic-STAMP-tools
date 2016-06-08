@@ -5,19 +5,21 @@
  */
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
-import static cz.cvut.kbss.inbas.reporting.util.ConfigParam.REPOSITORY_URL;
 import cz.cvut.kbss.ucl.E5XMLLoader;
 import cz.cvut.kbss.ucl.Utils;
 import cz.cvut.kbss.ucl.eccairs.SingeltonEccairsAccessFactory;
 import cz.cvut.kbss.ucl.eccairs.cfg.EccairsAccessConfiguration;
 import cz.cvut.kbss.ucl.eccairs.e5x.E5XXMLParser;
-import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+
+import javax.annotation.PostConstruct;
+
+import static cz.cvut.kbss.inbas.reporting.util.ConfigParam.REPOSITORY_URL;
 
 /**
  *

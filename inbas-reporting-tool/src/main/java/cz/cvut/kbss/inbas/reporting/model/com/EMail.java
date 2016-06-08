@@ -6,10 +6,12 @@
 package cz.cvut.kbss.inbas.reporting.model.com;
 
 //import cz.cvut.kbss.datatools.mail.model.Message;
+
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
+
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;

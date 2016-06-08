@@ -6,10 +6,11 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
 import cz.cvut.kbss.datatools.mail.imap.idle.IDLEMailMessageReader;
-import javax.annotation.PostConstruct;
-import javax.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import javax.mail.MessagingException;
 
 /**
  *
