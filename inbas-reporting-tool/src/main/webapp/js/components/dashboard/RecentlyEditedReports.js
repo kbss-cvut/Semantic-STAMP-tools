@@ -41,8 +41,8 @@ var RecentlyEditedReports = React.createClass({
     filterRecentReports: function () {
         var reports = this.state.reports.slice();
         reports.sort(function (a, b) {
-            var aEdited = a.lastEdited ? a.lastEdited : a.created,
-                bEdited = b.lastEdited ? b.lastEdited : b.created;
+            var aEdited = a.lastModified ? a.lastModified : a.created,
+                bEdited = b.lastModified ? b.lastModified : b.created;
             return bEdited - aEdited;
         });
         return reports.slice(0, RECENTLY_EDITED_COUNT);
