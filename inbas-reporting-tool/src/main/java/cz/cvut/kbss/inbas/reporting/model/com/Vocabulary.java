@@ -18,6 +18,7 @@ public class Vocabulary {
     // Of course the id needs a context in which it is an id. The context is the data source in which the id is considered to be unique
 //    public static final String hasId = "http://onto.fel.cvut.cz/ontologies/documentation/has-id";
     public static final String hasFileName = "http://onto.fel.cvut.cz/ontologies/documentation/has-name";
+    public static final String hasPart = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_part;
     
     
 }
