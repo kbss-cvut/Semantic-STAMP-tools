@@ -123,12 +123,17 @@ var OccurrenceReport = React.createClass({
                         </div>
                     </div>
 
-                    <Panel>
-                        <div className='row'>
-                            <div className='col-xs-4'>
-                                <Department report={report} onChange={this.props.handlers.onChange}/>
+                    <div className='form-group'>
+                        <Panel header={<h5>{this.i18n('report.organization')}</h5>} bsStyle='info'>
+                            <div className='row'>
+                                <div className='col-xs-4'>
+                                    <Department report={report} onChange={this.props.handlers.onChange}/>
+                                </div>
                             </div>
-                        </div>
+                        </Panel>
+                    </div>
+
+                    <Panel>
                         <ReportProvenance report={report} revisions={this.props.revisions}/>
                     </Panel>
 
