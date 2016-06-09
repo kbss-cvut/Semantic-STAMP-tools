@@ -1,6 +1,8 @@
 var React = require('react');
 var Pagination = require('react-bootstrap').Pagination;
 
+var FormattedMessage = require('react-intl').FormattedMessage;
+
 var MAX_BUTTONS = 5;
 
 /**
@@ -52,6 +54,13 @@ var PagingMixin = {
         return data.slice(startIndex, endIndex);
     },
 
+    _renderCountInfo: function (data) {
+        var currentItemCnt = this.getCurrentPage(data).length;
+        return <div className='paging-item-count-info'>
+            <FormattedMessage id='reports.paging.item-count' values={{showing: currentItemCnt, total: data.length}}/>
+        </div>;
+    },
+
     /**
      * Renders the pagination component.
      *
@@ -61,11 +70,16 @@ var PagingMixin = {
     renderPagination: function (data) {
         var itemCount = Math.ceil(data.length / this.props.pageSize);
         if (itemCount === 1) {
-            return null;
+            return <div>
+                {this._renderCountInfo(data)}
+            </div>;
         }
-        return (<Pagination
-            prev next first last ellipsis boundaryLinks items={itemCount} maxButtons={this.props.maxButtons}
-            activePage={this.state.activePage} onSelect={this._onPageSelect}/>);
+        return <div>
+            <Pagination
+                prev next first last ellipsis boundaryLinks items={itemCount} maxButtons={this.props.maxButtons}
+                activePage={this.state.activePage} onSelect={this._onPageSelect}/>
+            {this._renderCountInfo(data)}
+        </div>;
     }
 };
 

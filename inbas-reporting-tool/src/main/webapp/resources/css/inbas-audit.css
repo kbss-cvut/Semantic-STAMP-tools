@@ -503,6 +503,11 @@ button.reset-filters {
     margin: 15px 15px -35px 15px;
 }
 
+.paging-item-count-info {
+    margin-top: -1.2em;
+    margin-bottom: 1.2em;
+}
+
 /* ARMS */
 /* Set it to important so it does not get overridden by the readOnly background color*/
 .arms-index-green {

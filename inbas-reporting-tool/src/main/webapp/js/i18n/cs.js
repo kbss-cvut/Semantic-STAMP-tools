@@ -108,6 +108,7 @@ module.exports = {
         'reports.filter.type.preliminary': 'Předběžná',
         'reports.filter.no-matching-found': 'Žádná hlášení neodpovídají zvoleným parametrům.',
         'reports.filter.reset': 'Zrušit filtry',
+        'reports.paging.item-count': 'Zobrazuji {showing} z {total} položek.',
         'reports.create-report': 'Nové hlášení',
 
         'delete-dialog.title': 'Smazat hlášení?',

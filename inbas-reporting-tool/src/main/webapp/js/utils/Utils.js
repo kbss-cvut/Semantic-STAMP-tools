@@ -11,7 +11,6 @@ var PREPOSITIONS = [
     'of', 'off', 'on', 'onto', 'outside', 'over', 'since', 'than', 'through', 'to', 'until', 'up', 'via', 'with', 'within',
     'without', 'not'
 ];
-var WORD_LENGTH_THRESHOLD = 4;
 
 module.exports = {
     /**
