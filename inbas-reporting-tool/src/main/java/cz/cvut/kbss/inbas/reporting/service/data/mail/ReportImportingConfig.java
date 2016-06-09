@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
 import cz.cvut.kbss.ucl.E5XMLLoader;

@@ -70,7 +70,7 @@ module.exports = {
         'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
 
-        'dashboard.welcome': 'Hello {name}, Welcome to the ' + Constants.APP_NAME + '.',
+        'dashboard.welcome': 'Hello {name}, Welcome to ' + Constants.APP_NAME + '.',
         'dashboard.create-tile': 'Create Report',
         'dashboard.search-tile': 'Search for Report',
         'dashboard.search-placeholder': 'Report headline',

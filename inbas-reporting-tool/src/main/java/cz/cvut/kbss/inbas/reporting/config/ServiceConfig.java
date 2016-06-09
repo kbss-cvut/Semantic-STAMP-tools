@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.config;
 
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsServiceImpl;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.EmailSourceService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImportingConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,5 +30,10 @@ public class ServiceConfig {
     @Bean
     public ArmsService armsService() {
         return new ArmsServiceImpl();
+    }
+
+    @Bean
+    public EmailSourceService emailSourceService() {
+        return new EmailSourceService();
     }
 }

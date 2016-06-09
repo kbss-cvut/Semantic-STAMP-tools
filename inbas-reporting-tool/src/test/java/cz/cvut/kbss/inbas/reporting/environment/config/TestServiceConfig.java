@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.environment.config;
 
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.EmailSourceService;
 import cz.cvut.kbss.inbas.reporting.service.repository.RepositoryOccurrenceReportService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -35,5 +36,10 @@ public class TestServiceConfig {
     @Bean
     public ArmsService armsService() {
         return mock(ArmsService.class);
+    }
+
+    @Bean
+    public EmailSourceService emailSourceService() {
+        return mock(EmailSourceService.class);
     }
 }
