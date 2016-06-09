@@ -17,7 +17,7 @@ describe('Paging mixin', function () {
 
         PagingMixin.props.pageSize = 5;
         var result = PagingMixin.renderPagination(data);
-        expect(result.props.items).toEqual(expectedPageCount);
+        expect(result.props.children[0].props.items).toEqual(expectedPageCount);
     });
 
     function generateData(count) {
@@ -31,7 +31,8 @@ describe('Paging mixin', function () {
     it('does not render any pagination when data fits one page', function () {
         var data = generateData(defaultPageSize - 1),
             result = PagingMixin.renderPagination(data);
-        expect(result).toBeNull();
+        expect(typeof result.props.children).toEqual('object');
+        expect(result.props.children.props.className).toEqual('paging-item-count-info');
     });
 
     it('returns data for first page when it is active', function () {
@@ -72,5 +73,34 @@ describe('Paging mixin', function () {
     it('returns all data when it fits in one page', function () {
         var data = generateData(defaultPageSize);
         expect(PagingMixin.getCurrentPage(data)).toEqual(data);
+    });
+
+    it('renders correct item count when all items fit page', () => {
+        var data = generateData(defaultPageSize - 1),
+            result = PagingMixin.renderPagination(data);
+        var itemCount = result.props.children.props.children.props['values']['showing'];
+        var totalCount = result.props.children.props.children.props['values']['total'];
+        expect(totalCount).toEqual(data.length);
+        expect(itemCount).toEqual(totalCount);
+    });
+
+    it('renders correct item count when multiple pages are necessary', () => {
+        var data = generateData(defaultPageSize + defaultPageSize - 1),
+            result = PagingMixin.renderPagination(data);
+        var itemCount = result.props.children[1].props.children.props['values']['showing'];
+        var totalCount = result.props.children[1].props.children.props['values']['total'];
+        expect(itemCount).toEqual(defaultPageSize);
+        expect(totalCount).toEqual(data.length);
+    });
+
+    it('renders correct item count when rest of data are shown in last page', () => {
+        var data = generateData(defaultPageSize + defaultPageSize - 1),
+            result;
+        PagingMixin.state.activePage += 1;
+        result = PagingMixin.renderPagination(data);
+        var itemCount = result.props.children[1].props.children.props['values']['showing'];
+        var totalCount = result.props.children[1].props.children.props['values']['total'];
+        expect(itemCount).toEqual(defaultPageSize - 1);
+        expect(totalCount).toEqual(data.length);
     });
 });
