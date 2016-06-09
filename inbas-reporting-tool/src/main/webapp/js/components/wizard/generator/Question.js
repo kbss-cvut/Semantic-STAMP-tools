@@ -7,7 +7,6 @@ import Answer from "./Answer";
 import Constants from "../../../constants/Constants";
 import FormUtils from "./FormUtils";
 import QuestionAnswerProcessor from "../../../model/QuestionAnswerProcessor";
-import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 import Utils from "../../../utils/Utils";
 
