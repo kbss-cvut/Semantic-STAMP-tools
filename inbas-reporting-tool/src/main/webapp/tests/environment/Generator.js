@@ -66,10 +66,9 @@ var CATEGORIES = [
     }];
 
 var FACTOR_TYPES = [
-    Constants.LINK_TYPES.MITIGATE.value,
-    Constants.LINK_TYPES.CAUSE.value,
-    Constants.LINK_TYPES.CONTRIBUTE_TO.value,
-    Constants.LINK_TYPES.PREVENT.value
+    'http://onto.fel.cvut.cz/ontologies/aviation-safety/causes',
+    'http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes_to',
+    'http://onto.fel.cvut.cz/ontologies/aviation-safety/mitigates'
 ];
 
 /**

@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.UsernameExistsException;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.exception.WebServiceIntegrationException;
+import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -57,5 +58,10 @@ public class RestExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorInfo> illegalArgumentException(HttpServletRequest request, IllegalArgumentException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(PersistenceException.class)
+    public ResponseEntity<ErrorInfo> persistenceException(HttpServletRequest request, PersistenceException e) {
+        return new ResponseEntity<>(errorInfo(request, e.getCause()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

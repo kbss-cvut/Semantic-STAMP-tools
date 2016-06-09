@@ -5,11 +5,11 @@ var Vocabulary = require('../constants/Vocabulary');
 /**
  * Common propositions that should not be capitalized
  */
-var PROPOSITIONS = [
+var PREPOSITIONS = [
     'a', 'about', 'across', 'after', 'along', 'among', 'an', 'around', 'as', 'aside', 'at', 'before', 'behind', 'below',
     'beneath', 'beside', 'besides', 'between', 'beyond', 'but', 'by', 'for', 'given', 'in', 'inside', 'into', 'like', 'near',
     'of', 'off', 'on', 'onto', 'outside', 'over', 'since', 'than', 'through', 'to', 'until', 'up', 'via', 'with', 'within',
-    'without'
+    'without', 'not'
 ];
 var WORD_LENGTH_THRESHOLD = 4;
 
@@ -40,13 +40,11 @@ module.exports = {
         var words = constant.split('_');
         for (var i = 0, len = words.length; i < len; i++) {
             var word = words[i];
-            if (word.length < WORD_LENGTH_THRESHOLD) {
-                if (PROPOSITIONS.indexOf(word) === -1) {
-                    continue;
-                }
+            if (i > 0 && PREPOSITIONS.indexOf(word.toLowerCase()) !== -1) {
                 words[i] = word.toLowerCase();
+            } else {
+                words[i] = word.charAt(0) + word.substring(1).toLowerCase();
             }
-            words[i] = word.charAt(0) + word.substring(1).toLowerCase();
         }
         return words.join(' ');
     },
@@ -178,7 +176,24 @@ module.exports = {
      * @return {*} Attribute value (possibly null)
      */
     getJsonAttValue: function (obj, att) {
-        return typeof(obj[att]) === 'string' ? obj[att] : obj[att]['@value']
+        return obj[att] ? (typeof(obj[att]) !== 'object' ? obj[att] : obj[att]['@value']) : null;
+    },
+
+    /**
+     * Transforms the specified JSON-LD input to a list of objects suitable as options for a Select component.
+     *
+     * This means, that the resulting list consists of objects with value, label and title attributes.
+     * @param jsonLd The JSON-LD to process
+     * @return {*} List of options
+     */
+    processSelectOptions: function (jsonLd) {
+        return jsonLd.map(function (item) {
+            return {
+                value: item['@id'],
+                label: this.getJsonAttValue(item, Vocabulary.RDFS_LABEL),
+                title: this.getJsonAttValue(item, Vocabulary.RDFS_COMMENT)
+            }
+        }.bind(this));
     },
 
     /**
@@ -214,5 +229,16 @@ module.exports = {
             }
         }
         return id;
+    },
+
+    /**
+     * Gets the last path fragment from the specified URL.
+     *
+     * I.e. it returns the portion after the last '/'
+     * @param url
+     * @return {string|*}
+     */
+    getLastPathFragment: function (url) {
+        return url.substring(url.lastIndexOf('/') + 1);
     }
 };

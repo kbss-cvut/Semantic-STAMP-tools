@@ -77,7 +77,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
     private Factor factor(Set<Event> events) {
         final Factor f = new Factor();
         f.setEvent(event(events));
-        f.setType(Generator.randomFactorType());
+        f.addType(Generator.randomFactorType());
         return f;
     }
 

@@ -16,7 +16,7 @@ export default class UnprocessedReports extends React.Component {
         };
     }
 
-    static UNPROCESSED_PHASE = 'http://onto.fel.cvut.cz/ontologies/aviation-safety/not_processed';
+    static UNPROCESSED_PHASE = 'http://onto.fel.cvut.cz/ontologies/documentation/not_processed';
 
     componentWillMount() {
         this.unsubscribe = ReportStore.listen(this._onReportsLoaded);

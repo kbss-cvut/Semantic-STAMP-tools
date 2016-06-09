@@ -6,7 +6,10 @@ import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
-import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.Event;
+import cz.cvut.kbss.inbas.reporting.model.Factor;
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
@@ -119,8 +122,9 @@ public class EventFactorsSerializationTest {
             return;
         }
         for (Factor f : factors) {
-            verifyEdge(instanceMap.get(f.getEvent().getUri()), instanceMap.get(target.getUri()), f.getType().getUri(),
-                    graph);
+            assert f.getTypes().size() == 1;
+            verifyEdge(instanceMap.get(f.getEvent().getUri()), instanceMap.get(target.getUri()),
+                    f.getTypes().iterator().next(), graph);
             verifyStructure(f.getEvent(), graph, instanceMap, visited);
         }
     }
@@ -144,7 +148,7 @@ public class EventFactorsSerializationTest {
 
     private Factor generateChainItem(int currentIndex, final int maxIndex) {
         final Factor f = new Factor();
-        f.setType(randomFactorType());
+        f.addType(Generator.randomFactorType());
         f.setEvent(event());
         if (currentIndex < maxIndex) {
             f.getEvent().setFactors(new HashSet<>());
@@ -154,10 +158,6 @@ public class EventFactorsSerializationTest {
             }
         }
         return f;
-    }
-
-    private FactorType randomFactorType() {
-        return FactorType.values()[Generator.randomInt(FactorType.values().length) - 1];
     }
 
     @Test
@@ -183,7 +183,7 @@ public class EventFactorsSerializationTest {
                 }
                 final Factor f = new Factor();
                 f.setEvent(from);
-                f.setType(randomFactorType());
+                f.addType(Generator.randomFactorType());
                 to.getFactors().add(f);
             }
         }
@@ -210,7 +210,7 @@ public class EventFactorsSerializationTest {
                 final Event from = e1Children.get(Generator.randomIndex(e1Children));
                 final Event to = e2Children.get(Generator.randomIndex(e2Children));
                 final Factor f = new Factor();
-                f.setType(randomFactorType());
+                f.addType(Generator.randomFactorType());
                 f.setEvent(from);
                 to.addFactor(f);
             }
@@ -380,7 +380,7 @@ public class EventFactorsSerializationTest {
             final FactorGraphItem target = flattenedGraph.get(referenceToUri.get(edge.getTo()));
             assertNotNull(target);
             final Optional<Factor> factor = target.getFactors().stream().filter(f ->
-                    f.getType() == FactorType.fromUri(edge.getLinkType()) &&
+                    f.getTypes().contains(edge.getLinkType()) &&
                             f.getEvent().getUri().equals(source.getUri())).findFirst();
             assertTrue(factor.isPresent());
         }

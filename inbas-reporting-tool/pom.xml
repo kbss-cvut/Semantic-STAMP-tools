@@ -21,7 +21,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <cz.cvut.kbss.jopa.version>0.7.10</cz.cvut.kbss.jopa.version>
+        <cz.cvut.kbss.jopa.version>0.7.12</cz.cvut.kbss.jopa.version>
         <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.7.3</com.fasterxml.jackson.version>
@@ -201,6 +201,16 @@
             <artifactId>caa-email2rdf</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>-->
+        <dependency>
+            <groupId>cz.cvut.kbss.datatools</groupId>
+            <artifactId>mail-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss.datatools</groupId>
+            <artifactId>caa-email2rdf</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -438,6 +448,7 @@
                                 <resource>
                                     <directory>profiles/${profile.name}</directory>
                                     <includes>
+                                        <includes>option/*.json</includes>
                                         <include>query/*.sparql</include>
                                         <include>logback.xml</include>
                                         <include>config.properties</include>

@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -12,15 +8,20 @@ var assign = require('object-assign');
 var injectIntl = require('../../../utils/injectIntl');
 
 var Actions = require('../../../actions/Actions');
-var BasicOccurrenceInfo = require('./BasicOccurrenceInfo');
+var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
+var Department = require('./Department').default;
 var Factors = require('../../factor/Factors');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var ArmsAttributes = require('../arms/ArmsAttributes').default;
+var PhaseTransition = require('../../misc/PhaseTransition').default;
+var ReportProvenance = require('../ReportProvenance').default;
 var ReportSummary = require('../ReportSummary').default;
 var MessageMixin = require('../../mixin/MessageMixin');
 var ReportValidator = require('../../../validation/ReportValidator');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
+var WizardGenerator = require('../../wizard/generator/WizardGenerator');
+var WizardWindow = require('../../wizard/WizardWindow');
 
 var OccurrenceReport = React.createClass({
     mixins: [MessageMixin, I18nMixin, ReportDetailMixin],
@@ -33,7 +34,10 @@ var OccurrenceReport = React.createClass({
 
     getInitialState: function () {
         return {
-            submitting: false
+            submitting: false,
+            loadingWizard: false,
+            isWizardOpen: false,
+            wizardProperties: null
         };
     },
 
@@ -47,11 +51,10 @@ var OccurrenceReport = React.createClass({
         this.props.handlers.onChange(changes);
     },
 
-    onSave: function (e) {
+    onSave: function () {
         var report = this.props.report,
             factors = this.refs.factors.getWrappedInstance();
-        e.preventDefault();
-        this.setState(assign(this.state, {submitting: true}));
+        this.onLoading();
         report.factorGraph = factors.getFactorGraph();
         if (report.isNew) {
             Actions.createReport(report, this.onSaveSuccess, this.onSaveError);
@@ -61,44 +64,84 @@ var OccurrenceReport = React.createClass({
     },
 
     onSubmit: function () {
-        this.setState({submitting: true});
+        this.onLoading();
         Actions.submitReport(this.props.report, this.onSubmitSuccess, this.onSubmitError);
+    },
+
+    _reportSummary: function () {
+        this.setState({loadingWizard: true});
+        var report = assign({}, this.props.report);
+        report.factorGraph = this.refs.factors.getWrappedInstance().getFactorGraph();
+        WizardGenerator.generateWizard(report, {}, this.i18n('report.summary'), this.openSummaryWizard);
+    },
+
+    openSummaryWizard: function (wizardProperties) {
+        wizardProperties.onFinish = this.closeSummaryWizard;
+        this.setState({
+            loadingWizard: false,
+            isWizardOpen: true,
+            wizardProperties: wizardProperties
+        });
+    },
+
+    closeSummaryWizard: function () {
+        this.setState({isWizardOpen: false});
     },
 
     render: function () {
         var report = this.props.report;
 
-        return (
-            <div>
-                <Panel header={this.renderHeader()} bsStyle='primary'>
-                    <form>
-                        <BasicOccurrenceInfo report={report} revisions={this.props.revisions}
-                                             onChange={this.props.handlers.onChange}/>
+        return <div>
+            <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
+                                                           onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
 
-                        <div>
-                            <Factors ref='factors' report={report} onChange={this.onChanges}/>
+            <Panel header={this.renderHeader()} bsStyle='primary'>
+                <ButtonToolbar className='float-right'>
+                    <Button bsStyle='primary' onClick={this._reportSummary} disabled={this.state.loadingWizard}>
+                        {this.i18n(this.state.loadingWizard ? 'please-wait' : 'summary')}
+                    </Button>
+                </ButtonToolbar>
+                <form>
+                    <BasicOccurrenceInfo report={report} revisions={this.props.revisions}
+                                         onChange={this.props.handlers.onChange}/>
+
+                    <div>
+                        <Factors ref='factors' report={report} onChange={this.onChanges}/>
+                    </div>
+
+                    <div className='form-group'>
+                        <CorrectiveMeasures report={report} onChange={this.props.handlers.onChange}/>
+                    </div>
+
+                    <div className='form-group'>
+                        <ArmsAttributes report={report} onChange={this.props.handlers.onChange}/>
+                    </div>
+
+                    <div className='row'>
+                        <div className='col-xs-12'>
+                            <ReportSummary report={report} onChange={this.onChange}/>
                         </div>
+                    </div>
 
-                        <div className='form-group'>
-                            <CorrectiveMeasures report={report} onChange={this.props.handlers.onChange}/>
-                        </div>
-
-                        <div className='form-group'>
-                            <ArmsAttributes report={report} onChange={this.props.handlers.onChange}/>
-                        </div>
-
-                        <div className='row'>
-                            <div className='col-xs-12'>
-                                <ReportSummary report={report} onChange={this.onChange}/>
+                    <div className='form-group'>
+                        <Panel header={<h5>{this.i18n('report.organization')}</h5>} bsStyle='info'>
+                            <div className='row'>
+                                <div className='col-xs-4'>
+                                    <Department report={report} onChange={this.props.handlers.onChange}/>
+                                </div>
                             </div>
-                        </div>
+                        </Panel>
+                    </div>
 
-                        {this.renderButtons()}
-                    </form>
-                </Panel>
-                {this.renderMessage()}
-            </div>
-        );
+                    <Panel>
+                        <ReportProvenance report={report} revisions={this.props.revisions}/>
+                    </Panel>
+
+                    {this.renderButtons()}
+                </form>
+            </Panel>
+            {this.renderMessage()}
+        </div>;
     },
 
     renderHeader: function () {
@@ -124,13 +167,15 @@ var OccurrenceReport = React.createClass({
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return (<ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
+        return <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this.renderSubmitButton()}
-        </ButtonToolbar>);
+            <PhaseTransition report={this.props.report} onLoading={this.onLoading}
+                             onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
+        </ButtonToolbar>;
     },
 
     getSaveButtonTitle: function () {

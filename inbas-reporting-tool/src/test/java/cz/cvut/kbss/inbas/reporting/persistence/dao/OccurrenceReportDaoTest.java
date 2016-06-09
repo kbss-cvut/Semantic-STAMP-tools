@@ -250,7 +250,8 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         try {
             final Integer cnt = em
                     .createNativeQuery("SELECT (count(?x) as ?count) WHERE {?x a ?measureType . }", Integer.class)
-                    .setParameter("measureType", URI.create(Vocabulary.s_c_corrective_measure_request)).getSingleResult();
+                    .setParameter("measureType", URI.create(Vocabulary.s_c_corrective_measure_request))
+                    .getSingleResult();
             assertEquals(report.getCorrectiveMeasures().size(), cnt.intValue());
         } finally {
             em.close();
@@ -292,7 +293,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         addedOne.setEventType(Generator.generateEventType());
         final Factor newF = new Factor();
         newF.setEvent(addedOne);
-        newF.setType(FactorType.CONTRIBUTES_TO);
+        newF.addType(Generator.randomFactorType());
         report.getOccurrence().addFactor(newF);
         final Event addedChild = new Event();
         addedChild.setStartTime(report.getOccurrence().getStartTime());

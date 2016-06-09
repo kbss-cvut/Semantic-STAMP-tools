@@ -36,7 +36,7 @@ var ReportsTable = React.createClass({
                 <Table striped bordered condensed hover>
                     {this.renderHeader()}
                     <tbody>
-                    <ReportFilter onFilterChange={this._onFilterChange} reports={this.props.allReports}/>
+                    <ReportFilter onFilterChange={this._onFilterChange} filter={this.props.filter} reports={this.props.allReports}/>
                     {this.renderReports()}
                     </tbody>
                 </Table>

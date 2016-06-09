@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.service.*;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.RemoteDataLoader;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
 import org.springframework.context.annotation.Bean;
@@ -86,5 +87,10 @@ public class MockServiceConfig {
     @Bean
     public FormGenService formGenService() {
         return mock(FormGenService.class);
+    }
+
+    @Bean
+    public ReportImporter reportImporter() {
+        return mock(ReportImporter.class);
     }
 }

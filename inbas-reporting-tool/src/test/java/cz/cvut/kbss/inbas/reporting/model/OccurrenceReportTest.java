@@ -35,6 +35,8 @@ public class OccurrenceReportTest {
         assertEquals(original.getPhase(), copy.getPhase());
         assertEquals(original.getOccurrence().getName(), copy.getOccurrence().getName());
         assertEquals(original.getSummary(), copy.getSummary());
+        assertEquals(original.getSeverityAssessment(), copy.getSeverityAssessment());
+        assertEquals(original.getResponsibleDepartment(), copy.getResponsibleDepartment());
     }
 
     @Test

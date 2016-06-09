@@ -4,6 +4,7 @@ var React = require('react');
 var assign = require('object-assign');
 var CollapsibleText = require('../components/CollapsibleText');
 var Constants = require('../constants/Constants');
+var JsonLdUtils = require('../utils/JsonLdUtils').default;
 var Vocabulary = require('../constants/Vocabulary');
 
 class OccurrenceReport {
@@ -16,13 +17,13 @@ class OccurrenceReport {
         return require('../components/report/occurrence/OccurrenceReportController');
     }
 
-    getPhase(phaseMapping) {
+    getPhase(phaseMapping, intl) {
         if (!this.phase) {
             return '';
         }
         for (var i = 0, len = phaseMapping.length; i < len; i++) {
             if (phaseMapping[i]['@id'] === this.phase) {
-                return phaseMapping[i][Vocabulary.RDFS_LABEL];
+                return JsonLdUtils.getLocalized(phaseMapping[i][Vocabulary.RDFS_LABEL], intl);
             }
         }
         return this.phase;

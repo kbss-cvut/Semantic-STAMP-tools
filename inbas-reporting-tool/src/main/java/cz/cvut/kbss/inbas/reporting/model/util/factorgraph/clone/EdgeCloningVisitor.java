@@ -2,7 +2,6 @@ package cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone;
 
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Factor;
-import cz.cvut.kbss.inbas.reporting.model.FactorType;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphEdgeVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
@@ -31,7 +30,7 @@ public class EdgeCloningVisitor implements FactorGraphEdgeVisitor {
         } else {
             final Factor factor = new Factor();
             factor.setEvent((Event) source);
-            factor.setType(FactorType.fromUri(type));
+            factor.addType(type);
             target.addFactor(factor);
         }
     }

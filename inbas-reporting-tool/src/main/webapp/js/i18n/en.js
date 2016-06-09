@@ -17,6 +17,7 @@ module.exports = {
         'save': 'Save',
         'delete': 'Delete',
         'headline': 'Headline',
+        'summary': 'Summary',
         'narrative': 'Narrative',
         'fileNo': 'File number',
         'table-actions': 'Actions',
@@ -41,6 +42,8 @@ module.exports = {
         'detail.submit-tooltip': 'Create new revision of this report',
         'detail.submit-success-message': 'Report successfully submitted.',
         'detail.submit-failed-message': 'Unable to submit report. Server responded with message: ',
+        'detail.phase-transition-success-message': 'Report phase transition successful.',
+        'detail.phase-transition-failed-message': 'Report phase transition failed with error: ',
         'detail.loading': 'Loading report...',
         'detail.not-found.title': 'Report not found',
 
@@ -67,7 +70,7 @@ module.exports = {
         'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
 
-        'dashboard.welcome': 'Hello {name}, Welcome to the ' + Constants.APP_NAME + '.',
+        'dashboard.welcome': 'Hello {name}, Welcome to ' + Constants.APP_NAME + '.',
         'dashboard.create-tile': 'Create Report',
         'dashboard.search-tile': 'Search for Report',
         'dashboard.search-placeholder': 'Report headline',
@@ -123,7 +126,9 @@ module.exports = {
         'initial.wizard.edit-title': 'Edit initial report',
         'initial.label': 'Initial report',
         'initial.tooltip': 'Initial report text - this field is required',
-        
+
+        'report.summary': 'Report summary',
+        'report.created-by-msg': 'Created {date} by {name}.',
         'report.last-edited-msg': 'Last modified {date} by {name}.',
         'report.narrative-tooltip': 'Narrative - this field is required',
         'report.table-edit-tooltip': 'Edit statement',
@@ -137,6 +142,8 @@ module.exports = {
         'report.corrective.wizard.step-title': 'Corrective Measure Assessment',
         'report.eventtype.table-type': 'Event type',
         'report.eventtype.add-tooltip': 'Add an event type assessment',
+        'report.organization': 'Organization',
+        'report.responsible-department': 'Responsible department',
         
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
@@ -160,10 +167,6 @@ module.exports = {
         'factors.scale.hour': 'Hours',
         'factors.scale.relative': 'Relative',
         'factors.scale.relative-tooltip': 'Click to select relative scale',
-        'factors.causes': 'Causes',
-        'factors.contributes_to': 'Contributes to',
-        'factors.mitigates': 'Mitigates',
-        'factors.prevents': 'Prevents',
         'factors.link-type-select': 'Factor relationship type?',
         'factors.link-type-select-tooltip': 'Select link type',
         'factors.link.delete.title': 'Delete link?',

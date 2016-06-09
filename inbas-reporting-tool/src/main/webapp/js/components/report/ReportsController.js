@@ -66,9 +66,11 @@ var ReportsController = React.createClass({
     mixins: [Reflux.listenTo(ReportStore, 'onReportsLoaded')],
 
     getInitialState: function () {
+        var payload = RouterStore.getTransitionPayload(Routes.reports.name);
+        RouterStore.setTransitionPayload(Routes.reports.name);  // Clear payload
         return {
             reports: null,
-            filter: RouterStore.getTransitionPayload(Routes.reports.name) ? RouterStore.getTransitionPayload(Routes.reports.name).filter : null,
+            filter: payload ? payload.filter : null,
             sort: {
                 identification: Constants.SORTING.NO,
                 date: Constants.SORTING.NO
