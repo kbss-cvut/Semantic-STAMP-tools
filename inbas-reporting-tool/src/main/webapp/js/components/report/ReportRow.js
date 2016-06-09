@@ -4,9 +4,11 @@ var React = require('react');
 var Button = require('react-bootstrap').Button;
 var Label = require('react-bootstrap').Label;
 var Reflux = require('reflux');
+var classNames = require('classnames');
 
 var injectIntl = require('../../utils/injectIntl');
 
+var ArmsUtils = require('../../utils/ArmsUtils').default;
 var Utils = require('../../utils/Utils.js');
 var OptionsStore = require('../../stores/OptionsStore');
 var ReportType = require('../../model/ReportType');
@@ -53,9 +55,14 @@ var ReportRow = React.createClass({
 
     render: function () {
         var report = ReportType.getReport(this.props.report),
-            formattedDate = '';
+            formattedDate = '',
+            stateClasses = ['report-row', 'content-center'], stateTooltip = null;
         if (report.date) {
             formattedDate = Utils.formatDate(new Date(report.date));
+        }
+        if (report.armsIndex) {
+            stateClasses.push(ArmsUtils.resolveArmsIndexClass(report.armsIndex));
+            stateTooltip = this.i18n('arms.index.tooltip') + report.armsIndex;
         }
         return <tr onDoubleClick={this.onDoubleClick}>
             <td className='report-row'><a href='javascript:void(0);' onClick={this.onEditClick}
@@ -66,7 +73,9 @@ var ReportRow = React.createClass({
             <td className='report-row content-center'>
                 <Label title={this.i18n(report.toString())}>{this.i18n(report.getLabel())}</Label>
             </td>
-            <td className='report-row content-center'>{report.getPhase(OptionsStore.getOptions('reportingPhase'), this.props.intl)}</td>
+            <td className={classNames(stateClasses)} title={stateTooltip}>
+                {report.getPhase(OptionsStore.getOptions('reportingPhase'), this.props.intl)}
+            </td>
             <td className='report-row actions'>
                 <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.open-tooltip')}
                         onClick={this.onEditClick}>{this.i18n('open')}</Button>

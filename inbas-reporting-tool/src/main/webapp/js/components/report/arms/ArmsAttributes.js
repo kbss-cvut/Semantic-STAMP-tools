@@ -6,6 +6,7 @@ import injectIntl from "../../../utils/injectIntl";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import Actions from "../../../actions/Actions";
 import Ajax from "../../../utils/Ajax";
+import ArmsUtils from "../../../utils/ArmsUtils";
 import Input from "../../Input";
 import OptionsStore from "../../../stores/OptionsStore";
 import Select from "../../Select";
@@ -14,11 +15,6 @@ import Vocabulary from "../../../constants/Vocabulary";
 const GREATER_THAN = 'http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than';
 const ACCIDENT_OUTCOME = 'accidentOutcome';
 const BARRIER_EFFECTIVENESS = 'barrierEffectiveness';
-
-const ARMS_THRESHOLDS = {
-    green: 20,
-    yellow: 500
-};
 
 /**
  * Have to sort the array this way, because every item only knows only its immediate successor
@@ -112,46 +108,30 @@ class ArmsAttributes extends React.Component {
 
     render() {
         var i18n = this.props.i18n,
-            report = this.props.report;
-        return (
-            <Panel header={<h5>{i18n('arms.title')}</h5>} bsStyle='info'>
-                <div className='row'>
-                    <div className='col-xs-4' title={i18n('arms.barrier-effectiveness.tooltip')}>
-                        <Select name='barrierEffectiveness' value={report.barrierEffectiveness}
-                                label={i18n('arms.barrier-effectiveness')} addDefault={true}
-                                tooltip={i18n('arms.barrier-effectiveness.tooltip')}
-                                onChange={this._onChange} options={this.state.barrierEffectiveness}/>
-                    </div>
-
-                    <div className='col-xs-4' title={i18n('arms.accident-outcome.tooltip')}>
-                        <Select name='accidentOutcome' value={report.accidentOutcome}
-                                label={i18n('arms.accident-outcome')} addDefault={true}
-                                tooltip={i18n('arms.accident-outcome.tooltip')}
-                                onChange={this._onChange} options={this.state.accidentOutcome}/>
-                    </div>
-                    <div className='col-xs-4'>
-                        <Input className={this._resolveArmsIndexCls()} type='number' name='armsIndex' ref='armsIndex'
-                               value={report.armsIndex ? report.armsIndex : ''} label={i18n('arms.index')} readOnly/>
-                    </div>
+            report = this.props.report,
+            armsIndex = report.armsIndex;
+        return <Panel header={<h5>{i18n('arms.title')}</h5>} bsStyle='info'>
+            <div className='row'>
+                <div className='col-xs-4' title={i18n('arms.barrier-effectiveness.tooltip')}>
+                    <Select name='barrierEffectiveness' value={report.barrierEffectiveness}
+                            label={i18n('arms.barrier-effectiveness')} addDefault={true}
+                            tooltip={i18n('arms.barrier-effectiveness.tooltip')}
+                            onChange={this._onChange} options={this.state.barrierEffectiveness}/>
                 </div>
-            </Panel>
-        );
-    }
 
-    _resolveArmsIndexCls() {
-        var armsIndex = this.props.report.armsIndex;
-        if (!armsIndex) {
-            return '';
-        }
-        if (armsIndex < ARMS_THRESHOLDS.green) {
-            return 'arms-index-green';
-        }
-        if (armsIndex < ARMS_THRESHOLDS.yellow) {
-            return 'arms-index-yellow';
-        }
-        if (armsIndex >= ARMS_THRESHOLDS.yellow) {
-            return 'arms-index-red';
-        }
+                <div className='col-xs-4' title={i18n('arms.accident-outcome.tooltip')}>
+                    <Select name='accidentOutcome' value={report.accidentOutcome}
+                            label={i18n('arms.accident-outcome')} addDefault={true}
+                            tooltip={i18n('arms.accident-outcome.tooltip')}
+                            onChange={this._onChange} options={this.state.accidentOutcome}/>
+                </div>
+                <div className='col-xs-4'>
+                    <Input className={ArmsUtils.resolveArmsIndexClass(armsIndex)} type='number'
+                           name='armsIndex' ref='armsIndex' value={armsIndex ? armsIndex : ''}
+                           label={i18n('arms.index')} readOnly/>
+                </div>
+            </div>
+        </Panel>;
     }
 }
 
