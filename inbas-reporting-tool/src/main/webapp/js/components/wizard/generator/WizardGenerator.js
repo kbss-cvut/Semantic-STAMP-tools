@@ -8,7 +8,7 @@ var FormUtils = require('./FormUtils').default;
 var Logger = require('../../../utils/Logger');
 var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
-
+var Utils = require("../../../utils/Utils");
 var GeneratedStep = require('./GeneratedStep').default;
 
 var WizardGenerator = {

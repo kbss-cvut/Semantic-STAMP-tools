@@ -9,6 +9,7 @@ import FormUtils from "./FormUtils";
 import QuestionAnswerProcessor from "../../../model/QuestionAnswerProcessor";
 import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
+import Utils from "../../../utils/Utils";
 
 export default class Question extends React.Component {
     static propTypes = {
