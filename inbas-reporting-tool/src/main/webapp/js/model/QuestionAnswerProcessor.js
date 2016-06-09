@@ -39,7 +39,7 @@ export default class QuestionAnswerProcessor {
         var result = {};
         result.uri = answer['@id'];
         if (answer[Constants.FORM.HAS_OBJECT_VALUE]) {
-            result.codeValue = answer[Constants.FORM.HAS_OBJECT_VALUE];
+            result.codeValue = answer[Constants.FORM.HAS_OBJECT_VALUE]['@id'] ? answer[Constants.FORM.HAS_OBJECT_VALUE]['@id'] : answer[Constants.FORM.HAS_OBJECT_VALUE];
         } else {
             result.textValue = Utils.getJsonAttValue(answer, Constants.FORM.HAS_DATA_VALUE);
         }
