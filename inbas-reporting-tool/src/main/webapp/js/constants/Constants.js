@@ -64,7 +64,6 @@ module.exports = {
     // Form Generator
     FORM: {
         FORM: 'http://onto.fel.cvut.cz/ontologies/documentation/form',
-        QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
         HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
         HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/documentation/has_answer',
         HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',

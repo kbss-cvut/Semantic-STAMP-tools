@@ -8,7 +8,6 @@ var FormUtils = require('./FormUtils').default;
 var Logger = require('../../../utils/Logger');
 var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
-var Utils = require("../../../utils/Utils");
 var GeneratedStep = require('./GeneratedStep').default;
 
 var WizardGenerator = {
@@ -37,15 +36,17 @@ var WizardGenerator = {
             if (err) {
                 Logger.error(err);
             }
+            var store = {stepData: []};
             var wizardProperties = {
-                steps: this._constructWizardSteps(framed),
+                steps: this._constructWizardSteps(framed, store),
+                store: store,
                 title: title
             };
             renderCallback(wizardProperties);
         }.bind(this));
     },
 
-    _constructWizardSteps: function (structure) {
+    _constructWizardSteps: function (structure, store) {
         var form = structure['@graph'],
             formElements,
             item,
@@ -60,15 +61,17 @@ var WizardGenerator = {
             }
         }
         formElements = form[Constants.FORM.HAS_SUBQUESTION];
+        if (!formElements) {
+            Logger.error('Could not find any wizard steps in the received data.');
+            return [];
+        }
         for (i = 0, len = formElements.length; i < len; i++) {
             item = formElements[i];
             if (FormUtils.isWizardStep(item) && !FormUtils.isHidden(item)) {
                 steps.push({
                     name: Utils.getJsonAttValue(item, Vocabulary.RDFS_LABEL),
                     component: GeneratedStep,
-                    data: {
-                        structure: item
-                    }
+                    data: item
                 });
             }
         }
@@ -81,6 +84,9 @@ var WizardGenerator = {
             }
             return 0;
         });
+        for (i = 0, len = steps.length; i < len; i++) {
+            store.stepData[i] = steps[i].data;
+        }
         return steps;
     }
 };

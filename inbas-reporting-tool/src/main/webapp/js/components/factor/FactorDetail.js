@@ -154,14 +154,15 @@ var FactorDetail = React.createClass({
 
     onUpdateFactorDetails: function (data, closeCallback) {
         var statement = assign({}, this.state.statement),
+            stepData = data.store.stepData,
             processedQuestion;
         statement.question = {
             subQuestions: []
         };
-        if (data.stepData) {
-            for (var i = 0, len = data.stepData.length; i < len; i++) {
+        if (stepData) {
+            for (var i = 0, len = stepData.length; i < len; i++) {
                 // This will skip questions corresponding to empty steps in the wizard
-                processedQuestion = QuestionAnswerProcessor.processQuestionAnswerHierarchy(data.stepData[i]);
+                processedQuestion = QuestionAnswerProcessor.processQuestionAnswerHierarchy(stepData[i]);
                 if (processedQuestion) {
                     statement.question.subQuestions.push(processedQuestion);
                 }

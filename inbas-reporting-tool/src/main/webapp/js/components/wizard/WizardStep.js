@@ -25,7 +25,8 @@ var WizardStep = React.createClass({
         onPrevious: React.PropTypes.func,
         title: React.PropTypes.string,
         data: React.PropTypes.object,       // Global wizard data
-        stepData: React.PropTypes.object,   // Data specific for this step
+        store: React.PropTypes.object,   // Global wizard state
+        stepIndex: React.PropTypes.number.isRequired,
         isFirstStep: React.PropTypes.bool,
         isLastStep: React.PropTypes.bool,
         defaultNextDisabled: React.PropTypes.bool
@@ -135,7 +136,8 @@ var WizardStep = React.createClass({
         return React.createElement(this.props.component, {
             ref: 'component',
             data: this.props.data,
-            stepData: this.props.stepData,
+            store: this.props.store,
+            stepIndex: this.props.stepIndex,
             enableNext: this.enableNext,
             disableNext: this.disableNext,
             next: this.onNext,

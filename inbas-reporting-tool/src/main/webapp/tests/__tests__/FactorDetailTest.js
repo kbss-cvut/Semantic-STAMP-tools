@@ -49,7 +49,7 @@ describe('Factor detail dialog', function () {
                                                   getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
-        detail.onUpdateFactorDetails({stepData: [question]}, function () {
+        detail.onUpdateFactorDetails({store: {stepData: [question]}}, function () {
         });
         detail.onSave();
         expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, 'minute');
@@ -68,7 +68,7 @@ describe('Factor detail dialog', function () {
             },
             origFactor = assign({}, factor),
             question = {};
-        question[Constants.HAS_ANSWER] = [{
+        question[Constants.FORM.HAS_ANSWER] = [{
             value: 'someValue'
         }];
         detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
@@ -77,7 +77,7 @@ describe('Factor detail dialog', function () {
                                                   getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
-        detail.onUpdateFactorDetails({stepData: [{question: question}]}, function () {
+        detail.onUpdateFactorDetails({store: {stepData: [question]}}, function () {
         });
 
         expect(factor).toEqual(origFactor);

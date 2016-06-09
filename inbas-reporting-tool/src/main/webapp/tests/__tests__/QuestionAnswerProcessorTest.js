@@ -75,7 +75,7 @@ describe('Question answer processor', () => {
     }
 
     function verifyQuestions(expected, actual) {
-        expect(actual.types.indexOf(expected['@id'])).not.toEqual(-1);
+        expect(actual.id).toEqual(expected['@id']);
         verifyAnswers(expected, actual);
         if (expected[Constants.FORM.HAS_SUBQUESTION]) {
             expect(actual.subQuestions).toBeDefined();
