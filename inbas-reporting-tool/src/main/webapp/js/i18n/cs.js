@@ -150,7 +150,7 @@ module.exports = {
         
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',
-        'occurrencereport.type': 'Událost',
+        'occurrencereport.label': 'Událost',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

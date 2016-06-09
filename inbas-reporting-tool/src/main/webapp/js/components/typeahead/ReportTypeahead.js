@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -27,7 +23,7 @@ var ReportTypeahead = React.createClass({
 
     getInitialState: function () {
         return {
-            options: []
+            options: this._processReports(ReportStore.getReports())
         };
     },
 
@@ -43,14 +39,15 @@ var ReportTypeahead = React.createClass({
         if (data.action !== Actions.loadAllReports) {
             return;
         }
-        var options = [],
-            option,
-            reports = data.reports;
+        this.setState({options: this._processReports(data.reports)});
+    },
+
+    _processReports: function (reports) {
+        var options = [];
         for (var i = 0, len = reports.length; i < len; i++) {
-            option = ReportType.getReport(reports[i]);
-            options.push(option);
+            options.push(ReportType.getReport(reports[i]));
         }
-        this.setState({options: options});
+        return options;
     },
 
     onOptionSelected: function (option) {
