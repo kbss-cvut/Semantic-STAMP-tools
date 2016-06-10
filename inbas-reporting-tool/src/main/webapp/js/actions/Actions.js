@@ -11,10 +11,7 @@ var Actions = Reflux.createActions([
 
     'loadOptions', 'loadEventTypes', 'loadLocations', 'loadOperators', 'loadOccurrenceCategories',
 
-    'setTransitionPayload',
-
-    // Wizard actions
-    'initWizard', 'updateData', 'updateStepData', 'insertStep', 'removeStep'
+    'setTransitionPayload'
 ]);
 
 module.exports = Actions;

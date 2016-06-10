@@ -6,15 +6,12 @@ describe('InitialReports component tests', function () {
         ReactDOM = require('react-dom'),
         TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
-        InitialReports = require('../../js/components/initialreport/InitialReports'),
-        Actions = require('../../js/actions/Actions'),
-        WizardStore = require('../../js/stores/WizardStore');
+        InitialReports = require('../../js/components/initialreport/InitialReports');
 
     it('Opens initial report add dialog on Add button click', function () {
         var reports = Environment.render(<InitialReports report={{}} onAttributeChange={function() {}}/>);
         var addButton = ReactDOM.findDOMNode(reports.refs.addInitialReport);
         var wizard = reports.refs.initialReportWizard;
-        Environment.wireStoreListenables(['initWizard'], WizardStore);
         expect(wizard.props.show).toBeFalsy();
         TestUtils.Simulate.click(addButton);
         expect(wizard.props.show).toBeTruthy();

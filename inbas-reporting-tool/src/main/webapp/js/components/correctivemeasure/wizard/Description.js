@@ -1,13 +1,8 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
 var injectIntl = require('../../../utils/injectIntl');
 
-var Actions = require('../../../actions/Actions');
 var Input = require('../../Input');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var WizardStore = require('../../../stores/WizardStore');
@@ -33,7 +28,7 @@ var Description = React.createClass({
         var value = e.target.value,
             statement = WizardStore.getData().statement;
         statement.description = value;
-        Actions.updateData({statement: statement});
+        WizardStore.updateData({statement: statement});
         if (value.trim().length === 0) {
             this.props.disableNext();
         } else {

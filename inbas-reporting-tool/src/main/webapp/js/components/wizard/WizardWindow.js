@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -10,7 +6,13 @@ var assign = require('object-assign');
 
 var Wizard = require('./Wizard');
 
-var WizardWindow = React.createClass({
+const WizardWindow = React.createClass({
+    propTypes: {
+        onHide: React.PropTypes.func,
+        title: React.PropTypes.string,
+        show: React.PropTypes.bool
+    },
+
     render: function () {
         var properties = assign({}, this.props, {onClose: this.props.onHide});
         return (

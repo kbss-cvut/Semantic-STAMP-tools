@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -13,7 +9,6 @@ var assign = require('object-assign');
 
 var injectIntl = require('../../utils/injectIntl');
 
-var Actions = require('../../actions/Actions');
 var InitialReportSteps = require('./Steps');
 var CollapsibleText = require('../CollapsibleText');
 var WizardWindow = require('../wizard/WizardWindow');
@@ -37,7 +32,7 @@ var InitialReports = React.createClass({
     },
 
     addInitialReport: function () {
-        Actions.initWizard({initialReport: {}});
+        WizardStore.initWizard({initialReport: {}});
         this.setState({
             showInitialReportWizard: true,
             wizardProperties: {
@@ -52,7 +47,7 @@ var InitialReports = React.createClass({
         var targetId = e.target.id, index;
 
         index = Number(targetId.substring(targetId.indexOf('_') + 1));
-        Actions.initWizard({initialReport: assign({}, this.props.report.initialReports[index])});
+        WizardStore.initWizard({initialReport: assign({}, this.props.report.initialReports[index])});
         this.setState({
             showInitialReportWizard: true,
             editedInitialReportIndex: index,

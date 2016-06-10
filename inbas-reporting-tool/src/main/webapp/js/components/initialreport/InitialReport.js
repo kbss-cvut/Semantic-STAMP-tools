@@ -1,14 +1,9 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
 var assign = require('object-assign');
 var injectIntl = require('../../utils/injectIntl');
 
-var Actions = require('../../actions/Actions');
 var Input = require('../Input');
 var I18nMixin = require('../../i18n/I18nMixin');
 var WizardStore = require('../../stores/WizardStore');
@@ -33,7 +28,7 @@ var InitialReport = React.createClass({
         var value = e.target.value,
             initialReport = assign({}, WizardStore.getData().initialReport);
         initialReport.text = value;
-        Actions.updateData({initialReport: initialReport});
+        WizardStore.updateData({initialReport: initialReport});
         if (value.trim().length === 0) {
             this.props.disableNext();
         } else {

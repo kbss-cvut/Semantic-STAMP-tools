@@ -6,22 +6,21 @@ var assign = require('object-assign');
 var Actions = require('../actions/Actions');
 
 var WizardStore = Reflux.createStore({
-    listenables: [Actions],
 
     _stepData: [],
     _data: {},
 
-    onInitWizard: function (data, stepData) {
+    initWizard: function (data, stepData) {
         this._data = data ? assign({}, data) : {};
         this._stepData = [];
         if (stepData) {
             for (var i = 0, len = stepData.length; i < len; i++) {
-                stepData.push(assign({}, stepData[i]));
+                this._stepData.push(assign({}, stepData[i]));
             }
         }
     },
 
-    onUpdateData: function (update) {
+    updateData: function (update) {
         if (!update) {
             return;
         }
@@ -30,7 +29,7 @@ var WizardStore = Reflux.createStore({
         this.trigger();
     },
 
-    onUpdateStepData: function (index, update) {
+    updateStepData: function (index, update) {
         if (!update || index < 0 || index >= this._stepData.length) {
             return;
         }
@@ -40,12 +39,18 @@ var WizardStore = Reflux.createStore({
         this.trigger();
     },
 
-    onInsertStep: function (index, stepData) {
-        this._stepData.splice(index + 1, 0, stepData ? assign({}, stepData) : {});
+    /**
+     * Inserts the specified step data at the specified index, shifting the existing step data (if present) to the
+     * right.
+     * @param index Index at which to insert step data
+     * @param stepData The data to insert
+     */
+    insertStep: function (index, stepData) {
+        this._stepData.splice(index, 0, stepData ? assign({}, stepData) : {});
         this.trigger();
     },
 
-    onRemoveStep: function (index) {
+    removeStep: function (index) {
         this._stepData.splice(index, 1);
         this.trigger();
     },

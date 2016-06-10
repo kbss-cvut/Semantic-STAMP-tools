@@ -2,7 +2,6 @@
 
 import React from "react";
 import assign from "object-assign";
-import Actions from "../../../actions/Actions";
 import Question from "./Question";
 import WizardStore from "../../../stores/WizardStore";
 
@@ -31,7 +30,7 @@ export default class GeneratedStep extends React.Component {
     };
 
     onChange = (index, change) => {
-        Actions.updateStepData(this.props.stepIndex, assign(this.state.question, change));
+        WizardStore.updateStepData(this.props.stepIndex, assign(this.state.question, change));
     };
 
     render() {

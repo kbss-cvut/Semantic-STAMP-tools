@@ -3,11 +3,11 @@
 import React from "react";
 import {Button, Glyphicon, Panel} from "react-bootstrap";
 import assign from "object-assign";
-import Actions from "../../actions/Actions";
 import injectIntl from "../../utils/injectIntl";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import CorrectiveMeasuresTable from "./CorrectiveMeasuresTable";
 import CorrectiveMeasureWizardSteps from "./wizard/Steps";
+import WizardStore from "../../stores/WizardStore";
 import WizardWindow from "../wizard/WizardWindow";
 
 class CorrectiveMeasures extends React.Component {
@@ -25,7 +25,7 @@ class CorrectiveMeasures extends React.Component {
     }
 
     openWizard = (statement, onFinish) => {
-        Actions.initWizard({statement: statement});
+        WizardStore.initWizard({statement: statement});
         this.setState({
             isWizardOpen: true,
             wizardProperties: {

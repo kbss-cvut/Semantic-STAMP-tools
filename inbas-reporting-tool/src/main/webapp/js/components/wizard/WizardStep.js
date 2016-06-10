@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -9,9 +5,10 @@ var Alert = require('react-bootstrap').Alert;
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
-var injectIntl = require('../../utils/injectIntl');
 
+var injectIntl = require('../../utils/injectIntl');
 var I18nMixin = require('../../i18n/I18nMixin');
+var WizardStore = require('../../stores/WizardStore');
 
 var WizardStep = React.createClass({
     mixins: [I18nMixin],
@@ -45,7 +42,7 @@ var WizardStep = React.createClass({
                 currentError: err
             });
         } else {
-            Actions.updateStepData(this.props.stepIndex, this.getStepData());
+            WizardStore.updateStepData(this.props.stepIndex, this.getStepData());
             this.props.onAdvance();
         }
     },
@@ -62,7 +59,7 @@ var WizardStep = React.createClass({
         if (this.props.onNext) {
             this.props.onNext.apply(this, [this.onAdvance]);
         } else {
-            Actions.updateStepData(this.props.stepIndex, this.getStepData());
+            WizardStore.updateStepData(this.props.stepIndex, this.getStepData());
             this.props.onAdvance();
         }
     },
@@ -76,7 +73,7 @@ var WizardStep = React.createClass({
     },
 
     onFinish: function () {
-        Actions.updateStepData(this.props.stepIndex, this.getStepData());
+        WizardStore.updateStepData(this.props.stepIndex, this.getStepData());
         this.props.onFinish();
     },
 

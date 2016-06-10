@@ -5,7 +5,6 @@ var assign = require('object-assign');
 var ListGroup = require('react-bootstrap').ListGroup;
 var ListGroupItem = require('react-bootstrap').ListGroupItem;
 
-var Actions = require('../../actions/Actions');
 var WizardStep = require('./WizardStep');
 var WizardStore = require('../../stores/WizardStore');
 
@@ -13,10 +12,17 @@ var Wizard = React.createClass({
 
     propTypes: {
         start: React.PropTypes.number,
-        steps: React.PropTypes.array
+        steps: React.PropTypes.array,
+        onFinish: React.PropTypes.func,
+        onClose: React.PropTypes.func,
+        enableForwardSkip: React.PropTypes.bool     // Whether to allow forward step skipping
     },
 
     getInitialState: function () {
+        // First step is visited as soon as the wizard opens
+        if (this.props.steps.length > 0) {
+            this.props.steps[0].visited = true;
+        }
         return {
             currentStep: this.props.start || 0,
             nextDisabled: false,
@@ -62,7 +68,7 @@ var Wizard = React.createClass({
      */
     onInsertStepAfterCurrent: function (step) {
         this.props.steps.splice(this.state.currentStep + 1, 0, step);
-        Actions.insertStep(this.state.currentStep + 1, step.data);
+        WizardStore.insertStep(this.state.currentStep + 1, step.data);
     },
 
     /**
@@ -71,7 +77,7 @@ var Wizard = React.createClass({
      */
     onAddStep: function (step) {
         this.props.steps.push(step);
-        Actions.insertStep(this.props.step.length - 1, step.data);
+        WizardStore.insertStep(this.props.steps.length - 1, step.data);
     },
 
     onRemoveStep: function (stepId) {
@@ -79,8 +85,8 @@ var Wizard = React.createClass({
         for (var i = 0, len = this.props.steps.length; i < len; i++) {
             if (this.props.steps[i].id === stepId) {
                 this.props.steps.splice(i, 1);
-                Actions.removeStep(i);
-                if (i === this.state.currentStep) {
+                WizardStore.removeStep(i);
+                if (i === this.state.currentStep && i !== 0) {
                     stateUpdate.currentStep = this.state.currentStep - 1;
                 }
                 break;
