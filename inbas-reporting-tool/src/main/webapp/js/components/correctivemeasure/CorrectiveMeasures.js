@@ -3,6 +3,7 @@
 import React from "react";
 import {Button, Glyphicon, Panel} from "react-bootstrap";
 import assign from "object-assign";
+import Actions from "../../actions/Actions";
 import injectIntl from "../../utils/injectIntl";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import CorrectiveMeasuresTable from "./CorrectiveMeasuresTable";
@@ -24,12 +25,12 @@ class CorrectiveMeasures extends React.Component {
     }
 
     openWizard = (statement, onFinish) => {
+        Actions.initWizard({statement: statement});
         this.setState({
             isWizardOpen: true,
             wizardProperties: {
                 steps: CorrectiveMeasureWizardSteps,
                 title: this.props.i18n('report.corrective.wizard.title'),
-                statement: statement,
                 onFinish: onFinish
             }
         });
@@ -43,16 +44,16 @@ class CorrectiveMeasures extends React.Component {
         this.openWizard({}, this.addCorrectiveMeasure);
     };
 
-    addCorrectiveMeasure = (data, closeCallback) => {
-        var measure = data.data.statement;
+    addCorrectiveMeasure = (wizardData, closeCallback) => {
+        var measure = wizardData.data.statement;
         var measures = this.props.report.correctiveMeasures != null ? this.props.report.correctiveMeasures : [];
         measures.push(measure);
         this.props.onChange({correctiveMeasures: measures});
         closeCallback();
     };
 
-    updateCorrectiveMeasure = (data, closeCallback) => {
-        var measure = data.data.statement,
+    updateCorrectiveMeasure = (wizardData, closeCallback) => {
+        var measure = wizardData.data.statement,
             measures = this.props.report.correctiveMeasures;
         measures.splice(measure.index, 1, measure);
 

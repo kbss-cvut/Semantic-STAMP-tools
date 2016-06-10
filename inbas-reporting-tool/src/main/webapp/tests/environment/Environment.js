@@ -5,6 +5,7 @@ var ReactDOM = require('react-dom');
 var TestUtils = require('react-addons-test-utils');
 var rewire = require('rewire');
 
+var Actions = require('../../js/actions/Actions');
 var TestApp = require('./TestApp');
 
 module.exports = {
@@ -168,6 +169,24 @@ module.exports = {
             }
         }
         return true;
+    },
+
+    /**
+     * Wires listenables of the specified store to their respective actions.
+     *
+     * This is a workaround for the asynchronous processing of Actions, which causes issues in tests. The workaround
+     * spies on the specified actions and calls corresponding methods on the specified store (the methods have to
+     * conform to the listenables pattern - they have to be called 'onActionName', where 'ActionName' is 'actionName'
+     * in Actions.
+     * @param actions The actions to listen to
+     * @param store Target store
+     */
+    wireStoreListenables(actions, store) {
+        var callbackName;
+        for (var i = 0, len = actions.length; i < len; i++) {
+            callbackName = 'on' + actions[i].charAt(0).toUpperCase() + actions[i].substring(1);
+            spyOn(Actions, actions[i]).and.callFake(store[callbackName]);
+        }
     },
 
     /**

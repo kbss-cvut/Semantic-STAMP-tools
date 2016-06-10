@@ -24,8 +24,6 @@ var WizardStep = React.createClass({
         onNext: React.PropTypes.func,
         onPrevious: React.PropTypes.func,
         title: React.PropTypes.string,
-        data: React.PropTypes.object,       // Global wizard data
-        store: React.PropTypes.object,   // Global wizard state
         stepIndex: React.PropTypes.number.isRequired,
         isFirstStep: React.PropTypes.bool,
         isLastStep: React.PropTypes.bool,
@@ -47,7 +45,8 @@ var WizardStep = React.createClass({
                 currentError: err
             });
         } else {
-            this.props.onAdvance(this.getStepData);
+            Actions.updateStepData(this.props.stepIndex, this.getStepData());
+            this.props.onAdvance();
         }
     },
 
@@ -63,7 +62,8 @@ var WizardStep = React.createClass({
         if (this.props.onNext) {
             this.props.onNext.apply(this, [this.onAdvance]);
         } else {
-            this.props.onAdvance(this.getStepData);
+            Actions.updateStepData(this.props.stepIndex, this.getStepData());
+            this.props.onAdvance();
         }
     },
 
@@ -76,7 +76,8 @@ var WizardStep = React.createClass({
     },
 
     onFinish: function () {
-        this.props.onFinish(this.getStepData);
+        Actions.updateStepData(this.props.stepIndex, this.getStepData());
+        this.props.onFinish();
     },
 
     enableNext: function () {
@@ -135,8 +136,6 @@ var WizardStep = React.createClass({
     renderComponent: function () {
         return React.createElement(this.props.component, {
             ref: 'component',
-            data: this.props.data,
-            store: this.props.store,
             stepIndex: this.props.stepIndex,
             enableNext: this.enableNext,
             disableNext: this.disableNext,

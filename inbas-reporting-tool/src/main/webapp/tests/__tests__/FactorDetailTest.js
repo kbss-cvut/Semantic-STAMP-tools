@@ -49,7 +49,7 @@ describe('Factor detail dialog', function () {
                                                   getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
-        detail.onUpdateFactorDetails({store: {stepData: [question]}}, function () {
+        detail.onUpdateFactorDetails({stepData: [question]}, function () {
         });
         detail.onSave();
         expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, 'minute');
@@ -77,7 +77,7 @@ describe('Factor detail dialog', function () {
                                                   getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
-        detail.onUpdateFactorDetails({store: {stepData: [question]}}, function () {
+        detail.onUpdateFactorDetails({stepData: [question]}, function () {
         });
 
         expect(factor).toEqual(origFactor);

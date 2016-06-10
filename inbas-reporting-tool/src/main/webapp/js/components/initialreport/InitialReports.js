@@ -13,10 +13,12 @@ var assign = require('object-assign');
 
 var injectIntl = require('../../utils/injectIntl');
 
+var Actions = require('../../actions/Actions');
 var InitialReportSteps = require('./Steps');
 var CollapsibleText = require('../CollapsibleText');
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
+var WizardStore = require('../../stores/WizardStore');
 
 var InitialReports = React.createClass({
     mixins: [I18nMixin],
@@ -35,11 +37,11 @@ var InitialReports = React.createClass({
     },
 
     addInitialReport: function () {
+        Actions.initWizard({initialReport: {}});
         this.setState({
             showInitialReportWizard: true,
             wizardProperties: {
                 steps: InitialReportSteps,
-                initialReport: {},
                 title: this.i18n('initial.wizard.add-title'),
                 onFinish: this.saveNewInitialReport
             }
@@ -50,12 +52,12 @@ var InitialReports = React.createClass({
         var targetId = e.target.id, index;
 
         index = Number(targetId.substring(targetId.indexOf('_') + 1));
+        Actions.initWizard({initialReport: assign({}, this.props.report.initialReports[index])});
         this.setState({
             showInitialReportWizard: true,
             editedInitialReportIndex: index,
             wizardProperties: {
                 steps: InitialReportSteps,
-                initialReport: assign({}, this.props.report.initialReports[index]), // Edit a copy
                 title: this.i18n('initial.wizard.edit-title'),
                 onFinish: this.saveInitialReport
             }
@@ -66,16 +68,16 @@ var InitialReports = React.createClass({
         this.setState({showInitialReportWizard: false, editedInitialReportIndex: null});
     },
 
-    saveNewInitialReport: function (data, closeCallback) {
+    saveNewInitialReport: function (wizardData, closeCallback) {
         var initialReports = this.props.report.initialReports;
-        initialReports.push(data.initialReport);
+        initialReports.push(wizardData.data.initialReport);
         this.props.onAttributeChange('initialReports', initialReports);
         closeCallback();
     },
 
-    saveInitialReport: function (data, closeCallback) {
+    saveInitialReport: function (wizardData, closeCallback) {
         var initialReports = this.props.report.initialReports;
-        initialReports[this.state.editedInitialReportIndex] = data.initialReport;
+        initialReports[this.state.editedInitialReportIndex] = wizardData.data.initialReport;
         this.props.onAttributeChange('initialReports', initialReports);
         closeCallback();
     },

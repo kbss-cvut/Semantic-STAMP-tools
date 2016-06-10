@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -9,7 +5,9 @@ var assign = require('object-assign');
 var ListGroup = require('react-bootstrap').ListGroup;
 var ListGroupItem = require('react-bootstrap').ListGroupItem;
 
+var Actions = require('../../actions/Actions');
 var WizardStep = require('./WizardStep');
+var WizardStore = require('../../stores/WizardStore');
 
 var Wizard = React.createClass({
 
@@ -19,26 +17,11 @@ var Wizard = React.createClass({
     },
 
     getInitialState: function () {
-        var data = assign({}, this.props);
         return {
             currentStep: this.props.start || 0,
-            data: data,
-            store: this._initStore(),
             nextDisabled: false,
             previousDisabled: false
         };
-    },
-
-    _initStore: function () {
-        if (this.props.store) {
-            return this.props.store;
-        }
-        var steps = this.props.steps,
-            store = {stepData: []};
-        for (var i = 0, len = steps.length; i < len; i++) {
-            store.stepData.push(steps[i].data ? steps[i].data : {});
-        }
-        return store;
     },
 
     getDefaultProps: function () {
@@ -47,15 +30,12 @@ var Wizard = React.createClass({
         };
     },
 
-    onAdvance: function (dataCallback) {
+    onAdvance: function () {
         var change = {};
         if (this.state.currentStep !== this.props.steps.length - 1) {
             this.props.steps[this.state.currentStep + 1].visited = true;
             change.currentStep = this.state.currentStep + 1;
         }
-        var store = assign({}, this.state.store);
-        store.stepData[this.state.currentStep] = dataCallback();
-        change.store = store;
         this.setState(change);
     },
 
@@ -68,13 +48,11 @@ var Wizard = React.createClass({
         });
     },
 
-    onFinish: function (dataCallback, errCallback) {
+    onFinish: function (errCallback) {
         var data = {
-            data: this.state.data,
-            store: assign({}, this.state.store)
+            data: WizardStore.getData(),
+            stepData: WizardStore.getStepData()
         };
-        // Get data from the last executed step, as they may not have been merged into the wizard's state, yet
-        data.store.stepData[this.state.currentStep] = dataCallback();
         this.props.onFinish(data, this.props.onClose, errCallback);
     },
 
@@ -84,9 +62,7 @@ var Wizard = React.createClass({
      */
     onInsertStepAfterCurrent: function (step) {
         this.props.steps.splice(this.state.currentStep + 1, 0, step);
-        var store = assign({}, this.state.store);
-        store.stepData.splice(this.state.currentStep + 1, 0, step.data ? assign({}, step.data) : {});
-        this.setState({store: store});
+        Actions.insertStep(this.state.currentStep + 1, step.data);
     },
 
     /**
@@ -95,9 +71,7 @@ var Wizard = React.createClass({
      */
     onAddStep: function (step) {
         this.props.steps.push(step);
-        var store = assign({}, this.state.store);
-        store.stepData.push(step.data ? assign({}, step.data) : {});
-        this.setState({store: store});
+        Actions.insertStep(this.props.step.length - 1, step.data);
     },
 
     onRemoveStep: function (stepId) {
@@ -105,9 +79,7 @@ var Wizard = React.createClass({
         for (var i = 0, len = this.props.steps.length; i < len; i++) {
             if (this.props.steps[i].id === stepId) {
                 this.props.steps.splice(i, 1);
-                var store = assign({}, this.state.store);
-                store.stepData.splice(i, 1);
-                stateUpdate.store = store;
+                Actions.removeStep(i);
                 if (i === this.state.currentStep) {
                     stateUpdate.currentStep = this.state.currentStep - 1;
                 }
@@ -159,8 +131,7 @@ var Wizard = React.createClass({
     },
 
     initComponent: function () {
-        var step = this.props.steps[this.state.currentStep],
-            store = this.state.store;
+        var step = this.props.steps[this.state.currentStep];
 
         return React.createElement(WizardStep, {
             key: 'step' + this.state.currentStep,
@@ -175,8 +146,6 @@ var Wizard = React.createClass({
             onRemoveStep: this.onRemoveStep,
             component: step.component,
             title: step.name,
-            data: this.state.data,
-            store: store,
             stepIndex: this.state.currentStep,
             isFirstStep: this.state.currentStep === 0,
             isLastStep: this.state.currentStep === this.props.steps.length - 1,

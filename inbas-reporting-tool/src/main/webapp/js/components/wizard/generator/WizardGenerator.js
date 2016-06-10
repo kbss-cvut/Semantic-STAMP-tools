@@ -2,6 +2,7 @@
 
 var jsonld = require('jsonld');
 
+var Actions = require('../../../actions/Actions');
 var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
 var FormUtils = require('./FormUtils').default;
@@ -36,17 +37,15 @@ var WizardGenerator = {
             if (err) {
                 Logger.error(err);
             }
-            var store = {stepData: []};
             var wizardProperties = {
-                steps: this._constructWizardSteps(framed, store),
-                store: store,
+                steps: this._constructWizardSteps(framed),
                 title: title
             };
             renderCallback(wizardProperties);
         }.bind(this));
     },
 
-    _constructWizardSteps: function (structure, store) {
+    _constructWizardSteps: function (structure) {
         var form = structure['@graph'],
             formElements,
             item,
@@ -84,9 +83,9 @@ var WizardGenerator = {
             }
             return 0;
         });
-        for (i = 0, len = steps.length; i < len; i++) {
-            store.stepData[i] = steps[i].data;
-        }
+        Actions.initWizard(null, steps.map((item) => {
+            return item.data;
+        }));
         return steps;
     }
 };

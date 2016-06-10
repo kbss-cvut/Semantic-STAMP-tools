@@ -7,14 +7,16 @@
 var React = require('react');
 var injectIntl = require('../../../utils/injectIntl');
 
+var Actions = require('../../../actions/Actions');
 var Input = require('../../Input');
 var I18nMixin = require('../../../i18n/I18nMixin');
+var WizardStore = require('../../../stores/WizardStore');
 
 var Description = React.createClass({
     mixins: [I18nMixin],
 
     getInitialState: function () {
-        var description = this.props.data.statement.description;
+        var description = WizardStore.getData().statement.description;
         return {
             description: description ? description : ''
         };
@@ -29,8 +31,9 @@ var Description = React.createClass({
 
     onChange: function (e) {
         var value = e.target.value,
-            statement = this.props.data.statement;
+            statement = WizardStore.getData().statement;
         statement.description = value;
+        Actions.updateData({statement: statement});
         if (value.trim().length === 0) {
             this.props.disableNext();
         } else {
