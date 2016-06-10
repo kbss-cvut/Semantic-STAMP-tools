@@ -3,11 +3,11 @@ package cz.cvut.kbss.inbas.reporting.service.data.mail;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
-import cz.cvut.kbss.ucl.E5XMLLoader;
-import cz.cvut.kbss.ucl.NamedStream;
-import cz.cvut.kbss.ucl.eccairs.MappingEccairsData2Aso;
-import cz.cvut.kbss.ucl.eccairs.SingeltonEccairsAccessFactory;
-import cz.cvut.kbss.ucl.eccairs.report.model.EccairsReport;
+import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
+import cz.cvut.kbss.eccairs.report.e5xml.commons.NamedStream;
+import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
+import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
+import cz.cvut.kbss.eccairs.report.model.EccairsReport;
 import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +73,7 @@ public class EccairsReportImporter implements ReportImporter {
 //                if (r == null) {
 //                    return;
 //                }
-            String suri = "http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginalFile() + "-001";
+            String suri = "http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
             URI context = URI.create(suri);
             // TODO convert DummyReport to OccurrenceReport
             EntityManager em = eccairsEmf.createEntityManager();

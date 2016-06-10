@@ -1,10 +1,10 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
-import cz.cvut.kbss.ucl.E5XMLLoader;
-import cz.cvut.kbss.ucl.Utils;
-import cz.cvut.kbss.ucl.eccairs.SingeltonEccairsAccessFactory;
-import cz.cvut.kbss.ucl.eccairs.cfg.EccairsAccessConfiguration;
-import cz.cvut.kbss.ucl.eccairs.e5x.E5XXMLParser;
+import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
+import cz.cvut.kbss.eccairs.report.e5xml.commons.Utils;
+import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
+import cz.cvut.kbss.eccairs.schema.dao.cfg.EccairsAccessConfiguration;
+import cz.cvut.kbss.eccairs.report.e5xml.e5x.E5XXMLParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,7 +52,7 @@ public class ReportImportingConfig {
     protected E5XMLLoader loader;
 
     protected void constructE5XMLLoader() {
-        loader = new E5XMLLoader();
+        loader = new E5XMLLoader(null);
         E5XXMLParser parser = new E5XXMLParser(getEccairsAccessFactory());
         loader.setE5xParser(parser);
     }

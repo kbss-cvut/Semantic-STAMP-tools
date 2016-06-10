@@ -30,7 +30,7 @@ public class EwaWebServer
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:///home/kremep1/fel/projects/14tacr-inbas/impl/inbas-system/inbas-eccairs-webapi/src/main/resources/wsdl/webAPI.svc.single.wsdl");
+            url = new URL("file:src/main/resources/wsdl/webAPI.svc.single.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

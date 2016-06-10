@@ -5,8 +5,8 @@
  */
 package cz.cvut.kbss.inbas.reporting.service.data.eccairs;
 
-import cz.cvut.kbss.ucl.eccairs.e5x.E5XXMLParser;
-import cz.cvut.kbss.ucl.eccairs.report.model.EccairsReport;
+import cz.cvut.kbss.eccairs.report.e5xml.e5x.E5XXMLParser;
+import cz.cvut.kbss.eccairs.report.model.EccairsReport;
 
 import java.io.IOException;
 import java.net.URL;
