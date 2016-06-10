@@ -521,3 +521,10 @@ button.reset-filters {
 .arms-index-red {
     background-color: rgba(217, 83, 79, 0.3) !important;
 }
+
+.statistics-frame {
+    width: 100%;
+    min-height: 58em;
+    border: 1px solid #cecece;
+    border-radius: 3px;
+}
