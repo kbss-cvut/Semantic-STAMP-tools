@@ -9,6 +9,12 @@ module.exports = {
     OPTIONS: {
         OCCURRENCE_CLASS: 'occurrenceClass'
     },
+
+    /**
+     * URL of the remote BI solution providing statistics for the app
+     */
+    STATISTICS_URL: 'https://app.powerbi.com/view?r=eyJrIjoiYTgyY2ZhOTktYWUzMy00Y2NlLWI2MzctNTQ3OTNjYmYxNzBjIiwidCI6IjE4NTZiMjdkLWI5NmYtNDU4MC04NDFjLTc4ZTc4NmMzODdjNiIsImMiOjh9',
+
     /**
      * Sorting glyph icons
      */
@@ -64,7 +70,6 @@ module.exports = {
     // Form Generator
     FORM: {
         FORM: 'http://onto.fel.cvut.cz/ontologies/documentation/form',
-        QUESTION: 'http://onto.fel.cvut.cz/ontologies/form/question',
         HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
         HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/documentation/has_answer',
         HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
@@ -82,6 +87,9 @@ module.exports = {
         VALUE_TYPE_CODE: 'code',
         VALUE_TYPE_TEXT: 'text',
         GENERATED_ROW_SIZE: 1,
+
+        HAS_QUESTION_ORIGIN: 'http://onto.fel.cvut.cz/ontologies/form/has-question-origin',
+        HAS_ANSWER_ORIGIN: 'http://onto.fel.cvut.cz/ontologies/form/has-answer-origin',
 
         HAS_DATA_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_data_value',
         HAS_OBJECT_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_object_value'

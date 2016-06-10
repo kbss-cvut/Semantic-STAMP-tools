@@ -209,6 +209,7 @@ module.exports = {
         'arms.accident-outcome.tooltip': 'If this event had escalated into an accident, what would have been the most probable accident outcome?',
         'arms.barrier-effectiveness': 'Barrier effectiveness',
         'arms.barrier-effectiveness.tooltip': 'What was the effectiveness of the remaining barriers between this event and the most probable accident scenario?',
-        'arms.index': 'ARMS index'
+        'arms.index': 'ARMS index',
+        'arms.index.tooltip': 'ARMS index is '
     }
 };

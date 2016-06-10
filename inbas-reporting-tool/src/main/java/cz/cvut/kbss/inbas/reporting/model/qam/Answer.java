@@ -5,6 +5,7 @@
  */
 package cz.cvut.kbss.inbas.reporting.model.qam;
 
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.net.URI;
@@ -14,17 +15,20 @@ import java.util.Set;
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-@OWLClass(iri = Vocabulary.Answer)
+@OWLClass(iri = Vocabulary.s_c_answer)
 public class Answer {
 
     @Id(generated = true)
     private URI uri;
 
-    @OWLDataProperty(iri = Vocabulary.hasDataValue)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_data_value)
     private String textValue;
 
-    @OWLObjectProperty(iri = Vocabulary.hasURIValue)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_object_value)
     private URI codeValue;
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_answer_origin)
+    private URI origin;
 
     @Types
     private Set<String> types = new HashSet<>();
@@ -35,6 +39,7 @@ public class Answer {
     public Answer(Answer other) {
         this.textValue = other.textValue;
         this.codeValue = other.codeValue;
+        this.origin = other.origin;
         if (other.types != null) {
             this.types.addAll(other.types);
         }
@@ -64,16 +69,20 @@ public class Answer {
         this.codeValue = codeValue;
     }
 
+    public URI getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(URI origin) {
+        this.origin = origin;
+    }
+
     public Set<String> getTypes() {
         return types;
     }
 
     public void setTypes(Set<String> types) {
         this.types = types;
-    }
-
-    public void addType(String type) {
-        types.add(type);
     }
 
     @Override

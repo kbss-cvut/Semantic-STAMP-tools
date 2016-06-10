@@ -12,14 +12,14 @@ export default class GeneratedStep extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            question: this.props.stepData.structure
-        }
+            question: this.props.store.stepData[this.props.stepIndex]
+        };
     }
 
     onChange = (index, change) => {
         var newState = assign(this.state.question, change);
         this.setState({question: newState});
-        this.props.stepData.question = newState;
+        this.props.store.stepData[this.props.stepIndex] = newState;
     };
 
     getData = () => {

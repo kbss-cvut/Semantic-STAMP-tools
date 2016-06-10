@@ -5,6 +5,7 @@
  */
 package cz.cvut.kbss.inbas.reporting.model.qam;
 
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -16,21 +17,24 @@ import java.util.stream.Collectors;
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-@OWLClass(iri = Vocabulary.Question)
+@OWLClass(iri = Vocabulary.s_c_question)
 public class Question implements Serializable {
 
     @Id(generated = true)
     private URI uri;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    private Set<Question> subQuestions = new HashSet<>();
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_answer, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    private Set<Answer> answers = new HashSet<>();// entity instance or attribute value
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_question_origin)
+    private URI origin;
+
     // eccairs entity/attribute
     @Types
     private Set<String> types = new HashSet<>();
-
-    @OWLObjectProperty(iri = Vocabulary.hasRelatedQuestion, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    private Set<Question> subQuestions = new HashSet<>();
-
-    @OWLObjectProperty(iri = Vocabulary.hasAnswer, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
-    private Set<Answer> answers = new HashSet<>();// entity instance or attribute value
 
     public Question() {
     }
@@ -45,6 +49,7 @@ public class Question implements Serializable {
         if (other.types != null) {
             this.types.addAll(other.types);
         }
+        this.origin = other.origin;
     }
 
     public URI getUri() {
@@ -69,6 +74,14 @@ public class Question implements Serializable {
 
     public void setAnswers(Set<Answer> answers) {
         this.answers = answers;
+    }
+
+    public URI getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(URI origin) {
+        this.origin = origin;
     }
 
     public Set<String> getTypes() {
