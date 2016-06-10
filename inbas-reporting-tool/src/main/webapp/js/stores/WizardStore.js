@@ -3,8 +3,6 @@
 var Reflux = require('reflux');
 var assign = require('object-assign');
 
-var Actions = require('../actions/Actions');
-
 var WizardStore = Reflux.createStore({
 
     _stepData: [],

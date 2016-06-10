@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-var assign = require('object-assign');
 var ListGroup = require('react-bootstrap').ListGroup;
 var ListGroupItem = require('react-bootstrap').ListGroupItem;
 
