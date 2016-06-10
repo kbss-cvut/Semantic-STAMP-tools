@@ -23,18 +23,18 @@ public class Question implements Serializable {
     @Id(generated = true)
     private URI uri;
 
-    @OWLAnnotationProperty(iri = Vocabulary.s_p_label)
-    private String label;
-
-    // eccairs entity/attribute
-    @Types
-    private Set<String> types = new HashSet<>();
-
     @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<Question> subQuestions = new HashSet<>();
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_answer, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<Answer> answers = new HashSet<>();// entity instance or attribute value
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_question_origin)
+    private URI origin;
+
+    // eccairs entity/attribute
+    @Types
+    private Set<String> types = new HashSet<>();
 
     public Question() {
     }
@@ -49,7 +49,7 @@ public class Question implements Serializable {
         if (other.types != null) {
             this.types.addAll(other.types);
         }
-        this.label = other.label;
+        this.origin = other.origin;
     }
 
     public URI getUri() {
@@ -74,6 +74,14 @@ public class Question implements Serializable {
 
     public void setAnswers(Set<Answer> answers) {
         this.answers = answers;
+    }
+
+    public URI getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(URI origin) {
+        this.origin = origin;
     }
 
     public Set<String> getTypes() {

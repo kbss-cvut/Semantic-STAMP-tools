@@ -27,6 +27,9 @@ public class Answer {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_object_value)
     private URI codeValue;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_answer_origin)
+    private URI origin;
+
     @Types
     private Set<String> types = new HashSet<>();
 
@@ -36,6 +39,7 @@ public class Answer {
     public Answer(Answer other) {
         this.textValue = other.textValue;
         this.codeValue = other.codeValue;
+        this.origin = other.origin;
         if (other.types != null) {
             this.types.addAll(other.types);
         }
@@ -65,16 +69,20 @@ public class Answer {
         this.codeValue = codeValue;
     }
 
+    public URI getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(URI origin) {
+        this.origin = origin;
+    }
+
     public Set<String> getTypes() {
         return types;
     }
 
     public void setTypes(Set<String> types) {
         this.types = types;
-    }
-
-    public void addType(String type) {
-        types.add(type);
     }
 
     @Override

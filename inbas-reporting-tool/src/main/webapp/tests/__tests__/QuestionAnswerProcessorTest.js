@@ -16,13 +16,22 @@ describe('Question answer processor', () => {
     });
 
     function generateAnswers(question) {
+        var codeValue;
         question[Constants.FORM.HAS_ANSWER] = [];
         for (var i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
+            codeValue = Generator.getRandomBoolean();
             var answer = {};
             answer['@id'] = Generator.getRandomUri();
-            answer[Constants.FORM.HAS_DATA_VALUE] = {
-                '@value': i
-            };
+            answer[Constants.FORM.HAS_ANSWER_ORIGIN] = Generator.getRandomUri();
+            if (codeValue) {
+                answer[Constants.FORM.HAS_OBJECT_VALUE] = {
+                    '@id': Generator.getRandomUri()
+                }
+            } else {
+                answer[Constants.FORM.HAS_DATA_VALUE] = {
+                    '@value': i
+                };
+            }
             question[Constants.FORM.HAS_ANSWER].push(answer);
         }
     }
@@ -34,8 +43,12 @@ describe('Question answer processor', () => {
         expect(actualQuestion.answers).toBeDefined();
         expect(actualQuestion.answers.length).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER].length);
         for (var i = 0, len = actualQuestion.answers.length; i < len; i++) {
-            expect(actualQuestion.answers[i].textValue).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i][Constants.FORM.HAS_DATA_VALUE]['@value']);
             expect(actualQuestion.answers[i].uri).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i]['@id']);
+            if (expectedQuestion[Constants.FORM.HAS_ANSWER][i][Constants.FORM.HAS_DATA_VALUE]) {
+                expect(actualQuestion.answers[i].textValue).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i][Constants.FORM.HAS_DATA_VALUE]['@value']);
+            } else {
+                expect(actualQuestion.answers[i].codeValue).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i][Constants.FORM.HAS_OBJECT_VALUE]['@id']);
+            }
         }
     }
 
@@ -52,6 +65,7 @@ describe('Question answer processor', () => {
         question['@id'] = Generator.getRandomUri();
         question[Vocabulary.RDFS_LABEL] = 'Test0';
         question[Vocabulary.RDFS_COMMENT] = 'Test0 Comment';
+        question[Constants.FORM.HAS_QUESTION_ORIGIN] = Generator.getRandomUri();
         question[Constants.FORM.HAS_SUBQUESTION] = [];
         for (var i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
             question[Constants.FORM.HAS_SUBQUESTION].push(generateSubQuestions(0, 5));
@@ -62,6 +76,7 @@ describe('Question answer processor', () => {
     function generateSubQuestions(depth, maxDepth) {
         var question = {};
         question['@id'] = Generator.getRandomUri();
+        question[Constants.FORM.HAS_QUESTION_ORIGIN] = Generator.getRandomUri();
         question[Vocabulary.RDFS_LABEL] = 'Test' + Generator.getRandomInt();
         question[Vocabulary.RDFS_COMMENT] = 'Test Comment';
         if (depth < maxDepth) {
@@ -86,21 +101,40 @@ describe('Question answer processor', () => {
         }
     }
 
-    it('Stores labels of questions', () => {
+    it('Stores origin of questions', () => {
         var question = generateQuestions(),
             result;
         result = QuestionAnswerProcessor.processQuestionAnswerHierarchy(question);
 
-        verifyPresenceOfLabels(question, result);
+        verifyPresenceOfQuestionOrigin(question, result);
     });
 
-    function verifyPresenceOfLabels(expected, actual) {
-        expect(actual.label).toBeDefined();
-        expect(actual.label).toEqual(expected[Vocabulary.RDFS_LABEL]);
+    function verifyPresenceOfQuestionOrigin(expected, actual) {
+        expect(actual.origin).toBeDefined();
+        expect(actual.origin).toEqual(expected[Constants.FORM.HAS_QUESTION_ORIGIN]);
         if (expected[Constants.FORM.HAS_SUBQUESTION]) {
             for (var i = 0, len = actual.subQuestions.length; i < len; i++) {
                 verifyQuestions(expected[Constants.FORM.HAS_SUBQUESTION][i], actual.subQuestions[i]);
             }
+        }
+    }
+
+    it('Stores origin of answers', () => {
+        var question = {},
+            result;
+        generateAnswers(question);
+        result = QuestionAnswerProcessor.processQuestionAnswerHierarchy(question);
+        verifyPresenceOfAnswerOrigin(question, result);
+    });
+
+    function verifyPresenceOfAnswerOrigin(actualQuestion, expectedQuestion) {
+        if (!expectedQuestion[Constants.FORM.HAS_ANSWER]) {
+            return;
+        }
+        expect(actualQuestion.answers).toBeDefined();
+        expect(actualQuestion.answers.length).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER].length);
+        for (var i = 0, len = actualQuestion.answers.length; i < len; i++) {
+            expect(actualQuestion.answers[i].origin).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i][Constants.FORM.HAS_ANSWER_ORIGIN]);
         }
     }
 });

@@ -2,7 +2,6 @@
 
 import Constants from "../constants/Constants";
 import Utils from "../utils/Utils";
-import Vocabulary from "../constants/Vocabulary";
 
 export default class QuestionAnswerProcessor {
 
@@ -21,7 +20,7 @@ export default class QuestionAnswerProcessor {
         var result = {},
             i, len;
         result.id = question['@id'];
-        result.label = Utils.getJsonAttValue(question, Vocabulary.RDFS_LABEL);
+        result.origin = Utils.getJsonAttValue(question, Constants.FORM.HAS_QUESTION_ORIGIN);
         if (question[Constants.FORM.HAS_SUBQUESTION]) {
             result.subQuestions = [];
             for (i = 0, len = question[Constants.FORM.HAS_SUBQUESTION].length; i < len; i++) {
@@ -43,6 +42,7 @@ export default class QuestionAnswerProcessor {
     static processAnswer(answer) {
         var result = {};
         result.uri = answer['@id'];
+        result.origin = Utils.getJsonAttValue(answer, Constants.FORM.HAS_ANSWER_ORIGIN);
         if (answer[Constants.FORM.HAS_OBJECT_VALUE]) {
             result.codeValue = answer[Constants.FORM.HAS_OBJECT_VALUE]['@id'] ? answer[Constants.FORM.HAS_OBJECT_VALUE]['@id'] : answer[Constants.FORM.HAS_OBJECT_VALUE];
         } else {

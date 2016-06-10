@@ -81,6 +81,9 @@ module.exports = {
         VALUE_TYPE_CODE: 'code',
         VALUE_TYPE_TEXT: 'text',
         GENERATED_ROW_SIZE: 1,
+        
+        HAS_QUESTION_ORIGIN: 'http://onto.fel.cvut.cz/ontologies/form/has-question-origin',
+        HAS_ANSWER_ORIGIN: 'http://onto.fel.cvut.cz/ontologies/form/has-answer-origin',
 
         HAS_DATA_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_data_value',
         HAS_OBJECT_VALUE: 'http://onto.fel.cvut.cz/ontologies/documentation/has_object_value'
