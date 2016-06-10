@@ -85,4 +85,22 @@ describe('Question answer processor', () => {
             }
         }
     }
+
+    it('Stores labels of questions', () => {
+        var question = generateQuestions(),
+            result;
+        result = QuestionAnswerProcessor.processQuestionAnswerHierarchy(question);
+
+        verifyPresenceOfLabels(question, result);
+    });
+
+    function verifyPresenceOfLabels(expected, actual) {
+        expect(actual.label).toBeDefined();
+        expect(actual.label).toEqual(expected[Vocabulary.RDFS_LABEL]);
+        if (expected[Constants.FORM.HAS_SUBQUESTION]) {
+            for (var i = 0, len = actual.subQuestions.length; i < len; i++) {
+                verifyQuestions(expected[Constants.FORM.HAS_SUBQUESTION][i], actual.subQuestions[i]);
+            }
+        }
+    }
 });

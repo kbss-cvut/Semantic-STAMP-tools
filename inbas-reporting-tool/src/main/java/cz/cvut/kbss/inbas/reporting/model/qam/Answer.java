@@ -5,6 +5,7 @@
  */
 package cz.cvut.kbss.inbas.reporting.model.qam;
 
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.net.URI;
@@ -14,16 +15,16 @@ import java.util.Set;
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-@OWLClass(iri = Vocabulary.Answer)
+@OWLClass(iri = Vocabulary.s_c_answer)
 public class Answer {
 
     @Id(generated = true)
     private URI uri;
 
-    @OWLDataProperty(iri = Vocabulary.hasDataValue)
+    @OWLDataProperty(iri = Vocabulary.s_p_has_data_value)
     private String textValue;
 
-    @OWLObjectProperty(iri = Vocabulary.hasURIValue)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_object_value)
     private URI codeValue;
 
     @Types

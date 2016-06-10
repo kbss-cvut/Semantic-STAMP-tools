@@ -2,6 +2,7 @@
 
 import Constants from "../constants/Constants";
 import Utils from "../utils/Utils";
+import Vocabulary from "../constants/Vocabulary";
 
 export default class QuestionAnswerProcessor {
 
@@ -20,6 +21,7 @@ export default class QuestionAnswerProcessor {
         var result = {},
             i, len;
         result.id = question['@id'];
+        result.label = Utils.getJsonAttValue(question, Vocabulary.RDFS_LABEL);
         if (question[Constants.FORM.HAS_SUBQUESTION]) {
             result.subQuestions = [];
             for (i = 0, len = question[Constants.FORM.HAS_SUBQUESTION].length; i < len; i++) {
