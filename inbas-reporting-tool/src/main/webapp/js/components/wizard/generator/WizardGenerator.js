@@ -2,7 +2,6 @@
 
 var jsonld = require('jsonld');
 
-var Actions = require('../../../actions/Actions');
 var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
 var FormUtils = require('./FormUtils').default;
@@ -10,6 +9,7 @@ var Logger = require('../../../utils/Logger');
 var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
 var GeneratedStep = require('./GeneratedStep').default;
+var WizardStore = require('../../../stores/WizardStore');
 
 var WizardGenerator = {
 
@@ -83,7 +83,7 @@ var WizardGenerator = {
             }
             return 0;
         });
-        Actions.initWizard(null, steps.map((item) => {
+        WizardStore.initWizard(null, steps.map((item) => {
             return item.data;
         }));
         return steps;

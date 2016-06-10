@@ -153,4 +153,20 @@ describe('Wizard', () => {
 
         expect(component.state.currentStep).toEqual(startIndex);
     });
+
+    it('resets the WizardStore on finish', () => {
+        steps = initSteps(1);
+        var data = {
+                id: Generator.getRandomInt()
+            }, stepData = [
+                {}, {}, {}
+            ],
+            onFinish = jasmine.createSpy('onFinish');
+        spyOn(WizardStore, 'reset').and.callThrough();
+        WizardStore.initWizard(data, stepData);
+        var component = Environment.render(<Wizard steps={steps} onFinish={onFinish}/>);
+        component.onFinish();
+        expect(onFinish).toHaveBeenCalled();
+        expect(WizardStore.reset).toHaveBeenCalled();
+    });
 });

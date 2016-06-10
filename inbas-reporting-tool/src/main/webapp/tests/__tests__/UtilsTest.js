@@ -3,6 +3,7 @@
 describe('Utility functions tests', function () {
 
     var Utils = require('../../js/utils/Utils'),
+        Constants = require('../../js/constants/Constants'),
         Vocabulary = require('../../js/constants/Vocabulary'),
         Generator = require('../environment/Generator').default;
 
@@ -144,5 +145,13 @@ describe('Utility functions tests', function () {
             };
             expect(Utils.getJsonAttValue(obj, Vocabulary.RDFS_COMMENT)).toBeNull();
         });
+
+        it('extracts value using the passed in \'by\' attribute', () => {
+            var obj = {}, value = Generator.getRandomUri();
+            obj[Constants.FORM.HAS_QUESTION_ORIGIN] = {
+                '@id': value
+            };
+            expect(Utils.getJsonAttValue(obj, Constants.FORM.HAS_QUESTION_ORIGIN, '@id')).toEqual(value);
+        })
     });
 });

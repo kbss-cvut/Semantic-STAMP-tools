@@ -55,6 +55,11 @@ var WizardStore = Reflux.createStore({
         this.trigger();
     },
 
+    reset: function() {
+        this._data = {};
+        this._stepData = [];
+    },
+
     getData: function () {
         return this._data;
     },

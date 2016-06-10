@@ -7,7 +7,7 @@ import WizardStore from "../../../stores/WizardStore";
 
 export default class GeneratedStep extends React.Component {
     static propTypes = {
-        stepData: React.PropTypes.object.isRequired
+        stepIndex: React.PropTypes.number.isRequired
     };
 
     constructor(props) {
@@ -26,7 +26,7 @@ export default class GeneratedStep extends React.Component {
     }
 
     _onStoreTrigger = () => {
-        this.setState(question, WizardStore.getStepData(this.props.stepIndex));
+        this.setState({question: WizardStore.getStepData(this.props.stepIndex)});
     };
 
     onChange = (index, change) => {

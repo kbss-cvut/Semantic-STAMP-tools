@@ -59,6 +59,7 @@ var Wizard = React.createClass({
             data: WizardStore.getData(),
             stepData: WizardStore.getStepData()
         };
+        WizardStore.reset();
         this.props.onFinish(data, this.props.onClose, errCallback);
     },
 
