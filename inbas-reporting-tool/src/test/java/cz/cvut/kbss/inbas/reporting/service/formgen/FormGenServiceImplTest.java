@@ -140,10 +140,10 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void getPossibleValuesExecutesDecodesPassedInQueryAndExecutesIt() throws Exception {
+    public void getPossibleValuesExecutesExecutesPassedInQuery() throws Exception {
         final String url = environment.getProperty(ConfigParam.FORM_GEN_SERVICE_URL.toString());
         final String query = URLEncoder.encode("SELECT * WHERE {?x ?y ?z .}", Constants.UTF_8_ENCODING);
-        final String arg = URLEncoder.encode(url + "/query=" + query, Constants.UTF_8_ENCODING);
+        final String arg = url + "/query=" + query;
         mockServer.expect(requestTo(new UrlWithParamsMatcher(url, Collections.singletonMap("query", query))))
                   .andExpect(method(HttpMethod.GET))
                   .andRespond(withSuccess(MOCK_FORM_STRUCTURE, MediaType.APPLICATION_JSON));
