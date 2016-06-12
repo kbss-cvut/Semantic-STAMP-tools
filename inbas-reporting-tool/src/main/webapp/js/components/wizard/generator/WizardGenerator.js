@@ -72,6 +72,8 @@ var WizardGenerator = {
                     component: GeneratedStep,
                     data: item
                 });
+            } else {
+                Logger.warn('Item is not a wizard step: ' + item);
             }
         }
         // TODO Temporary sorting
