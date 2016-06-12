@@ -172,10 +172,11 @@ module.exports = {
      * object.
      * @param obj Object from which the attribute value will be extracted
      * @param att Attribute name
+     * @param by (optional) JSON attribute to use instead of '@value' in case the att value is an object
      * @return {*} Attribute value (possibly null)
      */
-    getJsonAttValue: function (obj, att) {
-        return obj[att] ? (typeof(obj[att]) !== 'object' ? obj[att] : obj[att]['@value']) : null;
+    getJsonAttValue: function (obj, att, by) {
+        return obj[att] ? (typeof(obj[att]) !== 'object' ? obj[att] : obj[att][by ? by : '@value']) : null;
     },
 
     /**

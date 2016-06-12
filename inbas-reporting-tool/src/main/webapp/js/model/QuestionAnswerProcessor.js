@@ -20,7 +20,7 @@ export default class QuestionAnswerProcessor {
         var result = {},
             i, len;
         result.id = question['@id'];
-        result.origin = Utils.getJsonAttValue(question, Constants.FORM.HAS_QUESTION_ORIGIN);
+        result.origin = Utils.getJsonAttValue(question, Constants.FORM.HAS_QUESTION_ORIGIN, '@id');
         if (question[Constants.FORM.HAS_SUBQUESTION]) {
             result.subQuestions = [];
             for (i = 0, len = question[Constants.FORM.HAS_SUBQUESTION].length; i < len; i++) {
@@ -42,9 +42,9 @@ export default class QuestionAnswerProcessor {
     static processAnswer(answer) {
         var result = {};
         result.uri = answer['@id'];
-        result.origin = Utils.getJsonAttValue(answer, Constants.FORM.HAS_ANSWER_ORIGIN);
+        result.origin = Utils.getJsonAttValue(answer, Constants.FORM.HAS_ANSWER_ORIGIN, '@id');
         if (answer[Constants.FORM.HAS_OBJECT_VALUE]) {
-            result.codeValue = answer[Constants.FORM.HAS_OBJECT_VALUE]['@id'] ? answer[Constants.FORM.HAS_OBJECT_VALUE]['@id'] : answer[Constants.FORM.HAS_OBJECT_VALUE];
+            result.codeValue = Utils.getJsonAttValue(answer,Constants.FORM.HAS_OBJECT_VALUE, '@id');
         } else {
             result.textValue = Utils.getJsonAttValue(answer, Constants.FORM.HAS_DATA_VALUE);
         }

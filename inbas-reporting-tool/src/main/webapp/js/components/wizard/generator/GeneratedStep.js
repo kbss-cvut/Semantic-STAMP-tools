@@ -3,27 +3,34 @@
 import React from "react";
 import assign from "object-assign";
 import Question from "./Question";
+import WizardStore from "../../../stores/WizardStore";
 
 export default class GeneratedStep extends React.Component {
     static propTypes = {
-        stepData: React.PropTypes.object.isRequired
+        stepIndex: React.PropTypes.number.isRequired
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            question: this.props.store.stepData[this.props.stepIndex]
+            question: WizardStore.getStepData([this.props.stepIndex])
         };
     }
 
-    onChange = (index, change) => {
-        var newState = assign(this.state.question, change);
-        this.setState({question: newState});
-        this.props.store.stepData[this.props.stepIndex] = newState;
+    componentDidMount() {
+        this.unsubscribe = WizardStore.listen(this._onStoreTrigger);
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    _onStoreTrigger = () => {
+        this.setState({question: WizardStore.getStepData(this.props.stepIndex)});
     };
 
-    getData = () => {
-        return this.state.question;
+    onChange = (index, change) => {
+        WizardStore.updateStepData(this.props.stepIndex, assign(this.state.question, change));
     };
 
     render() {

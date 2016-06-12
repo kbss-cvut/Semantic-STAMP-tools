@@ -154,7 +154,7 @@ var FactorDetail = React.createClass({
 
     onUpdateFactorDetails: function (data, closeCallback) {
         var statement = assign({}, this.state.statement),
-            stepData = data.store.stepData,
+            stepData = data.stepData,
             processedQuestion;
         statement.question = {
             subQuestions: []

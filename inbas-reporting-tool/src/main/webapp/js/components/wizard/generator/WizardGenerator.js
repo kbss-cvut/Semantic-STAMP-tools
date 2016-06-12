@@ -9,6 +9,7 @@ var Logger = require('../../../utils/Logger');
 var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
 var GeneratedStep = require('./GeneratedStep').default;
+var WizardStore = require('../../../stores/WizardStore');
 
 var WizardGenerator = {
 
@@ -36,17 +37,15 @@ var WizardGenerator = {
             if (err) {
                 Logger.error(err);
             }
-            var store = {stepData: []};
             var wizardProperties = {
-                steps: this._constructWizardSteps(framed, store),
-                store: store,
+                steps: this._constructWizardSteps(framed),
                 title: title
             };
             renderCallback(wizardProperties);
         }.bind(this));
     },
 
-    _constructWizardSteps: function (structure, store) {
+    _constructWizardSteps: function (structure) {
         var form = structure['@graph'],
             formElements,
             item,
@@ -73,6 +72,8 @@ var WizardGenerator = {
                     component: GeneratedStep,
                     data: item
                 });
+            } else {
+                Logger.warn('Item is not a wizard step: ' + item);
             }
         }
         // TODO Temporary sorting
@@ -84,9 +85,9 @@ var WizardGenerator = {
             }
             return 0;
         });
-        for (i = 0, len = steps.length; i < len; i++) {
-            store.stepData[i] = steps[i].data;
-        }
+        WizardStore.initWizard(null, steps.map((item) => {
+            return item.data;
+        }));
         return steps;
     }
 };

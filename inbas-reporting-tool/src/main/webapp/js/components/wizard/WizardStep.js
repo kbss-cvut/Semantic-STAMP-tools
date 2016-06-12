@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -9,9 +5,10 @@ var Alert = require('react-bootstrap').Alert;
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
-var injectIntl = require('../../utils/injectIntl');
 
+var injectIntl = require('../../utils/injectIntl');
 var I18nMixin = require('../../i18n/I18nMixin');
+var WizardStore = require('../../stores/WizardStore');
 
 var WizardStep = React.createClass({
     mixins: [I18nMixin],
@@ -24,8 +21,6 @@ var WizardStep = React.createClass({
         onNext: React.PropTypes.func,
         onPrevious: React.PropTypes.func,
         title: React.PropTypes.string,
-        data: React.PropTypes.object,       // Global wizard data
-        store: React.PropTypes.object,   // Global wizard state
         stepIndex: React.PropTypes.number.isRequired,
         isFirstStep: React.PropTypes.bool,
         isLastStep: React.PropTypes.bool,
@@ -47,7 +42,8 @@ var WizardStep = React.createClass({
                 currentError: err
             });
         } else {
-            this.props.onAdvance(this.getStepData);
+            WizardStore.updateStepData(this.props.stepIndex, this.getStepData());
+            this.props.onAdvance();
         }
     },
 
@@ -63,7 +59,8 @@ var WizardStep = React.createClass({
         if (this.props.onNext) {
             this.props.onNext.apply(this, [this.onAdvance]);
         } else {
-            this.props.onAdvance(this.getStepData);
+            WizardStore.updateStepData(this.props.stepIndex, this.getStepData());
+            this.props.onAdvance();
         }
     },
 
@@ -76,7 +73,8 @@ var WizardStep = React.createClass({
     },
 
     onFinish: function () {
-        this.props.onFinish(this.getStepData);
+        WizardStore.updateStepData(this.props.stepIndex, this.getStepData());
+        this.props.onFinish();
     },
 
     enableNext: function () {
@@ -135,8 +133,6 @@ var WizardStep = React.createClass({
     renderComponent: function () {
         return React.createElement(this.props.component, {
             ref: 'component',
-            data: this.props.data,
-            store: this.props.store,
             stepIndex: this.props.stepIndex,
             enableNext: this.enableNext,
             disableNext: this.disableNext,

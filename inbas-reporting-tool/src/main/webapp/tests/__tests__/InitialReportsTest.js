@@ -24,7 +24,7 @@ describe('InitialReports component tests', function () {
             initialReportText = 'Test',
             initialReport = {text: initialReportText};
 
-        reports.saveNewInitialReport({initialReport: initialReport}, callbacks.onClose);
+        reports.saveNewInitialReport({data: {initialReport: initialReport}}, callbacks.onClose);
         expect(callbacks.onAttributeChange).toHaveBeenCalledWith('initialReports', [initialReport]);
         expect(callbacks.onClose).toHaveBeenCalled();
     });
@@ -37,7 +37,7 @@ describe('InitialReports component tests', function () {
             updatedText = 'Updated text',
             initialReport = {text: updatedText};
         reports.state.editedInitialReportIndex = 0;
-        reports.saveInitialReport({initialReport: initialReport}, callbacks.onClose);
+        reports.saveInitialReport({data: {initialReport: initialReport}}, callbacks.onClose);
         expect(callbacks.onAttributeChange).toHaveBeenCalledWith('initialReports', [initialReport]);
         expect(callbacks.onClose).toHaveBeenCalled();
     });
