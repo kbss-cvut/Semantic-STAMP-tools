@@ -1,13 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.service.formgen;
 
-import cz.cvut.kbss.inbas.reporting.exception.WebServiceIntegrationException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.data.DataLoader;
 import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
-import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +14,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,12 +77,6 @@ public class FormGenServiceImpl implements FormGenService {
     @Override
     public RawJson getPossibleValues(String query) {
         Objects.requireNonNull(query);
-        try {
-            final String url = URLDecoder.decode(query, Constants.UTF_8_ENCODING);
-            return new RawJson(dataLoader.loadData(url, Collections.emptyMap()));
-        } catch (UnsupportedEncodingException e) {
-            LOG.error("Unable to decode possible values query.", e);
-            throw new WebServiceIntegrationException("Unable to decode possible values query.", e);
-        }
+        return new RawJson(dataLoader.loadData(query, Collections.emptyMap()));
     }
 }

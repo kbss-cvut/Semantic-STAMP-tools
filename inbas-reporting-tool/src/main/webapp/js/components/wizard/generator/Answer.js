@@ -53,7 +53,13 @@ export default class Answer extends React.Component {
         if (type !== this._queryHash) {
             return;
         }
-        this.setState({options: Utils.processTypeaheadOptions(options)});
+        options = Utils.processTypeaheadOptions(options);
+        var value = this._resolveValue(),
+            selected = options.find((item) => {
+                return item.id === value;
+            });
+        this.setState({options: options});
+        this.refs.typeahead.selectOption(selected);
     };
 
     onChange = (e) => {
@@ -89,10 +95,6 @@ export default class Answer extends React.Component {
         }
     }
 
-    _getPossibleValues(query) {
-
-    }
-
     render() {
         var cls = Constants.FORM.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.FORM.GENERATED_ROW_SIZE);
         return <div className={cls}>{this._renderInputComponent()}</div>;
@@ -112,9 +114,10 @@ export default class Answer extends React.Component {
             };
             component = <div>
                 <label className='control-label'>{label}</label>
-                <Typeahead className='form-group form-group-sm' formInputOption='id' inputProps={inputProps}
+                <Typeahead ref='typeahead' className='form-group form-group-sm' formInputOption='id'
+                           inputProps={inputProps}
                            title={title} value={value} label={label} placeholder={label} filterOption='name'
-                           displayOption='name' onOptionSelected={this._onOptionSelected}
+                           displayOption='name' onOptionSelected={this._onOptionSelected} optionsButton={true}
                            options={this.state.options} customListComponent={TypeaheadResultList}/>
             </div>;
         } else if (Answer._hasOptions(question)) {

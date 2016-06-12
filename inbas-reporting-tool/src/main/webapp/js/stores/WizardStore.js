@@ -53,7 +53,7 @@ var WizardStore = Reflux.createStore({
         this.trigger();
     },
 
-    reset: function() {
+    reset: function () {
         this._data = {};
         this._stepData = [];
     },
@@ -63,7 +63,7 @@ var WizardStore = Reflux.createStore({
     },
 
     getStepData: function (index) {
-        return index ? this._stepData[index] : this._stepData;
+        return (index !== undefined && index !== null) ? this._stepData[index] : this._stepData;
     }
 });
 

@@ -18,7 +18,7 @@
     "reflux": "~0.4.1",
     "kbss-react-bootstrap-datetimepicker": "https://dev.inbas.cz/dist/kbss-react-bootstrap-datetimepicker-0.0.4.tgz",
     "classnames": "~2.2.3",
-    "react-bootstrap-typeahead": "https://dev.inbas.cz/dist/react-bootstrap-typeahead-0.0.5.tgz",
+    "react-bootstrap-typeahead": "https://dev.inbas.cz/dist/react-bootstrap-typeahead-0.0.6.tgz",
     "remarkable": "~1.6.2",
     "js-cookie": "~2.1.0",
     "halogen": "~0.2.0",
