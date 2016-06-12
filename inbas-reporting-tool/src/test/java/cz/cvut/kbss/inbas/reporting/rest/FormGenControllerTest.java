@@ -11,6 +11,7 @@ import cz.cvut.kbss.inbas.reporting.rest.dto.model.FormGenData;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -21,12 +22,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.net.URI;
+import java.net.URLEncoder;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +38,7 @@ public class FormGenControllerTest extends BaseControllerTestRunner {
 
     private static final String MOCK_FORM_STRUCTURE = "{\"form\": {\"sections\": [{\"id\": \"sectionOne\"}, {\"id\": \"sectionTwo\"}]}}";
     private static final String PATH = "/formGen";
+    private static final String POSSIBLE_VALUES_PATH = PATH + "/possibleValues";
 
     @Autowired
     private FormGenService formGenService;
@@ -88,5 +92,17 @@ public class FormGenControllerTest extends BaseControllerTestRunner {
         public void setUri(URI uri) {
             this.uri = uri;
         }
+    }
+
+    @Test
+    public void getPossibleValuesPassesQueryToFormGenService() throws Exception {
+        final String query = URLEncoder.encode("SELECT ?x ?y ?z WHERE {?x ?y ?z. }", Constants.UTF_8_ENCODING);
+        when(formGenService.getPossibleValues(query)).thenReturn(new RawJson(MOCK_FORM_STRUCTURE));
+
+        final MvcResult result = mockMvc.perform(get(POSSIBLE_VALUES_PATH).param("query", query))
+                                        .andExpect(status().isOk()).andReturn();
+        final String json = result.getResponse().getContentAsString();
+        assertEquals(MOCK_FORM_STRUCTURE, json);
+        verify(formGenService).getPossibleValues(query);
     }
 }

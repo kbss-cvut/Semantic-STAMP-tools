@@ -240,5 +240,26 @@ module.exports = {
      */
     getLastPathFragment: function (url) {
         return url.substring(url.lastIndexOf('/') + 1);
+    },
+
+    /**
+     * Calculates a simple hash of the specified string, much like usual Java implementations.
+     * @param str The string to compute has for
+     * @return {number}
+     */
+    getStringHash: function (str) {
+        var hash = 0,
+            strlen = str ? str.length : 0,
+            i,
+            c;
+        if (strlen === 0) {
+            return hash;
+        }
+        for (i = 0; i < strlen; i++) {
+            c = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + c;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash;
     }
 };

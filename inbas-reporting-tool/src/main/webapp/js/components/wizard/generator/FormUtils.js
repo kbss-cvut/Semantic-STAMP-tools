@@ -20,6 +20,10 @@ export default class FormUtils {
     static isTypeahead(question) {
         return Utils.hasValue(question, Constants.FORM.LAYOUT_CLASS, Constants.FORM.LAYOUT.QUESTION_TYPEAHEAD);
     }
+    
+    static getPossibleValuesQuery(question) {
+        return Utils.getJsonAttValue(question, Constants.FORM.HAS_OPTIONS_QUERY);
+    }
 
     static isDisabled(question) {
         return Utils.hasValue(question, Constants.FORM.LAYOUT_CLASS, Constants.FORM.LAYOUT.DISABLED);

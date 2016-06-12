@@ -7,6 +7,7 @@ import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.hamcrest.BaseMatcher;
@@ -27,6 +28,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -135,6 +137,19 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
         final OccurrenceReport report = getOccurrenceReport();
 
         assertEquals("", formGenService.generateForm(report, Collections.emptyMap()).getValue());
+    }
+
+    @Test
+    public void getPossibleValuesExecutesDecodesPassedInQueryAndExecutesIt() throws Exception {
+        final String url = environment.getProperty(ConfigParam.FORM_GEN_SERVICE_URL.toString());
+        final String query = URLEncoder.encode("SELECT * WHERE {?x ?y ?z .}", Constants.UTF_8_ENCODING);
+        final String arg = URLEncoder.encode(url + "/query=" + query, Constants.UTF_8_ENCODING);
+        mockServer.expect(requestTo(new UrlWithParamsMatcher(url, Collections.singletonMap("query", query))))
+                  .andExpect(method(HttpMethod.GET))
+                  .andRespond(withSuccess(MOCK_FORM_STRUCTURE, MediaType.APPLICATION_JSON));
+
+        final RawJson result = formGenService.getPossibleValues(arg);
+        assertEquals(MOCK_FORM_STRUCTURE, result.getValue());
     }
 
     private static final class UrlWithParamsMatcher extends BaseMatcher<String> {

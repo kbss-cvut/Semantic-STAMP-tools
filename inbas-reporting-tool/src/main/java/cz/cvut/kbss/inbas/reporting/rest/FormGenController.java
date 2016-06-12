@@ -23,4 +23,9 @@ public class FormGenController extends BaseController {
     public RawJson generateForm(@RequestBody FormGenData data, @RequestParam Map<String, String> params) {
         return formGenService.generateForm(mapper.map(data), params);
     }
+
+    @RequestMapping("/possibleValues")
+    public RawJson getPossibleValues(@RequestParam("query") String query) {
+        return formGenService.getPossibleValues(query);
+    }
 }
