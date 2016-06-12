@@ -52,7 +52,7 @@ public class ReportImportingConfig {
     protected E5XMLLoader loader;
 
     protected void constructE5XMLLoader() {
-        loader = new E5XMLLoader(null);
+        loader = new E5XMLLoader();
         E5XXMLParser parser = new E5XXMLParser(getEccairsAccessFactory());
         loader.setE5xParser(parser);
     }

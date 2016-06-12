@@ -20,7 +20,11 @@ public class EMailService {
     }
     
     public void persist(EMail email){
+        // I assume that the transanction is rollbacked when something goes wrong
         emailDao.persist(email);
     }
     
+    public void remove(EMail email){
+        emailDao.remove(email);
+    }
 }

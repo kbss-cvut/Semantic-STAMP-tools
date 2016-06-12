@@ -1,13 +1,14 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
 import cz.cvut.kbss.eccairs.report.e5xml.commons.NamedStream;
+import java.util.stream.Stream;
 import org.apache.jena.rdf.model.Model;
 
 public interface ReportImporter {
 
-    void processDelegate(Object o);
+    Stream<String> processDelegate(Object o) throws Exception;
 
-    void process(NamedStream ns);
+    Stream<String> process(NamedStream ns) throws Exception;
 
-    void process(Model m);
+    Stream<String> process(Model m) throws Exception;
 }

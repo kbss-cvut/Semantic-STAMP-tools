@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.util.Objects;
 import java.util.stream.Stream;
+import org.jooq.lambda.Unchecked;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
@@ -43,33 +44,38 @@ public class EccairsReportImporter implements ReportImporter {
 
     @Autowired
     protected SesameUpdater updater;
+    
+    @Autowired
+    protected EMailService emailService;
 
     protected MappingEccairsData2Aso mapping;
-
 
     @PostConstruct
     protected void init() {
         mapping = new MappingEccairsData2Aso(eaf);
     }
 
-    public void processDelegate(Object o) {
+    @Override
+    public Stream<String> processDelegate(Object o) throws Exception {
         if (o instanceof NamedStream) {
-            process((NamedStream) o);
+            return process((NamedStream) o);
         } else if (o instanceof Model) {
-            process((Model) o);
+            return process((Model) o);
         }
+        return Stream.of();
     }
 
     @Override
-    public void process(NamedStream ns) {
+    public Stream<String> process(NamedStream ns) throws Exception {
 //        try {
         LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.emailId, ns.name);
 //            byte[] bs = IOUtils.toByteArray(ns.is);
 //            System.out.println(new String(bs));
-        Stream<EccairsReport> rs = e5XmlLoader.loadData(ns);
-        if (rs == null)
-            return;
-        rs.filter(Objects::nonNull).forEach(r -> {
+        Stream<EccairsReport> rs = e5XmlLoader.prepareFor(ns).loadData();
+        if (rs == null) {
+            return Stream.of();
+        }
+        return rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
 //                if (r == null) {
 //                    return;
 //                }
@@ -77,23 +83,33 @@ public class EccairsReportImporter implements ReportImporter {
             URI context = URI.create(suri);
             // TODO convert DummyReport to OccurrenceReport
             EntityManager em = eccairsEmf.createEntityManager();
-            em.getTransaction().begin();
-            em.persist(r, new EntityDescriptor(context));
-            em.getTransaction().commit();
-            updater.executeUpdate(
-                    mapping.getUFOTypesQuery(r.getTaxonomyVersion(), suri),
-                    mapping.generateEventsFromTypes(r.getTaxonomyVersion(), suri),
-                    mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), suri),
-                    mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
-                    mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
-        });
-//        } catch (IOException ex) {
-//            Logger.getLogger(ReportImporter.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+            try{
+                em.getTransaction().begin();
+                em.persist(r, new EntityDescriptor(context));
+                em.getTransaction().commit();
+            }catch(Exception e){// rolback the transanction if something fails
+                em.getTransaction().rollback();
+                throw e;
+            }
+            
+            try{
+                updater.executeUpdate(
+                mapping.getUFOTypesQuery(r.getTaxonomyVersion(), suri),
+                mapping.generateEventsFromTypes(r.getTaxonomyVersion(), suri),
+                mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), suri),
+                mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
+                mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
+            }catch(Exception e){// rolback the transanction if something fails
+                em.remove(r);
+                throw e;
+            }
+            return suri;
+        }));
     }
 
     @Override
-    public void process(Model m) {
+    public Stream<String> process(Model m) throws Exception {
         LOG.trace("processing Model");
+        return Stream.of();
     }
 }

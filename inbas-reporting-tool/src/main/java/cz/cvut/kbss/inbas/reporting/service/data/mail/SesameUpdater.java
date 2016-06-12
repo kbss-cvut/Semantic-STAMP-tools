@@ -21,23 +21,38 @@ public class SesameUpdater {
 
     protected String repository;
 
-    public void executeUpdate(String... updates) {
+    /**
+     * This executes the SPARQL updates using a sesame repository. If something 
+     * goes wrong during execution of the updates this method will catch the 
+     * exception, rollback any dirty changes and rethrow the exception for further 
+     * processing.
+     * 
+     * @param updates the sparql update queries to be executed
+     * @throws RepositoryException
+     * @throws RepositoryConfigException
+     * @throws MalformedQueryException
+     * @throws UpdateExecutionException 
+     */
+    public void executeUpdate(String... updates) throws RepositoryException, RepositoryConfigException, MalformedQueryException, UpdateExecutionException {
+        Repository r = RepositoryProvider.getRepository(repository);
+        r.initialize();
+        RepositoryConnection c = r.getConnection();
         try {
-            Repository r = RepositoryProvider.getRepository(repository);
-            r.initialize();
-
-            RepositoryConnection c = r.getConnection();
+            c.begin();
             for (String update : updates) {
-                c.begin();
                 LOG.trace("Executing SPARQL Update {}", update);
                 Update u = c.prepareUpdate(QueryLanguage.SPARQL, update);
                 u.execute();
-                c.commit();
             }
+            c.commit();
+        // Do not close the repository, it may be used by the application persistence
+        } catch (RepositoryException | MalformedQueryException | UpdateExecutionException ex) {
+            if(c.isActive())
+                c.rollback();
+            throw ex;
+//            LOG.error("Exception caught when executing Sesame update.", ex);
+        }finally{
             c.close();
-            // Do not close the repository, it may be used by the application persistence
-        } catch (RepositoryException | RepositoryConfigException | MalformedQueryException | UpdateExecutionException ex) {
-            LOG.error("Exception caught when executing Sesame update.", ex);
         }
     }
 
