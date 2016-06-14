@@ -451,6 +451,13 @@ button.reset-filters {
     margin-top: 7px;
 }
 
+.external-link-gantt {
+    content: url('../images/icons/external.png');
+    width: 16px;
+    height: 16px;
+    margin-top: 0.7em;
+}
+
 .table-sorter-wrapper {
     position: relative !important;
 }
