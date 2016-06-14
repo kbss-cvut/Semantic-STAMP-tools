@@ -2,6 +2,10 @@ package cz.cvut.kbss.inbas.reporting.service.cache;
 
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.model.util.DocumentDateAndRevisionComparator;
+import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -12,9 +16,13 @@ import java.util.*;
  * The goal is to prevent reading the latest revisions of report chains from the storage when a list of reports, which
  * contains only a subset of each report's data, is requested. As long as the reports do not change, there is no reason
  * to read the data from the storage on every report list request.
+ * <p>
+ * We are using Spring events to listen to cache events throughout the application.
  */
 @Service
-public class ReportCache {
+public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ReportCache.class);
 
     // Using synchronized methods for synchronizing access. If this proves to be a performance issue, other strategies
     // can be used.
@@ -51,5 +59,11 @@ public class ReportCache {
         final List<ReportDto> reports = new ArrayList<>(cache.values());
         Collections.sort(reports, new DocumentDateAndRevisionComparator());
         return reports;
+    }
+
+    @Override
+    public void onApplicationEvent(InvalidateCacheEvent invalidateCacheEvent) {
+        LOG.trace("Invalidate cache event received. Evicting cache...");
+        evict();
     }
 }

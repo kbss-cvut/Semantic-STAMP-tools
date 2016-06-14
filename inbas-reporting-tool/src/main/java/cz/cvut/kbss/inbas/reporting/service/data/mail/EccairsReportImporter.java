@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
+import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
@@ -13,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -24,7 +27,7 @@ import java.util.stream.Stream;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @Service
-public class EccairsReportImporter implements ReportImporter {
+public class EccairsReportImporter implements ReportImporter, ApplicationEventPublisherAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(EccairsReportImporter.class);
 
@@ -45,6 +48,8 @@ public class EccairsReportImporter implements ReportImporter {
     protected SesameUpdater updater;
 
     protected MappingEccairsData2Aso mapping;
+
+    private ApplicationEventPublisher eventPublisher;
 
 
     @PostConstruct
@@ -86,6 +91,7 @@ public class EccairsReportImporter implements ReportImporter {
                     mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), suri),
                     mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
                     mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
+            eventPublisher.publishEvent(new InvalidateCacheEvent(this));
         });
 //        } catch (IOException ex) {
 //            Logger.getLogger(ReportImporter.class.getName()).log(Level.SEVERE, null, ex);
@@ -95,5 +101,10 @@ public class EccairsReportImporter implements ReportImporter {
     @Override
     public void process(Model m) {
         LOG.trace("processing Model");
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
     }
 }

@@ -16,7 +16,6 @@ import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -78,7 +77,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         reportService.persist(report);
     }
 
-    @Ignore
     @Test
     public void persistAddsReportIntoCache() {
         assertTrue(reportCache.getAll().isEmpty());
@@ -129,7 +127,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         reportService.update(report);
     }
 
-    @Ignore
     @Test
     public void updateReplacesPreviousInstanceInReportCache() {
         final OccurrenceReport report = persistOccurrenceReport();
@@ -183,7 +180,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         chain.forEach(r -> assertTrue(occurrenceReportDao.exists(r.getUri())));
     }
 
-    @Ignore
     @Test
     public void removeReportChainRemovesInstanceFromReportCache() {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
@@ -232,7 +228,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         reportService.createNewRevision(Long.MAX_VALUE);
     }
 
-    @Ignore
     @Test
     public void createNewRevisionReplacesInstanceInReportCache() {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
@@ -271,7 +266,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertTrue(Environment.areEqual(latestRevisions, result));
     }
 
-    @Ignore
     @Test
     public void findAllPutsRetrievedReportsIntoCache() {
         // Once other report types are added, they should be added into this tests
@@ -283,7 +277,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertEquals(result, reportCache.getAll());
     }
 
-    @Ignore
     @Test
     public void findAllRetrievesInstancesFromReportCache() {
         initReportChains();

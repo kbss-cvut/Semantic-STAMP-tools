@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
 import org.junit.Test;
 
 import java.net.URI;
@@ -86,5 +87,14 @@ public class ReportCacheTest {
         assertTrue(cache.getAll().contains(toRemove));
         cache.evict(toRemove.getFileNumber());
         assertFalse(cache.getAll().contains(toRemove));
+    }
+
+    @Test
+    public void invalidateCacheEventEvictsCache() {
+        final List<ReportDto> lst = generateReports();
+        lst.forEach(cache::put);
+        assertFalse(cache.getAll().isEmpty());
+        cache.onApplicationEvent(new InvalidateCacheEvent(this));
+        assertTrue(cache.getAll().isEmpty());
     }
 }
