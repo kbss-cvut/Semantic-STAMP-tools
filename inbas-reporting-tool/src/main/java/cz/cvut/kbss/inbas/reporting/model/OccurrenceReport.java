@@ -99,6 +99,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         }
         this.barrierEffectiveness = other.barrierEffectiveness;
         this.accidentOutcome = other.accidentOutcome;
+        this.armsIndex = other.armsIndex;
     }
 
     @Override
