@@ -3,6 +3,7 @@
 describe('Wizard', () => {
 
     var React = require('react'),
+        TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
 
@@ -168,5 +169,17 @@ describe('Wizard', () => {
         component.onFinish();
         expect(onFinish).toHaveBeenCalled();
         expect(WizardStore.reset).toHaveBeenCalled();
+    });
+
+    it('renders info and nothing else when no steps are provided', () => {
+        steps = [];
+        var onFinish = jasmine.createSpy('onFinish'),
+            component = Environment.render(<Wizard steps={steps} onFinish={onFinish}/>);
+
+        var content = TestUtils.scryRenderedComponentsWithType(component, require('../../js/components/wizard/WizardStep'));
+        expect(content.length).toEqual(0);
+        var info = Environment.getComponentByTagAndText(component, 'div', 'There are no steps in this wizard.');
+        expect(info).toBeDefined();
+        expect(info).not.toBeNull();
     });
 });

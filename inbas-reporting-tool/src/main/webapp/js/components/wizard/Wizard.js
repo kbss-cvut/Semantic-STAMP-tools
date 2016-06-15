@@ -115,8 +115,8 @@ var Wizard = React.createClass({
 
     initNavMenu: function () {
         return this.props.steps.map(function (step, index) {
-            return (<ListGroupItem key={'nav' + index} onClick={this.navigate} id={'wizard-nav-' + index}
-                                   active={index === this.state.currentStep ? 'active' : ''}>{step.name}</ListGroupItem>);
+            return <ListGroupItem key={'nav' + index} onClick={this.navigate} id={'wizard-nav-' + index}
+                                  active={index === this.state.currentStep ? 'active' : ''}>{step.name}</ListGroupItem>;
         }.bind(this));
     },
 
@@ -137,6 +137,9 @@ var Wizard = React.createClass({
     },
 
     initComponent: function () {
+        if (this.props.steps.length === 0) {
+            return <div className='italics'>There are no steps in this wizard.</div>;
+        }
         var step = this.props.steps[this.state.currentStep];
 
         return React.createElement(WizardStep, {
