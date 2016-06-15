@@ -4,7 +4,6 @@ var Reflux = require('reflux');
 var jsonld = require('jsonld');
 
 var Actions = require('../actions/Actions');
-var Constants = require('../constants/Constants');
 var Ajax = require('../utils/Ajax');
 var Logger = require('../utils/Logger');
 
