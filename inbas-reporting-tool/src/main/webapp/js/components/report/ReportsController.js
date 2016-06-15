@@ -5,6 +5,7 @@ var Reflux = require('reflux');
 var assign = require('object-assign');
 
 var Actions = require('../../actions/Actions');
+var ComponentStateStore = require('../../stores/ComponentStateStore');
 var Constants = require('../../constants/Constants');
 var DataFilter = require('../../utils/DataFilter');
 var ReportStore = require('../../stores/ReportStore');
@@ -66,12 +67,20 @@ var ReportsController = React.createClass({
     mixins: [Reflux.listenTo(ReportStore, 'onReportsLoaded')],
 
     getInitialState: function () {
-        var payload = RouterStore.getTransitionPayload(Routes.reports.name);
+        var payload = RouterStore.getTransitionPayload(Routes.reports.name),
+            filter = null, sort = null, storedState;
         RouterStore.setTransitionPayload(Routes.reports.name);  // Clear payload
+        filter = payload ? payload.filter : null;
+        if ((storedState = ComponentStateStore.getComponentState(ReportsController.displayName))) {
+            sort = storedState.sort;
+            if (!filter) {
+                filter = storedState.filter;
+            }
+        }
         return {
             reports: null,
-            filter: payload ? payload.filter : null,
-            sort: {
+            filter: filter,
+            sort: sort ? sort : {
                 identification: Constants.SORTING.NO,
                 date: Constants.SORTING.NO
             }
@@ -83,6 +92,13 @@ var ReportsController = React.createClass({
         Actions.loadOptions('reportingPhase');
     },
 
+    componentWillUnmount: function () {
+        Actions.rememberComponentState(ReportsController.displayName, {
+            filter: this.state.filter,
+            sort: this.state.sort
+        });
+    },
+
     onReportsLoaded: function (data) {
         if (data.action === Actions.loadAllReports) {
             this.setState({reports: data.reports});
@@ -90,6 +106,10 @@ var ReportsController = React.createClass({
     },
 
     onEdit: function (report) {
+        Actions.rememberComponentState(ReportsController.displayName, {
+            filter: this.state.filter,
+            sort: this.state.sort
+        });
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
             handlers: {onCancel: Routes.reports}

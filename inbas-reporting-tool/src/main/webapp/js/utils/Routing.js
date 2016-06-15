@@ -1,16 +1,11 @@
 'use strict';
 
-//var createBrowserHistory = require('history/lib/createBrowserHistory');
-//var useBasename = require('history').useBasename;
 var hashHistory = require('react-router').hashHistory;
 
 var Constants = require('../constants/Constants');
 var RouterStore = require('../stores/RouterStore');
 
 var Routing = {
-    //history: useBasename(createBrowserHistory)({
-    //    basename: window.location.pathname
-    //}),
     history: hashHistory,
 
     originalTarget: null,

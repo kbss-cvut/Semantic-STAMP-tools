@@ -8,8 +8,10 @@ describe('ReportsController', () => {
         Generator = require('../environment/Generator').default,
 
         Actions = require('../../js/actions/Actions'),
+        ComponentStateStore = require('../../js/stores/ComponentStateStore'),
         Constants = require('../../js/constants/Constants'),
         RouterStore = require('../../js/stores/RouterStore'),
+        Routing = require('../../js/utils/Routing'),
         Routes = require('../../js/utils/Routes'),
         ReportsController = require('../../js/components/report/ReportsController'),
         Reports = require('../../js/components/report/Reports'),
@@ -23,20 +25,35 @@ describe('ReportsController', () => {
         reports = Generator.generateReports();
     });
 
-    xit('shows only reports of the corresponding type when type filter is triggered', () => {
+    it('initializes report sort with default values', () => {
+        var controller = Environment.render(<ReportsController />);
+        expect(controller.state.sort).toBeDefined();
+        expect(controller.state.sort.identification).toEqual(Constants.SORTING.NO);
+        expect(controller.state.sort.date).toEqual(Constants.SORTING.NO);
+    });
+
+    it('shows only reports of the corresponding type when type filter is triggered', () => {
         var controller = Environment.render(<ReportsController />),
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
-            renderedReports, filter;
+            renderedReports, filter, i, len,
+            phase = 'http://onto.fel.cvut.cz/ontologies/inbas-test/first',
+            phaseCnt = 0;
+        for (i = 0, len = reports.length; i < len; i++) {
+            if (Generator.getRandomBoolean()) {
+                reports[i].phase = phase;
+                phaseCnt++;
+            }
+        }
         controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports).toEqual(reports);
 
-        filter = {phase: null};
+        filter = {phase: phase};
         controller.onFilterChange(filter);
         renderedReports = reportsComponent.props.reports;
-        expect(renderedReports.length).toEqual(Math.ceil(reports.length / 2));
-        for (var i = 0, len = renderedReports.length; i < len; i++) {
-            expect(renderedReports[i].phase).toEqual(null);
+        expect(renderedReports.length).toEqual(phaseCnt);
+        for (i = 0, len = renderedReports.length; i < len; i++) {
+            expect(renderedReports[i].phase).toEqual(phase);
         }
     });
 
@@ -133,11 +150,65 @@ describe('ReportsController', () => {
     it('clears transition payload after it has read it', () => {
         var filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
-        }, controller;
+        };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
         spyOn(RouterStore, 'setTransitionPayload');
-        controller = Environment.render(<ReportsController/>);
+        Environment.render(<ReportsController/>);
         expect(RouterStore.setTransitionPayload).toHaveBeenCalledWith(Routes.reports.name);
+    });
+
+    it('stores current filter and sort state when edit is clicked', () => {
+        var controller = Environment.render(<ReportsController/>),
+            filter = {
+                phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
+            };
+        controller.onSort('identification');
+        controller.onFilterChange(filter);
+        Environment.bindActionsToStoreMethods('rememberComponentState', ComponentStateStore);
+        spyOn(Routing, 'transitionTo');
+
+        controller.onEdit({report: {key: 12345}});
+
+        expect(Actions.rememberComponentState).toHaveBeenCalled();
+        expect(ComponentStateStore.getComponentState(ReportsController.displayName).filter).toEqual(filter);
+        expect(ComponentStateStore.getComponentState(ReportsController.displayName).sort).toEqual({
+            identification: Constants.SORTING.DESC,
+            date: Constants.SORTING.NO
+        });
+    });
+
+    it('loads filter and sort state from ComponentStateStore', () => {
+        var filter = {
+            phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
+        }, sort = {
+            identification: Constants.SORTING.DESC,
+            date: Constants.SORTING.ASC
+        };
+        spyOn(ComponentStateStore, 'getComponentState').and.returnValue({filter: filter, sort: sort});
+        var controller = Environment.render(<ReportsController/>);
+        expect(ComponentStateStore.getComponentState).toHaveBeenCalledWith(ReportsController.displayName);
+        expect(controller.state.filter).toEqual(filter);
+        expect(controller.state.sort).toEqual(sort);
+    });
+
+    it('saves component filtering and sorting before unmounting', () => {
+        var filter = {
+                phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
+            }, sort,
+            controller = Environment.render(<ReportsController/>);
+        controller.onFilterChange(filter);
+        controller.onSort('identification');
+        controller.onSort('date');
+        controller.onSort('date');
+        sort = controller.state.sort;
+        Environment.bindActionsToStoreMethods('rememberComponentState', ComponentStateStore);
+        spyOn(ComponentStateStore, 'onRememberComponentState').and.callThrough();
+
+        controller.componentWillUnmount();
+        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.displayName, {
+            filter: filter,
+            sort: sort
+        });
     });
 
     function setEqualIdentifications() {

@@ -5,6 +5,7 @@ var ReactDOM = require('react-dom');
 var TestUtils = require('react-addons-test-utils');
 var rewire = require('rewire');
 
+var Actions = require('../../js/actions/Actions');
 var TestApp = require('./TestApp');
 
 module.exports = {
@@ -168,6 +169,20 @@ module.exports = {
             }
         }
         return true;
+    },
+
+    /**
+     * Binds store methods directly to actions to work around asynchronous processing of actions.
+     * @param actionName Name of the action
+     * @param store Store, the corresponding store method is found according to the usual onActionName scheme.
+     */
+    bindActionsToStoreMethods: function (actionName, store) {
+        var fn = 'on' + actionName.charAt(0).toUpperCase() + actionName.substring(1);
+        // For some reason, it didn't suffice (in some cases) to pass the store[fn] as argument to callFake, so that's
+        // why the wrapping function is here
+        spyOn(Actions, actionName).and.callFake(function () {
+            store[fn].apply(store, arguments);
+        });
     },
 
     /**
