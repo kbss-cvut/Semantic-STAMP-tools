@@ -1,23 +1,32 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
+import cz.cvut.kbss.datatools.mail.CompoundProcessor;
+import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
+import cz.cvut.kbss.datatools.mail.model.Message;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
 import cz.cvut.kbss.eccairs.report.e5xml.commons.NamedStream;
+import cz.cvut.kbss.eccairs.report.e5xml.e5x.E5XXMLParser;
 import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
+import cz.cvut.kbss.inbas.reporting.model.com.EMail;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.EmailDao;
 import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.PostConstruct;
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jooq.lambda.Unchecked;
 
@@ -29,8 +38,8 @@ public class EccairsReportImporter implements ReportImporter {
 
     private static final Logger LOG = LoggerFactory.getLogger(EccairsReportImporter.class);
 
-    @Autowired
-    protected E5XMLLoader e5XmlLoader;
+//    @Autowired
+//    protected E5XMLLoader e5XmlLoader;
 
     @Autowired
     protected EntityManagerFactory emf;
@@ -43,73 +52,140 @@ public class EccairsReportImporter implements ReportImporter {
     protected SingeltonEccairsAccessFactory eaf;
 
     @Autowired
+    protected EmailDao emailDao;
+
+    @Autowired
     protected SesameUpdater updater;
-    
+
     @Autowired
     protected EMailService emailService;
+    
+    volatile 
 
     protected MappingEccairsData2Aso mapping;
+
+    protected CompoundProcessor processor = new CompoundProcessor();
 
     @PostConstruct
     protected void init() {
         mapping = new MappingEccairsData2Aso(eaf);
+        processor.registerMessageProcessor(new E5XMLLocator());
+//        processor.registerMessageProcessor(new CSAEmailProcessor());
+//        processor.registerMessageProcessor(new TISEmailProcessor());
+//        processor.registerMessageProcessor(new UZPLNEmailProcessor());
+//        processor.registerMessageProcessor(new UZPLNParaEmailProcessor());
     }
 
     @Override
-    public Stream<String> processDelegate(Object o) throws Exception {
+    public List<String> processDelegate(Object o) throws Exception {
         if (o instanceof NamedStream) {
             return process((NamedStream) o);
         } else if (o instanceof Model) {
             return process((Model) o);
         }
-        return Stream.of();
+        return Collections.EMPTY_LIST;
     }
 
+    /**
+     * This method loads a report from a NamedStream, e.g. file or email attachment.
+     * 
+     * @param ns
+     * @return
+     * @throws Exception 
+     */
     @Override
-    public Stream<String> process(NamedStream ns) throws Exception {
+    public List<String> process(NamedStream ns) throws Exception {
 //        try {
         LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.emailId, ns.name);
 //            byte[] bs = IOUtils.toByteArray(ns.is);
 //            System.out.println(new String(bs));
+        E5XMLLoader e5XmlLoader = constructE5XMLLoader();
         Stream<EccairsReport> rs = e5XmlLoader.prepareFor(ns).loadData();
         if (rs == null) {
-            return Stream.of();
+            return Collections.EMPTY_LIST;
         }
-        return rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
+        List<String> ret = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
 //                if (r == null) {
 //                    return;
 //                }
-            String suri = "http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
+            String suri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
             URI context = URI.create(suri);
             // TODO convert DummyReport to OccurrenceReport
             EntityManager em = eccairsEmf.createEntityManager();
-            try{
+            try {
                 em.getTransaction().begin();
                 em.persist(r, new EntityDescriptor(context));
                 em.getTransaction().commit();
-            }catch(Exception e){// rolback the transanction if something fails
+            } catch (Exception e) {// rolback the transanction if something fails
                 em.getTransaction().rollback();
-                throw e;
+                LOG.trace(String.format("failed to persisting eccairs report from file {}.", r.getOriginFileName()),e);
             }
-            
-            try{
+
+            try {
                 updater.executeUpdate(
-                mapping.getUFOTypesQuery(r.getTaxonomyVersion(), suri),
-                mapping.generateEventsFromTypes(r.getTaxonomyVersion(), suri),
-                mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), suri),
-                mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
-                mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
-            }catch(Exception e){// rolback the transanction if something fails
+                        mapping.getUFOTypesQuery(r.getTaxonomyVersion(), suri),
+                        mapping.generateEventsFromTypes(r.getTaxonomyVersion(), suri),
+                        mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), suri),
+                        mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
+                        mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
+            } catch (Exception e) {// rolback the transanction if something fails
                 em.remove(r);
-                throw e;
+                LOG.trace(String.format("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName()), e);
             }
             return suri;
-        }));
+        })).collect(Collectors.toList());
+        ns.close();
+        return ret;
     }
 
     @Override
-    public Stream<String> process(Model m) throws Exception {
+    public List<String> process(Model m) throws Exception {
         LOG.trace("processing Model");
-        return Stream.of();
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public List<String> process(Message m) {
+
+        String id = m.getId();
+        EMail email = emailDao.findByMailId(id);
+        if (email == null) {
+            email = new EMail();
+            email.setId(id);
+            emailDao.persist(email);
+        }
+        Object o = processor.processMessage(m); //To change body of generated methods, choose Tools | Templates.=
+        if (o != null) {
+            if (!(o instanceof Stream)) {
+                o = Stream.of(o);
+            }
+            Stream<?> s = (Stream) o;
+            Set<URI> imported = s.flatMap(x -> {
+                try {
+                    return this.processDelegate(x).stream();
+                } catch (Exception e) {
+                    LOG.info(String.format("Something went wron while importing an attachment of the email with id : %s", id), e);
+                }
+                return Stream.of();
+            }).filter(x -> x != null).
+                    map(x -> URI.create(x)).
+                    collect(Collectors.toSet());
+
+            if (imported.isEmpty()) {
+                emailDao.remove(email);
+            } else {
+                email.getReports().addAll(imported);
+                emailDao.update(email);
+            }
+        }
+        return Collections.EMPTY_LIST;
+    }
+    
+    
+    protected E5XMLLoader constructE5XMLLoader() {
+        E5XMLLoader loader = new E5XMLLoader();
+        E5XXMLParser parser = new E5XXMLParser(eaf);
+        loader.setE5xParser(parser);
+        return loader;
     }
 }

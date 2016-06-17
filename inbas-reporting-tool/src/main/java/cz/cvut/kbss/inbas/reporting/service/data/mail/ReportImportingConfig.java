@@ -1,10 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
-import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
-import cz.cvut.kbss.eccairs.report.e5xml.commons.Utils;
+import cz.cvut.kbss.commons.utils.PropertyUtils;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
 import cz.cvut.kbss.eccairs.schema.dao.cfg.EccairsAccessConfiguration;
-import cz.cvut.kbss.eccairs.report.e5xml.e5x.E5XXMLParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,14 +30,14 @@ public class ReportImportingConfig {
     protected void init() {
         constructSesameUpdater();
         constructEccairsAccessFactory();
-        constructE5XMLLoader();
+//        constructE5XMLLoader();
     }
     
     // Eccairs Access Factory
     protected SingeltonEccairsAccessFactory eaf;
 
     protected void constructEccairsAccessFactory() {
-        EccairsAccessConfiguration eac = new EccairsAccessConfiguration(Utils.loadProperties("/eccairs-tools-config.properties"));
+        EccairsAccessConfiguration eac = new EccairsAccessConfiguration(PropertyUtils.loadProperties("/eccairs-tools-config.properties"));
         eaf = new SingeltonEccairsAccessFactory(eac);
     }
 
@@ -48,19 +46,19 @@ public class ReportImportingConfig {
         return eaf;
     }
 
-    // Eccairs E5XML loader
-    protected E5XMLLoader loader;
+//    // Eccairs E5XML loader
+//    protected E5XMLLoader loader;
+//
+//    protected void constructE5XMLLoader() {
+//        loader = new E5XMLLoader();
+//        E5XXMLParser parser = new E5XXMLParser(getEccairsAccessFactory());
+//        loader.setE5xParser(parser);
+//    }
 
-    protected void constructE5XMLLoader() {
-        loader = new E5XMLLoader();
-        E5XXMLParser parser = new E5XXMLParser(getEccairsAccessFactory());
-        loader.setE5xParser(parser);
-    }
-
-    @Bean
-    public E5XMLLoader getE5XMLLoader() {
-        return loader;
-    }
+//    @Bean
+//    public E5XMLLoader getE5XMLLoader() {
+//        return loader;
+//    }
 
     // Sesame updater
     protected SesameUpdater updater;
