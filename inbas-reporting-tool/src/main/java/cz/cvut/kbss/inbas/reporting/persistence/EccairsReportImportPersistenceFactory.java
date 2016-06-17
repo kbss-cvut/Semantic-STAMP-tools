@@ -53,7 +53,7 @@ public class EccairsReportImportPersistenceFactory {
             properties.put(DATA_SOURCE_PASSWORD, environment.getProperty(PASSWORD_PROPERTY));
         }
         // override the existing setting
-        properties.put(SCAN_PACKAGE, "cz.cvut.kbss.ucl.eccairs.report.model");
+        properties.put(SCAN_PACKAGE, "cz.cvut.kbss.eccairs.report.model");
         this.emf = Persistence.createEntityManagerFactory("eccairsPU", properties);
     }
 

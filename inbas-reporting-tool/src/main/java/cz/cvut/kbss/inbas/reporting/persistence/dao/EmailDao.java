@@ -61,6 +61,10 @@ public class EmailDao extends BaseDao<EMail> {
     protected void persist(EMail entity, EntityManager em) {
         em.persist(entity, d);
     }
-    
+
+    @Override
+    protected void update(EMail entity, EntityManager em) {
+        em.merge(entity, d);
+    }
     
 }

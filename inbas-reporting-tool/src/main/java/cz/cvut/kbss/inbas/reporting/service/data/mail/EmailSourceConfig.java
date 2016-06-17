@@ -12,7 +12,6 @@ import static cz.cvut.kbss.datatools.mail.model.javaapi.MailConfigParameters.MAI
 import static cz.cvut.kbss.datatools.mail.model.javaapi.MailConfigParameters.MAIL_SOCKET_FACTORY_FALLBACK;
 import static cz.cvut.kbss.datatools.mail.model.javaapi.MailConfigParameters.MAIL_SOCKET_FACTORY_PORT;
 import static cz.cvut.kbss.datatools.mail.model.javaapi.MailConfigParameters.MAIL_USER;
-import cz.cvut.kbss.datatools.mail.model.javaapi.MessageWrapperJavaAPI;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.EmailDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +22,6 @@ import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
 import java.util.Properties;
 import java.util.stream.Stream;
-import javax.mail.Folder;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -79,28 +77,8 @@ public class EmailSourceConfig {
             @Override
             protected boolean setProcessed(String id) {
                 return false;
-//                EMail email = emailService.getMailById(id);
-//                if (email == null) {
-//                    email = new EMail();
-//                    email.setId(id);
-//                    emailService.persist(email);
-//                }
-//                return false;
             }
 
-            @Override
-            public void processOldMessages(Folder f) throws MessagingException { // FOR DEBUG
-                javax.mail.Message[] ms = ms = f.getMessages(1 , 20);
-
-                for (javax.mail.Message m : ms) {
-                    MessageWrapperJavaAPI mw = new MessageWrapperJavaAPI(m);
-                    String id = mw.getId();
-                    if (!isProcessed(id)) {
-                        processMessageImpl(m, mw);
-                    }
-                    break;// DEBUG
-                }
-            }
 
             @Override
             protected Object processMessage(Message m) throws MessagingException {

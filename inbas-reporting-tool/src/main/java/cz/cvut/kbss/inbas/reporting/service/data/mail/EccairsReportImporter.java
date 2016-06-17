@@ -123,6 +123,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
             } catch (Exception e) {// rolback the transanction if something fails
                 em.getTransaction().rollback();
                 LOG.trace(String.format("failed to persisting eccairs report from file {}.", r.getOriginFileName()),e);
+                return null;// TODO type enter and filter the stream from nulls
             }
 
             try {
@@ -132,13 +133,13 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                         mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), suri),
                         mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
                         mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
-				eventPublisher.publishEvent(new InvalidateCacheEvent(this));
+//                eventPublisher.publishEvent(new InvalidateCacheEvent(this));
             } catch (Exception e) {// rolback the transanction if something fails
                 em.remove(r);
                 LOG.trace(String.format("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName()), e);
             }
             return suri;
-        })).collect(Collectors.toList());
+        })).filter(Objects::nonNull).collect(Collectors.toList());
         ns.close();
         return ret;
     }
