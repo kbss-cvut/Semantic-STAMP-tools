@@ -4,11 +4,19 @@ var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 var EventTypeFactory = require('../../model/EventTypeFactory');
 var Factory = require('../../model/ReportFactory');
 
+var I18nStore = require('../../stores/I18nStore');
+
 var DATE_FORMAT = '%d-%m-%y %H:%i';
 var TOOLTIP_DATE_FORMAT = '%d-%m-%y %H:%i:%s';
 var COLUMN_DEFINITIONS = {
-    'text': {name: 'text', label: 'Event', width: '*', tree: true},
-    'startDate': {name: 'start_date', label: 'Start time', width: '*', align: 'center'},
+    'text': {name: 'text', label: I18nStore.i18n('factors.event.label'), width: '*', tree: true},
+    'startDate': {name: 'start_date', label: I18nStore.i18n('factors.detail.start'), width: '*', align: 'center'},
+    'eventType': {
+        name: 'event_type', label: I18nStore.i18n('factors.detail.type'), template: function (task) {
+            var et = task.statement.eventType;
+            return '<a href="' + et + '" title="' + et + '" target="_blank" class="external-link-gantt"></a>';
+        }, align: 'center', width: 44
+    },
     'add': {name: 'add', label: '', width: 44}
 };
 
@@ -44,7 +52,7 @@ var GanttController = {
                 gantt.config.scale_height = 30;
                 gantt.config.min_column_width = 50;
                 gantt.config.subscales = [];
-                this.configureColumns(['text', 'startDate', 'add']);
+                this.configureColumns(['text', 'startDate', 'eventType', 'add']);
                 break;
             case 'hour':
                 gantt.config.scale_unit = 'hour';
@@ -54,7 +62,7 @@ var GanttController = {
                 gantt.config.scale_height = 30;
                 gantt.config.min_column_width = 50;
                 gantt.config.subscales = [];
-                this.configureColumns(['text', 'startDate', 'add']);
+                this.configureColumns(['text', 'startDate', 'eventType', 'add']);
                 break;
             case 'second':
                 gantt.config.scale_unit = 'second';
@@ -66,14 +74,14 @@ var GanttController = {
                 gantt.config.subscales = [
                     {unit: 'minute', step: 1, date: '%H:%i'}
                 ];
-                this.configureColumns(['text', 'startDate', 'add']);
+                this.configureColumns(['text', 'startDate', 'eventType', 'add']);
                 break;
             case 'relative':
                 gantt.config.date_scale = ' ';
                 gantt.config.scale_height = 30;
                 gantt.config.min_column_width = 25;
                 gantt.config.subscales = [];
-                this.configureColumns(['text', 'add']);
+                this.configureColumns(['text', 'eventType', 'add']);
                 break;
             default:
                 console.warn('Unsupported gantt scale ' + scale);
@@ -101,7 +109,7 @@ var GanttController = {
     },
 
     configureGanttConfig: function () {
-        this.configureColumns(['text', 'startDate', 'add']);
+        this.configureColumns(['text', 'startDate', 'eventType', 'add']);
         gantt.config.api_date = DATE_FORMAT;
         gantt.config.date_grid = DATE_FORMAT;
         gantt.config.fit_tasks = true;
@@ -131,12 +139,7 @@ var GanttController = {
             return formatFunc(date);
         };
         gantt.templates.tooltip_text = function (start, end, task) {
-            var tooltip;
-            if (task.statement && task.statement.eventType) {
-                tooltip = '<a href="' + task.statement.eventType + '" target="_blank">' + task.text + '</a><br/>';
-            } else {
-                tooltip = '<b>' + task.text + '</b><br/>';
-            }
+            var tooltip = '<b>' + task.text + '</b><br/>';
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
                 '<br/><b>End date:</b> ' + gantt.templates.tooltip_date_format(end);
             return tooltip;

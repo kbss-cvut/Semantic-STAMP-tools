@@ -11,7 +11,11 @@ var Actions = Reflux.createActions([
 
     'loadOptions', 'loadEventTypes', 'loadLocations', 'loadOperators', 'loadOccurrenceCategories',
 
-    'setTransitionPayload'
+    'setTransitionPayload',
+    
+    'rememberComponentState', 'resetComponentState',
+
+    'loadFormOptions'
 ]);
 
 module.exports = Actions;

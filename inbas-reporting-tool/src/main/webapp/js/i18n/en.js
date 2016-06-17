@@ -172,6 +172,7 @@ module.exports = {
         'factors.link-type-select-tooltip': 'Select link type',
         'factors.link.delete.title': 'Delete link?',
         'factors.link.delete.text': 'Are you sure you want to delete the link from {source} to {target}?',
+        'factors.event.label': 'Event',
         'factors.detail.title': 'Factor assessment',
         'factors.detail.type': 'Type',
         'factors.detail.type-placeholder': 'Factor type',

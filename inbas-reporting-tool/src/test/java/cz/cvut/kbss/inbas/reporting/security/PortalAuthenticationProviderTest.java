@@ -230,4 +230,9 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
 
         provider.authenticate(createAuthentication(USERNAME));
     }
+
+    @Test
+    public void supportsUsernameAndPasswordAuthentication() {
+        assertTrue(provider.supports(UsernamePasswordAuthenticationToken.class));
+    }
 }

@@ -115,6 +115,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         newRevision.setAuthor(securityUtils.getCurrentUser());
         newRevision.setDateCreated(new Date());
         super.persist(newRevision);
+        newRevision.setArmsIndex(armsService.calculateArmsIndex(newRevision));
         return newRevision;
     }
 

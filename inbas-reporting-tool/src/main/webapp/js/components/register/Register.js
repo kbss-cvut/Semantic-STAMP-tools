@@ -9,6 +9,7 @@ import {Alert, Button, Panel} from "react-bootstrap";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import Input from "../Input";
+import Logger from "../../utils/Logger";
 import Mask from "../Mask";
 import Routing from "../../utils/Routing";
 import Routes from "../../utils/Routes";
@@ -73,17 +74,16 @@ class Register extends React.Component {
             username: this.state.username,
             password: this.state.password
         };
-        Ajax.post('rest/persons', data).end(function (err, resp) {
-            if (err) {
-                this.setState({
-                    alertVisible: true,
-                    mask: false,
-                    errorMessage: resp.body.message ? resp.body.message : 'Unknown error.'
-                });
-            }
+        Ajax.post('rest/persons', data).end(function (resp) {
             if (resp.status === 201) {
                 this.doSyntheticLogin(data.username, data.password);
             }
+        }.bind(this), function (err) {
+            this.setState({
+                alertVisible: true,
+                mask: false,
+                errorMessage: err.message ? err.message : 'Unknown error.'
+            });
         }.bind(this));
         this.setState({mask: true});
     };
@@ -94,10 +94,7 @@ class Register extends React.Component {
      */
     doSyntheticLogin = (username, password) => {
         Ajax.post('j_spring_security_check', null, 'form').send('username=' + username).send('password=' + password)
-            .end(function (err, resp) {
-                if (err) {
-                    console.log('Unable to perform synthetic login. Received response with status ' + err.status);
-                }
+            .end(function (resp) {
                 var status = JSON.parse(resp.text);
                 if (!status.success || !status.loggedIn) {
                     this.setState({alertVisible: true});
@@ -105,7 +102,9 @@ class Register extends React.Component {
                 }
                 Actions.loadUser();
                 Routing.transitionToHome();
-            }.bind(this));
+            }.bind(this), function (err) {
+                Logger.error('Unable to perform synthetic login. Received response with status ' + err.status);
+            });
     };
 
     cancel = () => {

@@ -64,6 +64,10 @@ var OccurrenceClassification = React.createClass({
         }
         var options = data.data;
         this.setState({occurrenceCategories: Utils.processTypeaheadOptions(options)});
+        var selected = this._resolveSelectedCategory();
+        if (selected) {
+            this.refs.occurrenceCategory.selectOption(selected);
+        }
     },
 
     onChange: function (e) {

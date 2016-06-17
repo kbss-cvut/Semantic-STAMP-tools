@@ -4,6 +4,7 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var Actions = require('../../actions/Actions');
+var Logger = require('../../utils/Logger');
 var ReportFactory = require('../../model/ReportFactory');
 var Report = require('./Report');
 var OptionsStore = require('../../stores/OptionsStore'); // Force store initialization, so that it can listen to actions
@@ -73,6 +74,7 @@ var ReportController = React.createClass({
         if (!report) {
             this.setState({loading: false});
         } else {
+            Logger.log('Loaded report ' + report.uri);
             this.setState({report: report, loading: false});
             Actions.loadRevisions(report.fileNumber);
         }

@@ -7,8 +7,8 @@ import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 import Input from "../../Input";
 import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
+import FormGenStore from "../../../stores/FormGenStore";
 import FormUtils from "./FormUtils";
-import OptionsStore from "../../../stores/OptionsStore";
 import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 
@@ -22,16 +22,19 @@ export default class Answer extends React.Component {
 
     constructor(props) {
         super(props);
+        if (FormUtils.isTypeahead(this.props.question)) {
+            this._queryHash = Utils.getStringHash(FormUtils.getPossibleValuesQuery(this.props.question));
+        }
         this.state = {
-            options: OptionsStore.getOptions(props.question['@id'])
+            options: this._queryHash ? FormGenStore.getOptions(this._queryHash) : []
         }
     }
 
     componentWillMount() {
         var question = this.props.question;
         if (FormUtils.isTypeahead(question)) {
-            if (!question[Constants.FORM.HAS_OPTION] || question[Constants.FORM.HAS_OPTION].length === 0) {
-                Actions.loadOptions(question['@id']);
+            if (!question[Constants.FORM.HAS_OPTION] && FormUtils.getPossibleValuesQuery(question)) {
+                Actions.loadFormOptions(this._queryHash, FormUtils.getPossibleValuesQuery(question));
             } else {
                 this.setState({options: Utils.processTypeaheadOptions(question[Constants.FORM.HAS_OPTION])});
             }
@@ -39,7 +42,7 @@ export default class Answer extends React.Component {
     }
 
     componentDidMount() {
-        this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
+        this.unsubscribe = FormGenStore.listen(this._onOptionsLoaded);
     }
 
     componentWillUnmount() {
@@ -47,10 +50,16 @@ export default class Answer extends React.Component {
     }
 
     _onOptionsLoaded = (type, options) => {
-        if (type !== this.props.question['@id']) {
+        if (type !== this._queryHash) {
             return;
         }
-        this.setState({options: Utils.processTypeaheadOptions(options)});
+        options = Utils.processTypeaheadOptions(options);
+        var value = this._resolveValue(),
+            selected = options.find((item) => {
+                return item.id === value;
+            });
+        this.setState({options: options});
+        this.refs.typeahead.selectOption(selected);
     };
 
     onChange = (e) => {
@@ -105,9 +114,10 @@ export default class Answer extends React.Component {
             };
             component = <div>
                 <label className='control-label'>{label}</label>
-                <Typeahead className='form-group form-group-sm' formInputOption='id' inputProps={inputProps}
+                <Typeahead ref='typeahead' className='form-group form-group-sm' formInputOption='id'
+                           inputProps={inputProps}
                            title={title} value={value} label={label} placeholder={label} filterOption='name'
-                           displayOption='name' onOptionSelected={this._onOptionSelected}
+                           displayOption='name' onOptionSelected={this._onOptionSelected} optionsButton={true}
                            options={this.state.options} customListComponent={TypeaheadResultList}/>
             </div>;
         } else if (Answer._hasOptions(question)) {

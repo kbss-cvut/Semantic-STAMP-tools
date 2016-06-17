@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -71,5 +72,11 @@ public class FormGenServiceImpl implements FormGenService {
         params.put(CONTEXT_URI_PARAM, RestUtils.encodeUrl(processor.getContext().toString()));
         params.put(REPOSITORY_URL_PARAM, RestUtils.encodeUrl(repoUrl));
         return new RawJson(dataLoader.loadData(serviceUrl, params));
+    }
+
+    @Override
+    public RawJson getPossibleValues(String query) {
+        Objects.requireNonNull(query);
+        return new RawJson(dataLoader.loadData(query, Collections.emptyMap()));
     }
 }

@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
+import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
 import cz.cvut.kbss.datatools.mail.CompoundProcessor;
 import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
 import cz.cvut.kbss.datatools.mail.model.Message;
@@ -29,12 +30,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jooq.lambda.Unchecked;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @Service
-public class EccairsReportImporter implements ReportImporter {
+public class EccairsReportImporter implements ReportImporter, ApplicationEventPublisherAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(EccairsReportImporter.class);
 
@@ -64,6 +67,7 @@ public class EccairsReportImporter implements ReportImporter {
 
     protected MappingEccairsData2Aso mapping;
 
+    private ApplicationEventPublisher eventPublisher;
     protected CompoundProcessor processor = new CompoundProcessor();
 
     @PostConstruct
@@ -128,6 +132,7 @@ public class EccairsReportImporter implements ReportImporter {
                         mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), suri),
                         mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
                         mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
+				eventPublisher.publishEvent(new InvalidateCacheEvent(this));
             } catch (Exception e) {// rolback the transanction if something fails
                 em.remove(r);
                 LOG.trace(String.format("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName()), e);
@@ -142,6 +147,11 @@ public class EccairsReportImporter implements ReportImporter {
     public List<String> process(Model m) throws Exception {
         LOG.trace("processing Model");
         return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
     }
 
     @Override

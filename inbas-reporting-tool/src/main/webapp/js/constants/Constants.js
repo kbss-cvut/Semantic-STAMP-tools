@@ -73,6 +73,7 @@ module.exports = {
         HAS_SUBQUESTION: 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question',
         HAS_ANSWER: 'http://onto.fel.cvut.cz/ontologies/documentation/has_answer',
         HAS_OPTION: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-value',
+        HAS_OPTIONS_QUERY: 'http://onto.fel.cvut.cz/ontologies/form/has-possible-values-query',
         HAS_VALUE_TYPE: 'http://onto.fel.cvut.cz/ontologies/form/has-value-type',
         IS_DISABLED: 'http://onto.fel.cvut.cz/ontologies/aviation/form-376/is-disabled',
         LAYOUT_CLASS: 'http://onto.fel.cvut.cz/ontologies/form-layout/has-layout-class',

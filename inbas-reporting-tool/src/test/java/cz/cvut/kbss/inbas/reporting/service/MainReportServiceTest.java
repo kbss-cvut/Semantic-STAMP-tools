@@ -13,10 +13,10 @@ import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
+import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,7 +26,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class MainReportServiceTest extends BaseServiceTestRunner {
 
@@ -46,6 +48,9 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private ReportCache reportCache;
+
+    @Autowired
+    private ArmsService armsService;
 
     @Autowired
     private ReportingPhaseService phaseService;
@@ -78,7 +83,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         reportService.persist(report);
     }
 
-    @Ignore
     @Test
     public void persistAddsReportIntoCache() {
         assertTrue(reportCache.getAll().isEmpty());
@@ -129,7 +133,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         reportService.update(report);
     }
 
-    @Ignore
     @Test
     public void updateReplacesPreviousInstanceInReportCache() {
         final OccurrenceReport report = persistOccurrenceReport();
@@ -183,7 +186,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         chain.forEach(r -> assertTrue(occurrenceReportDao.exists(r.getUri())));
     }
 
-    @Ignore
     @Test
     public void removeReportChainRemovesInstanceFromReportCache() {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
@@ -232,7 +234,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         reportService.createNewRevision(Long.MAX_VALUE);
     }
 
-    @Ignore
     @Test
     public void createNewRevisionReplacesInstanceInReportCache() {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
@@ -245,6 +246,22 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         final OccurrenceReportDto dto = (OccurrenceReportDto) reportCache.getAll().get(0);
         assertEquals(newRevision.getUri(), dto.getUri());
         assertEquals(newRevision.getRevision(), dto.getRevision());
+    }
+
+    @Test
+    public void createNewRevisionSetsArmsIndexBeforePuttingInstanceIntoCache() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        report.setAccidentOutcome(Generator.ACCIDENT_NEGLIGIBLE);
+        report.setBarrierEffectiveness(Generator.BARRIER_LIMITED);
+        reportService.persist(report);
+        final int armsIndex = 117;
+        when(armsService.calculateArmsIndex(any(OccurrenceReport.class))).thenReturn(armsIndex);
+
+        final OccurrenceReport newRevision = reportService.createNewRevision(report.getFileNumber());
+        assertNotNull(newRevision.getArmsIndex());
+        assertEquals(armsIndex, newRevision.getArmsIndex().intValue());
+        final OccurrenceReportDto dto = (OccurrenceReportDto) reportCache.getAll().get(0);
+        assertEquals(armsIndex, dto.getArmsIndex().intValue());
     }
 
     @Test
@@ -271,7 +288,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertTrue(Environment.areEqual(latestRevisions, result));
     }
 
-    @Ignore
     @Test
     public void findAllPutsRetrievedReportsIntoCache() {
         // Once other report types are added, they should be added into this tests
@@ -283,7 +299,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertEquals(result, reportCache.getAll());
     }
 
-    @Ignore
     @Test
     public void findAllRetrievesInstancesFromReportCache() {
         initReportChains();

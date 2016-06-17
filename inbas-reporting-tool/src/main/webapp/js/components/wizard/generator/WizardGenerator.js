@@ -21,7 +21,9 @@ var WizardGenerator = {
                 uri += param + '=' + parameters[param] + '&';   // '&' at the end of request URI should not be a problem
             });
         }
-        var data = require('../../../../sample-eccairs-form.json');
+        // TODO Get rid of this
+        // var data = require('../../../../sample-eccairs-form.json');
+        var data = null;
         if (!data) {
             Ajax.post(uri, report).end(function
                 (data) {

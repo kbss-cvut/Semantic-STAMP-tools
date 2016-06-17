@@ -74,4 +74,9 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
             assertNull(context.getAuthentication());
         }
     }
+
+    @Test
+    public void supportsUsernameAndPasswordAuthentication() {
+        assertTrue(provider.supports(UsernamePasswordAuthenticationToken.class));
+    }
 }

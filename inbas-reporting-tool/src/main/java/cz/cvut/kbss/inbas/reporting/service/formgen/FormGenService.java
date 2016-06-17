@@ -14,4 +14,12 @@ public interface FormGenService {
      * @return Form structure description in JSON(-LD)
      */
     <T> RawJson generateForm(T data, Map<String, String> params);
+
+    /**
+     * Loads possible values for a question using the specified query.
+     *
+     * @param query The query to use
+     * @return Possible values in JSON-LD
+     */
+    RawJson getPossibleValues(String query);
 }
