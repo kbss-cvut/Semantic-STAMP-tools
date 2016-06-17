@@ -81,7 +81,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     }
 
     @Override
-    public List<String> processDelegate(Object o) throws Exception {
+    public List<URI> processDelegate(Object o) throws Exception {
         if (o instanceof NamedStream) {
             return process((NamedStream) o);
         } else if (o instanceof Model) {
@@ -98,7 +98,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
      * @throws Exception 
      */
     @Override
-    public List<String> process(NamedStream ns) throws Exception {
+    public List<URI> process(NamedStream ns) throws Exception {
 //        try {
         LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.emailId, ns.name);
 //            byte[] bs = IOUtils.toByteArray(ns.is);
@@ -108,7 +108,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
         if (rs == null) {
             return Collections.EMPTY_LIST;
         }
-        List<String> ret = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
+        List<URI> ret = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
 //                if (r == null) {
 //                    return;
 //                }
@@ -133,19 +133,19 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                         mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), suri),
                         mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
                         mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
-//                eventPublisher.publishEvent(new InvalidateCacheEvent(this));
+                eventPublisher.publishEvent(new InvalidateCacheEvent(this));
             } catch (Exception e) {// rolback the transanction if something fails
                 em.remove(r);
                 LOG.trace(String.format("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName()), e);
             }
-            return suri;
+            return context;
         })).filter(Objects::nonNull).collect(Collectors.toList());
         ns.close();
         return ret;
     }
 
     @Override
-    public List<String> process(Model m) throws Exception {
+    public List<URI> process(Model m) throws Exception {
         LOG.trace("processing Model");
         return Collections.EMPTY_LIST;
     }
@@ -156,7 +156,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     }
 
     @Override
-    public List<String> process(Message m) {
+    public List<URI> process(Message m) {
 
         String id = m.getId();
         EMail email = emailDao.findByMailId(id);
@@ -179,8 +179,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                 }
                 return Stream.of();
             }).filter(x -> x != null).
-                    map(x -> URI.create(x)).
-                    collect(Collectors.toSet());
+               collect(Collectors.toSet());
 
             if (imported.isEmpty()) {
                 emailDao.remove(email);
