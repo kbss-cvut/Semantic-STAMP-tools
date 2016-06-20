@@ -18,24 +18,6 @@ describe('ReportController', function () {
         Environment.mockGantt();
     });
 
-    xit('Uses report passed from router store if it is set', function () {
-        var report = {
-            initialReports: [{text: 'First Initial Report'}],
-            occurrence: {
-                startTime: Date.now() - 10000,
-                endTime: Date.now()
-            }
-        };
-        spyOn(RouterStore, 'getTransitionPayload').and.returnValue(report);
-
-        var controller = Environment.render(<ReportController params={{}}/>),
-            state = controller.getInitialState();
-        expect(RouterStore.getTransitionPayload).toHaveBeenCalledWith(Routes.createReport.name);
-        expect(state.loading).toBeFalsy();
-        expect(state.report.initialReports).toEqual(report.initialReports);
-        expect(state.report.occurrence).toBeDefined();
-    });
-
     it('Loads existing report when report key is passed in path params', function () {
         spyOn(Actions, 'loadReport');
         var params = {reportKey: 12345},
@@ -56,20 +38,5 @@ describe('ReportController', function () {
         expect(report.occurrence).toBeDefined();
         expect(report.occurrence.startTime).toBeDefined();
         expect(report.occurrence.endTime).toBeDefined();
-    });
-
-    xit('Initializes new report with imported initial report', function () {
-        var payload = {
-            initialReports: [{
-                text: 'Initial report'
-            }]
-        };
-        spyOn(RouterStore, 'getTransitionPayload').and.returnValue(payload);
-        var controller = Environment.render(<ReportController params={{}}/>),
-            report = controller.state.report;
-
-        expect(report.occurrence).toBeDefined();
-        expect(report.initialReports.length).toEqual(1);
-        expect(report.initialReports[0]).toEqual(payload.initialReports[0]);
     });
 });
