@@ -178,17 +178,16 @@ describe('ReportsController', () => {
             controller = Environment.render(<ReportsController/>);
         Environment.bindActionsToStoreMethods('rememberComponentState', ComponentStateStore);
         spyOn(ComponentStateStore, 'onRememberComponentState').and.callThrough();
-        controller.onFilterChange(filter);
         sort = controller.state.sort;
 
-        controller.componentWillUnmount();
+        controller.onFilterChange(filter);
         expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.displayName, {
             filter: filter,
             sort: sort
         });
     });
 
-    it('saves component filtering and sorting when filter changes', () => {
+    it('saves component filtering and sorting when sort is called', () => {
         var sort, filter,
             controller = Environment.render(<ReportsController/>);
         Environment.bindActionsToStoreMethods('rememberComponentState', ComponentStateStore);
@@ -198,7 +197,6 @@ describe('ReportsController', () => {
         sort = controller.state.sort;
         filter = controller.state.filter;
 
-        controller.componentWillUnmount();
         expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.displayName, {
             filter: filter,
             sort: sort
