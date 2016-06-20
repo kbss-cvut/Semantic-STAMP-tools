@@ -1,28 +1,31 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
-import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
+import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.datatools.mail.CompoundProcessor;
 import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
 import cz.cvut.kbss.datatools.mail.model.Message;
-import cz.cvut.kbss.jopa.model.EntityManager;
-import cz.cvut.kbss.jopa.model.EntityManagerFactory;
-import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
-import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.eccairs.report.e5xml.e5x.E5XXMLParser;
-import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
-import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
-import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
+import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
 import cz.cvut.kbss.inbas.reporting.model.com.EMail;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.EmailDao;
 import cz.cvut.kbss.inbas.reporting.service.MainReportService;
+import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
+import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
 import org.apache.jena.rdf.model.Model;
+import org.jooq.lambda.Unchecked;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.util.Collections;
@@ -31,9 +34,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.jooq.lambda.Unchecked;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
@@ -64,7 +64,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
 
     @Autowired
     protected EMailService emailService;
-    
+
     @Autowired
     protected MainReportService mrs;
 
@@ -90,15 +90,15 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
         } else if (o instanceof Model) {
             return process((Model) o);
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     /**
      * This method loads a report from a NamedStream, e.g. file or email attachment.
-     * 
+     *
      * @param ns
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
     public List<URI> process(NamedStream ns) throws Exception {
@@ -109,7 +109,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
         E5XMLLoader e5XmlLoader = constructE5XMLLoader();
         Stream<EccairsReport> rs = e5XmlLoader.prepareFor(ns).loadData();
         if (rs == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         List<URI> ret = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
 //                if (r == null) {
@@ -124,7 +124,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                 em.getTransaction().commit();
             } catch (Exception e) {// rolback the transanction if something fails
                 em.getTransaction().rollback();
-                LOG.trace(String.format("failed to persisting eccairs report from file {}.", r.getOriginFileName()),e);
+                LOG.trace("failed to persisting eccairs report from file {}.", r.getOriginFileName(), e);
                 return null;
             }
 
@@ -139,7 +139,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
 //                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
             } catch (Exception e) {// rolback the transanction if something fails
                 em.remove(r);
-                LOG.trace(String.format("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName()), e);
+                LOG.trace("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName(), e);
             }
             return context;
         })).filter(Objects::nonNull).collect(Collectors.toList());
@@ -150,7 +150,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     @Override
     public List<URI> process(Model m) throws Exception {
         LOG.trace("processing Model");
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     @Override
@@ -178,11 +178,11 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                 try {
                     return this.processDelegate(x).stream();
                 } catch (Exception e) {
-                    LOG.info(String.format("Something went wron while importing an attachment of the email with id : %s", id), e);
+                    LOG.info("Something went wrong while importing an attachment of the email with id : {}", id, e);
                 }
                 return Stream.of();
             }).filter(x -> x != null).
-               collect(Collectors.toSet());
+                                         collect(Collectors.toSet());
 
             if (imported.isEmpty()) {
                 emailDao.remove(email);
@@ -191,10 +191,10 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                 emailDao.update(email);
             }
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
-    
-    
+
+
     protected E5XMLLoader constructE5XMLLoader() {
         E5XMLLoader loader = new E5XMLLoader();
         E5XXMLParser parser = new E5XXMLParser(eaf);
