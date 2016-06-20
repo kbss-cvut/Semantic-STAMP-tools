@@ -8,13 +8,15 @@ import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
-import cz.cvut.kbss.eccairs.report.e5xml.commons.NamedStream;
+import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.eccairs.report.e5xml.e5x.E5XXMLParser;
 import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.com.EMail;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.EmailDao;
+import cz.cvut.kbss.inbas.reporting.service.MainReportService;
 import org.apache.jena.rdf.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +65,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     @Autowired
     protected EMailService emailService;
     
-    volatile 
+    @Autowired
+    protected MainReportService mrs;
 
     protected MappingEccairsData2Aso mapping;
 
@@ -100,7 +103,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     @Override
     public List<URI> process(NamedStream ns) throws Exception {
 //        try {
-        LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.emailId, ns.name);
+        LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.getEmailId(), ns.getName());
 //            byte[] bs = IOUtils.toByteArray(ns.is);
 //            System.out.println(new String(bs));
         E5XMLLoader e5XmlLoader = constructE5XMLLoader();
@@ -114,7 +117,6 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
 //                }
             String suri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
             URI context = URI.create(suri);
-            // TODO convert DummyReport to OccurrenceReport
             EntityManager em = eccairsEmf.createEntityManager();
             try {
                 em.getTransaction().begin();
@@ -123,7 +125,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
             } catch (Exception e) {// rolback the transanction if something fails
                 em.getTransaction().rollback();
                 LOG.trace(String.format("failed to persisting eccairs report from file {}.", r.getOriginFileName()),e);
-                return null;// TODO type enter and filter the stream from nulls
+                return null;
             }
 
             try {
@@ -134,6 +136,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                         mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
                         mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
                 eventPublisher.publishEvent(new InvalidateCacheEvent(this));
+//                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
             } catch (Exception e) {// rolback the transanction if something fails
                 em.remove(r);
                 LOG.trace(String.format("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName()), e);

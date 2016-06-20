@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
 import cz.cvut.kbss.datatools.mail.model.Message;
-import cz.cvut.kbss.eccairs.report.e5xml.commons.NamedStream;
+import cz.cvut.kbss.commons.io.NamedStream;
 import java.net.URI;
 import java.util.List;
 import org.apache.jena.rdf.model.Model;
