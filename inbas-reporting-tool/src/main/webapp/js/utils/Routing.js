@@ -4,6 +4,7 @@ var hashHistory = require('react-router').hashHistory;
 
 var Constants = require('../constants/Constants');
 var RouterStore = require('../stores/RouterStore');
+var RoutingRules = require('./RoutingRules');
 
 var Routing = {
     history: hashHistory,
@@ -25,6 +26,7 @@ var Routing = {
         }
         RouterStore.setTransitionPayload(route.name, options.payload);
         RouterStore.setViewHandlers(route.name, options.handlers);
+        RoutingRules.execute(route.name);
         this.history.push({
             pathname: path,
             search: options.query

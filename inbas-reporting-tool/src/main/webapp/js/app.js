@@ -46,6 +46,11 @@ var DashboardController = require('./components/dashboard/DashboardController');
 var ReportsController = require('./components/report/ReportsController');
 var StatisticsController = require('./components/statistics/Statistics').default;
 var ReportDetailController = require('./components/report/ReportController');
+var RoutingRules = require('./utils/RoutingRules');
+
+function onRouteEnter() {
+    RoutingRules.execute(this.path);
+}
 
 // Wrapping router in a React component to allow Intl to initialize
 var App = React.createClass({
@@ -54,13 +59,13 @@ var App = React.createClass({
             <Router history={history}>
                 <Route path='/' component={MainView}>
                     <IndexRoute component={DashboardController}/>
-                    <Route path={Routes.login.path} component={Login}/>
-                    <Route path={Routes.register.path} component={Register}/>
-                    <Route path={Routes.dashboard.path} component={DashboardController}/>
-                    <Route path={Routes.reports.path} component={ReportsController}/>
-                    <Route path={Routes.statistics.path} component={StatisticsController}/>
-                    <Route path={Routes.createReport.path} component={ReportDetailController}/>
-                    <Route path={Routes.editReport.path} component={ReportDetailController}/>
+                    <Route path={Routes.login.path} onEnter={onRouteEnter} component={Login}/>
+                    <Route path={Routes.register.path} onEnter={onRouteEnter} component={Register}/>
+                    <Route path={Routes.dashboard.path} onEnter={onRouteEnter} component={DashboardController}/>
+                    <Route path={Routes.reports.path} onEnter={onRouteEnter} component={ReportsController}/>
+                    <Route path={Routes.statistics.path} onEnter={onRouteEnter} component={StatisticsController}/>
+                    <Route path={Routes.createReport.path} onEnter={onRouteEnter} component={ReportDetailController}/>
+                    <Route path={Routes.editReport.path} onEnter={onRouteEnter} component={ReportDetailController}/>
                 </Route>
             </Router>
         </IntlProvider>;

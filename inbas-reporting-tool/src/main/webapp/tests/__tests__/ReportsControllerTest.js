@@ -157,26 +157,6 @@ describe('ReportsController', () => {
         expect(RouterStore.setTransitionPayload).toHaveBeenCalledWith(Routes.reports.name);
     });
 
-    it('stores current filter and sort state when edit is clicked', () => {
-        var controller = Environment.render(<ReportsController/>),
-            filter = {
-                phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
-            };
-        controller.onSort('identification');
-        controller.onFilterChange(filter);
-        Environment.bindActionsToStoreMethods('rememberComponentState', ComponentStateStore);
-        spyOn(Routing, 'transitionTo');
-
-        controller.onEdit({report: {key: 12345}});
-
-        expect(Actions.rememberComponentState).toHaveBeenCalled();
-        expect(ComponentStateStore.getComponentState(ReportsController.displayName).filter).toEqual(filter);
-        expect(ComponentStateStore.getComponentState(ReportsController.displayName).sort).toEqual({
-            identification: Constants.SORTING.DESC,
-            date: Constants.SORTING.NO
-        });
-    });
-
     it('loads filter and sort state from ComponentStateStore', () => {
         var filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
@@ -191,18 +171,32 @@ describe('ReportsController', () => {
         expect(controller.state.sort).toEqual(sort);
     });
 
-    it('saves component filtering and sorting before unmounting', () => {
+    it('saves component filtering and sorting when filter changes', () => {
         var filter = {
                 phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
             }, sort,
             controller = Environment.render(<ReportsController/>);
-        controller.onFilterChange(filter);
-        controller.onSort('identification');
-        controller.onSort('date');
-        controller.onSort('date');
-        sort = controller.state.sort;
         Environment.bindActionsToStoreMethods('rememberComponentState', ComponentStateStore);
         spyOn(ComponentStateStore, 'onRememberComponentState').and.callThrough();
+        controller.onFilterChange(filter);
+        sort = controller.state.sort;
+
+        controller.componentWillUnmount();
+        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.displayName, {
+            filter: filter,
+            sort: sort
+        });
+    });
+
+    it('saves component filtering and sorting when filter changes', () => {
+        var sort, filter,
+            controller = Environment.render(<ReportsController/>);
+        Environment.bindActionsToStoreMethods('rememberComponentState', ComponentStateStore);
+        spyOn(ComponentStateStore, 'onRememberComponentState').and.callThrough();
+        controller.onSort('identification');
+        controller.onSort('date');
+        sort = controller.state.sort;
+        filter = controller.state.filter;
 
         controller.componentWillUnmount();
         expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.displayName, {

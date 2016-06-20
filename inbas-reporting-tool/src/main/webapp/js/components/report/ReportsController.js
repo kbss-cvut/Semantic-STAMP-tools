@@ -68,7 +68,7 @@ var ReportsController = React.createClass({
 
     getInitialState: function () {
         var payload = RouterStore.getTransitionPayload(Routes.reports.name),
-            filter = null, sort = null, storedState;
+            sort = null, filter, storedState;
         RouterStore.setTransitionPayload(Routes.reports.name);  // Clear payload
         filter = payload ? payload.filter : null;
         if ((storedState = ComponentStateStore.getComponentState(ReportsController.displayName))) {
@@ -92,13 +92,6 @@ var ReportsController = React.createClass({
         Actions.loadOptions('reportingPhase');
     },
 
-    componentWillUnmount: function () {
-        Actions.rememberComponentState(ReportsController.displayName, {
-            filter: this.state.filter,
-            sort: this.state.sort
-        });
-    },
-
     onReportsLoaded: function (data) {
         if (data.action === Actions.loadAllReports) {
             this.setState({reports: data.reports});
@@ -106,10 +99,6 @@ var ReportsController = React.createClass({
     },
 
     onEdit: function (report) {
-        Actions.rememberComponentState(ReportsController.displayName, {
-            filter: this.state.filter,
-            sort: this.state.sort
-        });
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
             handlers: {onCancel: Routes.reports}
@@ -122,12 +111,21 @@ var ReportsController = React.createClass({
 
     onFilterChange: function (filter) {
         this.setState({filter: assign({}, this.state.filter, filter)});
+        this._rememberFilterAndStort();
+    },
+
+    _rememberFilterAndStort: function() {
+        Actions.rememberComponentState(ReportsController.displayName, {
+            filter: this.state.filter,
+            sort: this.state.sort
+        });
     },
 
     onSort: function (column) {
         var change = {};
         change[column] = sortStateTransition(this.state.sort[column]);
         this.setState({sort: assign(this.state.sort, change)});
+        this._rememberFilterAndStort();
     },
 
     _filterReports: function (reports) {
