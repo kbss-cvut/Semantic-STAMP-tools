@@ -44,7 +44,7 @@ export default class QuestionAnswerProcessor {
         result.uri = answer['@id'];
         result.origin = Utils.getJsonAttValue(answer, Constants.FORM.HAS_ANSWER_ORIGIN, '@id');
         if (answer[Constants.FORM.HAS_OBJECT_VALUE]) {
-            result.codeValue = Utils.getJsonAttValue(answer,Constants.FORM.HAS_OBJECT_VALUE, '@id');
+            result.codeValue = Utils.getJsonAttValue(answer, Constants.FORM.HAS_OBJECT_VALUE, '@id');
         } else {
             result.textValue = Utils.getJsonAttValue(answer, Constants.FORM.HAS_DATA_VALUE);
         }
@@ -57,9 +57,7 @@ export default class QuestionAnswerProcessor {
      */
     static generateAnswer(question) {
         var answer = {};
-        answer[Constants.FORM.HAS_DATA_VALUE] = {
-            '@value': ''
-        };
+        answer[Constants.FORM.HAS_DATA_VALUE] = '';
         return answer;
     }
 }

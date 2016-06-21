@@ -205,6 +205,9 @@ module.exports = {
         'sort.asc': 'Záznamy jsou seřazeny vzestupně',
         'sort.desc': 'Záznamy jsou seřazeny sestupně',
 
+        'form.default.step-label': 'Popis',
+        'form.default.question': 'Popis události',
+
         // ----------- ARMS -------------
         'arms.title': 'ARMS',
         'arms.accident-outcome': 'Výsledek nehody',

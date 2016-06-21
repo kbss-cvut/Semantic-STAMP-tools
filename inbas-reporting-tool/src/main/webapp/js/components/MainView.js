@@ -18,6 +18,7 @@ var injectIntl = require('../utils/injectIntl');
 
 var Constants = require('../constants/Constants');
 var I18nMixin = require('../i18n/I18nMixin');
+var I18nStore = require('../stores/I18nStore');
 
 var Authentication = require('../utils/Authentication');
 var UserStore = require('../stores/UserStore');
@@ -32,6 +33,10 @@ var MainView = React.createClass({
         return {
             loggedIn: UserStore.isLoaded()
         }
+    },
+
+    componentWillMount: function () {
+        I18nStore.setIntl(this.props.intl);
     },
 
     onUserLoaded: function () {

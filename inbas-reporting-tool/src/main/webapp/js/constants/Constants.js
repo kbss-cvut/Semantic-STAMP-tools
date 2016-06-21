@@ -83,7 +83,8 @@ module.exports = {
             QUESTION_SECTION: 'section',
             WIZARD_STEP: 'wizard-step',
             DISABLED: 'disabled',
-            HIDDEN: 'hidden'
+            HIDDEN: 'hidden',
+            TEXTAREA: 'textarea'
         },
         VALUE_TYPE_CODE: 'code',
         VALUE_TYPE_TEXT: 'text',

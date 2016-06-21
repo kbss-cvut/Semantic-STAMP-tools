@@ -4,7 +4,10 @@ var jsonld = require('jsonld');
 
 var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
+var DefaultFormGenerator = require('../../../model/DefaultFormGenerator');
 var FormUtils = require('./FormUtils').default;
+var I18nStore = require('../../../stores/I18nStore');
+var JsonLdUtils = require('../../../utils/JsonLdUtils').default;
 var Logger = require('../../../utils/Logger');
 var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
@@ -23,15 +26,24 @@ var WizardGenerator = {
         }
         // TODO Get rid of this
         // var data = require('../../../../sample-eccairs-form.json');
-        var data = null;
-        if (!data) {
-            Ajax.post(uri, report).end(function
-                (data) {
-                this._createWizard(data, wizardTitle, renderCallback);
-            }.bind(this));
-        } else {
-            this._createWizard(data, wizardTitle, renderCallback);
-        }
+        // var data = null;
+        // if (!data) {
+        //     Ajax.post(uri, report).end(function
+        //         (data) {
+        //         this._createWizard(data, wizardTitle, renderCallback);
+        //     }.bind(this));
+        // } else {
+        //     this._createWizard(data, wizardTitle, renderCallback);
+        // }
+        this._createDefaultWizard(wizardTitle, renderCallback);
+    },
+
+    _createDefaultWizard: function (title, renderCallback) {
+        var wizardProperties = {
+            steps: this._constructWizardSteps(DefaultFormGenerator.generateForm()),
+            title: title
+        };
+        renderCallback(wizardProperties);
     },
 
     _createWizard: function (structure, title, renderCallback) {
@@ -70,7 +82,7 @@ var WizardGenerator = {
             item = formElements[i];
             if (FormUtils.isWizardStep(item) && !FormUtils.isHidden(item)) {
                 steps.push({
-                    name: Utils.getJsonAttValue(item, Vocabulary.RDFS_LABEL),
+                    name: JsonLdUtils.getLocalized(item[Vocabulary.RDFS_LABEL], I18nStore.getIntl()),
                     component: GeneratedStep,
                     data: item
                 });

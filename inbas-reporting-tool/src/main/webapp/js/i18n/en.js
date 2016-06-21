@@ -203,6 +203,9 @@ module.exports = {
         'sort.no': 'Click to sort records by this column',
         'sort.asc': 'Records are sorted in ascending order',
         'sort.desc': 'Records are sorted in descending order',
+        
+        'form.default.step-label': 'Description',
+        'form.default.question': 'Event description',
 
         // ----------- ARMS -------------
         'arms.title': 'ARMS',

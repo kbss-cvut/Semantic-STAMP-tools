@@ -176,7 +176,7 @@ module.exports = {
      * @return {*} Attribute value (possibly null)
      */
     getJsonAttValue: function (obj, att, by) {
-        return obj[att] ? (typeof(obj[att]) !== 'object' ? obj[att] : obj[att][by ? by : '@value']) : null;
+        return obj[att] != null ? (typeof(obj[att]) !== 'object' ? obj[att] : obj[att][by ? by : '@value']) : null;
     },
 
     /**
