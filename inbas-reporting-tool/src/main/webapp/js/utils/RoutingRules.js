@@ -12,12 +12,16 @@ var rules = {};
 rules[Routes.dashboard.name] = [
     () => {
         Actions.resetComponentState(require('../components/report/ReportsController').displayName);
+        // InjectIntl workaround
+        Actions.resetComponentState(require('../components/report/ReportsTable').WrappedComponent.displayName);
     }
 ];
 
 rules[Routes.statistics.name] = [
     () => {
         Actions.resetComponentState(require('../components/report/ReportsController').displayName);
+        // InjectIntl workaround
+        Actions.resetComponentState(require('../components/report/ReportsTable').WrappedComponent.displayName);
     }
 ];
 
