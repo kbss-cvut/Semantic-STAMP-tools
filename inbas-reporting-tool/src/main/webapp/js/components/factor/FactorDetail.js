@@ -29,9 +29,6 @@ var I18nMixin = require('../../i18n/I18nMixin');
 var EventTypeFactory = require('../../model/EventTypeFactory');
 var QuestionAnswerProcessor = require('../../model/QuestionAnswerProcessor').default;
 
-var EVENT_PARAM = 'event';
-var EVENT_TYPE_PARAM = 'eventType';
-
 function convertDurationToCurrentUnit(factor) {
     var targetUnit = gantt.config.duration_unit;
     return Utils.convertTime(factor.durationUnit, targetUnit, factor.duration);
@@ -53,10 +50,10 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: factor.statement ? Utils.jsonLdToTypeaheadOption(EventTypeFactory.resolveEventType(factor.statement.eventType)) : null,
+            eventType: Utils.jsonLdToTypeaheadOption(EventTypeFactory.resolveEventType(factor.statement.eventType)),
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
-            statement: factor.statement ? factor.statement : null,
+            statement: factor.statement,
 
             isWizardOpen: false,
             wizardProperties: null,
@@ -103,11 +100,11 @@ var FactorDetail = React.createClass({
 
     onOpenDetails: function () {
         this.setState({showMask: true});
-        var params = {}, report = this.props.getReport();
+        var report = this.props.getReport(),
+            event = assign({}, this.state.statement);
         this._updateReportForFormGen(report);
-        params[EVENT_TYPE_PARAM] = encodeURIComponent(this.state.eventType.id);
-        params[EVENT_PARAM] = this.state.statement.referenceId;
-        WizardGenerator.generateWizard(report, params, this.props.factor.text, this.openDetailsWizard);
+        this._mergeStatementState(event);
+        WizardGenerator.generateWizard(report, event, this.props.factor.text, this.openDetailsWizard);
     },
 
     /**
