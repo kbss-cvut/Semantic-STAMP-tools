@@ -68,15 +68,15 @@ class Register extends React.Component {
         if (!this.isValid()) {
             return;
         }
-        var data = {
+        var userData = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             username: this.state.username,
             password: this.state.password
         };
-        Ajax.post('rest/persons', data).end(function (resp) {
+        Ajax.post('rest/persons', userData).end(function (body, resp) {
             if (resp.status === 201) {
-                this.doSyntheticLogin(data.username, data.password);
+                this.doSyntheticLogin(userData.username, userData.password);
             }
         }.bind(this), function (err) {
             this.setState({
@@ -94,7 +94,7 @@ class Register extends React.Component {
      */
     doSyntheticLogin = (username, password) => {
         Ajax.post('j_spring_security_check', null, 'form').send('username=' + username).send('password=' + password)
-            .end(function (resp) {
+            .end(function (data, resp) {
                 var status = JSON.parse(resp.text);
                 if (!status.success || !status.loggedIn) {
                     this.setState({alertVisible: true});

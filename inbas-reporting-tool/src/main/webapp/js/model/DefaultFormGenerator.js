@@ -11,6 +11,8 @@ module.exports = {
      */
     generateForm(event) {
         var formTemplate = require('./defaultForm.json');
+        // Deep copy of the form template to prevent modifications
+        formTemplate = JSON.parse(JSON.stringify(formTemplate));
         if (!event || !event.question) {
             return formTemplate;
         }

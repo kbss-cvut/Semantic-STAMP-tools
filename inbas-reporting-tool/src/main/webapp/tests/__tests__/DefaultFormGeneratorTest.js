@@ -36,8 +36,7 @@ describe('Default form generator', () => {
                 }
             },
 
-            form = DefaultFormGenerator.generateForm(event),
-            wizardSteps = WizardGenerator._constructWizardSteps(form);
+            form = DefaultFormGenerator.generateForm(event);
 
         var answer = form['@graph'][0][Constants.FORM.HAS_SUBQUESTION][0][Constants.FORM.HAS_SUBQUESTION][0][Constants.FORM.HAS_ANSWER];
         expect(answer).not.toBeNull();
@@ -62,7 +61,6 @@ describe('Default form generator', () => {
             },
 
             form = DefaultFormGenerator.generateForm(event),
-            wizardSteps = WizardGenerator._constructWizardSteps(form),
             rootQuestion = form['@graph'][0];
         expect(rootQuestion['@id']).toEqual(event.question.uri);
         expect(rootQuestion[Constants.FORM.HAS_SUBQUESTION][0]['@id']).toEqual(event.question.subQuestions[0].uri);
@@ -71,4 +69,11 @@ describe('Default form generator', () => {
         expect(rootQuestion[Constants.FORM.HAS_SUBQUESTION][0][Constants.FORM.HAS_SUBQUESTION][0][Constants.FORM.HAS_ANSWER]['@id'])
             .toEqual(event.question.subQuestions[0].subQuestions[0].answers[0].uri);
     });
+
+    it('creates a clone of the form template, so that modifications to the form do not affect the original template', () => {
+        var formOne = DefaultFormGenerator.generateForm(), formTwo;
+        formOne['newAttribute'] = 12345;
+        formTwo = DefaultFormGenerator.generateForm();
+        expect(formTwo['newAttribute']).not.toBeDefined();
+    })
 });
