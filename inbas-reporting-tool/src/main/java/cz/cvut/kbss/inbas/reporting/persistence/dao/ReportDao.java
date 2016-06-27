@@ -42,6 +42,23 @@ public class ReportDao {
     }
 
     /**
+     * Gets a set of OWL classes to which report with the specified URI belongs.
+     *
+     * @param uri Report identifier (URI)
+     * @return Report's classes, or an empty set, if there is no such report
+     */
+    public Set<String> getReportTypes(URI uri) {
+        final EntityManager em = entityManager();
+        try {
+            final List<String> types = em.createNativeQuery("SELECT ?type WHERE { ?x a ?type . }", String.class)
+                                         .setParameter("x", uri).getResultList();
+            return new HashSet<>(types);
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
      * Gets a set of OWL Classes to which reports in report chain with the specified identifier belong.
      * <p>
      * The result contains types of all reports in the chain, although it is expected that all the reports will have the

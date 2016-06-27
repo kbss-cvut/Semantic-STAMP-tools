@@ -1,9 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest.handler;
 
-import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
-import cz.cvut.kbss.inbas.reporting.exception.UsernameExistsException;
-import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
-import cz.cvut.kbss.inbas.reporting.exception.WebServiceIntegrationException;
+import cz.cvut.kbss.inbas.reporting.exception.*;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,5 +60,10 @@ public class RestExceptionHandler {
     @ExceptionHandler(PersistenceException.class)
     public ResponseEntity<ErrorInfo> persistenceException(HttpServletRequest request, PersistenceException e) {
         return new ResponseEntity<>(errorInfo(request, e.getCause()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ReportImportingException.class)
+    public ResponseEntity<ErrorInfo> reportImportingException(HttpServletRequest request, ReportImportingException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

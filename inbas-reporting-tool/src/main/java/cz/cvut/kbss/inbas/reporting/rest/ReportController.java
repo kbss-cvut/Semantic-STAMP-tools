@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -143,7 +144,14 @@ public class ReportController extends BaseController {
      */
     @RequestMapping(value = "/importE5", method = RequestMethod.POST)
     public ResponseEntity<Void> importE5Report(@RequestParam("file") MultipartFile file) {
-        // TODO
-        throw new UnsupportedOperationException("Not implemented, yet.");
+        try {
+            final LogicalDocument result = reportService
+                    .importReportFromFile(file.getOriginalFilename(), file.getInputStream());
+            final HttpHeaders headers = RestUtils
+                    .createLocationHeaderFromContextPath("/reports/{key}", result.getKey());
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        } catch (IOException e) {
+            throw new BadRequestException("Unable to read the uploaded file.", e);
+        }
     }
 }

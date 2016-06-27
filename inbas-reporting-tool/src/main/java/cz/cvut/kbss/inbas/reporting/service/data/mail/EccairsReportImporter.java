@@ -138,8 +138,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                 eventPublisher.publishEvent(new InvalidateCacheEvent(this));
 //                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
             } catch (Exception e) {// rolback the transanction if something fails
-                em.remove(r);
                 LOG.trace("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName(), e);
+                em.remove(r);
             }
             return context;
         })).filter(Objects::nonNull).collect(Collectors.toList());
