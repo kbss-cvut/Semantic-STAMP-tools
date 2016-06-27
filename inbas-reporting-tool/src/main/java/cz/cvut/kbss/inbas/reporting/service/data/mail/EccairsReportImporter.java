@@ -5,8 +5,10 @@ import cz.cvut.kbss.datatools.mail.CompoundProcessor;
 import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
 import cz.cvut.kbss.datatools.mail.model.Message;
 import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
+import cz.cvut.kbss.eccairs.report.e5xml.e5f.E5FXMLParser;
 import cz.cvut.kbss.eccairs.report.e5xml.e5x.E5XXMLParser;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
+import cz.cvut.kbss.eccairs.report.model.dao.EccairsReportDao;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
 import cz.cvut.kbss.inbas.reporting.model.com.EMail;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.EmailDao;
@@ -106,8 +108,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
         LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.getEmailId(), ns.getName());
 //            byte[] bs = IOUtils.toByteArray(ns.is);
 //            System.out.println(new String(bs));
-        E5XMLLoader e5XmlLoader = constructE5XMLLoader();
-        Stream<EccairsReport> rs = e5XmlLoader.prepareFor(ns).loadData();
+        E5XMLLoader e5XmlLoader = constructE5XMLLoader(ns);
+        Stream<EccairsReport> rs = e5XmlLoader.loadData();
         if (rs == null) {
             return Collections.emptyList();
         }
@@ -118,9 +120,10 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
             String suri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
             URI context = URI.create(suri);
             EntityManager em = eccairsEmf.createEntityManager();
+            EccairsReportDao eccairsDao = new EccairsReportDao(em);
             try {
                 em.getTransaction().begin();
-                em.persist(r, new EntityDescriptor(context));
+                eccairsDao.safePersist(r, new EntityDescriptor(context));
                 em.getTransaction().commit();
             } catch (Exception e) {// rolback the transanction if something fails
                 em.getTransaction().rollback();
@@ -195,10 +198,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     }
 
 
-    protected E5XMLLoader constructE5XMLLoader() {
-        E5XMLLoader loader = new E5XMLLoader();
-        E5XXMLParser parser = new E5XXMLParser(eaf);
-        loader.setE5xParser(parser);
-        return loader;
+    protected E5XMLLoader constructE5XMLLoader(NamedStream ns) {
+        return new E5XMLLoader(ns, eaf);
     }
 }

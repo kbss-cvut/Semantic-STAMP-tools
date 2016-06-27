@@ -53,6 +53,7 @@ public class SesameUpdater {
 //            LOG.error("Exception caught when executing Sesame update.", ex);
         }finally{
             c.close();
+            r.shutDown();
         }
     }
 
