@@ -18,7 +18,7 @@ public class ReportingPhaseService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReportingPhaseService.class);
 
-    private static final String PHASE_OPTION_TYPE = "reportingPhase";
+    static final String PHASE_OPTION_TYPE = "reportingPhase";
 
     @Autowired
     private OptionsService optionsService;
@@ -28,7 +28,13 @@ public class ReportingPhaseService {
 
     @PostConstruct
     private void loadPhases() {
-        final RawJson json = (RawJson) optionsService.getOptions(PHASE_OPTION_TYPE);
+        final RawJson json;
+        try {
+            json = (RawJson) optionsService.getOptions(PHASE_OPTION_TYPE);
+        } catch (IllegalArgumentException e) {
+            LOG.warn("Reporting phases are not available (Message: {}).", e.getMessage());
+            return;
+        }
         this.phases.addAll(JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than));
         this.defaultPhase = JsonLdProcessing.getItemWithType(json, Vocabulary.s_c_default_phase);
         if (defaultPhase == null) {
