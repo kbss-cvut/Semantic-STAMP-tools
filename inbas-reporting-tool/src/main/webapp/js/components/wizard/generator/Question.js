@@ -6,6 +6,7 @@ import {Panel} from "react-bootstrap";
 import Answer from "./Answer";
 import Constants from "../../../constants/Constants";
 import FormUtils from "./FormUtils";
+import JsonLdUtils from "../../../utils/JsonLdUtils";
 import QuestionAnswerProcessor from "../../../model/QuestionAnswerProcessor";
 import Vocabulary from "../../../constants/Vocabulary";
 import Utils from "../../../utils/Utils";
@@ -47,7 +48,7 @@ export default class Question extends React.Component {
                     {this.renderSubQuestions()}
                 </div>;
             } else {
-                var label = Utils.getJsonAttValue(this.props.question, Vocabulary.RDFS_LABEL);
+                var label = JsonLdUtils.getLocalized(this.props.question[Vocabulary.RDFS_LABEL], this.props.intl);
                 return <Panel header={<h5>{label}</h5>} bsStyle='info'>
                     {this.renderAnswers()}
                     {this.renderSubQuestions()}
@@ -110,7 +111,7 @@ export default class Question extends React.Component {
             question[Constants.FORM.HAS_SUBQUESTION] = [question[Constants.FORM.HAS_SUBQUESTION]];
         }
         // TODO Temporary sorting
-        question[Constants.FORM.HAS_SUBQUESTION].sort(function(a, b) {
+        question[Constants.FORM.HAS_SUBQUESTION].sort(function (a, b) {
             var aLabel = Utils.getJsonAttValue(a, Vocabulary.RDFS_LABEL),
                 bLabel = Utils.getJsonAttValue(b, Vocabulary.RDFS_LABEL);
             if (aLabel < bLabel) {

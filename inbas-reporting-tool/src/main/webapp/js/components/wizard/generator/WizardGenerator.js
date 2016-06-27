@@ -4,45 +4,62 @@ var jsonld = require('jsonld');
 
 var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
+var DefaultFormGenerator = require('../../../model/DefaultFormGenerator');
 var FormUtils = require('./FormUtils').default;
+var I18nStore = require('../../../stores/I18nStore');
+var JsonLdUtils = require('../../../utils/JsonLdUtils').default;
 var Logger = require('../../../utils/Logger');
 var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
 var GeneratedStep = require('./GeneratedStep').default;
 var WizardStore = require('../../../stores/WizardStore');
 
+var EVENT_PARAM = 'event';
+var EVENT_TYPE_PARAM = 'eventType';
+var FORM_GEN_URL = 'rest/formGen';
+
 var WizardGenerator = {
 
-    generateWizard: function (report, parameters, wizardTitle, renderCallback) {
-        var uri = 'rest/formGen';
-        if (parameters) {
-            uri += '?';
-            Object.getOwnPropertyNames(parameters).forEach(function (param) {
-                uri += param + '=' + parameters[param] + '&';   // '&' at the end of request URI should not be a problem
-            });
-        }
-        // TODO Get rid of this
-        // var data = require('../../../../sample-eccairs-form.json');
-        var data = null;
-        if (!data) {
-            Ajax.post(uri, report).end(function
-                (data) {
-                this._createWizard(data, wizardTitle, renderCallback);
-            }.bind(this));
-        } else {
-            this._createWizard(data, wizardTitle, renderCallback);
-        }
+    generateWizard: function (report, event, wizardTitle, renderCallback) {
+        var url = this._initUrlWithParameters(event);
+        Ajax.post(url, report).end(function
+            (data) {
+            this._createWizard(data, event, wizardTitle, renderCallback);
+        }.bind(this), function () {
+            Logger.log('Received no valid wizard. Using default one.');
+            this._createDefaultWizard(event, wizardTitle, renderCallback);
+        }.bind(this));
     },
 
-    _createWizard: function (structure, title, renderCallback) {
+    _initUrlWithParameters: function (event) {
+        var params = {};
+        params[EVENT_TYPE_PARAM] = encodeURIComponent(event.eventType);
+        params[EVENT_PARAM] = event.referenceId;
+        return Utils.addParametersToUrl(FORM_GEN_URL, params);
+    },
+
+    _createDefaultWizard: function (event, title, renderCallback) {
+        var wizardProperties = {
+            steps: this._constructWizardSteps(DefaultFormGenerator.generateForm(event)),
+            title: title
+        };
+        renderCallback(wizardProperties);
+    },
+
+    _createWizard: function (structure, event, title, renderCallback) {
         jsonld.frame(structure, {}, function (err, framed) {
             if (err) {
                 Logger.error(err);
             }
-            var wizardProperties = {
-                steps: this._constructWizardSteps(framed),
-                title: title
-            };
+            try {
+                var wizardProperties = {
+                    steps: this._constructWizardSteps(framed),
+                    title: title
+                };
+            } catch (e) {
+                this._createDefaultWizard(event, title, renderCallback);
+                return;
+            }
             renderCallback(wizardProperties);
         }.bind(this));
     },
@@ -64,13 +81,13 @@ var WizardGenerator = {
         formElements = form[Constants.FORM.HAS_SUBQUESTION];
         if (!formElements) {
             Logger.error('Could not find any wizard steps in the received data.');
-            return [];
+            throw 'No wizard steps in form';
         }
         for (i = 0, len = formElements.length; i < len; i++) {
             item = formElements[i];
             if (FormUtils.isWizardStep(item) && !FormUtils.isHidden(item)) {
                 steps.push({
-                    name: Utils.getJsonAttValue(item, Vocabulary.RDFS_LABEL),
+                    name: JsonLdUtils.getLocalized(item[Vocabulary.RDFS_LABEL], I18nStore.getIntl()),
                     component: GeneratedStep,
                     data: item
                 });

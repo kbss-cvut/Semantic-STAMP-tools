@@ -7,7 +7,6 @@ var injectIntl = require('react-intl').injectIntl;
  *
  * Decorates the basic instance returned by injectIntl with accessors to the wrapped component or element (needed by
  * tests).
- * @param component
  */
 module.exports = function (component, props) {
     if (!props) {

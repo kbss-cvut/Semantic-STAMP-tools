@@ -3,12 +3,15 @@
 describe('Paging mixin', function () {
 
     var PagingMixin = require('../../js/components/mixin/PagingMixin'),
+        Actions = require('../../js/actions/Actions'),
+        ComponentStateStore = require('../../js/stores/ComponentStateStore'),
         defaultPageSize;
 
     beforeEach(function () {
         PagingMixin.props = PagingMixin.getDefaultProps();
         PagingMixin.state = PagingMixin.getInitialState();
         defaultPageSize = PagingMixin.props.pageSize;
+        spyOn(Actions, 'rememberComponentState');
     });
 
     it('renders buttons corresponding to page count', function () {
@@ -102,5 +105,41 @@ describe('Paging mixin', function () {
         var totalCount = result.props.children[1].props.children.props['values']['total'];
         expect(itemCount).toEqual(defaultPageSize - 1);
         expect(totalCount).toEqual(data.length);
+    });
+
+    it('remembers paging for component when page is selected', () => {
+        var selectedPage = PagingMixin.state.activePage + 1,
+            displayName = 'ReportsTable';
+        PagingMixin.getDisplayName = jasmine.createSpy('getDisplayName');
+        PagingMixin.getDisplayName.and.returnValue(displayName);
+        PagingMixin._onPageSelect({}, {
+            eventKey: selectedPage
+        });
+        expect(Actions.rememberComponentState).toHaveBeenCalledWith(displayName, PagingMixin.state);
+    });
+
+    it('calls paging change callback when paging is reset', () => {
+        var displayName = 'ReportsTable';
+        PagingMixin.getDisplayName = jasmine.createSpy('getDisplayName');
+        PagingMixin.getDisplayName.and.returnValue(displayName);
+        PagingMixin.resetPagination();
+        expect(Actions.rememberComponentState).toHaveBeenCalledWith(displayName, PagingMixin.getInitialState());
+    });
+
+    it('uses default active page when no initial state is remembered in ComponentStateStore', () => {
+        var displayName = 'ReportsTable';
+        PagingMixin.getDisplayName = jasmine.createSpy('getDisplayName');
+        PagingMixin.getDisplayName.and.returnValue(displayName);
+        expect(PagingMixin.getInitialState()).toEqual({activePage: 1});
+    });
+
+    it('uses remembered paging state when it is available in ComponentStateStore', () => {
+        var page = 2,
+            displayName = 'ReportsTable';
+        spyOn(ComponentStateStore, 'getComponentState').and.returnValue({activePage: page});
+        PagingMixin.getDisplayName = jasmine.createSpy('getDisplayName');
+        PagingMixin.getDisplayName.and.returnValue(displayName);
+        expect(PagingMixin.getInitialState()).toEqual({activePage: page});
+        expect(ComponentStateStore.getComponentState).toHaveBeenCalledWith(displayName);
     });
 });

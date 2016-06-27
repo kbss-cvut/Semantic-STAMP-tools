@@ -1,5 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.util;
 
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
+
+import java.util.Objects;
 import java.util.Random;
 
 public class IdentificationUtils {
@@ -32,5 +35,22 @@ public class IdentificationUtils {
      */
     public static Long generateFileNumber() {
         return System.currentTimeMillis();
+    }
+
+    /**
+     * Sets required identification fields of the specified document.
+     * <p>
+     * This currently included its key and file number. If the fields are already set, they are not modified.
+     *
+     * @param doc The document to set fields on
+     */
+    public static void generateIdentificationFields(LogicalDocument doc) {
+        Objects.requireNonNull(doc);
+        if (doc.getKey() == null) {
+            doc.setKey(generateKey());
+        }
+        if (doc.getFileNumber() == null) {
+            doc.setFileNumber(generateFileNumber());
+        }
     }
 }

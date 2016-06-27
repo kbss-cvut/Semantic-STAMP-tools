@@ -5,6 +5,7 @@
  */
 
 var _messages = [];
+var _intl = {};
 
 var I18nStore = {
 
@@ -12,8 +13,16 @@ var I18nStore = {
         _messages = messages;
     },
 
+    setIntl: function (intl) {
+        _intl = intl;
+    },
+
     i18n: function (messageId) {
         return _messages[messageId];
+    },
+
+    getIntl: function () {
+        return _intl;
     }
 };
 

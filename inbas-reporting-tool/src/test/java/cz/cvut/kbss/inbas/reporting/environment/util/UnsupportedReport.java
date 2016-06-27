@@ -17,6 +17,10 @@ public class UnsupportedReport implements LogicalDocument {
     }
 
     @Override
+    public void setFileNumber(Long fileNumber) {
+    }
+
+    @Override
     public Person getAuthor() {
         return null;
     }
@@ -53,7 +57,6 @@ public class UnsupportedReport implements LogicalDocument {
 
     @Override
     public void setKey(String key) {
-
     }
 
     @Override

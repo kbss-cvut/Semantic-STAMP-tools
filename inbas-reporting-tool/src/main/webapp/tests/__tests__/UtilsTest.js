@@ -154,4 +154,31 @@ describe('Utility functions tests', function () {
             expect(Utils.getJsonAttValue(obj, Constants.FORM.HAS_QUESTION_ORIGIN, '@id')).toEqual(value);
         })
     });
+
+    describe('addParametersToUrl', () => {
+
+        it('adds parameters to URL', () => {
+            var url = '/rest/formGen',
+                parameters = {
+                    pOne: '12345',
+                    pTwo: '54321'
+                },
+
+                result = Utils.addParametersToUrl(url, parameters);
+            expect(result.indexOf('pOne=' + parameters.pOne)).not.toEqual(-1);
+            expect(result.indexOf('pTwo=' + parameters.pTwo)).not.toEqual(-1);
+        });
+
+        it('adds parameters to URL which already contains query string', () => {
+            var url = '/rest/formGen?paramZero=0',
+                parameters = {
+                    pOne: '12345',
+                    pTwo: '54321'
+                },
+
+                result = Utils.addParametersToUrl(url, parameters);
+            expect(result.indexOf('&pOne=' + parameters.pOne)).not.toEqual(-1);
+            expect(result.indexOf('&pTwo=' + parameters.pTwo)).not.toEqual(-1);
+        });
+    });
 });

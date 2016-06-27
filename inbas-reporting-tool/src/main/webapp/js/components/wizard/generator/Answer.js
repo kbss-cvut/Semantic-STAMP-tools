@@ -9,6 +9,8 @@ import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
 import FormGenStore from "../../../stores/FormGenStore";
 import FormUtils from "./FormUtils";
+import I18nStore from "../../../stores/I18nStore";
+import JsonLdUtils from "../../../utils/JsonLdUtils";
 import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 
@@ -103,8 +105,8 @@ export default class Answer extends React.Component {
     _renderInputComponent() {
         var question = this.props.question,
             value = this._resolveValue(),
-            label = Utils.getJsonAttValue(question, Vocabulary.RDFS_LABEL),
-            title = Utils.getJsonAttValue(question, Vocabulary.RDFS_COMMENT),
+            label = JsonLdUtils.getLocalized(question[Vocabulary.RDFS_LABEL], I18nStore.getIntl()),
+            title = JsonLdUtils.getLocalized(question[Vocabulary.RDFS_COMMENT], I18nStore.getIntl()),
             component;
 
         if (FormUtils.isTypeahead(question)) {
@@ -132,7 +134,7 @@ export default class Answer extends React.Component {
             if (answer[Constants.FORM.HAS_OBJECT_VALUE] && answer[Constants.FORM.HAS_OBJECT_VALUE][Vocabulary.RDFS_LABEL]) {
                 value = Utils.getJsonAttValue(answer[Constants.FORM.HAS_OBJECT_VALUE], Vocabulary.RDFS_LABEL);
             }
-            var inputType = value.length > Constants.INPUT_LENGTH_THRESHOLD ? 'textarea' : 'text';
+            var inputType = FormUtils.isTextarea(question, value) ? 'textarea' : 'text';
             component = <Input type={inputType} label={label} title={title} value={value} onChange={this.onChange}
                                disabled={FormUtils.isDisabled(question)} rows={5}/>;
         }

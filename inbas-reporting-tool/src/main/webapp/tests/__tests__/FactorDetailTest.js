@@ -4,10 +4,11 @@
 describe('Factor detail dialog', function () {
 
     var React = require('react'),
+        assign = require('object-assign'),
         Environment = require('../environment/Environment'),
         Constants = require('../../js/constants/Constants'),
         FactorDetail = require('../../js/components/factor/FactorDetail'),
-        assign = require('object-assign'),
+        ReportFactory = require('../../js/model/ReportFactory'),
         callbacks,
         gantt = {
             calculateEndDate: function () {
@@ -26,7 +27,8 @@ describe('Factor detail dialog', function () {
             id: 1,
             text: 'Test',
             start_date: new Date(),
-            duration: 1
+            duration: 1,
+            statement: ReportFactory.createFactor()
         };
     });
 

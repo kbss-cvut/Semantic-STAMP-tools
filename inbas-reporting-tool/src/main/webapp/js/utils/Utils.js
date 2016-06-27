@@ -12,6 +12,8 @@ var PREPOSITIONS = [
     'without', 'not'
 ];
 
+var URL_CONTAINS_QUERY = /^.+\?.+=.+$/;
+
 module.exports = {
     /**
      * Formats the specified date into DD-MM-YY HH:mm
@@ -176,7 +178,7 @@ module.exports = {
      * @return {*} Attribute value (possibly null)
      */
     getJsonAttValue: function (obj, att, by) {
-        return obj[att] ? (typeof(obj[att]) !== 'object' ? obj[att] : obj[att][by ? by : '@value']) : null;
+        return obj[att] != null ? (typeof(obj[att]) !== 'object' ? obj[att] : obj[att][by ? by : '@value']) : null;
     },
 
     /**
@@ -261,5 +263,23 @@ module.exports = {
             hash = hash & hash; // Convert to 32bit integer
         }
         return hash;
+    },
+
+    /**
+     * Appends parameters in the specified argument as query parameters to the specified url.
+     *
+     * The url can already contain a query string
+     * @param url The URL to append parameters to
+     * @param parameters The parameters to add
+     * @return {*} Updated URL
+     */
+    addParametersToUrl(url, parameters) {
+        if (parameters) {
+            url += URL_CONTAINS_QUERY.test(url) ? '&' : '?';
+            Object.getOwnPropertyNames(parameters).forEach(function (param) {
+                url += param + '=' + parameters[param] + '&';   // '&' at the end of request URI should not be a problem
+            });
+        }
+        return url;
     }
 };

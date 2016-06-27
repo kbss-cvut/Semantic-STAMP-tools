@@ -10,11 +10,13 @@ describe('Routing rules', () => {
         spyOn(Actions, 'resetComponentState');
         RoutingRules.execute(Routes.dashboard.name);
         expect(Actions.resetComponentState).toHaveBeenCalledWith(require('../../js/components/report/ReportsController').displayName);
+        expect(Actions.resetComponentState).toHaveBeenCalledWith(require('../../js/components/report/ReportsTable').WrappedComponent.displayName);
     });
 
     it('resets component state store when statistics route is used', () => {
         spyOn(Actions, 'resetComponentState');
         RoutingRules.execute(Routes.statistics.name);
         expect(Actions.resetComponentState).toHaveBeenCalledWith(require('../../js/components/report/ReportsController').displayName);
+        expect(Actions.resetComponentState).toHaveBeenCalledWith(require('../../js/components/report/ReportsTable').WrappedComponent.displayName);
     });
 });

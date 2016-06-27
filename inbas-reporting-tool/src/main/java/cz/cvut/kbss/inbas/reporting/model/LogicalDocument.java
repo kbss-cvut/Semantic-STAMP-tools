@@ -28,6 +28,13 @@ public interface LogicalDocument extends HasOwlKey, HasUri {
     Long getFileNumber();
 
     /**
+     * Sets file number of this document.
+     *
+     * @param fileNumber The file number to set
+     */
+    void setFileNumber(Long fileNumber);
+
+    /**
      * Gets author of the report.
      *
      * @return Author

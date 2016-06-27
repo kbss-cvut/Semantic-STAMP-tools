@@ -81,12 +81,12 @@ module.exports = {
         'dashboard.recent-table-last-edited': 'Last modified',
         'dashboard.recent.no-reports': 'There are no reports, yet.',
         'dashboard.import.import-e5': 'Import E5X/E5F report',
-        
+
         'dashboard.unprocessed': 'You have {count} unprocessed report(s).',
-        
+
         'dropzone.title': 'Drop the file here or click to select a file to upload.',
         'dropzone-tooltip': 'Click here to select a file to upload',
-        
+
         'reports.no-reports': 'There are no reports, yet. You can create one ',
         'reports.no-reports.link': 'here.',
         'reports.no-reports.link-tooltip': 'Go to dashboard',
@@ -145,7 +145,7 @@ module.exports = {
         'report.eventtype.add-tooltip': 'Add an event type assessment',
         'report.organization': 'Organization',
         'report.responsible-department': 'Responsible department',
-        
+
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
         'occurrencereport.label': 'Occurrence',
@@ -199,7 +199,7 @@ module.exports = {
         'revisions.created': 'Created',
         'revisions.show-tooltip': 'Show this revision',
         'revisions.readonly-notice': 'Older revisions are read-only.',
-        
+
         'sort.no': 'Click to sort records by this column',
         'sort.asc': 'Records are sorted in ascending order',
         'sort.desc': 'Records are sorted in descending order',

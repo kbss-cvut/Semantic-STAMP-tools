@@ -3,6 +3,9 @@ var Pagination = require('react-bootstrap').Pagination;
 
 var FormattedMessage = require('react-intl').FormattedMessage;
 
+var Actions = require('../../actions/Actions');
+var ComponentStateStore = require('../../stores/ComponentStateStore');
+
 var MAX_BUTTONS = 5;
 
 /**
@@ -29,11 +32,22 @@ var PagingMixin = {
     },
 
     getInitialState: function () {
-        return {activePage: 1};
+        var page = 1;
+        if (this.getDisplayName) {
+            var state = ComponentStateStore.getComponentState(this.getDisplayName());
+            if (state && state.activePage) {
+                page = state.activePage;
+            }
+        }
+        return {activePage: page};
     },
 
     _onPageSelect: function (e, selectedEvent) {
-        this.setState({activePage: selectedEvent.eventKey});
+        var page = selectedEvent.eventKey;
+        this.setState({activePage: page});
+        if (this.getDisplayName) {
+            Actions.rememberComponentState(this.getDisplayName(), {activePage: page});
+        }
     },
 
     /**
@@ -41,6 +55,9 @@ var PagingMixin = {
      */
     resetPagination: function () {
         this.setState(this.getInitialState());
+        if (this.getDisplayName) {
+            Actions.rememberComponentState(this.getDisplayName(), this.getInitialState());
+        }
     },
 
     /**
