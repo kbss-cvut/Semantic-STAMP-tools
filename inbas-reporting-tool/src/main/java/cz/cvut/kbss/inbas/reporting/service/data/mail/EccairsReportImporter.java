@@ -34,8 +34,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.config.RepositoryConfigException;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
@@ -79,10 +84,24 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     protected void init() {
         mapping = new MappingEccairsData2Aso(eaf);
         processor.registerMessageProcessor(new E5XMLLocator());
+        
+        try {
+            // create importer user
+            updater.executeUpdate(
+                    mapping.createAutomatedImporterPerson("http://onto.fel.cvut.cz/ontologies/ucl-sisel-context"));
+        } catch (RepositoryException | RepositoryConfigException | MalformedQueryException | UpdateExecutionException ex) {
+            LOG.error("Could not create importer user!", ex);
+        }
 //        processor.registerMessageProcessor(new CSAEmailProcessor());
 //        processor.registerMessageProcessor(new TISEmailProcessor());
 //        processor.registerMessageProcessor(new UZPLNEmailProcessor());
 //        processor.registerMessageProcessor(new UZPLNParaEmailProcessor());
+        
+//        processor.registerMessageProcessor(new CSAEmailProcessor());
+//        processor.registerMessageProcessor(new TISEmailProcessor());
+//        processor.registerMessageProcessor(new UZPLNEmailProcessor());
+//        processor.registerMessageProcessor(new UZPLNParaEmailProcessor());
+        
     }
 
     @Override
