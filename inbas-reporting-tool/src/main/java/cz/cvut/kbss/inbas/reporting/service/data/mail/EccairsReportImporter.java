@@ -47,9 +47,6 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
 //    protected E5XMLLoader e5XmlLoader;
 
     @Autowired
-    protected EntityManagerFactory emf;
-
-    @Autowired
     @Qualifier("eccairsPU")
     protected EntityManagerFactory eccairsEmf;
 
@@ -93,16 +90,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
         return Collections.emptyList();
     }
 
-    /**
-     * This method loads a report from a NamedStream, e.g. file or email attachment.
-     *
-     * @param ns
-     * @return
-     * @throws Exception
-     */
     @Override
     public List<URI> process(NamedStream ns) throws Exception {
-//        try {
         LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.getEmailId(), ns.getName());
 //            byte[] bs = IOUtils.toByteArray(ns.is);
 //            System.out.println(new String(bs));
@@ -112,39 +101,48 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
             return Collections.emptyList();
         }
         List<URI> ret = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
-//                if (r == null) {
-//                    return;
-//                }
-            String suri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
-            URI context = URI.create(suri);
+            String sUri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
+            URI context = URI.create(sUri);
             EntityManager em = eccairsEmf.createEntityManager();
             try {
-                em.getTransaction().begin();
-                em.persist(r, new EntityDescriptor(context));
-                em.getTransaction().commit();
-            } catch (Exception e) {// rolback the transanction if something fails
-                em.getTransaction().rollback();
-                LOG.trace("failed to persisting eccairs report from file {}.", r.getOriginFileName(), e);
-                return null;
-            }
-
-            try {
-                updater.executeUpdate(
-                        mapping.getUFOTypesQuery(r.getTaxonomyVersion(), suri),
-                        mapping.generateEventsFromTypes(r.getTaxonomyVersion(), suri),
-                        mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), suri),
-                        mapping.fixOccurrenceReport(r.getTaxonomyVersion(), suri, r.getOccurrence()),
-                        mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), suri, r.getOccurrence()));
-                eventPublisher.publishEvent(new InvalidateCacheEvent(this));
-//                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
-            } catch (Exception e) {// rolback the transanction if something fails
-                LOG.trace("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName(), e);
-                em.remove(r);
+                try {
+                    em.getTransaction().begin();
+                    em.persist(r, new EntityDescriptor(context));
+                    em.getTransaction().commit();
+                } catch (Exception e) {// rollback the transaction if something fails
+                    em.getTransaction().rollback();
+                    LOG.error("Failed to persist eccairs report from file {}.", r.getOriginFileName(), e);
+                    return null;
+                }
+                adjustPersistedReport(r, em);
+            } finally {
+                em.close();
             }
             return context;
         })).filter(Objects::nonNull).collect(Collectors.toList());
         ns.close();
         return ret;
+    }
+
+    private void adjustPersistedReport(EccairsReport r, EntityManager em) {
+        final String reportUri = r.getUri();
+        try {
+            updater.executeUpdate(
+                    mapping.getUFOTypesQuery(r.getTaxonomyVersion(), reportUri),
+                    mapping.generateEventsFromTypes(r.getTaxonomyVersion(), reportUri),
+                    mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), reportUri),
+                    mapping.fixOccurrenceReport(r.getTaxonomyVersion(), reportUri, r.getOccurrence()),
+                    mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), reportUri, r.getOccurrence()));
+            eventPublisher.publishEvent(new InvalidateCacheEvent(this));
+//                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
+        } catch (Exception e) {
+            LOG.error("Mapping eccairs report {} to reporting tool report failed. Reverting changes.",
+                    r.getOriginFileName(), e);
+            em.getTransaction().begin();
+            final Object toRemove = em.merge(r);
+            em.remove(toRemove);
+            em.getTransaction().commit();
+        }
     }
 
     @Override
@@ -195,7 +193,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     }
 
 
-    protected E5XMLLoader constructE5XMLLoader() {
+    private E5XMLLoader constructE5XMLLoader() {
         E5XMLLoader loader = new E5XMLLoader();
         E5XXMLParser parser = new E5XXMLParser(eaf);
         loader.setE5xParser(parser);

@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@ComponentScan(basePackages = "cz.cvut.kbss.inbas.reporting.persistence.dao")
+@ComponentScan(basePackages = {"cz.cvut.kbss.inbas.reporting.persistence.dao",
+        "cz.cvut.kbss.inbas.reporting.persistence.sesame"})
 @Import({TestPersistenceFactory.class,
         TestFormGenPersistenceFactory.class,
         TestEccairsReportImportPersistenceFactory.class})

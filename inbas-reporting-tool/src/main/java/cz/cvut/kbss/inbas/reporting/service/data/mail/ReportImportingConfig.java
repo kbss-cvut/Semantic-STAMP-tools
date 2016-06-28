@@ -12,10 +12,7 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 
-import static cz.cvut.kbss.inbas.reporting.util.ConfigParam.REPOSITORY_URL;
-
 /**
- *
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @Configuration
@@ -25,19 +22,20 @@ public class ReportImportingConfig {
 
     @Autowired
     protected Environment env;
-    
+
     @PostConstruct
     protected void init() {
         constructSesameUpdater();
         constructEccairsAccessFactory();
 //        constructE5XMLLoader();
     }
-    
+
     // Eccairs Access Factory
     protected SingeltonEccairsAccessFactory eaf;
 
     protected void constructEccairsAccessFactory() {
-        EccairsAccessConfiguration eac = new EccairsAccessConfiguration(PropertyUtils.loadProperties("/eccairs-tools-config.properties"));
+        EccairsAccessConfiguration eac = new EccairsAccessConfiguration(
+                PropertyUtils.loadProperties("/eccairs-tools-config.properties"));
         eaf = new SingeltonEccairsAccessFactory(eac);
     }
 
@@ -63,9 +61,8 @@ public class ReportImportingConfig {
     // Sesame updater
     protected SesameUpdater updater;
 
-    protected void constructSesameUpdater() {
+    private void constructSesameUpdater() {
         updater = new SesameUpdater();
-        updater.setRepository(env.getProperty(REPOSITORY_URL.toString()));
     }
 
     @Bean
