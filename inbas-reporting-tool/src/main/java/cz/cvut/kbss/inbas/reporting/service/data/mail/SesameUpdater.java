@@ -5,6 +5,7 @@ import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryLanguage;
 import org.openrdf.query.Update;
 import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.config.RepositoryConfigException;
@@ -35,7 +36,8 @@ public class SesameUpdater {
      */
     public void executeUpdate(String... updates)
             throws RepositoryException, RepositoryConfigException, MalformedQueryException, UpdateExecutionException {
-        RepositoryConnection c = sesamePersistence.getRepository().getConnection();
+        final Repository repository = sesamePersistence.getRepository();
+        RepositoryConnection c = repository.getConnection();
         try {
             c.begin();
             for (String update : updates) {
@@ -52,7 +54,7 @@ public class SesameUpdater {
 //            LOG.error("Exception caught when executing Sesame update.", ex);
         } finally {
             c.close();
-            r.shutDown();
+            repository.shutDown();
         }
     }
 }

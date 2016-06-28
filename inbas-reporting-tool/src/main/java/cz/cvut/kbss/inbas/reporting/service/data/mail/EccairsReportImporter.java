@@ -5,8 +5,6 @@ import cz.cvut.kbss.datatools.mail.CompoundProcessor;
 import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
 import cz.cvut.kbss.datatools.mail.model.Message;
 import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
-import cz.cvut.kbss.eccairs.report.e5xml.e5f.E5FXMLParser;
-import cz.cvut.kbss.eccairs.report.e5xml.e5x.E5XXMLParser;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
 import cz.cvut.kbss.eccairs.report.model.dao.EccairsReportDao;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
@@ -20,13 +18,16 @@ import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
 import org.apache.jena.rdf.model.Model;
 import org.jooq.lambda.Unchecked;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.config.RepositoryConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
@@ -34,24 +35,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.config.RepositoryConfigException;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-@Service
 public class EccairsReportImporter implements ReportImporter, ApplicationEventPublisherAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(EccairsReportImporter.class);
-
-//    @Autowired
-//    protected E5XMLLoader e5XmlLoader;
 
     @Autowired
     @Qualifier("eccairsPU")
@@ -114,29 +106,27 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
             return Collections.emptyList();
         }
         List<URI> ret = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
-            String sUri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
-            URI context = URI.create(sUri);
-            EntityManager em = eccairsEmf.createEntityManager();
-            EccairsReportDao eccairsDao = new EccairsReportDao(em);
-            try {
-                em.getTransaction().begin();
-                eccairsDao.safePersist(r, new EntityDescriptor(context));
-                em.getTransaction().commit();
-            } catch (Exception e) {// rolback the transanction if something fails
-                em.getTransaction().rollback();
-                LOG.trace("failed to persisting eccairs report from file {}.", r.getOriginFileName(), e);
-                return null;
-            }
+                    String sUri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
+                    URI context = URI.create(sUri);
+                    EntityManager em = eccairsEmf.createEntityManager();
+                    EccairsReportDao eccairsDao = new EccairsReportDao(em);
+                    try {
+                        em.getTransaction().begin();
+                        eccairsDao.safePersist(r, new EntityDescriptor(context));
+                        em.getTransaction().commit();
+                    } catch (Exception e) {// rolback the transanction if something fails
+                        em.getTransaction().rollback();
+                        LOG.trace("failed to persisting eccairs report from file {}.", r.getOriginFileName(), e);
+                        return null;
+                    }
 
-            adjustPersistedReport(r, em);
-                eventPublisher.publishEvent(new InvalidateCacheEvent(this));
+                    adjustPersistedReport(r, em);
+                    eventPublisher.publishEvent(new InvalidateCacheEvent(this));
 //                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
-            } catch (Exception e) {// rolback the transanction if something fails
-                LOG.trace("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName(), e);
-                em.remove(r);
-            }
-            return context;
-        })).filter(Objects::nonNull).collect(Collectors.toList());
+                    return context;
+                }
+
+        )).filter(Objects::nonNull).collect(Collectors.toList());
         ns.close();
         return ret;
     }
