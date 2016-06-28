@@ -5,8 +5,10 @@ import cz.cvut.kbss.datatools.mail.CompoundProcessor;
 import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
 import cz.cvut.kbss.datatools.mail.model.Message;
 import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
+import cz.cvut.kbss.eccairs.report.e5xml.e5f.E5FXMLParser;
 import cz.cvut.kbss.eccairs.report.e5xml.e5x.E5XXMLParser;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
+import cz.cvut.kbss.eccairs.report.model.dao.EccairsReportDao;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
 import cz.cvut.kbss.inbas.reporting.model.com.EMail;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.EmailDao;
@@ -32,8 +34,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.UpdateExecutionException;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.config.RepositoryConfigException;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
@@ -74,6 +81,14 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     protected void init() {
         mapping = new MappingEccairsData2Aso(eaf);
         processor.registerMessageProcessor(new E5XMLLocator());
+
+        try {
+            // create importer user
+            updater.executeUpdate(
+                    mapping.createAutomatedImporterPerson("http://onto.fel.cvut.cz/ontologies/ucl-sisel-context"));
+        } catch (RepositoryException | RepositoryConfigException | MalformedQueryException | UpdateExecutionException ex) {
+            LOG.error("Could not create importer user!", ex);
+        }
 //        processor.registerMessageProcessor(new CSAEmailProcessor());
 //        processor.registerMessageProcessor(new TISEmailProcessor());
 //        processor.registerMessageProcessor(new UZPLNEmailProcessor());
@@ -93,10 +108,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     @Override
     public List<URI> process(NamedStream ns) throws Exception {
         LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.getEmailId(), ns.getName());
-//            byte[] bs = IOUtils.toByteArray(ns.is);
-//            System.out.println(new String(bs));
-        E5XMLLoader e5XmlLoader = constructE5XMLLoader();
-        Stream<EccairsReport> rs = e5XmlLoader.prepareFor(ns).loadData();
+        E5XMLLoader e5XmlLoader = constructE5XMLLoader(ns);
+        Stream<EccairsReport> rs = e5XmlLoader.loadData();
         if (rs == null) {
             return Collections.emptyList();
         }
@@ -104,19 +117,23 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
             String sUri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
             URI context = URI.create(sUri);
             EntityManager em = eccairsEmf.createEntityManager();
+            EccairsReportDao eccairsDao = new EccairsReportDao(em);
             try {
-                try {
-                    em.getTransaction().begin();
-                    em.persist(r, new EntityDescriptor(context));
-                    em.getTransaction().commit();
-                } catch (Exception e) {// rollback the transaction if something fails
-                    em.getTransaction().rollback();
-                    LOG.error("Failed to persist eccairs report from file {}.", r.getOriginFileName(), e);
-                    return null;
-                }
-                adjustPersistedReport(r, em);
-            } finally {
-                em.close();
+                em.getTransaction().begin();
+                eccairsDao.safePersist(r, new EntityDescriptor(context));
+                em.getTransaction().commit();
+            } catch (Exception e) {// rolback the transanction if something fails
+                em.getTransaction().rollback();
+                LOG.trace("failed to persisting eccairs report from file {}.", r.getOriginFileName(), e);
+                return null;
+            }
+
+            adjustPersistedReport(r, em);
+                eventPublisher.publishEvent(new InvalidateCacheEvent(this));
+//                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
+            } catch (Exception e) {// rolback the transanction if something fails
+                LOG.trace("mapping eccairs report {} to reporting tool report failed.", r.getOriginFileName(), e);
+                em.remove(r);
             }
             return context;
         })).filter(Objects::nonNull).collect(Collectors.toList());
@@ -133,7 +150,6 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                     mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), reportUri),
                     mapping.fixOccurrenceReport(r.getTaxonomyVersion(), reportUri, r.getOccurrence()),
                     mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), reportUri, r.getOccurrence()));
-            eventPublisher.publishEvent(new InvalidateCacheEvent(this));
 //                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
         } catch (Exception e) {
             LOG.error("Mapping eccairs report {} to reporting tool report failed. Reverting changes.",
@@ -193,10 +209,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     }
 
 
-    private E5XMLLoader constructE5XMLLoader() {
-        E5XMLLoader loader = new E5XMLLoader();
-        E5XXMLParser parser = new E5XXMLParser(eaf);
-        loader.setE5xParser(parser);
-        return loader;
+    protected E5XMLLoader constructE5XMLLoader(NamedStream ns) {
+        return new E5XMLLoader(ns, eaf);
     }
 }
