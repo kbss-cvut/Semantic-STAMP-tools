@@ -29,6 +29,10 @@
         <appender-ref ref="STDOUT"/>
     </logger>
 
+    <logger name="org.apache.http" level="WARN" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
     <!-- Restrict logging of Spring -->
     <logger name="org.springframework" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
