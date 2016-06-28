@@ -15,7 +15,9 @@ var Actions = Reflux.createActions([
     
     'rememberComponentState', 'resetComponentState',
 
-    'loadFormOptions'
+    'loadFormOptions',
+
+    'loadStatistics'
 ]);
 
 module.exports = Actions;
