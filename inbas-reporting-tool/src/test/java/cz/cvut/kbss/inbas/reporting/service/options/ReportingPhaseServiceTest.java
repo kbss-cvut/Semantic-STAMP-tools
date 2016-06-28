@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.options;
 
+import cz.cvut.kbss.inbas.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import org.junit.Rule;
 import org.junit.Test;
@@ -7,12 +8,14 @@ import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ReportingPhaseServiceTest extends BaseServiceTestRunner {
 
@@ -20,7 +23,6 @@ public class ReportingPhaseServiceTest extends BaseServiceTestRunner {
             .asList(URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/first"),
                     URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second"),
                     URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/third"));
-    ;
 
     @Autowired
     private ReportingPhaseService service;
@@ -75,5 +77,24 @@ public class ReportingPhaseServiceTest extends BaseServiceTestRunner {
     public void getDefaultPhaseReturnsDefaultReportPhase() {
         final URI expected = URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second");
         assertEquals(expected, service.getDefaultPhase());
+    }
+
+    @Test
+    public void initializationHandlesSituationWhenNoPhasesAreAvailable() throws Exception {
+        final OptionsService optionsServiceMock = mock(OptionsService.class);
+        when(optionsServiceMock.getOptions(ReportingPhaseService.PHASE_OPTION_TYPE))
+                .thenThrow(new IllegalArgumentException("Unsupported option."));
+        final ReportingPhaseService service = new ReportingPhaseService();
+        TestUtils.setFieldValue(ReportingPhaseService.class.getDeclaredField("optionsService"), service,
+                optionsServiceMock);
+
+        final Method loadPhases = ReportingPhaseService.class.getDeclaredMethod("loadPhases");
+        loadPhases.setAccessible(true);
+        loadPhases.invoke(service);
+        assertNull(service.getDefaultPhase());
+        final Field phasesField = ReportingPhaseService.class.getDeclaredField("phases");
+        phasesField.setAccessible(true);
+        final List<?> phases = (List) phasesField.get(service);
+        assertTrue(phases.isEmpty());
     }
 }

@@ -10,6 +10,7 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.util.ReportRevisionComparator;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
+import cz.cvut.kbss.inbas.reporting.exception.ReportImportingException;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
@@ -26,9 +27,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -320,5 +323,35 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                                         .andExpect(status().isInternalServerError()).andReturn();
         final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
         assertEquals(message, errorInfo.getMessage());
+    }
+
+    @Test
+    public void importFromE5ReturnsLocationHeaderOnSuccess() throws Exception {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        IdentificationUtils.generateIdentificationFields(report);
+        when(reportServiceMock.importReportFromFile(anyString(), any(InputStream.class))).thenReturn(report);
+        final MockMultipartFile file = getMockMultipartFile();
+        final MvcResult result = mockMvc.perform(fileUpload(REPORTS_PATH + "importE5").file(file))
+                                        .andExpect(status().isCreated()).andReturn();
+        verifyLocationEquals(REPORTS_PATH + report.getKey(), result);
+        verify(reportServiceMock).importReportFromFile(eq(file.getOriginalFilename()), any(InputStream.class));
+    }
+
+    private MockMultipartFile getMockMultipartFile() {
+        final String name = "iame5xfile.e5x";
+        final String content = "fjadjfiasjefnasenfas9eu0[1231hhafp8ayh2r23rqhwjkehrqo3987424";
+        return new MockMultipartFile("file", name, null, content.getBytes());
+    }
+
+    @Test
+    public void reportImportingExceptionIsWrappedInJsonObjectWithReadableMessage() throws Exception {
+        final String errorMsg = "Invalid report content.";
+        when(reportServiceMock.importReportFromFile(anyString(), any(InputStream.class)))
+                .thenThrow(new ReportImportingException(errorMsg));
+        final MockMultipartFile file = getMockMultipartFile();
+        final MvcResult result = mockMvc.perform(fileUpload(REPORTS_PATH + "importE5").file(file))
+                                        .andExpect(status().isInternalServerError()).andReturn();
+        final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
+        assertEquals(errorMsg, errorInfo.getMessage());
     }
 }

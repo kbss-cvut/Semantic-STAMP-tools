@@ -47,6 +47,15 @@ public class ReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
+    public void getReportTypesGetsTypesForReportIdentifiedByUri() {
+        final OccurrenceReport report = persistReport();
+        // At least these
+        final Set<String> minExpected = new HashSet<>(Arrays.asList(Vocabulary.s_c_report, Vocabulary.s_c_occurrence_report));
+        final Set<String> types = reportDao.getReportTypes(report.getUri());
+        assertTrue(types.containsAll(minExpected));
+    }
+
+    @Test
     public void getReportTypesReturnsEmptySetForUnknownReport() {
         final Set<String> types = reportDao.getReportTypes("unknownReport");
         assertNotNull(types);
