@@ -104,19 +104,13 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
      */
     @Override
     public List<URI> process(NamedStream ns) throws Exception {
-//        try {
         LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.getEmailId(), ns.getName());
-//            byte[] bs = IOUtils.toByteArray(ns.is);
-//            System.out.println(new String(bs));
         E5XMLLoader e5XmlLoader = constructE5XMLLoader(ns);
         Stream<EccairsReport> rs = e5XmlLoader.loadData();
         if (rs == null) {
             return Collections.emptyList();
         }
         List<URI> ret = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
-//                if (r == null) {
-//                    return;
-//                }
             String suri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
             URI context = URI.create(suri);
             EntityManager em = eccairsEmf.createEntityManager();
