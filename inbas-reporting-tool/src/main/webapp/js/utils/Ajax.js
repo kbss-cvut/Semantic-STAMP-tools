@@ -74,6 +74,9 @@ var Ajax = {
                         Routing.saveOriginalTarget({path: currentRoute});
                         Routing.transitionTo(Routes.login);
                     }
+                    if (onError) {
+                        onError();
+                    }
                     return;
                 }
                 try {
