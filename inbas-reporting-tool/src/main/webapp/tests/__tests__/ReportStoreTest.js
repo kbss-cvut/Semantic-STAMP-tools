@@ -15,6 +15,7 @@ describe('Report store', function () {
         Ajax.__set__('request', reqMock);
         Ajax.__set__('Logger', Environment.mockLogger());
         ReportStore.__set__('Ajax', Ajax);
+        jasmine.getGlobal().top = {};
     });
 
     it('triggers with data and action identification when reports are loaded', function () {
@@ -94,5 +95,24 @@ describe('Report store', function () {
             action: Actions.loadReport,
             report: null
         });
-    })
+    });
+
+    it('does not start new request when loadAllReports is triggered and reports are already being loaded', () => {
+        var reports = [
+            {id: 'reportOne'},
+            {id: 'reportTwo'}
+        ];
+        reqMock.end.and.callFake(function (handler) {
+            setTimeout(() => {
+                handler(null, {
+                    body: reports
+                });
+            }, 500);
+
+        });
+        ReportStore.onLoadAllReports();
+        ReportStore.onLoadAllReports();
+
+        expect(reqMock.end.calls.count()).toEqual(1);
+    });
 });

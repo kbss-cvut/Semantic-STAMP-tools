@@ -9,19 +9,28 @@ var Utils = require('../utils/Utils');
 var BASE_URL = 'rest/reports';
 var BASE_URL_WITH_SLASH = 'rest/reports/';
 
+// When reports are being loaded, do not send the request again
+var reportsLoading = false;
+
 var ReportStore = Reflux.createStore({
     listenables: [Actions],
 
     _reports: null,
 
     onLoadAllReports: function () {
+        if (reportsLoading) {
+            return;
+        }
+        reportsLoading = true;
         Ajax.get(BASE_URL).end(function (data) {
+            reportsLoading = false;
             this._reports = data;
             this.trigger({
                 action: Actions.loadAllReports,
                 reports: this._reports
             });
         }.bind(this), function () {
+            reportsLoading = false;
             this.trigger({
                 action: Actions.loadAllReports,
                 reports: []

@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.persistence.sesame;
 
-import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandler;
@@ -19,7 +18,7 @@ public class DataDao {
     private static final Logger LOG = LoggerFactory.getLogger(DataDao.class);
 
     @Autowired
-    private Repository repository;
+    private SesamePersistenceProvider sesameRepository;
 
     /**
      * Gets raw content of the repository.
@@ -30,7 +29,7 @@ public class DataDao {
      */
     public String getRepositoryData() {
         try {
-            final RepositoryConnection connection = repository.getConnection();
+            final RepositoryConnection connection = sesameRepository.getRepository().getConnection();
             final ByteArrayOutputStream bos = new ByteArrayOutputStream();
             final RDFHandler rdfHandler = new RDFXMLPrettyWriter(bos);
             connection.export(rdfHandler);

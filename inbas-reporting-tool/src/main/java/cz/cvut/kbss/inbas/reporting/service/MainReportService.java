@@ -41,8 +41,6 @@ public class MainReportService implements ReportBusinessService {
     @Autowired
     private OccurrenceReportService occurrenceReportService;
 
-    private volatile boolean cacheLoaded;
-
     private final Map<String, Class<? extends LogicalDocument>> entitiesToOwlClasses = new HashMap<>();
 
     private final Map<Class<? extends LogicalDocument>, BaseReportService<? extends LogicalDocument>> services = new HashMap<>();
@@ -60,14 +58,13 @@ public class MainReportService implements ReportBusinessService {
 
     @Override
     public List<ReportDto> findAll() {
-        if (cacheLoaded) {
+        if (!reportCache.isEmpty()) {
             return reportCache.getAll();
         }
         final List<LogicalDocument> reports = new ArrayList<>();
         services.values().forEach(service -> reports.addAll(service.findAll()));
         final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
         result.forEach(reportCache::put);
-        cacheLoaded = true;
         Collections.sort(result, new DocumentDateAndRevisionComparator());
         return result;
     }

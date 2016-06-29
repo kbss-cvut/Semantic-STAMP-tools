@@ -181,7 +181,6 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         p.setUsername(userData.getEmailAddress());
         p.setPassword(PASSWORD);
         p.encodePassword(encoder);
-        p.setUri(URI.create("http://krizik.felk.cvut.cz/differentUri"));
         personDao.persist(p);
         return p;
     }

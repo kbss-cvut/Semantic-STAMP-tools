@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.environment.config;
 
 import cz.cvut.kbss.inbas.reporting.persistence.sesame.DataDao;
-import org.openrdf.repository.Repository;
+import cz.cvut.kbss.inbas.reporting.persistence.sesame.SesamePersistenceProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,7 +16,7 @@ public class MockSesamePersistence {
     }
 
     @Bean
-    public Repository repository() {
-        return mock(Repository.class);
+    public SesamePersistenceProvider sesamePersistenceProvider() {
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
+import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.config.TestPersistenceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.TestServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
@@ -13,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestServiceConfig.class, TestPersistenceConfig.class})
+@ContextConfiguration(classes = {TestServiceConfig.class, TestPersistenceConfig.class, MockSesamePersistence.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class BaseServiceTestRunner {
 

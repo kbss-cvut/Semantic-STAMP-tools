@@ -129,9 +129,14 @@ public class Person implements HasDerivableUri, Serializable {
 
     /**
      * Generates URI using {@link Constants#PERSON_BASE_URI} and the person's first and last name.
+     *
+     * If the URI is already set, nothing happens.
      */
     @Override
     public void generateUri() {
+        if (uri != null) {
+            return;
+        }
         if (firstName == null || firstName.isEmpty()) {
             throw new IllegalStateException("Cannot generate Person URI without first name.");
         }
