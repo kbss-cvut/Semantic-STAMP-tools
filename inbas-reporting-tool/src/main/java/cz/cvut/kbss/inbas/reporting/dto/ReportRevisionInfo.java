@@ -62,24 +62,12 @@ public class ReportRevisionInfo {
 
         ReportRevisionInfo that = (ReportRevisionInfo) o;
 
-        assert uri != null;
-        assert key != null;
-        assert revision != null;
-        if (!uri.equals(that.uri)) return false;
-        if (!key.equals(that.key)) return false;
-        if (created != null ? !created.equals(that.created) : that.created != null) return false;
-        return revision.equals(that.revision);
+        return uri != null ? uri.equals(that.uri) : that.uri == null;
+
     }
 
     @Override
     public int hashCode() {
-        int result = uri.hashCode();
-        assert uri != null;
-        assert key != null;
-        assert revision != null;
-        result = 31 * result + key.hashCode();
-        result = 31 * result + (created != null ? created.hashCode() : 0);
-        result = 31 * result + revision.hashCode();
-        return result;
+        return uri != null ? uri.hashCode() : 0;
     }
 }

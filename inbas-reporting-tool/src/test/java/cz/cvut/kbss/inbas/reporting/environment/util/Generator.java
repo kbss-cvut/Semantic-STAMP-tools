@@ -28,7 +28,7 @@ public class Generator {
     public static final URI ACCIDENT_CATASTROPHIC = URI
             .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/catastrophic");
 
-    private static final URI[] FACTOR_TYPES = {
+    public static final URI[] FACTOR_TYPES = {
             URI.create("http://onto.fel.cvut.cz/ontologies/aviation-safety/causes"),
             URI.create("http://onto.fel.cvut.cz/ontologies/aviation-safety/mitigates"),
             URI.create("http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes_to")
