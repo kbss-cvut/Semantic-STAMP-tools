@@ -82,7 +82,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
             final Person importer = new Person();
             importer.setUsername(IMPORTER_USERNAME);
             importer.setFirstName("importer");
-            importer.setLastName("0001");
+            importer.setLastName("");
             importer.setPassword("Importer0001");
             personService.persist(importer);
         }
