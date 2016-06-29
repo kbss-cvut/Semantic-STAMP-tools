@@ -11,5 +11,101 @@
 
     <artifactId>eccairs-webapi</artifactId>
 
+    <build>
 
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.10</version>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/java-generated</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>3.1.6</version>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sourceRoot>${project.basedir}/src/main/java-generated</sourceRoot>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>${project.basedir}/src/main/resources/wsdl/cvut-webapi/cvut-webapi.wsdl</wsdl>
+                                    <extraargs>
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>cz.cvut.kbss.eccairs.webapi.cvut</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>${project.basedir}/src/main/resources/wsdl/uzpln-webapi/uzpln-webapi.wsdl</wsdl>
+                                    <extraargs>
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>cz.cvut.kbss.eccairs.webapi.uzpln</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>${project.basedir}/src/main/resources/wsdl/uzpln-service/uzpln-service.wsdl</wsdl>
+                                    <extraargs>
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>cz.cvut.kbss.eccairs.serviceapi.uzpln</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
+                            </wsdlOptions>
+                        </configuration>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>jaxws-maven-plugin</artifactId>-->
+                <!--<version>2.4.1</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>wsimport-from-jdk</id>-->
+                        <!--<goals>-->
+                            <!--<goal>wsimport</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--&lt;!&ndash; using wsdl from an url &ndash;&gt;-->
+                    <!--&lt;!&ndash;<wsdlUrls>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<wsdlUrl>&ndash;&gt;-->
+                            <!--&lt;!&ndash;http://myWSDLurl?wsdl&ndash;&gt;-->
+                        <!--&lt;!&ndash;</wsdlUrl>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</wsdlUrls>&ndash;&gt;-->
+                    <!--&lt;!&ndash; or using wsdls file directory &ndash;&gt;-->
+                     <!--<wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>-->
+                    <!--&lt;!&ndash; which wsdl file &ndash;&gt;-->
+                    <!--<wsdlFiles>-->
+                         <!--<wsdlFile>cvut-webapi/cvut-webapi.wsdl</wsdlFile>-->
+                    <!--</wsdlFiles>-->
+                    <!--&lt;!&ndash; Keep generated files &ndash;&gt;-->
+                    <!--<keep>true</keep>-->
+                    <!--&lt;!&ndash; Package name &ndash;&gt;-->
+                    <!--<packageName>cz.cvut.kbss.eccairs.webapi.cvut</packageName>-->
+                    <!--&lt;!&ndash; generated source files destination&ndash;&gt;-->
+                    <!--<sourceDestDir>src/main/java-generated</sourceDestDir>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        </plugins>
+    </build>
 </project>
