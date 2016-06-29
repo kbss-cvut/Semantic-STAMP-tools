@@ -59,4 +59,12 @@ public class PersonTest {
         person.setFirstName("a");
         person.generateUri();
     }
+
+    @Test
+    public void generateUriDoesNothingIfTheUriIsAlreadySet() {
+        final String uri = "http://test";
+        person.setUri(URI.create(uri));
+        person.generateUri();
+        assertEquals(uri, person.getUri().toString());
+    }
 }

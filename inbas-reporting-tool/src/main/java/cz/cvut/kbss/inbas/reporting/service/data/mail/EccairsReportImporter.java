@@ -43,6 +43,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     private static final Logger LOG = LoggerFactory.getLogger(EccairsReportImporter.class);
 
     private static final String IMPORTER_USERNAME = "e5xml-data-importer-0001";
+    private static final String IMPORTER_URI = "http://onto.fel.cvut.cz/ointologies/tools/e5xml-data-importer-0001";
 
     @Autowired
     @Qualifier("eccairsPU")
@@ -80,9 +81,10 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     private void createImporterUser() {
         if (personService.findByUsername(IMPORTER_USERNAME) == null) {
             final Person importer = new Person();
+            importer.setUri(URI.create(IMPORTER_URI));
             importer.setUsername(IMPORTER_USERNAME);
             importer.setFirstName("importer");
-            importer.setLastName("");
+            importer.setLastName("0001");
             importer.setPassword("Importer0001");
             personService.persist(importer);
         }
