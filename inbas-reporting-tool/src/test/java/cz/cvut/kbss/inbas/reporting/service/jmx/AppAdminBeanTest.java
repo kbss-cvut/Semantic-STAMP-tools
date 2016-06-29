@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
 import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
+import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -33,6 +34,7 @@ public class AppAdminBeanTest extends BaseServiceTestRunner {
     public void invalidateCachePublishesEventThatInvalidatesCaches() throws Exception {
         final ReportDto dto = new OccurrenceReportDto();
         dto.setUri(URI.create(Vocabulary.s_c_report + "-instance123345"));
+        dto.setFileNumber(IdentificationUtils.generateFileNumber());
         reportCache.put(dto);
         assertFalse(reportCache.getAll().isEmpty());
         final CountDownLatch countDownLatch = new CountDownLatch(1);

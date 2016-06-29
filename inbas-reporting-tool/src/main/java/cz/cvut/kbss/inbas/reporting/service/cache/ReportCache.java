@@ -8,7 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A very simple cache for improving performance of access to the list of all reports.
@@ -24,28 +28,25 @@ public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReportCache.class);
 
-    // Using synchronized methods for synchronizing access. If this proves to be a performance issue, other strategies
-    // can be used.
-
-    private final Map<Long, ReportDto> cache = new HashMap<>();
+    private final Map<Long, ReportDto> cache = new ConcurrentHashMap<>();
 
     /**
      * Puts the specified report into the cache, possibly replacing its previous version.
      *
      * @param report The report to add
      */
-    public synchronized void put(ReportDto report) {
+    public void put(ReportDto report) {
         cache.put(report.getFileNumber(), report);
     }
 
     /**
      * Evicts the cache, i.e. removes all records.
      */
-    public synchronized void evict() {
+    public void evict() {
         cache.clear();
     }
 
-    public synchronized void evict(Long fileNumber) {
+    public void evict(Long fileNumber) {
         assert fileNumber != null;
         cache.remove(fileNumber);
     }
@@ -55,7 +56,7 @@ public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
      *
      * @return List of cached reports
      */
-    public synchronized List<ReportDto> getAll() {
+    public List<ReportDto> getAll() {
         final List<ReportDto> reports = new ArrayList<>(cache.values());
         Collections.sort(reports, new DocumentDateAndRevisionComparator());
         return reports;
@@ -65,5 +66,16 @@ public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
     public void onApplicationEvent(InvalidateCacheEvent invalidateCacheEvent) {
         LOG.trace("Invalidate cache event received. Evicting cache...");
         evict();
+    }
+
+    /**
+     * Returns {@code true} if the cache is empty.
+     * <p>
+     * This can mean that no reports have been put into it, yet, or it has been evicted recently.
+     *
+     * @return Emptiness status
+     */
+    public boolean isEmpty() {
+        return cache.isEmpty();
     }
 }

@@ -34,8 +34,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class MainReportServiceTest extends BaseServiceTestRunner {
 
@@ -388,5 +387,18 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertTrue(res instanceof OccurrenceReport);
         final OccurrenceReport resultReport = reportService.findByKey(res.getKey());
         assertEquals(reports.get(0).getUri(), resultReport.getUri());
+    }
+
+    @Test
+    public void findAllAfterCacheEvictLoadsReportsFromRepository() throws Exception {
+        initReportChains();
+        assertTrue(reportCache.getAll().isEmpty());
+        assertFalse(reportService.findAll().isEmpty());
+        assertFalse(reportCache.getAll().isEmpty());
+        reportCache.evict();
+        assertTrue(reportCache.getAll().isEmpty());
+        assertFalse(reportService.findAll().isEmpty());
+        assertFalse(reportCache.getAll().isEmpty());
+        verify(occurrenceReportService, times(2)).findAll();
     }
 }

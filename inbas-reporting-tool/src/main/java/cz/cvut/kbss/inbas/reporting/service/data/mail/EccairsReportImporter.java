@@ -8,9 +8,10 @@ import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
 import cz.cvut.kbss.eccairs.report.model.dao.EccairsReportDao;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.com.EMail;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.EmailDao;
-import cz.cvut.kbss.inbas.reporting.service.MainReportService;
+import cz.cvut.kbss.inbas.reporting.service.PersonService;
 import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -18,10 +19,6 @@ import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
 import org.apache.jena.rdf.model.Model;
 import org.jooq.lambda.Unchecked;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.UpdateExecutionException;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.config.RepositoryConfigException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
 
     private static final Logger LOG = LoggerFactory.getLogger(EccairsReportImporter.class);
 
+    private static final String IMPORTER_USERNAME = "e5xml-data-importer-0001";
+
     @Autowired
     @Qualifier("eccairsPU")
     protected EntityManagerFactory eccairsEmf;
@@ -59,10 +58,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     protected SesameUpdater updater;
 
     @Autowired
-    protected EMailService emailService;
-
-    @Autowired
-    protected MainReportService mrs;
+    private PersonService personService;
 
     protected MappingEccairsData2Aso mapping;
 
@@ -74,17 +70,22 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
         mapping = new MappingEccairsData2Aso(eaf);
         processor.registerMessageProcessor(new E5XMLLocator());
 
-        try {
-            // create importer user
-            updater.executeUpdate(
-                    mapping.createAutomatedImporterPerson("http://onto.fel.cvut.cz/ontologies/ucl-sisel-context"));
-        } catch (RepositoryException | RepositoryConfigException | MalformedQueryException | UpdateExecutionException ex) {
-            LOG.error("Could not create importer user!", ex);
-        }
+        createImporterUser();
 //        processor.registerMessageProcessor(new CSAEmailProcessor());
 //        processor.registerMessageProcessor(new TISEmailProcessor());
 //        processor.registerMessageProcessor(new UZPLNEmailProcessor());
 //        processor.registerMessageProcessor(new UZPLNParaEmailProcessor());
+    }
+
+    private void createImporterUser() {
+        if (personService.findByUsername(IMPORTER_USERNAME) == null) {
+            final Person importer = new Person();
+            importer.setUsername(IMPORTER_USERNAME);
+            importer.setFirstName("importer");
+            importer.setLastName("0001");
+            importer.setPassword("Importer0001");
+            personService.persist(importer);
+        }
     }
 
     @Override
@@ -99,7 +100,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
 
     @Override
     public List<URI> process(NamedStream ns) throws Exception {
-        LOG.trace("processing NamedStream, emailId = {}, name = {}", ns.getEmailId(), ns.getName());
+        LOG.trace("Processing NamedStream, emailId = {}, name = {}", ns.getEmailId(), ns.getName());
         E5XMLLoader e5XmlLoader = constructE5XMLLoader(ns);
         Stream<EccairsReport> rs = e5XmlLoader.loadData();
         if (rs == null) {
@@ -116,7 +117,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                         em.getTransaction().commit();
                     } catch (Exception e) {// rolback the transanction if something fails
                         em.getTransaction().rollback();
-                        LOG.trace("failed to persisting eccairs report from file {}.", r.getOriginFileName(), e);
+                        LOG.trace("Failed to persist eccairs report from file {}.", r.getOriginFileName(), e);
                         return null;
                     }
 
@@ -153,7 +154,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
 
     @Override
     public List<URI> process(Model m) throws Exception {
-        LOG.trace("processing Model");
+        LOG.trace("Processing Model");
         return Collections.emptyList();
     }
 
@@ -185,8 +186,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                     LOG.info("Something went wrong while importing an attachment of the email with id : {}", id, e);
                 }
                 return Stream.of();
-            }).filter(x -> x != null).
-                                         collect(Collectors.toSet());
+            }).filter(x -> x != null).collect(Collectors.toSet());
 
             if (imported.isEmpty()) {
                 emailDao.remove(email);
@@ -199,7 +199,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     }
 
 
-    protected E5XMLLoader constructE5XMLLoader(NamedStream ns) {
+    private E5XMLLoader constructE5XMLLoader(NamedStream ns) {
         return new E5XMLLoader(ns, eaf);
     }
 }
