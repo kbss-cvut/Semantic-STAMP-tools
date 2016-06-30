@@ -62,12 +62,12 @@ public class ReportRevisionInfo {
 
         ReportRevisionInfo that = (ReportRevisionInfo) o;
 
-        return uri != null ? uri.equals(that.uri) : that.uri == null;
+        return uri.equals(that.uri);
 
     }
 
     @Override
     public int hashCode() {
-        return uri != null ? uri.hashCode() : 0;
+        return uri.hashCode();
     }
 }

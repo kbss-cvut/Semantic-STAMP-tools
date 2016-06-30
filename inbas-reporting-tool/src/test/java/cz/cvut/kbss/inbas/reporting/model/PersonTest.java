@@ -9,8 +9,7 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PersonTest {
 
@@ -53,10 +52,28 @@ public class PersonTest {
     }
 
     @Test
+    public void generateUriThrowsIllegalStateForEmptyFirstName() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Cannot generate Person URI without first name.");
+        person.setFirstName("");
+        person.setLastName("b");
+        person.generateUri();
+    }
+
+    @Test
     public void generateUriThrowsIllegalStateForMissingLastName() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Cannot generate Person URI without last name.");
         person.setFirstName("a");
+        person.generateUri();
+    }
+
+    @Test
+    public void generateUriThrowsIllegalStateForEmptyLastName() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Cannot generate Person URI without last name.");
+        person.setFirstName("a");
+        person.setLastName("");
         person.generateUri();
     }
 
@@ -66,5 +83,36 @@ public class PersonTest {
         person.setUri(URI.create(uri));
         person.generateUri();
         assertEquals(uri, person.getUri().toString());
+    }
+
+    @Test
+    public void nameEqualsReturnsFalseForNullOtherPerson() {
+        person.setFirstName("a");
+        person.setLastName("b");
+        assertFalse(person.nameEquals(null));
+    }
+
+    @Test
+    public void testNameEquals() {
+        person.setFirstName("a");
+        person.setLastName("b");
+        final Person other = new Person();
+        other.setFirstName("a");
+        other.setLastName("b");
+        assertTrue(person.nameEquals(other));
+        assertTrue(other.nameEquals(person));
+    }
+
+    @Test
+    public void nameEqualsTestsBothFirstAndLastName() {
+        person.setFirstName("a");
+        person.setLastName("b");
+        final Person other = new Person();
+        other.setFirstName("a");
+        other.setLastName("c");
+        assertFalse(person.nameEquals(other));
+        other.setLastName("b");
+        other.setFirstName("c");
+        assertFalse(person.nameEquals(other));
     }
 }

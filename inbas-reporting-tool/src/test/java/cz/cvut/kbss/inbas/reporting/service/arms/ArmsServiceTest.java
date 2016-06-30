@@ -103,7 +103,7 @@ public class ArmsServiceTest {
     }
 
     /**
-     * ARMS values according to http://essi.easa.europa.eu/documents/ARMS.pdf, slide 27.
+     * ARMS values according to https://essi.easa.europa.eu/documents/Methodology.pdf, page 19.
      */
     private List<ArmsTriple> initTestValues() {
         final List<ArmsTriple> lst = new ArrayList<>();
@@ -116,12 +116,12 @@ public class ArmsServiceTest {
         lst.add(new ArmsTriple(Generator.ACCIDENT_MINOR, Generator.BARRIER_MINIMAL, 20));
         lst.add(new ArmsTriple(Generator.ACCIDENT_MINOR, Generator.BARRIER_NOT_EFFECTIVE, 100));
         lst.add(new ArmsTriple(Generator.ACCIDENT_MAJOR, Generator.BARRIER_EFFECTIVE, 10));
-        lst.add(new ArmsTriple(Generator.ACCIDENT_MAJOR, Generator.BARRIER_LIMITED, 20));
-        lst.add(new ArmsTriple(Generator.ACCIDENT_MAJOR, Generator.BARRIER_MINIMAL, 100));
+        lst.add(new ArmsTriple(Generator.ACCIDENT_MAJOR, Generator.BARRIER_LIMITED, 21));
+        lst.add(new ArmsTriple(Generator.ACCIDENT_MAJOR, Generator.BARRIER_MINIMAL, 101));
         lst.add(new ArmsTriple(Generator.ACCIDENT_MAJOR, Generator.BARRIER_NOT_EFFECTIVE, 500));
         lst.add(new ArmsTriple(Generator.ACCIDENT_CATASTROPHIC, Generator.BARRIER_EFFECTIVE, 50));
-        lst.add(new ArmsTriple(Generator.ACCIDENT_CATASTROPHIC, Generator.BARRIER_LIMITED, 100));
-        lst.add(new ArmsTriple(Generator.ACCIDENT_CATASTROPHIC, Generator.BARRIER_MINIMAL, 500));
+        lst.add(new ArmsTriple(Generator.ACCIDENT_CATASTROPHIC, Generator.BARRIER_LIMITED, 102));
+        lst.add(new ArmsTriple(Generator.ACCIDENT_CATASTROPHIC, Generator.BARRIER_MINIMAL, 502));
         lst.add(new ArmsTriple(Generator.ACCIDENT_CATASTROPHIC, Generator.BARRIER_NOT_EFFECTIVE, 2500));
         return lst;
     }

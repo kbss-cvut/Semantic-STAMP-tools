@@ -84,6 +84,7 @@ public class ArmsServiceImpl implements ArmsService {
         if (index == 0) {   // If the accident is the least serious, return base value immediately
             return value;
         }
+        final int outcomeIndex = index;
         index = 0;
         while (index < barriers.size() && !barriers.get(index).equals(barrierEffectiveness)) {
             value *= index < 1 ? FIRST_STEP_FACTOR : STEP_FACTOR;
@@ -91,6 +92,14 @@ public class ArmsServiceImpl implements ArmsService {
         }
         if (index == barriers.size()) {
             return 0;
+        }
+        // Modification of the index, according to ARMS 4.1
+        if (index > 0 && index < barriers.size() - 1) {
+            if (outcomeIndex == accidents.size() - 1) {
+                value += 2;
+            } else if (outcomeIndex == accidents.size() - 2) {
+                value += 1;
+            }
         }
         return value;
     }
