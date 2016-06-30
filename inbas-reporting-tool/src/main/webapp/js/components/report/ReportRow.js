@@ -12,6 +12,7 @@ var ArmsUtils = require('../../utils/ArmsUtils').default;
 var Utils = require('../../utils/Utils.js');
 var OptionsStore = require('../../stores/OptionsStore');
 var ReportType = require('../../model/ReportType');
+var Routes = require('../../utils/Routes');
 var DeleteReportDialog = require('./DeleteReportDialog');
 var I18nMixin = require('../../i18n/I18nMixin');
 
@@ -65,7 +66,7 @@ var ReportRow = React.createClass({
             stateTooltip = this.i18n('arms.index.tooltip') + report.armsIndex;
         }
         return <tr onDoubleClick={this.onDoubleClick}>
-            <td className='report-row'><a href='javascript:void(0);' onClick={this.onEditClick}
+            <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + report.key}
                                           title={this.i18n('reports.open-tooltip')}>{report.identification}</a>
             </td>
             <td className='report-row content-center'>{formattedDate}</td>

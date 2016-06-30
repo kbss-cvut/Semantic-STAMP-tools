@@ -55,7 +55,7 @@
     "webpack": "^1.12.15"
   },
   "scripts": {
-    "start": "watchify -o ../../../target/inbas-reporting-tool-0.6.0/js/bundle.js -v -d js/app.js",
+    "start": "watchify -o js/bundle.js -v -d js/app.js",
     "browserify": "browserify . -t [envify --NODE_ENV production] -o js/bundle.js",
     "build-js": "browserify . -t [envify --NODE_ENV production] | uglifyjs -cm > ../../../profiles/production/js/bundle.min.js",
     "build-css": "cleancss --skip-rebase -d -o ../../../profiles/production/resources/css/inbas-audit.min.css resources/css/inbas-audit.css",

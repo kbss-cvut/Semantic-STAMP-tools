@@ -41,7 +41,7 @@ var Factors = React.createClass({
 
     getInitialState: function () {
         return {
-            scale: 'minute',
+            scale: 'second',
             showLinkTypeDialog: false,
             currentLink: null,
             currentLinkSource: null,

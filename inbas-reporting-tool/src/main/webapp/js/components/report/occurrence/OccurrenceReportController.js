@@ -41,7 +41,7 @@ var OccurrenceReportController = React.createClass({
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
         } else {
-            Routing.transitionTo(Constants.HOME_ROUTE);
+            Routing.transitionTo(Routes.reports);
         }
     },
 

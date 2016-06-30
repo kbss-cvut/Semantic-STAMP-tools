@@ -31,10 +31,10 @@ describe('Factors component tests', function () {
         spyOn(Actions, 'loadEventTypes');
     });
 
-    it('Initializes gantt with minute scale on component mount', function () {
+    it('Initializes gantt with seconds scale on component mount', function () {
         Environment.render(<Factors report={report}/>);
         expect(GanttController.init).toHaveBeenCalled();
-        expect(GanttController.setScale).toHaveBeenCalledWith('minute');
+        expect(GanttController.setScale).toHaveBeenCalledWith('second');
     });
 
     it('Adds event of the occurrence into gantt on initialization', function () {
