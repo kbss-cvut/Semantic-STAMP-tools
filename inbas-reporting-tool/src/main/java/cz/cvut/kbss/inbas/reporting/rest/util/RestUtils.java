@@ -5,6 +5,8 @@ import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -56,11 +58,28 @@ public class RestUtils {
         return headers;
     }
 
+    /**
+     * Encodes the specifies value with an URL encoder.
+     *
+     * @param value The value to encode
+     * @return Encoded string
+     */
     public static String encodeUrl(String value) {
         try {
             return URLEncoder.encode(value, Constants.UTF_8_ENCODING);
         } catch (UnsupportedEncodingException e) {
             throw new WebServiceIntegrationException("Encoding not found.", e);
         }
+    }
+
+    public static String getCookie(HttpServletRequest request, String cookieName) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (cookie.getName().equals(cookieName)) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }

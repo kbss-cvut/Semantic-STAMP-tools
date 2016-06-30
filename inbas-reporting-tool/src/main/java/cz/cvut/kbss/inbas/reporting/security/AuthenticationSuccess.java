@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.PortalUser;
+import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.security.model.LoginStatus;
 import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
 import cz.cvut.kbss.inbas.reporting.service.ConfigReader;
@@ -18,7 +19,6 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -63,15 +63,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
         if (!authentication.getAuthorities().contains(new SimpleGrantedAuthority(PortalUser.PORTAL_USER_ROLE))) {
             return false;
         }
-        if (request.getCookies() == null) {
-            return false;
-        }
-        for (Cookie c : request.getCookies()) {
-            if (c.getName().equals(Constants.COMPANY_ID_COOKIE)) {
-                return true;
-            }
-        }
-        return false;
+        return RestUtils.getCookie(request, Constants.COMPANY_ID_COOKIE) != null;
     }
 
     private String getUsername(Authentication authentication) {

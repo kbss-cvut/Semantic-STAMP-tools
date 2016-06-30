@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.security;
 
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.PortalUser;
+import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.security.model.AuthenticationToken;
 import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
 import cz.cvut.kbss.inbas.reporting.security.portal.PortalEndpoint;
@@ -32,7 +33,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 
@@ -113,15 +113,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     }
 
     private String getCompanyId() {
-        String companyId = null;
-        final HttpServletRequest request = getCurrentRequest();
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equals(Constants.COMPANY_ID_COOKIE)) {
-                    companyId = cookie.getValue();
-                }
-            }
-        }
+        final String companyId = RestUtils.getCookie(getCurrentRequest(), Constants.COMPANY_ID_COOKIE);
         if (companyId == null) {
             throw new AuthenticationServiceException("Portal is not available.");
         }
