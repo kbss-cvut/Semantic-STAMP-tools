@@ -6,6 +6,7 @@ import {Panel} from "react-bootstrap";
 import Answer from "./Answer";
 import Constants from "../../../constants/Constants";
 import FormUtils from "./FormUtils";
+import I18nStore from "../../../stores/I18nStore";
 import JsonLdUtils from "../../../utils/JsonLdUtils";
 import QuestionAnswerProcessor from "../../../model/QuestionAnswerProcessor";
 import Vocabulary from "../../../constants/Vocabulary";
@@ -48,7 +49,7 @@ export default class Question extends React.Component {
                     {this.renderSubQuestions()}
                 </div>;
             } else {
-                var label = JsonLdUtils.getLocalized(this.props.question[Vocabulary.RDFS_LABEL], this.props.intl);
+                var label = JsonLdUtils.getLocalized(this.props.question[Vocabulary.RDFS_LABEL], I18nStore.getIntl());
                 return <Panel header={<h5>{label}</h5>} bsStyle='info'>
                     {this.renderAnswers()}
                     {this.renderSubQuestions()}
