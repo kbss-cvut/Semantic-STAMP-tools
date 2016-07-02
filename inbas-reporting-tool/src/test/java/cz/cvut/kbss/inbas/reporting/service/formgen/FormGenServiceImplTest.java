@@ -95,7 +95,8 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void formGenPassesRepositoryUrlAndContextUrlToRemoteFormGenerator() throws Exception {
+    public void formGenPassesRepositoryUrlContextUrlAndApplicationRepositoryYrkToRemoteFormGenerator()
+            throws Exception {
         setupRemoteFormGenServiceMock(Collections.emptyMap());
 
         final OccurrenceReport report = getOccurrenceReport();
@@ -119,10 +120,13 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
 
     private void setupRemoteFormGenServiceMock(Map<String, String> params) {
         final String serviceUrl = environment.getProperty(ConfigParam.FORM_GEN_SERVICE_URL.toString());
-        final String repoUrl = environment.getProperty("test." + ConfigParam.FORM_GEN_REPOSITORY_URL.toString());
-        ((MockEnvironment) environment).setProperty(ConfigParam.FORM_GEN_REPOSITORY_URL.toString(), repoUrl);
+        final String formGenRepoUrl = environment.getProperty("test." + ConfigParam.FORM_GEN_REPOSITORY_URL.toString());
+        final String appRepoUrl = environment.getProperty("test." + ConfigParam.REPOSITORY_URL.toString());
+        ((MockEnvironment) environment).setProperty(ConfigParam.FORM_GEN_REPOSITORY_URL.toString(), formGenRepoUrl);
+        ((MockEnvironment) environment).setProperty(ConfigParam.REPOSITORY_URL.toString(), appRepoUrl);
         final Map<String, String> expectedParams = new HashMap<>(params);
-        expectedParams.put(FormGenServiceImpl.REPOSITORY_URL_PARAM, repoUrl);
+        expectedParams.put(FormGenServiceImpl.REPOSITORY_URL_PARAM, formGenRepoUrl);
+        expectedParams.put(FormGenServiceImpl.APP_REPOSITORY_PARAM, appRepoUrl);
         expectedParams.put(FormGenServiceImpl.CONTEXT_URI_PARAM, "");   // We don't know the context, it is random
 
         mockServer.expect(requestTo(new UrlWithParamsMatcher(serviceUrl, expectedParams)))

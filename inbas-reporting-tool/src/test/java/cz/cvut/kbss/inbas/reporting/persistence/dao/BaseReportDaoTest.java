@@ -4,16 +4,24 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
+import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
+import cz.cvut.kbss.jopa.exceptions.NoUniqueResultException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
 import java.util.*;
 
+import static org.hamcrest.core.Is.isA;
 import static org.junit.Assert.*;
 
 public class BaseReportDaoTest extends BaseDaoTestRunner {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Autowired
     private OccurrenceReportDao dao;    // Use this implementation for the tests (make sure tested methods are not overridden)
@@ -77,6 +85,21 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
+    public void findLatestRevisionThrowsPersistenceExceptionForNonUniqueResult() {
+        thrown.expect(PersistenceException.class);
+        thrown.expectCause(isA(NoUniqueResultException.class));
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        dao.persist(chain);
+        final OccurrenceReport latest = chain.get(chain.size() - 1);
+        final OccurrenceReport duplicate = new OccurrenceReport(latest);
+        duplicate.setAuthor(author);
+        duplicate.setDateCreated(new Date());
+        duplicate.setRevision(latest.getRevision());    // This will cause issue
+        dao.persist(duplicate);
+        dao.findLatestRevision(latest.getFileNumber());
+    }
+
+    @Test
     public void findRevisionReturnsSpecificReportRevision() {
         final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
         dao.persist(chain);
@@ -104,6 +127,21 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
         final Integer revision = chain.get(chain.size() - 1).getRevision() + 1;
 
         assertNull(dao.findRevision(chain.get(0).getFileNumber(), revision));
+    }
+
+    @Test
+    public void findRevisionThrowsPersistenceExceptionForNonUniqueResult() {
+        thrown.expect(PersistenceException.class);
+        thrown.expectCause(isA(NoUniqueResultException.class));
+        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        dao.persist(chain);
+        final OccurrenceReport selectedRevision = chain.get(Generator.randomIndex(chain));
+        final OccurrenceReport duplicate = new OccurrenceReport(selectedRevision);
+        duplicate.setAuthor(author);
+        duplicate.setDateCreated(new Date());
+        duplicate.setRevision(selectedRevision.getRevision());    // This will cause issue
+        dao.persist(duplicate);
+        dao.findRevision(selectedRevision.getFileNumber(), selectedRevision.getRevision());
     }
 
     @Test

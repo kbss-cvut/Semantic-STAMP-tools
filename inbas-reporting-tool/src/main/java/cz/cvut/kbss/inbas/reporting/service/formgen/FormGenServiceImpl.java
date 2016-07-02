@@ -24,8 +24,12 @@ public class FormGenServiceImpl implements FormGenService {
 
     private static final Logger LOG = LoggerFactory.getLogger(FormGenServiceImpl.class);
 
+    // FormGen repository URL
     static final String REPOSITORY_URL_PARAM = "repositoryUrl";
+    // Named graph URI in the form gen repository
     static final String CONTEXT_URI_PARAM = "graphId";
+    // URL of the main application repository
+    static final String APP_REPOSITORY_PARAM = "appRepositoryUrl";
 
     @Autowired
     private OccurrenceReportFormGenDao occurrenceReportFormGenDao;
@@ -71,6 +75,8 @@ public class FormGenServiceImpl implements FormGenService {
         final Map<String, String> params = new HashMap<>(processor.getParams());
         params.put(CONTEXT_URI_PARAM, RestUtils.encodeUrl(processor.getContext().toString()));
         params.put(REPOSITORY_URL_PARAM, RestUtils.encodeUrl(repoUrl));
+        params.put(APP_REPOSITORY_PARAM,
+                RestUtils.encodeUrl(environment.getProperty(ConfigParam.REPOSITORY_URL.toString())));
         return new RawJson(dataLoader.loadData(serviceUrl, params));
     }
 
