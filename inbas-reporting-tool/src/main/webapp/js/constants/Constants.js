@@ -13,7 +13,7 @@ module.exports = {
     /**
      * URL of the remote BI solution providing statistics for the app
      */
-    STATISTICS_URL: 'https://app.powerbi.com/view?r=eyJrIjoiYTgyY2ZhOTktYWUzMy00Y2NlLWI2MzctNTQ3OTNjYmYxNzBjIiwidCI6IjE4NTZiMjdkLWI5NmYtNDU4MC04NDFjLTc4ZTc4NmMzODdjNiIsImMiOjh9',
+    STATISTICS_URL: 'http://147.32.84.201:8080/pentaho/api/repos/%3Apublic%3AUCL%3ADashboard.wcdf/generatedContent',
 
     /**
      * Sorting glyph icons
