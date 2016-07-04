@@ -104,7 +104,9 @@ var WizardGenerator = {
             }
             return 0;
         });
-        WizardStore.initWizard(null, steps.map((item) => {
+        WizardStore.initWizard({
+            root: form
+        }, steps.map((item) => {
             return item.data;
         }));
         return steps;

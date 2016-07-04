@@ -6,6 +6,31 @@ import Utils from "../utils/Utils";
 export default class QuestionAnswerProcessor {
 
     /**
+     * Builds question answer model from the specified wizard data.
+     * @param wizardData Global wizard data
+     * @param stepData Data from individual wizard steps
+     */
+    static buildQuestionAnswerModel(wizardData, stepData) {
+        var question = {
+            subQuestions: []
+        }, processedQuestion;
+        if (wizardData) {
+            question.uri = wizardData.root['@id'];
+            question.origin = Utils.getJsonAttValue(wizardData.root, Constants.FORM.HAS_QUESTION_ORIGIN, '@id');
+        }
+        if (stepData) {
+            for (var i = 0, len = stepData.length; i < len; i++) {
+                // This will skip questions corresponding to empty steps in the wizard
+                processedQuestion = QuestionAnswerProcessor.processQuestionAnswerHierarchy(stepData[i]);
+                if (processedQuestion) {
+                    question.subQuestions.push(processedQuestion);
+                }
+            }
+        }
+        return question;
+    }
+
+    /**
      * Transforms the QA hierarchy from JSON-LD-based structure to the object model-based one.
      * @param rootQuestion
      */
@@ -19,7 +44,7 @@ export default class QuestionAnswerProcessor {
     static _processQuestion(question) {
         var result = {},
             i, len;
-        result.id = question['@id'];
+        result.uri = question['@id'];
         result.origin = Utils.getJsonAttValue(question, Constants.FORM.HAS_QUESTION_ORIGIN, '@id');
         if (question[Constants.FORM.HAS_SUBQUESTION]) {
             result.subQuestions = [];

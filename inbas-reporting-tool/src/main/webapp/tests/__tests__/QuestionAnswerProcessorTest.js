@@ -90,7 +90,7 @@ describe('Question answer processor', () => {
     }
 
     function verifyQuestions(expected, actual) {
-        expect(actual.id).toEqual(expected['@id']);
+        expect(actual.uri).toEqual(expected['@id']);
         verifyAnswers(expected, actual);
         if (expected[Constants.FORM.HAS_SUBQUESTION]) {
             expect(actual.subQuestions).toBeDefined();
@@ -137,4 +137,20 @@ describe('Question answer processor', () => {
             expect(actualQuestion.answers[i].origin).toEqual(expectedQuestion[Constants.FORM.HAS_ANSWER][i][Constants.FORM.HAS_ANSWER_ORIGIN]);
         }
     }
+
+    it('builds QAM from the specified questions and answers, including form root', () => {
+        var data = {
+                root: {}
+            },
+            questions = [generateQuestions()],
+            result;
+        data.root['@id'] = Generator.getRandomUri();
+        data.root[Constants.FORM.HAS_QUESTION_ORIGIN] = Generator.getRandomUri();
+
+        result = QuestionAnswerProcessor.buildQuestionAnswerModel(data, questions);
+        expect(result.uri).toEqual(data.root['@id']);
+        expect(result.origin).toEqual(data.root[Constants.FORM.HAS_QUESTION_ORIGIN]);
+        expect(result.subQuestions.length).toEqual(1);
+        verifyQuestions(questions[0], result.subQuestions[0]);
+    });
 });

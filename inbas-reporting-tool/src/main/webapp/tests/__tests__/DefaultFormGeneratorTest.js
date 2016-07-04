@@ -20,7 +20,7 @@ describe('Default form generator', () => {
             wizardSteps = WizardGenerator._constructWizardSteps(form);
 
         expect(wizardSteps.length).toEqual(1);
-        expect(WizardStore.initWizard).toHaveBeenCalledWith(null, [form['@graph'][0][Constants.FORM.HAS_SUBQUESTION][0]]);
+        expect(WizardStore.initWizard).toHaveBeenCalledWith({root: form['@graph'][0]}, [form['@graph'][0][Constants.FORM.HAS_SUBQUESTION][0]]);
     });
 
     it('generates wizard with data for which report with QA was provided', () => {
