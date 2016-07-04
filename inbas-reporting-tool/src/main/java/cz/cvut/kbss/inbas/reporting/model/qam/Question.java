@@ -23,7 +23,8 @@ public class Question implements Serializable {
     @Id(generated = true)
     private URI uri;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.MERGE,
+            CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Set<Question> subQuestions = new HashSet<>();
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_answer, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)

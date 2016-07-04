@@ -58,6 +58,15 @@ public class Generator {
         return URI.create("http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-" + randomInt());
     }
 
+    /**
+     * Generates a (pseudo) random URI, usable for test individuals.
+     *
+     * @return Random URI
+     */
+    public static URI generateUri() {
+        return URI.create(Vocabulary.ONTOLOGY_IRI_model + "/randomInstance" + randomInt());
+    }
+
     public static Person getPerson() {
         final Person person = new Person();
         person.setFirstName("Catherine");

@@ -34,7 +34,7 @@ export default class FormUtils {
     }
 
     static isTextarea(question, answerValue) {
-        return answerValue.length > Constants.INPUT_LENGTH_THRESHOLD
+        return answerValue && answerValue.length > Constants.INPUT_LENGTH_THRESHOLD
             || Utils.hasValue(question, Constants.FORM.LAYOUT_CLASS, Constants.FORM.LAYOUT.TEXTAREA);
     }
 }

@@ -1,10 +1,13 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao.formgen;
 
+import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.Descriptor;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -13,6 +16,8 @@ import java.util.Objects;
 import java.util.Random;
 
 public abstract class FormGenDao<T> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FormGenDao.class);
 
     private final Random random = new Random();
 
@@ -30,6 +35,9 @@ public abstract class FormGenDao<T> {
             prePersist(instance, em, descriptor);
             em.persist(instance, descriptor);
             em.getTransaction().commit();
+        } catch (Exception e) {
+            LOG.error("Error when persisting entity for form generation.", e);
+            throw new PersistenceException(e);
         } finally {
             em.close();
         }

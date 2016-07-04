@@ -38,7 +38,8 @@ public class Event implements FactorGraphItem, Serializable {
     @OWLDataProperty(iri = Vocabulary.s_p_child_index)
     private Integer index;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.MERGE,
+            CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Question question;
 
     @Types

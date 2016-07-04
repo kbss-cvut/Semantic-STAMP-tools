@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao;
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Factor;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.util.QuestionSaver;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,8 @@ import java.util.stream.Collectors;
 
 @Repository
 public class OccurrenceDao extends OwlKeySupportingDao<Occurrence> {
+
+    private QuestionSaver questionSaver;
 
     public OccurrenceDao() {
         super(Occurrence.class);
@@ -28,6 +31,10 @@ public class OccurrenceDao extends OwlKeySupportingDao<Occurrence> {
 
     private void persistEventsIfNecessary(Occurrence entity, EntityManager em) {
         final Map<Event, Object> visited = new IdentityHashMap<>();
+        this.questionSaver = new QuestionSaver();
+        if (entity.getQuestion() != null) {
+            questionSaver.persistIfNecessary(entity.getQuestion(), em);
+        }
         if (entity.getChildren() != null) {
             entity.getChildren().forEach(e -> persistEventIfNecessary(e, em, visited));
         }
@@ -49,6 +56,9 @@ public class OccurrenceDao extends OwlKeySupportingDao<Occurrence> {
         }
         if (event.getUri() == null) {
             em.persist(event);
+            if (event.getQuestion() != null) {
+                questionSaver.persistIfNecessary(event.getQuestion(), em);
+            }
         }
     }
 

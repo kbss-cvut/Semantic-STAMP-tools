@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
+import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -105,5 +106,12 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
         report.setLastModifiedBy(report.getAuthor());
         final URI ctx = dao.persist(report);
         assertNotNull(ctx);
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void throwsPersistenceExceptionWhenInvalidDataIsPersisted() throws Exception {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        report.getOccurrence().setName(null);
+        dao.persist(report);
     }
 }
