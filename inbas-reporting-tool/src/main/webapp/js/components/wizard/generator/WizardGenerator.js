@@ -26,7 +26,7 @@ var WizardGenerator = {
             (data) {
             this._createWizard(data, event, wizardTitle, renderCallback);
         }.bind(this), function () {
-            Logger.log('Received no valid wizard. Using default one.');
+            Logger.log('Received no valid wizard. Using the default one.');
             this._createDefaultWizard(event, wizardTitle, renderCallback);
         }.bind(this));
     },
