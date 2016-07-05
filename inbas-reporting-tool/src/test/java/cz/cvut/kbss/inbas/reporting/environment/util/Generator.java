@@ -1,6 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.environment.util;
 
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.qam.Answer;
+import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 
 import java.net.URI;
@@ -276,5 +278,49 @@ public class Generator {
      */
     public static URI randomFactorType() {
         return FACTOR_TYPES[random.nextInt(FACTOR_TYPES.length)];
+    }
+
+    /**
+     * Generates a tree of questions with answers.
+     *
+     * @param maxDepth Maximum depth. Optional parameter. If not set, a random number will be generated
+     * @return Root question
+     */
+    public static Question generateQuestions(Integer maxDepth) {
+        final int max = maxDepth != null ? maxDepth : Generator.randomInt(10);
+        final Question root = question();
+        root.setUri(generateUri());
+        root.setAnswers(Collections.singleton(answer()));
+        generateQuestions(root, 0, max);
+        return root;
+    }
+
+    public static Question question() {
+        final Question q = new Question();
+        q.setUri(generateUri());
+        q.getTypes().add(Generator.generateEventType().toString());
+        return q;
+    }
+
+    public static Answer answer() {
+        final Answer a = new Answer();
+        if (Generator.randomBoolean()) {
+            a.setTextValue("RandomTextValue" + Generator.randomInt());
+        } else {
+            a.setCodeValue(Generator.generateUri());
+        }
+        return a;
+    }
+
+    private static void generateQuestions(Question parent, int depth, int maxDepth) {
+        if (depth >= maxDepth) {
+            return;
+        }
+        for (int i = 0; i < Generator.randomInt(5); i++) {
+            final Question child = question();
+            child.setAnswers(Collections.singleton(answer()));
+            parent.getSubQuestions().add(child);
+            generateQuestions(child, depth + 1, maxDepth);
+        }
     }
 }

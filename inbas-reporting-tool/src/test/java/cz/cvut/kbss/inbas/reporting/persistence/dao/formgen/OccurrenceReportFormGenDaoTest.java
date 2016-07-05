@@ -1,14 +1,19 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao.formgen;
 
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.util.TestUtils;
+import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.qam.Answer;
+import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import org.junit.Test;
 import org.openrdf.model.Resource;
 import org.openrdf.repository.Repository;
@@ -113,5 +118,27 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
         final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
         report.getOccurrence().setName(null);
         dao.persist(report);
+    }
+
+    @Test
+    public void persistSavesQuestionAnswerGraph() throws Exception {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        personDao.persist(report.getAuthor());
+        final Event evt = report.getOccurrence().getChildren().iterator().next();
+        evt.setQuestion(Generator.generateQuestions(null));
+
+        final URI ctx = dao.persist(report);
+        final EntityManager em = emf.createEntityManager();
+        try {
+            final EntityDescriptor descriptor = new EntityDescriptor(ctx);
+            TestUtils.verifyQuestions(evt.getQuestion(), q -> {
+                assertNotNull(em.find(Question.class, q.getUri(), descriptor));
+                if (!q.getAnswers().isEmpty()) {
+                    q.getAnswers().forEach(a -> assertNotNull(em.find(Answer.class, a.getUri(), descriptor)));
+                }
+            });
+        } finally {
+            em.close();
+        }
     }
 }

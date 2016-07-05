@@ -27,7 +27,7 @@ public class QuestionSaver {
     }
 
     public void persistIfNecessary(Question root, EntityManager em) {
-        if (root.getUri() != null && visited.contains(root.getUri())) {
+        if (visited.contains(root.getUri())) {
             return;
         }
         persist(root, em);
@@ -44,7 +44,7 @@ public class QuestionSaver {
     }
 
     private void persistSubQuestionIfNecessary(Question question, EntityManager em) {
-        if (question.getUri() != null && visited.contains(question.getUri())) {
+        if (visited.contains(question.getUri())) {
             return;
         }
         persist(question, em);
