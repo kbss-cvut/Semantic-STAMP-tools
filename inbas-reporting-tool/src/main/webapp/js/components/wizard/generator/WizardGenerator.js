@@ -21,14 +21,15 @@ var FORM_GEN_URL = 'rest/formGen';
 var WizardGenerator = {
 
     generateWizard: function (report, event, wizardTitle, renderCallback) {
-        var url = this._initUrlWithParameters(event);
-        Ajax.post(url, report).end(function
-            (data) {
-            this._createWizard(data, event, wizardTitle, renderCallback);
-        }.bind(this), function () {
-            Logger.log('Received no valid wizard. Using the default one.');
-            this._createDefaultWizard(event, wizardTitle, renderCallback);
-        }.bind(this));
+        this._createDefaultWizard(event, wizardTitle, renderCallback);
+        // var url = this._initUrlWithParameters(event);
+        // Ajax.post(url, report).end(function
+        //     (data) {
+        //     this._createWizard(data, event, wizardTitle, renderCallback);
+        // }.bind(this), function () {
+        //     Logger.log('Received no valid wizard. Using the default one.');
+        //     this._createDefaultWizard(event, wizardTitle, renderCallback);
+        // }.bind(this));
     },
 
     _initUrlWithParameters: function (event) {
