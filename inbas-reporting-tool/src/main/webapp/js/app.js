@@ -44,7 +44,7 @@ var Register = require('./components/register/Register').default;
 var MainView = require('./components/MainView');
 var DashboardController = require('./components/dashboard/DashboardController');
 var ReportsController = require('./components/report/ReportsController');
-var StatisticsController = require('./components/statistics/Statistics').default;
+var StatisticsController = require('./components/statistics/StatisticsSimple').default;
 var ReportDetailController = require('./components/report/ReportController');
 var RoutingRules = require('./utils/RoutingRules');
 

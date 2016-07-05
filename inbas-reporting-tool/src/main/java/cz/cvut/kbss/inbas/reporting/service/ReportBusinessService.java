@@ -5,7 +5,6 @@ import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -32,15 +31,6 @@ public interface ReportBusinessService {
      * @param report The instance to persist
      */
     <T extends LogicalDocument> void persist(T report);
-
-    /**
-     * Imports report from a file.
-     *
-     * @param fileName Name of the file
-     * @param input    Input stream containing content of the imported file
-     * @return The imported report
-     */
-    <T extends LogicalDocument> T importReportFromFile(String fileName, InputStream input);
 
     /**
      * Updates the specified report.

@@ -14,12 +14,9 @@ var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Constants = require('../../constants/Constants');
-var CreateReportDashboard = require('./CreateReportDashboard').default;
-var ImportReportDashboard = require('./ImportReportDashboard').default;
 var Tile = require('./DashboardTile').default;
 var ReportTypeahead = require('../typeahead/ReportTypeahead');
 var RecentlyEdited = require('./RecentlyEditedReports');
-var UnprocessedReports = require('./UnprocessedReports').default;
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var Dashboard = React.createClass({
@@ -50,14 +47,6 @@ var Dashboard = React.createClass({
         this.setState({dashboard: Constants.DASHBOARD_GO_BACK[this.state.dashboard]});
     },
 
-    createReport: function () {
-        this.setState({dashboard: Constants.DASHBOARDS.CREATE_REPORT.id});
-    },
-
-    importReport: function () {
-        this.setState({dashboard: Constants.DASHBOARDS.IMPORT_REPORT.id});
-    },
-
     toggleSearch: function () {
         this.setState({search: !this.state.search});
     },
@@ -76,9 +65,6 @@ var Dashboard = React.createClass({
                     <div>
                         <RecentlyEdited reports={this.props.reports} onOpenReport={this.props.openReport}/>
                     </div>
-                    <div>
-                        <UnprocessedReports />
-                    </div>
                 </div>
             </div>
 
@@ -86,27 +72,13 @@ var Dashboard = React.createClass({
     },
 
     renderTitle: function () {
-        switch (this.state.dashboard) {
-            case Constants.DASHBOARDS.CREATE_REPORT.id:
-                return <h3>{this.i18n('dashboard.create-tile')}</h3>;
-            case Constants.DASHBOARDS.IMPORT_REPORT.id:
-                return <h3>{this.i18n('dashboard.create-import-tile')}</h3>;
-            default:
-                return <h3><FormattedMessage id='dashboard.welcome'
-                                             values={{name: <span className='bold'>{this.props.userFirstName}</span>}}/>
-                </h3>;
-        }
+        return <h3><FormattedMessage id='dashboard.welcome'
+                                     values={{name: <span className='bold'>{this.props.userFirstName}</span>}}/>
+        </h3>;
     },
 
     renderDashboardContent: function () {
-        switch (this.state.dashboard) {
-            case Constants.DASHBOARDS.CREATE_REPORT.id:
-                return this._renderCreateReportDashboard();
-            case Constants.DASHBOARDS.IMPORT_REPORT.id:
-                return this._renderImportReportDashboard();
-            default:
-                return this._renderMainDashboard();
-        }
+        return this._renderMainDashboard();
     },
 
     _renderMainDashboard: function () {
@@ -116,7 +88,7 @@ var Dashboard = React.createClass({
             <Grid fluid={true}>
                 <Row>
                     <Col xs={4} className='dashboard-sector'>
-                        <Tile onClick={this.createReport}>{this.i18n('dashboard.create-tile')}</Tile>
+                        <Tile onClick={this.props.createEmptyReport}>{this.i18n('dashboard.create-tile')}</Tile>
                     </Col>
                     <Col xs={4} className='dashboard-sector'>
                         <Tile onClick={this.toggleSearch}>{this.i18n('dashboard.search-tile')}</Tile>
@@ -134,15 +106,6 @@ var Dashboard = React.createClass({
                 </Row>
             </Grid>
         );
-    },
-
-    _renderCreateReportDashboard: function () {
-        return <CreateReportDashboard createReport={this.props.createEmptyReport} importReport={this.importReport}
-                                      goBack={this.goBack}/>;
-    },
-
-    _renderImportReportDashboard: function () {
-        return <ImportReportDashboard import={this.props.importE5Report} goBack={this.goBack}/>
     }
 });
 

@@ -14,9 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -134,24 +132,5 @@ public class ReportController extends BaseController {
                             " or the report chain does not exist.");
         }
         return dtoMapper.reportToReportDto(report);
-    }
-
-    /**
-     * Receives uploaded E5X/E5F file and passes it to our E5X/E5F processing code.
-     *
-     * @param file The uploaded file
-     * @return Created response with key to the imported report
-     */
-    @RequestMapping(value = "/importE5", method = RequestMethod.POST)
-    public ResponseEntity<Void> importE5Report(@RequestParam("file") MultipartFile file) {
-        try {
-            final LogicalDocument result = reportService
-                    .importReportFromFile(file.getOriginalFilename(), file.getInputStream());
-            final HttpHeaders headers = RestUtils
-                    .createLocationHeaderFromContextPath("/reports/{key}", result.getKey());
-            return new ResponseEntity<>(headers, HttpStatus.CREATED);
-        } catch (IOException e) {
-            throw new BadRequestException("Unable to read the uploaded file.", e);
-        }
     }
 }

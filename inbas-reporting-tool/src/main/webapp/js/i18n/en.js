@@ -202,15 +202,6 @@ module.exports = {
 
         'sort.no': 'Click to sort records by this column',
         'sort.asc': 'Records are sorted in ascending order',
-        'sort.desc': 'Records are sorted in descending order',
-
-        // ----------- ARMS -------------
-        'arms.title': 'ARMS',
-        'arms.accident-outcome': 'Accident outcome',
-        'arms.accident-outcome.tooltip': 'If this event had escalated into an accident, what would have been the most probable accident outcome?',
-        'arms.barrier-effectiveness': 'Barrier effectiveness',
-        'arms.barrier-effectiveness.tooltip': 'What was the effectiveness of the remaining barriers between this event and the most probable accident scenario?',
-        'arms.index': 'ARMS index',
-        'arms.index.tooltip': 'ARMS index is '
+        'sort.desc': 'Records are sorted in descending order'
     }
 };

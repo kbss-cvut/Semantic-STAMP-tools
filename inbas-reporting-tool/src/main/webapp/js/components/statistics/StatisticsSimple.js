@@ -1,23 +1,19 @@
 'use strict';
 
 import React from "react";
-import {Panel} from "react-bootstrap";
-import ReactDOM from 'react-dom';
-import ReactPivot from 'react-pivot';
+import ReactPivot from "react-pivot";
 import {Treemap, PieChart} from "react-d3";
-
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
-import Logger  from '../../utils/Logger';
-import Input from '../Input';
-import StatisticsStore from '../../stores/StatisticsStore';
-
-import Actions from '../../actions/Actions'
+import Logger from "../../utils/Logger";
+import Input from "../Input";
+import StatisticsStore from "../../stores/StatisticsStore";
+import Actions from "../../actions/Actions";
 
 class StatisticsSimple extends React.Component {
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             rows: [],
             dimensions: [],
@@ -95,17 +91,17 @@ class StatisticsSimple extends React.Component {
         }
 
         this.setState({pieData: pieData});
-    }
+    };
 
 
     reduce = (row, memo) => {
         memo.count = (memo.count || 0) + parseFloat(row.count);
         return memo;
-    }
+    };
 
     _onChartTypeSelect = (e) => {
         this.setState({chartType: e.target.value});
-    }
+    };
 
     render() {
         return ( <div className='centered'>

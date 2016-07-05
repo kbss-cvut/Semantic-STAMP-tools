@@ -5,7 +5,6 @@ import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
-import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.inbas.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.reporting.service.validation.OccurrenceReportValidator;
@@ -14,7 +13,6 @@ import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -35,33 +33,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     @Autowired
     private ReportingPhaseService phaseService;
 
-    @Autowired
-    private ArmsService armsService;
-
     @Override
     protected OwlKeySupportingDao<OccurrenceReport> getPrimaryDao() {
         return reportDao;
-    }
-
-    @Override
-    public OccurrenceReport findByKey(String key) {
-        final OccurrenceReport r = super.findByKey(key);
-        setArmsIndex(r);
-        return r;
-    }
-
-    @Override
-    public Collection<OccurrenceReport> findAll() {
-        final Collection<OccurrenceReport> reports = super.findAll();
-        reports.forEach(this::setArmsIndex);
-        return reports;
-    }
-
-    @Override
-    public OccurrenceReport find(URI uri) {
-        final OccurrenceReport r = super.find(uri);
-        setArmsIndex(r);
-        return r;
     }
 
     @Override
@@ -115,31 +89,20 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         newRevision.setAuthor(securityUtils.getCurrentUser());
         newRevision.setDateCreated(new Date());
         super.persist(newRevision);
-        newRevision.setArmsIndex(armsService.calculateArmsIndex(newRevision));
         return newRevision;
     }
 
     @Override
     public OccurrenceReport findLatestRevision(Long fileNumber) {
         Objects.requireNonNull(fileNumber);
-        final OccurrenceReport r = reportDao.findLatestRevision(fileNumber);
-        setArmsIndex(r);
-        return r;
-    }
-
-    private void setArmsIndex(OccurrenceReport report) {
-        if (report != null) {
-            report.setArmsIndex(armsService.calculateArmsIndex(report));
-        }
+        return reportDao.findLatestRevision(fileNumber);
     }
 
     @Override
     public OccurrenceReport findRevision(Long fileNumber, Integer revision) {
         Objects.requireNonNull(fileNumber);
         Objects.requireNonNull(revision);
-        final OccurrenceReport r = reportDao.findRevision(fileNumber, revision);
-        setArmsIndex(r);
-        return r;
+        return reportDao.findRevision(fileNumber, revision);
     }
 
     @Override

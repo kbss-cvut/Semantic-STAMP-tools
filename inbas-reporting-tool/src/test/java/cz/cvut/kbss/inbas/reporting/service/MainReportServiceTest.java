@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.service;
 
-import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
@@ -8,37 +7,28 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.util.UnsupportedReport;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
-import cz.cvut.kbss.inbas.reporting.exception.ReportImportingException;
 import cz.cvut.kbss.inbas.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
-import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
-import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class MainReportServiceTest extends BaseServiceTestRunner {
-
-    private static final String IMPORT_FILE_NAME = "16FEDEF0BC91E511B897002655546824-anon.e5x";
 
     // More tests should be added as additional support for additional report types is added
 
@@ -56,12 +46,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private ReportCache reportCache;
-
-    @Autowired
-    private ArmsService armsService;
-
-    @Autowired
-    private ReportImporter reportImporterMock;
 
     @Autowired
     private ReportingPhaseService phaseService;
@@ -260,22 +244,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void createNewRevisionSetsArmsIndexBeforePuttingInstanceIntoCache() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
-        report.setAccidentOutcome(Generator.ACCIDENT_NEGLIGIBLE);
-        report.setBarrierEffectiveness(Generator.BARRIER_LIMITED);
-        reportService.persist(report);
-        final int armsIndex = 117;
-        when(armsService.calculateArmsIndex(any(OccurrenceReport.class))).thenReturn(armsIndex);
-
-        final OccurrenceReport newRevision = reportService.createNewRevision(report.getFileNumber());
-        assertNotNull(newRevision.getArmsIndex());
-        assertEquals(armsIndex, newRevision.getArmsIndex().intValue());
-        final OccurrenceReportDto dto = (OccurrenceReportDto) reportCache.getAll().get(0);
-        assertEquals(armsIndex, dto.getArmsIndex().intValue());
-    }
-
-    @Test
     public void testFindRevisionForOccurrenceReport() {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
         final OccurrenceReport report = Environment.randomElement(chain);
@@ -347,46 +315,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
         final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
         assertEquals(expected, result.getPhase());
-    }
-
-    @Test
-    public void importReportFromFileImportsE5XReport() throws Exception {
-        final InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/eccairs/" + IMPORT_FILE_NAME);
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setAuthor(author);
-        when(reportImporterMock.process(any(NamedStream.class))).thenAnswer((invocation) -> {
-            occurrenceReportDao.persist(report);
-            return Collections.singletonList(report.getUri());
-        });
-        final LogicalDocument res = reportService.importReportFromFile(IMPORT_FILE_NAME, is);
-        assertNotNull(res);
-        assertTrue(res instanceof OccurrenceReport);
-        final OccurrenceReport resultReport = reportService.findByKey(res.getKey());
-        assertEquals(report.getUri(), resultReport.getUri());
-    }
-
-    @Test(expected = ReportImportingException.class)
-    public void importReportThrowsReportImportingExceptionWhenImportFails() throws Exception {
-        final InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/eccairs/" + IMPORT_FILE_NAME);
-        when(reportImporterMock.process(any(NamedStream.class))).thenThrow(new IOException("Unable to load report."));
-        reportService.importReportFromFile(IMPORT_FILE_NAME, is);
-    }
-
-    @Test
-    public void importReportReturnsTheFirstReportWhenMultipleAreExtractedFromArchive() throws Exception {
-        final InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/eccairs/" + IMPORT_FILE_NAME);
-        final List<OccurrenceReport> reports = Arrays
-                .asList(Generator.generateOccurrenceReport(true), Generator.generateOccurrenceReport(true));
-        reports.forEach(r -> r.setAuthor(author));
-        when(reportImporterMock.process(any(NamedStream.class))).thenAnswer((invocation) -> {
-            occurrenceReportDao.persist(reports);
-            return reports.stream().map(OccurrenceReport::getUri).collect(Collectors.toList());
-        });
-        final LogicalDocument res = reportService.importReportFromFile(IMPORT_FILE_NAME, is);
-        assertNotNull(res);
-        assertTrue(res instanceof OccurrenceReport);
-        final OccurrenceReport resultReport = reportService.findByKey(res.getKey());
-        assertEquals(reports.get(0).getUri(), resultReport.getUri());
     }
 
     @Test
