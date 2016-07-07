@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 public class EventTest {
 
     /**
-     * @see Vocabulary#s_p_has_event_type
+     * @see Vocabulary#p_hasEventType
      */
     @Test
     public void setTypeAddsEventTypeUriToInstanceTypesAsWell() {

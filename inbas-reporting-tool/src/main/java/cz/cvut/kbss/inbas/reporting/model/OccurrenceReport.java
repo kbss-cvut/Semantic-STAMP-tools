@@ -56,11 +56,25 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_severity_assessment)
     private URI severityAssessment;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_responsible_organization)
+    private URI responsibleDepartment;
+
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String summary;
+
+    // ARMS Attributes
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_most_probable_accident_outcome)
+    private URI accidentOutcome;
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_barrier_effectiveness_evaluation)
+    private URI barrierEffectiveness;
+
+    @Transient
+    private Integer armsIndex;
 
     @Types
     private Set<String> types;
@@ -77,11 +91,15 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.phase = other.phase;
         this.occurrence = Occurrence.copyOf(other.occurrence);
         this.severityAssessment = other.severityAssessment;
+        this.responsibleDepartment = other.responsibleDepartment;
         this.summary = other.summary;
         if (other.correctiveMeasures != null) {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
                                                               .collect(Collectors.toSet());
         }
+        this.barrierEffectiveness = other.barrierEffectiveness;
+        this.accidentOutcome = other.accidentOutcome;
+        this.armsIndex = other.armsIndex;
     }
 
     @Override
@@ -173,6 +191,14 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.severityAssessment = severityAssessment;
     }
 
+    public URI getResponsibleDepartment() {
+        return responsibleDepartment;
+    }
+
+    public void setResponsibleDepartment(URI responsibleDepartment) {
+        this.responsibleDepartment = responsibleDepartment;
+    }
+
     public Set<CorrectiveMeasureRequest> getCorrectiveMeasures() {
         return correctiveMeasures;
     }
@@ -187,6 +213,30 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public URI getAccidentOutcome() {
+        return accidentOutcome;
+    }
+
+    public void setAccidentOutcome(URI accidentOutcome) {
+        this.accidentOutcome = accidentOutcome;
+    }
+
+    public URI getBarrierEffectiveness() {
+        return barrierEffectiveness;
+    }
+
+    public void setBarrierEffectiveness(URI barrierEffectiveness) {
+        this.barrierEffectiveness = barrierEffectiveness;
+    }
+
+    public Integer getArmsIndex() {
+        return armsIndex;
+    }
+
+    public void setArmsIndex(Integer armsIndex) {
+        this.armsIndex = armsIndex;
     }
 
     public Set<String> getTypes() {
@@ -224,6 +274,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         assert occurrence != null;
         res.setIdentification(occurrence.getName());
         res.setDate(occurrence.getStartTime());
+        res.setArmsIndex(armsIndex);
         res.setSummary(summary);
         res.setSeverityAssessment(severityAssessment);
         res.setOccurrenceCategory(occurrence.getEventType());

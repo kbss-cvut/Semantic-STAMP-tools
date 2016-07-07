@@ -42,9 +42,19 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     private URI severityAssessment;
 
+    private URI responsibleDepartment;
+
     private Set<CorrectiveMeasureRequestDto> correctiveMeasures;
 
     private String summary;
+
+    // ARMS Attributes
+
+    private URI accidentOutcome;
+
+    private URI barrierEffectiveness;
+
+    private Integer armsIndex;
 
     private Set<String> types;
 
@@ -153,6 +163,14 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
         this.severityAssessment = severityAssessment;
     }
 
+    public URI getResponsibleDepartment() {
+        return responsibleDepartment;
+    }
+
+    public void setResponsibleDepartment(URI responsibleDepartment) {
+        this.responsibleDepartment = responsibleDepartment;
+    }
+
     public Set<CorrectiveMeasureRequestDto> getCorrectiveMeasures() {
         return correctiveMeasures;
     }
@@ -167,6 +185,30 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public URI getAccidentOutcome() {
+        return accidentOutcome;
+    }
+
+    public void setAccidentOutcome(URI accidentOutcome) {
+        this.accidentOutcome = accidentOutcome;
+    }
+
+    public URI getBarrierEffectiveness() {
+        return barrierEffectiveness;
+    }
+
+    public void setBarrierEffectiveness(URI barrierEffectiveness) {
+        this.barrierEffectiveness = barrierEffectiveness;
+    }
+
+    public Integer getArmsIndex() {
+        return armsIndex;
+    }
+
+    public void setArmsIndex(Integer armsIndex) {
+        this.armsIndex = armsIndex;
     }
 
     public Set<String> getTypes() {

@@ -8,7 +8,7 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 
 @Component
-@ManagedResource(objectName = "bean:name=INBASStageAdminBean", description = "Application administration bean. ")
+@ManagedResource(objectName = "bean:name=AdminBean", description = "Application administration bean. ")
 public class AppAdminBean implements ApplicationEventPublisherAware {
 
     private ApplicationEventPublisher eventPublisher;

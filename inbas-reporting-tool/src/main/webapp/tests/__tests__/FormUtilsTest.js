@@ -85,35 +85,4 @@ describe('FormUtils', () => {
             expect(FormUtils.isHidden({})).toBeFalsy();
         });
     });
-
-    describe('resolveValue', () => {
-        it('returns null for no answer', () => {
-            expect(FormUtils.resolveValue(null)).toBeNull();
-        });
-
-        it('returns identifier of code value answer', () => {
-            var id = "http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100",
-                answer = {
-                    "@id": "http://onto.fel.cvut.cz/ontologies/eccairs/model/instance#instance-1495029633-a",
-                    "@type": "http://onto.fel.cvut.cz/ontologies/documentation/answer",
-                    "http://onto.fel.cvut.cz/ontologies/documentation/has_object_value": {
-                        "@id": id
-                    }
-                };
-            expect(FormUtils.resolveValue(answer)).toEqual(id);
-        });
-
-        it('returns value of data value answer', () => {
-            var value = "2016-06-21",
-                answer = {
-                    "@id": "http://onto.fel.cvut.cz/ontologies/eccairs/model/instance#instance-2018758124-a",
-                    "@type": "http://onto.fel.cvut.cz/ontologies/documentation/answer",
-                    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": {
-                        "@language": "en",
-                        "@value": value
-                    }
-                };
-            expect(FormUtils.resolveValue(answer)).toEqual(value);
-        });
-    });
 });

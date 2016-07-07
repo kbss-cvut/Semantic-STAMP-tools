@@ -36,6 +36,7 @@ public class OccurrenceReportTest {
         assertEquals(original.getOccurrence().getName(), copy.getOccurrence().getName());
         assertEquals(original.getSummary(), copy.getSummary());
         assertEquals(original.getSeverityAssessment(), copy.getSeverityAssessment());
+        assertEquals(original.getResponsibleDepartment(), copy.getResponsibleDepartment());
     }
 
     @Test
@@ -91,5 +92,13 @@ public class OccurrenceReportTest {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
         final ReportDto dto = report.toReportDto();
         assertTrue(dto.getTypes().contains(Vocabulary.s_c_occurrence_report));
+    }
+
+    @Test
+    public void copyConstructorCopiesArmsValues() {
+        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport copy = new OccurrenceReport(report);
+        assertEquals(report.getAccidentOutcome(), copy.getAccidentOutcome());
+        assertEquals(report.getBarrierEffectiveness(), copy.getBarrierEffectiveness());
     }
 }

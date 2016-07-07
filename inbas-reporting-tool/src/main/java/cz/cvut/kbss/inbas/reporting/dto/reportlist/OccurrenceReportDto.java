@@ -8,6 +8,8 @@ public class OccurrenceReportDto extends ReportDto {
 
     private URI occurrenceCategory;
 
+    private Integer armsIndex;
+
     private String summary;
 
     public URI getSeverityAssessment() {
@@ -24,6 +26,14 @@ public class OccurrenceReportDto extends ReportDto {
 
     public void setOccurrenceCategory(URI occurrenceCategory) {
         this.occurrenceCategory = occurrenceCategory;
+    }
+
+    public Integer getArmsIndex() {
+        return armsIndex;
+    }
+
+    public void setArmsIndex(Integer armsIndex) {
+        this.armsIndex = armsIndex;
     }
 
     public String getSummary() {

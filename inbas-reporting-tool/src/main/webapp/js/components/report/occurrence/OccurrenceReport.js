@@ -9,8 +9,10 @@ var injectIntl = require('../../../utils/injectIntl');
 
 var Actions = require('../../../actions/Actions');
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
+var Department = require('./Department').default;
 var Factors = require('../../factor/Factors');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
+var ArmsAttributes = require('../arms/ArmsAttributes').default;
 var PhaseTransition = require('../../misc/PhaseTransition').default;
 var ReportProvenance = require('../ReportProvenance').default;
 var ReportSummary = require('../ReportSummary').default;
@@ -111,10 +113,24 @@ var OccurrenceReport = React.createClass({
                         <CorrectiveMeasures report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
+                    <div className='form-group'>
+                        <ArmsAttributes report={report} onChange={this.props.handlers.onChange}/>
+                    </div>
+
                     <div className='row'>
                         <div className='col-xs-12'>
                             <ReportSummary report={report} onChange={this.onChange}/>
                         </div>
+                    </div>
+
+                    <div className='form-group'>
+                        <Panel header={<h5>{this.i18n('report.organization')}</h5>} bsStyle='info'>
+                            <div className='row'>
+                                <div className='col-xs-4'>
+                                    <Department report={report} onChange={this.props.handlers.onChange}/>
+                                </div>
+                            </div>
+                        </Panel>
                     </div>
 
                     <Panel>

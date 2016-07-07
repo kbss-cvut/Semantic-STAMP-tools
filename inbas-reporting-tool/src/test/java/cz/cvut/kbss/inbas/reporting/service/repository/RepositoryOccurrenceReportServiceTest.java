@@ -182,6 +182,16 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     }
 
     @Test
+    public void findReturnsOccurrenceWithCalculatedArmsIndex() {
+        final OccurrenceReport report = persistFirstRevision(false);
+        assertNotNull(report.getBarrierEffectiveness());
+        assertNotNull(report.getAccidentOutcome());
+        assertNull(report.getArmsIndex());
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertNotNull(result.getArmsIndex());
+    }
+
+    @Test
     public void transitionToNextPhaseSetsNewPhaseOnReport() {
         final OccurrenceReport report = Generator.generateOccurrenceReport(true);
         report.setAuthor(author);

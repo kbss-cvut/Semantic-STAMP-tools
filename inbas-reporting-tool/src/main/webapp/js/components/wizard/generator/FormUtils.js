@@ -37,15 +37,4 @@ export default class FormUtils {
         return answerValue && answerValue.length > Constants.INPUT_LENGTH_THRESHOLD
             || Utils.hasValue(question, Constants.FORM.LAYOUT_CLASS, Constants.FORM.LAYOUT.TEXTAREA);
     }
-    
-    static resolveValue(answer) {
-        if (!answer) {
-            return null;
-        }
-        if (answer[Constants.FORM.HAS_OBJECT_VALUE]) {
-            return answer[Constants.FORM.HAS_OBJECT_VALUE]['@id'];
-        } else {
-            return Utils.getJsonAttValue(answer, Constants.FORM.HAS_DATA_VALUE);
-        }
-    }
 }

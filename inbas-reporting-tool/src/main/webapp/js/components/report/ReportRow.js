@@ -8,6 +8,7 @@ var classNames = require('classnames');
 
 var injectIntl = require('../../utils/injectIntl');
 
+var ArmsUtils = require('../../utils/ArmsUtils').default;
 var Utils = require('../../utils/Utils.js');
 var OptionsStore = require('../../stores/OptionsStore');
 var ReportType = require('../../model/ReportType');
@@ -59,6 +60,10 @@ var ReportRow = React.createClass({
             stateClasses = ['report-row', 'content-center'], stateTooltip = null;
         if (report.date) {
             formattedDate = Utils.formatDate(new Date(report.date));
+        }
+        if (report.armsIndex) {
+            stateClasses.push(ArmsUtils.resolveArmsIndexClass(report.armsIndex));
+            stateTooltip = this.i18n('arms.index.tooltip') + report.armsIndex;
         }
         return <tr onDoubleClick={this.onDoubleClick}>
             <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + report.key}

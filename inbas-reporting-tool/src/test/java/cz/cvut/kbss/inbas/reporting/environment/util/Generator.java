@@ -102,8 +102,11 @@ public class Generator {
         report.setOccurrence(generateOccurrence());
         report.setSummary("Some random summary " + randomInt() + ".");
         if (setAttributes) {
+            report.setBarrierEffectiveness(BARRIER_EFFECTIVE);
+            report.setAccidentOutcome(ACCIDENT_NEGLIGIBLE);
             report.setSeverityAssessment(
                     URI.create("http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100"));
+            report.setResponsibleDepartment(URI.create("http://kbss.felk.cvut.cz"));
             report.setAuthor(getPerson());
             report.setDateCreated(new Date());
             report.setFileNumber((long) randomInt(Integer.MAX_VALUE));

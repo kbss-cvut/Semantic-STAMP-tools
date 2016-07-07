@@ -56,7 +56,7 @@ export default class Answer extends React.Component {
             return;
         }
         options = Utils.processTypeaheadOptions(options);
-        var value = FormUtils.resolveValue(this.props.answer),
+        var value = this._resolveValue(),
             selected = options.find((item) => {
                 return item.id === value;
             });
@@ -87,15 +87,24 @@ export default class Answer extends React.Component {
         this._setValue(change, option.id);
         this.props.onChange(this.props.index, change);
     };
-    
+
+    _resolveValue() {
+        var answer = this.props.answer;
+        if (answer[Constants.FORM.HAS_OBJECT_VALUE]) {
+            return answer[Constants.FORM.HAS_OBJECT_VALUE]['@id'];
+        } else {
+            return Utils.getJsonAttValue(answer, Constants.FORM.HAS_DATA_VALUE);
+        }
+    }
 
     render() {
-        return this._renderInputComponent();
+        var cls = Constants.FORM.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.FORM.GENERATED_ROW_SIZE);
+        return <div className={cls}>{this._renderInputComponent()}</div>;
     }
 
     _renderInputComponent() {
         var question = this.props.question,
-            value = FormUtils.resolveValue(this.props.answer),
+            value = this._resolveValue(),
             label = JsonLdUtils.getLocalized(question[Vocabulary.RDFS_LABEL], I18nStore.getIntl()),
             title = JsonLdUtils.getLocalized(question[Vocabulary.RDFS_COMMENT], I18nStore.getIntl()),
             component;
