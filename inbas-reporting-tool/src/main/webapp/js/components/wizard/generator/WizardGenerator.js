@@ -1,15 +1,11 @@
 'use strict';
 
-var jsonld = require('jsonld');
-
-var Ajax = require('../../../utils/Ajax');
 var Constants = require('../../../constants/Constants');
 var DefaultFormGenerator = require('../../../model/DefaultFormGenerator');
 var FormUtils = require('./FormUtils').default;
 var I18nStore = require('../../../stores/I18nStore');
 var JsonLdUtils = require('../../../utils/JsonLdUtils').default;
 var Logger = require('../../../utils/Logger');
-var Utils = require('../../../utils/Utils');
 var Vocabulary = require('../../../constants/Vocabulary');
 var GeneratedStep = require('./GeneratedStep').default;
 var WizardStore = require('../../../stores/WizardStore');
