@@ -15,7 +15,9 @@ describe('Factor detail dialog', function () {
                 return new Date();
             },
             config: {
-                duration_unit: 'minute'
+                duration_unit: 'second'
+            },
+            render: function () {
             }
         },
         factor;
@@ -28,6 +30,7 @@ describe('Factor detail dialog', function () {
             text: 'Test',
             start_date: new Date(),
             duration: 1,
+            durationUnit: 'minute',
             statement: ReportFactory.createFactor()
         };
     });
@@ -54,7 +57,7 @@ describe('Factor detail dialog', function () {
         detail.onUpdateFactorDetails({stepData: [question]}, function () {
         });
         detail.onSave();
-        expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, 'minute');
+        expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, gantt.config.duration_unit);
         expect(factor.end_date).toBeDefined();
         expect(callbacks.onSave).toHaveBeenCalled();
         expect(factor.statement.question.subQuestions[0]).toBeDefined();
@@ -84,4 +87,12 @@ describe('Factor detail dialog', function () {
 
         expect(factor).toEqual(origFactor);
     });
+
+    it('Calculates event duration based on scale', () => {
+        var detail = Environment.render(<FactorDetail scale='second' factor={factor} onSave={callbacks.onSave}
+                                                      onClose={callbacks.onClose}
+                                                      onDelete={callbacks.onDelete}
+                                                      getReport={callbacks.getReport}/>);
+        expect(detail.state.duration).toEqual(factor.duration * 60);    // factor duration is in minutes
+    })
 });

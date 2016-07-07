@@ -236,9 +236,9 @@ var Factors = React.createClass({
         if (!this.state.showFactorDialog) {
             return null;
         }
-        return (<FactorDetail show={this.state.showFactorDialog} getReport={this.getReport}
+        return <FactorDetail show={this.state.showFactorDialog} getReport={this.getReport}
                               factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
-                              onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}/>);
+                              onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}/>;
     },
 
     renderLinkTypeDialog: function () {

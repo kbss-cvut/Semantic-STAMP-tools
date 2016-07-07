@@ -62,12 +62,15 @@ export default class Question extends React.Component {
 
     renderAnswers() {
         var question = this.props.question,
-            children = [], row = [];
+            children = [], row = [], cls, isTextarea;
         var answers = this._getAnswers();
         for (var i = 0, len = answers.length; i < len; i++) {
-            row.push(<Answer key={'row-item-' + i} index={i} answer={answers[i]} question={question}
-                             onChange={this.onAnswerChange}/>);
-            if (row.length === Constants.FORM.GENERATED_ROW_SIZE) {
+            isTextarea = FormUtils.isTextarea(this.props.question, FormUtils.resolveValue(answers[i]));
+            cls = this._getAnswerClass(isTextarea);
+            row.push(<div key={'row-item-' + i} className={cls}>
+                <Answer index={i} answer={answers[i]} question={question} onChange={this.onAnswerChange}/>
+            </div>);
+            if (row.length === Constants.FORM.GENERATED_ROW_SIZE || isTextarea) {
                 children.push(<div className='row' key={'question-row-' + i}>{row}</div>);
                 row = [];
             }
@@ -91,6 +94,11 @@ export default class Question extends React.Component {
             question[Constants.FORM.HAS_ANSWER] = [question[Constants.FORM.HAS_ANSWER]];
         }
         return question[Constants.FORM.HAS_ANSWER];
+    }
+
+    _getAnswerClass(isTextarea) {
+        return isTextarea ? 'col-xs-12' : (
+            Constants.FORM.GENERATED_ROW_SIZE === 1 ? 'col-xs-6' : 'col-xs-' + (Constants.COLUMN_COUNT / Constants.FORM.GENERATED_ROW_SIZE));
     }
 
     renderSubQuestions() {
