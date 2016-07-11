@@ -13,7 +13,7 @@ module.exports = {
     /**
      * URL of the remote BI solution providing statistics for the app
      */
-    STATISTICS_URL: 'http://147.32.84.201:8080/pentaho/api/repos/%3Apublic%3AUCL%3ADashboard.wcdf/generatedContent',
+    STATISTICS_URL: 'https://147.32.84.201/pentaho/api/repos/%3Apublic%3AUCL%3ADashboard.wcdf/generatedContent',
 
     /**
      * Sorting glyph icons
