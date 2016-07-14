@@ -13,13 +13,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.net.URI;
 import java.util.Objects;
-import java.util.Random;
 
 public abstract class FormGenDao<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(FormGenDao.class);
-
-    private final Random random = new Random();
 
     @Autowired
     @Qualifier("formGen")
@@ -45,7 +42,7 @@ public abstract class FormGenDao<T> {
     }
 
     private URI generateContextUri() {
-        return URI.create(Constants.FORM_GEN_CONTEXT_BASE + random.nextInt());
+        return URI.create(Constants.FORM_GEN_CONTEXT_BASE + System.currentTimeMillis());
     }
 
     /**
