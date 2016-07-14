@@ -145,6 +145,7 @@ module.exports = {
         'report.eventtype.add-tooltip': 'Add an event type assessment',
         'report.organization': 'Organization',
         'report.responsible-department': 'Responsible department',
+        'report.responsible-department.add-tooltip': 'Add another responsible department',
 
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',

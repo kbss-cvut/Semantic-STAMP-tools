@@ -57,7 +57,7 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
     private URI severityAssessment;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_responsible_organization)
-    private URI responsibleDepartment;
+    private Set<URI> responsibleDepartments;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
@@ -91,7 +91,9 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.phase = other.phase;
         this.occurrence = Occurrence.copyOf(other.occurrence);
         this.severityAssessment = other.severityAssessment;
-        this.responsibleDepartment = other.responsibleDepartment;
+        if (other.responsibleDepartments != null) {
+            this.responsibleDepartments = new HashSet<>(other.responsibleDepartments);
+        }
         this.summary = other.summary;
         if (other.correctiveMeasures != null) {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
@@ -191,12 +193,12 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
         this.severityAssessment = severityAssessment;
     }
 
-    public URI getResponsibleDepartment() {
-        return responsibleDepartment;
+    public Set<URI> getResponsibleDepartments() {
+        return responsibleDepartments;
     }
 
-    public void setResponsibleDepartment(URI responsibleDepartment) {
-        this.responsibleDepartment = responsibleDepartment;
+    public void setResponsibleDepartments(Set<URI> responsibleDepartments) {
+        this.responsibleDepartments = responsibleDepartments;
     }
 
     public Set<CorrectiveMeasureRequest> getCorrectiveMeasures() {

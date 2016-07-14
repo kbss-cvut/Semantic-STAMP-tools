@@ -147,6 +147,7 @@ module.exports = {
         'report.eventtype.add-tooltip': 'Přidat popis typu události',
         'report.organization': 'Organizace',
         'report.responsible-department': 'Zodpovědné oddělení',
+        'report.responsible-department.add-tooltip': 'Přidat další zodpovědné oddělení',
 
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',

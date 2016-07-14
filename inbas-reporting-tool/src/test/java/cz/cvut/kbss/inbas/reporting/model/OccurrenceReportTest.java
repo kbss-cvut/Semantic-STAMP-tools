@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,7 +37,28 @@ public class OccurrenceReportTest {
         assertEquals(original.getOccurrence().getName(), copy.getOccurrence().getName());
         assertEquals(original.getSummary(), copy.getSummary());
         assertEquals(original.getSeverityAssessment(), copy.getSeverityAssessment());
-        assertEquals(original.getResponsibleDepartment(), copy.getResponsibleDepartment());
+        assertEquals(original.getResponsibleDepartments(), copy.getResponsibleDepartments());
+    }
+
+    @Test
+    public void copyConstructorCreatesCopyOfResponsibleDepartments() {
+        final OccurrenceReport original = Generator.generateOccurrenceReport(true);
+        final Set<URI> departments = new HashSet<>();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            departments.add(Generator.generateUri());
+        }
+        original.setResponsibleDepartments(departments);
+        final OccurrenceReport copy = new OccurrenceReport(original);
+        assertEquals(original.getResponsibleDepartments(), copy.getResponsibleDepartments());
+        assertNotSame(original.getResponsibleDepartments(), copy.getResponsibleDepartments());
+    }
+
+    @Test
+    public void copyConstructorLeavesResponsibleDepartmentsNullWhenOriginalHasNone() {
+        final OccurrenceReport original = Generator.generateOccurrenceReport(true);
+        original.setResponsibleDepartments(null);
+        final OccurrenceReport copy = new OccurrenceReport(original);
+        assertNull(copy.getResponsibleDepartments());
     }
 
     @Test

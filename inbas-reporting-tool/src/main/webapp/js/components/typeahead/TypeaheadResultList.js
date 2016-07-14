@@ -36,7 +36,7 @@ var TypeaheadResultList = React.createClass({
 
     onClick: function(option, event) {
         event.preventDefault();
-        this.props.onOptionSelected(option);
+        this.props.onOptionSelected(option, event);
     }
 });
 

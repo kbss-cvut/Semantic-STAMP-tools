@@ -93,7 +93,7 @@ var OccurrenceReport = React.createClass({
 
         return <div>
             <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
-                                                           onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
+                          onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <ButtonToolbar className='float-right'>
@@ -124,13 +124,7 @@ var OccurrenceReport = React.createClass({
                     </div>
 
                     <div className='form-group'>
-                        <Panel header={<h5>{this.i18n('report.organization')}</h5>} bsStyle='info'>
-                            <div className='row'>
-                                <div className='col-xs-4'>
-                                    <Department report={report} onChange={this.props.handlers.onChange}/>
-                                </div>
-                            </div>
-                        </Panel>
+                        <Department report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <Panel>

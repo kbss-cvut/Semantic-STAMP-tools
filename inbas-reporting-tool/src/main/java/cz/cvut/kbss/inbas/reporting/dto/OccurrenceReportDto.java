@@ -42,7 +42,7 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     private URI severityAssessment;
 
-    private URI responsibleDepartment;
+    private Set<URI> responsibleDepartments;
 
     private Set<CorrectiveMeasureRequestDto> correctiveMeasures;
 
@@ -163,12 +163,12 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
         this.severityAssessment = severityAssessment;
     }
 
-    public URI getResponsibleDepartment() {
-        return responsibleDepartment;
+    public Set<URI> getResponsibleDepartments() {
+        return responsibleDepartments;
     }
 
-    public void setResponsibleDepartment(URI responsibleDepartment) {
-        this.responsibleDepartment = responsibleDepartment;
+    public void setResponsibleDepartments(Set<URI> responsibleDepartments) {
+        this.responsibleDepartments = responsibleDepartments;
     }
 
     public Set<CorrectiveMeasureRequestDto> getCorrectiveMeasures() {

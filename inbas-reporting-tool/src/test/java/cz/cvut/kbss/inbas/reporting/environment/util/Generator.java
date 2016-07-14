@@ -106,7 +106,7 @@ public class Generator {
             report.setAccidentOutcome(ACCIDENT_NEGLIGIBLE);
             report.setSeverityAssessment(
                     URI.create("http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100"));
-            report.setResponsibleDepartment(URI.create("http://kbss.felk.cvut.cz"));
+            report.setResponsibleDepartments(Collections.singleton(URI.create("http://kbss.felk.cvut.cz")));
             report.setAuthor(getPerson());
             report.setDateCreated(new Date());
             report.setFileNumber((long) randomInt(Integer.MAX_VALUE));
@@ -232,7 +232,7 @@ public class Generator {
         int rand;
         do {
             rand = random.nextInt(upperBound);
-        } while (rand == 0);
+        } while (rand <= 0);
         return rand;
     }
 
