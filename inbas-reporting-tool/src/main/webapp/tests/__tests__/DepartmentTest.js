@@ -8,9 +8,11 @@ describe('Responsible department(s)', () => {
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         Typeahead = require('react-bootstrap-typeahead'),
+        Vocabulary = require('../../js/constants/Vocabulary'),
 
+        OptionsStore = require('../../js/stores/OptionsStore'),
         Department = require('../../js/components/report/occurrence/Department').default,
-        report, onChange;
+        report, onChange, options;
 
     beforeEach(() => {
         report = Generator.generateOccurrenceReport();
@@ -31,9 +33,29 @@ describe('Responsible department(s)', () => {
         for (var i = 0; i < cnt; i++) {
             report.responsibleDepartments.push(Generator.getRandomUri());
         }
+        spyOn(OptionsStore, 'getOptions').and.callFake(() => {
+            var opts = [], opt;
+            for (var i = 0, len = report.responsibleDepartments.length; i < len; i++) {
+                opt = {
+                    '@id': report.responsibleDepartments[i]
+                };
+                opt[Vocabulary.RDFS_LABEL] = 'Option ' + i;
+                opts.push(opt);
+            }
+            for (i = 0; i < 5; i++) {
+                opt = {
+                    '@id': Generator.getRandomUri()
+                };
+                opt[Vocabulary.RDFS_LABEL] = 'AdditionalOption' + i;
+                opts.push(opt);
+            }
+            options = opts;
+            return opts;
+        });
     }
 
     it('displays one empty typeahead when there is no responsible department in the report', () => {
+        generateDepartments(0);
         var result = Environment.render(<Department report={report} onChange={onChange}/>),
             typeaheads = TestUtils.scryRenderedComponentsWithType(result, Typeahead);
         expect(typeaheads.length).toEqual(1);
@@ -44,36 +66,35 @@ describe('Responsible department(s)', () => {
         var cnt = 5,
             result, typeaheads, expected,
             index = Generator.getRandomPositiveInt(0, cnt),
-            department = {
-                id: Generator.getRandomUri(),
-                name: 'Test'
-            };
+            department;
         generateDepartments(cnt);
+        department = options[Generator.getRandomPositiveInt(0, options.length)];
         result = Environment.render(<Department report={report} onChange={onChange}/>);
         typeaheads = TestUtils.scryRenderedComponentsWithType(result, Typeahead);
 
-        typeaheads[index].props.onOptionSelected(department);
+        typeaheads[index].props.onOptionSelected({
+            id: department['@id']
+        });
         expected = report.responsibleDepartments.slice();
-        expected[index] = department.id;
+        expected[index] = department['@id'];
         expect(onChange).toHaveBeenCalledWith({responsibleDepartments: expected});
     });
 
     it('appends department URI when it was selected in the added typeahead', () => {
         var cnt = 5,
             result, typeaheads, expected, addButton,
-            index = Generator.getRandomPositiveInt(0, cnt),
-            department = {
-                id: Generator.getRandomUri(),
-                name: 'Test'
-            };
+            department;
         generateDepartments(cnt);
+        department = options[Generator.getRandomPositiveInt(0, options.length)];
         result = Environment.render(<Department report={report} onChange={onChange}/>);
         addButton = Environment.getComponentByText(result, Button, 'Add');
         TestUtils.Simulate.click(addButton);
         typeaheads = TestUtils.scryRenderedComponentsWithType(result, Typeahead);
-        typeaheads[typeaheads.length - 1].props.onOptionSelected(department);
+        typeaheads[typeaheads.length - 1].props.onOptionSelected({
+            id: department['@id']
+        });
         expected = report.responsibleDepartments.slice();
-        expected.push(department.id);
+        expected.push(department['@id']);
         expect(onChange).toHaveBeenCalledWith({responsibleDepartments: expected});
     });
 
@@ -88,5 +109,18 @@ describe('Responsible department(s)', () => {
         TestUtils.Simulate.click(addButton);
         typeaheads = TestUtils.scryRenderedComponentsWithType(result, Typeahead);
         expect(typeaheads.length).toEqual(cnt + 1);
+    });
+
+    it('removes department when delete is triggered', () => {
+        var cnt = Generator.getRandomPositiveInt(1, 5),
+            index = Generator.getRandomPositiveInt(0, cnt),
+            result, deleteButtons, expected;
+        generateDepartments(cnt);
+        result = Environment.render(<Department report={report} onChange={onChange}/>);
+        deleteButtons = Environment.getComponentsByText(result, Button, 'Delete');
+        TestUtils.Simulate.click(deleteButtons[index]);
+        expected = report.responsibleDepartments.slice();
+        expected.splice(index, 1);
+        expect(onChange).toHaveBeenCalledWith({responsibleDepartments: expected});
     });
 });

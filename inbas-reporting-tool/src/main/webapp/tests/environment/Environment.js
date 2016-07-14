@@ -59,20 +59,33 @@ module.exports = {
      * @param text Component text
      */
     getComponentByText: function (root, component, text) {
-        var components = TestUtils.scryRenderedComponentsWithType(root, component);
-        return this._getNodeByText(components, text, true);
+        var components = TestUtils.scryRenderedComponentsWithType(root, component),
+            result = this._getNodesByText(components, text, true);
+        return result.length > 0 ? result[0] : null;
     },
 
-    _getNodeByText: function (components, text, strict) {
+    /**
+     * Finds all components with the specified text.
+     * @param root Root of the tree where the component is searched for
+     * @param component Component class
+     * @param text Component text
+     */
+    getComponentsByText: function (root, component, text) {
+        var components = TestUtils.scryRenderedComponentsWithType(root, component);
+        return this._getNodesByText(components, text, true);
+    },
+
+    _getNodesByText: function (components, text, strict) {
+        var res = [];
         for (var i = 0, len = components.length; i < len; i++) {
             var node = ReactDOM.findDOMNode(components[i]);
             if (strict && node.textContent === text) {
-                return node;
+                res.push(node);
             } else if (!strict && node.textContent.indexOf(text) !== -1) {
-                return node;
+                res.push(node);
             }
         }
-        return null;
+        return res;
     },
 
     /**
@@ -84,8 +97,9 @@ module.exports = {
      * @param text Component text
      */
     getComponentByTagAndText: function (root, tag, text) {
-        var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag);
-        return this._getNodeByText(components, text, true);
+        var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag),
+            result = this._getNodesByText(components, text, true);
+        return result.length > 0 ? result[0] : null;
     },
 
     /**
@@ -97,8 +111,9 @@ module.exports = {
      * @param text Text contained in the component's text content
      */
     getComponentByTagAndContainedText: function (root, tag, text) {
-        var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag);
-        return this._getNodeByText(components, text, false);
+        var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag),
+            result = this._getNodesByText(components, text, false);
+        return result.length > 0 ? result[0] : null;
     },
 
     mockFactors: function (investigation) {

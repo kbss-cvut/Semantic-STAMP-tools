@@ -62,14 +62,19 @@ class Department extends React.Component {
         this.setState({added: true});
     };
 
+    _onDelete = (index) => {
+        var departments = this.props.report.responsibleDepartments.slice();
+        departments.splice(index, 1);
+        this.props.onChange({responsibleDepartments: departments});
+    };
+
     _resolveDepartment(dept) {
         if (dept) {
-            var option = this.state.options.find((item) => {
+            return this.state.options.find((item) => {
                 return item.id === dept;
             });
-            return option ? option.name : '';
         }
-        return '';
+        return null;
     }
 
     render() {
@@ -86,18 +91,21 @@ class Department extends React.Component {
     }
 
     _renderDepartments() {
+        if (this.state.options.length === 0) {
+            return null;
+        }
         var departments = this.props.report.responsibleDepartments,
             toRender = [],
             i18n = this.props.i18n;
         if (departments) {
             for (var i = 0, len = departments.length; i < len; i++) {
                 toRender.push(<DepartmentInput key={'dept_' + i} value={this._resolveDepartment(departments[i])}
-                                               index={i}
+                                               index={i} onDelete={this._onDelete}
                                                onChange={this._onChange} i18n={i18n} options={this.state.options}/>);
             }
         }
-        if (this.state.added || !departments) {
-            toRender.push(<DepartmentInput key='dept_added' onChange={this._onChange} i18n={i18n} value={''}
+        if (this.state.added || !departments || departments.length === 0) {
+            toRender.push(<DepartmentInput key='dept_added' onChange={this._onChange} i18n={i18n}
                                            options={this.state.options}/>);
         }
         return toRender;
@@ -107,9 +115,10 @@ class Department extends React.Component {
 class DepartmentInput extends React.Component {
 
     static propTypes = {
-        value: React.PropTypes.string,
+        value: React.PropTypes.object,
         options: React.PropTypes.array,
         onChange: React.PropTypes.func.isRequired,
+        onDelete: React.PropTypes.func,
         index: React.PropTypes.number,
         i18n: React.PropTypes.func.isRequired
     };
@@ -122,19 +131,42 @@ class DepartmentInput extends React.Component {
         this.props.onChange(option, this.props.index);
     };
 
+    _onDelete = () => {
+        this.props.onDelete(this.props.index);
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.value) {
+            this.refs.typeahead.selectOption(nextProps.value);
+        }
+    }
+
     render() {
-        var i18n = this.props.i18n;
+        var i18n = this.props.i18n,
+            value = this.props.value;
         return <div className='row'>
             <div className='col-xs-4'>
                 <label className='control-label'>
                     {i18n('report.responsible-department')}
                 </label>
                 <Typeahead className='form-group form-group-sm' formInputOption='id' optionsButton={true}
+                           ref='typeahead'
                            placeholder={i18n('report.responsible-department')}
                            onOptionSelected={this._onChange} filterOption='name'
-                           value={this.props.value} displayOption='name' options={this.props.options}
+                           value={value ? value.name : ''} displayOption='name' options={this.props.options}
                            customClasses={{input: 'form-control'}} customListComponent={TypeaheadResultList}/>
             </div>
+            {this._renderDeleteButton()}
+        </div>;
+    }
+
+    _renderDeleteButton() {
+        if (!this.props.value || this.props.value.length === 0) {
+            return null;
+        }
+        return <div className='col-xs-1'>
+            <Button style={{margin: '23px 0 0 0'}} bsSize='small' bsStyle='warning'
+                    onClick={this._onDelete}>{this.props.i18n('delete')}</Button>
         </div>;
     }
 }

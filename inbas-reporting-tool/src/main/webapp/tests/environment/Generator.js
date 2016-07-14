@@ -216,7 +216,7 @@ export default class Generator {
      */
     static getRandomPositiveInt(min, max) {
         var bound = max ? max : Number.MAX_SAFE_INTEGER;
-        if (!min) {
+        if (min === null || min === undefined) {
             min = 1;
         }
         return Math.floor(Math.random() * (bound - min)) + min;

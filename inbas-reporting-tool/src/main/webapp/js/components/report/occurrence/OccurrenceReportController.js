@@ -7,7 +7,6 @@
 var React = require('react');
 
 var Actions = require('../../../actions/Actions');
-var Constants = require('../../../constants/Constants');
 var ReportDetail = require('./OccurrenceReport');
 var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
