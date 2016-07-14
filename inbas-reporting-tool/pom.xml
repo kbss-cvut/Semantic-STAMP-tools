@@ -350,6 +350,31 @@
                 <version>2.17</version>
             </plugin>
             <plugin>
+                <!-- Generate entity classes from OWL integrity constraints -->
+                <groupId>cz.cvut.kbss.jopa</groupId>
+                <artifactId>jopa-maven-plugin</artifactId>
+                <version>${cz.cvut.kbss.jopa.version}</version>
+                <configuration>
+                    <package>cz.cvut.kbss.inbas.reporting.model</package>
+                    <!-- Generate the vocabulary directly into sources to prevent dependency issue with the Mapstruct mapping processor -->
+                    <output-directory>${project.basedir}/src/main/java</output-directory>
+                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/reporting-tool/model</ontology-iri>
+                    <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
+                    <whole-ontology-as-ics>true</whole-ontology-as-ics>
+                    <!--<context-name>eccairs-model</context-name>-->
+                    <vocabulary-only>true</vocabulary-only>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-vocabulary</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>owl2java-transform</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.bsc.maven</groupId>
                 <artifactId>maven-processor-plugin</artifactId>
                 <version>2.2.4</version>
@@ -364,7 +389,7 @@
                 <executions>
                     <execution>
                         <id>process</id>
-                        <phase>compile</phase>
+                        <phase>generate-sources</phase>
                         <goals>
                             <goal>process</goal>
                         </goals>
@@ -428,30 +453,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- Generate entity classes from OWL integrity constraints -->
-                <groupId>cz.cvut.kbss.jopa</groupId>
-                <artifactId>jopa-maven-plugin</artifactId>
-                <version>${cz.cvut.kbss.jopa.version}</version>
-                <configuration>
-                    <package>cz.cvut.kbss.inbas.reporting.model</package>
-                    <output-directory>${project.basedir}/src/main/generated-sources</output-directory>
-                    <ontology-iri>http://onto.fel.cvut.cz/ontologies/reporting-tool/model</ontology-iri>
-                    <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
-                    <whole-ontology-as-ics>true</whole-ontology-as-ics>
-                    <!--<context-name>eccairs-model</context-name>-->
-                    <vocabulary-only>true</vocabulary-only>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-vocabulary</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>owl2java-transform</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
                 <version>1.7</version>
@@ -461,18 +462,6 @@
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/main/generated-sources</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>add-test-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-test-source</goal>
                         </goals>
                         <configuration>
                             <sources>
