@@ -29,28 +29,29 @@ describe('Responsible department(s)', () => {
     });
 
     function generateDepartments(cnt) {
+        var i, len;
         report.responsibleDepartments = [];
-        for (var i = 0; i < cnt; i++) {
+        for (i = 0; i < cnt; i++) {
             report.responsibleDepartments.push(Generator.getRandomUri());
         }
+        options = [];
+        var opt;
+        for (i = 0, len = report.responsibleDepartments.length; i < len; i++) {
+            opt = {
+                '@id': report.responsibleDepartments[i]
+            };
+            opt[Vocabulary.RDFS_LABEL] = 'Option ' + i;
+            options.push(opt);
+        }
+        for (i = 0; i < 5; i++) {
+            opt = {
+                '@id': Generator.getRandomUri()
+            };
+            opt[Vocabulary.RDFS_LABEL] = 'AdditionalOption' + i;
+            options.push(opt);
+        }
         spyOn(OptionsStore, 'getOptions').and.callFake(() => {
-            var opts = [], opt;
-            for (var i = 0, len = report.responsibleDepartments.length; i < len; i++) {
-                opt = {
-                    '@id': report.responsibleDepartments[i]
-                };
-                opt[Vocabulary.RDFS_LABEL] = 'Option ' + i;
-                opts.push(opt);
-            }
-            for (i = 0; i < 5; i++) {
-                opt = {
-                    '@id': Generator.getRandomUri()
-                };
-                opt[Vocabulary.RDFS_LABEL] = 'AdditionalOption' + i;
-                opts.push(opt);
-            }
-            options = opts;
-            return opts;
+            return options;
         });
     }
 
@@ -65,7 +66,8 @@ describe('Responsible department(s)', () => {
     it('updates correct department URI when one of multiple is changed', () => {
         var cnt = 5,
             result, typeaheads, expected,
-            index = Generator.getRandomPositiveInt(0, cnt),
+            // index = Generator.getRandomPositiveInt(0, cnt),
+            index = cnt - 1,
             department;
         generateDepartments(cnt);
         department = options[Generator.getRandomPositiveInt(0, options.length)];

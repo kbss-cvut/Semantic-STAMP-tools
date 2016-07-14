@@ -49,7 +49,7 @@ class Department extends React.Component {
 
     _onChange = (dept, index) => {
         var departments = this.props.report.responsibleDepartments ? this.props.report.responsibleDepartments.slice() : [];
-        if (index) {
+        if (index !== null) {
             departments[index] = dept.id;
         } else {
             departments.push(dept.id);
@@ -105,7 +105,7 @@ class Department extends React.Component {
             }
         }
         if (this.state.added || !departments || departments.length === 0) {
-            toRender.push(<DepartmentInput key='dept_added' onChange={this._onChange} i18n={i18n}
+            toRender.push(<DepartmentInput key='dept_added' onChange={this._onChange} i18n={i18n} index={null}
                                            options={this.state.options}/>);
         }
         return toRender;
