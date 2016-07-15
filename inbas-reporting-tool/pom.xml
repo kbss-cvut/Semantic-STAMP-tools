@@ -356,8 +356,7 @@
                 <version>${cz.cvut.kbss.jopa.version}</version>
                 <configuration>
                     <package>cz.cvut.kbss.inbas.reporting.model</package>
-                    <!-- Generate the vocabulary directly into sources to prevent dependency issue with the Mapstruct mapping processor -->
-                    <output-directory>${project.basedir}/src/main/java</output-directory>
+                    <output-directory>${project.basedir}/src/main/generated-sources</output-directory>
                     <ontology-iri>http://onto.fel.cvut.cz/ontologies/reporting-tool/model</ontology-iri>
                     <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
                     <whole-ontology-as-ics>true</whole-ontology-as-ics>
@@ -379,6 +378,11 @@
                 <artifactId>maven-processor-plugin</artifactId>
                 <version>2.2.4</version>
                 <configuration>
+                    <additionalSourceDirectories>
+                        <additionalSourceDirectory>
+                            ${project.basedir}/src/main/generated-sources
+                        </additionalSourceDirectory>
+                    </additionalSourceDirectories>
                     <defaultOutputDirectory>
                         ${project.basedir}/src/main/generated-sources
                     </defaultOutputDirectory>
