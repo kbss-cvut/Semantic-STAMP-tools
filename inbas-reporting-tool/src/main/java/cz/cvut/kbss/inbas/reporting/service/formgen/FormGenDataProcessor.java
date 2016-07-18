@@ -21,7 +21,6 @@ import java.util.Objects;
 class FormGenDataProcessor<T> {
 
     private final FormGenDao<T> dao;
-    private URI context;
     Map<String, String> params;
 
     FormGenDataProcessor(FormGenDao<T> dao) {
@@ -38,17 +37,9 @@ class FormGenDataProcessor<T> {
         Objects.requireNonNull(data);
         Objects.requireNonNull(params);
 
-        this.context = dao.persist(data);
+        final Map<String, URI> contexts = dao.persist(data);
         this.params = new HashMap<>(params);
-    }
-
-    /**
-     * Gets context in which the form data is saved.
-     *
-     * @return Context URI
-     */
-    URI getContext() {
-        return context;
+        contexts.entrySet().forEach(e -> this.params.put(e.getKey(), e.getValue().toString()));
     }
 
     /**

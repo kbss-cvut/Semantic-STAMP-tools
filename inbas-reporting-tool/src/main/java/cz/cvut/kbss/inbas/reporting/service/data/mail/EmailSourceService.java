@@ -23,8 +23,8 @@ public class EmailSourceService {
     @PostConstruct
     public void start() {
         // FIXME : do not create a thread by hand find a better solution!!!
-        Thread daemon = new Thread(() -> idleImapReader.waitForEmails());
-        daemon.start();
+//        Thread daemon = new Thread(() -> idleImapReader.waitForEmails());
+//        daemon.start();
     }
 
     @PreDestroy

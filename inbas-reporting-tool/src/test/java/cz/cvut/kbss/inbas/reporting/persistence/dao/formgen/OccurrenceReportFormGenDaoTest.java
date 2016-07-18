@@ -4,31 +4,48 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model.qam.Answer;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
-import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
+import cz.cvut.kbss.inbas.reporting.persistence.TestEccairsReportImportPersistenceFactory;
+import cz.cvut.kbss.inbas.reporting.persistence.TestFormGenPersistenceFactory;
+import cz.cvut.kbss.inbas.reporting.persistence.TestPersistenceFactory;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
+import cz.cvut.kbss.inbas.reporting.persistence.sesame.DataDaoPersistenceConfig;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
+import org.openrdf.model.ValueFactory;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ComponentScan(basePackages = {"cz.cvut.kbss.inbas.reporting.persistence.dao"})
+@ContextConfiguration(classes = {TestPersistenceFactory.class,
+        TestFormGenPersistenceFactory.class,
+        TestEccairsReportImportPersistenceFactory.class,
+        DataDaoPersistenceConfig.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class OccurrenceReportFormGenDaoTest {
 
     @Autowired
     private OccurrenceReportFormGenDao dao;
@@ -43,6 +60,9 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
     @Qualifier("formGen")
     private EntityManagerFactory emf;
 
+    @Autowired
+    private EntityManagerFactory mainEmf;
+
     @Test
     public void persistSavesNewReportIntoUniqueContext() throws Exception {
         final EntityManager em = emf.createEntityManager();
@@ -55,10 +75,11 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
             report.setFileNumber(null);
             report.setRevision(null);
             report.getAuthor().generateUri();
-            final URI ctx = dao.persist(report);
+            final Map<String, URI> ctx = dao.persist(report);
             assertTrue(connection.getContextIDs().hasNext());
             final Set<URI> contexts = getContexts(connection);
-            assertTrue(contexts.contains(ctx));
+            assertTrue(ctx.containsKey(OccurrenceReportFormGenDao.REPORT_CONTEXT_NAME));
+            assertTrue(contexts.contains(ctx.get(OccurrenceReportFormGenDao.REPORT_CONTEXT_NAME)));
         } finally {
             em.close();
             if (connection != null) {
@@ -81,8 +102,8 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
         final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
         personDao.persist(report.getAuthor());
         reportDao.persist(report);
-        final URI ctx = dao.persist(report);
-        assertNotNull(ctx);
+        final Map<String, URI> contexts = dao.persist(report);
+        assertFalse(contexts.isEmpty());
     }
 
     @Test
@@ -109,8 +130,24 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
         personDao.persist(report.getAuthor());
         reportDao.persist(report);
         report.setLastModifiedBy(report.getAuthor());
-        final URI ctx = dao.persist(report);
-        assertNotNull(ctx);
+        final Map<String, URI> contexts = dao.persist(report);
+        assertFalse(contexts.isEmpty());
+    }
+
+    @Test
+    public void testPersistReportWithDifferentAuthorAndLastModifier() throws Exception {
+        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        personDao.persist(report.getAuthor());
+        final Person lastModifier = new Person();
+        lastModifier.setFirstName("Thomas");
+        lastModifier.setLastName("Lasky");
+        lastModifier.setUsername("lasky@unsc.org");
+        personDao.persist(lastModifier);
+        report.setLastModifiedBy(lastModifier);
+        reportDao.persist(report);
+
+        final Map<String, URI> contexts = dao.persist(report);
+        assertFalse(contexts.isEmpty());
     }
 
     @Test(expected = PersistenceException.class)
@@ -127,10 +164,12 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
         final Event evt = report.getOccurrence().getChildren().iterator().next();
         evt.setQuestion(Generator.generateQuestions(null));
 
-        final URI ctx = dao.persist(report);
+        final Map<String, URI> contexts = dao.persist(report);
+        assertFalse(contexts.isEmpty());
         final EntityManager em = emf.createEntityManager();
         try {
-            final EntityDescriptor descriptor = new EntityDescriptor(ctx);
+            final EntityDescriptor descriptor = new EntityDescriptor(
+                    contexts.get(OccurrenceReportFormGenDao.REPORT_CONTEXT_NAME));
             TestUtils.verifyQuestions(evt.getQuestion(), q -> {
                 assertNotNull(em.find(Question.class, q.getUri(), descriptor));
                 if (!q.getAnswers().isEmpty()) {
@@ -138,6 +177,63 @@ public class OccurrenceReportFormGenDaoTest extends BaseDaoTestRunner {
                 }
             });
         } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void persistExportsE5xDataIntoSeparateContextAndReturnsItsUri() throws Exception {
+        final EntityManager em = mainEmf.createEntityManager();
+        RepositoryConnection sourceConnection = null;
+        try {
+            final Repository repository = em.unwrap(Repository.class);
+            sourceConnection = repository.getConnection();
+            final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+            report.setUri(Generator.generateUri());
+            final Collection<Statement> e5Data = persistE5Data(report.getUri(), sourceConnection);
+            report.getAuthor().generateUri();
+            final Map<String, URI> ctx = dao.persist(report);
+            assertTrue(ctx.containsKey(OccurrenceReportFormGenDao.REPORT_CONTEXT_NAME));
+            assertTrue(ctx.containsKey(OccurrenceReportFormGenDao.DATA_CONTEXT_NAME));
+            verifyStatementPresence(e5Data, ctx.get(OccurrenceReportFormGenDao.DATA_CONTEXT_NAME));
+        } finally {
+            em.close();
+            if (sourceConnection != null) {
+                sourceConnection.close();
+            }
+        }
+    }
+
+    private Collection<Statement> persistE5Data(URI contextUri, RepositoryConnection connection) throws Exception {
+        final List<Statement> statements = new ArrayList<>();
+        final ValueFactory vf = connection.getValueFactory();
+        connection.begin();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            final org.openrdf.model.URI propertyUri = vf.createURI(Generator.generateUri().toString());
+            final Statement stmt = vf
+                    .createStatement(vf.createURI(contextUri.toString()), propertyUri, vf.createLiteral(i));
+            connection.add(stmt, vf.createURI(contextUri.toString()));
+            statements.add(stmt);
+        }
+        connection.commit();
+        return statements;
+    }
+
+    private void verifyStatementPresence(Collection<Statement> statements, URI contextUri) throws Exception {
+        final EntityManager em = emf.createEntityManager();
+        final Repository repo = em.unwrap(Repository.class);
+        final RepositoryConnection connection = repo.getConnection();
+        try {
+            final ValueFactory vf = connection.getValueFactory();
+            final org.openrdf.model.URI context = vf.createURI(contextUri.toString());
+            for (Statement s : statements) {
+                final RepositoryResult rr = connection
+                        .getStatements(s.getSubject(), s.getPredicate(), s.getObject(), false, context);
+                assertTrue(rr.hasNext());
+                rr.close();
+            }
+        } finally {
+            connection.close();
             em.close();
         }
     }

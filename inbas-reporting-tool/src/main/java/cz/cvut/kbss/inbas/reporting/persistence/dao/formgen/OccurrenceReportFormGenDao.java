@@ -4,16 +4,28 @@ import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.util.QuestionSaver;
+import cz.cvut.kbss.inbas.reporting.persistence.sesame.DataDao;
+import cz.cvut.kbss.inbas.reporting.persistence.sesame.StatementCopyingHandler;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.descriptors.Descriptor;
+import org.openrdf.repository.RepositoryConnection;
+import org.openrdf.repository.RepositoryException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.net.URI;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
 @Repository
 public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
+
+    static final String REPORT_CONTEXT_NAME = "reportGraphId";
+    static final String DATA_CONTEXT_NAME = "dataGraphId";
+
+    @Autowired
+    private DataDao dataDao;
 
     @Override
     void prePersist(OccurrenceReport instance, EntityManager em, Descriptor descriptor) {
@@ -72,5 +84,35 @@ public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
         if (event.getQuestion() != null) {
             questionSaver.persistIfNecessary(event.getQuestion(), em);
         }
+    }
+
+    @Override
+    void postPersist(OccurrenceReport instance, EntityManager em, Map<String, URI> contexts) {
+        assert contexts.containsKey(MAIN_CONTEXT);
+
+        final URI ctx = contexts.remove(MAIN_CONTEXT);
+        contexts.put(REPORT_CONTEXT_NAME, ctx);
+        final URI dataCtx = copyE5Data(instance.getUri(), em);
+        contexts.put(DATA_CONTEXT_NAME, dataCtx);
+        super.postPersist(instance, em, contexts);
+    }
+
+    private URI copyE5Data(URI contextUri, EntityManager em) {
+        final URI targetContext = generateContextUri();
+        try {
+            final org.openrdf.repository.Repository targetRepository = em
+                    .unwrap(org.openrdf.repository.Repository.class);
+            final RepositoryConnection targetConnection = targetRepository.getConnection();
+            try {
+                targetConnection.begin();
+                dataDao.getRepositoryData(contextUri, new StatementCopyingHandler(targetConnection, targetContext));
+                targetConnection.commit();
+            } finally {
+                targetConnection.close();
+            }
+        } catch (RepositoryException e) {
+            LOG.error("Unable to copy E5Data.", e);
+        }
+        return targetContext;
     }
 }

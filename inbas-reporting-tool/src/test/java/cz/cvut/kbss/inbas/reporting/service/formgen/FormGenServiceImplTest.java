@@ -1,11 +1,14 @@
 package cz.cvut.kbss.inbas.reporting.service.formgen;
 
+import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.config.PropertyMockingApplicationContextInitializer;
+import cz.cvut.kbss.inbas.reporting.environment.config.TestServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
+import cz.cvut.kbss.inbas.reporting.persistence.sesame.DataDaoPersistenceConfig;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
-import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -16,6 +19,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.PropertySource;
@@ -23,10 +27,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.env.MockEnvironment;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Collections;
@@ -39,8 +46,13 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @PropertySource("classpath:config.properties")
-@ContextConfiguration(initializers = PropertyMockingApplicationContextInitializer.class)
-public class FormGenServiceImplTest extends BaseServiceTestRunner {
+@ContextConfiguration(initializers = PropertyMockingApplicationContextInitializer.class,
+        classes = {TestServiceConfig.class,
+                DataDaoPersistenceConfig.class,
+                MockSesamePersistence.class})
+@RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+public class FormGenServiceImplTest {
 
     private static final String MOCK_FORM_STRUCTURE = "{\"form\": {\"sections\": [{\"id\": \"sectionOne\"}, {\"id\": \"sectionTwo\"}]}}";
 
@@ -95,9 +107,25 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void formGenPassesRepositoryUrlContextUrlAndApplicationRepositoryYrkToRemoteFormGenerator()
-            throws Exception {
-        setupRemoteFormGenServiceMock(Collections.emptyMap());
+    public void formGenPassesRepositoryUrlAndReportContextUrlToRemoteFormGenerator() throws Exception {
+        final Field reportContextNameField = OccurrenceReportFormGenDao.class.getDeclaredField("REPORT_CONTEXT_NAME");
+        reportContextNameField.setAccessible(true);
+        // We're not interested in the param value, because it is random. Just check its presence
+        setupRemoteFormGenServiceMock(Collections.singletonMap((String) reportContextNameField.get(null), ""));
+
+        final OccurrenceReport report = getOccurrenceReport();
+        final RawJson result = formGenService.generateForm(report, Collections.emptyMap());
+        assertNotNull(result);
+        assertEquals(MOCK_FORM_STRUCTURE, result.getValue());
+        mockServer.verify();
+    }
+
+    @Test
+    public void formGenPassesE5DataContextUrlToRemoteFormGenerator() throws Exception {
+        final Field dataContextNameField = OccurrenceReportFormGenDao.class.getDeclaredField("DATA_CONTEXT_NAME");
+        dataContextNameField.setAccessible(true);
+        // We're not interested in the param value, because it is random. Just check its presence
+        setupRemoteFormGenServiceMock(Collections.singletonMap((String) dataContextNameField.get(null), ""));
 
         final OccurrenceReport report = getOccurrenceReport();
         final RawJson result = formGenService.generateForm(report, Collections.emptyMap());
@@ -126,8 +154,6 @@ public class FormGenServiceImplTest extends BaseServiceTestRunner {
         ((MockEnvironment) environment).setProperty(ConfigParam.REPOSITORY_URL.toString(), appRepoUrl);
         final Map<String, String> expectedParams = new HashMap<>(params);
         expectedParams.put(FormGenServiceImpl.REPOSITORY_URL_PARAM, formGenRepoUrl);
-        expectedParams.put(FormGenServiceImpl.APP_REPOSITORY_PARAM, appRepoUrl);
-        expectedParams.put(FormGenServiceImpl.CONTEXT_URI_PARAM, "");   // We don't know the context, it is random
 
         mockServer.expect(requestTo(new UrlWithParamsMatcher(serviceUrl, expectedParams)))
                   .andExpect(method(HttpMethod.GET))
