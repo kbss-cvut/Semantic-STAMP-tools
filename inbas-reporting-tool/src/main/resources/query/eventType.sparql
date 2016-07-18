@@ -13,38 +13,23 @@ PREFIX eccairs-current: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4
 
 CONSTRUCT {
   ?term rdfs:label ?label ;
-  a ?type ;
-  rdfs:comment ?comment ;
+        a ?type ;
+        rdfs:comment ?comment ;
 } WHERE {
     {
-      SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
+      SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/uniset-factors> {
          # all events
-         eccairs-current:a-390 eccairs-model:has-child+  ?term.
-         ?term rdfs:label ?label.
-         ?term eccairs-model:has-explanation ?comment.
+         ?term rdfs:label ?label2.
+         SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation> {
+            ?term rdfs:label ?label.
+         }
+         BIND(eccairs:event-type as ?type)
       }
-      BIND(eccairs:event-type as ?type)
-    } UNION {
-      SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
-         # all descriptive factors
-         eccairs-current:a-385 eccairs-model:has-child+  ?term.
-         ?term rdfs:label ?label.
-         ?term eccairs-model:has-explanation ?comment.
-      }
-      BIND(eccairs:descriptive-factor as ?type)
-    } UNION {
-      SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
-         # all explanatory factors
-         eccairs-current:a-392 eccairs-model:has-child+  ?term.
-         ?term rdfs:label ?label.
-         ?term eccairs-model:has-explanation ?comment.
-      }
-      BIND(eccairs:explanatory-factor as ?type)
-    } UNION {
-      ?term rdfs:subClassOf+ <safety_event> .
-      # add all labels - not everything is returned due to missing labels
-      ?term rdfs:label ?label.
-      OPTIONAL {  ?term rdfs:comment ?comment.}
-      BIND(<safety-event> as ?type)
+#    } UNION {
+#      ?term rdfs:subClassOf+ <safety_event> .
+#      ?term rdfs:label ?label.
+#      OPTIONAL {  ?term rdfs:comment ?comment.}
+#      BIND(<safety-event> as ?type)
+#      FILTER(!contains(str(?term),"eccairs"))
   }
 }
