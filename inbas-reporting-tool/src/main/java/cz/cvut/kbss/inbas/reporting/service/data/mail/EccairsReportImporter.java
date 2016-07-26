@@ -116,7 +116,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                         em.getTransaction().commit();
                     } catch (Exception e) {// rolback the transanction if something fails
                         em.getTransaction().rollback();
-                        LOG.trace("failed to persisting eccairs report from file {}.", r.getOriginFileName(), e);
+                        LOG.trace(String.format("failed to persisting eccairs report from file %s.", r.getOriginFileName()), e);
                         return null;
                     }
 
@@ -142,8 +142,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                     mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), reportUri, r.getOccurrence()));
 //                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
         } catch (Exception e) {
-            LOG.error("Mapping eccairs report {} to reporting tool report failed. Reverting changes.",
-                    r.getOriginFileName(), e);
+            LOG.error(String.format("Mapping eccairs report %s to reporting tool report failed. Reverting changes.",
+                    r.getOriginFileName()), e);
             em.getTransaction().begin();
             final Object toRemove = em.merge(r);
             em.remove(toRemove);
@@ -166,12 +166,6 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     public List<URI> process(Message m) {
 
         String id = m.getId();
-        EMail email = emailDao.findByMailId(id);
-        if (email == null) {
-            email = new EMail();
-            email.setId(id);
-            emailDao.persist(email);
-        }
         Object o = processor.processMessage(m); //To change body of generated methods, choose Tools | Templates.=
         if (o != null) {
             if (!(o instanceof Stream)) {
@@ -182,15 +176,19 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                 try {
                     return this.processDelegate(x).stream();
                 } catch (Exception e) {
-                    LOG.info("Something went wrong while importing an attachment of the email with id : {}", id, e);
+                    LOG.info(String.format("Something went wrong while importing an attachment of the email with id : %s", id), e);
                 }
                 return Stream.of();
-            }).filter(x -> x != null).
-                                         collect(Collectors.toSet());
-
-            if (imported.isEmpty()) {
-                emailDao.remove(email);
-            } else {
+            }).filter(x -> x != null).collect(Collectors.toSet());
+            
+            if (!imported.isEmpty()) {// TODO: implememnt in EMailService and enclose in transaction.
+                EMail email = emailDao.findByMailId(id);
+                if (email == null) {
+                    email = new EMail();
+                    email.setId(id);
+                    emailDao.persist(email);
+                }
+                emailDao.persist(email);
                 email.getReports().addAll(imported);
                 emailDao.update(email);
             }
