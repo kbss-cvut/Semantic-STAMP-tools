@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -109,7 +110,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
             return Collections.emptyList();
         }
         List<URI> ret = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
-                    String sUri = r.getUri();//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
+                    String sUri = "http://onto.fel.cvut.cz/ontologies/report-" + UUID.randomUUID();
+                    r.setUri(sUri);//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
                     URI context = URI.create(sUri);
                     EntityManager em = eccairsEmf.createEntityManager();
                     EccairsReportDao eccairsDao = new EccairsReportDao(em);
