@@ -13,10 +13,7 @@ import java.net.URI;
 import java.util.*;
 
 @OWLClass(iri = Vocabulary.s_c_Occurrence)
-public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
-
-    @Id(generated = true)
-    private URI uri;
+public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraphItem, Serializable {
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.s_p_has_key)
@@ -73,18 +70,11 @@ public class Occurrence implements HasOwlKey, FactorGraphItem, Serializable {
     }
 
     @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
-    }
-
     public String getKey() {
         return key;
     }
 
+    @Override
     public void setKey(String key) {
         this.key = key;
     }

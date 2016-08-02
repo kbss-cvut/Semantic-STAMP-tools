@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
@@ -38,7 +39,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
     public void findAllGetsReportsOrderedByOccurrenceStartDescending() {
         final List<OccurrenceReport> reports = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
-            final OccurrenceReport r = Generator.generateOccurrenceReport(true);
+            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
             r.setAuthor(author);
             r.getOccurrence().setStartTime(new Date(System.currentTimeMillis() + i * 1000));
             reports.add(r);
@@ -57,7 +58,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
     public void findAllGetsLatestRevisionsForEveryReportChain() {
         final Set<URI> latestRevisionUris = new HashSet<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
-            final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+            final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
             dao.persist(chain);
             latestRevisionUris.add(chain.get(chain.size() - 1).getUri());   // Get latest revision URI
         }
@@ -69,7 +70,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findLatestRevisionReturnReportWithHighestRevisionInChain() {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         dao.persist(chain);
         final OccurrenceReport latest = chain.get(chain.size() - 1);
 
@@ -88,7 +89,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
     public void findLatestRevisionThrowsPersistenceExceptionForNonUniqueResult() {
         thrown.expect(PersistenceException.class);
         thrown.expectCause(isA(NoUniqueResultException.class));
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         dao.persist(chain);
         final OccurrenceReport latest = chain.get(chain.size() - 1);
         final OccurrenceReport duplicate = new OccurrenceReport(latest);
@@ -101,7 +102,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findRevisionReturnsSpecificReportRevision() {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         dao.persist(chain);
         final OccurrenceReport report = chain.get(Generator.randomInt(chain.size()));
 
@@ -114,7 +115,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findRevisionReturnsNullForUnknownChain() {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         dao.persist(chain);
         final Integer revision = chain.get(0).getRevision();
         assertNull(dao.findRevision(Long.MAX_VALUE, revision));
@@ -122,7 +123,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findRevisionReturnsNullForUnknownRevision() {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         dao.persist(chain);
         final Integer revision = chain.get(chain.size() - 1).getRevision() + 1;
 
@@ -133,7 +134,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
     public void findRevisionThrowsPersistenceExceptionForNonUniqueResult() {
         thrown.expect(PersistenceException.class);
         thrown.expectCause(isA(NoUniqueResultException.class));
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         dao.persist(chain);
         final OccurrenceReport selectedRevision = chain.get(Generator.randomIndex(chain));
         final OccurrenceReport duplicate = new OccurrenceReport(selectedRevision);
@@ -146,7 +147,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void removeReportChainDeletesAllReportsInChain() {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         dao.persist(chain);
         final Long fileNumber = chain.get(0).getFileNumber();
 
@@ -159,7 +160,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void removeChainDoesNothingWhenChainDoesNotExist() {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         dao.persist(chain);
 
         dao.removeReportChain(Long.MAX_VALUE);

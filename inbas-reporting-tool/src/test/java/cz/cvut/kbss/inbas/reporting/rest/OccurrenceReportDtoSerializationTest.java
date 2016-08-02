@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.rest.dto.EventFactorsSerializationTest;
@@ -31,7 +31,7 @@ public class OccurrenceReportDtoSerializationTest {
 
     @Test
     public void serializationUsesReferenceToOccurrenceInFactorGraph() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setOccurrence(EventFactorsSerializationTest.generateOccurrenceWithSubEvents());
         final LogicalDocument dto = dtoMapper.reportToReportDto(report);
         final String output = mapper.writeValueAsString(dto);

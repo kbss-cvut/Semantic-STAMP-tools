@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.service.security;
 
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;

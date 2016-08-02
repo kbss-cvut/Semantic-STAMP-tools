@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.dto;
 
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapperImpl;
@@ -17,7 +17,7 @@ public class OccurrenceReportDtoTest {
     @Test
     public void testToReportDto() {
         final OccurrenceReportDto dto = dtoMapper
-                .occurrenceReportToOccurrenceReportDto(Generator.generateOccurrenceReport(true));
+                .occurrenceReportToOccurrenceReportDto(OccurrenceReportGenerator.generateOccurrenceReport(true));
 
         final ReportDto target = dto.toReportDto();
         assertTrue(target instanceof cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto);
@@ -41,7 +41,7 @@ public class OccurrenceReportDtoTest {
     @Test
     public void toReportDtoAddsOccurrenceReportToTypes() {
         final OccurrenceReportDto dto = dtoMapper
-                .occurrenceReportToOccurrenceReportDto(Generator.generateOccurrenceReport(true));
+                .occurrenceReportToOccurrenceReportDto(OccurrenceReportGenerator.generateOccurrenceReport(true));
         final ReportDto target = dto.toReportDto();
         assertTrue(target.getTypes().contains(Vocabulary.s_c_occurrence_report));
     }

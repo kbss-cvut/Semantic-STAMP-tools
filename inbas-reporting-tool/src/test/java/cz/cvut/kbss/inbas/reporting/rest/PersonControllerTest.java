@@ -2,8 +2,8 @@ package cz.cvut.kbss.inbas.reporting.rest;
 
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.rest.handler.ErrorInfo;

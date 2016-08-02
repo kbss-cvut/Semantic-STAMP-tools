@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.util;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ public class IdentificationUtilsTest {
 
     @Test
     public void generateIdentificationFieldsSetsRequiredIdentificationFields() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         assertNull(report.getKey());
         assertNull(report.getFileNumber());
         IdentificationUtils.generateIdentificationFields(report);
@@ -20,7 +20,7 @@ public class IdentificationUtilsTest {
 
     @Test
     public void generateIdentificationUtilsLeavesFieldsUnchangedIfTheyAreAlreadySet() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setKey(IdentificationUtils.generateKey());
         final String origKey = report.getKey();
         final Long origFileNo = report.getFileNumber();

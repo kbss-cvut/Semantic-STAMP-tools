@@ -1,7 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
@@ -37,7 +38,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Test
     public void persistSetsAuthorDateCreatedFileNumberAndRevision() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         assertNull(report.getAuthor());
         assertNull(report.getDateCreated());
         assertNull(report.getFileNumber());
@@ -59,7 +60,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         // New file number is used for every instance
         final List<OccurrenceReport> reports = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
-            reports.add(Generator.generateOccurrenceReport(false));
+            reports.add(OccurrenceReportGenerator.generateOccurrenceReport(false));
         }
         occurrenceReportService.persist(reports);
         reports.forEach(this::verifyPersistedReport);
@@ -67,7 +68,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Test
     public void persistSetsDefaultReportPhase() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         assertNull(report.getPhase());
         occurrenceReportService.persist(report);
         assertNotNull(report.getPhase());
@@ -79,7 +80,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Test
     public void persistDoesNotSetDefaultPhaseIfPhaseIsAlreadySet() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         assertNotEquals(phaseService.getInitialPhase(), phaseService.getDefaultPhase());
         report.setPhase(phaseService.getInitialPhase());
         occurrenceReportService.persist(report);
@@ -106,7 +107,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     }
 
     private OccurrenceReport persistFirstRevision(boolean generateMeasures) {
-        final OccurrenceReport firstRevision = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport firstRevision = OccurrenceReportGenerator.generateOccurrenceReport(true);
         firstRevision.setAuthor(author);
         if (generateMeasures) {
             final Set<CorrectiveMeasureRequest> measures = new HashSet<>();
@@ -193,7 +194,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Test
     public void transitionToNextPhaseSetsNewPhaseOnReport() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         report.setPhase(phaseService.getInitialPhase());
         occurrenceReportService.persist(report);
@@ -206,7 +207,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Test
     public void transitionToNextPhaseDoesNothingWhenReportHasNoPhase() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         report.setAuthor(author);
         assertNull(report.getPhase());
         occurrenceReportService.persist(report);
@@ -218,7 +219,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Test
     public void transitionToNextPhaseDoesNothingIfAlreadyInLatestPhase() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         report.setPhase(phaseService.getInitialPhase());
         URI oldPhase;

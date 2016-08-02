@@ -5,9 +5,14 @@
  */
 package cz.cvut.kbss.inbas.reporting.model.qam;
 
+import cz.cvut.kbss.inbas.reporting.model.AbstractEntity;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
-import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
+import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
+import cz.cvut.kbss.jopa.model.annotations.Types;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,10 +21,7 @@ import java.util.Set;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @OWLClass(iri = Vocabulary.s_c_answer)
-public class Answer {
-
-    @Id(generated = true)
-    private URI uri;
+public class Answer extends AbstractEntity implements Serializable {
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_data_value)
     private String textValue;
@@ -43,14 +45,6 @@ public class Answer {
         if (other.types != null) {
             this.types.addAll(other.types);
         }
-    }
-
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
     }
 
     public String getTextValue() {

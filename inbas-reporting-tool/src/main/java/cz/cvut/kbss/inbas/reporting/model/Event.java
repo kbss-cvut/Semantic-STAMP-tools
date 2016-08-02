@@ -12,10 +12,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_Event)
-public class Event implements FactorGraphItem, Serializable {
-
-    @Id(generated = true)
-    private URI uri;
+public class Event extends AbstractEntity implements FactorGraphItem, Serializable {
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
@@ -62,15 +59,6 @@ public class Event implements FactorGraphItem, Serializable {
         if (other.question != null) {
             this.question = new Question(other.question);
         }
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
     }
 
     public Set<Factor> getFactors() {
