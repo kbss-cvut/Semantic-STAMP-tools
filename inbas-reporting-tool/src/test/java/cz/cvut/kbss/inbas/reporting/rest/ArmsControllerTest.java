@@ -2,7 +2,7 @@ package cz.cvut.kbss.inbas.reporting.rest;
 
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ public class ArmsControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void testGetArmsIndex() throws Exception {
-        final URI outcome = Generator.ACCIDENT_CATASTROPHIC;
-        final URI barrier = Generator.BARRIER_NOT_EFFECTIVE;
+        final URI outcome = OccurrenceReportGenerator.ACCIDENT_CATASTROPHIC;
+        final URI barrier = OccurrenceReportGenerator.BARRIER_NOT_EFFECTIVE;
         final int expected = 117;
         when(armsService.calculateArmsIndex(outcome, barrier)).thenReturn(expected);
         final MvcResult result = mockMvc.perform(
@@ -39,8 +39,8 @@ public class ArmsControllerTest extends BaseControllerTestRunner {
     @Test
     public void getArmsIndexReturnsBadRequestWhenInvalidUriIsPassed() throws Exception {
         final MvcResult result = mockMvc.perform(
-                get("/arms/").param("accidentOutcome", Generator.ACCIDENT_CATASTROPHIC.toString())
-                             .param("barrierEffectiveness", "_+++f//fds/   dskfj;j1213")).andReturn();
+                get("/arms/").param("accidentOutcome", OccurrenceReportGenerator.ACCIDENT_CATASTROPHIC.toString())
+                             .param("barrierEffectiveness", "_+++f//fds/dskfj;     j1213")).andReturn();
         assertEquals(HttpStatus.BAD_REQUEST, HttpStatus.valueOf(result.getResponse().getStatus()));
     }
 }

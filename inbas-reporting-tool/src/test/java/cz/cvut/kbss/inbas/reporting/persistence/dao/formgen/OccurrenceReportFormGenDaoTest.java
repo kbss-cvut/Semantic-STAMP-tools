@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao.formgen;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
@@ -71,7 +72,7 @@ public class OccurrenceReportFormGenDaoTest {
             final Repository repository = em.unwrap(Repository.class);
             connection = repository.getConnection();
             assertFalse(connection.getContextIDs().hasNext());
-            final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+            final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
             report.setFileNumber(null);
             report.setRevision(null);
             report.getAuthor().generateUri();
@@ -99,7 +100,7 @@ public class OccurrenceReportFormGenDaoTest {
 
     @Test
     public void persistSavesExistingReportIntoUniqueContext() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         personDao.persist(report.getAuthor());
         reportDao.persist(report);
         final Map<String, URI> contexts = dao.persist(report);
@@ -108,8 +109,8 @@ public class OccurrenceReportFormGenDaoTest {
 
     @Test
     public void persistRemovesCorrectiveMeasuresFromReport() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
-        report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
+        report.setCorrectiveMeasures(OccurrenceReportGenerator.generateCorrectiveMeasureRequests());
         report.getAuthor().generateUri();
         assertFalse(report.getCorrectiveMeasures().isEmpty());
         dao.persist(report);
@@ -126,7 +127,7 @@ public class OccurrenceReportFormGenDaoTest {
 
     @Test
     public void testPersistReportWithAuthorAndLastModifiedBySame() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         personDao.persist(report.getAuthor());
         reportDao.persist(report);
         report.setLastModifiedBy(report.getAuthor());
@@ -136,7 +137,7 @@ public class OccurrenceReportFormGenDaoTest {
 
     @Test
     public void testPersistReportWithDifferentAuthorAndLastModifier() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         personDao.persist(report.getAuthor());
         final Person lastModifier = new Person();
         lastModifier.setFirstName("Thomas");
@@ -152,14 +153,14 @@ public class OccurrenceReportFormGenDaoTest {
 
     @Test(expected = PersistenceException.class)
     public void throwsPersistenceExceptionWhenInvalidDataIsPersisted() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         report.getOccurrence().setName(null);
         dao.persist(report);
     }
 
     @Test
     public void persistSavesQuestionAnswerGraph() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         personDao.persist(report.getAuthor());
         final Event evt = report.getOccurrence().getChildren().iterator().next();
         evt.setQuestion(Generator.generateQuestions(null));
@@ -188,7 +189,7 @@ public class OccurrenceReportFormGenDaoTest {
         try {
             final Repository repository = em.unwrap(Repository.class);
             sourceConnection = repository.getConnection();
-            final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+            final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
             report.setUri(Generator.generateUri());
             final Collection<Statement> e5Data = persistE5Data(report.getUri(), sourceConnection);
             report.getAuthor().generateUri();

@@ -43,7 +43,7 @@ public class OccurrenceReportTest {
 
     @Test
     public void copyConstructorCreatesCopyOfResponsibleDepartments() {
-        final OccurrenceReport original = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport original = OccurrenceReportGenerator.generateOccurrenceReport(true);
         final Set<URI> departments = new HashSet<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
             departments.add(Generator.generateUri());
@@ -56,7 +56,7 @@ public class OccurrenceReportTest {
 
     @Test
     public void copyConstructorLeavesResponsibleDepartmentsNullWhenOriginalHasNone() {
-        final OccurrenceReport original = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport original = OccurrenceReportGenerator.generateOccurrenceReport(true);
         original.setResponsibleDepartments(null);
         final OccurrenceReport copy = new OccurrenceReport(original);
         assertNull(copy.getResponsibleDepartments());
@@ -119,7 +119,7 @@ public class OccurrenceReportTest {
 
     @Test
     public void copyConstructorCopiesArmsValues() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         final OccurrenceReport copy = new OccurrenceReport(report);
         assertEquals(report.getAccidentOutcome(), copy.getAccidentOutcome());
         assertEquals(report.getBarrierEffectiveness(), copy.getBarrierEffectiveness());

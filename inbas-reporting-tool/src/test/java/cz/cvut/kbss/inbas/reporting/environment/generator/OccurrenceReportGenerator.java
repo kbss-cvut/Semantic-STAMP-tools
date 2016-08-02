@@ -7,6 +7,23 @@ import java.net.URI;
 import java.util.*;
 
 public class OccurrenceReportGenerator {
+
+    public static final URI BARRIER_EFFECTIVE = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/effective");
+    public static final URI BARRIER_LIMITED = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/limited");
+    public static final URI BARRIER_MINIMAL = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/minimal");
+    public static final URI BARRIER_NOT_EFFECTIVE = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/not-effective");
+    public static final URI ACCIDENT_NEGLIGIBLE = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/negligible");
+    public static final URI ACCIDENT_MINOR = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/minor");
+    public static final URI ACCIDENT_MAJOR = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/major");
+    public static final URI ACCIDENT_CATASTROPHIC = URI
+            .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/catastrophic");
     /**
      * Generates occurrence report.
      * <p>
@@ -20,6 +37,8 @@ public class OccurrenceReportGenerator {
         report.setOccurrence(generateOccurrence());
         report.setSummary("Some random summary " + Generator.randomInt() + ".");
         if (setAttributes) {
+            report.setBarrierEffectiveness(BARRIER_EFFECTIVE);
+            report.setAccidentOutcome(ACCIDENT_NEGLIGIBLE);
             report.setSeverityAssessment(
                     URI.create("http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100"));
             report.setAuthor(Generator.getPerson());

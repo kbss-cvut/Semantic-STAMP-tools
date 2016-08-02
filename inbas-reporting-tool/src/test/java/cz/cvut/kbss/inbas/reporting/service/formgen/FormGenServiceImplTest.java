@@ -3,7 +3,8 @@ package cz.cvut.kbss.inbas.reporting.service.formgen;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.inbas.reporting.environment.config.TestServiceConfig;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
@@ -94,7 +95,7 @@ public class FormGenServiceImplTest {
     }
 
     private OccurrenceReport getOccurrenceReport() {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         report.getAuthor().generateUri();   // This won't be necessary in code, the user is already persisted
         return report;
     }
@@ -136,7 +137,7 @@ public class FormGenServiceImplTest {
 
     @Test
     public void formGenPassesParametersToRemoteFormGenerator() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         final Map<String, String> params = Collections
                 .singletonMap("eventType", report.getOccurrence().getEventType().toString());
         setupRemoteFormGenServiceMock(params);

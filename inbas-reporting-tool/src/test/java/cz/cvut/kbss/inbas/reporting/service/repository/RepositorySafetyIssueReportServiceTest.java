@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
+import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
@@ -28,7 +28,7 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
 
     @Test
     public void persistInitializesReportProvenanceData() {
-        final SafetyIssueReport report = Generator.generateSafetyIssueReport(false, false);
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
         service.persist(report);
         final SafetyIssueReport result = service.findByKey(report.getKey());
         assertNotNull(result);
@@ -40,7 +40,7 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
 
     @Test
     public void updateSetsLastModifiedAndLastModifiedBy() {
-        final SafetyIssueReport report = Generator.generateSafetyIssueReport(false, false);
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
         service.persist(report);
         report.setSummary("Updated report summary.");
         assertNull(report.getLastModified());

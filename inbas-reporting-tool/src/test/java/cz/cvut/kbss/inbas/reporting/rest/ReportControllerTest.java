@@ -328,7 +328,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void importFromE5ReturnsLocationHeaderOnSuccess() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         IdentificationUtils.generateIdentificationFields(report);
         when(reportServiceMock.importReportFromFile(anyString(), any(InputStream.class))).thenReturn(report);
         final MockMultipartFile file = getMockMultipartFile();

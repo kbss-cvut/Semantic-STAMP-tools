@@ -262,9 +262,9 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void createNewRevisionSetsArmsIndexBeforePuttingInstanceIntoCache() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
-        report.setAccidentOutcome(Generator.ACCIDENT_NEGLIGIBLE);
-        report.setBarrierEffectiveness(Generator.BARRIER_LIMITED);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        report.setAccidentOutcome(OccurrenceReportGenerator.ACCIDENT_NEGLIGIBLE);
+        report.setBarrierEffectiveness(OccurrenceReportGenerator.BARRIER_LIMITED);
         reportService.persist(report);
         final int armsIndex = 117;
         when(armsService.calculateArmsIndex(any(OccurrenceReport.class))).thenReturn(armsIndex);
@@ -353,7 +353,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Test
     public void importReportFromFileImportsE5XReport() throws Exception {
         final InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/eccairs/" + IMPORT_FILE_NAME);
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         when(reportImporterMock.process(any(NamedStream.class))).thenAnswer((invocation) -> {
             occurrenceReportDao.persist(report);
@@ -376,8 +376,8 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Test
     public void importReportReturnsTheFirstReportWhenMultipleAreExtractedFromArchive() throws Exception {
         final InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/eccairs/" + IMPORT_FILE_NAME);
-        final List<OccurrenceReport> reports = Arrays
-                .asList(Generator.generateOccurrenceReport(true), Generator.generateOccurrenceReport(true));
+        final List<OccurrenceReport> reports = Arrays.asList(OccurrenceReportGenerator.generateOccurrenceReport(true),
+                OccurrenceReportGenerator.generateOccurrenceReport(true));
         reports.forEach(r -> r.setAuthor(author));
         when(reportImporterMock.process(any(NamedStream.class))).thenAnswer((invocation) -> {
             occurrenceReportDao.persist(reports);

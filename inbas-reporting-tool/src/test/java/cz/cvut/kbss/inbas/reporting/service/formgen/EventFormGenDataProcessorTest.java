@@ -3,7 +3,8 @@ package cz.cvut.kbss.inbas.reporting.service.formgen;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.inbas.reporting.environment.config.TestServiceConfig;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
@@ -67,7 +68,7 @@ public class EventFormGenDataProcessorTest {
     }
 
     private OccurrenceReport getOccurrenceReport() {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         report.getAuthor().generateUri();
         return report;
     }

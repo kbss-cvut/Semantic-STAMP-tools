@@ -3,63 +3,50 @@ package cz.cvut.kbss.inbas.reporting.model;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
-import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @MappedSuperclass
-public abstract class AbstractReport implements LogicalDocument {
-
-    @Id(generated = true)
-    URI uri;
+public abstract class AbstractReport extends AbstractEntity implements LogicalDocument {
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.s_p_has_key)
-    String key;
+    protected String key;
 
     /**
      * File number identifies a particular report chain, i.e. revisions of the same report.
      */
     @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.s_p_has_file_number)
-    Long fileNumber;
+    protected Long fileNumber;
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.s_p_has_author, fetch = FetchType.EAGER)
-    Person author;
+    protected Person author;
 
     @OWLDataProperty(iri = Vocabulary.s_p_created)
-    Date dateCreated;
+    protected Date dateCreated;
 
     @OWLDataProperty(iri = Vocabulary.s_p_modified)
-    Date lastModified;
+    protected Date lastModified;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_last_editor, fetch = FetchType.EAGER)
-    Person lastModifiedBy;
+    protected Person lastModifiedBy;
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.s_p_has_revision)
-    Integer revision;
+    protected Integer revision;
 
     @OWLDataProperty(iri = Vocabulary.s_p_description)
-    String summary;
+    protected String summary;
 
     @Types
-    Set<String> types;
+    protected Set<String> types;
 
     protected AbstractReport() {
         this.types = new HashSet<>(4);
         types.add(Vocabulary.s_c_report);
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
     }
 
     @Override

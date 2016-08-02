@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
@@ -28,7 +29,7 @@ public class SafetyIssueReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistPersistsSafetyIssueAsWell() {
-        final SafetyIssueReport report = Generator.generateSafetyIssueReport(true, false);
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(true, false);
         persistPerson(report.getAuthor());
         reportDao.persist(report);
         assertNotNull(report.getUri());
@@ -65,7 +66,7 @@ public class SafetyIssueReportDaoTest extends BaseDaoTestRunner {
     }
 
     private SafetyIssueReport persistReportWithMeasures() {
-        final SafetyIssueReport report = Generator.generateSafetyIssueReport(true, true);
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
         persistPerson(report.getAuthor());
         report.getCorrectiveMeasures().stream()
               .filter(m -> m.getResponsibleOrganizations() != null && !m.getResponsibleOrganizations().isEmpty())
