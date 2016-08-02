@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.validation;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
@@ -28,13 +28,13 @@ public class OccurrenceReportValidatorTest {
 
     @Test
     public void validReportPassesPersistValidation() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         validator.validateForPersist(report);
     }
 
     @Test
     public void validReportPassesUpdateValidation() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setKey(IdentificationUtils.generateKey());
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.getAuthor().generateUri();
@@ -51,7 +51,7 @@ public class OccurrenceReportValidatorTest {
     public void reportWithFutureOccurrenceStartIsInvalid() {
         thrown.expect(ValidationException.class);
         thrown.expectMessage("Occurrence start cannot be in the future.");
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.getOccurrence().setStartTime(new Date(System.currentTimeMillis() + 10000));
         validator.validateForPersist(report);
     }
@@ -60,7 +60,7 @@ public class OccurrenceReportValidatorTest {
     public void reportWithOccurrenceEndBeforeOccurrenceStartIsInvalid() {
         thrown.expect(ValidationException.class);
         thrown.expectMessage("Occurrence start cannot be after occurrence end.");
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.getOccurrence().setEndTime(new Date(report.getOccurrence().getStartTime().getTime() - 10000));
         validator.validateForPersist(report);
     }
@@ -69,7 +69,7 @@ public class OccurrenceReportValidatorTest {
     public void emptyOccurrenceNameIsInvalid() {
         thrown.expect(ValidationException.class);
         thrown.expectMessage("Occurrence name cannot be empty.");
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.getOccurrence().setName("");
         validator.validateForPersist(report);
     }
@@ -77,7 +77,7 @@ public class OccurrenceReportValidatorTest {
     @Test
     public void occurrenceValidatorCallsNextValidatorInChain() {
         thrown.expect(ValidationException.class);
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setKey(IdentificationUtils.generateKey());
         final OccurrenceReport copy = new OccurrenceReport(report);
         copy.setKey(IdentificationUtils.generateKey()); // The key will be different

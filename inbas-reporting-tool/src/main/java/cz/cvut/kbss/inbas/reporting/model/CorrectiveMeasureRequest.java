@@ -1,10 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
-import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.jopa.model.annotations.FetchType;
+import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
+import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,10 +16,7 @@ import java.util.Set;
  * inheritance between agent - Person/Organization and Event - Occurrence.
  */
 @OWLClass(iri = Vocabulary.s_c_corrective_measure_request)
-public class CorrectiveMeasureRequest implements HasUri, Serializable {
-
-    @Id(generated = true)
-    private URI uri;
+public class CorrectiveMeasureRequest extends AbstractEntity implements Serializable {
 
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String description;
@@ -56,15 +54,6 @@ public class CorrectiveMeasureRequest implements HasUri, Serializable {
         }
         this.basedOnEvent = other.basedOnEvent;
         this.basedOnOccurrence = other.basedOnOccurrence;
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
     }
 
     public String getDescription() {

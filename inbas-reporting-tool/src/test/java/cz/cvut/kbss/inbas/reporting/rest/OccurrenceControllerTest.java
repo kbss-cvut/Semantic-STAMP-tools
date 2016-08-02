@@ -3,8 +3,9 @@ package cz.cvut.kbss.inbas.reporting.rest;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.OccurrenceReportDtoList;
@@ -55,7 +56,7 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
     }
 
     private Occurrence generateOccurrence() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrence.setKey(IdentificationUtils.generateKey());
         occurrence.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/occurrence#instance12345"));
         return occurrence;
@@ -92,9 +93,9 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
     private List<OccurrenceReport> generateReportsForOccurrence(Occurrence occurrence) {
         final List<OccurrenceReport> reports = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
-            final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+            final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
             report.setOccurrence(occurrence);
-            report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
+            report.setCorrectiveMeasures(OccurrenceReportGenerator.generateCorrectiveMeasureRequests());
             reports.add(report);
         }
         return reports;

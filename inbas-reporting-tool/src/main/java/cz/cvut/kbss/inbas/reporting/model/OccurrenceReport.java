@@ -13,10 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @OWLClass(iri = Vocabulary.s_c_occurrence_report)
-public class OccurrenceReport implements LogicalDocument, Serializable {
-
-    @Id(generated = true)
-    private URI uri;
+public class OccurrenceReport extends AbstractEntity implements LogicalDocument, Serializable {
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.s_p_has_key)
@@ -82,15 +79,6 @@ public class OccurrenceReport implements LogicalDocument, Serializable {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
                                                               .collect(Collectors.toSet());
         }
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
     }
 
     public String getKey() {

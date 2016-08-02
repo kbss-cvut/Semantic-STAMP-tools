@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
@@ -25,7 +26,7 @@ public class OwlKeySupportingDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistGeneratesKeyForEntity() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         assertNull(report.getKey());
         dao.persist(report);
@@ -34,7 +35,7 @@ public class OwlKeySupportingDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findByKeyReturnsInstanceWithMatchingKey() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         dao.persist(report);
 

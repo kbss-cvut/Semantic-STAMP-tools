@@ -11,7 +11,8 @@ import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
@@ -147,7 +148,7 @@ public class DtoMapperTest {
 
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequestBasedOnOccurrence() {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrence.setKey(IdentificationUtils.generateKey());
         occurrence.setUri(URI.create(Vocabulary.s_c_Occurrence + "#instance"));
         req.setBasedOnOccurrence(occurrence);
@@ -255,8 +256,8 @@ public class DtoMapperTest {
 
     @Test
     public void reportToReportDtoTransformsOccurrenceReportToOccurrenceReportDto() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
-        report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setCorrectiveMeasures(OccurrenceReportGenerator.generateCorrectiveMeasureRequests());
         final LogicalDocument dto = mapper.reportToReportDto(report);
         assertNotNull(dto);
         assertTrue(dto instanceof OccurrenceReportDto);
