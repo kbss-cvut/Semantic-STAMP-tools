@@ -2,7 +2,8 @@ package cz.cvut.kbss.inbas.reporting.model;
 
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -21,7 +22,7 @@ public class OccurrenceReportTest {
 
     @Test
     public void copyConstructorCopiesRelevantAttributes() {
-        final OccurrenceReport original = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport original = OccurrenceReportGenerator.generateOccurrenceReport(true);
         final OccurrenceReport copy = new OccurrenceReport(original);
 
         assertNull(copy.getUri());
@@ -40,7 +41,7 @@ public class OccurrenceReportTest {
 
     @Test
     public void copyConstructorCreatesNewCorrectiveMeasureRequests() {
-        final OccurrenceReport original = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport original = OccurrenceReportGenerator.generateOccurrenceReport(true);
         final Set<CorrectiveMeasureRequest> requests = new HashSet<>();
         final CorrectiveMeasureRequest rOne = new CorrectiveMeasureRequest();
         rOne.setDescription("CorrectiveMeasureRequest_One");
@@ -63,7 +64,7 @@ public class OccurrenceReportTest {
 
     @Test
     public void testToReportDto() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setPhase(Generator.generateEventType());
 
         final ReportDto dto = report.toReportDto();
@@ -88,7 +89,7 @@ public class OccurrenceReportTest {
 
     @Test
     public void toReportDtoAddsOccurrenceReportToTypes() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         final ReportDto dto = report.toReportDto();
         assertTrue(dto.getTypes().contains(Vocabulary.s_c_occurrence_report));
     }

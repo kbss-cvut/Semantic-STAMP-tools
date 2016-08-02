@@ -3,8 +3,9 @@ package cz.cvut.kbss.inbas.reporting.service;
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.util.UnsupportedReport;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.UnsupportedReportTypeException;
@@ -67,7 +68,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     }
 
     private OccurrenceReport persistOccurrenceReport() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         reportService.persist(report);
         return report;
     }
@@ -100,7 +101,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Test(expected = UnsupportedReportTypeException.class)
     public void findByKeyThrowsUnsupportedReportTypeForReportOfUnknownType() {
         // Occurrences have keys, so it will play a role of unsupported report here
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrenceService.persist(occurrence);
 
         reportService.findByKey(occurrence.getKey());
@@ -154,7 +155,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     }
 
     private List<OccurrenceReport> persistOccurrenceReportChain() {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         occurrenceReportDao.persist(chain);
         return chain;
     }
@@ -305,7 +306,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void transitionToNextPhaseTransitionsReportPhase() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         report.setPhase(phaseService.getInitialPhase());
         occurrenceReportService.persist(report);

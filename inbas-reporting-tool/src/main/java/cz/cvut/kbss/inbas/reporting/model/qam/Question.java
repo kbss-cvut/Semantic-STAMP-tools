@@ -5,6 +5,7 @@
  */
 package cz.cvut.kbss.inbas.reporting.model.qam;
 
+import cz.cvut.kbss.inbas.reporting.model.AbstractEntity;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -18,10 +19,7 @@ import java.util.stream.Collectors;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @OWLClass(iri = Vocabulary.s_c_question)
-public class Question implements Serializable {
-
-    @Id(generated = true)
-    private URI uri;
+public class Question extends AbstractEntity implements Serializable {
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE}, fetch = FetchType.EAGER)
@@ -51,14 +49,6 @@ public class Question implements Serializable {
             this.types.addAll(other.types);
         }
         this.origin = other.origin;
-    }
-
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
     }
 
     public Set<Question> getSubQuestions() {

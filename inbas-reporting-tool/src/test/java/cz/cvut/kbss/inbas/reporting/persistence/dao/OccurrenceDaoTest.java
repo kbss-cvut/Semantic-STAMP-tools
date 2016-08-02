@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Factor;
@@ -33,7 +34,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistPersistsAllEventsFromFactorGraph() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         final Set<Event> events = new HashSet<>();
         generateFactorGraph(occurrence, events, 0);
         dao.persist(occurrence);
@@ -98,7 +99,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistPersistsQuestionsAndAnswersOfEvents() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrence.setQuestion(Generator.generateQuestions(null));
         dao.persist(occurrence);
         final EntityManager em = emf.createEntityManager();
@@ -124,7 +125,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistReusesQuestionsWithTheSameUri() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         final Set<Event> children = new HashSet<>(2);
         occurrence.setChildren(children);
         event(children);
@@ -156,7 +157,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void removeDeletesAllQuestionsAndAnswersAsWell() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrence.setQuestion(Generator.generateQuestions(null));
         dao.persist(occurrence);
 

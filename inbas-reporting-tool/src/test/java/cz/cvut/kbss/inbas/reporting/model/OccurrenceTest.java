@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.model.util.EventPositionComparator;
 import org.junit.Test;
@@ -22,7 +23,7 @@ public class OccurrenceTest {
 
     @Test
     public void copyOfCopiesOccurrenceWithChildren() {
-        final Occurrence original = Generator.generateOccurrenceWithDescendantEvents();
+        final Occurrence original = OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents();
         final Occurrence result = Occurrence.copyOf(original);
         assertNotNull(result);
         verifyFactorGraph(original, result);
@@ -98,7 +99,7 @@ public class OccurrenceTest {
     }
 
     private Occurrence generateFactorGraph() {
-        final Occurrence o = Generator.generateOccurrenceWithDescendantEvents();
+        final Occurrence o = OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents();
         final Event e1 = event();
         final Factor f1 = new Factor();
         f1.setEvent(e1);
@@ -139,7 +140,7 @@ public class OccurrenceTest {
 
     @Test
     public void setEventTypeAddsEventTypeToTypesToo() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         final URI eventType = Generator.generateEventType();
         occurrence.setEventType(eventType);
         assertTrue(occurrence.getTypes().contains(eventType.toString()));
@@ -147,7 +148,7 @@ public class OccurrenceTest {
 
     @Test
     public void copyConstructorCopiesQuestionInstance() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         final Question question = new Question();
         question.setUri(URI.create(Vocabulary.s_c_question + "instance117"));
         occurrence.setQuestion(question);

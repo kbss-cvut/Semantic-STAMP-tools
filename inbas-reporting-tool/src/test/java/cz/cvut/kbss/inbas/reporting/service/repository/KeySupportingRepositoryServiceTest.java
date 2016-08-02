@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceService;
@@ -17,7 +17,7 @@ public class KeySupportingRepositoryServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void testFindByKey() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrenceService.persist(occurrence);
 
         final Occurrence result = occurrenceService.findByKey(occurrence.getKey());

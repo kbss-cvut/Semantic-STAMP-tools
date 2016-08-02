@@ -1,7 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -48,7 +49,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     private OccurrenceReport persistReport() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         occurrenceReportDao.persist(report);
         return report;
@@ -56,7 +57,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void persistReportWithFactorGraphCascadesPersistToAppropriateEventInstances() {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         report.setAuthor(author);
         occurrenceReportDao.persist(report);
 
@@ -128,7 +129,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findByOccurrenceGetsReportsWithMatchingOccurrence() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrenceDao.persist(occurrence);
         final List<OccurrenceReport> reports = persistReportsForOccurrence(occurrence);
         // This one is just so that the method does not simply select all reports
@@ -141,7 +142,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     private List<OccurrenceReport> persistReportsForOccurrence(Occurrence occurrence) {
         final List<OccurrenceReport> reports = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
-            final OccurrenceReport r = Generator.generateOccurrenceReport(true);
+            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
             r.setOccurrence(occurrence);
             r.setAuthor(author);
             reports.add(r);
@@ -152,11 +153,11 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findByOccurrenceReturnsLatestRevisionsOfMatchingReportChains() throws Exception {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrenceDao.persist(occurrence);
         final Set<URI> reportUris = new HashSet<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
-            final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+            final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
             chain.forEach(r -> r.setOccurrence(occurrence));
             occurrenceReportDao.persist(chain);
             reportUris.add(chain.get(chain.size() - 1).getUri());
@@ -169,7 +170,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findByOccurrenceReturnsReportsOrderedByOccurrenceStartDescending() {
-        final Occurrence occurrence = Generator.generateOccurrence();
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrenceDao.persist(occurrence);
         final List<OccurrenceReport> reports = persistReportsForOccurrence(occurrence);
         Collections.sort(reports,
@@ -206,7 +207,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     private OccurrenceReport prepareReportWithMeasureRequests() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         final Organization org = new Organization(ORGANIZATION_NAME);
         report.setCorrectiveMeasures(new HashSet<>());
@@ -283,7 +284,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void updateReportByAddingItemsIntoFactorGraph() {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         report.setAuthor(author);
         occurrenceReportDao.persist(report);
 
@@ -309,7 +310,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void updateReportByRemovingItemsFromFactorGraph() {
-        final OccurrenceReport report = Generator.generateOccurrenceReportWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         report.setAuthor(author);
         occurrenceReportDao.persist(report);
 

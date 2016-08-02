@@ -1,6 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.dto.event;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotEquals;

@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.service.validation;
 
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
@@ -32,7 +33,7 @@ public class ReportValidatorTest {
 
     @Before
     public void setUp() {
-        this.original = Generator.generateOccurrenceReport(true);
+        this.original = OccurrenceReportGenerator.generateOccurrenceReport(true);
         original.setUri(URI.create("http://onto.fel.cvut.cz/ontologies/documentation/report/original"));
         original.setKey(IdentificationUtils.generateKey());
         original.getAuthor().generateUri();

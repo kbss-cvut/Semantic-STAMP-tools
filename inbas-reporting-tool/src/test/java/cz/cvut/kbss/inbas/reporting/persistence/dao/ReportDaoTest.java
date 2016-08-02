@@ -1,7 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
@@ -39,7 +40,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
     }
 
     private OccurrenceReport persistReport() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         persistPerson(author);
         report.setAuthor(author);
         occurrenceReportDao.persist(report);
@@ -76,7 +77,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
 
     private List<OccurrenceReport> persistReportChain() {
         persistPerson(author);
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         chain.get(0).getTypes().add(Vocabulary.s_c_logical_document);
         chain.get(chain.size() - 1).getTypes().add(Vocabulary.s_c_logical_record);
         occurrenceReportDao.persist(chain);

@@ -6,8 +6,9 @@ import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.util.ReportRevisionComparator;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
@@ -82,7 +83,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void testGetReportForOccurrenceReport() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.getOccurrence().setUri(URI.create(Vocabulary.s_c_Occurrence + "#32145"));
         report.setKey(IdentificationUtils.generateKey());
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance12345"));
@@ -97,7 +98,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void testGetLatestRevisionForOccurrenceReport() throws Exception {
-        final OccurrenceReport latestRevision = Generator.generateOccurrenceReport(true);
+        final OccurrenceReport latestRevision = OccurrenceReportGenerator.generateOccurrenceReport(true);
         latestRevision.setRevision(Generator.randomInt(10));
         when(reportServiceMock.findLatestRevision(latestRevision.getFileNumber())).thenReturn(latestRevision);
         final MvcResult result = mockMvc.perform(get(REPORTS_PATH + "chain/" + latestRevision.getFileNumber()))
@@ -117,7 +118,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void testGetReportChainRevisions() throws Exception {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         Collections.sort(chain, new ReportRevisionComparator<>());  // sort by revision descending
         final Long fileNumber = chain.get(0).getFileNumber();
         final List<ReportRevisionInfo> revisions = new ArrayList<>(chain.size());
@@ -151,7 +152,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void testGetOccurrenceReportRevisionByChainIdentifierAndRevisionNumber() throws Exception {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         chain.forEach(r -> {
             r.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance-" + Generator.randomInt()));
             r.setKey(IdentificationUtils.generateKey());
@@ -180,7 +181,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void createReportReturnsLocationOfNewInstance() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         final String key = "117";
         doAnswer(call -> {
             final OccurrenceReport r = (OccurrenceReport) call.getArguments()[0];
@@ -198,7 +199,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void createReportReturnsValidationExceptionThrownByServiceAsResponse() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         doThrow(new ValidationException("Invalid report.")).when(reportServiceMock)
                                                            .persist(any(OccurrenceReport.class));
         mockMvc.perform(post("/reports").content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
@@ -209,7 +210,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void createNewRevisionReturnsLocationOfNewRevision() throws Exception {
-        final List<OccurrenceReport> chain = Generator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         final Long fileNumber = chain.get(0).getFileNumber();
         Collections.sort(chain, new ReportRevisionComparator<>());  // Sort descending
         final OccurrenceReport newRevision = new OccurrenceReport();
@@ -249,7 +250,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     }
 
     private OccurrenceReport prepareReport() {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
@@ -258,7 +259,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void updateReportThrowsBadRequestWhenKeyInPathDoesNotMatchReportKey() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
         final String otherKey = IdentificationUtils.generateKey();
@@ -270,7 +271,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void updateReportThrowsNotFoundForUnknownReportKey() throws Exception {
-        final OccurrenceReport report = Generator.generateOccurrenceReport(false);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(null);

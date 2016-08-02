@@ -3,7 +3,7 @@ package cz.cvut.kbss.inbas.reporting.security;
 import cz.cvut.kbss.inbas.reporting.config.RestConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.config.TestSecurityConfig;
-import cz.cvut.kbss.inbas.reporting.environment.util.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.security.model.UserDetails;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import org.junit.After;
