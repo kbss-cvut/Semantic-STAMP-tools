@@ -158,4 +158,20 @@ public class Person implements HasDerivableUri, Serializable {
     public boolean nameEquals(Person other) {
         return other != null && firstName.equals(other.firstName) && lastName.equals(other.lastName);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Person person = (Person) o;
+
+        return uri != null ? uri.equals(person.uri) : person.uri == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return uri != null ? uri.hashCode() : 0;
+    }
 }

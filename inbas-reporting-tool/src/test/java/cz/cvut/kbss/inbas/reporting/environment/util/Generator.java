@@ -3,6 +3,9 @@ package cz.cvut.kbss.inbas.reporting.environment.util;
 import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.model.qam.Answer;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.CorrectiveMeasure;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 
 import java.net.URI;
@@ -107,10 +110,7 @@ public class Generator {
             report.setSeverityAssessment(
                     URI.create("http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100"));
             report.setResponsibleDepartments(Collections.singleton(URI.create("http://kbss.felk.cvut.cz")));
-            report.setAuthor(getPerson());
-            report.setDateCreated(new Date());
-            report.setFileNumber((long) randomInt(Integer.MAX_VALUE));
-            report.setRevision(1);
+            setReportAttributes(report);
         }
         return report;
     }
@@ -168,7 +168,7 @@ public class Generator {
 
     public static Set<CorrectiveMeasureRequest> generateCorrectiveMeasureRequests() {
         final Set<CorrectiveMeasureRequest> set = new HashSet<>();
-        for (int i = 0; i < randomInt(10); i++) {
+        for (int i = 0; i < randomInt(3, 10); i++) {
             final CorrectiveMeasureRequest cmr = new CorrectiveMeasureRequest();
             cmr.setDescription(UUID.randomUUID().toString());
             int j = randomInt(Integer.MAX_VALUE);
@@ -233,6 +233,21 @@ public class Generator {
         do {
             rand = random.nextInt(upperBound);
         } while (rand <= 0);
+        return rand;
+    }
+
+    /**
+     * Generates a (pseudo-)random integer between the specified bounds.
+     *
+     * @param lowerBound Lower bound, inclusive
+     * @param upperBound Upper bound, exclusive
+     * @return Randomly generated integer
+     */
+    public static int randomInt(int lowerBound, int upperBound) {
+        int rand;
+        do {
+            rand = random.nextInt(upperBound);
+        } while (rand < lowerBound);
         return rand;
     }
 
@@ -322,5 +337,42 @@ public class Generator {
             parent.getSubQuestions().add(child);
             generateQuestions(child, depth + 1, maxDepth);
         }
+    }
+
+    public static SafetyIssue generateSafetyIssue() {
+        final SafetyIssue issue = new SafetyIssue();
+        issue.setName("SafetyIssue" + randomInt());
+        return issue;
+    }
+
+    public static SafetyIssueReport generateSafetyIssueReport(boolean setAttributes, boolean generateMeasures) {
+        final SafetyIssueReport report = new SafetyIssueReport();
+        report.setSafetyIssue(generateSafetyIssue());
+        report.setSummary("Safety issue report " + randomInt());
+        if (setAttributes) {
+            setReportAttributes(report);
+        }
+        if (generateMeasures) {
+            report.setCorrectiveMeasures(new HashSet<>());
+            for (int i = 0; i < randomInt(5, 10); i++) {
+                final CorrectiveMeasure measure = new CorrectiveMeasure();
+                measure.setDescription("Safety issue corrective measure " + i);
+                measure.setDeadline(new Date());
+                if (randomBoolean()) {
+                    measure.setResponsiblePersons(Collections.singleton(report.getAuthor()));
+                } else {
+                    measure.setResponsibleOrganizations(Collections.singleton(generateOrganization()));
+                }
+                report.getCorrectiveMeasures().add(measure);
+            }
+        }
+        return report;
+    }
+
+    private static void setReportAttributes(AbstractReport report) {
+        report.setAuthor(getPerson());
+        report.setDateCreated(new Date());
+        report.setFileNumber((long) randomInt(Integer.MAX_VALUE));
+        report.setRevision(1);
     }
 }
