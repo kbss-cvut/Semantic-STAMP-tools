@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 public class SafetyIssueReportGenerator {
 
@@ -46,5 +47,10 @@ public class SafetyIssueReportGenerator {
         report.setDateCreated(new Date());
         report.setFileNumber((long) Generator.randomInt(Integer.MAX_VALUE));
         report.setRevision(1);
+    }
+
+    public static List<SafetyIssueReport> generateSafetyIssueReportChain() {
+        final int count = Generator.randomInt(2, 10);
+        return null;
     }
 }

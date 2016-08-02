@@ -1,19 +1,18 @@
 package cz.cvut.kbss.inbas.reporting.model.safetyissue;
 
+import cz.cvut.kbss.inbas.reporting.model.AbstractEntity;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
-import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
-import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
+import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
+import cz.cvut.kbss.jopa.model.annotations.Types;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_safety_issue)
-public class SafetyIssue implements HasUri, Serializable {
-
-    @Id(generated = true)
-    private URI uri;
+public class SafetyIssue extends AbstractEntity implements Serializable {
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLAnnotationProperty(iri = Vocabulary.s_p_label)
@@ -25,15 +24,6 @@ public class SafetyIssue implements HasUri, Serializable {
     public SafetyIssue() {
         this.types = new HashSet<>(4);
         types.add(Vocabulary.s_c_event_type);
-    }
-
-    @Override
-    public URI getUri() {
-        return uri;
-    }
-
-    public void setUri(URI uri) {
-        this.uri = uri;
     }
 
     public String getName() {

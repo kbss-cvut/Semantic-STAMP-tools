@@ -53,6 +53,7 @@ public class Generator {
         person.setLastName("Halsey");
         person.setUsername(USERNAME);
         person.setPassword(PASSWORD);
+        person.generateUri();
         return person;
     }
 
@@ -64,6 +65,7 @@ public class Generator {
     public static Organization generateOrganization() {
         final Organization org = new Organization();
         org.setName(UUID.randomUUID().toString());
+        org.generateUri();
         return org;
     }
 

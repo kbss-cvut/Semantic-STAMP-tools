@@ -1,22 +1,23 @@
 package cz.cvut.kbss.inbas.reporting.model.safetyissue;
 
+import cz.cvut.kbss.inbas.reporting.model.AbstractEntity;
 import cz.cvut.kbss.inbas.reporting.model.Organization;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
-import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
-import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.jopa.model.annotations.FetchType;
+import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
+import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 
 import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 // TODO Request? We already have a different version of corrective measure request related to occurrence report
 @OWLClass(iri = Vocabulary.s_c_corrective_measure_request)
-public class CorrectiveMeasure implements HasUri, Serializable {
-
-    @Id(generated = true)
-    private URI uri;
+public class CorrectiveMeasure extends AbstractEntity implements Serializable {
 
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String description;
@@ -34,13 +35,19 @@ public class CorrectiveMeasure implements HasUri, Serializable {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_reporting_phase)
     private URI phase;
 
-    @Override
-    public URI getUri() {
-        return uri;
+    public CorrectiveMeasure() {
     }
 
-    public void setUri(URI uri) {
-        this.uri = uri;
+    public CorrectiveMeasure(CorrectiveMeasure other) {
+        this.description = other.description;
+        this.deadline = other.deadline;
+        this.phase = other.phase;
+        if (other.responsiblePersons != null) {
+            this.responsiblePersons = new HashSet<>(other.responsiblePersons);
+        }
+        if (other.responsibleOrganizations != null) {
+            this.responsibleOrganizations = new HashSet<>(other.responsibleOrganizations);
+        }
     }
 
     public String getDescription() {
