@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model.safetyissue;
 
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.SafetyIssueReportDto;
 import cz.cvut.kbss.inbas.reporting.model.AbstractReport;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
@@ -10,7 +11,7 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@OWLClass(iri = cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_c_safety_issue_report)
+@OWLClass(iri = Vocabulary.s_c_safety_issue_report)
 public class SafetyIssueReport extends AbstractReport implements LogicalDocument, Serializable {
 
     @ParticipationConstraints(nonEmpty = true)
@@ -53,6 +54,11 @@ public class SafetyIssueReport extends AbstractReport implements LogicalDocument
 
     @Override
     public ReportDto toReportDto() {
-        return null;
+        final SafetyIssueReportDto dto = new SafetyIssueReportDto();
+        copyAttributes(dto);
+        dto.setSummary(summary);
+        dto.setIdentification(safetyIssue.getName());
+        dto.getTypes().add(SafetyIssueReport.class.getDeclaredAnnotation(OWLClass.class).iri());
+        return dto;
     }
 }

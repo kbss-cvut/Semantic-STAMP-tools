@@ -61,6 +61,11 @@ public class OccurrenceReportDto extends ReportDto {
     }
 
     @Override
+    public String toString() {
+        return "OccurrenceReportDto{ " + super.toString() + '}';
+    }
+
+    @Override
     public ReportDto toReportDto() {
         return this;
     }

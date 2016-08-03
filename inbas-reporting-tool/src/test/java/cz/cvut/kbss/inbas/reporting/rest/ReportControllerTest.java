@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.ReportRevisionComparator;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
@@ -16,6 +17,7 @@ import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.rest.handler.ErrorInfo;
@@ -66,13 +68,44 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     }
 
     @Test
+    public void getAllReturnsDtosForVariousReportTypes() throws Exception {
+        final List<ReportDto> dtos = initReportsForFindAll();
+        when(reportServiceMock.findAll()).thenReturn(dtos);
+        final MvcResult result = mockMvc.perform(get("/reports").accept(MediaType.APPLICATION_JSON_VALUE))
+                                        .andExpect(status().isOk()).andReturn();
+        final List<ReportDto> res = readValue(result, new TypeReference<List<ReportDto>>() {
+        });
+        assertNotNull(res);
+        assertEquals(dtos, res);
+    }
+
+    private List<ReportDto> initReportsForFindAll() {
+        final List<ReportDto> dtos = new ArrayList<>();
+        final int count = Generator.randomInt(2, 5);
+        for (int i = 0; i < count; i++) {
+            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
+            r.setUri(Generator.generateUri());
+            r.setAuthor(author);
+            dtos.add(r.toReportDto());
+        }
+        for (int i = 0; i < count; i++) {
+            final SafetyIssueReport r = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
+            r.setUri(Generator.generateUri());
+            r.setAuthor(author);
+            dtos.add(r.toReportDto());
+        }
+        // Some random shuffling
+        Collections.shuffle(dtos);
+        return dtos;
+    }
+
+    @Test
     public void getAllReportsReturnsEmptyCollectionWhenThereAreNoReports() throws Exception {
         when(reportServiceMock.findAll()).thenReturn(Collections.emptyList());
         final MvcResult result = mockMvc.perform(get("/reports").accept(MediaType.APPLICATION_JSON_VALUE))
                                         .andExpect(status().isOk()).andReturn();
-        final List<ReportDto> res = objectMapper
-                .readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<ReportDto>>() {
-                });
+        final List<ReportDto> res = readValue(result, new TypeReference<List<ReportDto>>() {
+        });
         assertNotNull(res);
         assertTrue(res.isEmpty());
     }

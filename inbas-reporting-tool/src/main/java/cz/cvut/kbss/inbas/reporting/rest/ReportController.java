@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportList;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -31,8 +30,8 @@ public class ReportController extends BaseController {
     private DtoMapper dtoMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<ReportDto> getAllReports() {
-        return reportService.findAll();
+    public ReportList getAllReports() {
+        return new ReportList(reportService.findAll());
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
