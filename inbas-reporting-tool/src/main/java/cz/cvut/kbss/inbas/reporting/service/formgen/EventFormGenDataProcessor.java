@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.FormGenDao;
 import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 
@@ -31,7 +32,7 @@ class EventFormGenDataProcessor extends FormGenDataProcessor<OccurrenceReport> {
         }
 
         final SearchByReferenceVisitor visitor = new SearchByReferenceVisitor(referenceId);
-        final FactorGraphTraverser traverser = new FactorGraphTraverser(visitor, null);
+        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(visitor, null);
         traverser.traverse(data.getOccurrence());
         if (visitor.uri == null) {
             throw new IllegalArgumentException(
