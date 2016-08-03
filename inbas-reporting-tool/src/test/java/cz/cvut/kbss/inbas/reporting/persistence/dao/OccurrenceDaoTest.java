@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
     }
 
     private void generateFactorGraph(Occurrence occurrence, Set<Event> events, int depth) {
-        for (int i = 0; i < Generator.randomInt(5); i++) {
+        for (int i = 0; i < Generator.randomInt(2, 5); i++) {
             final Event evt = event(events);
             occurrence.addChild(evt);
             generateFactorGraph(evt, events, depth + 1);
@@ -153,6 +154,36 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
         copy.setUri(first.getUri());
         copy.setTypes(first.getTypes());
         return root;
+    }
+
+    @Test
+    public void updateRemovesOrphans() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        final Set<Event> events = new HashSet<>();
+        generateFactorGraph(occurrence, events, 0);
+        dao.persist(occurrence);
+        final Set<Event> removed = new HashSet<>();
+        final Iterator<Event> it = occurrence.getChildren().iterator();
+        final Event currentRoot = it.next();
+        it.remove();
+        removeChildren(currentRoot, removed);
+        dao.update(occurrence);
+
+        final EntityManager em = emf.createEntityManager();
+        try {
+            removed.forEach(e -> assertNull(em.find(Event.class, e.getUri())));
+        } finally {
+            em.close();
+        }
+        final Occurrence result = dao.find(occurrence.getUri());
+        assertEquals(occurrence.getChildren().size(), result.getChildren().size());
+    }
+
+    private void removeChildren(Event event, Set<Event> toRemove) {
+        toRemove.add(event);
+        if (event.getChildren() != null) {
+            event.getChildren().forEach(e -> removeChildren(e, toRemove));
+        }
     }
 
     @Test

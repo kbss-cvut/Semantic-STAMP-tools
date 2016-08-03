@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_Event)
-public class Event extends AbstractEntity implements FactorGraphItem, Serializable {
+public class Event extends AbstractEntity implements FactorGraphItem, Serializable, Comparable<Event> {
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
@@ -192,5 +192,14 @@ public class Event extends AbstractEntity implements FactorGraphItem, Serializab
         return "Event{" + uri +
                 ", types=" + types +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Event o) {
+        if (index != null && o.index != null) {
+            return index.compareTo(o.index);
+        }
+        // If either index is missing, do not use it at all. It could break sorted set equals/hashCode contract
+        return hashCode() - o.hashCode();
     }
 }

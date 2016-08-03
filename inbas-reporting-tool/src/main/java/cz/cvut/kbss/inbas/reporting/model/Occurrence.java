@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.EdgeCloningVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.NodeCloningVisitor;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.DefaultFactorGraphTraverser;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -204,10 +205,15 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
         return "Occurrence{" + name + " <" + uri + ">, types=" + types + '}';
     }
 
+    @Override
+    public void accept(FactorGraphNodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
     public static Occurrence copyOf(Occurrence original) {
         final Map<URI, FactorGraphItem> instanceMap = new HashMap<>();
         final NodeCloningVisitor nodeVisitor = new NodeCloningVisitor(instanceMap);
-        final FactorGraphTraverser traverser = new FactorGraphTraverser(nodeVisitor, null);
+        final FactorGraphTraverser traverser = new DefaultFactorGraphTraverser(nodeVisitor, null);
         traverser.traverse(original);
         final EdgeCloningVisitor edgeVisitor = new EdgeCloningVisitor(instanceMap);
         traverser.setFactorGraphEdgeVisitor(edgeVisitor);
