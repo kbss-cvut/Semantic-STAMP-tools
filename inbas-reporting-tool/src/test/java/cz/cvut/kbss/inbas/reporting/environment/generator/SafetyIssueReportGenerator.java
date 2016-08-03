@@ -1,14 +1,12 @@
 package cz.cvut.kbss.inbas.reporting.environment.generator;
 
 import cz.cvut.kbss.inbas.reporting.model.AbstractReport;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class SafetyIssueReportGenerator {
 
@@ -49,8 +47,18 @@ public class SafetyIssueReportGenerator {
         report.setRevision(1);
     }
 
-    public static List<SafetyIssueReport> generateSafetyIssueReportChain() {
+    public static List<SafetyIssueReport> generateSafetyIssueReportChain(Person author) {
         final int count = Generator.randomInt(2, 10);
-        return null;
+        final List<SafetyIssueReport> chain = new ArrayList<>(count);
+        final SafetyIssueReport orig = generateSafetyIssueReport(true, false);
+        orig.setAuthor(author);
+        chain.add(orig);
+        for (int i = 1; i < count; i++) {
+            final SafetyIssueReport r = new SafetyIssueReport(orig);
+            r.setRevision(orig.getRevision() + i);
+            r.setAuthor(author);
+            chain.add(r);
+        }
+        return chain;
     }
 }

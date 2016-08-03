@@ -27,6 +27,7 @@ public class SafetyIssueReport extends AbstractReport implements LogicalDocument
         this.fileNumber = other.fileNumber;
         this.summary = other.summary;
         types.addAll(other.getTypes());
+        this.safetyIssue = SafetyIssue.copyOf(other.safetyIssue);
         if (other.getCorrectiveMeasures() != null) {
             this.correctiveMeasures = other.getCorrectiveMeasures().stream().map(CorrectiveMeasure::new).collect(
                     Collectors.toSet());

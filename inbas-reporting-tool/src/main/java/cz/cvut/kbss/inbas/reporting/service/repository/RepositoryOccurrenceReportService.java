@@ -60,13 +60,17 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     }
 
     private void initReportData(OccurrenceReport instance) {
-        instance.setAuthor(securityUtils.getCurrentUser());
-        instance.setDateCreated(new Date());
+        initReportProvenance(instance);
         instance.setFileNumber(IdentificationUtils.generateFileNumber());
         instance.setRevision(Constants.INITIAL_REVISION);
         if (instance.getPhase() == null) {
             instance.setPhase(phaseService.getDefaultPhase());
         }
+    }
+
+    private void initReportProvenance(OccurrenceReport instance) {
+        instance.setAuthor(securityUtils.getCurrentUser());
+        instance.setDateCreated(new Date());
     }
 
     @Override
@@ -84,8 +88,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         }
         final OccurrenceReport newRevision = new OccurrenceReport(latest);
         newRevision.setRevision(latest.getRevision() + 1);
-        newRevision.setAuthor(securityUtils.getCurrentUser());
-        newRevision.setDateCreated(new Date());
+        initReportProvenance(newRevision);
         reportDao.persist(newRevision);
         newRevision.setArmsIndex(armsService.calculateArmsIndex(newRevision));
         return newRevision;

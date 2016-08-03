@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
+import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.SafetyIssueReportDao;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Repository
 public class RepositorySafetyIssueReportService extends KeySupportingRepositoryService<SafetyIssueReport>
@@ -38,10 +40,14 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
     }
 
     private void initReportData(SafetyIssueReport instance) {
-        instance.setAuthor(securityUtils.getCurrentUser());
-        instance.setDateCreated(new Date());
+        initReportProvenance(instance);
         instance.setFileNumber(IdentificationUtils.generateFileNumber());
         instance.setRevision(Constants.INITIAL_REVISION);
+    }
+
+    private void initReportProvenance(SafetyIssueReport instance) {
+        instance.setAuthor(securityUtils.getCurrentUser());
+        instance.setDateCreated(new Date());
     }
 
     @Override
@@ -52,22 +58,34 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
 
     @Override
     public SafetyIssueReport findLatestRevision(Long fileNumber) {
-        return null;
+        Objects.requireNonNull(fileNumber);
+        return dao.findLatestRevision(fileNumber);
     }
 
     @Override
     public void removeReportChain(Long fileNumber) {
-
+        Objects.requireNonNull(fileNumber);
+        dao.removeReportChain(fileNumber);
     }
 
     @Override
     public SafetyIssueReport createNewRevision(Long fileNumber) {
-        return null;
+        final SafetyIssueReport latest = findLatestRevision(fileNumber);
+        if (latest == null) {
+            throw NotFoundException.create(SafetyIssueReport.class.getSimpleName(), fileNumber);
+        }
+        final SafetyIssueReport newRevision = new SafetyIssueReport(latest);
+        newRevision.setRevision(latest.getRevision() + 1);
+        initReportProvenance(newRevision);
+        dao.persist(newRevision);
+        return newRevision;
     }
 
     @Override
     public SafetyIssueReport findRevision(Long fileNumber, Integer revision) {
-        return null;
+        Objects.requireNonNull(fileNumber);
+        Objects.requireNonNull(revision);
+        return dao.findRevision(fileNumber, revision);
     }
 
     @Override

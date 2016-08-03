@@ -9,6 +9,7 @@ import cz.cvut.kbss.jopa.model.annotations.Types;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_safety_issue)
@@ -45,5 +46,20 @@ public class SafetyIssue extends AbstractEntity implements Serializable {
     @Override
     public String toString() {
         return "SafetyIssue{" + name + '}';
+    }
+
+    /**
+     * Creates deep copy of the specified safety issue.
+     *
+     * @param original The instance to copy
+     * @return Deep copy of {@code original}
+     */
+    public static SafetyIssue copyOf(SafetyIssue original) {
+        Objects.requireNonNull(original);
+        final SafetyIssue copy = new SafetyIssue();
+        assert original.getTypes() != null;
+        copy.setTypes(new HashSet<>(original.getTypes()));
+        copy.setName(original.getName());
+        return copy;
     }
 }

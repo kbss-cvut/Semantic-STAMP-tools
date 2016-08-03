@@ -48,4 +48,13 @@ public class SafetyIssueReportTest {
             assertTrue(found);
         }
     }
+
+    @Test
+    public void copyConstructorCopiesSafetyIssue() {
+        final SafetyIssueReport original = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
+        final SafetyIssueReport copy = new SafetyIssueReport(original);
+        assertNotNull(copy.getSafetyIssue());
+        assertEquals(original.getSafetyIssue().getName(), copy.getSafetyIssue().getName());
+        assertNotSame(original.getSafetyIssue(), copy.getSafetyIssue());
+    }
 }
