@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone;
 
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 
@@ -21,6 +22,14 @@ public class NodeCloningVisitor implements FactorGraphNodeVisitor {
         if (!instanceMap.containsKey(occurrence.getUri())) {
             final Occurrence clone = new Occurrence(occurrence);
             instanceMap.put(occurrence.getUri(), clone);
+        }
+    }
+
+    @Override
+    public void visit(SafetyIssue issue) {
+        if (!instanceMap.containsKey(issue.getUri())) {
+            final SafetyIssue clone = new SafetyIssue(issue);
+            instanceMap.put(issue.getUri(), clone);
         }
     }
 

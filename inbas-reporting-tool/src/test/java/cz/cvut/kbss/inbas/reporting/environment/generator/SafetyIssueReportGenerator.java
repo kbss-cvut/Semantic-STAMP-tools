@@ -51,4 +51,13 @@ public class SafetyIssueReportGenerator {
         }
         return chain;
     }
+
+    public static SafetyIssue generateSafetyIssueWithFactorGraph() {
+        final SafetyIssue issue = generateSafetyIssue();
+        issue.setUri(Generator.generateUri());
+        final int maxDepth = Generator.randomInt(5);
+        final int childCount = Generator.randomInt(5);
+        OccurrenceReportGenerator.generateChildEvents(issue, 0, maxDepth, childCount);
+        return issue;
+    }
 }

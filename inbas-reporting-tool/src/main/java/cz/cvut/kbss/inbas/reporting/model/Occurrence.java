@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.model;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.model.util.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.EdgeCloningVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.NodeCloningVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
@@ -191,6 +192,11 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
 
     public void setReferenceId(Integer referenceId) {
         this.referenceId = referenceId;
+    }
+
+    @Override
+    public void accept(FactorGraphNodeVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

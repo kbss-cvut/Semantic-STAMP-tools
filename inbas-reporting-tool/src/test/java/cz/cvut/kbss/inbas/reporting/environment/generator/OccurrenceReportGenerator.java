@@ -119,7 +119,7 @@ public class OccurrenceReportGenerator {
         return occurrence;
     }
 
-    private static void generateChildEvents(FactorGraphItem parent, int depth, int maxDepth, int childCount) {
+    static void generateChildEvents(FactorGraphItem parent, int depth, int maxDepth, int childCount) {
         if (depth >= maxDepth) {
             return;
         }

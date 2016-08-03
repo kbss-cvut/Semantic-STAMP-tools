@@ -22,4 +22,6 @@ public interface FactorGraphItem extends HasUri {
     void setFactors(Set<Factor> factors);
 
     void addFactor(Factor factor);
+
+    void accept(FactorGraphNodeVisitor visitor);
 }

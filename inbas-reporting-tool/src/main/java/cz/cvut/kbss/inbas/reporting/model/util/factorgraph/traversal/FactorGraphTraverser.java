@@ -1,7 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal;
 
 import cz.cvut.kbss.inbas.reporting.model.Event;
-import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model.util.EventPositionComparator;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphEdgeVisitor;
@@ -39,26 +38,13 @@ public class FactorGraphTraverser {
     }
 
     /**
-     * Traverses factor graph rooted in the specified {@link Occurrence}.
+     * Traverses factor graph rooted in the specified item.
      *
      * @param root Factor graph root
      */
-    public void traverse(Occurrence root) {
+    public void traverse(FactorGraphItem root) {
         final Set<URI> visited = new HashSet<>();
-        if (nodeVisitor != null) {
-            nodeVisitor.visit(root);
-        }
-        visited.add(root.getUri());
-        if (root.getChildren() != null) {
-            root.setChildren(sortChildren(root.getChildren()));
-            for (Event e : root.getChildren()) {
-                if (factorGraphEdgeVisitor != null) {
-                    factorGraphEdgeVisitor.visit(root.getUri(), e.getUri(), HAS_PART_URI);
-                }
-                traverse(e, visited);
-            }
-        }
-        traverseFactors(root, visited);
+        traverse(root, visited);
     }
 
     private void traverseFactors(FactorGraphItem item, Set<URI> visited) {
@@ -74,24 +60,24 @@ public class FactorGraphTraverser {
         }
     }
 
-    private void traverse(Event event, Set<URI> visited) {
-        if (visited.contains(event.getUri())) {
+    private void traverse(FactorGraphItem item, Set<URI> visited) {
+        if (visited.contains(item.getUri())) {
             return;
         }
         if (nodeVisitor != null) {
-            nodeVisitor.visit(event);
+            item.accept(nodeVisitor);
         }
-        visited.add(event.getUri());
-        if (event.getChildren() != null) {
-            event.setChildren(sortChildren(event.getChildren()));
-            event.getChildren().forEach(e -> {
+        visited.add(item.getUri());
+        if (item.getChildren() != null) {
+            item.setChildren(sortChildren(item.getChildren()));
+            item.getChildren().forEach(e -> {
                 if (factorGraphEdgeVisitor != null) {
-                    factorGraphEdgeVisitor.visit(event.getUri(), e.getUri(), HAS_PART_URI);
+                    factorGraphEdgeVisitor.visit(item.getUri(), e.getUri(), HAS_PART_URI);
                 }
                 traverse(e, visited);
             });
         }
-        traverseFactors(event, visited);
+        traverseFactors(item, visited);
     }
 
     private Set<Event> sortChildren(Set<Event> children) {

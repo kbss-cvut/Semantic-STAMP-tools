@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.model;
 
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -21,11 +22,9 @@ public class Event extends AbstractEntity implements FactorGraphItem, Serializab
             CascadeType.REMOVE})
     private Set<Event> children;
 
-    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.s_p_has_start_time)
     private Date startTime;
 
-    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.s_p_has_end_time)
     private Date endTime;
 
@@ -181,6 +180,11 @@ public class Event extends AbstractEntity implements FactorGraphItem, Serializab
 
     public void setReferenceId(Integer referenceId) {
         this.referenceId = referenceId;
+    }
+
+    @Override
+    public void accept(FactorGraphNodeVisitor visitor) {
+        visitor.visit(this);
     }
 
     @Override

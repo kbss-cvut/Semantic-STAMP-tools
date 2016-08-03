@@ -1,19 +1,22 @@
 package cz.cvut.kbss.inbas.reporting.model.safetyissue;
 
 import cz.cvut.kbss.inbas.reporting.model.AbstractEntity;
+import cz.cvut.kbss.inbas.reporting.model.Event;
+import cz.cvut.kbss.inbas.reporting.model.Factor;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
-import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
-import cz.cvut.kbss.jopa.model.annotations.Types;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.EdgeCloningVisitor;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.NodeCloningVisitor;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.net.URI;
+import java.util.*;
 
 @OWLClass(iri = Vocabulary.s_c_safety_issue)
-public class SafetyIssue extends AbstractEntity implements Serializable {
+public class SafetyIssue extends AbstractEntity implements Serializable, FactorGraphItem {
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLAnnotationProperty(iri = Vocabulary.s_p_label)
@@ -22,9 +25,22 @@ public class SafetyIssue extends AbstractEntity implements Serializable {
     @Types
     private Set<String> types;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Factor> factors;
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_part, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
+            CascadeType.REMOVE})
+    private Set<Event> children;
+
     public SafetyIssue() {
         this.types = new HashSet<>(4);
         types.add(Vocabulary.s_c_event_type);
+    }
+
+    public SafetyIssue(SafetyIssue other) {
+        this();
+        this.name = other.name;
+        this.types.addAll(other.getTypes());
     }
 
     public String getName() {
@@ -44,8 +60,51 @@ public class SafetyIssue extends AbstractEntity implements Serializable {
     }
 
     @Override
+    public Set<Factor> getFactors() {
+        return factors;
+    }
+
+    @Override
+    public void setFactors(Set<Factor> factors) {
+        this.factors = factors;
+    }
+
+    @Override
+    public void addFactor(Factor factor) {
+        Objects.requireNonNull(factor);
+        if (factors == null) {
+            this.factors = new LinkedHashSet<>();
+        }
+        factors.add(factor);
+    }
+
+    @Override
+    public Set<Event> getChildren() {
+        return children;
+    }
+
+    @Override
+    public void setChildren(Set<Event> children) {
+        this.children = children;
+    }
+
+    @Override
+    public void addChild(Event child) {
+        Objects.requireNonNull(child);
+        if (children == null) {
+            this.children = new LinkedHashSet<>();
+        }
+        children.add(child);
+    }
+
+    @Override
     public String toString() {
         return "SafetyIssue{" + name + '}';
+    }
+
+    @Override
+    public void accept(FactorGraphNodeVisitor visitor) {
+        visitor.visit(this);
     }
 
     /**
@@ -56,10 +115,13 @@ public class SafetyIssue extends AbstractEntity implements Serializable {
      */
     public static SafetyIssue copyOf(SafetyIssue original) {
         Objects.requireNonNull(original);
-        final SafetyIssue copy = new SafetyIssue();
-        assert original.getTypes() != null;
-        copy.setTypes(new HashSet<>(original.getTypes()));
-        copy.setName(original.getName());
-        return copy;
+        final Map<URI, FactorGraphItem> instanceMap = new HashMap<>();
+        final NodeCloningVisitor nodeVisitor = new NodeCloningVisitor(instanceMap);
+        final FactorGraphTraverser traverser = new FactorGraphTraverser(nodeVisitor, null);
+        traverser.traverse(original);
+        final EdgeCloningVisitor edgeVisitor = new EdgeCloningVisitor(instanceMap);
+        traverser.setFactorGraphEdgeVisitor(edgeVisitor);
+        traverser.traverse(original);
+        return (SafetyIssue) instanceMap.get(original.getUri());
     }
 }

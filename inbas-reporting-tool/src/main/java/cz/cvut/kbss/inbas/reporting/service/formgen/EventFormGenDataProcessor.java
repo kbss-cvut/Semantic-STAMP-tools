@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.service.formgen;
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.formgen.FormGenDao;
@@ -67,6 +68,11 @@ class EventFormGenDataProcessor extends FormGenDataProcessor<OccurrenceReport> {
             if (referenceId.equals(occurrence.getReferenceId())) {
                 this.uri = occurrence.getUri();
             }
+        }
+
+        @Override
+        public void visit(SafetyIssue issue) {
+            // TODO
         }
 
         @Override
