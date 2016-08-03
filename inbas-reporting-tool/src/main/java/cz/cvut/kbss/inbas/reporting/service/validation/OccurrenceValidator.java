@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 
 import java.util.Date;
 
@@ -33,7 +34,7 @@ public class OccurrenceValidator extends Validator<Occurrence> {
     }
 
     private void validateEvents(Occurrence occurrence) {
-        final FactorGraphTraverser traverser = new FactorGraphTraverser(new FactorGraphNodeVisitor() {
+        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(new FactorGraphNodeVisitor() {
             @Override
             public void visit(Occurrence occurrence) {
                 // Do nothing

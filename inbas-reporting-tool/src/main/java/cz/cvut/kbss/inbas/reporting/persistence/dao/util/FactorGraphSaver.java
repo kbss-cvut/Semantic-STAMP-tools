@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao.util;
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.jopa.model.EntityManager;
 
@@ -24,6 +25,11 @@ public class FactorGraphSaver implements FactorGraphNodeVisitor {
         if (occurrence.getQuestion() != null) {
             questionSaver.persistIfNecessary(occurrence.getQuestion(), em);
         }
+    }
+
+    @Override
+    public void visit(SafetyIssue issue) {
+        // Do nothing, safety issue is persisted separately
     }
 
     @Override

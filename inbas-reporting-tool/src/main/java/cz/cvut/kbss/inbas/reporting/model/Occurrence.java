@@ -205,11 +205,6 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
         return "Occurrence{" + name + " <" + uri + ">, types=" + types + '}';
     }
 
-    @Override
-    public void accept(FactorGraphNodeVisitor visitor) {
-        visitor.visit(this);
-    }
-
     public static Occurrence copyOf(Occurrence original) {
         final Map<URI, FactorGraphItem> instanceMap = new HashMap<>();
         final NodeCloningVisitor nodeVisitor = new NodeCloningVisitor(instanceMap);
