@@ -11,6 +11,7 @@ import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.DefaultFactorGraphTraverser;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -190,7 +191,7 @@ public abstract class DtoMapper {
             reset();
         }
         final DtoNodeVisitor nodeVisitor = new DtoNodeVisitor(this, random, eventDtoRegistry);
-        final FactorGraphTraverser traverser = new FactorGraphTraverser(nodeVisitor, null);
+        final FactorGraphTraverser traverser = new DefaultFactorGraphTraverser(nodeVisitor, null);
         traverser.traverse(occurrence);
         final DtoEdgeVisitor edgeVisitor = new DtoEdgeVisitor(nodeVisitor.getInstanceMap());
         traverser.setFactorGraphEdgeVisitor(edgeVisitor);
