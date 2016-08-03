@@ -11,6 +11,15 @@ import static org.junit.Assert.assertEquals;
 public class CorrectiveMeasureRequestTest {
 
     @Test
+    public void copyConstructorCopiesBasicFields() {
+        final CorrectiveMeasureRequest measure = Generator.generateCorrectiveMeasureRequests().iterator().next();
+        final CorrectiveMeasureRequest copy = new CorrectiveMeasureRequest(measure);
+        assertEquals(measure.getDescription(), copy.getDescription());
+        assertEquals(measure.getDeadline(), copy.getDeadline());
+        assertEquals(measure.getPhase(), copy.getPhase());
+    }
+
+    @Test
     public void copyConstructorReusesResponsiblePersonsAndOrganizations() {
         final CorrectiveMeasureRequest original = new CorrectiveMeasureRequest();
         original.setDescription("Blablabla corrective measure request");

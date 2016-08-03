@@ -24,6 +24,7 @@ public class OccurrenceReportGenerator {
             .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/major");
     public static final URI ACCIDENT_CATASTROPHIC = URI
             .create("http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/catastrophic");
+
     /**
      * Generates occurrence report.
      * <p>
@@ -107,33 +108,6 @@ public class OccurrenceReportGenerator {
         occurrence.setStartTime(new Date(System.currentTimeMillis() - 100000));
         occurrence.setEndTime(new Date());
         return occurrence;
-    }
-
-    public static Set<CorrectiveMeasureRequest> generateCorrectiveMeasureRequests() {
-        final Set<CorrectiveMeasureRequest> set = new HashSet<>();
-        for (int i = 0; i < Generator.randomInt(2, 10); i++) {
-            final CorrectiveMeasureRequest cmr = new CorrectiveMeasureRequest();
-            cmr.setDescription(UUID.randomUUID().toString());
-            int j = Generator.randomInt(Integer.MAX_VALUE);
-            switch (j % 3) {
-                case 0:
-                    cmr.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
-                    final Event evt = new Event();
-                    evt.setEventType(Generator.generateEventType());
-                    cmr.setBasedOnEvent(evt);
-                    break;
-                case 1:
-                    cmr.setResponsibleOrganizations(Collections.singleton(Generator.generateOrganization()));
-                    cmr.setBasedOnOccurrence(generateOccurrence());
-                    break;
-                case 2:
-                    cmr.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
-                    cmr.setResponsibleOrganizations(Collections.singleton(Generator.generateOrganization()));
-                    break;
-            }
-            set.add(cmr);
-        }
-        return set;
     }
 
     public static Occurrence generateOccurrenceWithDescendantEvents() {

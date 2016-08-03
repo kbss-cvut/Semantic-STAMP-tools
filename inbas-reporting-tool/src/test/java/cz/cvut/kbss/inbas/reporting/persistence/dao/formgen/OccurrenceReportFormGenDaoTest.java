@@ -110,7 +110,7 @@ public class OccurrenceReportFormGenDaoTest {
     @Test
     public void persistRemovesCorrectiveMeasuresFromReport() throws Exception {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
-        report.setCorrectiveMeasures(OccurrenceReportGenerator.generateCorrectiveMeasureRequests());
+        report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
         report.getAuthor().generateUri();
         assertFalse(report.getCorrectiveMeasures().isEmpty());
         dao.persist(report);

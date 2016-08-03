@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.SafetyIssueReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
+import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import org.junit.Test;
 
@@ -37,9 +38,9 @@ public class SafetyIssueReportTest {
         final SafetyIssueReport copy = new SafetyIssueReport(original);
         assertEquals(original.getCorrectiveMeasures().size(), copy.getCorrectiveMeasures().size());
         boolean found;
-        for (CorrectiveMeasure m : original.getCorrectiveMeasures()) {
+        for (CorrectiveMeasureRequest m : original.getCorrectiveMeasures()) {
             found = false;
-            for (CorrectiveMeasure mm : copy.getCorrectiveMeasures()) {
+            for (CorrectiveMeasureRequest mm : copy.getCorrectiveMeasures()) {
                 // We can't use URI for equality, because there is none in the copy, yet
                 if (m.getDescription().equals(mm.getDescription())) {
                     found = true;

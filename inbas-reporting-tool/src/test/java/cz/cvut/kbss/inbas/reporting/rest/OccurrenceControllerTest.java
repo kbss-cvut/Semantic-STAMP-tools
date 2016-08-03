@@ -95,7 +95,7 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
             report.setOccurrence(occurrence);
-            report.setCorrectiveMeasures(OccurrenceReportGenerator.generateCorrectiveMeasureRequests());
+            report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
             reports.add(report);
         }
         return reports;

@@ -2,11 +2,12 @@ package cz.cvut.kbss.inbas.reporting.environment.generator;
 
 import cz.cvut.kbss.inbas.reporting.model.AbstractReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
-import cz.cvut.kbss.inbas.reporting.model.safetyissue.CorrectiveMeasure;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class SafetyIssueReportGenerator {
 
@@ -24,18 +25,7 @@ public class SafetyIssueReportGenerator {
             setReportAttributes(report);
         }
         if (generateMeasures) {
-            report.setCorrectiveMeasures(new HashSet<>());
-            for (int i = 0; i < Generator.randomInt(5, 10); i++) {
-                final CorrectiveMeasure measure = new CorrectiveMeasure();
-                measure.setDescription("Safety issue corrective measure " + i);
-                measure.setDeadline(new Date());
-                if (Generator.randomBoolean()) {
-                    measure.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
-                } else {
-                    measure.setResponsibleOrganizations(Collections.singleton(Generator.generateOrganization()));
-                }
-                report.getCorrectiveMeasures().add(measure);
-            }
+            report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
         }
         return report;
     }

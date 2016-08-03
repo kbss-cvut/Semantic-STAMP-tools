@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.model.safetyissue;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.SafetyIssueReportDto;
 import cz.cvut.kbss.inbas.reporting.model.AbstractReport;
+import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
@@ -19,7 +20,7 @@ public class SafetyIssueReport extends AbstractReport implements LogicalDocument
     private SafetyIssue safetyIssue;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<CorrectiveMeasure> correctiveMeasures;
+    private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
     public SafetyIssueReport() {
     }
@@ -30,7 +31,7 @@ public class SafetyIssueReport extends AbstractReport implements LogicalDocument
         types.addAll(other.getTypes());
         this.safetyIssue = SafetyIssue.copyOf(other.safetyIssue);
         if (other.getCorrectiveMeasures() != null) {
-            this.correctiveMeasures = other.getCorrectiveMeasures().stream().map(CorrectiveMeasure::new).collect(
+            this.correctiveMeasures = other.getCorrectiveMeasures().stream().map(CorrectiveMeasureRequest::new).collect(
                     Collectors.toSet());
         }
     }
@@ -43,12 +44,12 @@ public class SafetyIssueReport extends AbstractReport implements LogicalDocument
         this.safetyIssue = safetyIssue;
     }
 
-    public Set<CorrectiveMeasure> getCorrectiveMeasures() {
+    public Set<CorrectiveMeasureRequest> getCorrectiveMeasures() {
         return correctiveMeasures;
     }
 
     public void setCorrectiveMeasures(
-            Set<CorrectiveMeasure> correctiveMeasures) {
+            Set<CorrectiveMeasureRequest> correctiveMeasures) {
         this.correctiveMeasures = correctiveMeasures;
     }
 

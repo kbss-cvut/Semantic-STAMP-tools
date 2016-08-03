@@ -257,7 +257,7 @@ public class DtoMapperTest {
     @Test
     public void reportToReportDtoTransformsOccurrenceReportToOccurrenceReportDto() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
-        report.setCorrectiveMeasures(OccurrenceReportGenerator.generateCorrectiveMeasureRequests());
+        report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
         final LogicalDocument dto = mapper.reportToReportDto(report);
         assertNotNull(dto);
         assertTrue(dto instanceof OccurrenceReportDto);

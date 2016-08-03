@@ -6,6 +6,8 @@ import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
 
 import java.io.Serializable;
+import java.net.URI;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -33,6 +35,15 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     @OWLObjectProperty(iri = Vocabulary.s_p_based_on_occurrence, fetch = FetchType.EAGER)
     private Occurrence basedOnOccurrence;
 
+    // Safety issue attributes
+
+    @OWLDataProperty(iri = Vocabulary.s_p_deadline)
+    private Date deadline;
+
+    // TODO has reporting phase is probably not very suitable for corrective measure
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_reporting_phase)
+    private URI phase;
+
     public CorrectiveMeasureRequest() {
     }
 
@@ -46,6 +57,8 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     public CorrectiveMeasureRequest(CorrectiveMeasureRequest other) {
         Objects.requireNonNull(other);
         this.description = other.description;
+        this.deadline = other.deadline;
+        this.phase = other.phase;
         if (other.responsiblePersons != null) {
             this.responsiblePersons = new HashSet<>(other.responsiblePersons);
         }
@@ -95,6 +108,32 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     public void setResponsibleOrganizations(
             Set<Organization> responsibleOrganizations) {
         this.responsibleOrganizations = responsibleOrganizations;
+    }
+
+    /**
+     * Used in safety issues.
+     *
+     * @return Corrective measure's deadline
+     */
+    public Date getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
+    }
+
+    /**
+     * Used in safety issues.
+     *
+     * @return Phase in which this measure is (e.g. applied, verified).
+     */
+    public URI getPhase() {
+        return phase;
+    }
+
+    public void setPhase(URI phase) {
+        this.phase = phase;
     }
 
     @Override
