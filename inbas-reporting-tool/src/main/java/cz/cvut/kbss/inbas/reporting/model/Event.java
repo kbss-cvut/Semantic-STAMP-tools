@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.model;
 
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_Event)
-public class Event extends AbstractEntity implements FactorGraphItem, Serializable {
+public class Event extends AbstractEntity implements FactorGraphItem, Serializable, Comparable<Event> {
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
@@ -184,9 +185,23 @@ public class Event extends AbstractEntity implements FactorGraphItem, Serializab
     }
 
     @Override
+    public void accept(FactorGraphNodeVisitor visitor) {
+        visitor.visit(this);
+    }
+
+    @Override
     public String toString() {
         return "Event{" + uri +
                 ", types=" + types +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Event o) {
+        if (index != null && o.index != null) {
+            return index.compareTo(o.index);
+        }
+        // If either index is missing, do not use it at all. It could break sorted set equals/hashCode contract
+        return hashCode() - o.hashCode();
     }
 }

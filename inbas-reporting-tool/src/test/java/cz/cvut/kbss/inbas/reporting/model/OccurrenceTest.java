@@ -3,7 +3,6 @@ package cz.cvut.kbss.inbas.reporting.model;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
-import cz.cvut.kbss.inbas.reporting.model.util.EventPositionComparator;
 import org.junit.Test;
 
 import java.net.URI;
@@ -12,8 +11,6 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 public class OccurrenceTest {
-
-    private EventPositionComparator positionComparator = new EventPositionComparator();
 
     @Test
     public void newInstanceHasEventInTypes() {
@@ -43,7 +40,7 @@ public class OccurrenceTest {
             return;
         }
         assertNotNull(copy);
-        final Set<Event> sortedCopy = new TreeSet<>(positionComparator);
+        final Set<Event> sortedCopy = new TreeSet<>();
         sortedCopy.addAll(copy);
         assertEquals(original.size(), sortedCopy.size());
         final Iterator<Event> itOrig = original.iterator();
