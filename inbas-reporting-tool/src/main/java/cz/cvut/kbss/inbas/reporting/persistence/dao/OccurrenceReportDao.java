@@ -1,18 +1,15 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.util.OrphanRemover;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Repository
 public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> implements GenericDao<OccurrenceReport> {
@@ -44,16 +41,9 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
 
     private void updateWithOrphanRemoval(OccurrenceReport entity, EntityManager em) {
         final OccurrenceReport original = em.find(OccurrenceReport.class, entity.getUri());
-        final Set<URI> measureUris = entity.getCorrectiveMeasures() == null ? Collections.emptySet() :
-                                     entity.getCorrectiveMeasures().stream()
-                                           .map(CorrectiveMeasureRequest::getUri).collect(Collectors.toSet());
-        final Set<CorrectiveMeasureRequest> orphans =
-                original.getCorrectiveMeasures() == null ? Collections.emptySet() :
-                original.getCorrectiveMeasures().stream().filter(m -> !measureUris.contains(m.getUri()))
-                        .collect(Collectors.toSet());
         em.merge(entity);
+        new OrphanRemover(em).removeOrphans(original.getCorrectiveMeasures(), entity.getCorrectiveMeasures());
         occurrenceDao.update(entity.getOccurrence(), em);
-        orphans.forEach(em::remove);
     }
 
     /**
