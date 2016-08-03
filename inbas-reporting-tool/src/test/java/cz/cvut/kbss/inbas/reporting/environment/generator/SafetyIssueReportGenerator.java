@@ -30,7 +30,7 @@ public class SafetyIssueReportGenerator {
                 measure.setDescription("Safety issue corrective measure " + i);
                 measure.setDeadline(new Date());
                 if (Generator.randomBoolean()) {
-                    measure.setResponsiblePersons(Collections.singleton(report.getAuthor()));
+                    measure.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
                 } else {
                     measure.setResponsibleOrganizations(Collections.singleton(Generator.generateOrganization()));
                 }

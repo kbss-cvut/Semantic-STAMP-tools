@@ -45,12 +45,12 @@ public class SafetyIssueReportDaoTest extends BaseDaoTestRunner {
         final Iterator<CorrectiveMeasure> it = report.getCorrectiveMeasures().iterator();
         while (it.hasNext()) {
             final CorrectiveMeasure m = it.next();
-            if (Generator.randomBoolean()) {
+            // Just make sure that there is at least one to remove
+            if (Generator.randomBoolean() || toRemove.isEmpty()) {
                 it.remove();
                 toRemove.add(m);
             }
         }
-        assertFalse(toRemove.isEmpty());
         reportDao.update(report);
 
         final SafetyIssueReport result = reportDao.findByKey(report.getKey());

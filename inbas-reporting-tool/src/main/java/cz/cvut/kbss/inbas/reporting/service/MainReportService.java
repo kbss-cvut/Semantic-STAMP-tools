@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.reporting.exception.ReportImportingException;
 import cz.cvut.kbss.inbas.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.DocumentDateAndRevisionComparator;
 import cz.cvut.kbss.inbas.reporting.model.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.ReportDao;
@@ -41,6 +42,9 @@ public class MainReportService implements ReportBusinessService {
     @Autowired
     private OccurrenceReportService occurrenceReportService;
 
+    @Autowired
+    private SafetyIssueReportService safetyIssueReportService;
+
     private final Map<String, Class<? extends LogicalDocument>> entitiesToOwlClasses = new HashMap<>();
 
     private final Map<Class<? extends LogicalDocument>, BaseReportService<? extends LogicalDocument>> services = new HashMap<>();
@@ -48,6 +52,7 @@ public class MainReportService implements ReportBusinessService {
     @PostConstruct
     private void initServiceMap() {
         registerService(OccurrenceReport.class, occurrenceReportService);
+        registerService(SafetyIssueReport.class, safetyIssueReportService);
     }
 
     private void registerService(Class<? extends LogicalDocument> cls,

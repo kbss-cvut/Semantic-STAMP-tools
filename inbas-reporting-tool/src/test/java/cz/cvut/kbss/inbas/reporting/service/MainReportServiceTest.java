@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.environment.util.UnsupportedReport;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
@@ -15,6 +16,7 @@ import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
@@ -54,6 +56,9 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private OccurrenceReportService occurrenceReportService;
+
+    @Autowired
+    private SafetyIssueReportService safetyIssueReportService;
 
     @Autowired
     private ReportCache reportCache;
@@ -112,6 +117,22 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         final OccurrenceReport result = reportService.findByKey(report.getKey());
         assertNotNull(result);
         assertEquals(report.getUri(), result.getUri());
+    }
+
+    @Test
+    public void testFindSafetyIssueReportByKey() {
+        final SafetyIssueReport report = persistSafetyIssueReport();
+
+        final SafetyIssueReport result = reportService.findByKey(report.getKey());
+        assertNotNull(result);
+        assertEquals(report.getUri(), result.getUri());
+    }
+
+    private SafetyIssueReport persistSafetyIssueReport() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
+        report.setAuthor(author);
+        safetyIssueReportService.persist(report);
+        return report;
     }
 
     @Test(expected = UnsupportedReportTypeException.class)
