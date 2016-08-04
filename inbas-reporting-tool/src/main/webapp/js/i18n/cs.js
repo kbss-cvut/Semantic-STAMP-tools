@@ -76,7 +76,8 @@ module.exports = {
         'dashboard.search-tile': 'Hledat hlášení',
         'dashboard.search-placeholder': 'Název hlášení',
         'dashboard.view-all-tile': 'Prohlížet všechna hlášení',
-        'dashboard.create-empty-tile': 'Začít s prázdným hlášením',
+        'dashboard.create-new-occurrence-report-tile': 'Nové hlášení o události',
+        'dashboard.create-new-safety-issue-tile': 'Nový bezpečnostní problém',
         'dashboard.create-import-tile': 'Importovat hlášení',
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
@@ -152,6 +153,8 @@ module.exports = {
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',
         'occurrencereport.label': 'Událost',
+        'safetyissuereport.title': 'Hlášení o bezpečnostním problému',
+        'safetyissuereport.label': 'Bezpečnostní problém',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

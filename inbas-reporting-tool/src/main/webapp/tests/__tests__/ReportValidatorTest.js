@@ -4,6 +4,7 @@ describe('Report validator', function () {
 
     var ReportValidator = require('../../js/validation/ReportValidator'),
         Constants = require('../../js/constants/Constants'),
+        ReportFactory = require('../../js/model/ReportFactory'),
         report;
 
     beforeEach(function () {
@@ -75,5 +76,10 @@ describe('Report validator', function () {
         report.occurrence.startTime = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
         report.occurrence.endTime = Date.now();
         expect(ReportValidator.canRender(report)).toBeFalsy();
+    });
+
+    it('handles report without occurrence when checking renderability', () => {
+        report = ReportFactory.createSafetyIssueReport();
+        expect(ReportValidator.canRender(report)).toBeTruthy();
     });
 });

@@ -32,11 +32,14 @@ var DashboardController = React.createClass({
         this.setState({firstName: user.firstName});
     },
 
-    createEmptyReport: function () {
+    createEmptyReport: function (reportType) {
         Routing.transitionTo(Routes.createReport, {
             handlers: {
                 onSuccess: Routes.reports,
                 onCancel: Routes.dashboard
+            },
+            payload: {
+                reportType: reportType
             }
         });
     },

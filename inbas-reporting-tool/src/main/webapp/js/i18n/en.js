@@ -75,7 +75,8 @@ module.exports = {
         'dashboard.search-tile': 'Search for Report',
         'dashboard.search-placeholder': 'Report headline',
         'dashboard.view-all-tile': 'View All Reports',
-        'dashboard.create-empty-tile': 'Start with Empty Report',
+        'dashboard.create-new-occurrence-report-tile': 'Create New Occurrence Report',
+        'dashboard.create-new-safety-issue-tile': 'Create New Safety Issue',
         'dashboard.create-import-tile': 'Import Report',
         'dashboard.recent-panel-heading': 'Recently Edited/Added Reports',
         'dashboard.recent-table-last-edited': 'Last modified',
@@ -150,6 +151,8 @@ module.exports = {
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
         'occurrencereport.label': 'Occurrence',
+        'safetyissuereport.title': 'Safety issue report',
+        'safetyissuereport.label': 'Safety issue',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',

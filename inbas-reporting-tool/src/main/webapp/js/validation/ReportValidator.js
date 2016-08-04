@@ -49,7 +49,7 @@ var ReportValidator = {
     },
 
     _isOccurrenceStartEndTimeDiffValid: function (report) {
-        return report.occurrence.endTime - report.occurrence.startTime <= Constants.MAX_OCCURRENCE_START_END_DIFF;
+        return !report.occurrence || report.occurrence.endTime - report.occurrence.startTime <= Constants.MAX_OCCURRENCE_START_END_DIFF;
     },
 
     /**

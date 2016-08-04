@@ -42,10 +42,34 @@ class OccurrenceReport {
     }
 }
 
+class SafetyIssueReport {
+    constructor(data) {
+        assign(this, data);
+    }
+
+    static getDetailController() {
+        return require('../components/report/safetyissue/SafetyIssueReportController');
+    }
+
+    getLabel() {
+        return 'safetyissuereport.label';
+    }
+
+    toString() {
+        return 'safetyissuereport.title';
+    }
+
+    renderMoreInfo() {
+        return <CollapsibleText text={this.summary}/>;
+    }
+}
+
 var REPORT_TYPES = {};
 
 REPORT_TYPES[Vocabulary.OCCURRENCE_REPORT] = OccurrenceReport;
 REPORT_TYPES[Constants.OCCURRENCE_REPORT_JAVA_CLASS] = OccurrenceReport;
+REPORT_TYPES[Vocabulary.SAFETY_ISSUE_REPORT] = SafetyIssueReport;
+REPORT_TYPES[Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS] = SafetyIssueReport;
 
 module.exports = {
 

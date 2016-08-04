@@ -31,11 +31,14 @@ var ReportController = React.createClass({
 
     initNewReport: function () {
         var payload = RouterStore.getTransitionPayload(Routes.createReport.name),
-            report = ReportFactory.createOccurrenceReport();
+            report;
         if (payload) {
-            report.initialReports = payload.initialReports;
+            report = ReportFactory.createReport(payload.reportType);
+            if (payload.initialReports) {
+                report.initialReports = payload.initialReports;
+            }
         }
-        return report;
+        return report ? report : ReportFactory.createOccurrenceReport();
     },
 
     componentWillMount: function () {
