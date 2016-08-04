@@ -39,12 +39,6 @@ var OccurrenceReport = React.createClass({
         };
     },
 
-    onAttributeChange: function (attribute, value) {
-        var change = {};
-        change[attribute] = value;
-        this.onChanges(change);
-    },
-
     onChanges: function (changes) {
         this.props.handlers.onChange(changes);
     },
