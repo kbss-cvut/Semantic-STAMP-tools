@@ -10,14 +10,16 @@ var ReportDetailMixin = {
 
     onChange: function (e) {
         var attributeName = e.target.name;
-        this.onAttributeChange(attributeName, e.target.value);
+        var change = {};
+        change[attributeName] = e.target.value;
+        this.props.handlers.onChange(change);
     },
 
-    onLoading: function() {
+    onLoading: function () {
         this.setState({submitting: true});
     },
-    
-    onLoadingEnd: function() {
+
+    onLoadingEnd: function () {
         this.setState({submitting: false});
     },
 
@@ -44,14 +46,14 @@ var ReportDetailMixin = {
         this.onLoadingEnd();
         this.showErrorMessage(this.i18n('detail.submit-failed-message') + error.message);
     },
-    
-    onPhaseTransitionSuccess: function() {
+
+    onPhaseTransitionSuccess: function () {
         this.onLoadingEnd();
         this.showSuccessMessage(this.i18n('detail.phase-transition-success-message'));
         this.props.handlers.onSuccess();
     },
-    
-    onPhaseTransitionError: function(error) {
+
+    onPhaseTransitionError: function (error) {
         this.onLoadingEnd();
         this.showErrorMessage(this.i18n('detail.phase-transition-failed-message') + error.message);
     },
