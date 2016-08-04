@@ -3,7 +3,6 @@
 var React = require('react');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
-var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
 
@@ -12,6 +11,7 @@ var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').d
 var MessageMixin = require('../../mixin/MessageMixin');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var injectIntl = require('../../../utils/injectIntl');
+var Input = require('../../Input');
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
 var ReportSummary = require('../ReportSummary').default;
@@ -37,10 +37,10 @@ var SafetyIssueReport = React.createClass({
         };
     },
 
-    onAttributeChange: function (attribute, value) {
-        var change = {};
-        change[attribute] = value;
-        this.onChanges(change);
+    onNameChange: function (e) {
+        var issue = assign({}, this.props.report.safetyIssue);
+        issue.name = e.target.value;
+        this.onChanges({safetyIssue: issue});
     },
 
     onChanges: function (changes) {
@@ -76,7 +76,8 @@ var SafetyIssueReport = React.createClass({
                     <div className='form-group'>
                         <div className='row'>
                             <div className='col-xs-4'>
-                                <Input type='text' name='name' value={report.safetyIssue.name} onChange={this.onChange}
+                                <Input type='text' name='name' value={report.safetyIssue.name}
+                                       onChange={this.onNameChange}
                                        label={this.i18n('name') + '*'}
                                        title={this.i18n('safety-issue.headline-tooltip')}/>
                             </div>

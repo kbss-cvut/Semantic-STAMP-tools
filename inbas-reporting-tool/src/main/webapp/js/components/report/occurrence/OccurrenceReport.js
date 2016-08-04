@@ -113,7 +113,7 @@ var OccurrenceReport = React.createClass({
 
                     <div className='row'>
                         <div className='col-xs-12'>
-                            <ReportSummary report={report} onChange={this.onChange}/>
+                            <ReportSummary report={report} onChange={this.onChange} required={true}/>
                         </div>
                     </div>
 

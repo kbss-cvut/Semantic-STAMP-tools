@@ -156,8 +156,8 @@ module.exports = {
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',
         'occurrencereport.label': 'Událost',
-        'safetyissuereport.title': 'Hlášení o bezpečnostním problému',
-        'safetyissuereport.label': 'Bezpečnostní problém',
+        'safetyissuereport.title': 'Hlášení o safety issue',
+        'safetyissuereport.label': 'Safety issue',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

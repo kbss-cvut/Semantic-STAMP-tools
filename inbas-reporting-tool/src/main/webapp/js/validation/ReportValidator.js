@@ -94,4 +94,22 @@ var OccurrenceReportValidator = {
 
 validators[Constants.OCCURRENCE_REPORT_JAVA_CLASS] = OccurrenceReportValidator;
 
+var SafetyIssueReportValidator = {
+    getValidationMessage: function (report) {
+        if (!report.safetyIssue) {
+            return 'detail.invalid-tooltip';
+        }
+        if (!report.safetyIssue.name || report.safetyIssue.name.length === 0) {
+            return 'detail.invalid-tooltip';
+        }
+        return null;
+    },
+
+    getRenderError: function (report) {
+        return null;
+    }
+};
+
+validators[Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS] = SafetyIssueReportValidator;
+
 module.exports = ReportValidator;
