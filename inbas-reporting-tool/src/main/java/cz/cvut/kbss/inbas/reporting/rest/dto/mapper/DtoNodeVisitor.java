@@ -33,7 +33,10 @@ class DtoNodeVisitor implements FactorGraphNodeVisitor {
 
     @Override
     public void visit(SafetyIssue issue) {
-        // TODO
+        if (!instanceMap.containsKey(issue.getUri())) {
+            instanceMap.put(issue.getUri(), mapper.safetyIssueToSafetyIssueDto(issue));
+        }
+        generateReferenceId(issue.getUri());
     }
 
     private void generateReferenceId(URI uri) {

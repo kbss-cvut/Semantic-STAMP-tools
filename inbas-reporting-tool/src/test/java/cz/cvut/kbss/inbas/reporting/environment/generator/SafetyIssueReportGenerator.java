@@ -1,9 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.environment.generator;
 
+import cz.cvut.kbss.inbas.reporting.dto.SafetyIssueReportDto;
 import cz.cvut.kbss.inbas.reporting.model.AbstractReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
+import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,5 +61,14 @@ public class SafetyIssueReportGenerator {
         final int childCount = Generator.randomInt(5);
         OccurrenceReportGenerator.generateChildEvents(issue, 0, maxDepth, childCount);
         return issue;
+    }
+
+    public static SafetyIssueReportDto generateSafetyIssueReportDto() {
+        final SafetyIssueReportDto dto = new SafetyIssueReportDto();
+        dto.setUri(Generator.generateUri());
+        dto.setKey(IdentificationUtils.generateKey());
+        dto.setFileNumber(IdentificationUtils.generateFileNumber());
+        dto.setAuthor(Generator.getPerson());
+        return dto;
     }
 }

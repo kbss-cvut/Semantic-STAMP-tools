@@ -5,11 +5,13 @@ import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.Event;
 import cz.cvut.kbss.inbas.reporting.model.Factor;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
@@ -81,16 +83,16 @@ public class EventFactorsSerializationTest {
         return evt;
     }
 
-    private void verifyStructure(Occurrence occurrence, FactorGraph graph) {
+    private void verifyStructure(FactorGraphItem root, FactorGraph graph) {
         final Map<URI, EventDto> instanceMap = new HashMap<>();
         graph.getNodes().forEach(n -> instanceMap.put(n.getUri(), n));
         final Set<URI> visited = new HashSet<>();
-        visited.add(occurrence.getUri());
+        visited.add(root.getUri());
 
-        verifyFactors(occurrence, occurrence.getFactors(), graph, instanceMap, visited);
-        if (occurrence.getChildren() != null) {
-            occurrence.getChildren().forEach(child -> {
-                verifyEdge(instanceMap.get(occurrence.getUri()), instanceMap.get(child.getUri()), HAS_PART_URI, graph);
+        verifyFactors(root, root.getFactors(), graph, instanceMap, visited);
+        if (root.getChildren() != null) {
+            root.getChildren().forEach(child -> {
+                verifyEdge(instanceMap.get(root.getUri()), instanceMap.get(child.getUri()), HAS_PART_URI, graph);
                 verifyStructure(child, graph, instanceMap, visited);
             });
         }
@@ -281,7 +283,7 @@ public class EventFactorsSerializationTest {
         verifyDeserializedTree(graph, res, expectedChildren);
     }
 
-    private void verifyDeserializedTree(FactorGraph graph, Occurrence o,
+    private void verifyDeserializedTree(FactorGraph graph, FactorGraphItem o,
                                         Map<Integer, Collection<Integer>> expectedChildren) {
         final Map<URI, EventDto> dtos = new HashMap<>();
         graph.getNodes().forEach(n -> dtos.put(n.getUri(), n));
@@ -343,7 +345,7 @@ public class EventFactorsSerializationTest {
         verifyLinks(graph, factorGraphNodes);
     }
 
-    private Map<URI, FactorGraphItem> flattenFactorGraph(Occurrence root) {
+    private Map<URI, FactorGraphItem> flattenFactorGraph(FactorGraphItem root) {
         final Map<URI, FactorGraphItem> visited = new HashMap<>();
         visited.put(root.getUri(), root);
         if (root.getChildren() != null) {
@@ -401,5 +403,53 @@ public class EventFactorsSerializationTest {
 
     private FactorGraph loadGraph(String fileName) throws Exception {
         return Environment.loadData(fileName, FactorGraph.class);
+    }
+
+    @Test
+    public void testSerializationOfSafetyIssueWithSubEvents() {
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final FactorGraph result = dtoMapper.safetyIssueToFactorGraph(issue);
+        assertNotNull(result);
+        verifyStructure(issue, result);
+    }
+
+    @Test
+    public void testSerializationOfSafetyIssueWithSubEventsAndFactors() {
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        addFactorsToStructure(issue.getChildren());
+        final FactorGraph result = dtoMapper.safetyIssueToFactorGraph(issue);
+        assertNotNull(result);
+        verifyStructure(issue, result);
+    }
+
+    /**
+     * Tree structure:
+     * <pre>
+     *     {@code
+     *           1
+     *       2 | 3 | 4
+     *     5 6 | 7 |
+     *     }
+     * </pre>
+     * Links:
+     * <pre>
+     * <ul>
+     *     <li>2 -> 3, causes</li>
+     *     <li>4 -> 3, mitigates</li>
+     *     <li>5 -> 7, causes</li>
+     * </ul>
+     * </pre>
+     */
+    @Test
+    public void testDeserializationOfSafetyIssueWithFactorGraph() throws Exception {
+        final FactorGraph graph = loadGraph("data/safetyIssueWithFactorGraph.json");
+        final SafetyIssue res = dtoMapper.factorGraphToSafetyIssue(graph);
+        final Map<Integer, Collection<Integer>> expectedChildren = new HashMap<>();
+        expectedChildren.put(1, Arrays.asList(2, 3, 4));
+        expectedChildren.put(2, Arrays.asList(5, 6));
+        expectedChildren.put(3, Collections.singletonList(7));
+        verifyDeserializedTree(graph, res, expectedChildren);
+        final Map<URI, FactorGraphItem> factorGraphNodes = flattenFactorGraph(res);
+        verifyLinks(graph, factorGraphNodes);
     }
 }

@@ -1,19 +1,22 @@
 package cz.cvut.kbss.inbas.reporting.rest.dto.mapper;
 
 import cz.cvut.kbss.inbas.reporting.config.RestConfig;
+import cz.cvut.kbss.inbas.reporting.dto.AbstractReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.CorrectiveMeasureRequestDto;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.SafetyIssueReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
-import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
-import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
-import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
+import cz.cvut.kbss.inbas.reporting.dto.event.*;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
+import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
@@ -25,10 +28,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -263,12 +263,16 @@ public class DtoMapperTest {
         assertTrue(dto instanceof OccurrenceReportDto);
         final OccurrenceReportDto orDto = (OccurrenceReportDto) dto;
         assertEquals(report.getCorrectiveMeasures().size(), orDto.getCorrectiveMeasures().size());
-        assertEquals(report.getUri(), orDto.getUri());
-        assertEquals(report.getKey(), orDto.getKey());
-        assertEquals(report.getFileNumber(), orDto.getFileNumber());
+        verifyBasicReportAttributes(report, orDto);
         assertEquals(report.getAccidentOutcome(), orDto.getAccidentOutcome());
         assertEquals(report.getBarrierEffectiveness(), orDto.getBarrierEffectiveness());
         assertEquals(report.getArmsIndex(), orDto.getArmsIndex());
+    }
+
+    private void verifyBasicReportAttributes(AbstractReport report, AbstractReportDto dto) {
+        assertEquals(report.getUri(), dto.getUri());
+        assertEquals(report.getKey(), dto.getKey());
+        assertEquals(report.getFileNumber(), dto.getFileNumber());
     }
 
     @Test
@@ -326,5 +330,48 @@ public class DtoMapperTest {
         assertFalse(mapper.canMap(String.class));
         assertFalse(mapper.canMap(FactorGraphEdge.class));
         assertFalse(mapper.canMap(FactorGraphItem.class));
+    }
+
+    @Test
+    public void reportToReportDtoTransformsSafetyIssueReportToSafetyIssueReportDto() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
+        final LogicalDocument dto = mapper.reportToReportDto(report);
+        assertTrue(dto instanceof SafetyIssueReportDto);
+        final SafetyIssueReportDto result = (SafetyIssueReportDto) dto;
+        verifyBasicReportAttributes(report, result);
+        assertNotNull(result.getSafetyIssue());
+        assertEquals(report.getCorrectiveMeasures().size(), result.getCorrectiveMeasures().size());
+    }
+
+    @Test
+    public void reportToReportDtoTransformsSafetyIssueReportWithFactorGraph() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
+        report.setSafetyIssue(SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph());
+        final LogicalDocument dto = mapper.reportToReportDto(report);
+        assertTrue(dto instanceof SafetyIssueReportDto);
+        final SafetyIssueReportDto result = (SafetyIssueReportDto) dto;
+        assertNotNull(result.getFactorGraph());
+        assertFalse(result.getFactorGraph().getNodes().isEmpty());
+        assertFalse(result.getFactorGraph().getEdges().isEmpty());
+    }
+
+    @Test
+    public void reportDtoToReportTransformsSafetyIssueReportDtoWithFactorGraphToSafetyIssueReport() throws Exception {
+        final SafetyIssueReportDto dto = SafetyIssueReportGenerator.generateSafetyIssueReportDto();
+        dto.setCorrectiveMeasures(Collections.singleton(generateCorrectiveMeasureRequestDtoWithAgents()));
+        final FactorGraph factorGraph = Environment.loadData("data/safetyIssueWithFactorGraph.json", FactorGraph.class);
+        dto.setFactorGraph(factorGraph);
+        final Optional<EventDto> issueDto = factorGraph.getNodes().stream()
+                                                       .filter(e -> e instanceof SafetyIssueDto).findFirst();
+        assertTrue(issueDto.isPresent());
+        final SafetyIssueDto issue = (SafetyIssueDto) issueDto.get();
+        dto.setSafetyIssue(issue);
+
+        final LogicalDocument report = mapper.reportDtoToReport(dto);
+        assertTrue(report instanceof SafetyIssueReport);
+        final SafetyIssueReport result = (SafetyIssueReport) report;
+        assertEquals(dto.getUri(), result.getUri());
+        assertNotNull(result.getSafetyIssue());
+        assertFalse(result.getSafetyIssue().getChildren().isEmpty());
     }
 }

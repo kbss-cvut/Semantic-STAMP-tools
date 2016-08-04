@@ -2,14 +2,14 @@ package cz.cvut.kbss.inbas.reporting.rest.dto.mapper;
 
 import cz.cvut.kbss.inbas.reporting.dto.CorrectiveMeasureRequestDto;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.SafetyIssueReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
-import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
-import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
-import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraphEdge;
-import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
+import cz.cvut.kbss.inbas.reporting.dto.event.*;
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.DefaultFactorGraphTraverser;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
@@ -18,6 +18,7 @@ import org.mapstruct.Mapping;
 
 import java.net.URI;
 import java.util.*;
+import java.util.function.Function;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class DtoMapper {
@@ -53,6 +54,10 @@ public abstract class DtoMapper {
         return map;
     }
 
+    public DtoMapper() {
+        reset();
+    }
+
     /**
      * Returns true if the specified classes can be mapped by this mapper.
      *
@@ -71,6 +76,9 @@ public abstract class DtoMapper {
         if (report instanceof OccurrenceReport) {
             return occurrenceReportToOccurrenceReportDto((OccurrenceReport) report);
         }
+        if (report instanceof SafetyIssueReport) {
+            return safetyIssueReportToSafetyIssueReportDto((SafetyIssueReport) report);
+        }
         return report;
     }
 
@@ -82,6 +90,9 @@ public abstract class DtoMapper {
         if (dto instanceof OccurrenceReportDto) {
             return occurrenceReportDtoToOccurrenceReport((OccurrenceReportDto) dto);
         }
+        if (dto instanceof SafetyIssueReportDto) {
+            return safetyIssueReportDtoToSafetyIssueReport((SafetyIssueReportDto) dto);
+        }
         return dto;
     }
 
@@ -91,6 +102,13 @@ public abstract class DtoMapper {
 
     @Mapping(source = "factorGraph", target = "occurrence")
     public abstract OccurrenceReport occurrenceReportDtoToOccurrenceReport(OccurrenceReportDto dto);
+
+    @Mapping(source = "safetyIssue", target = "safetyIssue")
+    @Mapping(source = "safetyIssue", target = "factorGraph", dependsOn = "safetyIssue")
+    public abstract SafetyIssueReportDto safetyIssueReportToSafetyIssueReportDto(SafetyIssueReport report);
+
+    @Mapping(source = "factorGraph", target = "safetyIssue")
+    public abstract SafetyIssueReport safetyIssueReportDtoToSafetyIssueReport(SafetyIssueReportDto dto);
 
     public CorrectiveMeasureRequestDto correctiveMeasureRequestToDto(CorrectiveMeasureRequest req) {
         if (req == null) {
@@ -173,9 +191,6 @@ public abstract class DtoMapper {
         dto.setEventType(occurrence.getEventType());
         dto.setQuestion(occurrence.getQuestion());
         dto.setReferenceId(random.nextInt());
-        if (eventDtoRegistry == null) {
-            reset();
-        }
         eventDtoRegistry.put(dto.getUri(), dto);
 
         return dto;
@@ -184,18 +199,19 @@ public abstract class DtoMapper {
     public abstract Occurrence occurrenceDtoToOccurrence(OccurrenceDto dto);
 
     public FactorGraph occurrenceToFactorGraph(Occurrence occurrence) {
-        if (occurrence == null) {
+        return serializeFactorGraph(occurrence);
+    }
+
+    private FactorGraph serializeFactorGraph(FactorGraphItem root) {
+        if (root == null) {
             return null;
-        }
-        if (eventDtoRegistry == null) {
-            reset();
         }
         final DtoNodeVisitor nodeVisitor = new DtoNodeVisitor(this, random, eventDtoRegistry);
         final FactorGraphTraverser traverser = new DefaultFactorGraphTraverser(nodeVisitor, null);
-        traverser.traverse(occurrence);
+        traverser.traverse(root);
         final DtoEdgeVisitor edgeVisitor = new DtoEdgeVisitor(nodeVisitor.getInstanceMap());
         traverser.setFactorGraphEdgeVisitor(edgeVisitor);
-        traverser.traverse(occurrence);
+        traverser.traverse(root);
         final FactorGraph graph = new FactorGraph();
         graph.setNodes(new ArrayList<>(nodeVisitor.getInstanceMap().values()));
         graph.setEdges(edgeVisitor.getEdges());
@@ -203,24 +219,30 @@ public abstract class DtoMapper {
     }
 
     public Occurrence factorGraphToOccurrence(FactorGraph graph) {
+        return deserializeFactorGraph((dto) -> {
+            if (dto instanceof OccurrenceDto) {
+                return occurrenceDtoToOccurrence((OccurrenceDto) dto);
+            } else {
+                return eventDtoToEvent(dto);
+            }
+        }, Occurrence.class, graph);
+    }
+
+    private <T> T deserializeFactorGraph(Function<EventDto, FactorGraphItem> rootDeserializer, Class<T> targetType,
+                                         FactorGraph graph) {
         if (graph == null) {
             return null;
         }
         final Map<Integer, EventDto> dtoMap = new HashMap<>();
         graph.getNodes().forEach(n -> dtoMap.put(n.getReferenceId(), n));
         final Map<Integer, FactorGraphItem> instanceMap = new HashMap<>(dtoMap.size());
-        graph.getNodes().forEach(n -> {
-            if (n instanceof OccurrenceDto) {
-                instanceMap.put(n.getReferenceId(), occurrenceDtoToOccurrence((OccurrenceDto) n));
-            } else {
-                instanceMap.put(n.getReferenceId(), eventDtoToEvent(n));
-            }
-        });
+        graph.getNodes().forEach(n -> instanceMap.put(n.getReferenceId(), rootDeserializer.apply(n)));
         transformEdgesToRelations(graph, dtoMap, instanceMap);
         final Optional<FactorGraphItem> occurrence = instanceMap.values().stream()
-                                                                .filter(item -> item instanceof Occurrence).findFirst();
+                                                                .filter(item -> targetType
+                                                                        .isAssignableFrom(item.getClass())).findFirst();
         assert occurrence.isPresent();
-        return (Occurrence) occurrence.get();
+        return targetType.cast(occurrence.get());
     }
 
     private void transformEdgesToRelations(FactorGraph graph, Map<Integer, EventDto> dtoMap,
@@ -238,5 +260,37 @@ public abstract class DtoMapper {
                 instanceMap.get(target.getReferenceId()).addFactor(factor);
             }
         }
+    }
+
+    public SafetyIssueDto safetyIssueToSafetyIssueDto(SafetyIssue issue) {
+        if (issue == null) {
+            return null;
+        }
+        SafetyIssueDto dto = new SafetyIssueDto();
+        dto.setUri(issue.getUri());
+        if (issue.getTypes() != null) {
+            dto.setTypes(new HashSet<>(issue.getTypes()));
+        }
+        dto.setName(issue.getName());
+        dto.setReferenceId(random.nextInt());
+        eventDtoRegistry.put(dto.getUri(), dto);
+
+        return dto;
+    }
+
+    public abstract SafetyIssue safetyIssueDtoToSafetyIssue(SafetyIssueDto dto);
+
+    public FactorGraph safetyIssueToFactorGraph(SafetyIssue issue) {
+        return serializeFactorGraph(issue);
+    }
+
+    public SafetyIssue factorGraphToSafetyIssue(FactorGraph graph) {
+        return deserializeFactorGraph((dto) -> {
+            if (dto instanceof SafetyIssueDto) {
+                return safetyIssueDtoToSafetyIssue((SafetyIssueDto) dto);
+            } else {
+                return eventDtoToEvent(dto);
+            }
+        }, SafetyIssue.class, graph);
     }
 }
