@@ -8,6 +8,7 @@ describe('Report validator', function () {
 
     beforeEach(function () {
         report = {
+            javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS,
             occurrence: {
                 name: 'TestReport',
                 startTime: Date.now() - 1000,
