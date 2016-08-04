@@ -3,6 +3,7 @@
 var React = require('react');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+var Input = require('react-bootstrap').Input;
 var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
 
@@ -72,6 +73,15 @@ var SafetyIssueReport = React.createClass({
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <form>
+                    <div className='form-group'>
+                        <div className='row'>
+                            <div className='col-xs-4'>
+                                <Input type='text' name='name' value={report.safetyIssue.name} onChange={this.onChange}
+                                       label={this.i18n('name') + '*'}
+                                       title={this.i18n('safety-issue.headline-tooltip')}/>
+                            </div>
+                        </div>
+                    </div>
                     <div className='form-group'>
                         <CorrectiveMeasures report={report} onChange={this.props.handlers.onChange}/>
                     </div>

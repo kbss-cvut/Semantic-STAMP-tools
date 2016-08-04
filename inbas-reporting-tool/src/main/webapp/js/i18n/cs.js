@@ -17,6 +17,7 @@ module.exports = {
         'save': 'Uložit',
         'delete': 'Smazat',
         'headline': 'Název',
+        'name': 'Název',
         'summary': 'Shrnutí',
         'narrative': 'Popis',
         'fileNo': 'Číslo záznamu',
@@ -123,6 +124,8 @@ module.exports = {
         'occurrence.end-time-tooltip': 'Datum a čas kdy událost skončila',
         'occurrence.class': 'Třída závažnosti',
         'occurrence.class-tooltip': 'Třída závažnosti - pole je povinné',
+
+        'safety-issue.name-tooltip': 'Krátké pojmenování problému - pole je povinné',
 
         'initial.panel-title': 'Prvotní hlášení',
         'initial.table-report': 'Hlášení',

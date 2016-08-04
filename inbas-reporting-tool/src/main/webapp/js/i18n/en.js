@@ -17,6 +17,7 @@ module.exports = {
         'save': 'Save',
         'delete': 'Delete',
         'headline': 'Headline',
+        'name': 'Name',
         'summary': 'Summary',
         'narrative': 'Narrative',
         'fileNo': 'File number',
@@ -121,6 +122,8 @@ module.exports = {
         'occurrence.end-time-tooltip': 'Date and time when the event ended',
         'occurrence.class': 'Occurrence class',
         'occurrence.class-tooltip': 'Occurrence class - this field is required',
+
+        'safety-issue.name-tooltip': 'Short descriptive name of the issue - this field is required',
 
         'initial.panel-title': 'Initial reports',
         'initial.table-report': 'Report',
