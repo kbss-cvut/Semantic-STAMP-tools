@@ -42,7 +42,7 @@ var OccurrenceReportFactorRenderer = {
             };
         }
         report.occurrence.readOnly = true;
-        GanttController.setOccurrenceEventId(report.occurrence.referenceId);
+        GanttController.setRootEventId(report.occurrence.referenceId);
         FactorRendererImpl.renderFactors(report.factorGraph, eventTypes);
     }
 };
