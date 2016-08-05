@@ -43,7 +43,14 @@ var FactorDetail = React.createClass({
         onDelete: React.PropTypes.func.isRequired,
         scale: React.PropTypes.string.isRequired,
         factor: React.PropTypes.object.isRequired,
-        getReport: React.PropTypes.func.isRequired
+        getReport: React.PropTypes.func.isRequired,
+        enableDetails: React.PropTypes.bool
+    },
+
+    getDefaultProps: function () {
+        return {
+            enableDetails: true
+        };
     },
 
     getInitialState: function () {
@@ -190,7 +197,7 @@ var FactorDetail = React.createClass({
         return (
             <div>
                 <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
-                                                               onHide={this.onCloseDetails} enableForwardSkip={true}/>
+                              onHide={this.onCloseDetails} enableForwardSkip={true}/>
                 <Modal show={this.props.show} onHide={this.props.onClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>{this.i18n('factors.detail.title')}</Modal.Title>
@@ -225,7 +232,10 @@ var FactorDetail = React.createClass({
                                     <DateTimePicker inputFormat='DD-MM-YY HH:mm'
                                                     dateTime={this.state.startDate.toString()}
                                                     onChange={this.onDateChange}
-                                                    inputProps={{title: this.i18n('occurrence.start-time-tooltip'), bsSize: 'small'}}/>
+                                                    inputProps={{
+                                                        title: this.i18n('occurrence.start-time-tooltip'),
+                                                        bsSize: 'small'
+                                                    }}/>
                                 </div>
                                 <div className='col-xs-2 bold'
                                      style={{padding: '7px 0 7px 15px'}}>{this.i18n('factors.detail.duration')}</div>
@@ -294,12 +304,13 @@ var FactorDetail = React.createClass({
     },
 
     renderWizardButton: function () {
-        return (
-            <div style={{float: 'left'}}>
-                <Button bsStyle='primary' bsSize='small' onClick={this.onOpenDetails}
-                        disabled={!this.state.eventType}>{this.i18n('factors.detail.details')}</Button>
-            </div>
-        )
+        if (!this.props.enableDetails) {
+            return null;
+        }
+        return <div style={{float: 'left'}}>
+            <Button bsStyle='primary' bsSize='small' onClick={this.onOpenDetails}
+                    disabled={!this.state.eventType}>{this.i18n('factors.detail.details')}</Button>
+        </div>;
     },
 
     renderDeleteDialog: function () {
