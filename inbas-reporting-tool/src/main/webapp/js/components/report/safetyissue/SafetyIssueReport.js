@@ -8,10 +8,11 @@ var assign = require('object-assign');
 
 var Actions = require('../../../actions/Actions');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
-var MessageMixin = require('../../mixin/MessageMixin');
+var Factors = require('../../factor/Factors');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var injectIntl = require('../../../utils/injectIntl');
 var Input = require('../../Input');
+var MessageMixin = require('../../mixin/MessageMixin');
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
 var ReportSummary = require('../ReportSummary').default;
@@ -83,6 +84,12 @@ var SafetyIssueReport = React.createClass({
                             </div>
                         </div>
                     </div>
+
+                    <div className='form-group'>
+                        <Factors report={report} rootAttribute='safetyIssue' enableDetails={false}
+                                 onChange={this.props.handlers.onChange}/>
+                    </div>
+
                     <div className='form-group'>
                         <CorrectiveMeasures report={report} onChange={this.props.handlers.onChange}/>
                     </div>

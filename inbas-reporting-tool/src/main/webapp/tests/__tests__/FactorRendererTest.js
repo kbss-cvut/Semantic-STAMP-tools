@@ -4,24 +4,16 @@ describe('FactorRenderer', function () {
 
     var rewire = require('rewire'),
         FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
+        Constants = require('../../js/constants/Constants'),
         Vocabulary = require('../../js/constants/Vocabulary'),
         Generator = require('../environment/Generator').default,
         GanttController,
         report;
 
     beforeEach(function () {
-        GanttController = jasmine.createSpyObj('GanttController', ['addFactor', 'addLink', 'setRootEventId', 'setFactorParent', 'applyUpdates']);
+        GanttController = jasmine.createSpyObj('GanttController', ['addFactor', 'addLink', 'setRootEventId', 'setFactorParent', 'applyUpdates', 'setScale']);
         FactorRenderer.__set__('GanttController', GanttController);
         report = {
-            occurrence: {
-                uri: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#Occurrence_instance319360066',
-                key: '25857640490956897',
-                name: 'Runway incursion',
-                eventType: Generator.randomCategory().id,
-                startTime: 1447144734937,
-                endTime: 1447144800937,
-                referenceId: 1
-            },
             created: 1447144867175,
             lastModified: 1447147087897,
             summary: 'Short report summary.',
@@ -38,40 +30,57 @@ describe('FactorRenderer', function () {
         }
     });
 
+    function initOccurrence() {
+        return {
+            uri: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#Occurrence_instance319360066',
+            key: '25857640490956897',
+            name: 'Runway incursion',
+            eventType: Generator.randomCategory().id,
+            startTime: 1447144734937,
+            endTime: 1447144800937,
+            referenceId: 1
+        };
+    }
+
     it('Renders occurrence when factor graph is empty', () => {
+        report.occurrence = initOccurrence();
         delete report.factorGraph;
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(1);
         expect(GanttController.setRootEventId).toHaveBeenCalled();
         var arg = GanttController.addFactor.calls.argsFor(0)[0];
-        verifyRoot(arg);
+        verifyRoot(arg, 'occurrence');
     });
 
-    function verifyRoot(arg) {
-        expect(arg.text).toEqual(report.occurrence.name);
-        expect(arg.start_date.getTime()).toEqual(report.occurrence.startTime);
-        expect(arg.end_date.getTime()).toEqual(report.occurrence.endTime);
+    function verifyRoot(arg, rootAttribute) {
+        expect(arg.text).toEqual(report[rootAttribute].name);
+        if (report[rootAttribute].startTime) {
+            expect(arg.start_date.getTime()).toEqual(report[rootAttribute].startTime);
+            expect(arg.end_date.getTime()).toEqual(report[rootAttribute].endTime);
+        }
         expect(arg.readonly).toBeTruthy();
         expect(arg.parent).not.toBeDefined();
     }
 
     it('Renders occurrence when it is the only node in factor graph', () => {
+        report.occurrence = initOccurrence();
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(1);
         expect(GanttController.setRootEventId).toHaveBeenCalled();
         var arg = GanttController.addFactor.calls.argsFor(0)[0];
-        verifyRoot(arg);
+        verifyRoot(arg, 'occurrence');
     });
 
     it('Renders nodes of the factor graph', () => {
+        report.occurrence = initOccurrence();
         Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(report.factorGraph.nodes.length);
-        verifyAddedNodes();
+        verifyAddedNodes('occurrence');
     });
 
-    function verifyAddedNodes() {
-        verifyRoot(GanttController.addFactor.calls.argsFor(0)[0]);
+    function verifyAddedNodes(rootAttribute) {
+        verifyRoot(GanttController.addFactor.calls.argsFor(0)[0], rootAttribute);
         for (var i = 1, len = report.factorGraph.nodes.length; i < len; i++) {
             var node = report.factorGraph.nodes[i];
             var added = GanttController.addFactor.calls.argsFor(i)[0];
@@ -82,6 +91,7 @@ describe('FactorRenderer', function () {
     }
 
     it('Renders factor graph part-of hierarchy', () => {
+        report.occurrence = initOccurrence();
         Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         report.factorGraph.edges = Generator.generatePartOfLinksForNodes(report, report.factorGraph.nodes);
         FactorRenderer.renderFactors(report);
@@ -99,6 +109,7 @@ describe('FactorRenderer', function () {
     }
 
     it('Renders factor graph with causality/mitigation edges', () => {
+        report.occurrence = initOccurrence();
         Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         report.factorGraph.edges = Generator.generateFactorLinksForNodes(report.factorGraph.nodes);
         FactorRenderer.renderFactors(report);
@@ -119,18 +130,20 @@ describe('FactorRenderer', function () {
     }
 
     it('Renders factor graph with part-of and factor links', () => {
+        report.occurrence = initOccurrence();
         Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         report.factorGraph.edges = [];
         Array.prototype.push.apply(report.factorGraph.edges, Generator.generatePartOfLinksForNodes(report, report.factorGraph.nodes));
         Array.prototype.push.apply(report.factorGraph.edges, Generator.generateFactorLinksForNodes(report.factorGraph.nodes));
         FactorRenderer.renderFactors(report);
-        verifyAddedNodes();
+        verifyAddedNodes('occurrence');
         verifyPartOfHierarchy();
         verifyAddedLinks();
     });
 
 
     it('Stores highest reference id', function () {
+        report.occurrence = initOccurrence();
         Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         FactorRenderer.renderFactors(report);
         var highest = 0;
@@ -141,5 +154,31 @@ describe('FactorRenderer', function () {
         }
 
         expect(FactorRenderer.greatestReferenceId).toEqual(highest);
+    });
+
+    it('renders safety issue when there is no factor graph', () => {
+        report.safetyIssue = initSafetyIssue();
+        delete report.factorGraph;
+        FactorRenderer.renderFactors(report);
+        expect(GanttController.addFactor.calls.count()).toEqual(1);
+        expect(GanttController.setRootEventId).toHaveBeenCalled();
+        var arg = GanttController.addFactor.calls.argsFor(0)[0];
+        verifyRoot(arg, 'safetyIssue');
+    });
+
+    function initSafetyIssue() {
+        return {
+            javaClass: Constants.SAFETY_ISSUE_JAVA_CLASS,
+            referenceId: Generator.getRandomInt(),
+            name: ''
+        }
+    }
+
+    it('sets end and start time on safety issue for rendering in gantt', () => {
+        report.safetyIssue = initSafetyIssue();
+        delete report.factorGraph;
+        FactorRenderer.renderFactors(report);
+        expect(report.safetyIssue.startTime).toBeDefined();
+        expect(report.safetyIssue.endTime).toBeDefined();
     });
 });

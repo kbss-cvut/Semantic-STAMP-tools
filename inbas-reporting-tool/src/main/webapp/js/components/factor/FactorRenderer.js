@@ -1,6 +1,7 @@
 'use strict';
 
 var GanttController = require('./GanttController');
+var Constants = require('../../constants/Constants');
 var Vocabulary = require('../../constants/Vocabulary');
 var EventTypeFactory = require('../../model/EventTypeFactory');
 var Utils = require('../../utils/Utils');
@@ -13,6 +14,8 @@ var FactorRenderer = {
         this.greatestReferenceId = Number.MIN_VALUE;
         if (report.occurrence) {
             OccurrenceReportFactorRenderer.renderFactors(report, eventTypes);
+        } else if (report.safetyIssue) {
+            SafetyIssueFactorRenderer.renderFactors(report, eventTypes);
         } else {
             FactorRendererImpl.renderFactors(report.factorGraph, eventTypes);
         }
@@ -27,22 +30,50 @@ var FactorRenderer = {
 var OccurrenceReportFactorRenderer = {
 
     renderFactors: function (report, eventTypes) {
-        if (!report.occurrence.referenceId) {
-            report.occurrence.referenceId = Date.now();
+        RootAddingFactorRenderer.renderFactors(report, eventTypes, 'occurrence');
+    }
+};
+
+/**
+ * Renderer for safety issues.
+ *
+ * It needs to add the safety issue to the factor graph
+ */
+var SafetyIssueFactorRenderer = {
+
+    renderFactors: function (report, eventTypes) {
+        this._generateTimesForNodes(report);
+        RootAddingFactorRenderer.renderFactors(report, eventTypes, 'safetyIssue');
+    },
+
+    _generateTimesForNodes: function (report) {
+        GanttController.setScale(Constants.TIME_SCALES.SECOND);
+        var start = Date.now(),
+            end = start + 1000;
+        report.safetyIssue.startTime = start;
+        report.safetyIssue.endTime = end;
+        GanttController.setScale(Constants.TIME_SCALES.RELATIVE);
+    }
+};
+
+var RootAddingFactorRenderer = {
+    renderFactors: function (report, eventTypes, rootAttribute) {
+        if (!report[rootAttribute].referenceId) {
+            report[rootAttribute].referenceId = Date.now();
         }
         var factorGraph = report.factorGraph;
         if (factorGraph) {
-            var ind = factorGraph.nodes.indexOf(report.occurrence.referenceId);
+            var ind = factorGraph.nodes.indexOf(report[rootAttribute].referenceId);
             if (ind !== -1) {
-                factorGraph.nodes[ind] = report.occurrence;
+                factorGraph.nodes[ind] = report[rootAttribute];
             }
         } else {
             report.factorGraph = {
-                nodes: [report.occurrence]
+                nodes: [report[rootAttribute]]
             };
         }
-        report.occurrence.readOnly = true;
-        GanttController.setRootEventId(report.occurrence.referenceId);
+        report[rootAttribute].readOnly = true;
+        GanttController.setRootEventId(report[rootAttribute].referenceId);
         FactorRendererImpl.renderFactors(report.factorGraph, eventTypes);
     }
 };
@@ -85,10 +116,10 @@ var FactorRendererImpl = {
         var node;
         for (var i = 0, len = nodes.length; i < len; i++) {
             node = nodes[i];
-            var text;
-            if (node.name) {
+            var text = '';
+            if (node.name !== null) {
                 text = node.name;
-            } else {
+            } else if (node.eventType) {
                 var eventType = EventTypeFactory.resolveEventType(node.eventType, eventTypes);
                 text = eventType ? Utils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
             }
