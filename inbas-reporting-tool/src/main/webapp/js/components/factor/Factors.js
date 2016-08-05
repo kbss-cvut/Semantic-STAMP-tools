@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -258,7 +254,8 @@ var Factors = React.createClass({
         }
         return <FactorDetail show={this.state.showFactorDialog} getReport={this.getReport}
                              factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
-                             onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}/>;
+                             onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}
+                             enableDetails={this.props.enableDetails}/>;
     },
 
     renderLinkTypeDialog: function () {
