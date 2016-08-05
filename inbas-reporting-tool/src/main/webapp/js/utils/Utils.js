@@ -1,5 +1,6 @@
 'use strict';
 
+var Constants = require('../constants/Constants');
 var Vocabulary = require('../constants/Vocabulary');
 
 /**
@@ -273,7 +274,7 @@ module.exports = {
      * @param parameters The parameters to add
      * @return {*} Updated URL
      */
-    addParametersToUrl(url, parameters) {
+    addParametersToUrl: function (url, parameters) {
         if (parameters) {
             url += URL_CONTAINS_QUERY.test(url) ? '&' : '?';
             Object.getOwnPropertyNames(parameters).forEach(function (param) {
@@ -281,5 +282,28 @@ module.exports = {
             });
         }
         return url;
+    },
+
+    /**
+     * Determines suitable time scale for graphical representation of events.
+     *
+     * It is assumed that the root event's time span exceeds time span of all its descendants.
+     *
+     * If the {@code rootEvent} has no {@code startTime} and {@code endTime}, 'relative' scale is returned.
+     * @param rootEvent
+     */
+    determineTimeScale: function (rootEvent) {
+        if (!rootEvent.startTime || !rootEvent.endTime) {
+            return Constants.TIME_SCALES.RELATIVE;
+        }
+        var duration = (rootEvent.endTime - rootEvent.startTime) / 1000;    // to seconds
+        if (duration < Constants.TIME_SCALE_THRESHOLD) {
+            return Constants.TIME_SCALES.SECOND;
+        }
+        duration = duration / 60;
+        if (duration < Constants.TIME_SCALE_THRESHOLD) {
+            return Constants.TIME_SCALES.MINUTE;
+        }
+        return Constants.TIME_SCALES.HOUR;
     }
 };

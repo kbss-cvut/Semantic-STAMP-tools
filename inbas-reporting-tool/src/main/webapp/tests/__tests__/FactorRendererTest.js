@@ -10,7 +10,7 @@ describe('FactorRenderer', function () {
         report;
 
     beforeEach(function () {
-        GanttController = jasmine.createSpyObj('GanttController', ['addFactor', 'addLink', 'setOccurrenceEventId', 'setFactorParent', 'applyUpdates']);
+        GanttController = jasmine.createSpyObj('GanttController', ['addFactor', 'addLink', 'setRootEventId', 'setFactorParent', 'applyUpdates']);
         FactorRenderer.__set__('GanttController', GanttController);
         report = {
             occurrence: {
@@ -42,7 +42,7 @@ describe('FactorRenderer', function () {
         delete report.factorGraph;
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(1);
-        expect(GanttController.setOccurrenceEventId).toHaveBeenCalled();
+        expect(GanttController.setRootEventId).toHaveBeenCalled();
         var arg = GanttController.addFactor.calls.argsFor(0)[0];
         verifyRoot(arg);
     });
@@ -58,7 +58,7 @@ describe('FactorRenderer', function () {
     it('Renders occurrence when it is the only node in factor graph', () => {
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(1);
-        expect(GanttController.setOccurrenceEventId).toHaveBeenCalled();
+        expect(GanttController.setRootEventId).toHaveBeenCalled();
         var arg = GanttController.addFactor.calls.argsFor(0)[0];
         verifyRoot(arg);
     });
@@ -71,7 +71,6 @@ describe('FactorRenderer', function () {
     });
 
     function verifyAddedNodes() {
-        var occurrence = report.occurrence;
         verifyRoot(GanttController.addFactor.calls.argsFor(0)[0]);
         for (var i = 1, len = report.factorGraph.nodes.length; i < len; i++) {
             var node = report.factorGraph.nodes[i];
