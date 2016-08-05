@@ -41,7 +41,7 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
     it('Serializes part-of hierarchy', () => {
         var nodes = [report.occurrence];
         Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
-        var partOfLinks = Generator.generatePartOfLinksForNodes(report, nodes);
+        var partOfLinks = Generator.generatePartOfLinksForNodes(report.occurrence, nodes);
         initGetFactorStub(nodes);
         initForEachStub(nodes);
         initGetChildrenStub(nodes, partOfLinks);
@@ -126,7 +126,7 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
             expected;
         Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
         var factorLinks = Generator.generateFactorLinksForNodes(nodes);
-        var partOfLinks = Generator.generatePartOfLinksForNodes(report, nodes);
+        var partOfLinks = Generator.generatePartOfLinksForNodes(report.occurrence, nodes);
         initGetLinksStub(factorLinks);
         initGetFactorStub(nodes);
         initForEachStub(nodes);
@@ -146,7 +146,7 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
         var nodes = [report.occurrence];
         Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
         var factorLinks = Generator.generateFactorLinksForNodes(nodes);
-        var partOfLinks = Generator.generatePartOfLinksForNodes(report, nodes);
+        var partOfLinks = Generator.generatePartOfLinksForNodes(report.occurrence, nodes);
         initGetLinksStub(factorLinks);
         initGetFactorStub(nodes);
         initForEachStub(nodes);
@@ -155,5 +155,41 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
         var factorGraph = FactorJsonSerializer.getFactorGraph(report);
         var occurrenceRefId = report.occurrence.referenceId;
         expect(factorGraph.nodes.indexOf(occurrenceRefId)).not.toEqual(-1);
+    });
+
+    it('uses safety issue reference id in factor graph for a safety issue report', () => {
+        report = Generator.generateSafetyIssueReport();
+        report.safetyIssue.referenceId = 117;
+        var nodes = [report.safetyIssue];
+        Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
+        var factorLinks = Generator.generateFactorLinksForNodes(nodes);
+        var partOfLinks = Generator.generatePartOfLinksForNodes(report.safetyIssue, nodes);
+        initGetLinksStub(factorLinks);
+        initGetFactorStub(nodes);
+        initForEachStub(nodes);
+        initGetChildrenStub(nodes, partOfLinks);
+
+        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
+        var refId = report.safetyIssue.referenceId;
+        expect(factorGraph.nodes.indexOf(refId)).not.toEqual(-1);
+    });
+
+    it('removes start and end times from safety issue factor graph nodes', () => {
+        report = Generator.generateSafetyIssueReport();
+        report.safetyIssue.referenceId = 117;
+        var nodes = [report.safetyIssue];
+        Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
+        var factorLinks = Generator.generateFactorLinksForNodes(nodes);
+        var partOfLinks = Generator.generatePartOfLinksForNodes(report.safetyIssue, nodes);
+        initGetLinksStub(factorLinks);
+        initGetFactorStub(nodes);
+        initForEachStub(nodes);
+        initGetChildrenStub(nodes, partOfLinks);
+
+        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
+        for (var i = 0, len = factorGraph.nodes.length; i < len; i++) {
+            expect(factorGraph.nodes[i].startTime).not.toBeDefined();
+            expect(factorGraph.nodes[i].endTime).not.toBeDefined();
+        }
     });
 });

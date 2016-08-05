@@ -62,8 +62,17 @@ var Factors = React.createClass({
 
     componentDidUpdate: function () {
         if (this.factorsRendered) {
-            this.ganttController.updateRootEvent(this.props.report[this.props.rootAttribute]);
+            if (this._reportReloaded()) {
+                this.factorsRendered = false;
+                this.ganttController.clearAll();
+                this.renderFactors();
+            } else
+                this.ganttController.updateRootEvent(this.props.report[this.props.rootAttribute]);
         }
+    },
+
+    _reportReloaded: function () {
+        return this.rootReferenceId !== this.props.report[this.props.rootAttribute].referenceId;
     },
 
     componentWillMount: function () {
@@ -99,6 +108,7 @@ var Factors = React.createClass({
             return;
         }
         this.factorsRendered = true;
+        this.rootReferenceId = this.props.report[this.props.rootAttribute].referenceId;
         FactorRenderer.renderFactors(this.props.report, TypeaheadStore.getEventTypes());
         this.ganttController.expandSubtree(this.ganttController.rootEventId);
         this.factorReferenceIdCounter = FactorRenderer.greatestReferenceId;

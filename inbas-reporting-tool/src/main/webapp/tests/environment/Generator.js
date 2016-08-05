@@ -123,8 +123,8 @@ export default class Generator {
         return nodes;
     }
 
-    static generatePartOfLinksForNodes(report, nodes) {
-        var parents = [report.occurrence],
+    static generatePartOfLinksForNodes(root, nodes) {
+        var parents = [root],
             links = [], index = 1,
             childCount;
         while (index < nodes.length - 1) {
@@ -184,6 +184,22 @@ export default class Generator {
                 name: 'TestOccurrence',
                 startTime: Date.now() - 10000,
                 endTime: Date.now(),
+                eventType: Generator.randomCategory().id
+            }
+        };
+    }
+
+    /**
+     * Generates a safety issue report with safety issue, key and revision number.
+     */
+    static generateSafetyIssueReport() {
+        return {
+            key: Generator.getRandomInt().toString(),
+            revision: 1,
+            javaClass: Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS,
+            safetyIssue: {
+                javaClass: Constants.SAFETY_ISSUE_JAVA_CLASS,
+                name: 'TestSafetyIssue',
                 eventType: Generator.randomCategory().id
             }
         };

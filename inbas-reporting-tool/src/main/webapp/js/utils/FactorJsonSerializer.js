@@ -1,5 +1,6 @@
 'use strict';
 
+var assign = require('object-assign');
 var Vocabulary = require('../constants/Vocabulary');
 
 /**
@@ -18,6 +19,8 @@ var FactorJsonSerializer = {
         this._verifyGanttControllerIsSet();
         if (report.occurrence) {
             return OccurrenceFactorSerializer.getFactorGraph(report);
+        } else if (report.safetyIssue) {
+            return SafetyIssueFactorSerializer.getFactorGraph(report);
         }
         return FactorSerializer.getFactorGraph();
     },
@@ -54,7 +57,7 @@ var FactorSerializer = {
         var nodes = [],
             me = this;
         this.ganttController.forEach((item) => {
-            var node = item.statement;
+            var node = assign({}, item.statement);
             node.startTime = item.start_date.getTime();
             node.endTime = item.end_date.getTime();
             me.ganttIdsToNodes[item.id] = node;
@@ -116,6 +119,23 @@ var OccurrenceFactorSerializer = {
             if (report.occurrence.referenceId === graph.nodes[i].referenceId) {
                 graph.nodes[i] = report.occurrence.referenceId;
                 break;  // Occurrence is there only once
+            }
+        }
+        return graph;
+    }
+};
+
+var SafetyIssueFactorSerializer = {
+
+    getFactorGraph: function (report) {
+        var graph = FactorSerializer.getFactorGraph(),
+            node;
+        for (var i = 0, len = graph.nodes.length; i < len; i++) {
+            node = graph.nodes[i];
+            delete node.startTime;
+            delete node.endTime;
+            if (report.safetyIssue.referenceId === node.referenceId) {
+                graph.nodes[i] = report.safetyIssue.referenceId;
             }
         }
         return graph;

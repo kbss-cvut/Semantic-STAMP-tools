@@ -444,6 +444,10 @@ var GanttController = {
 
     getLinks: function () {
         return gantt.getLinks();
+    },
+
+    clearAll: function () {
+        gantt.clearAll();
     }
 };
 

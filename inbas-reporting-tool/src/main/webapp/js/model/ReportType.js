@@ -51,6 +51,10 @@ class SafetyIssueReport {
         return require('../components/report/safetyissue/SafetyIssueReportController');
     }
 
+    getPhase() {
+        return '';
+    }
+
     getLabel() {
         return 'safetyissuereport.label';
     }

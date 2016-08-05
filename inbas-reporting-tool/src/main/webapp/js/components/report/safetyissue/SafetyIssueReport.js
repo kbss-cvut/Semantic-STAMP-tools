@@ -49,9 +49,10 @@ var SafetyIssueReport = React.createClass({
     },
 
     onSave: function () {
-        var report = this.props.report;
+        var report = this.props.report,
+            factors = this.refs.factors.getWrappedInstance();
         this.onLoading();
-        // TODO factor graph
+        report.factorGraph = factors.getFactorGraph();
         if (report.isNew) {
             Actions.createReport(report, this.onSaveSuccess, this.onSaveError);
         } else {
@@ -86,7 +87,7 @@ var SafetyIssueReport = React.createClass({
                     </div>
 
                     <div className='form-group'>
-                        <Factors report={report} rootAttribute='safetyIssue' enableDetails={false}
+                        <Factors ref='factors' report={report} rootAttribute='safetyIssue' enableDetails={false}
                                  onChange={this.props.handlers.onChange}/>
                     </div>
 
