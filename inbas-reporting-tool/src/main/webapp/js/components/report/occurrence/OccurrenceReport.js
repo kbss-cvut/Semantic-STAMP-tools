@@ -98,7 +98,7 @@ var OccurrenceReport = React.createClass({
                                          onChange={this.props.handlers.onChange}/>
 
                     <div>
-                        <Factors ref='factors' report={report} onChange={this.onChanges}/>
+                        <Factors ref='factors' report={report} rootAttribute='occurrence' onChange={this.onChanges}/>
                     </div>
 
                     <div className='form-group'>
