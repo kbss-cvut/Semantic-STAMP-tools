@@ -38,7 +38,7 @@ function initSecondsScale() {
  */
 var GanttController = {
 
-    occurrenceEventId: null,
+    rootEventId: null,
     props: {},
     applyChangesRunning: false,
 
@@ -129,7 +129,7 @@ var GanttController = {
         gantt.templates.task_class = function (start, end, task) {
             var eventType;
             if (!task.parent) {
-                return 'factor-occurrence-event';
+                return 'factor-root-event';
             }
             eventType = EventTypeFactory.resolveEventType(task.statement.eventType);
             return eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '';
@@ -170,7 +170,7 @@ var GanttController = {
             return true;
         }
         e.preventDefault();
-        if (Number(id) === this.occurrenceEventId) {
+        if (Number(id) === this.rootEventId) {
             return;
         }
         var factor = gantt.getTask(id);
@@ -179,8 +179,8 @@ var GanttController = {
 
     onFactorAdded: function (id, factor) {
         var updates = [];
-        if (id !== this.occurrenceEventId && !factor.parent) {
-            factor.parent = this.occurrenceEventId;
+        if (id !== this.rootEventId && !factor.parent) {
+            factor.parent = this.rootEventId;
         }
         this.extendAncestorsIfNecessary(factor, updates);
         this.applyUpdates(updates);
@@ -266,7 +266,7 @@ var GanttController = {
     },
 
     shrinkRootIfNecessary: function (updates) {
-        var root = gantt.getTask(this.occurrenceEventId),
+        var root = gantt.getTask(this.rootEventId),
             children = gantt.getChildren(root.id),
             lowestStart, highestEnd, changed, child;
         if (!children || children.length === 0) {
@@ -300,20 +300,20 @@ var GanttController = {
         }
     },
 
-    applyUpdates: function (updates, preventOccurrenceUpdate) {
-        var me = this, updateOccurrenceEvt = false;
+    applyUpdates: function (updates, preventUpdatePropagation) {
+        var me = this, updateGraphRoot = false;
         me.applyChangesRunning = true;
         gantt.batchUpdate(function () {
             for (var i = 0, len = updates.length; i < len; i++) {
                 gantt.updateTask(updates[i]);
-                if (updates[i] === me.occurrenceEventId) {
-                    updateOccurrenceEvt = true;
+                if (updates[i] === me.rootEventId) {
+                    updateGraphRoot = true;
                 }
             }
         });
-        if (updateOccurrenceEvt && !preventOccurrenceUpdate) {
-            var root = gantt.getTask(this.occurrenceEventId);
-            this.props.updateOccurrence(root.start_date.getTime(), root.end_date.getTime());
+        if (updateGraphRoot && !preventUpdatePropagation) {
+            var root = gantt.getTask(this.rootEventId);
+            this.props.updateGraphRoot(root.start_date.getTime(), root.end_date.getTime());
         }
         gantt.refreshData();
         me.applyChangesRunning = false;
@@ -342,25 +342,25 @@ var GanttController = {
         this.props.onDeleteLink(link, source, target);
     },
 
-    updateOccurrenceEvent: function (report) {
+    updateRootEvent: function (graphRoot) {
         if (this.applyChangesRunning) {
             return;
         }
-        var occurrenceEvt = gantt.getTask(this.occurrenceEventId),
+        var rootEvent = gantt.getTask(this.rootEventId),
             updates = [];
-        if (occurrenceEvt.text !== report.occurrence.name) {
-            occurrenceEvt.text = report.occurrence.name;
-            updates.push(this.occurrenceEventId);
+        if (rootEvent.text !== graphRoot.name) {
+            rootEvent.text = graphRoot.name;
+            updates.push(this.rootEventId);
         }
-        if (occurrenceEvt.start_date.getTime() !== report.occurrence.startTime || occurrenceEvt.end_date.getTime() !== report.occurrence.endTime) {
-            occurrenceEvt.start_date = new Date(report.occurrence.startTime);
-            occurrenceEvt.end_date = new Date(report.occurrence.endTime);
-            occurrenceEvt.duration = gantt.calculateDuration(occurrenceEvt.start_date, occurrenceEvt.end_date);
-            this.ensureNonZeroDuration(occurrenceEvt);
-            this.updateDescendantsTimeInterval(occurrenceEvt, updates);
-            updates.push(this.occurrenceEventId);
+        if (rootEvent.start_date.getTime() !== graphRoot.startTime || rootEvent.end_date.getTime() !== graphRoot.endTime) {
+            rootEvent.start_date = new Date(graphRoot.startTime);
+            rootEvent.end_date = new Date(graphRoot.endTime);
+            rootEvent.duration = gantt.calculateDuration(rootEvent.start_date, rootEvent.end_date);
+            this.ensureNonZeroDuration(rootEvent);
+            this.updateDescendantsTimeInterval(rootEvent, updates);
+            updates.push(this.rootEventId);
         }
-        occurrenceEvt.statement = report.occurrence;
+        rootEvent.statement = graphRoot;
         if (updates.length > 0) {
             this.applyUpdates(updates, true);
         }
@@ -377,8 +377,8 @@ var GanttController = {
         }
     },
 
-    setOccurrenceEventId: function (id) {
-        this.occurrenceEventId = id;
+    setRootEventId: function (id) {
+        this.rootEventId = id;
     },
 
     addFactor: function (factor, parentId) {

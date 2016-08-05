@@ -27,17 +27,23 @@ var Utils = require('../../utils/Utils');
 var OptionsStore = require('../../stores/OptionsStore');
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 
-// TODO We should get rid of references to report.occurrence, because factors will be used also in Safety issue reports
-// and possibly audit reports
 var Factors = React.createClass({
     mixins: [I18nMixin, Reflux.listenTo(TypeaheadStore, 'renderFactors'), Reflux.listenTo(OptionsStore, '_factorTypesLoaded')],
 
     propTypes: {
-        report: React.PropTypes.object.isRequired
+        report: React.PropTypes.object.isRequired,
+        rootAttribute: React.PropTypes.string.isRequired,
+        enableDetails: React.PropTypes.bool
     },
 
     ganttController: null,
     factorReferenceIdCounter: 0,
+
+    getDefaultProps: function () {
+        return {
+            enableDetails: true
+        };
+    },
 
     getInitialState: function () {
         return {
@@ -55,7 +61,7 @@ var Factors = React.createClass({
 
     componentDidUpdate: function () {
         if (this.factorsRendered) {
-            this.ganttController.updateOccurrenceEvent(this.props.report);
+            this.ganttController.updateRootEvent(this.props.report[this.props.rootAttribute]);
         }
     },
 
@@ -69,7 +75,7 @@ var Factors = React.createClass({
             onLinkAdded: this.onLinkAdded,
             onCreateFactor: this.onCreateFactor,
             onEditFactor: this.onEditFactor,
-            updateOccurrence: this.onUpdateOccurrence,
+            updateGraphRoot: this.onGraphRootUpdate,
             onDeleteLink: this.onDeleteLink
         });
         this.ganttController.setScale(this.state.scale);
@@ -93,7 +99,7 @@ var Factors = React.createClass({
         }
         this.factorsRendered = true;
         FactorRenderer.renderFactors(this.props.report, TypeaheadStore.getEventTypes());
-        this.ganttController.expandSubtree(this.ganttController.occurrenceEventId);
+        this.ganttController.expandSubtree(this.ganttController.rootEventId);
         this.factorReferenceIdCounter = FactorRenderer.greatestReferenceId;
     },
 
@@ -170,11 +176,14 @@ var Factors = React.createClass({
         this.ganttController.setScale(scale);
     },
 
-    onUpdateOccurrence: function (startTime, endTime) {
-        var occurrence = assign({}, this.props.report.occurrence);
-        occurrence.startTime = startTime;
-        occurrence.endTime = endTime;
-        this.props.onChange({'occurrence': occurrence});
+    onGraphRootUpdate: function (startTime, endTime) {
+        var attName = this.props.rootAttribute,
+            root = assign({}, this.props.report[attName]),
+            change = {};
+        root.startTime = startTime;
+        root.endTime = endTime;
+        change[attName] = root;
+        this.props.onChange(change);
     },
 
     getFactorGraph: function () {
@@ -237,8 +246,8 @@ var Factors = React.createClass({
             return null;
         }
         return <FactorDetail show={this.state.showFactorDialog} getReport={this.getReport}
-                              factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
-                              onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}/>;
+                             factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
+                             onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}/>;
     },
 
     renderLinkTypeDialog: function () {
@@ -265,7 +274,10 @@ var Factors = React.createClass({
                 </Modal.Header>
                 <Modal.Body>
                     <FormattedMessage id='factors.link.delete.text'
-                                      values={{source: <span className='bold'>{source}</span>, target: <span className='bold'>{target}</span>}}/>
+                                      values={{
+                                          source: <span className='bold'>{source}</span>,
+                                          target: <span className='bold'>{target}</span>
+                                      }}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button bsStyle='warning' bsSize='small' onClick={this.deleteLink}>{this.i18n('delete')}</Button>
