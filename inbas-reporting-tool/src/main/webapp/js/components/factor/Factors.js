@@ -47,7 +47,7 @@ var Factors = React.createClass({
 
     getInitialState: function () {
         return {
-            scale: 'second',
+            scale: Utils.determineTimeScale(this.props.report[this.props.rootAttribute]),
             showLinkTypeDialog: false,
             currentLink: null,
             currentLinkSource: null,

@@ -9,6 +9,8 @@ describe('Factors component tests', function () {
         Factors = rewire('../../js/components/factor/Factors'),
         FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
         Actions = require('../../js/actions/Actions'),
+        Constants = require('../../js/constants/Constants'),
+        Utils = require('../../js/utils/Utils'),
         GanttController = null,
         report = {
             occurrence: {
@@ -36,10 +38,12 @@ describe('Factors component tests', function () {
         };
     });
 
-    it('Initializes gantt with seconds scale on component mount', function () {
+    it('Determines correct scale on component mount', function () {
+        spyOn(Utils, 'determineTimeScale').and.callThrough();
         Environment.render(<Factors report={report} rootAttribute='occurrence'/>);
         expect(GanttController.init).toHaveBeenCalled();
-        expect(GanttController.setScale).toHaveBeenCalledWith('second');
+        expect(GanttController.setScale).toHaveBeenCalled();
+        expect(Utils.determineTimeScale).toHaveBeenCalledWith(report.occurrence);
     });
 
     it('Adds event of the occurrence into gantt on initialization', function () {

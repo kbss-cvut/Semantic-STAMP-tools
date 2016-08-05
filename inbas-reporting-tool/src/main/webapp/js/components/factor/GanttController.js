@@ -1,5 +1,6 @@
 'use strict';
 
+var Constants = require('../../constants/Constants');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 var EventTypeFactory = require('../../model/EventTypeFactory');
 var Factory = require('../../model/ReportFactory');
@@ -44,7 +45,7 @@ var GanttController = {
 
     setScale: function (scale) {
         switch (scale) {
-            case 'minute':
+            case Constants.TIME_SCALES.MINUTE:
                 gantt.config.scale_unit = 'minute';
                 gantt.config.date_scale = '%H:%i';
                 gantt.config.duration_unit = 'minute';
@@ -54,7 +55,7 @@ var GanttController = {
                 gantt.config.subscales = [];
                 this.configureColumns(['text', 'startDate', 'eventType', 'add']);
                 break;
-            case 'hour':
+            case Constants.TIME_SCALES.HOUR:
                 gantt.config.scale_unit = 'hour';
                 gantt.config.date_scale = '%H';
                 gantt.config.duration_unit = 'hour';
@@ -64,7 +65,7 @@ var GanttController = {
                 gantt.config.subscales = [];
                 this.configureColumns(['text', 'startDate', 'eventType', 'add']);
                 break;
-            case 'second':
+            case Constants.TIME_SCALES.SECOND:
                 gantt.config.scale_unit = 'second';
                 gantt.config.date_scale = '%s';
                 gantt.config.duration_unit = 'second';
@@ -76,7 +77,7 @@ var GanttController = {
                 ];
                 this.configureColumns(['text', 'startDate', 'eventType', 'add']);
                 break;
-            case 'relative':
+            case Constants.TIME_SCALES.RELATIVE:
                 gantt.config.date_scale = ' ';
                 gantt.config.scale_height = 30;
                 gantt.config.min_column_width = 25;

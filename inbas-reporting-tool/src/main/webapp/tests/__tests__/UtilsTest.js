@@ -181,4 +181,55 @@ describe('Utility functions tests', function () {
             expect(result.indexOf('&pTwo=' + parameters.pTwo)).not.toEqual(-1);
         });
     });
+
+    describe('determineTimeScale', () => {
+        it('returns seconds for small time scale', () => {
+            var startTime = Date.now();
+            var root = {
+                startTime: startTime,
+                endTime: startTime + 50 * 1000
+            };
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.SECOND);
+            root.endTime = startTime;
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.SECOND);
+            root.endTime = startTime + Constants.TIME_SCALE_THRESHOLD * 1000 - 1;
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.SECOND);
+        });
+
+        it('returns minutes for medium time scale', () => {
+            var startTime = Date.now();
+            var root = {
+                startTime: startTime,
+                endTime: startTime + 10 * 60 * 1000
+            };
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.MINUTE);
+            root.endTime = startTime + Constants.TIME_SCALE_THRESHOLD * 1000;
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.MINUTE);
+            root.endTime = startTime + Constants.TIME_SCALE_THRESHOLD * 60 * 1000 - 1;
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.MINUTE);
+        });
+
+        it('returns hours for large time scale', () => {
+            var startTime = Date.now();
+            var root = {
+                startTime: startTime,
+                endTime: startTime + 10 * 60 * 60 * 1000
+            };
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.HOUR);
+            root.endTime = startTime + Constants.TIME_SCALE_THRESHOLD * 1000 * 60;
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.HOUR);
+        });
+
+        it('returns relative time scale for missing start or end time', () => {
+            var root = {
+                startTime: Date.now()
+            };
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.RELATIVE);
+            root.endTime = Date.now();
+            delete root.startTime;
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.RELATIVE);
+            delete root.endTime;
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.RELATIVE);
+        });
+    });
 });

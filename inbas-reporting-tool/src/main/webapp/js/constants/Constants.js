@@ -10,6 +10,14 @@ module.exports = {
         OCCURRENCE_CLASS: 'occurrenceClass'
     },
 
+    TIME_SCALES: {
+        SECOND: 'second',
+        MINUTE: 'minute',
+        HOUR: 'hour',
+        RELATIVE: 'relative'
+    },
+    TIME_SCALE_THRESHOLD: 100,
+
     /**
      * URL of the remote BI solution providing statistics for the app
      */
