@@ -33,6 +33,7 @@ var Factors = React.createClass({
     propTypes: {
         report: React.PropTypes.object.isRequired,
         rootAttribute: React.PropTypes.string.isRequired,
+        onChange: React.PropTypes.func.isRequired,
         enableDetails: React.PropTypes.bool
     },
 

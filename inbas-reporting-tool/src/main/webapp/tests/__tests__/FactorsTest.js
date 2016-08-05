@@ -11,7 +11,7 @@ describe('Factors component tests', function () {
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
         Utils = require('../../js/utils/Utils'),
-        GanttController = null,
+        GanttController = null, onChange,
         report = {
             occurrence: {
                 name: 'TestOccurrence',
@@ -30,6 +30,7 @@ describe('Factors component tests', function () {
             start_date: new Date(report.occurrence.startTime)
         });
         GanttController.getChildCount.and.returnValue(0);
+        onChange = jasmine.createSpy('onChange');
         spyOn(Actions, 'loadEventTypes');
         jasmine.getGlobal().gantt = {
             config: {
@@ -40,7 +41,7 @@ describe('Factors component tests', function () {
 
     it('Determines correct scale on component mount', function () {
         spyOn(Utils, 'determineTimeScale').and.callThrough();
-        Environment.render(<Factors report={report} rootAttribute='occurrence'/>);
+        Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>);
         expect(GanttController.init).toHaveBeenCalled();
         expect(GanttController.setScale).toHaveBeenCalled();
         expect(Utils.determineTimeScale).toHaveBeenCalledWith(report.occurrence);
@@ -51,7 +52,7 @@ describe('Factors component tests', function () {
         GanttController.addFactor.and.callFake(function (arg) {
             factor = arg;
         });
-        var factors = Environment.render(<Factors report={report} rootAttribute='occurrence'/>);
+        var factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>);
         factors.renderFactors({action: Actions.loadEventTypes, data: []});
         expect(GanttController.addFactor).toHaveBeenCalled();
         expect(factor).toBeDefined();
@@ -61,13 +62,13 @@ describe('Factors component tests', function () {
 
     it('Sets scale to seconds when seconds are selected', function () {
         var evt = {target: {value: 'second'}},
-            factors = Environment.render(<Factors report={report} rootAttribute='occurrence'/>);
+            factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>);
         factors.onScaleChange(evt);
         expect(GanttController.setScale).toHaveBeenCalledWith('second');
     });
 
     it('Adds new factor without parent to gantt when factor at top level is created', () => {
-        var factors = Environment.render(<Factors report={report} rootAttribute='occurrence'/>),
+        var factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>),
             newFactor = {
                 duration: 2,
                 durationUnit: 'minute',
@@ -105,7 +106,7 @@ describe('Factors component tests', function () {
             component;
         report.occurrence.referenceId = referenceId;
         GanttController.getFactor.and.returnValue(parent);
-        component = Environment.render(<Factors report={report} rootAttribute='occurrence'/>);
+        component = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>);
         component.renderFactors({action: Actions.loadEventTypes, data: []});
         component.onCreateFactor(newFactor);
 
@@ -115,7 +116,7 @@ describe('Factors component tests', function () {
 
     it('Renders factor graph only after event types have been loaded', () => {
         spyOn(FactorRenderer, 'renderFactors');
-        var factors = Environment.render(<Factors report={report} rootAttribute='occurrence'/>),
+        var factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>),
             eventTypes = [
                 {id: 'test'}
             ],
@@ -130,7 +131,7 @@ describe('Factors component tests', function () {
     });
 
     it('Sets event position when new child event is added to a parent', () => {
-        var factors = Environment.render(<Factors report={report} rootAttribute='occurrence'/>),
+        var factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>),
             childCount = Generator.getRandomPositiveInt(1, 5),
             referenceId = 117,
             newFactor = {
@@ -146,7 +147,7 @@ describe('Factors component tests', function () {
         report.occurrence.referenceId = referenceId;
         GanttController.getChildCount.and.returnValue(childCount);
         GanttController.getFactor.and.returnValue(parent);
-        component = Environment.render(<Factors report={report} rootAttribute='occurrence'/>);
+        component = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>);
         component.renderFactors({action: Actions.loadEventTypes, data: []});
         component.setState({
             currentFactor: newFactor
