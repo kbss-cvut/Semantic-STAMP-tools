@@ -1,7 +1,5 @@
 'use strict';
 
-var assign = require('object-assign');
-
 var Constants = require('../constants/Constants');
 var Vocabulary = require('../constants/Vocabulary');
 var Utils = require('../utils/Utils');

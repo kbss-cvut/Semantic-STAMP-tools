@@ -18,7 +18,6 @@ var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
 var ReportSummary = require('../ReportSummary').default;
 var ReportValidator = require('../../../validation/ReportValidator');
-var WizardGenerator = require('../../wizard/generator/WizardGenerator');
 var WizardWindow = require('../../wizard/WizardWindow');
 
 var SafetyIssueReport = React.createClass({

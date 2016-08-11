@@ -7,6 +7,9 @@ import I18nWrapper from "../../../i18n/I18nWrapper";
 import ReportType from "../../../model/ReportType";
 import Routes from "../../../utils/Routes";
 
+/**
+ * Displays a table of reports on which a safety issue is based.
+ */
 var BasedOn = (props) => {
     var basedOn = props.report.safetyIssue.basedOn;
     if (!basedOn) {
@@ -21,9 +24,9 @@ var BasedOn = (props) => {
         <Table striped bordered condensed hover>
             <thead>
             <tr>
-                <th className='col-xs-2'>{i18n('headline')}</th>
-                <th className='col-xs-9'>{i18n('reports.table-moreinfo')}</th>
-                <th className='col-xs-1'>{i18n('reports.table-type')}</th>
+                <th className='col-xs-2 content-center'>{i18n('headline')}</th>
+                <th className='col-xs-9 content-center'>{i18n('reports.table-moreinfo')}</th>
+                <th className='col-xs-1 content-center'>{i18n('reports.table-type')}</th>
             </tr>
             </thead>
             <tbody>
