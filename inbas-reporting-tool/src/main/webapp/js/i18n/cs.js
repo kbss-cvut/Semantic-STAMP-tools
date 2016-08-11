@@ -160,6 +160,7 @@ module.exports = {
         'occurrencereport.create-safety-issue-tooltip': 'Vytvořit safety issue na základě tohoto hlášení',
         'safetyissuereport.title': 'Hlášení o safety issue',
         'safetyissuereport.label': 'Safety issue',
+        'safetyissue.based-on': 'Vytvořeno na základě',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

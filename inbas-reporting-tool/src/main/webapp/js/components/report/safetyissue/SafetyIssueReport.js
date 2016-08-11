@@ -7,6 +7,7 @@ var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
 
 var Actions = require('../../../actions/Actions');
+var BasedOn = require('./BasedOn').default;
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var Factors = require('../../factor/Factors');
 var I18nMixin = require('../../../i18n/I18nMixin');
@@ -89,6 +90,10 @@ var SafetyIssueReport = React.createClass({
                     <div className='form-group'>
                         <Factors ref='factors' report={report} rootAttribute='safetyIssue' enableDetails={false}
                                  onChange={this.props.handlers.onChange}/>
+                    </div>
+
+                    <div className='form-group'>
+                        <BasedOn report={report}/>
                     </div>
 
                     <div className='form-group'>

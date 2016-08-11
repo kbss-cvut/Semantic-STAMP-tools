@@ -37,6 +37,10 @@ class OccurrenceReport {
         return 'occurrencereport.title';
     }
 
+    getHeadline() {
+        return this.occurrence.name;
+    }
+
     renderMoreInfo() {
         return <CollapsibleText text={this.summary}/>;
     }
@@ -61,6 +65,10 @@ class SafetyIssueReport {
 
     toString() {
         return 'safetyissuereport.title';
+    }
+
+    getHeadline() {
+        return this.safetyIssue.name;
     }
 
     renderMoreInfo() {

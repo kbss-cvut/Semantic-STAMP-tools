@@ -158,6 +158,7 @@ module.exports = {
         'occurrencereport.create-safety-issue-tooltip': 'Create safety issue based on this report',
         'safetyissuereport.title': 'Safety issue report',
         'safetyissuereport.label': 'Safety issue',
+        'safetyissue.based-on': 'Based on',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',
