@@ -1,9 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
-import cz.cvut.kbss.jopa.model.annotations.FetchType;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
+import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -44,6 +41,9 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     @OWLObjectProperty(iri = Vocabulary.s_p_has_reporting_phase)
     private URI phase;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_evaluation, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private CorrectiveMeasureImplementationEvaluation evaluation;
+
     public CorrectiveMeasureRequest() {
     }
 
@@ -67,6 +67,9 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
         }
         this.basedOnEvent = other.basedOnEvent;
         this.basedOnOccurrence = other.basedOnOccurrence;
+        if (other.evaluation != null) {
+            this.evaluation = new CorrectiveMeasureImplementationEvaluation(other.evaluation);
+        }
     }
 
     public String getDescription() {
@@ -134,6 +137,14 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
 
     public void setPhase(URI phase) {
         this.phase = phase;
+    }
+
+    public CorrectiveMeasureImplementationEvaluation getEvaluation() {
+        return evaluation;
+    }
+
+    public void setEvaluation(CorrectiveMeasureImplementationEvaluation evaluation) {
+        this.evaluation = evaluation;
     }
 
     @Override

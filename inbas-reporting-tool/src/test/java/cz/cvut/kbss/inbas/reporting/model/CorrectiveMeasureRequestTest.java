@@ -3,10 +3,12 @@ package cz.cvut.kbss.inbas.reporting.model;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CorrectiveMeasureRequestTest {
 
@@ -64,5 +66,19 @@ public class CorrectiveMeasureRequestTest {
         final CorrectiveMeasureRequest copy = new CorrectiveMeasureRequest(original);
         assertEquals(original.getDescription(), copy.getDescription());
         assertEquals(original.getBasedOnOccurrence(), copy.getBasedOnOccurrence());
+    }
+
+    @Test
+    public void copyConstructorCopiesEvaluation() {
+        final CorrectiveMeasureRequest original = new CorrectiveMeasureRequest();
+        final CorrectiveMeasureImplementationEvaluation evaluation = new CorrectiveMeasureImplementationEvaluation();
+        evaluation.setDescription("Evaluation is ok");
+        evaluation.setTypes(Collections.singleton(Generator.generateUri().toString()));
+        original.setEvaluation(evaluation);
+
+        final CorrectiveMeasureRequest copy = new CorrectiveMeasureRequest(original);
+        assertNotNull(copy.getEvaluation());
+        assertEquals(evaluation.getDescription(), copy.getEvaluation().getDescription());
+        assertEquals(evaluation.getTypes(), copy.getEvaluation().getTypes());
     }
 }

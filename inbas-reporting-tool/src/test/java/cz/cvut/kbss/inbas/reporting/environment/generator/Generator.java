@@ -1,9 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.environment.generator;
 
-import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
-import cz.cvut.kbss.inbas.reporting.model.Organization;
-import cz.cvut.kbss.inbas.reporting.model.Person;
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.model.qam.Answer;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
 
@@ -196,6 +193,10 @@ public class Generator {
             cmr.setPhase(generateUri());
             if (Generator.randomBoolean()) {
                 cmr.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
+                final CorrectiveMeasureImplementationEvaluation evaluation = new CorrectiveMeasureImplementationEvaluation();
+                evaluation.setDescription("Corrective measure request evaluation " + i);
+                evaluation.setTypes(Collections.singleton(generateUri().toString()));
+                cmr.setEvaluation(evaluation);
             } else {
                 cmr.setResponsibleOrganizations(Collections.singleton(Generator.generateOrganization()));
             }
