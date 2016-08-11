@@ -154,6 +154,8 @@ module.exports = {
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
         'occurrencereport.label': 'Occurrence',
+        'occurrencereport.create-safety-issue': 'Create safety issue',
+        'occurrencereport.create-safety-issue-tooltip': 'Create safety issue based on this report',
         'safetyissuereport.title': 'Safety issue report',
         'safetyissuereport.label': 'Safety issue',
 

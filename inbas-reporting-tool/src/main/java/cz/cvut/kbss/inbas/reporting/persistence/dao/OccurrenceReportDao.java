@@ -22,6 +22,26 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
     }
 
     @Override
+    protected List<OccurrenceReport> findAll(EntityManager em) {
+        return em.createNativeQuery("SELECT ?x WHERE { " +
+                "?x a ?type ; " +
+                "?hasFileNumber ?fileNo ;" +
+                "?hasRevision ?revision ;" +
+                "?hasOccurrence ?occurrence ." +
+                "?occurrence ?hasStartTime ?startTime ." +
+                "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
+                "{ ?y a ?type; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . } GROUP BY ?iFileNo }" +
+                "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
+                "} ORDER BY DESC(?startTime) DESC(?revision)", type)
+                 .setParameter("type", typeUri)
+                 .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
+                 .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
+                 .setParameter("hasOccurrence", URI.create(Vocabulary.s_p_documents))
+                 .setParameter("hasStartTime", URI.create(Vocabulary.s_p_has_start_time))
+                 .getResultList();
+    }
+
+    @Override
     protected void persist(OccurrenceReport entity, EntityManager em) {
         assert entity != null;
         if (entity.getOccurrence() != null && entity.getOccurrence().getUri() == null) {

@@ -163,6 +163,7 @@ var OccurrenceReport = React.createClass({
             {this.renderSubmitButton()}
             <PhaseTransition report={this.props.report} onLoading={this.onLoading}
                              onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
+            {this.renderCreateSafetyIssueButton()}
         </ButtonToolbar>;
     },
 
@@ -177,11 +178,20 @@ var OccurrenceReport = React.createClass({
     },
 
     renderSubmitButton: function () {
-        return (
-            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')}
-                    onClick={this.onSubmit}>
-                {this.i18n('detail.submit')}
-            </Button>);
+        return <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')}
+                       onClick={this.onSubmit}>
+            {this.i18n('detail.submit')}
+        </Button>;
+    },
+
+    renderCreateSafetyIssueButton: function () {
+        if (this.props.report.isNew) {
+            return null;
+        }
+        return <Button bsStyle='primary' bsSize='small' onClick={this.props.handlers.onCreateSafetyIssue}
+                       title={this.i18n('occurrencereport.create-safety-issue-tooltip')}>
+            {this.i18n('occurrencereport.create-safety-issue')}
+        </Button>;
     }
 });
 

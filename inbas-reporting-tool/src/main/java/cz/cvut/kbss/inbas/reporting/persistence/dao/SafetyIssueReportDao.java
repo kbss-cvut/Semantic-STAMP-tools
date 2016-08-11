@@ -1,10 +1,14 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.util.OrphanRemover;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.net.URI;
+import java.util.List;
 
 @Repository
 public class SafetyIssueReportDao extends BaseReportDao<SafetyIssueReport> {
@@ -14,6 +18,24 @@ public class SafetyIssueReportDao extends BaseReportDao<SafetyIssueReport> {
 
     public SafetyIssueReportDao() {
         super(SafetyIssueReport.class);
+    }
+
+    @Override
+    protected List<SafetyIssueReport> findAll(EntityManager em) {
+        return em.createNativeQuery("SELECT ?x WHERE { " +
+                "?x a ?type ; " +
+                "?hasFileNumber ?fileNo ;" +
+                "?hasRevision ?revision ;" +
+                "?wasCreated ?dateCreated" +
+                "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
+                "{ ?y a ?type; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . } GROUP BY ?iFileNo }" +
+                "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
+                "} ORDER BY DESC(?dateCreated) DESC(?revision)", type)
+                 .setParameter("type", typeUri)
+                 .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
+                 .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
+                 .setParameter("wasCreated", URI.create(Vocabulary.s_p_created))
+                 .getResultList();
     }
 
     @Override

@@ -9,7 +9,8 @@ describe('ReportController', function () {
         RouterStore = require('../../js/stores/RouterStore'),
         ReportController = require('../../js/components/report/ReportController'),
         Routes = require('../../js/utils/Routes'),
-        Constants = require('../../js/constants/Constants');
+        Constants = require('../../js/constants/Constants'),
+        Vocabulary = require('../../js/constants/Vocabulary');
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
@@ -38,5 +39,35 @@ describe('ReportController', function () {
         expect(report.occurrence).toBeDefined();
         expect(report.occurrence.startTime).toBeDefined();
         expect(report.occurrence.endTime).toBeDefined();
+    });
+
+    it('initializes new report when no key is passed in updated props', () => {
+        var TestParent = React.createClass({
+            getInitialState: function () {
+                return {
+                    params: {
+                        reportKey: 12345
+                    }
+                }
+            },
+            render() {
+                return <ReportController ref='sut' {...this.state}/>;
+            }
+        });
+        spyOn(Actions, 'loadReport');
+        var params = {reportKey: 12345},
+            parent = Environment.render(<TestParent/>);
+        spyOn(RouterStore, 'getTransitionPayload').and.returnValue({
+            reportType: Vocabulary.SAFETY_ISSUE_REPORT,
+            basedOn: Generator.generateOccurrenceReport()
+        });
+        parent.setState({
+            params: {}
+        });
+        var controllerState = parent.refs.sut.state;
+        expect(controllerState.report.isNew).toBeTruthy();
+        expect(controllerState.report.javaClass).toEqual(Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS);
+        expect(controllerState.report.safetyIssue).toBeDefined();
+        expect(controllerState.report.safetyIssue.basedOn).toBeDefined();
     });
 });

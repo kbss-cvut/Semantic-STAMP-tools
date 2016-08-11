@@ -12,6 +12,7 @@ var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
 var RouterStore = require('../../../stores/RouterStore');
 var ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMixin');
+var Vocabulary = require('../../../constants/Vocabulary');
 
 var OccurrenceReportController = React.createClass({
     mixins: [
@@ -44,12 +45,22 @@ var OccurrenceReportController = React.createClass({
         }
     },
 
+    onCreateSafetyIssue: function () {
+        Routing.transitionTo(Routes.createReport, {
+            payload: {
+                reportType: Vocabulary.SAFETY_ISSUE_REPORT,
+                basedOn: this.props.report
+            }
+        });
+    },
+
 
     render: function () {
         var handlers = {
             onChange: this.onChange,
             onSuccess: this.onSuccess,
-            onCancel: this.onCancel
+            onCancel: this.onCancel,
+            onCreateSafetyIssue: this.onCreateSafetyIssue
         };
         return (
             <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}

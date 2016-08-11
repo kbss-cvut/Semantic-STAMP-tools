@@ -1,9 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.model.safetyissue;
 
-import cz.cvut.kbss.inbas.reporting.model.AbstractEntity;
-import cz.cvut.kbss.inbas.reporting.model.Event;
-import cz.cvut.kbss.inbas.reporting.model.Factor;
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.EdgeCloningVisitor;
@@ -33,6 +30,9 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
             CascadeType.REMOVE})
     private Set<Event> children;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_based_on, fetch = FetchType.EAGER)
+    private Set<OccurrenceReport> basedOn;
+
     public SafetyIssue() {
         this.types = new HashSet<>(4);
         types.add(Vocabulary.s_c_event_type);
@@ -42,6 +42,9 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
         this();
         this.name = other.name;
         this.types.addAll(other.getTypes());
+        if (other.basedOn != null) {
+            this.basedOn = new HashSet<>(other.basedOn);
+        }
     }
 
     public String getName() {
@@ -96,6 +99,14 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
             this.children = new LinkedHashSet<>();
         }
         children.add(child);
+    }
+
+    public Set<OccurrenceReport> getBasedOn() {
+        return basedOn;
+    }
+
+    public void setBasedOn(Set<OccurrenceReport> basedOn) {
+        this.basedOn = basedOn;
     }
 
     @Override

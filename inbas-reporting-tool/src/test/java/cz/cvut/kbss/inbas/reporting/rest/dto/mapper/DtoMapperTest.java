@@ -16,6 +16,7 @@ import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenera
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
@@ -353,6 +354,22 @@ public class DtoMapperTest {
         assertNotNull(result.getFactorGraph());
         assertFalse(result.getFactorGraph().getNodes().isEmpty());
         assertFalse(result.getFactorGraph().getEdges().isEmpty());
+    }
+
+    @Test
+    public void safetyIssueToSafetyIssueDtoTransformsBasedOnAttribute() {
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setUri(Generator.generateUri());
+        report.setKey(IdentificationUtils.generateKey());
+        issue.setBasedOn(Collections.singleton(report));
+
+        final SafetyIssueDto result = mapper.safetyIssueToSafetyIssueDto(issue);
+        assertEquals(1, result.getBasedOn().size());
+        final OccurrenceReportDto dto = result.getBasedOn().iterator().next();
+        assertEquals(report.getUri(), dto.getUri());
+        assertEquals(report.getKey(), dto.getKey());
+        assertEquals(report.getFileNumber(), dto.getFileNumber());
     }
 
     @Test

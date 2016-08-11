@@ -19,6 +19,7 @@ import org.mapstruct.Mapping;
 import java.net.URI;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class DtoMapper {
@@ -215,6 +216,9 @@ public abstract class DtoMapper {
         final FactorGraph graph = new FactorGraph();
         graph.setNodes(new ArrayList<>(nodeVisitor.getInstanceMap().values()));
         graph.setEdges(edgeVisitor.getEdges());
+        // Have to reset it here, because some instances may contain more than one factor graph (e.g. safety issue) and
+        // the registry has to be empty before every serialization
+        reset();
         return graph;
     }
 
@@ -273,6 +277,10 @@ public abstract class DtoMapper {
         }
         dto.setName(issue.getName());
         dto.setReferenceId(random.nextInt());
+        if (issue.getBasedOn() != null) {
+            dto.setBasedOn(issue.getBasedOn().stream().map(this::occurrenceReportToOccurrenceReportDto)
+                                .collect(Collectors.toSet()));
+        }
         eventDtoRegistry.put(dto.getUri(), dto);
 
         return dto;

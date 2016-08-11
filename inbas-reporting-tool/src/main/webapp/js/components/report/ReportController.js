@@ -22,7 +22,7 @@ var ReportController = React.createClass({
             report: this._isNew() ? this.initNewReport() : null,
             revisions: null,
             loading: false
-        }
+        };
     },
 
     _isNew: function () {
@@ -33,7 +33,7 @@ var ReportController = React.createClass({
         var payload = RouterStore.getTransitionPayload(Routes.createReport.name),
             report;
         if (payload) {
-            report = ReportFactory.createReport(payload.reportType);
+            report = ReportFactory.createReport(payload.reportType, payload);
             if (payload.initialReports) {
                 report.initialReports = payload.initialReports;
             }
@@ -60,7 +60,11 @@ var ReportController = React.createClass({
     },
 
     componentWillReceiveProps: function (nextProps) {
-        if (nextProps.params.reportKey && this.state.key !== nextProps.params.reportKey) {
+        if (!nextProps.params.reportKey && this.state.key) {
+            var newState = this.getInitialState();
+            newState.report = this.initNewReport();
+            this.setState(newState);
+        } else if (nextProps.params.reportKey && this.state.key !== nextProps.params.reportKey) {
             this._loadReport(nextProps.params.reportKey);
         }
     },

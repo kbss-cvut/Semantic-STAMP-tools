@@ -2,7 +2,9 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
+import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -10,9 +12,7 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -73,5 +73,26 @@ public class SafetyIssueReportDaoTest extends BaseDaoTestRunner {
               .forEach(m -> m.getResponsibleOrganizations().forEach(this::persistOrganization));
         reportDao.persist(report);
         return report;
+    }
+
+    @Test
+    public void findAllReturnsAllLatestRevisionsOfSafetyIssues() {
+        final Person author = Generator.getPerson();
+        persistPerson(author);
+        final List<SafetyIssueReport> reports = generateReports(author);
+
+        final List<SafetyIssueReport> result = reportDao.findAll();
+        assertTrue(Environment.areEqual(reports, result));
+    }
+
+    private List<SafetyIssueReport> generateReports(Person author) {
+        final List<SafetyIssueReport> reports = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(2, 10); i++) {
+            final SafetyIssueReport r = SafetyIssueReportGenerator.generateSafetyIssueReport(true, false);
+            r.setAuthor(author);
+            reports.add(r);
+        }
+        reportDao.persist(reports);
+        return reports;
     }
 }
