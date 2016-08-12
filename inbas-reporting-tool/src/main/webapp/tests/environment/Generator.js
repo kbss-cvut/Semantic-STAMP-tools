@@ -250,11 +250,15 @@ export default class Generator {
             reports = [],
             report;
         for (var i = 0; i < count; i++) {
-            report = Generator.generateOccurrenceReport();
+            report = {};
             report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
-            report.identification = report.occurrence.name + i;
-            report.date = report.occurrence.startTime + i * 1000;
-            delete report.occurrence;
+            report.identification = 'GeneratedReport ' + i;
+            if (Generator.getRandomBoolean()) {
+                report.date = Date.now() - 100000 + i * 1000;
+                report.types = [Vocabulary.OCCURRENCE_REPORT];
+            } else {
+                report.types = [Vocabulary.SAFETY_ISSUE_REPORT];
+            }
             reports.push(report);
         }
         return reports;

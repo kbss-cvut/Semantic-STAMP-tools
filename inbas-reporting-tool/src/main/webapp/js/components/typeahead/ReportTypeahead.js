@@ -60,7 +60,8 @@ var ReportTypeahead = React.createClass({
             results: 'dashboard-report-search-results'
         };
         var optionLabel = function (option) {
-            return option.identification + ' (' + Utils.formatDate(new Date(option.date)) + ' - ' + this.i18n(option.toString()) + ')';
+            var date = option.date ? Utils.formatDate(new Date(option.date)) + ' - ' : '';
+            return option.identification + ' (' + date + this.i18n(option.toString()) + ')';
         }.bind(this);
         return (
             <Typeahead ref='reportTypeahead' className='form-group form-group-sm' name={this.props.name}

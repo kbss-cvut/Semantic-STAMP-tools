@@ -3,23 +3,26 @@
 var React = require('react');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+var DropdownButton = require('react-bootstrap').DropdownButton;
+var MenuItem = require('react-bootstrap').MenuItem;
 var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
 var injectIntl = require('../../../utils/injectIntl');
 
 var Actions = require('../../../actions/Actions');
+var ArmsAttributes = require('../arms/ArmsAttributes').default;
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
+var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var Department = require('./Department').default;
 var Factors = require('../../factor/Factors');
-var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
-var ArmsAttributes = require('../arms/ArmsAttributes').default;
+var I18nMixin = require('../../../i18n/I18nMixin');
+var MessageMixin = require('../../mixin/MessageMixin');
 var PhaseTransition = require('../../misc/PhaseTransition').default;
+var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
 var ReportSummary = require('../ReportSummary').default;
-var MessageMixin = require('../../mixin/MessageMixin');
 var ReportValidator = require('../../../validation/ReportValidator');
-var I18nMixin = require('../../../i18n/I18nMixin');
-var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
+var SafetyIssueSelector = require('../safetyissue/SafetyIssueSelector').default;
 var WizardGenerator = require('../../wizard/generator/WizardGenerator');
 var WizardWindow = require('../../wizard/WizardWindow');
 
@@ -37,7 +40,8 @@ var OccurrenceReport = React.createClass({
             submitting: false,
             loadingWizard: false,
             isWizardOpen: false,
-            wizardProperties: null
+            wizardProperties: null,
+            showSafetyIssueSelector: false
         };
     },
 
@@ -80,6 +84,10 @@ var OccurrenceReport = React.createClass({
 
     closeSummaryWizard: function () {
         this.setState({isWizardOpen: false});
+    },
+
+    _onOpenSafetyIssueSelector: function () {
+        this.setState({showSafetyIssueSelector: true});
     },
 
     render: function () {
@@ -126,6 +134,9 @@ var OccurrenceReport = React.createClass({
                     </Panel>
 
                     {this.renderButtons()}
+
+                    <div style={{clear: 'both'}}/>
+                    {this._renderSafetyIssueSelector()}
                 </form>
             </Panel>
             {this.renderMessage()}
@@ -155,7 +166,7 @@ var OccurrenceReport = React.createClass({
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
+        return <ButtonToolbar className='float-right buttons-right'>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
@@ -163,7 +174,7 @@ var OccurrenceReport = React.createClass({
             {this.renderSubmitButton()}
             <PhaseTransition report={this.props.report} onLoading={this.onLoading}
                              onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
-            {this.renderCreateSafetyIssueButton()}
+            {this._renderCreateSafetyIssueButton()}
         </ButtonToolbar>;
     },
 
@@ -184,14 +195,25 @@ var OccurrenceReport = React.createClass({
         </Button>;
     },
 
-    renderCreateSafetyIssueButton: function () {
+    _renderCreateSafetyIssueButton: function () {
         if (this.props.report.isNew) {
             return null;
         }
-        return <Button bsStyle='primary' bsSize='small' onClick={this.props.handlers.onCreateSafetyIssue}
-                       title={this.i18n('occurrencereport.create-safety-issue-tooltip')}>
-            {this.i18n('occurrencereport.create-safety-issue')}
-        </Button>;
+        return <DropdownButton id='safetyIssueSelector' bsStyle='primary' bsSize='small'
+                               title={this.i18n('safetyissuereport.label')}
+                               pullRight={true}>
+            <MenuItem onClick={this.props.handlers.onCreateSafetyIssue}
+                      title={this.i18n('occurrencereport.create-safety-issue-tooltip')}>{this.i18n('occurrencereport.create-safety-issue')}</MenuItem>
+            <MenuItem onClick={this._onOpenSafetyIssueSelector}
+                      title={this.i18n('occurrencereport.add-as-safety-issue-base-tooltip')}>{this.i18n('occurrencereport.add-as-safety-issue-base')}</MenuItem>
+        </DropdownButton>;
+    },
+
+    _renderSafetyIssueSelector: function () {
+        return this.state.showSafetyIssueSelector ?
+            <div className='float-right row col-xs-3'>
+                <SafetyIssueSelector report={this.props.report}/>
+            </div> : null;
     }
 });
 
