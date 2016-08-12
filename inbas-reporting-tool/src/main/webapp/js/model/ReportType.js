@@ -5,6 +5,7 @@ var assign = require('object-assign');
 var CollapsibleText = require('../components/CollapsibleText');
 var Constants = require('../constants/Constants');
 var JsonLdUtils = require('../utils/JsonLdUtils').default;
+var Utils = require('../utils/Utils');
 var Vocabulary = require('../constants/Vocabulary');
 
 class OccurrenceReport {
@@ -74,8 +75,62 @@ class SafetyIssueReport {
     renderMoreInfo() {
         return <CollapsibleText text={this.summary}/>;
     }
-}
 
+    /**
+     * Adds the specified report as this safety issue report's base.
+     * @param baseReport The new base
+     */
+    addBase(baseReport) {
+        if (this.safetyIssue.basedOn) {
+            if (this.safetyIssue.basedOn.find((item) => item.key === baseReport.key)) {
+                return;
+            }
+            this.safetyIssue.basedOn.push(baseReport);
+        } else {
+            this.safetyIssue.basedOn = [baseReport];
+        }
+        if (baseReport.factorGraph) {
+            this._copyFactorGraph(baseReport);
+            // Get rid of the original factor graph. We don't need it for safety issue persisting and it causes
+            // deserialization issues
+            delete baseReport.factorGraph;
+        }
+    }
+
+    _copyFactorGraph(source) {
+        if (!this.factorGraph) {
+            this.factorGraph = {
+                nodes: [],
+                edges: []
+            };
+            this.factorGraph.nodes.push(this.safetyIssue.referenceId);
+        }
+        var referenceMap = {};
+        referenceMap[source.factorGraph.nodes[0].referenceId] = this.safetyIssue.referenceId;
+        var node, newReferenceId;
+        for (var i = 1, len = source.factorGraph.nodes.length; i < len; i++) {
+            node = source.factorGraph.nodes[i];
+            newReferenceId = Utils.randomInt();
+            referenceMap[node.referenceId] = newReferenceId;
+            this.factorGraph.nodes.push({
+                referenceId: newReferenceId,
+                eventType: node.eventType,
+                types: node.types,
+                index: node.index,
+                javaClass: node.javaClass
+            });
+        }
+        var edge;
+        for (i = 0, len = source.factorGraph.edges.length; i < len; i++) {
+            edge = source.factorGraph.edges[i];
+            this.factorGraph.edges.push({
+                linkType: edge.linkType,
+                from: referenceMap[edge.from],
+                to: referenceMap[edge.to]
+            });
+        }
+    }
+}
 var REPORT_TYPES = {};
 
 REPORT_TYPES[Vocabulary.OCCURRENCE_REPORT] = OccurrenceReport;

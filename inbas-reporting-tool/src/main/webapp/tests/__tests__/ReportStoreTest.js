@@ -4,6 +4,7 @@ describe('Report store', function () {
 
     var rewire = require('rewire'),
         Environment = require('../environment/Environment'),
+        Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         Ajax = rewire('../../js/utils/Ajax'),
         ReportStore = rewire('../../js/stores/ReportStore'),
@@ -113,6 +114,29 @@ describe('Report store', function () {
         ReportStore.onLoadAllReports();
         ReportStore.onLoadAllReports();
 
+        expect(reqMock.end.calls.count()).toEqual(1);
+    });
+
+    it('loads safety issue and adds base to it when addSafetyIssueBase is triggered', () => {
+        var base = Generator.generateOccurrenceReport(),
+            issue = Generator.generateSafetyIssueReport();
+        spyOn(ReportStore, 'trigger').and.callThrough();
+        reqMock.end.and.callFake(function (handler) {
+            handler(null, {
+                body: issue
+            });
+        });
+        ReportStore.onAddSafetyIssueBase(issue.key, base);
+        expect(reqMock.end).toHaveBeenCalled();
+        expect(issue.safetyIssue.basedOn).toBeDefined();
+        expect(issue.safetyIssue.basedOn[0]).toEqual(base);
+        expect(ReportStore.trigger).toHaveBeenCalled();
+    });
+
+    it('prevents report loading when it is already being loaded', () => {
+        var issue = Generator.generateSafetyIssueReport();
+        ReportStore.onLoadReport(issue.key);
+        ReportStore.onLoadReport(issue.key);
         expect(reqMock.end.calls.count()).toEqual(1);
     });
 });

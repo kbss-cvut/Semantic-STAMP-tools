@@ -4,6 +4,7 @@ var Reflux = require('reflux');
 
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
+var ReportType = require('../model/ReportType');
 var Utils = require('../utils/Utils');
 
 var BASE_URL = 'rest/reports';
@@ -16,6 +17,11 @@ var ReportStore = Reflux.createStore({
     listenables: [Actions],
 
     _reports: null,
+    _pendingLoad: null,
+
+    _resetPendingLoad: function () {
+        this._pendingLoad = null;
+    },
 
     onLoadAllReports: function () {
         if (reportsLoading) {
@@ -39,12 +45,18 @@ var ReportStore = Reflux.createStore({
     },
 
     onLoadReport: function (key) {
+        if (this._pendingLoad === key) {
+            return;
+        }
+        this._pendingLoad = key;
         Ajax.get(BASE_URL_WITH_SLASH + key).end(function (data) {
+            this._resetPendingLoad();
             this.trigger({
                 action: Actions.loadReport,
                 report: data
             });
         }.bind(this), function () {
+            this._resetPendingLoad();
             this.trigger({
                 action: Actions.loadReport,
                 report: null
@@ -104,6 +116,25 @@ var ReportStore = Reflux.createStore({
             }
             this.onLoadAllReports();
         }.bind(this), onError);
+    },
+
+    onAddSafetyIssueBase: function (key, newBase) {
+        this._pendingLoad = key;
+        Ajax.get(BASE_URL_WITH_SLASH + key).end(function (data) {
+            var report = ReportType.getReport(data);
+            report.addBase(newBase);
+            this._resetPendingLoad();
+            this.trigger({
+                action: Actions.loadReport,
+                report: report
+            });
+        }.bind(this), function () {
+            this._resetPendingLoad();
+            this.trigger({
+                action: Actions.loadReport,
+                report: null
+            });
+        }.bind(this));
     },
 
     getReports: function () {

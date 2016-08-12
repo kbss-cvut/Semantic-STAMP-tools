@@ -55,9 +55,9 @@ class SafetyIssueSelector extends React.Component {
     _onOptionSelected = (option) => {
         var issueKey = option.key,
             report = this.props.report;
+        Actions.addSafetyIssueBase(issueKey, report);
         Routing.transitionTo(Routes.editReport, {
-            params: {reportKey: issueKey},
-            payload: {basedOn: report}
+            params: {reportKey: issueKey}
         });
     };
 
