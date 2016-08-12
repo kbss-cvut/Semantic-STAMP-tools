@@ -47,12 +47,14 @@ describe('ReportType', function () {
             var basedOn = generateSafetyIssueBase(),
                 newBase = generateSafetyIssueBase(),
                 originalFactorGraph = basedOn.factorGraph,
-                newBaseFactorGraph = newBase.factorGraph;
+                newBaseFactorGraph = newBase.factorGraph,
+                report, result;
 
-            var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {basedOn: basedOn});
+            report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {basedOn: basedOn});
             expect(report.factorGraph).not.toBeNull();
             report = ReportType.getReport(report);
-            report.addBase(newBase);
+            result = report.addBase(newBase);
+            expect(result).toBeTruthy();
             // The occurrence will be counted twice, but we need only one, which is transformed to safety issue (the
             // graph's root)
             expect(report.factorGraph.nodes.length).toEqual(originalFactorGraph.nodes.length + newBaseFactorGraph.nodes.length - 1);
@@ -64,15 +66,17 @@ describe('ReportType', function () {
 
         it('does not add base if it already exists in safety issue', () => {
             var basedOn = generateSafetyIssueBase(),
-                originalFactorGraph = basedOn.factorGraph;
+                originalFactorGraph = basedOn.factorGraph,
+                report, result;
 
-            var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {basedOn: basedOn});
+            report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {basedOn: basedOn});
             expect(report.factorGraph).not.toBeNull();
             report = ReportType.getReport(report);
             expect(report.factorGraph.nodes.length).toEqual(originalFactorGraph.nodes.length);
             expect(report.factorGraph.edges.length).toEqual(originalFactorGraph.edges.length);
             expect(report.safetyIssue.basedOn.length).toEqual(1);
-            report.addBase(basedOn);
+            result = report.addBase(basedOn);
+            expect(result).toBeFalsy();
             expect(report.factorGraph.nodes.length).toEqual(originalFactorGraph.nodes.length);
             expect(report.factorGraph.edges.length).toEqual(originalFactorGraph.edges.length);
             expect(report.safetyIssue.basedOn.length).toEqual(1);

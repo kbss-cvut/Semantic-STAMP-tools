@@ -83,7 +83,7 @@ class SafetyIssueReport {
     addBase(baseReport) {
         if (this.safetyIssue.basedOn) {
             if (this.safetyIssue.basedOn.find((item) => item.key === baseReport.key)) {
-                return;
+                return false;
             }
             this.safetyIssue.basedOn.push(baseReport);
         } else {
@@ -95,6 +95,7 @@ class SafetyIssueReport {
             // deserialization issues
             delete baseReport.factorGraph;
         }
+        return true;
     }
 
     _copyFactorGraph(source) {

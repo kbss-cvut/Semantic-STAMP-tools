@@ -162,6 +162,8 @@ module.exports = {
         'safetyissuereport.title': 'Hlášení o safety issue',
         'safetyissuereport.label': 'Safety issue',
         'safetyissue.based-on': 'Vytvořeno na základě',
+        'safetyissue.base-add-success': 'Podklad safety issue úspěšně přidán. Změny uložíte kliknutím na tlačítko \'Uložit\'',
+        'safetyissue.base-add-duplicate': 'Safety issue již je založeno na daném hlášení.',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

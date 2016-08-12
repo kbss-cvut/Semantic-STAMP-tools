@@ -70,7 +70,7 @@ var ReportController = React.createClass({
     },
 
     onReportStoreTrigger: function (data) {
-        if (data.action === Actions.loadReport) {
+        if (data.action === Actions.loadReport || data.action === Actions.addSafetyIssueBase) {
             this._onReportLoaded(data.report);
         } else if (data.action == Actions.loadRevisions) {
             this.setState({revisions: data.revisions});

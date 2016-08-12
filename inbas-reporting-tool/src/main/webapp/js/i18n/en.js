@@ -162,6 +162,8 @@ module.exports = {
         'safetyissuereport.title': 'Safety issue report',
         'safetyissuereport.label': 'Safety issue',
         'safetyissue.based-on': 'Based on',
+        'safetyissue.base-add-success': 'Safety issue base successfully added. Click \'Save\' to save changes.',
+        'safetyissue.base-add-duplicate': 'Safety issue is already based on the specified report.',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',
