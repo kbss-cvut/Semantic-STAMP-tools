@@ -12,12 +12,14 @@ var Actions = Reflux.createActions([
     'loadOptions', 'loadEventTypes', 'loadLocations', 'loadOperators', 'loadOccurrenceCategories',
 
     'setTransitionPayload',
-
+    
     'rememberComponentState', 'resetComponentState',
 
     'loadFormOptions',
 
     'loadStatistics',
+
+    'publishMessage',
 
     'addSafetyIssueBase'
 ]);
