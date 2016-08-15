@@ -209,26 +209,24 @@ var Factors = React.createClass({
 
 
     render: function () {
-        var scaleTooltip = this.i18n('factors.scale-tooltip');
-        return (
-            <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
-                {this.renderFactorDetailDialog()}
-                {this.renderLinkTypeDialog()}
-                {this.renderDeleteLinkDialog()}
-                <div id='factors_gantt' className='factors-gantt'/>
-                <div className='gantt-zoom'>
-                    <div className='col-xs-5'>
-                        <div className='col-xs-2 gantt-zoom-label bold'>{this.i18n('factors.scale')}:</div>
-                        {this._renderScaleOptions()}
-                    </div>
-
-                    <div className='col-xs-2'>&nbsp;</div>
-
-                    <div className='col-xs-5 gantt-zoom-label'>
-                        {this._renderLineColors()}
-                    </div>
+        return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
+            {this.renderFactorDetailDialog()}
+            {this.renderLinkTypeDialog()}
+            {this.renderDeleteLinkDialog()}
+            <div id='factors_gantt' className='factors-gantt'/>
+            <div className='gantt-zoom'>
+                <div className='col-xs-5'>
+                    <div className='col-xs-2 gantt-zoom-label bold'>{this.i18n('factors.scale')}:</div>
+                    {this._renderScaleOptions()}
                 </div>
-            </Panel>);
+
+                <div className='col-xs-2'>&nbsp;</div>
+
+                <div className='col-xs-5 gantt-zoom-label'>
+                    {this._renderLineColors()}
+                </div>
+            </div>
+        </Panel>;
     },
 
     _renderScaleOptions: function () {

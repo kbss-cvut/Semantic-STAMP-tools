@@ -37,8 +37,7 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     @OWLDataProperty(iri = Vocabulary.s_p_deadline)
     private Date deadline;
 
-    // TODO has reporting phase is probably not very suitable for corrective measure
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_reporting_phase)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure_phase)
     private URI phase;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_evaluation, cascade = CascadeType.ALL, fetch = FetchType.EAGER)

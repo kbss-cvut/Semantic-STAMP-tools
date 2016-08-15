@@ -36,6 +36,8 @@ var Description = React.createClass({
         }
         this.setState({description: value});
     },
+
+
     render: function () {
         return (
             <div>
