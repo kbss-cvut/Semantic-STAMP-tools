@@ -17,7 +17,9 @@ var Actions = Reflux.createActions([
 
     'loadFormOptions',
 
-    'loadStatistics'
+    'loadStatistics',
+
+    'publishMessage'
 ]);
 
 module.exports = Actions;
