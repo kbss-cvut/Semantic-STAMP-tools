@@ -4,6 +4,7 @@ var Reflux = require('reflux');
 
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
+var Constants = require('../constants/Constants');
 var ReportType = require('../model/ReportType');
 var Utils = require('../utils/Utils');
 
@@ -141,6 +142,7 @@ var ReportStore = Reflux.createStore({
             action: Actions.addSafetyIssueBase,
             report: report
         });
+        Actions.publishMessage(message, result ? Constants.MESSAGE_TYPE.SUCCESS : Constants.MESSAGE_TYPE.WARNING, Actions.addSafetyIssueBase);
     },
 
     getReports: function () {

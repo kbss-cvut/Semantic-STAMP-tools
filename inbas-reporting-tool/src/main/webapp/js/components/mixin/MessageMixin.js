@@ -1,6 +1,3 @@
-/**
- * @jsx
- */
 'use strict';
 
 var React = require('react');
@@ -21,7 +18,7 @@ var MessageMixin = {
     },
 
     showInfoMessage: function (text) {
-        this.dismissInterval = 5000;
+        this.dismissInterval = 10000;
         this._showMessage('info', text);
     },
 
@@ -35,13 +32,18 @@ var MessageMixin = {
     },
 
     showSuccessMessage: function (text) {
-        this.dismissInterval = 5000;
+        this.dismissInterval = 10000;
         this._showMessage('success', text);
     },
 
     showErrorMessage: function (text) {
         this.dismissInterval = 10000;
         this._showMessage('danger', text);
+    },
+
+    showWarnMessage: function (text) {
+        this.dismissInterval = 10000;
+        this._showMessage('warning', text);
     },
 
     renderMessage: function () {

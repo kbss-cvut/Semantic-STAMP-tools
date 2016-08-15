@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var Reflux = require('reflux');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
@@ -8,12 +9,14 @@ var assign = require('object-assign');
 
 var Actions = require('../../../actions/Actions');
 var BasedOn = require('./BasedOn').default;
+var Constants = require('../../../constants/Constants');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var Factors = require('../../factor/Factors');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var injectIntl = require('../../../utils/injectIntl');
 var Input = require('../../Input');
 var MessageMixin = require('../../mixin/MessageMixin');
+var MessageStore = require('../../../stores/MessageStore');
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
 var ReportSummary = require('../ReportSummary').default;
@@ -21,7 +24,7 @@ var ReportValidator = require('../../../validation/ReportValidator');
 var WizardWindow = require('../../wizard/WizardWindow');
 
 var SafetyIssueReport = React.createClass({
-    mixins: [MessageMixin, I18nMixin, ReportDetailMixin],
+    mixins: [MessageMixin, I18nMixin, ReportDetailMixin, Reflux.listenTo(MessageStore, 'onMessage')],
 
     propTypes: {
         handlers: React.PropTypes.object,
@@ -36,6 +39,20 @@ var SafetyIssueReport = React.createClass({
             isWizardOpen: false,
             wizardProperties: null
         };
+    },
+
+    onMessage: function (msg) {
+        if (msg.source !== Actions.addSafetyIssueBase) {
+            return;
+        }
+        switch (msg.type) {
+            case Constants.MESSAGE_TYPE.SUCCESS:
+                this.showSuccessMessage(this.i18n(msg.message));
+                break;
+            case Constants.MESSAGE_TYPE.WARNING:
+                this.showWarnMessage(this.i18n(msg.message));
+                break;
+        }
     },
 
     onNameChange: function (e) {
