@@ -13,6 +13,7 @@ var Input = require('../Input');
 var Select = require('../Select');
 
 var Actions = require('../../actions/Actions');
+var Constants = require('../../constants/Constants');
 var FactorDetail = require('./FactorDetail');
 var FactorRenderer = require('./FactorRenderer');
 var GanttController = require('./GanttController');
@@ -30,7 +31,8 @@ var Factors = React.createClass({
         report: React.PropTypes.object.isRequired,
         rootAttribute: React.PropTypes.string.isRequired,
         onChange: React.PropTypes.func.isRequired,
-        enableDetails: React.PropTypes.bool
+        enableDetails: React.PropTypes.bool,
+        enableScaleChange: React.PropTypes.bool
     },
 
     ganttController: null,
@@ -38,7 +40,8 @@ var Factors = React.createClass({
 
     getDefaultProps: function () {
         return {
-            enableDetails: true
+            enableDetails: true,
+            enableScaleChange: true
         };
     },
 
@@ -216,27 +219,7 @@ var Factors = React.createClass({
                 <div className='gantt-zoom'>
                     <div className='col-xs-5'>
                         <div className='col-xs-2 gantt-zoom-label bold'>{this.i18n('factors.scale')}:</div>
-                        <div className='col-xs-2'>
-                            <Input type='radio' label={this.i18n('factors.scale.second')} value='second'
-                                   title={scaleTooltip + 'seconds'} checked={this.state.scale === 'second'}
-                                   onChange={this.onScaleChange}/>
-                        </div>
-                        <div className='col-xs-2'>
-                            <Input type='radio' label={this.i18n('factors.scale.minute')} value='minute'
-                                   title={scaleTooltip + 'minutes'}
-                                   checked={this.state.scale === 'minute'}
-                                   onChange={this.onScaleChange}/>
-                        </div>
-                        <div className='col-xs-2'>
-                            <Input type='radio' label={this.i18n('factors.scale.hour')} value='hour'
-                                   title={scaleTooltip + 'hours'}
-                                   checked={this.state.scale === 'hour'} onChange={this.onScaleChange}/>
-                        </div>
-                        <div className='col-xs-2'>
-                            <Input type='radio' label={this.i18n('factors.scale.relative')} value='relative'
-                                   title={this.i18n('factors.scale.relative-tooltip')}
-                                   checked={this.state.scale === 'relative'} onChange={this.onScaleChange}/>
-                        </div>
+                        {this._renderScaleOptions()}
                     </div>
 
                     <div className='col-xs-2'>&nbsp;</div>
@@ -246,6 +229,23 @@ var Factors = React.createClass({
                     </div>
                 </div>
             </Panel>);
+    },
+
+    _renderScaleOptions: function () {
+        var items = [],
+            scalesEnabled = this.props.enableScaleChange;
+        Object.getOwnPropertyNames(Constants.TIME_SCALES).forEach(scaleName => {
+            var scale = Constants.TIME_SCALES[scaleName];
+            if (scalesEnabled || this.state.scale === scale) {
+                items.push(<div className='col-xs-2' key={scale}>
+                    <Input type='radio' label={this.i18n('factors.scale.' + scale)} value={scale}
+                           title={this.formatMessage('factors.scale-tooltip', {unit: this.i18n('factors.scale.' + scale)})}
+                           checked={this.state.scale === scale}
+                           onChange={this.onScaleChange}/>
+                </div>);
+            }
+        });
+        return items;
     },
 
     renderFactorDetailDialog: function () {

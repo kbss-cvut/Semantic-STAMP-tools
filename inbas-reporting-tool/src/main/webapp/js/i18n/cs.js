@@ -209,7 +209,7 @@ module.exports = {
         'notrenderable.error': 'Chyba: {message}',
         'notrenderable.error-generic': 'Zkontrolujte, prosím, zda je záznam validní.',
 
-        'revisions.label': 'Revize zprávy',
+        'revisions.label': 'Revize hlášení',
         'revisions.created': 'Vytvořeno',
         'revisions.show-tooltip': 'Zobrazit tuto revizi',
         'revisions.readonly-notice': 'Starší revize jsou pouze ke čtení.',

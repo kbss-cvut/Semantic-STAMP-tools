@@ -105,7 +105,7 @@ var SafetyIssueReport = React.createClass({
 
                     <div className='form-group'>
                         <Factors ref='factors' report={report} rootAttribute='safetyIssue' enableDetails={false}
-                                 onChange={this.props.handlers.onChange}/>
+                                 enableScaleChange={false} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <div className='form-group'>

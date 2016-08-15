@@ -4,6 +4,7 @@ describe('Factors component tests', function () {
 
     var React = require('react'),
         rewire = require('rewire'),
+        TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         Factors = rewire('../../js/components/factor/Factors'),
@@ -155,5 +156,13 @@ describe('Factors component tests', function () {
         component.onSaveFactor();
 
         expect(newFactor.statement.index).toEqual(childCount);
+    });
+
+    it('does not show scale options when enableScaleChange is set to false', () => {
+        var factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}
+                                                  enableScaleChange={false}/>),
+            scaleOptions = TestUtils.scryRenderedComponentsWithType(factors, require('../../js/components/Input'));
+        expect(scaleOptions.length).toEqual(1); // Only the currently selected scale
+        expect(scaleOptions[0].props.value).toEqual(factors.state.scale);
     });
 });

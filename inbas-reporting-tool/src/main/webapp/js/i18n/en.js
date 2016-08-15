@@ -177,7 +177,7 @@ module.exports = {
 
         'factors.panel-title': 'Factors',
         'factors.scale': 'Scale',
-        'factors.scale-tooltip': 'Click to select scale in ',
+        'factors.scale-tooltip': 'Click to select scale: {unit}',
         'factors.scale.second': 'Seconds',
         'factors.scale.minute': 'Minutes',
         'factors.scale.hour': 'Hours',
