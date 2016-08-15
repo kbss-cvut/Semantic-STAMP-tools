@@ -19,6 +19,16 @@ module.exports = {
     TIME_SCALE_THRESHOLD: 100,
 
     /**
+     * Types of message published by the MessageStore
+     */
+    MESSAGE_TYPE: {
+        SUCCESS: 'success',
+        INFO: 'info',
+        WARNING: 'warning',
+        ERROR: 'danger'
+    },
+
+    /**
      * URL of the remote BI solution providing statistics for the app
      */
     STATISTICS_URL: 'https://147.32.84.201/pentaho/api/repos/%3Apublic%3AUCL%3ADashboard.wcdf/generatedContent',
