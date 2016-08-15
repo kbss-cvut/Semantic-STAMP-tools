@@ -9,6 +9,7 @@ import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.*;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
@@ -20,10 +21,13 @@ import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -32,6 +36,7 @@ import java.net.URI;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RestConfig.class, MockServiceConfig.class, MockSesamePersistence.class})
@@ -39,6 +44,14 @@ public class DtoMapperTest {
 
     @Autowired
     private DtoMapper mapper;
+
+    @Autowired
+    private ReportBusinessService reportServiceMock;
+
+    @Before
+    public void setUp() {
+        Mockito.reset(reportServiceMock);
+    }
 
     @Test
     public void correctiveMeasureRequestToDtoCopiesBasicAttributes() {
@@ -366,7 +379,7 @@ public class DtoMapperTest {
 
         final SafetyIssueDto result = mapper.safetyIssueToSafetyIssueDto(issue);
         assertEquals(1, result.getBasedOn().size());
-        final OccurrenceReportDto dto = result.getBasedOn().iterator().next();
+        final ReportDto dto = result.getBasedOn().iterator().next();
         assertEquals(report.getUri(), dto.getUri());
         assertEquals(report.getKey(), dto.getKey());
         assertEquals(report.getFileNumber(), dto.getFileNumber());
@@ -390,5 +403,21 @@ public class DtoMapperTest {
         assertEquals(dto.getUri(), result.getUri());
         assertNotNull(result.getSafetyIssue());
         assertFalse(result.getSafetyIssue().getChildren().isEmpty());
+    }
+
+    @Test
+    public void safetyIssueDtoToSafetyIssueLoadsCorrectBasedOnReportInstancesForTheDtos() {
+        final SafetyIssueDto dto = new SafetyIssueDto();
+        dto.setName("SafetyIssueTest");
+        final OccurrenceReport basedOn = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        basedOn.setUri(Generator.generateUri());
+        basedOn.setKey(IdentificationUtils.generateKey());
+        dto.setBasedOn(Collections.singleton(basedOn.toReportDto()));
+        when(reportServiceMock.findByKey(basedOn.getKey())).thenReturn(basedOn);
+
+        final SafetyIssue result = mapper.safetyIssueDtoToSafetyIssue(dto);
+        assertNotNull(result);
+        assertEquals(1, result.getBasedOn().size());
+        assertEquals(basedOn, result.getBasedOn().iterator().next());
     }
 }

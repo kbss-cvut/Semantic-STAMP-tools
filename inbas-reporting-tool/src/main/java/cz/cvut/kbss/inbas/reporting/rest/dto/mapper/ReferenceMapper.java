@@ -1,7 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.rest.dto.mapper;
 
-import cz.cvut.kbss.inbas.reporting.model.Organization;
-import cz.cvut.kbss.inbas.reporting.service.OrganizationService;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
+import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import org.mapstruct.TargetType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,13 +11,12 @@ import org.springframework.stereotype.Service;
 public class ReferenceMapper {
 
     @Autowired
-    private OrganizationService organizationService;
+    private ReportBusinessService reportService;
 
-    public Organization resolve(String name, @TargetType Class<Organization> entityClass) {
-        if (name == null) {
+    public <T extends LogicalDocument> T resolve(ReportDto reference, @TargetType Class<T> entityClass) {
+        if (reference == null) {
             return null;
         }
-        final Organization org = organizationService.findByName(name);
-        return org != null ? org : new Organization(name);
+        return reportService.findByKey(reference.getKey());
     }
 }

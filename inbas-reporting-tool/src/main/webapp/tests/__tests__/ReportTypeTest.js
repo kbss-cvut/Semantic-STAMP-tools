@@ -3,6 +3,7 @@
 describe('ReportType', function () {
 
     var ReportType = require('../../js/model/ReportType'),
+        Constants = require('../../js/constants/Constants'),
         Generator = require('../environment/Generator').default,
         ReportFactory = require('../../js/model/ReportFactory'),
         OccurrenceReportController = require('../../js/components/report/occurrence/OccurrenceReportController'),
@@ -80,6 +81,24 @@ describe('ReportType', function () {
             expect(report.factorGraph.nodes.length).toEqual(originalFactorGraph.nodes.length);
             expect(report.factorGraph.edges.length).toEqual(originalFactorGraph.edges.length);
             expect(report.safetyIssue.basedOn.length).toEqual(1);
+        });
+
+        it('transforms base report to report list item before adding it as base', () => {
+            var basedOn = generateSafetyIssueBase(),
+                newBase = generateSafetyIssueBase(),
+                report, result;
+            report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {basedOn: basedOn});
+            expect(report.factorGraph).not.toBeNull();
+            report = ReportType.getReport(report);
+            result = report.addBase(newBase);
+            expect(result).toBeTruthy();
+            for (var i = 0; i < report.safetyIssue.basedOn.length; i++) {
+                expect(report.safetyIssue.basedOn[i].identification).toBeDefined();
+                expect(report.safetyIssue.basedOn[i].occurrence).not.toBeDefined();
+                expect(report.safetyIssue.basedOn[i].factorGraph).not.toBeDefined();
+                expect(report.safetyIssue.basedOn[i].correctiveMeasures).not.toBeDefined();
+                expect(report.safetyIssue.basedOn[i].javaClass).toEqual(Constants.OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS);
+            }
         })
     });
 });

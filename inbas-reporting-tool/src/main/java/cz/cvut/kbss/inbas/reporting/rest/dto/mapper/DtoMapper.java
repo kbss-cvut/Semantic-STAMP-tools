@@ -278,7 +278,7 @@ public abstract class DtoMapper {
         dto.setName(issue.getName());
         dto.setReferenceId(random.nextInt());
         if (issue.getBasedOn() != null) {
-            dto.setBasedOn(issue.getBasedOn().stream().map(this::occurrenceReportToOccurrenceReportDto)
+            dto.setBasedOn(issue.getBasedOn().stream().map(OccurrenceReport::toReportDto)
                                 .collect(Collectors.toSet()));
         }
         eventDtoRegistry.put(dto.getUri(), dto);

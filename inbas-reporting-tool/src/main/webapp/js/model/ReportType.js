@@ -45,6 +45,18 @@ class OccurrenceReport {
     renderMoreInfo() {
         return <CollapsibleText text={this.summary}/>;
     }
+
+    toReportListItem() {
+        var result = assign({}, this);
+        delete result.occurrence;
+        delete result.factorGraph;
+        delete result.correctiveMeasures;
+        result.identification = this.occurrence.name;
+        result.date = this.occurrence.startTime;
+        result.occurrenceCategory = this.occurrence.eventType;
+        result.javaClass = Constants.OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS;
+        return result;
+    }
 }
 
 class SafetyIssueReport {
@@ -76,6 +88,16 @@ class SafetyIssueReport {
         return <CollapsibleText text={this.summary}/>;
     }
 
+    toReportListItem() {
+        var result = assign({}, this);
+        delete result.safetyIssue;
+        delete result.factorGraph;
+        delete result.correctiveMeasures;
+        result.identification = this.safetyIssue.name;
+        result.javaClass = Constants.SAFETY_ISSUE_REPORT_LIST_ITEM_JAVA_CLASS;
+        return result;
+    }
+
     /**
      * Adds the specified report as this safety issue report's base.
      * @param baseReport The new base
@@ -85,9 +107,9 @@ class SafetyIssueReport {
             if (this.safetyIssue.basedOn.find((item) => item.key === baseReport.key)) {
                 return false;
             }
-            this.safetyIssue.basedOn.push(baseReport);
+            this.safetyIssue.basedOn.push(SafetyIssueReport._reportToListItem(baseReport));
         } else {
-            this.safetyIssue.basedOn = [baseReport];
+            this.safetyIssue.basedOn = [SafetyIssueReport._reportToListItem(baseReport)];
         }
         if (baseReport.factorGraph) {
             this._copyFactorGraph(baseReport);
@@ -96,6 +118,10 @@ class SafetyIssueReport {
             delete baseReport.factorGraph;
         }
         return true;
+    }
+
+    static _reportToListItem(baseReport) {
+        return ReportType.getReport(baseReport).toReportListItem();
     }
 
     _copyFactorGraph(source) {
@@ -136,10 +162,12 @@ var REPORT_TYPES = {};
 
 REPORT_TYPES[Vocabulary.OCCURRENCE_REPORT] = OccurrenceReport;
 REPORT_TYPES[Constants.OCCURRENCE_REPORT_JAVA_CLASS] = OccurrenceReport;
+REPORT_TYPES[Constants.OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS] = OccurrenceReport;
 REPORT_TYPES[Vocabulary.SAFETY_ISSUE_REPORT] = SafetyIssueReport;
 REPORT_TYPES[Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS] = SafetyIssueReport;
+REPORT_TYPES[Constants.SAFETY_ISSUE_REPORT_LIST_ITEM_JAVA_CLASS] = SafetyIssueReport;
 
-module.exports = {
+var ReportType = {
 
     getDetailController: function (report) {
         return this._getReportClass(report).getDetailController();
@@ -171,3 +199,5 @@ module.exports = {
         return null;
     }
 };
+
+module.exports = ReportType;

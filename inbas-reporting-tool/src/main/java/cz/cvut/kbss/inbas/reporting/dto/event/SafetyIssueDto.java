@@ -2,7 +2,7 @@ package cz.cvut.kbss.inbas.reporting.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 
 import java.util.Set;
 
@@ -11,7 +11,7 @@ public class SafetyIssueDto extends EventDto {
 
     private String name;
 
-    private Set<OccurrenceReportDto> basedOn;
+    private Set<ReportDto> basedOn;
 
     public String getName() {
         return name;
@@ -21,11 +21,11 @@ public class SafetyIssueDto extends EventDto {
         this.name = name;
     }
 
-    public Set<OccurrenceReportDto> getBasedOn() {
+    public Set<ReportDto> getBasedOn() {
         return basedOn;
     }
 
-    public void setBasedOn(Set<OccurrenceReportDto> basedOn) {
+    public void setBasedOn(Set<ReportDto> basedOn) {
         this.basedOn = basedOn;
     }
 }

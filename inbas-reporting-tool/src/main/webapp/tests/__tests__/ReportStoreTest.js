@@ -129,7 +129,8 @@ describe('Report store', function () {
         ReportStore.onAddSafetyIssueBase(issue.key, base);
         expect(reqMock.end).toHaveBeenCalled();
         expect(issue.safetyIssue.basedOn).toBeDefined();
-        expect(issue.safetyIssue.basedOn[0]).toEqual(base);
+        expect(issue.safetyIssue.basedOn[0].uri).toEqual(base.uri);
+        expect(issue.safetyIssue.basedOn[0].key).toEqual(base.key);
         expect(ReportStore.trigger).toHaveBeenCalled();
     });
 

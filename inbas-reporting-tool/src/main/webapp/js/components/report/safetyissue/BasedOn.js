@@ -45,7 +45,7 @@ var Row = (props) => {
         report = ReportType.getReport(props.report);
     return <tr>
         <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + report.key}
-                                      title={i18n('reports.open-tooltip')}>{report.getHeadline()}</a></td>
+                                      title={i18n('reports.open-tooltip')}>{report.identification}</a></td>
         <td className='report-row'>{report.renderMoreInfo()}</td>
         <td className='report-row content-center'>
             <Label title={i18n(report.toString())}>{i18n(report.getLabel())}</Label>
