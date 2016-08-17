@@ -5,10 +5,13 @@ describe('Factor detail dialog', function () {
 
     var React = require('react'),
         assign = require('object-assign'),
+        TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
+        Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
         FactorDetail = require('../../js/components/factor/FactorDetail'),
         ReportFactory = require('../../js/model/ReportFactory'),
+        DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default,
         callbacks,
         gantt = {
             calculateEndDate: function () {
@@ -33,6 +36,7 @@ describe('Factor detail dialog', function () {
             durationUnit: 'minute',
             statement: ReportFactory.createFactor()
         };
+        spyOn(Actions, 'loadEventTypes');
     });
 
     it('Updates factor with new values upon save', function () {
@@ -48,10 +52,9 @@ describe('Factor detail dialog', function () {
             '@value': value
         };
         spyOn(gantt, 'calculateEndDate').and.callThrough();
-        detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
-                                                  onClose={callbacks.onClose}
-                                                  onDelete={callbacks.onDelete}
-                                                  getReport={callbacks.getReport}/>);
+        detail = Environment.render(<FactorDetail scale={Constants.TIME_SCALES.MINUTE} factor={factor}
+                                                  onSave={callbacks.onSave} onClose={callbacks.onClose}
+                                                  onDelete={callbacks.onDelete} getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
         detail.onUpdateFactorDetails({stepData: [question]}, function () {
@@ -76,10 +79,9 @@ describe('Factor detail dialog', function () {
         question[Constants.FORM.HAS_ANSWER] = [{
             value: 'someValue'
         }];
-        detail = Environment.render(<FactorDetail scale='minute' factor={factor} onSave={callbacks.onSave}
-                                                  onClose={callbacks.onClose}
-                                                  onDelete={callbacks.onDelete}
-                                                  getReport={callbacks.getReport}/>);
+        detail = Environment.render(<FactorDetail scale={Constants.TIME_SCALES.MINUTE} factor={factor}
+                                                  onSave={callbacks.onSave} onClose={callbacks.onClose}
+                                                  onDelete={callbacks.onDelete} getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
         detail.onUpdateFactorDetails({stepData: [question]}, function () {
@@ -89,10 +91,26 @@ describe('Factor detail dialog', function () {
     });
 
     it('Calculates event duration based on scale', () => {
-        var detail = Environment.render(<FactorDetail scale='second' factor={factor} onSave={callbacks.onSave}
-                                                      onClose={callbacks.onClose}
-                                                      onDelete={callbacks.onDelete}
-                                                      getReport={callbacks.getReport}/>);
+        var detail = Environment.render(<FactorDetail scale={Constants.TIME_SCALES.SECOND} factor={factor}
+                                                      onSave={callbacks.onSave} onClose={callbacks.onClose}
+                                                      onDelete={callbacks.onDelete} getReport={callbacks.getReport}/>);
         expect(detail.state.duration).toEqual(factor.duration * 60);    // factor duration is in minutes
-    })
+    });
+
+    it('shows start time picker when absolute scale is used', () => {
+        var detail = Environment.render(<FactorDetail scale={Constants.TIME_SCALES.MINUTE} factor={factor}
+                                                      onSave={callbacks.onSave} onClose={callbacks.onClose}
+                                                      show={true}
+                                                      onDelete={callbacks.onDelete} getReport={callbacks.getReport}/>),
+            pickers = TestUtils.scryRenderedComponentsWithType(detail._modalContent, DateTimePicker);
+        expect(pickers.length).toEqual(1);
+    });
+
+    it('shows no start time picker when relative scale is used', () => {
+        var detail = Environment.render(<FactorDetail scale={Constants.TIME_SCALES.RELATIVE} factor={factor}
+                                                      onSave={callbacks.onSave} onClose={callbacks.onClose} show={true}
+                                                      onDelete={callbacks.onDelete} getReport={callbacks.getReport}/>),
+            pickers = TestUtils.scryRenderedComponentsWithType(detail._modalContent, DateTimePicker);
+        expect(pickers.length).toEqual(0);
+    });
 });
