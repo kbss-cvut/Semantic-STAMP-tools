@@ -8,6 +8,7 @@ var Modal = require('react-bootstrap').Modal;
 var Panel = require('react-bootstrap').Panel;
 var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
+var JsonLdUtils = require('jsonld-utils').default;
 
 var Input = require('../Input');
 var Select = require('../Select');
@@ -51,7 +52,7 @@ var Factors = React.createClass({
             currentLinkTarget: null,
             showFactorDialog: false,
             currentFactor: null,
-            factorTypeOptions: Utils.processSelectOptions(OptionsStore.getOptions('factorType')),
+            factorTypeOptions: JsonLdUtils.processSelectOptions(OptionsStore.getOptions('factorType')),
             showDeleteLinkDialog: false
         }
     },
@@ -83,7 +84,7 @@ var Factors = React.createClass({
 
     _factorTypesLoaded: function (type, data) {
         if (type === 'factorType') {
-            this.setState({factorTypeOptions: Utils.processSelectOptions(data)});
+            this.setState({factorTypeOptions: JsonLdUtils.processSelectOptions(data)});
         }
     },
 

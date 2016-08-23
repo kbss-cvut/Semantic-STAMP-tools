@@ -6,11 +6,11 @@
 var React = require('react');
 var Reflux = require('reflux');
 var Button = require('react-bootstrap').Button;
+var JsonLdUtils = require('jsonld-utils').default;
 
 var Constants = require('../../constants/Constants');
 var injectIntl = require('../../utils/injectIntl');
 var I18nMixin = require('../../i18n/I18nMixin');
-var JsonLdUtils = require('../../utils/JsonLdUtils').default;
 var OptionsStore = require('../../stores/OptionsStore');
 var ReportType = require('../../model/ReportType');
 var Select = require('../Select');
