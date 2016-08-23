@@ -7,7 +7,7 @@ describe('Occurrence classification', () => {
         Generator = require('../environment/Generator').default,
         OccurrenceClassification = require('../../js/components/report/occurrence/OccurrenceClassification'),
         TypeaheadStore = require('../../js/stores/TypeaheadStore'),
-        Utils = require('../../js/utils/Utils'),
+        JsonLdUtils = require('jsonld-utils').default,
         Actions = require('../../js/actions/Actions'),
         report, onChange;
 
@@ -21,10 +21,10 @@ describe('Occurrence classification', () => {
 
     it('processes occurrence category options when getting them from store on init', () => {
         spyOn(TypeaheadStore, 'getOccurrenceCategories').and.returnValue(Generator.getJsonLdSample());
-        spyOn(Utils, 'processTypeaheadOptions').and.callThrough();
+        spyOn(JsonLdUtils, 'processTypeaheadOptions').and.callThrough();
         Environment.render(<OccurrenceClassification report={report} onChange={onChange}/>);
 
-        expect(Utils.processTypeaheadOptions).toHaveBeenCalled();
+        expect(JsonLdUtils.processTypeaheadOptions).toHaveBeenCalled();
     });
 
     it('processes occurrence category options when triggered from store on load', () => {
@@ -33,10 +33,10 @@ describe('Occurrence classification', () => {
             data: Generator.getJsonLdSample()
         };
         spyOn(TypeaheadStore, 'getOccurrenceCategories').and.returnValue([]);
-        spyOn(Utils, 'processTypeaheadOptions').and.callThrough();
+        spyOn(JsonLdUtils, 'processTypeaheadOptions').and.callThrough();
         Environment.render(<OccurrenceClassification report={report} onChange={onChange}/>);
         TypeaheadStore.trigger(trigger);
 
-        expect(Utils.processTypeaheadOptions).toHaveBeenCalledWith(Generator.getJsonLdSample());
+        expect(JsonLdUtils.processTypeaheadOptions).toHaveBeenCalledWith(Generator.getJsonLdSample());
     });
 });
