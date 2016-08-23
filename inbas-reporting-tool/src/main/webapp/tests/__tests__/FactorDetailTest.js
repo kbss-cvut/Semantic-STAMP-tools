@@ -121,7 +121,6 @@ describe('Factor detail dialog', function () {
             pickers = TestUtils.scryRenderedComponentsWithType(detail._modalContent, DateTimePicker);
         expect(pickers.length).toEqual(0);
     });
-    });
 
     it('updates statement question answer tree upon wizard finish', () => {
         var detail = Environment.render(<FactorDetail scale='second' factor={factor} onSave={callbacks.onSave}
