@@ -4,12 +4,12 @@ var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-bootstrap-typeahead');
 var injectIntl = require('../../utils/injectIntl');
+var JsonLdUtils = require('jsonld-utils').default;
 
 var Actions = require('../../actions/Actions');
 var TypeaheadResultList = require('./EventTypeTypeaheadResultList').default;
 var TypeaheadStore = require('../../stores/TypeaheadStore');
 var I18nMixin = require('../../i18n/I18nMixin');
-var Utils = require('../../utils/Utils');
 
 var EventTypeTypeahead = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
@@ -33,7 +33,7 @@ var EventTypeTypeahead = React.createClass({
     },
     onEventsLoaded: function () {
         var options = TypeaheadStore.getEventTypes();
-        this.setState({options: Utils.processTypeaheadOptions(options)});
+        this.setState({options: JsonLdUtils.processTypeaheadOptions(options)});
     },
 
     focus: function () {

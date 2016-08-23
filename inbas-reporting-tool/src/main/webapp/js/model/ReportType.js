@@ -2,10 +2,9 @@
 
 var React = require('react');
 var assign = require('object-assign');
+var JsonLdUtils = require('jsonld-utils').default;
 var CollapsibleText = require('../components/CollapsibleText');
 var Constants = require('../constants/Constants');
-var JsonLdUtils = require('../utils/JsonLdUtils').default;
-var Utils = require('../utils/Utils');
 var Vocabulary = require('../constants/Vocabulary');
 
 class OccurrenceReport {
@@ -167,7 +166,7 @@ REPORT_TYPES[Vocabulary.SAFETY_ISSUE_REPORT] = SafetyIssueReport;
 REPORT_TYPES[Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS] = SafetyIssueReport;
 REPORT_TYPES[Constants.SAFETY_ISSUE_REPORT_LIST_ITEM_JAVA_CLASS] = SafetyIssueReport;
 
-var ReportType = {
+module.exports = {
 
     getDetailController: function (report) {
         return this._getReportClass(report).getDetailController();
@@ -199,5 +198,3 @@ var ReportType = {
         return null;
     }
 };
-
-module.exports = ReportType;

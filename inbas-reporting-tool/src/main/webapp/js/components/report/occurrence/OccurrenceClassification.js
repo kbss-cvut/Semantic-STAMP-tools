@@ -1,13 +1,10 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
 var Reflux = require('reflux');
 var Typeahead = require('react-bootstrap-typeahead');
 var TypeaheadResultList = require('../../typeahead/EventTypeTypeaheadResultList').default;
+var JsonLdUtils = require('jsonld-utils').default;
 
 var injectIntl = require('../../../utils/injectIntl');
 
@@ -19,7 +16,6 @@ var I18nMixin = require('../../../i18n/I18nMixin');
 var Constants = require('../../../constants/Constants');
 var Vocabulary = require('../../../constants/Vocabulary');
 var ExternalLink = require('../../misc/ExternalLink').default;
-var Utils = require('../../../utils/Utils');
 
 var OccurrenceClassification = React.createClass({
     mixins: [Reflux.ListenerMixin, I18nMixin],
@@ -32,7 +28,7 @@ var OccurrenceClassification = React.createClass({
     getInitialState: function () {
         return {
             occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
-            occurrenceCategories: Utils.processTypeaheadOptions(TypeaheadStore.getOccurrenceCategories())
+            occurrenceCategories: JsonLdUtils.processTypeaheadOptions(TypeaheadStore.getOccurrenceCategories())
         };
     },
 
@@ -52,8 +48,8 @@ var OccurrenceClassification = React.createClass({
         return this.state.occurrenceClasses.map((item) => {
             return {
                 value: item['@id'],
-                label: Utils.getJsonAttValue(item, Vocabulary.RDFS_LABEL),
-                title: Utils.getJsonAttValue(item, Vocabulary.RDFS_COMMENT)
+                label: JsonLdUtils.getJsonAttValue(item, Vocabulary.RDFS_LABEL),
+                title: JsonLdUtils.getJsonAttValue(item, Vocabulary.RDFS_COMMENT)
             };
         });
     },
@@ -63,7 +59,7 @@ var OccurrenceClassification = React.createClass({
             return;
         }
         var options = data.data;
-        this.setState({occurrenceCategories: Utils.processTypeaheadOptions(options)});
+        this.setState({occurrenceCategories: JsonLdUtils.processTypeaheadOptions(options)});
         var selected = this._resolveSelectedCategory();
         if (selected) {
             this.refs.occurrenceCategory.selectOption(selected);

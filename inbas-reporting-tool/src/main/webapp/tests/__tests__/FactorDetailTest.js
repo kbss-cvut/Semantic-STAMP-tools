@@ -6,6 +6,7 @@ describe('Factor detail dialog', function () {
     var React = require('react'),
         assign = require('object-assign'),
         TestUtils = require('react-addons-test-utils'),
+        QuestionAnswerProcessor = require('semforms').QuestionAnswerProcessor,
         Environment = require('../environment/Environment'),
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
@@ -45,25 +46,28 @@ describe('Factor detail dialog', function () {
                 name: 'Runway Incursion',
                 id: 'http://incursion'
             },
-            question = {},
-            value = 'SomeImportantValue';
-        question[Constants.FORM.HAS_ANSWER] = [{}];
-        question[Constants.FORM.HAS_ANSWER][0][Constants.FORM.HAS_DATA_VALUE] = {
-            '@value': value
-        };
+            value = 'SomeImportantValue',
+            statement = {
+                question: {
+                    subQuestions: [{
+                        answers: [{
+                            textValue: value
+                        }]
+                    }]
+                }
+            };
         spyOn(gantt, 'calculateEndDate').and.callThrough();
         detail = Environment.render(<FactorDetail scale={Constants.TIME_SCALES.MINUTE} factor={factor}
                                                   onSave={callbacks.onSave} onClose={callbacks.onClose}
                                                   onDelete={callbacks.onDelete} getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
-        detail.onUpdateFactorDetails({stepData: [question]}, function () {
-        });
+        detail.setState({statement: statement});
         detail.onSave();
         expect(gantt.calculateEndDate).toHaveBeenCalledWith(factor.start_date, newDuration, gantt.config.duration_unit);
         expect(factor.end_date).toBeDefined();
         expect(callbacks.onSave).toHaveBeenCalled();
-        expect(factor.statement.question.subQuestions[0]).toBeDefined();
+        expect(factor.statement).toEqual(statement);
         expect(factor.statement.question.subQuestions[0].answers[0]).toBeDefined();
         expect(factor.statement.question.subQuestions[0].answers[0].textValue).toEqual(value);
     });
@@ -75,17 +79,21 @@ describe('Factor detail dialog', function () {
                 id: 'http://incursion'
             },
             origFactor = assign({}, factor),
-            question = {};
-        question[Constants.FORM.HAS_ANSWER] = [{
-            value: 'someValue'
-        }];
+            statement = {
+                question: {
+                    subQuestions: [{
+                        answers: [{
+                            textValue: "someValue"
+                        }]
+                    }]
+                }
+            };
         detail = Environment.render(<FactorDetail scale={Constants.TIME_SCALES.MINUTE} factor={factor}
                                                   onSave={callbacks.onSave} onClose={callbacks.onClose}
                                                   onDelete={callbacks.onDelete} getReport={callbacks.getReport}/>);
         detail.onDurationSet({target: {value: newDuration}});
         detail.onEventTypeChange(eventType);
-        detail.onUpdateFactorDetails({stepData: [question]}, function () {
-        });
+        detail.setState({statement: statement});
 
         expect(factor).toEqual(origFactor);
     });
@@ -112,5 +120,21 @@ describe('Factor detail dialog', function () {
                                                       onDelete={callbacks.onDelete} getReport={callbacks.getReport}/>),
             pickers = TestUtils.scryRenderedComponentsWithType(detail._modalContent, DateTimePicker);
         expect(pickers.length).toEqual(0);
+    });
+    });
+
+    it('updates statement question answer tree upon wizard finish', () => {
+        var detail = Environment.render(<FactorDetail scale='second' factor={factor} onSave={callbacks.onSave}
+                                                      onClose={callbacks.onClose}
+                                                      onDelete={callbacks.onDelete}
+                                                      getReport={callbacks.getReport}/>),
+            question = {uri: 'http://very.important.question'},
+            wizardCallback = jasmine.createSpy('wizardCallback');
+        spyOn(QuestionAnswerProcessor, 'buildQuestionAnswerModel').and.returnValue(question);
+        detail.onUpdateFactorDetails({data: {}, stepData: []}, wizardCallback);
+
+        expect(QuestionAnswerProcessor.buildQuestionAnswerModel).toHaveBeenCalled();
+        expect(detail.state.statement.question).toEqual(question);
+        expect(wizardCallback).toHaveBeenCalled();
     });
 });

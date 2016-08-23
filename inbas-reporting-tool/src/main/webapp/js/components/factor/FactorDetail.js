@@ -1,7 +1,6 @@
-/**
- * @jsx
- */
 'use strict';
+
+var QuestionAnswerProcessor = require('semforms').QuestionAnswerProcessor;
 
 var React = require('react');
 var assign = require('object-assign');
@@ -14,6 +13,7 @@ var Label = require('react-bootstrap').Label;
 var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
 var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
+var JsonLdUtils = require('jsonld-utils').default;
 
 var Constants = require('../../constants/Constants');
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
@@ -28,7 +28,6 @@ var WizardGenerator = require('../wizard/generator/WizardGenerator');
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
 var EventTypeFactory = require('../../model/EventTypeFactory');
-var QuestionAnswerProcessor = require('../../model/QuestionAnswerProcessor').default;
 
 function convertDurationToCurrentUnit(factor) {
     var targetUnit = gantt.config.duration_unit;
@@ -58,7 +57,7 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: Utils.jsonLdToTypeaheadOption(EventTypeFactory.resolveEventType(factor.statement.eventType)),
+            eventType: JsonLdUtils.jsonLdToTypeaheadOption(EventTypeFactory.resolveEventType(factor.statement.eventType)),
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement,
