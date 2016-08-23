@@ -1,7 +1,6 @@
-/**
- * @jsx
- */
 'use strict';
+
+var QuestionAnswerProcessor = require('semforms').QuestionAnswerProcessor;
 
 var React = require('react');
 var assign = require('object-assign');
@@ -27,7 +26,6 @@ var WizardGenerator = require('../wizard/generator/WizardGenerator');
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
 var EventTypeFactory = require('../../model/EventTypeFactory');
-var QuestionAnswerProcessor = require('../../model/QuestionAnswerProcessor').default;
 
 function convertDurationToCurrentUnit(factor) {
     var targetUnit = gantt.config.duration_unit;
