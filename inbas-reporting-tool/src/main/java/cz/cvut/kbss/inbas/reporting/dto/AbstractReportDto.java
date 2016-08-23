@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.dto;
 
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 
 import java.net.URI;
@@ -8,7 +9,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractReportDto {
+public abstract class AbstractReportDto implements LogicalDocument {
 
     private URI uri;
 
@@ -30,6 +31,7 @@ public abstract class AbstractReportDto {
 
     private Set<String> types;
 
+    @Override
     public URI getUri() {
         return uri;
     }
@@ -38,22 +40,27 @@ public abstract class AbstractReportDto {
         this.uri = uri;
     }
 
+    @Override
     public String getKey() {
         return key;
     }
 
+    @Override
     public void setKey(String key) {
         this.key = key;
     }
 
+    @Override
     public Long getFileNumber() {
         return fileNumber;
     }
 
+    @Override
     public void setFileNumber(Long fileNumber) {
         this.fileNumber = fileNumber;
     }
 
+    @Override
     public Person getAuthor() {
         return author;
     }
@@ -62,6 +69,7 @@ public abstract class AbstractReportDto {
         this.author = author;
     }
 
+    @Override
     public Date getDateCreated() {
         return dateCreated;
     }
@@ -70,6 +78,7 @@ public abstract class AbstractReportDto {
         this.dateCreated = dateCreated;
     }
 
+    @Override
     public Date getLastModified() {
         return lastModified;
     }
@@ -78,6 +87,7 @@ public abstract class AbstractReportDto {
         this.lastModified = lastModified;
     }
 
+    @Override
     public Person getLastModifiedBy() {
         return lastModifiedBy;
     }
@@ -86,6 +96,7 @@ public abstract class AbstractReportDto {
         this.lastModifiedBy = lastModifiedBy;
     }
 
+    @Override
     public Integer getRevision() {
         return revision;
     }
