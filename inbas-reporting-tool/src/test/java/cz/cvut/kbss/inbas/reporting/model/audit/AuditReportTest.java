@@ -7,8 +7,7 @@ import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class AuditReportTest {
 
@@ -37,5 +36,14 @@ public class AuditReportTest {
         final AuditReport original = AuditReportGenerator.generateAuditReport(true);
         final ReportDto dto = original.toReportDto();
         assertTrue(dto.getTypes().contains(Vocabulary.s_c_audit_report));
+    }
+
+    @Test
+    public void copyConstructorCopiesAudit() {
+        final AuditReport original = AuditReportGenerator.generateAuditReport(true);
+
+        final AuditReport copy = new AuditReport(original);
+        assertNotNull(copy.getAudit());
+        assertNotSame(original.getAudit(), copy.getAudit());
     }
 }

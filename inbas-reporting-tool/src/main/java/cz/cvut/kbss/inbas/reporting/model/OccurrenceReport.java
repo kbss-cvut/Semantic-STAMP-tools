@@ -7,7 +7,6 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,15 +44,13 @@ public class OccurrenceReport extends AbstractReport implements LogicalDocument,
     }
 
     public OccurrenceReport(OccurrenceReport other) {
-        Objects.requireNonNull(other);
-        this.fileNumber = other.fileNumber;
+        super(other);
         this.phase = other.phase;
         this.occurrence = Occurrence.copyOf(other.occurrence);
         this.severityAssessment = other.severityAssessment;
         if (other.responsibleDepartments != null) {
             this.responsibleDepartments = new HashSet<>(other.responsibleDepartments);
         }
-        this.summary = other.summary;
         if (other.correctiveMeasures != null) {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
                                                               .collect(Collectors.toSet());

@@ -25,9 +25,7 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
     }
 
     public SafetyIssueReport(SafetyIssueReport other) {
-        this.fileNumber = other.fileNumber;
-        this.summary = other.summary;
-        types.addAll(other.getTypes());
+        super(other);
         this.safetyIssue = SafetyIssue.copyOf(other.safetyIssue);
         if (other.getCorrectiveMeasures() != null) {
             this.correctiveMeasures = other.getCorrectiveMeasures().stream().map(CorrectiveMeasureRequest::new).collect(

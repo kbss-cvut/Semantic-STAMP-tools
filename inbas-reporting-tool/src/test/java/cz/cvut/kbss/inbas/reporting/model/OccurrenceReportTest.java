@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
+import cz.cvut.kbss.inbas.reporting.environment.util.TestUtils;
 import org.junit.Test;
 
 import java.net.URI;
@@ -77,12 +78,7 @@ public class OccurrenceReportTest {
 
         final OccurrenceReport copy = new OccurrenceReport(original);
         assertNotNull(copy.getCorrectiveMeasures());
-        assertEquals(original.getCorrectiveMeasures().size(), copy.getCorrectiveMeasures().size());
-        for (CorrectiveMeasureRequest r : original.getCorrectiveMeasures()) {
-            for (CorrectiveMeasureRequest rr : copy.getCorrectiveMeasures()) {
-                assertNotSame(r, rr);
-            }
-        }
+        TestUtils.verifyCorrectiveMeasures(original.getCorrectiveMeasures(), copy.getCorrectiveMeasures());
     }
 
     @Test
