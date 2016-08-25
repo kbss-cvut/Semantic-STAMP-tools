@@ -4,7 +4,10 @@ import cz.cvut.kbss.inbas.reporting.dto.reportlist.AuditReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.model.AbstractReport;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
-import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.jopa.model.annotations.FetchType;
+import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
+import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
 
 import java.io.Serializable;
 
@@ -12,7 +15,7 @@ import java.io.Serializable;
 public class AuditReport extends AbstractReport implements Serializable {
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.s_p_documents, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_documents, fetch = FetchType.EAGER)
     private Audit audit;
 
     public AuditReport() {

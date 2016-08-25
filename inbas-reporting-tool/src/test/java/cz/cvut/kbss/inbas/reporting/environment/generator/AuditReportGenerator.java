@@ -4,9 +4,7 @@ import cz.cvut.kbss.inbas.reporting.model.audit.Audit;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class AuditReportGenerator {
 
@@ -15,6 +13,7 @@ public class AuditReportGenerator {
         audit.setName("RandomAudit" + Generator.randomInt());
         audit.setStartDate(new Date(System.currentTimeMillis() - 1000 * 60 * 60));
         audit.setEndDate(new Date());
+        audit.setAuditee(Generator.generateOrganization());
         return audit;
     }
 
@@ -25,6 +24,21 @@ public class AuditReportGenerator {
             Generator.setReportAttributes(report);
         }
         return report;
+    }
+
+    public static List<AuditReport> generateAuditReportChain(boolean setAttributes) {
+        final List<AuditReport> result = new ArrayList<>();
+        AuditReport current = generateAuditReport(setAttributes);
+        result.add(current);
+        for (int i = 0; i < Generator.randomInt(1, 5); i++) {
+            final AuditReport newRevision = new AuditReport(current);
+            newRevision.setRevision(current.getRevision() + 1);
+            newRevision.setAuthor(current.getAuthor());
+            newRevision.setDateCreated(new Date());
+            result.add(newRevision);
+            current = newRevision;
+        }
+        return result;
     }
 
     public static Set<AuditFinding> generateFindings() {

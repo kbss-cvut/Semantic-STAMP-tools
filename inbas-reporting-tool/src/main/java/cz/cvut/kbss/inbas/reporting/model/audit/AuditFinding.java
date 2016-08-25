@@ -21,7 +21,7 @@ public class AuditFinding extends AbstractEntity {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_factor)
     private Set<URI> factors;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
     @Types
