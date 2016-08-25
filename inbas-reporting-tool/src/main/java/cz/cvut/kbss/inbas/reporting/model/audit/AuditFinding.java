@@ -59,6 +59,9 @@ public class AuditFinding extends AbstractEntity {
     }
 
     public Set<CorrectiveMeasureRequest> getCorrectiveMeasures() {
+        if (correctiveMeasures == null) {
+            this.correctiveMeasures = new HashSet<>();
+        }
         return correctiveMeasures;
     }
 

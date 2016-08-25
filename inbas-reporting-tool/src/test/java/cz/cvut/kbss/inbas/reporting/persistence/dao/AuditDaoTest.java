@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class AuditDaoTest extends BaseDaoTestRunner {
 
@@ -161,7 +160,7 @@ public class AuditDaoTest extends BaseDaoTestRunner {
         final CorrectiveMeasureRequest cm = new CorrectiveMeasureRequest();
         cm.setDescription("Corrective measure");
         cm.setResponsibleOrganizations(Collections.singleton(audit.getAuditee()));
-        audit.getFindings().forEach(f -> f.setCorrectiveMeasures(Collections.singleton(cm)));
+        audit.getFindings().forEach(f -> f.setCorrectiveMeasures(new HashSet<>(Collections.singletonList(cm))));
         dao.persist(audit);
 
         final List<AuditFinding> emptyFindings = new ArrayList<>();
@@ -176,7 +175,7 @@ public class AuditDaoTest extends BaseDaoTestRunner {
         try {
             for (AuditFinding finding : emptyFindings) {
                 final AuditFinding af = em.find(AuditFinding.class, finding.getUri());
-                assertNull(af.getCorrectiveMeasures());
+                assertTrue(af.getCorrectiveMeasures().isEmpty());
             }
             assertNotNull(em.find(CorrectiveMeasureRequest.class, cm.getUri()));
         } finally {

@@ -104,6 +104,9 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     }
 
     public Set<Organization> getResponsibleOrganizations() {
+        if (responsibleOrganizations == null) {
+            this.responsibleOrganizations = new HashSet<>();
+        }
         return responsibleOrganizations;
     }
 

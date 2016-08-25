@@ -5,14 +5,10 @@ import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.SafetyIssueReportDao;
 import cz.cvut.kbss.inbas.reporting.service.SafetyIssueReportService;
-import cz.cvut.kbss.inbas.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.reporting.service.validation.ReportValidator;
-import cz.cvut.kbss.inbas.reporting.util.Constants;
-import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.Objects;
 
 @Repository
@@ -23,7 +19,7 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
     private SafetyIssueReportDao dao;
 
     @Autowired
-    private SecurityUtils securityUtils;
+    private ReportMetadataService reportMetadataService;
 
     @Autowired
     private ReportValidator validator;
@@ -35,25 +31,13 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
 
     @Override
     protected void prePersist(SafetyIssueReport instance) {
-        initReportData(instance);
+        reportMetadataService.initMetadataForPersist(instance);
         validator.validateForPersist(instance);
-    }
-
-    private void initReportData(SafetyIssueReport instance) {
-        initReportProvenance(instance);
-        instance.setFileNumber(IdentificationUtils.generateFileNumber());
-        instance.setRevision(Constants.INITIAL_REVISION);
-    }
-
-    private void initReportProvenance(SafetyIssueReport instance) {
-        instance.setAuthor(securityUtils.getCurrentUser());
-        instance.setDateCreated(new Date());
     }
 
     @Override
     protected void preUpdate(SafetyIssueReport instance) {
-        instance.setLastModifiedBy(securityUtils.getCurrentUser());
-        instance.setLastModified(new Date());
+        reportMetadataService.initMetadataForUpdate(instance);
     }
 
     @Override
@@ -76,7 +60,7 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
         }
         final SafetyIssueReport newRevision = new SafetyIssueReport(latest);
         newRevision.setRevision(latest.getRevision() + 1);
-        initReportProvenance(newRevision);
+        reportMetadataService.initReportProvenanceMetadata(newRevision);
         dao.persist(newRevision);
         return newRevision;
     }
