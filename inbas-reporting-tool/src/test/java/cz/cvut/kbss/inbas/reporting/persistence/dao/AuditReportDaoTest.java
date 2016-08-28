@@ -86,7 +86,7 @@ public class AuditReportDaoTest extends BaseDaoTestRunner {
         final Person author = Generator.getPerson();
         persistPerson(author);
         for (int i = 0; i < Generator.randomInt(5, 10); i++) {
-            final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(true);
+            final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(author);
             chain.forEach(r -> r.setAuthor(author));
             dao.persist(chain);
             result.add(chain.get(chain.size() - 1));    // Last one is the latest revision

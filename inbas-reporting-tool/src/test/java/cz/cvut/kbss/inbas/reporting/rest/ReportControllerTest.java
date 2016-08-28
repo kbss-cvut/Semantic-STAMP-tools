@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
+import cz.cvut.kbss.inbas.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
@@ -17,6 +18,7 @@ import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
@@ -90,6 +92,12 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         }
         for (int i = 0; i < count; i++) {
             final SafetyIssueReport r = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
+            r.setUri(Generator.generateUri());
+            r.setAuthor(author);
+            dtos.add(r.toReportDto());
+        }
+        for (int i = 0; i < count; i++) {
+            final AuditReport r = AuditReportGenerator.generateAuditReport(true);
             r.setUri(Generator.generateUri());
             r.setAuthor(author);
             dtos.add(r.toReportDto());

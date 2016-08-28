@@ -1,8 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.environment.generator;
 
+import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.audit.Audit;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
+import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 
 import java.util.*;
 
@@ -26,11 +29,16 @@ public class AuditReportGenerator {
         return report;
     }
 
-    public static List<AuditReport> generateAuditReportChain(boolean setAttributes) {
+    public static List<AuditReport> generateAuditReportChain(Person author) {
         final List<AuditReport> result = new ArrayList<>();
-        AuditReport current = generateAuditReport(setAttributes);
+        AuditReport current = generateAuditReport(false);
+        current.setRevision(Constants.INITIAL_REVISION);
+        final Long fileNumber = IdentificationUtils.generateFileNumber();
         result.add(current);
         for (int i = 0; i < Generator.randomInt(1, 5); i++) {
+            current.setKey(IdentificationUtils.generateKey());
+            current.setFileNumber(fileNumber);
+            current.setAuthor(author);
             final AuditReport newRevision = new AuditReport(current);
             newRevision.setRevision(current.getRevision() + 1);
             newRevision.setAuthor(current.getAuthor());

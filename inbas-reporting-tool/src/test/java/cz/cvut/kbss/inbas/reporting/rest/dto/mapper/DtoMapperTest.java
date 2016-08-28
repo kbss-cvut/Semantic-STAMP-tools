@@ -1,10 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.rest.dto.mapper;
 
 import cz.cvut.kbss.inbas.reporting.config.RestConfig;
-import cz.cvut.kbss.inbas.reporting.dto.AbstractReportDto;
-import cz.cvut.kbss.inbas.reporting.dto.CorrectiveMeasureRequestDto;
-import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
-import cz.cvut.kbss.inbas.reporting.dto.SafetyIssueReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.*;
 import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
@@ -12,11 +9,13 @@ import cz.cvut.kbss.inbas.reporting.dto.event.*;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
+import cz.cvut.kbss.inbas.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
@@ -419,5 +418,15 @@ public class DtoMapperTest {
         assertNotNull(result);
         assertEquals(1, result.getBasedOn().size());
         assertEquals(basedOn, result.getBasedOn().iterator().next());
+    }
+
+    @Test
+    public void reportToReportDtoTransformAuditReportToAuditReportDto() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+
+        final LogicalDocument dto = mapper.reportToReportDto(report);
+        assertTrue(dto instanceof AuditReportDto);
+        final AuditReportDto result = (AuditReportDto) dto;
+        assertEquals(report.getUri(), result.getUri());
     }
 }

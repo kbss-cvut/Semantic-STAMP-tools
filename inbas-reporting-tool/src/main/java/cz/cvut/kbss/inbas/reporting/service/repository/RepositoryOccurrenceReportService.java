@@ -68,7 +68,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     public OccurrenceReport createNewRevision(Long fileNumber) {
         final OccurrenceReport latest = findLatestRevision(fileNumber);
         if (latest == null) {
-            throw NotFoundException.create("OccurrenceReport", fileNumber);
+            throw NotFoundException.create("Occurrence report chain", fileNumber);
         }
         final OccurrenceReport newRevision = new OccurrenceReport(latest);
         newRevision.setRevision(latest.getRevision() + 1);

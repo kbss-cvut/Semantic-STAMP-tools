@@ -10,6 +10,8 @@ import cz.cvut.kbss.inbas.reporting.service.validation.AuditReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class RepositoryAuditReportService extends KeySupportingRepositoryService<AuditReport>
         implements AuditReportService {
@@ -58,26 +60,38 @@ public class RepositoryAuditReportService extends KeySupportingRepositoryService
 
     @Override
     public AuditReport findLatestRevision(Long fileNumber) {
-        return null;
+        Objects.requireNonNull(fileNumber);
+        return reportDao.findLatestRevision(fileNumber);
     }
 
     @Override
     public void removeReportChain(Long fileNumber) {
-
+        Objects.requireNonNull(fileNumber);
+        reportDao.removeReportChain(fileNumber);
     }
 
     @Override
     public AuditReport createNewRevision(Long fileNumber) {
-        return null;
+        final AuditReport latest = findLatestRevision(fileNumber);
+        if (latest == null) {
+            throw NotFoundException.create("Audit report chain", fileNumber);
+        }
+        final AuditReport newRevision = new AuditReport(latest);
+        reportMetadataService.initReportProvenanceMetadata(newRevision);
+        newRevision.setRevision(latest.getRevision() + 1);
+        reportDao.persist(newRevision);
+        return newRevision;
     }
 
     @Override
     public AuditReport findRevision(Long fileNumber, Integer revision) {
-        return null;
+        Objects.requireNonNull(fileNumber);
+        Objects.requireNonNull(revision);
+        return reportDao.findRevision(fileNumber, revision);
     }
 
     @Override
     public void transitionToNextPhase(AuditReport report) {
-
+        // Do nothing, no phases for safety issue reports
     }
 }

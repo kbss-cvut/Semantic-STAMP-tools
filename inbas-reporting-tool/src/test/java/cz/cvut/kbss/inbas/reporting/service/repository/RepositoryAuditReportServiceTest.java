@@ -21,6 +21,7 @@ import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -146,5 +147,72 @@ public class RepositoryAuditReportServiceTest extends BaseServiceTestRunner {
         } finally {
             em.close();
         }
+    }
+
+    @Test
+    public void findLatestRevisionLoadsLatestRevisionOfAReportChain() {
+        final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(author);
+        reportDao.persist(chain);
+
+        final AuditReport latest = chain.get(chain.size() - 1);
+        final AuditReport result = service.findLatestRevision(latest.getFileNumber());
+        assertNotNull(result);
+        assertEquals(latest.getUri(), result.getUri());
+    }
+
+    @Test
+    public void deleteReportChainRemovesChainWithSpecifiedFileNumber() {
+        final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(author);
+        reportDao.persist(chain);
+
+        service.removeReportChain(chain.get(0).getFileNumber());
+        chain.forEach(r -> assertNull(reportDao.find(r.getUri())));
+    }
+
+    @Test
+    public void createNewRevisionsPersistNewRevisionOfAuditReport() {
+        final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(author);
+        reportDao.persist(chain);
+
+        final AuditReport latest = chain.get(chain.size() - 1);
+        final AuditReport newRevision = service.createNewRevision(latest.getFileNumber());
+        assertNotNull(newRevision);
+        assertEquals(latest.getFileNumber(), newRevision.getFileNumber());
+        assertEquals(latest.getRevision() + 1, newRevision.getRevision().intValue());
+        assertNotNull(service.findByKey(newRevision.getKey()));
+    }
+
+    @Test
+    public void createNewRevisionThrowsNotFoundForUnknownFileNumber() {
+        final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(author);
+        reportDao.persist(chain);
+        final Long unknownFileNumber = System.currentTimeMillis();
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("Audit report chain identified by " + unknownFileNumber + " not found.");
+        service.createNewRevision(unknownFileNumber);
+    }
+
+    @Test
+    public void findRevisionReturnsMatchingReportRevision() {
+        final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(author);
+        reportDao.persist(chain);
+
+        final AuditReport report = chain.get(Generator.randomIndex(chain));
+        final AuditReport result = service.findRevision(report.getFileNumber(), report.getRevision());
+        assertNotNull(result);
+        assertEquals(report.getUri(), result.getUri());
+    }
+
+    @Test
+    public void transitionToNextPhaseDoesNothing() {
+        final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(author);
+        reportDao.persist(chain);
+
+        final AuditReport latest = chain.get(chain.size() - 1);
+        service.transitionToNextPhase(latest);
+        final AuditReport result = service.find(latest.getUri());
+        assertEquals(latest.getRevision(), result.getRevision());
+        assertEquals(latest.getLastModified(), result.getLastModified());
+        assertEquals(latest.getLastModifiedBy(), result.getLastModifiedBy());
     }
 }

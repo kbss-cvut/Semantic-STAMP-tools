@@ -7,6 +7,7 @@ import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SafetyIssueReportGenerator {
@@ -39,6 +40,7 @@ public class SafetyIssueReportGenerator {
         for (int i = 1; i < count; i++) {
             final SafetyIssueReport r = new SafetyIssueReport(orig);
             r.setRevision(orig.getRevision() + i);
+            r.setDateCreated(new Date());
             r.setAuthor(author);
             chain.add(r);
         }

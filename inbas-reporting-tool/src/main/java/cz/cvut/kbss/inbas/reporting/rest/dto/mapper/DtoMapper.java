@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest.dto.mapper;
 
+import cz.cvut.kbss.inbas.reporting.dto.AuditReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.CorrectiveMeasureRequestDto;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.SafetyIssueReportDto;
@@ -8,6 +9,7 @@ import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.*;
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
@@ -40,6 +42,10 @@ public abstract class DtoMapper {
         final Map<Class<?>, Class<?>> map = new HashMap<>();
         map.put(OccurrenceReport.class, OccurrenceReportDto.class);
         map.put(OccurrenceReportDto.class, OccurrenceReport.class);
+        map.put(SafetyIssueReport.class, SafetyIssueReportDto.class);
+        map.put(SafetyIssueReportDto.class, SafetyIssueReport.class);
+        map.put(AuditReport.class, AuditReportDto.class);
+        map.put(AuditReportDto.class, AuditReport.class);
         map.put(CorrectiveMeasureRequest.class, CorrectiveMeasureRequestDto.class);
         map.put(CorrectiveMeasureRequestDto.class, CorrectiveMeasureRequest.class);
         map.put(Person.class, PersonDto.class);
@@ -80,6 +86,9 @@ public abstract class DtoMapper {
         if (report instanceof SafetyIssueReport) {
             return safetyIssueReportToSafetyIssueReportDto((SafetyIssueReport) report);
         }
+        if (report instanceof AuditReport) {
+            return auditReportToAuditReportDto((AuditReport) report);
+        }
         return report;
     }
 
@@ -93,6 +102,9 @@ public abstract class DtoMapper {
         }
         if (dto instanceof SafetyIssueReportDto) {
             return safetyIssueReportDtoToSafetyIssueReport((SafetyIssueReportDto) dto);
+        }
+        if (dto instanceof AuditReportDto) {
+            return auditReportDtoToAuditReport((AuditReportDto) dto);
         }
         return dto;
     }
@@ -110,6 +122,10 @@ public abstract class DtoMapper {
 
     @Mapping(source = "factorGraph", target = "safetyIssue")
     public abstract SafetyIssueReport safetyIssueReportDtoToSafetyIssueReport(SafetyIssueReportDto dto);
+
+    public abstract AuditReportDto auditReportToAuditReportDto(AuditReport report);
+
+    public abstract AuditReport auditReportDtoToAuditReport(AuditReportDto dto);
 
     public CorrectiveMeasureRequestDto correctiveMeasureRequestToDto(CorrectiveMeasureRequest req) {
         if (req == null) {

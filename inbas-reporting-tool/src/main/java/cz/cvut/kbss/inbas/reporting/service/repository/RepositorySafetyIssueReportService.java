@@ -56,7 +56,7 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
     public SafetyIssueReport createNewRevision(Long fileNumber) {
         final SafetyIssueReport latest = findLatestRevision(fileNumber);
         if (latest == null) {
-            throw NotFoundException.create(SafetyIssueReport.class.getSimpleName(), fileNumber);
+            throw NotFoundException.create("Safety issue report chain", fileNumber);
         }
         final SafetyIssueReport newRevision = new SafetyIssueReport(latest);
         newRevision.setRevision(latest.getRevision() + 1);
