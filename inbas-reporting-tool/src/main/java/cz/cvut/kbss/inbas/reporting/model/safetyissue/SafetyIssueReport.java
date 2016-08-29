@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,9 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
     }
 
     public Set<CorrectiveMeasureRequest> getCorrectiveMeasures() {
+        if (correctiveMeasures == null) {
+            this.correctiveMeasures = new HashSet<>();
+        }
         return correctiveMeasures;
     }
 

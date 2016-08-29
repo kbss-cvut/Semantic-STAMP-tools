@@ -11,6 +11,23 @@
         </encoder>
     </appender>
 
+    <appender name="EMAILS_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>%date{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{30} - %msg%n</pattern>
+        </encoder>
+        <file>${catalina.base}/logs/email-import.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>email-import.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- keep 15 days' worth of history capped at 1GB total size -->
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+
+        </rollingPolicy>
+    </appender>
+
     <!-- Just INFO for JOPA -->
     <logger name="cz.cvut.kbss.jopa" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
@@ -19,6 +36,15 @@
     <!-- and OntoDriver -->
     <logger name="cz.cvut.kbss.ontodriver" level="INFO" additivity="false">
         <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <!-- Log emails separately to prevent log pollution -->
+    <logger name="cz.cvut.kbss.datatools" level="DEBUG" additivity="false">
+        <appender-ref ref="EMAILS_FILE"/>
+    </logger>
+
+    <logger name="cz.cvut.kbss.inbas.reporting.service.data.mail" level="DEBUG" additivity="false">
+        <appender-ref ref="EMAILS_FILE"/>
     </logger>
 
     <!-- Logger for our app -->
