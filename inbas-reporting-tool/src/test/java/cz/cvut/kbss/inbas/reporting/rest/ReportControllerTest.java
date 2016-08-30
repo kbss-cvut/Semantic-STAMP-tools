@@ -154,6 +154,21 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     }
 
     @Test
+    public void testGetReportForAuditReport() throws Exception {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+        report.getAudit().setUri(Generator.generateUri());
+        report.setKey(IdentificationUtils.generateKey());
+        report.setUri(Generator.generateUri());
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final MvcResult result = mockMvc.perform(get(REPORTS_PATH + report.getKey())).andExpect(status().isOk())
+                                        .andReturn();
+        final AuditReport res = readValue(result, AuditReport.class);
+        assertNotNull(res);
+        assertEquals(report.getUri(), res.getUri());
+        assertEquals(report.getKey(), res.getKey());
+    }
+
+    @Test
     public void getLatestRevisionThrowsNotFoundWhenReportChainIsNotFound() throws Exception {
         final Long fileNumber = 12345L;
         when(reportServiceMock.findLatestRevision(fileNumber)).thenReturn(null);

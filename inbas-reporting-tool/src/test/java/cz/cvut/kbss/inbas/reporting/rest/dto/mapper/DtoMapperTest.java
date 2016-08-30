@@ -1,7 +1,10 @@
 package cz.cvut.kbss.inbas.reporting.rest.dto.mapper;
 
 import cz.cvut.kbss.inbas.reporting.config.RestConfig;
-import cz.cvut.kbss.inbas.reporting.dto.*;
+import cz.cvut.kbss.inbas.reporting.dto.AbstractReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.CorrectiveMeasureRequestDto;
+import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.SafetyIssueReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
@@ -421,12 +424,31 @@ public class DtoMapperTest {
     }
 
     @Test
-    public void reportToReportDtoTransformAuditReportToAuditReportDto() {
+    public void reportToReportDtoReturnsTheSameInstanceWithAddedTypeForAuditReport() {
         final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+        assertFalse(report.getTypes().contains(Vocabulary.s_c_audit_report));
 
         final LogicalDocument dto = mapper.reportToReportDto(report);
-        assertTrue(dto instanceof AuditReportDto);
-        final AuditReportDto result = (AuditReportDto) dto;
-        assertEquals(report.getUri(), result.getUri());
+        assertSame(report, dto);
+        final AuditReport result = (AuditReport) dto;
+        assertTrue(result.getTypes().contains(Vocabulary.s_c_audit_report));
+    }
+
+    @Test
+    public void reportDtoToReportReturnsTheSameInstanceForAuditReport() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+
+        final LogicalDocument result = mapper.reportDtoToReport(report);
+        assertSame(report, result);
+    }
+
+    @Test
+    public void reportDtoToReportRemovesAuditReportClassFromAuditReportTypes() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+        report.addType(Vocabulary.s_c_audit_report);
+
+        final LogicalDocument result = mapper.reportDtoToReport(report);
+        assertSame(report, result);
+        assertFalse(((AuditReport) result).getTypes().contains(Vocabulary.s_c_audit_report));
     }
 }

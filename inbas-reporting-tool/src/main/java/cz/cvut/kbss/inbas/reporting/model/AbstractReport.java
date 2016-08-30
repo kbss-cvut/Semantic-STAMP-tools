@@ -138,6 +138,19 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
         this.types = types;
     }
 
+    /**
+     * Adds the specified type to this report's types
+     *
+     * @param type The type to add
+     */
+    public void addType(String type) {
+        Objects.requireNonNull(type);
+        if (types == null) {
+            this.types = new HashSet<>();
+        }
+        types.add(type);
+    }
+
     protected void copyAttributes(ReportDto dto) {
         dto.setUri(uri);
         dto.setKey(key);

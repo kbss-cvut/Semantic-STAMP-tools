@@ -1,6 +1,5 @@
 package cz.cvut.kbss.inbas.reporting.rest.dto.mapper;
 
-import cz.cvut.kbss.inbas.reporting.dto.AuditReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.CorrectiveMeasureRequestDto;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.SafetyIssueReportDto;
@@ -44,8 +43,7 @@ public abstract class DtoMapper {
         map.put(OccurrenceReportDto.class, OccurrenceReport.class);
         map.put(SafetyIssueReport.class, SafetyIssueReportDto.class);
         map.put(SafetyIssueReportDto.class, SafetyIssueReport.class);
-        map.put(AuditReport.class, AuditReportDto.class);
-        map.put(AuditReportDto.class, AuditReport.class);
+        map.put(AuditReport.class, AuditReport.class);
         map.put(CorrectiveMeasureRequest.class, CorrectiveMeasureRequestDto.class);
         map.put(CorrectiveMeasureRequestDto.class, CorrectiveMeasureRequest.class);
         map.put(Person.class, PersonDto.class);
@@ -103,8 +101,8 @@ public abstract class DtoMapper {
         if (dto instanceof SafetyIssueReportDto) {
             return safetyIssueReportDtoToSafetyIssueReport((SafetyIssueReportDto) dto);
         }
-        if (dto instanceof AuditReportDto) {
-            return auditReportDtoToAuditReport((AuditReportDto) dto);
+        if (dto instanceof AuditReport) {
+            return auditReportDtoToAuditReport((AuditReport) dto);
         }
         return dto;
     }
@@ -123,9 +121,17 @@ public abstract class DtoMapper {
     @Mapping(source = "factorGraph", target = "safetyIssue")
     public abstract SafetyIssueReport safetyIssueReportDtoToSafetyIssueReport(SafetyIssueReportDto dto);
 
-    public abstract AuditReportDto auditReportToAuditReportDto(AuditReport report);
+    public AuditReport auditReportToAuditReportDto(AuditReport report) {
+        assert report != null;
+        report.addType(Vocabulary.s_c_audit_report);
+        return report;
+    }
 
-    public abstract AuditReport auditReportDtoToAuditReport(AuditReportDto dto);
+    public AuditReport auditReportDtoToAuditReport(AuditReport dto) {
+        assert dto != null;
+        dto.getTypes().remove(Vocabulary.s_c_audit_report);
+        return dto;
+    }
 
     public CorrectiveMeasureRequestDto correctiveMeasureRequestToDto(CorrectiveMeasureRequest req) {
         if (req == null) {
