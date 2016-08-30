@@ -167,6 +167,8 @@ module.exports = {
         'safetyissue.based-on': 'Vytvořeno na základě',
         'safetyissue.base-add-success': 'Podklad safety issue úspěšně přidán. Změny uložíte kliknutím na tlačítko \'Uložit\'',
         'safetyissue.base-add-duplicate': 'Safety issue již je založeno na daném hlášení.',
+        'auditreport.title': 'Hlášení o auditu',
+        'auditreport.label': 'Audit',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

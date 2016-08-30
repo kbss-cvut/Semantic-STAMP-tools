@@ -167,6 +167,8 @@ module.exports = {
         'safetyissue.based-on': 'Based on',
         'safetyissue.base-add-success': 'Safety issue base successfully added. Click \'Save\' to save changes.',
         'safetyissue.base-add-duplicate': 'Safety issue is already based on the specified report.',
+        'auditreport.title': 'Audit report',
+        'auditreport.label': 'Audit',
 
         'wizard.finish': 'Finish',
         'wizard.next': 'Next',

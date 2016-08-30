@@ -109,4 +109,27 @@ describe('Report validator', function () {
             expect(ReportValidator.isValid(report)).toBeFalsy();
         });
     });
+
+    describe('(Audit reports)', () => {
+        beforeEach(() => {
+            report = ReportFactory.createAuditReport();
+        });
+
+        it('marks valid report as valid', () => {
+            report.audit.name = 'Test';
+            expect(ReportValidator.isValid(report)).toBeTruthy();
+        });
+
+        it('marks report without audit as invalid', () => {
+            report.audit = null;
+            expect(ReportValidator.isValid(report)).toBeFalsy();
+        });
+
+        it('marks report without audit name as invalid', () => {
+            report.audit.name = null;
+            expect(ReportValidator.isValid(report)).toBeFalsy();
+            report.audit.name = '';
+            expect(ReportValidator.isValid(report)).toBeFalsy();
+        });
+    });
 });

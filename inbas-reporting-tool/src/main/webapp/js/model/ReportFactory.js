@@ -16,6 +16,9 @@ module.exports = {
             case Vocabulary.SAFETY_ISSUE_REPORT:
             case Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS:
                 return this.createSafetyIssueReport(options);
+            case Vocabulary.AUDIT_REPORT:
+            case Constants.AUDIT_REPORT_JAVA_CLASS:
+                return this.createAuditReport(options);
             default:
                 throw 'Unsupported report type ' + type;
         }
@@ -59,6 +62,16 @@ module.exports = {
             report.addBase(options.basedOn);
         }
         return report;
+    },
+
+    createAuditReport: function (options) {
+        return {
+            audit: {
+                name: ''
+            },
+            isNew: true,
+            javaClass: Constants.AUDIT_REPORT_JAVA_CLASS
+        };
     },
 
     createFactor: function () {
