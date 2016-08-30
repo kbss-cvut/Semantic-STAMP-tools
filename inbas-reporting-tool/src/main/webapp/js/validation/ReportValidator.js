@@ -120,6 +120,9 @@ var AuditReportValidator = {
         if (!report.audit.name || report.audit.name.length === 0) {
             return 'detail.invalid-tooltip';
         }
+        if (!report.audit.auditee) {
+            return 'detail.invalid-tooltip';
+        }
         return null;
     },
 

@@ -4,6 +4,7 @@ describe('Report validator', function () {
 
     var ReportValidator = require('../../js/validation/ReportValidator'),
         Constants = require('../../js/constants/Constants'),
+        Generator = require('../environment/Generator').default,
         ReportFactory = require('../../js/model/ReportFactory'),
         report;
 
@@ -117,6 +118,7 @@ describe('Report validator', function () {
 
         it('marks valid report as valid', () => {
             report.audit.name = 'Test';
+            report.audit.auditee = Generator.getRandomUri();
             expect(ReportValidator.isValid(report)).toBeTruthy();
         });
 
@@ -129,6 +131,12 @@ describe('Report validator', function () {
             report.audit.name = null;
             expect(ReportValidator.isValid(report)).toBeFalsy();
             report.audit.name = '';
+            expect(ReportValidator.isValid(report)).toBeFalsy();
+        });
+
+        it('marks report without audited organization as invalid', () => {
+            report.audit.name = 'Test';
+            report.audit.auditee = null;
             expect(ReportValidator.isValid(report)).toBeFalsy();
         });
     });

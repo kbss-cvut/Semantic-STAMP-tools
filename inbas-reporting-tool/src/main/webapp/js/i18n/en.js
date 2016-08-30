@@ -78,6 +78,7 @@ module.exports = {
         'dashboard.view-all-tile': 'View All Reports',
         'dashboard.create-new-occurrence-report-tile': 'Create New Occurrence Report',
         'dashboard.create-new-safety-issue-tile': 'Create New Safety Issue',
+        'dashboard.create-new-audit-report-tile': 'Create New Audit Report',
         'dashboard.create-import-tile': 'Import Report',
         'dashboard.recent-panel-heading': 'Recently Edited/Added Reports',
         'dashboard.recent-table-last-edited': 'Last modified',
@@ -124,6 +125,19 @@ module.exports = {
         'occurrence.class-tooltip': 'Occurrence class - this field is required',
 
         'safety-issue.name-tooltip': 'Short descriptive name of the issue - this field is required',
+
+        'audit.name-tooltip': 'Short descriptive name of the audit (e.g. audited organization name + date of audit) - this field is required',
+        'audit.type.label': 'Audit type',
+        'audit.type.placeholder': 'Select audit type',
+        'audit.auditee.label': 'Audited organization',
+        'audit.auditee.placeholder': 'Audited organization name',
+        'audit.location.label': 'Audit location',
+        'audit.location.placeholder': 'Where the audit took place',
+        'audit.start-date': 'Audit start',
+        'audit.start-date.tooltip': 'Date and time of the first action of the audit',
+        'audit.end-date': 'Audit end',
+        'audit.end-date.tooltip': 'Date and time of the last action of the audit',
+        'audit.findings.header': 'Audit findings',
 
         'initial.panel-title': 'Initial reports',
         'initial.table-report': 'Report',

@@ -79,6 +79,7 @@ module.exports = {
         'dashboard.view-all-tile': 'Prohlížet všechna hlášení',
         'dashboard.create-new-occurrence-report-tile': 'Nové hlášení o události',
         'dashboard.create-new-safety-issue-tile': 'Nový bezpečnostní problém',
+        'dashboard.create-new-audit-report-tile': 'Nová zpráva o auditu',
         'dashboard.create-import-tile': 'Importovat hlášení',
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
@@ -126,6 +127,19 @@ module.exports = {
         'occurrence.class-tooltip': 'Třída závažnosti - pole je povinné',
 
         'safety-issue.name-tooltip': 'Krátké pojmenování problému - pole je povinné',
+
+        'audit.name-tooltip': 'Název auditu (např. jméno auditované organizace + datum) - pole je povinné',
+        'audit.type.label': 'Druh kontroly',
+        'audit.type.placeholder': 'Vyberte druh kontroly',
+        'audit.auditee.label': 'Kontrolované organizace',
+        'audit.auditee.placeholder': 'Vyberte kontrolovanou organizaci',
+        'audit.location.label': 'Místo kontroly',
+        'audit.location.placeholder': 'Vyberte místo kontroly',
+        'audit.start-date': 'Začátek kontroly',
+        'audit.start-date.tooltip': 'Datum a čas prvního kontrolního úkonu',
+        'audit.end-date': 'Konec kontroly',
+        'audit.end-date.tooltip': 'Datum a čas posledního kontrolního úkonu',
+        'audit.findings.header': 'Kontrolní zjištění',
 
         'initial.panel-title': 'Prvotní hlášení',
         'initial.table-report': 'Hlášení',
