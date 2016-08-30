@@ -19,6 +19,21 @@ const FORM_GEN_URL = 'rest/formGen';
 
 module.exports = {
 
+    generateSummaryWizard: function(report, wizardTitle, renderCallback) {
+        Ajax.post(FORM_GEN_URL, report).end((data) => {
+            Configuration.actions = Actions;
+            Configuration.wizardStore = WizardStore;
+            Configuration.optionsStore = FormGenStore;
+            Configuration.intl = I18nStore.getIntl();
+            Configuration.typeaheadResultList = TypeaheadResultList;
+            Configuration.inputComponent = Input;
+            WizardGenerator.createWizard(data, {}, wizardTitle, renderCallback);
+        }, () => {
+            Logger.log('Received no valid wizard. Using the default one.');
+            WizardGenerator.createDefaultWizard({}, wizardTitle, renderCallback);
+        });
+    },
+
     generateWizard: function (report, event, wizardTitle, renderCallback) {
         var url = this._initUrlWithParameters(event);
         Ajax.post(url, report).end((data) => {
