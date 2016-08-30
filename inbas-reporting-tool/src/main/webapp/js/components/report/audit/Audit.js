@@ -1,13 +1,16 @@
 'use strict';
 
 import React from "react";
+import JsonLdUtils from "jsonld-utils";
 import DateTimePicker from "kbss-react-bootstrap-datetimepicker";
 import assign from "object-assign";
 import Typeahead from "react-bootstrap-typeahead";
+import Actions from "../../../actions/Actions";
 import AuditFindings from "./AuditFindings";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import Input from "../../Input";
+import OptionsStore from "../../../stores/OptionsStore";
 import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 
 class Audit extends React.Component {
@@ -20,10 +23,36 @@ class Audit extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            auditTypes: [],
-            organizations: [],
-            locations: []
+            auditType: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions('auditType')),
+            organization: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions('organization')),
+            location: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions('location'))
         };
+    }
+
+    componentDidMount() {
+        if (this.state.auditTypes.length === 0) {
+            Actions.loadOptions('auditType');
+        }
+        if (this.state.organizations.length === 0) {
+            Actions.loadOptions('organization');
+        }
+        if (this.state.locations.length === 0) {
+            Actions.loadOptions('location');
+        }
+        this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
+    }
+
+    _onOptionsLoaded = (type, data) => {
+        if (type !== 'auditType' && type !== 'organization' && type !== '') {
+            return;
+        }
+        var newState = {};
+        newState[type] = JsonLdUtils.processTypeaheadOptions(data);
+        this.setState(newState);
+    };
+
+    componentWillUnmount() {
+        this.unsubscribe();
     }
 
     _onChange = (e) => {
@@ -38,6 +67,10 @@ class Audit extends React.Component {
     };
 
     _onTypeSelected = (option) => {
+        var types = this.props.audit.types;
+    };
+
+    _onAuditeeSelected = (option) => {
 
     };
 
@@ -45,12 +78,13 @@ class Audit extends React.Component {
         var types = this.props.audit.types;
     }
 
-    _resolveAuditee() {
-
-    }
-
     _resolveLocation() {
-
+        var locations = this.state.location,
+            auditLoc = this.props.audit.location;
+        if (locations.length === 0 || !auditLoc) {
+            return null;
+        }
+        return locations.find((item) => item.id === auditLoc);
     }
 
     render() {
@@ -73,7 +107,7 @@ class Audit extends React.Component {
                         <Typeahead className='form-group form-group-sm' formInputOption='id'
                                    placeholder={i18n('audit.type.placeholder')}
                                    onOptionSelected={this._onTypeSelected} filterOption='name' displayOption='name'
-                                   value={this._resolveAuditType()} options={this.state.auditTypes}
+                                   value={this._resolveAuditType()} options={this.state.auditType}
                                    customClasses={{input: 'form-control'}} optionsButton={true}
                                    customListComponent={TypeaheadResultList}/>
                     </div>
@@ -84,9 +118,9 @@ class Audit extends React.Component {
                         <label className='control-label'>{i18n('audit.auditee.label') + '*'}</label>
                         <Typeahead className='form-group form-group-sm' formInputOption='id'
                                    placeholder={i18n('audit.auditee.placeholder')}
-                                   onOptionSelected={(opt) => this._mergeChange({auditee: opt.id})} filterOption='name'
+                                   onOptionSelected={this._onAuditeeSelected} filterOption='name'
                                    displayOption='name'
-                                   value={this._resolveAuditee()} options={this.state.organizations}
+                                   value={audit.auditee ? audit.auditee.name : null} options={this.state.organization}
                                    customClasses={{input: 'form-control'}} optionsButton={true}
                                    customListComponent={TypeaheadResultList}/>
                     </div>
@@ -99,7 +133,7 @@ class Audit extends React.Component {
                                    placeholder={i18n('audit.location.placeholder')}
                                    onOptionSelected={(opt) => this._mergeChange({location: opt.id})} filterOption='name'
                                    displayOption='name'
-                                   value={this._resolveLocation()} options={this.state.locations}
+                                   value={this._resolveLocation()} options={this.state.location}
                                    customClasses={{input: 'form-control'}} optionsButton={true}
                                    customListComponent={TypeaheadResultList}/>
                     </div>
