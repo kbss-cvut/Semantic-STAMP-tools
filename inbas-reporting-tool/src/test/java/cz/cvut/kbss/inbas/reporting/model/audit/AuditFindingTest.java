@@ -19,6 +19,24 @@ public class AuditFindingTest {
     }
 
     @Test
+    public void copyConstructorCopiesBasicAttributes() {
+        final AuditFinding original = new AuditFinding();
+        original.setDescription("I am the original audit finding.");
+        original.getTypes().add(Generator.generateEventType().toString());
+        original.setFactors(new HashSet<>());
+        for (int i = 0; i < Generator.randomInt(1, 5); i++) {
+            original.getFactors().add(Generator.generateEventType());
+        }
+        original.setLevel(1);
+
+        final AuditFinding copy = new AuditFinding(original);
+        assertEquals(original.getDescription(), copy.getDescription());
+        assertEquals(original.getLevel(), copy.getLevel());
+        assertEquals(original.getTypes(), copy.getTypes());
+        assertEquals(original.getFactors(), copy.getFactors());
+    }
+
+    @Test
     public void copyConstructorCopiesCorrectiveMeasures() {
         final AuditFinding original = new AuditFinding();
         original.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());

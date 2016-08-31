@@ -102,7 +102,7 @@ class CorrectiveMeasures extends React.Component {
                 <div className={buttonCls}>
                     <Button bsStyle='primary' bsSize='small' onClick={this.onAdd}
                             title={this.props.i18n('report.corrective.add-tooltip')}>
-                        <Glyphicon glyph='plus' style={{margin: '0 5px 0 0'}}/>
+                        <Glyphicon glyph='plus' className='add-icon-glyph'/>
                         {this.props.i18n('add')}
                     </Button>
                 </div>

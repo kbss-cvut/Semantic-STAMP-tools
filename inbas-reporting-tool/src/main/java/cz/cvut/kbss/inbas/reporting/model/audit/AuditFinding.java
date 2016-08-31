@@ -18,6 +18,9 @@ public class AuditFinding extends AbstractEntity {
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String description;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_has_severity_assessment)
+    private Integer level;
+
     @OWLObjectProperty(iri = Vocabulary.s_p_has_factor)
     private Set<URI> factors;
 
@@ -35,6 +38,7 @@ public class AuditFinding extends AbstractEntity {
     public AuditFinding(AuditFinding other) {
         Objects.requireNonNull(other);
         this.description = other.description;
+        this.level = other.level;
         this.factors = other.factors != null ? new HashSet<>(other.factors) : null;
         this.types = new HashSet<>(other.types);
         this.correctiveMeasures = other.correctiveMeasures != null ?
@@ -48,6 +52,14 @@ public class AuditFinding extends AbstractEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
     }
 
     public Set<URI> getFactors() {
@@ -82,6 +94,7 @@ public class AuditFinding extends AbstractEntity {
     public String toString() {
         return "AuditFinding{" +
                 "types=" + types +
+                "level=" + level +
                 ", description='" + description + '\'' +
                 "} " + super.toString();
     }

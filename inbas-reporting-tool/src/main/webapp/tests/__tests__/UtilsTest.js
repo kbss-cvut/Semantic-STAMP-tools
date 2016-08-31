@@ -160,4 +160,36 @@ describe('Utility functions tests', function () {
             expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.RELATIVE);
         });
     });
+
+    describe('resolveType', () => {
+        it('returns null when there are no options', () => {
+            var options = null,
+                types = [Generator.randomCategory().id];
+            expect(Utils.resolveType(types, options)).toBeNull();
+            options = [];
+            expect(Utils.resolveType(types, options)).toBeNull();
+        });
+
+        it('returns null when there are no types', () => {
+            var options = Generator.getCategories(),
+                types = null;
+            expect(Utils.resolveType(types, options)).toBeNull();
+            types = [];
+            expect(Utils.resolveType(types, options)).toBeNull();
+        });
+
+        it('returns first option whose id is in types', () => {
+            var options = Generator.getCategories(),
+                option = Generator.randomCategory(),
+                types = [option.id];
+            expect(Utils.resolveType(types, options)).toEqual(option);
+        });
+
+        it('returns null if none of the options matches types', () => {
+            var options = Generator.getCategories(),
+                option = Generator.randomCategory(),
+                types = [Generator.getRandomUri()];
+            expect(Utils.resolveType(types, options)).toBeNull();
+        })
+    });
 });

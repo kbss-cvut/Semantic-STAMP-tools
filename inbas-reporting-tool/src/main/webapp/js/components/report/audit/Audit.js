@@ -12,6 +12,7 @@ import injectIntl from "../../../utils/injectIntl";
 import Input from "../../Input";
 import OptionsStore from "../../../stores/OptionsStore";
 import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
+import Utils from "../../../utils/Utils";
 
 class Audit extends React.Component {
     static propTypes = {
@@ -30,20 +31,20 @@ class Audit extends React.Component {
     }
 
     componentDidMount() {
-        if (this.state.auditTypes.length === 0) {
+        if (this.state.auditType.length === 0) {
             Actions.loadOptions('auditType');
         }
-        if (this.state.organizations.length === 0) {
+        if (this.state.organization.length === 0) {
             Actions.loadOptions('organization');
         }
-        if (this.state.locations.length === 0) {
+        if (this.state.location.length === 0) {
             Actions.loadOptions('location');
         }
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
     }
 
     _onOptionsLoaded = (type, data) => {
-        if (type !== 'auditType' && type !== 'organization' && type !== '') {
+        if (type !== 'auditType' && type !== 'organization' && type !== 'location') {
             return;
         }
         var newState = {};
@@ -67,15 +68,22 @@ class Audit extends React.Component {
     };
 
     _onTypeSelected = (option) => {
-        var types = this.props.audit.types;
+        var types = this.props.audit.types ? this.props.audit.types.slice() : [];
+        var origType = Utils.resolveType(types, this.state.auditType);
+        if (origType) {
+            types.splice(types.indexOf(origType.id), 1);
+        }
+        types.push(option.id);
+        this._mergeChange({types: types});
     };
 
     _onAuditeeSelected = (option) => {
-
+        this._mergeChange({auditee: option});
     };
 
     _resolveAuditType() {
-        var types = this.props.audit.types;
+        var type = Utils.resolveType(this.props.audit.types, this.state.auditType);
+        return type ? type.name : '';
     }
 
     _resolveLocation() {
