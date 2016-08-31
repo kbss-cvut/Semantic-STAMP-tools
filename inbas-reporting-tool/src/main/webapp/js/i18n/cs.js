@@ -152,6 +152,9 @@ module.exports = {
         'audit.finding.type.placeholder': 'Vyberte typ zjištění',
         'audit.finding.level': 'Nález úrovně {level}',
         'audit.finding.description-tooltip': 'Popis zjištěného nálezu',
+        'audit.finding.factors': 'Faktory nálezu',
+        'audit.finding.factors.placeholder': 'Typ faktoru',
+        'audit.finding.factors.remove-tooltip': 'Klikněte pro odstranení faktoru',
 
         'initial.panel-title': 'Prvotní hlášení',
         'initial.table-report': 'Hlášení',

@@ -544,3 +544,9 @@ button.reset-filters {
 .add-icon-glyph {
     margin-right: 5px;
 }
+
+.finding-factor-label {
+    margin-right: 0.5em;
+    padding: 0.4em;
+    font-size: 95%;
+}

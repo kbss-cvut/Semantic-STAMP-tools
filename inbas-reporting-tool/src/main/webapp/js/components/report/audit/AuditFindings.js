@@ -148,10 +148,10 @@ var FindingRow = (props) => {
     var finding = props.finding,
         type = Utils.resolveType(finding.types, props.findingType);
     return <tr>
-        <td><CollapsibleText text={finding.description}/></td>
-        <td className='content-center'>{type ? type.name : ''}</td>
-        <td className='content-center'>{finding.level}</td>
-        <td className='actions'>
+        <td className='report-row'><CollapsibleText text={finding.description}/></td>
+        <td className='report-row content-center'>{type ? type.name : ''}</td>
+        <td className='report-row content-center'>{finding.level}</td>
+        <td className='report-row actions'>
             <Button bsStyle='primary' bsSize='small' title={props.i18n('audit.findings.table.open-tooltip')}
                     onClick={() => props.onEdit(finding)}>{props.i18n('open')}</Button>
             <Button bsStyle='warning' bsSize='small' title={props.i18n('audit.findings.table.delete-tooltip')}

@@ -150,6 +150,9 @@ module.exports = {
         'audit.finding.type.placeholder': 'Select finding type',
         'audit.finding.level': 'Finding level {level}',
         'audit.finding.description-tooltip': 'Description of the finding',
+        'audit.finding.factors': 'Finding factors',
+        'audit.finding.factors.placeholder': 'Factor type',
+        'audit.finding.factors.remove-tooltip': 'Click to remove this factor',
 
         'initial.panel-title': 'Initial reports',
         'initial.table-report': 'Report',

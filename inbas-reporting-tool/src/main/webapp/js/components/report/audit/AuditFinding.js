@@ -6,6 +6,7 @@ import assign from "object-assign";
 import {Button, Modal} from "react-bootstrap";
 import Typeahead from "react-bootstrap-typeahead";
 import Constants from "../../../constants/Constants";
+import FindingFactors from "./FindingFactors";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import Input from "../../Input";
@@ -111,6 +112,9 @@ class AuditFinding extends React.Component {
                                onChange={e => this._mergeChange({description: e.target.value})}/>
                     </div>
                 </div>
+                <div className='row'>
+                    <FindingFactors factors={finding.factors} onChange={this._mergeChange}/>
+                    </div>
             </div>
             <Modal.Footer>
                 <Button bsSize='small' bsStyle='success'
