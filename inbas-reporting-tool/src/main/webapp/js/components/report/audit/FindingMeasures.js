@@ -2,6 +2,7 @@
 
 import React from "react";
 import {Button, Glyphicon, Panel, Table} from "react-bootstrap";
+import CollapsibleText from "../../CollapsibleText";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import Utils from "../../../utils/Utils";
@@ -26,15 +27,37 @@ class FindingMeasures extends React.Component {
     }
 
     _onAddMeasure = () => {
-
+        var measure = {
+            isNew: true
+        };
+        this._onEditMeasure(measure);
     };
 
     _onEditMeasure = (measure) => {
+        this.setState({showWindow: true, currentMeasure: measure});
+    };
 
+    _onEditFinished = (measure) => {
+        var measures = this.props.correctiveMeasures ? this.props.correctiveMeasures.slice() : [];
+        if (measure.isNew) {
+            measures.push(measure);
+        } else {
+            var indexToUpdate = measures.indexOf(this.state.currentMeasure);
+            measures.splice(indexToUpdate, 1, measure);
+        }
+        this.props.onChange({correctiveMeasures: measures});
+        this._onEditClose();
+    };
+
+    _onEditClose = () => {
+        this.setState({showWindow: false, currentMeasure: null});
     };
 
     _onDeleteMeasure = (measure) => {
-
+        var measures = this.props.correctiveMeasures.slice(),
+            indexToRemove = measures.indexOf(measure);
+        measures.splice(indexToRemove, 1);
+        this.props.onChange({correctiveMeasures: measures});
     };
 
     _hasMeasures() {
@@ -91,7 +114,7 @@ class FindingMeasures extends React.Component {
 
 var MeasureRow = (props) => {
     var measure = props.measure,
-        formattedDeadline = Utils.formatDate(measure.deadline);
+        formattedDeadline = Utils.formatDate(measure.deadline ? new Date(measure.deadline) : null);
     return <tr>
         <td className='report-row'><CollapsibleText text={measure.description}/></td>
         <td className='report-row content-center'>{formattedDeadline}</td>
@@ -112,5 +135,7 @@ MeasureRow.propTypes = {
     onEdit: React.PropTypes.func.isRequired,
     onDelete: React.PropTypes.func.isRequired
 };
+
+MeasureRow = injectIntl(I18nWrapper(MeasureRow));
 
 export default injectIntl(I18nWrapper(FindingMeasures));

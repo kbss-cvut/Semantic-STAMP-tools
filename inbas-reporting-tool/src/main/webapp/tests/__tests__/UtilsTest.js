@@ -8,7 +8,7 @@ describe('Utility functions tests', function () {
         Generator = require('../environment/Generator').default;
 
     describe('formatDate', () => {
-        it('returns emtpy string when no date is specified', () => {
+        it('returns empty string when no date is specified', () => {
             expect(Utils.formatDate(null)).toEqual('');
         });
     });
