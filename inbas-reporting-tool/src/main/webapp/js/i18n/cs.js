@@ -156,6 +156,12 @@ module.exports = {
         'audit.finding.factors': 'Faktory nálezu',
         'audit.finding.factors.placeholder': 'Typ faktoru',
         'audit.finding.factors.remove-tooltip': 'Klikněte pro odstranení faktoru',
+        'audit.finding.measures.no-measures-message': 'Nebyla definována žádná nápravná opatření',
+        'audit.finding.measures.description': 'Popis opatření',
+        'audit.finding.measures.deadline': 'Termín zavedení',
+        'audit.finding.measures.implemented': 'Bylo zavedeno?',
+        'audit.finding.measures.open-tooltip': 'Zobrazit a editovat toto nápravné opatření',
+        'audit.finding.measures.delete-tooltip': 'Odstranit toto nápravné opatření',
 
         'initial.panel-title': 'Prvotní hlášení',
         'initial.table-report': 'Hlášení',

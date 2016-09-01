@@ -7,6 +7,12 @@ describe('Utility functions tests', function () {
         Vocabulary = require('../../js/constants/Vocabulary'),
         Generator = require('../environment/Generator').default;
 
+    describe('formatDate', () => {
+        it('returns emtpy string when no date is specified', () => {
+            expect(Utils.formatDate(null)).toEqual('');
+        });
+    });
+
     it('Transforms a constant with known preposition/auxiliary word into text with spaces and correctly capitalized words', function () {
         expect(Utils.constantToString('BARRIER_NOT_EFFECTIVE', true)).toEqual('Barrier not Effective');
         expect(Utils.constantToString('NOT_EFFECTIVE', true)).toEqual('Not Effective');

@@ -7,6 +7,7 @@ import {Button, Modal} from "react-bootstrap";
 import Typeahead from "react-bootstrap-typeahead";
 import Constants from "../../../constants/Constants";
 import FindingFactors from "./FindingFactors";
+import FindingMeasures from "./FindingMeasures";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import Input from "../../Input";
@@ -116,6 +117,11 @@ class AuditFinding extends React.Component {
                 </div>
                 <div className='row'>
                     <FindingFactors factors={finding.factors} onChange={this._mergeChange}/>
+                </div>
+                <div className='row'>
+                    <div className='col-xs-12'>
+                        <FindingMeasures correctiveMeasures={finding.correctiveMeasures} onChange={this._mergeChange}/>
+                    </div>
                 </div>
             </div>
             <Modal.Footer>

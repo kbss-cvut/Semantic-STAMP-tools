@@ -154,6 +154,12 @@ module.exports = {
         'audit.finding.factors': 'Finding factors',
         'audit.finding.factors.placeholder': 'Factor type',
         'audit.finding.factors.remove-tooltip': 'Click to remove this factor',
+        'audit.finding.measures.no-measures-message': 'There are not corrective measures',
+        'audit.finding.measures.description': 'Measure description',
+        'audit.finding.measures.deadline': 'Measure deadline',
+        'audit.finding.measures.implemented': 'Was implemented?',
+        'audit.finding.measures.open-tooltip': 'View and edit this corrective measure',
+        'audit.finding.measures.delete-tooltip': 'Remove this corrective measure',
 
         'initial.panel-title': 'Initial reports',
         'initial.table-report': 'Report',

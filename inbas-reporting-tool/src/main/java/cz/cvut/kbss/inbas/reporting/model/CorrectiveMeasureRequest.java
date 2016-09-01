@@ -43,6 +43,8 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     @OWLObjectProperty(iri = Vocabulary.s_p_has_evaluation, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private CorrectiveMeasureImplementationEvaluation evaluation;
 
+    // TODO Add implemented attribute (used in audits)
+
     public CorrectiveMeasureRequest() {
     }
 

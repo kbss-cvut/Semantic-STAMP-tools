@@ -14,6 +14,7 @@ import Utils from "../../../utils/Utils";
 
 const FACTOR_ROW_LENGTH = 3;
 
+// TODO Extract a generic component from this. It will be reused in other parts of the application
 class FindingFactors extends React.Component {
     static propTypes = {
         factors: React.PropTypes.array,

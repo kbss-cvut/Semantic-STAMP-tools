@@ -20,6 +20,9 @@ module.exports = {
      * @param date The date to format
      */
     formatDate: function (date) {
+        if (!date) {
+            return '';
+        }
         var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate().toString();
         var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1).toString();
         var year = (date.getFullYear() % 100).toString();
