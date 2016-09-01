@@ -12,6 +12,8 @@ import TypeaheadResultList from "../../typeahead/EventTypeTypeaheadResultList";
 import TypeaheadStore from "../../../stores/TypeaheadStore";
 import Utils from "../../../utils/Utils";
 
+const FACTOR_ROW_LENGTH = 3;
+
 class FindingFactors extends React.Component {
     static propTypes = {
         factors: React.PropTypes.array,
@@ -85,26 +87,28 @@ class FindingFactors extends React.Component {
     }
 
     _renderFactors() {
-        // TODO Make the splitting into rows more general and add some margin between rows
         var factors = this.props.factors,
             rows = [],
             items = [];
         for (var i = 0, len = factors.length; i < len; i++) {
             items.push(<Factor key={'factor_' + i} factor={factors[i]} eventTypes={this.state.eventType}
                                onRemove={this._onRemoveFactor}/>);
-            if (i === 4) {
-                rows.push(<div className='row' key={'row-' + i}>
-                    <div className='col-xs-12'>{items}</div>
-                </div>);
+            if (i === FACTOR_ROW_LENGTH) {
+                FindingFactors._addRow(rows, items);
                 items = [];
             }
         }
         if (items.length > 0) {
-            rows.push(<div className='row' key={'row-' + i}>
-                <div className='col-xs-12'>{items}</div>
-            </div>);
+            FindingFactors._addRow(rows, items);
         }
         return rows;
+    }
+
+    static _addRow(rows, items) {
+        rows.push(<div className={'row' + (rows.length > 0 ? ' finding-factor-row-with-margin' : '')}
+                       key={'row-' + rows.length}>
+            <div className='col-xs-12'>{items}</div>
+        </div>);
     }
 }
 
@@ -114,9 +118,9 @@ var Factor = (props) => {
         styleInfo = FactorStyleInfo.getStyleInfo(type ? type.type : '');
 
     return <Label bsStyle={styleInfo.bsStyle} className='finding-factor-label' title={styleInfo.title}>
-        <Glyphicon className='add-icon-glyph' glyph='remove' onClick={() => props.onRemove(factor)}
-                   title={props.i18n('audit.finding.factors.remove-tooltip')}/>
         {type ? type.name : factor}
+        <Glyphicon className='remove-icon-glyph' glyph='remove' onClick={() => props.onRemove(factor)}
+                   title={props.i18n('audit.finding.factors.remove-tooltip')}/>
     </Label>;
 };
 
