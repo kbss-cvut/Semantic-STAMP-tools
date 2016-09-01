@@ -1,10 +1,10 @@
 'use strict';
 
+var JsonLdUtils = require('jsonld-utils').default;
 var GanttController = require('./GanttController');
 var Constants = require('../../constants/Constants');
 var Vocabulary = require('../../constants/Vocabulary');
 var EventTypeFactory = require('../../model/EventTypeFactory');
-var Utils = require('../../utils/Utils');
 
 var FactorRenderer = {
 
@@ -131,7 +131,7 @@ var FactorRendererImpl = {
                 text = node.name;
             } else if (node.eventType) {
                 var eventType = EventTypeFactory.resolveEventType(node.eventType, eventTypes);
-                text = eventType ? Utils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
+                text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
             }
             GanttController.addFactor({
                 id: node.referenceId,

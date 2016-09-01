@@ -2,10 +2,10 @@
 
 import React from "react";
 import {Label} from "react-bootstrap";
+import JsonLdUtils from "jsonld-utils";
 import {FormattedMessage} from "react-intl";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
-import JsonLdUtils from "../../utils/JsonLdUtils";
 import OptionsStore from "../../stores/OptionsStore";
 import Utils from "../../utils/Utils";
 import Vocabulary from "../../constants/Vocabulary";

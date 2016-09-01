@@ -2,9 +2,9 @@
 
 import React from "react";
 import {Button} from "react-bootstrap";
+import JsonLdUtils from "jsonld-utils";
 import Actions from "../../actions/Actions";
 import injectIntl from "../../utils/injectIntl";
-import JsonLdUtils from "../../utils/JsonLdUtils";
 import OptionsStore from "../../stores/OptionsStore";
 import Vocabulary from "../../constants/Vocabulary";
 

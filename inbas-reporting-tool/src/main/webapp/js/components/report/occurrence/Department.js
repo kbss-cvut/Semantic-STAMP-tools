@@ -2,12 +2,12 @@
 
 import React from "react";
 import {Button, Glyphicon, Panel} from "react-bootstrap";
+import JsonLdUtils from "jsonld-utils";
 import injectIntl from "../../../utils/injectIntl";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import OptionsStore from "../../../stores/OptionsStore";
 import Typeahead from "react-bootstrap-typeahead";
 import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
-import Utils from "../../../utils/Utils";
 
 class Department extends React.Component {
     static propTypes = {
@@ -24,7 +24,7 @@ class Department extends React.Component {
     }
 
     static _processOptions(options) {
-        var opts = Utils.processTypeaheadOptions(options);
+        var opts = JsonLdUtils.processTypeaheadOptions(options);
         opts.sort((a, b) => {
             return a.name.localeCompare(b.name);
         });

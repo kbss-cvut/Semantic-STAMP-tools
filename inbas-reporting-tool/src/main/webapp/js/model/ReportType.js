@@ -2,9 +2,9 @@
 
 var React = require('react');
 var assign = require('object-assign');
+var JsonLdUtils = require('jsonld-utils').default;
 var CollapsibleText = require('../components/CollapsibleText');
 var Constants = require('../constants/Constants');
-var JsonLdUtils = require('../utils/JsonLdUtils').default;
 var Utils = require('../utils/Utils');
 var Vocabulary = require('../constants/Vocabulary');
 
