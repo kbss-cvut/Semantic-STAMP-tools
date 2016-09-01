@@ -19,6 +19,13 @@ var OccurrenceReportController = React.createClass({
         ReportDetailControllerMixin
     ],
 
+    componentDidMount: function() {
+        Actions.loadOptions();
+        Actions.loadOccurrenceCategories();
+        Actions.loadOptions('department');
+        Actions.loadOptions('factorType');
+    },
+
     onSuccess: function (key) {
         if (this.props.report.isNew) {
             Routing.transitionTo(Routes.reports);

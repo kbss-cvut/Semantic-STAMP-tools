@@ -4,17 +4,20 @@ PREFIX caa-checklist: <http://onto.fel.cvut.cz/ontologies/aviation/cz/caa/cat/au
 
 CONSTRUCT {
   ?audit_finding_type rdfs:label ?label .
+  ?audit_finding_type caa-checklist:has_full_order ?order .
 } WHERE {
   SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/binbas-checklist> {
     ?audit_type a documentation:checklist ;
-          caa-checklist:has_child+ ?audit_finding_type .
-    OPTIONAL {
-      ?audit_finding_type rdfs:label ?label .
-      FILTER(lang(?label)=?prefLang)
+        	caa-checklist:has_child+ ?audit_finding_type .
+              OPTIONAL {
+                ?audit_finding_type caa-checklist:has_full_text ?label ;
+                                    caa-checklist:has_full_order ?order .
+                FILTER(lang(?label)=?prefLang)
+              }
+              OPTIONAL {
+                ?audit_finding_type caa-checklist:has_full_text ?label ;
+                                    caa-checklist:has_full_order ?order .
+              }
     }
-    OPTIONAL {
-      ?audit_finding_type rdfs:label ?label .
-    }
-  }
-} ORDER BY asc(?label)
+} ORDER BY asc(str(?order))
 VALUES (?prefLang) {("cs")}

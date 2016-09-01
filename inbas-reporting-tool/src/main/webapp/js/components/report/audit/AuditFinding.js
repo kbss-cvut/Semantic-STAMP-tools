@@ -15,6 +15,8 @@ import OptionsStore from "../../../stores/OptionsStore";
 import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 import Utils from "../../../utils/Utils";
 
+const INDEX_PROPERTY = 'http://onto.fel.cvut.cz/ontologies/aviation/cz/caa/cat/audit/checklist/has_full_order';
+
 class AuditFinding extends React.Component {
     static propTypes = {
         finding: React.PropTypes.object,
@@ -27,8 +29,16 @@ class AuditFinding extends React.Component {
         this.i18n = props.i18n;
         this.state = {
             finding: props.finding ? assign({}, props.finding) : null,
-            findingType: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions('findingType'))
+            findingType: this._processOptions(OptionsStore.getOptions('findingType'))
         };
+    }
+
+    _processOptions(options) {
+        // TODO Find a generic solution to option sorting
+        options.sort((a, b) => {
+            return a[INDEX_PROPERTY]['@value'].localeCompare(b[INDEX_PROPERTY]['@value']);
+        });
+        return JsonLdUtils.processTypeaheadOptions(options);
     }
 
     componentDidMount() {
@@ -37,7 +47,7 @@ class AuditFinding extends React.Component {
 
     _onOptionsLoaded = (type, data) => {
         if (type === 'findingType') {
-            this.setState({findingType: JsonLdUtils.processTypeaheadOptions(data)});
+            this.setState({findingType: this._processOptions(data)});
         }
     };
 

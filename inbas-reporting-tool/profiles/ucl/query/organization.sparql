@@ -1,5 +1,5 @@
 #
-# Generic query to get event types
+# Gets organizations for the audit module
 #
 BASE <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 
@@ -16,7 +16,7 @@ CONSTRUCT {
   ?operator rdfs:label ?label ;
     a ?type.
 } WHERE {
-  SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
+  SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
     ?a a ns1:aircraft.
     ?a ns1:has-operator-name ?name.
     ?a ns1:has-operator-id ?id.

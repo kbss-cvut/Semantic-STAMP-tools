@@ -91,7 +91,8 @@ class Audit extends React.Component {
         if (locations.length === 0 || !auditLoc) {
             return null;
         }
-        return locations.find((item) => item.id === auditLoc);
+        var loc = locations.find((item) => item.id === auditLoc);
+        return loc ? loc.name : '';
     }
 
     render() {
@@ -142,7 +143,7 @@ class Audit extends React.Component {
                                    onOptionSelected={(opt) => this._mergeChange({location: opt.id})} filterOption='name'
                                    displayOption='name'
                                    value={this._resolveLocation()} options={this.state.location}
-                                   customClasses={{input: 'form-control'}} optionsButton={true}
+                                   customClasses={{input: 'form-control'}}
                                    customListComponent={TypeaheadResultList}/>
                     </div>
                 </div>
