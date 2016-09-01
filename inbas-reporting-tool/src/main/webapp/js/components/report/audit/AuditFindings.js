@@ -34,11 +34,11 @@ class AuditFindings extends React.Component {
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
     }
 
-    _onOptionsLoaded(type, data) {
-        if (type === 'auditType') {
-            this.setState({auditType: JsonLdUtils.processTypeaheadOptions(data)});
+    _onOptionsLoaded = (type, data) => {
+        if (type === 'findingType') {
+            this.setState({findingType: JsonLdUtils.processTypeaheadOptions(data)});
         }
-    }
+    };
 
     componentWillUnmount() {
         this.unsubscribe();

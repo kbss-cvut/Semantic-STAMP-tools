@@ -87,22 +87,24 @@ public class OptionsServiceImpl implements OptionsService {
     }
 
     @Override
-    public Object getOptions(String type) {
+    public Object getOptions(String type, Map<String, String> parameters) {
         Objects.requireNonNull(type);
+        Objects.requireNonNull(parameters);
         if (remoteOptions.containsKey(type)) {
-            return loadRemoteData(remoteOptions.get(type));
+            return loadRemoteData(remoteOptions.get(type), parameters);
         } else if (localOptions.containsKey(type)) {
             return loadLocalData(localOptions.get(type));
         }
         throw new IllegalArgumentException("Unsupported option type " + type);
     }
 
-    private RawJson loadRemoteData(String queryFile) {
+    private RawJson loadRemoteData(String queryFile, Map<String, String> parameters) {
         final String repositoryUrl = configReader.getConfig(ConfigParam.EVENT_TYPE_REPOSITORY_URL);
-        if (repositoryUrl .isEmpty()) {
+        if (repositoryUrl.isEmpty()) {
             throw new IllegalStateException("Missing repository URL configuration.");
         }
         String query = localLoader.loadData(queryFile, Collections.emptyMap());
+        query = enhanceQueryWithParameters(query, parameters);
         try {
             query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
             final String data = remoteLoader.loadData(repositoryUrl, Collections.singletonMap("query", query));
@@ -110,6 +112,13 @@ public class OptionsServiceImpl implements OptionsService {
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unable to find encoding " + Constants.UTF_8_ENCODING, e);
         }
+    }
+
+    private String enhanceQueryWithParameters(String query, Map<String, String> parameters) {
+        for (Map.Entry<String, String> e : parameters.entrySet()) {
+            query = query.replaceAll("\\?" + e.getKey(), "<" + e.getValue() + ">");
+        }
+        return query;
     }
 
     private RawJson loadLocalData(String optionsFile) {

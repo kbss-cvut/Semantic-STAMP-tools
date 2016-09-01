@@ -1,0 +1,20 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX documentation: <http://onto.fel.cvut.cz/ontologies/documentation/>
+PREFIX caa-checklist: <http://onto.fel.cvut.cz/ontologies/aviation/cz/caa/cat/audit/checklist/>
+
+CONSTRUCT {
+  ?audit_finding_type rdfs:label ?label .
+} WHERE {
+  SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/binbas-checklist> {
+    ?audit_type a documentation:checklist ;
+          caa-checklist:has_child+ ?audit_finding_type .
+    OPTIONAL {
+      ?audit_finding_type rdfs:label ?label .
+      FILTER(lang(?label)=?prefLang)
+    }
+    OPTIONAL {
+      ?audit_finding_type rdfs:label ?label .
+    }
+  }
+} ORDER BY asc(?label)
+VALUES (?audit_type ?prefLang) {(<http://onto.fel.cvut.cz/ontologies/aviation/cz/caa/cat/audit/checklist/C01> "cs")}

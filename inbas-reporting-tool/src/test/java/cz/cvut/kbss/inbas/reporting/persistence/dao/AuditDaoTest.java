@@ -166,7 +166,7 @@ public class AuditDaoTest extends BaseDaoTestRunner {
         final List<AuditFinding> emptyFindings = new ArrayList<>();
         audit.getFindings().stream().filter(af -> Generator.randomBoolean())
              .forEach(af -> {
-                 af.setCorrectiveMeasures(null);
+                 af.getCorrectiveMeasures().clear();
                  emptyFindings.add(af);
              });
         dao.update(audit);
