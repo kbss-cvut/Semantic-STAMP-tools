@@ -82,8 +82,7 @@ class Audit extends React.Component {
     };
 
     _resolveAuditType() {
-        var type = Utils.resolveType(this.props.audit.types, this.state.auditType);
-        return type ? type.name : '';
+        return Utils.resolveType(this.props.audit.types, this.state.auditType);
     }
 
     _resolveLocation() {
@@ -97,7 +96,8 @@ class Audit extends React.Component {
 
     render() {
         var audit = this.props.audit,
-            i18n = this.i18n;
+            i18n = this.i18n,
+            auditType = this._resolveAuditType();
         return <div>
             <div className='form-group'>
                 <div className='row'>
@@ -115,7 +115,7 @@ class Audit extends React.Component {
                         <Typeahead className='form-group form-group-sm' formInputOption='id'
                                    placeholder={i18n('audit.type.placeholder')}
                                    onOptionSelected={this._onTypeSelected} filterOption='name' displayOption='name'
-                                   value={this._resolveAuditType()} options={this.state.auditType}
+                                   value={auditType ? auditType.name : ''} options={this.state.auditType}
                                    customClasses={{input: 'form-control'}} optionsButton={true}
                                    customListComponent={TypeaheadResultList}/>
                     </div>
@@ -162,7 +162,7 @@ class Audit extends React.Component {
                     </div>
                 </div>
             </div>
-            <AuditFindings audit={audit} onChange={this._mergeChange}/>
+            <AuditFindings audit={audit} auditType={auditType ? auditType.id : ''} onChange={this._mergeChange}/>
         </div>;
     }
 }

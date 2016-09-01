@@ -29,7 +29,9 @@ describe('Audit', () => {
         var change = onChange.calls.argsFor(0)[0],
             newTypes = change.audit.types;
         expect(newTypes.indexOf(selectedCategory.id)).not.toEqual(-1);
-        expect(newTypes.indexOf(originalCategory.id)).toEqual(-1);
+        if (selectedCategory.id !== originalCategory.id) {
+            expect(newTypes.indexOf(originalCategory.id)).toEqual(-1);
+        }
     });
 
     it('adds selected audit type when no other types where present in audit on audit type select', () => {

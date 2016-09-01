@@ -17,4 +17,4 @@ CONSTRUCT {
     }
   }
 } ORDER BY asc(?label)
-VALUES (?audit_type ?prefLang) {(<http://onto.fel.cvut.cz/ontologies/aviation/cz/caa/cat/audit/checklist/C01> "cs")}
+VALUES (?prefLang) {("cs")}

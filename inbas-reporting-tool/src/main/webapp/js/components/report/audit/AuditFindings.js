@@ -14,6 +14,7 @@ import Utils from "../../../utils/Utils";
 class AuditFindings extends React.Component {
     static propTypes = {
         audit: React.PropTypes.object.isRequired,
+        auditType: React.PropTypes.string,
         onChange: React.PropTypes.func.isRequired
     };
 
@@ -22,14 +23,14 @@ class AuditFindings extends React.Component {
         this.i18n = props.i18n;
         this.state = {
             showWindow: false,
-            findingType: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions('auditType')),
+            findingType: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions('findingType')),
             currentFinding: null
         };
     }
 
     componentDidMount() {
         if (this.state.findingType.length === 0) {
-            Actions.loadOptions('findingType');
+            Actions.loadOptions('findingType', this.props.auditType ? {'audit_type': encodeURIComponent(this.props.auditType)} : null);
         }
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
     }
@@ -42,6 +43,12 @@ class AuditFindings extends React.Component {
 
     componentWillUnmount() {
         this.unsubscribe();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.auditType && nextProps.auditType !== this.props.auditType) {
+            Actions.loadOptions('findingType', {'audit_type': encodeURIComponent(nextProps.auditType)});
+        }
     }
 
     _onAddFinding = () => {
@@ -95,8 +102,8 @@ class AuditFindings extends React.Component {
     render() {
         var addClass = this._hasFindings() ? 'float-right' : '';
         return <div>
-            <AuditFinding show={this.state.showWindow} finding={this.state.currentFinding} onSave={this._onEditFinish}
-                          onClose={this._onEditClose}/>
+            <AuditFinding show={this.state.showWindow} finding={this.state.currentFinding}
+                          onSave={this._onEditFinish} onClose={this._onEditClose}/>
             <Panel header={<h5>{this.i18n('audit.findings.header')}</h5>} bsStyle='info'>
                 {this._renderPanelContent()}
                 <div className={addClass}>
@@ -121,8 +128,8 @@ class AuditFindings extends React.Component {
         return <Table striped bordered condensed hover>
             <thead>
             <tr>
-                <th className='col-xs-7 content-center'>{this.i18n('audit.findings.table.description')}</th>
-                <th className='col-xs-2 content-center'>{this.i18n('audit.findings.table.type')}</th>
+                <th className='col-xs-5 content-center'>{this.i18n('audit.findings.table.description')}</th>
+                <th className='col-xs-4 content-center'>{this.i18n('audit.findings.table.type')}</th>
                 <th className='col-xs-1 content-center'>{this.i18n('audit.findings.table.level')}</th>
                 <th className='col-xs-2 content-center'>{this.i18n('table-actions')}</th>
             </tr>
@@ -149,7 +156,7 @@ var FindingRow = (props) => {
         type = Utils.resolveType(finding.types, props.findingType);
     return <tr>
         <td className='report-row'><CollapsibleText text={finding.description}/></td>
-        <td className='report-row content-center'>{type ? type.name : ''}</td>
+        <td className='report-row content-center'><CollapsibleText text={type ? type.name : ''}/></td>
         <td className='report-row content-center'>{finding.level}</td>
         <td className='report-row actions'>
             <Button bsStyle='primary' bsSize='small' title={props.i18n('audit.findings.table.open-tooltip')}

@@ -150,6 +150,7 @@ module.exports = {
         'audit.finding.header': 'Kontrolní zjištění',
         'audit.finding.type.label': 'Typ zjištění',
         'audit.finding.type.placeholder': 'Vyberte typ zjištění',
+        'audit.finding.type.edit-tooltip': 'Klikněte zde pro editaci typu zjištění',
         'audit.finding.level': 'Nález úrovně {level}',
         'audit.finding.description-tooltip': 'Popis zjištěného nálezu',
         'audit.finding.factors': 'Faktory nálezu',

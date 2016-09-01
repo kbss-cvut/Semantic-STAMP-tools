@@ -148,6 +148,7 @@ module.exports = {
         'audit.finding.header': 'Audit finding',
         'audit.finding.type.label': 'Finding type',
         'audit.finding.type.placeholder': 'Select finding type',
+        'audit.finding.type.edit-tooltip': 'Click to edit finding type',
         'audit.finding.level': 'Finding level {level}',
         'audit.finding.description-tooltip': 'Description of the finding',
         'audit.finding.factors': 'Finding factors',

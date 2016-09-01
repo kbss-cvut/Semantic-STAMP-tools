@@ -34,11 +34,11 @@ class AuditFinding extends React.Component {
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
     }
 
-    _onOptionsLoaded(type, data) {
+    _onOptionsLoaded = (type, data) => {
         if (type === 'findingType') {
             this.setState({findingType: JsonLdUtils.processTypeaheadOptions(data)});
         }
-    }
+    };
 
     componentWillUnmount() {
         this.unsubscribe();
@@ -81,6 +81,7 @@ class AuditFinding extends React.Component {
         if (!finding) {
             return null;
         }
+        var findingType = this._resolveFindingType();
         return <Modal show={this.props.show} bsSize='large' animation={true} dialogClassName='large-modal'
                       onHide={this.props.onClose}>
             <Modal.Header closeButton>
@@ -88,13 +89,14 @@ class AuditFinding extends React.Component {
             </Modal.Header>
             <div className='modal-body'>
                 <div className='row'>
-                    <div className='col-xs-4'>
+                    <div className='col-xs-12'>
                         <label className='control-label'>{this.i18n('audit.finding.type.label')}</label>
                         <Typeahead className='form-group form-group-sm' formInputOption='id'
                                    placeholder={this.i18n('audit.finding.type.placeholder')}
                                    onOptionSelected={this._onTypeSelected} filterOption='name' displayOption='name'
-                                   value={this._resolveFindingType()} options={this.state.findingType}
+                                   value={findingType} options={this.state.findingType}
                                    customClasses={{input: 'form-control'}} optionsButton={true}
+                                   inputProps={{title: findingType}}
                                    customListComponent={TypeaheadResultList}/>
                     </div>
                 </div>
@@ -114,7 +116,7 @@ class AuditFinding extends React.Component {
                 </div>
                 <div className='row'>
                     <FindingFactors factors={finding.factors} onChange={this._mergeChange}/>
-                    </div>
+                </div>
             </div>
             <Modal.Footer>
                 <Button bsSize='small' bsStyle='success'
