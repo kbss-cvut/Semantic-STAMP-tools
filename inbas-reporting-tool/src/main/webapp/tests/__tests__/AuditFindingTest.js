@@ -36,6 +36,8 @@ describe('AuditFinding', () => {
 
         var newFinding = component.getWrappedComponent().state.finding;
         expect(newFinding.types.indexOf(selectedType.id)).not.toEqual(-1);
-        expect(newFinding.types.indexOf(originalType.id)).toEqual(-1);
+        if (selectedType !== originalType) {
+            expect(newFinding.types.indexOf(originalType.id)).toEqual(-1);
+        }
     });
 });

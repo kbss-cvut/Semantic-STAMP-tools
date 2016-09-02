@@ -64,7 +64,7 @@ class FindingFactors extends React.Component {
     };
 
     render() {
-        return <div className='col-xs-12'>
+        return <div className='col-xs-12 form-group'>
             <div className='row'>
                 <div className='col-xs-4'>
                     <label className="control-label">{this.i18n('audit.finding.factors')}</label>

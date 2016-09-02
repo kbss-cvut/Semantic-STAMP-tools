@@ -3,9 +3,14 @@
 import React from "react";
 import {Button, Glyphicon, Panel, Table} from "react-bootstrap";
 import CollapsibleText from "../../CollapsibleText";
+import Constants from "../../../constants/Constants";
+import CorrectiveMeasure from "../../correctivemeasure/CorrectiveMeasure";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import Utils from "../../../utils/Utils";
+
+const MEASURE_ATTRIBUTES = [Constants.CORRECTIVE_MEASURE.DESCRIPTION, Constants.CORRECTIVE_MEASURE.DEADLINE,
+    Constants.CORRECTIVE_MEASURE.IMPLEMENTED];
 
 class FindingMeasures extends React.Component {
     static propTypes = {
@@ -28,6 +33,7 @@ class FindingMeasures extends React.Component {
 
     _onAddMeasure = () => {
         var measure = {
+            deadline: Date.now(),
             isNew: true
         };
         this._onEditMeasure(measure);
@@ -65,16 +71,22 @@ class FindingMeasures extends React.Component {
     }
 
     render() {
-        return <Panel header={<h5>{this.i18n('report.corrective.panel-title')}</h5>} bsStyle='info'>
-            <div className={this._hasMeasures() > 0 ? 'float-right' : ''}>
+        return <div>
+            <CorrectiveMeasure correctiveMeasure={this.state.currentMeasure} show={this.state.showWindow}
+                               onSave={this._onEditFinished} onClose={this._onEditClose}
+                               attributes={MEASURE_ATTRIBUTES}/>
+
+            <Panel header={<h5>{this.i18n('report.corrective.panel-title')}</h5>} bsStyle='info'>
                 {this._renderPanelContent()}
-                <Button bsStyle='primary' bsSize='small' onClick={this._onAddMeasure}
-                        title={this.props.i18n('report.corrective.add-tooltip')}>
-                    <Glyphicon glyph='plus' className='add-icon-glyph'/>
-                    {this.props.i18n('add')}
-                </Button>
-            </div>
-        </Panel>;
+                <div className={this._hasMeasures() > 0 ? 'float-right' : ''}>
+                    <Button bsStyle='primary' bsSize='small' onClick={this._onAddMeasure}
+                            title={this.props.i18n('report.corrective.add-tooltip')}>
+                        <Glyphicon glyph='plus' className='add-icon-glyph'/>
+                        {this.props.i18n('add')}
+                    </Button>
+                </div>
+            </Panel>
+        </div>;
     }
 
     _renderPanelContent() {
@@ -119,7 +131,8 @@ var MeasureRow = (props) => {
         <td className='report-row'><CollapsibleText text={measure.description}/></td>
         <td className='report-row content-center'>{formattedDeadline}</td>
         <td className='report-row content-center'>
-            <Glyphicon glyph={measure.implemented ? 'ok-sign' : 'remove-sign'}/>
+            <Glyphicon glyph={measure.implemented ? 'ok-sign' : 'remove-sign'}
+                       title={props.i18n(measure.implemented ? 'audit.finding.measures.implemented.yes' : 'audit.finding.measures.implemented.no')}/>
         </td>
         <td className='report-row actions'>
             <Button bsStyle='primary' bsSize='small' title={props.i18n('audit.finding.measures.open-tooltip')}

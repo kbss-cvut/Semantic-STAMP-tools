@@ -47,6 +47,7 @@ describe('FindingMeasures', () => {
 
     it('appends new measure to the end of measures on edit finish', () => {
         var newMeasure = {
+                deadline: Date.now(),
                 isNew: true,
                 description: 'New corrective measure'
             },
@@ -60,6 +61,7 @@ describe('FindingMeasures', () => {
 
     it('adds first measure on edit finish', () => {
         var newMeasure = {
+                deadline: Date.now(),
                 isNew: true,
                 description: 'New corrective measure'
             },

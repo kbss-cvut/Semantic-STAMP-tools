@@ -160,8 +160,16 @@ module.exports = {
         'audit.finding.measures.description': 'Popis opatření',
         'audit.finding.measures.deadline': 'Termín zavedení',
         'audit.finding.measures.implemented': 'Bylo zavedeno?',
+        'audit.finding.measures.implemented.yes': 'Nápravné opatření bylo zavedeno',
+        'audit.finding.measures.implemented.no': 'Nápravné opatření ještě nebylo zavedeno',
         'audit.finding.measures.open-tooltip': 'Zobrazit a editovat toto nápravné opatření',
         'audit.finding.measures.delete-tooltip': 'Odstranit toto nápravné opatření',
+
+        'correctivemeasure.title': 'Nápravné opatření',
+        'correctivemeasure.description.placeholder': 'Popis nápravného opatření',
+        'correctivemeasure.description.tooltip': 'Popis nápravného opatření - pole je povinné',
+        'correctivemeasure.deadline': 'Nejpozdější termín zavedení',
+        'correctivemeasure.deadline.tooltip': 'Datum, do kdy by opatření mělo být zavedeno',
 
         'initial.panel-title': 'Prvotní hlášení',
         'initial.table-report': 'Hlášení',

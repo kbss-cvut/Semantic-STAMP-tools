@@ -157,9 +157,17 @@ module.exports = {
         'audit.finding.measures.no-measures-message': 'There are not corrective measures',
         'audit.finding.measures.description': 'Measure description',
         'audit.finding.measures.deadline': 'Measure deadline',
-        'audit.finding.measures.implemented': 'Was implemented?',
+        'audit.finding.measures.implemented': 'Implemented?',
+        'audit.finding.measures.implemented.yes': 'The corrective measure has been implemented',
+        'audit.finding.measures.implemented.no': 'The corrective measure has not been implemented, yet',
         'audit.finding.measures.open-tooltip': 'View and edit this corrective measure',
         'audit.finding.measures.delete-tooltip': 'Remove this corrective measure',
+
+        'correctivemeasure.title': 'Corrective measure',
+        'correctivemeasure.description.placeholder': 'Corrective measure description',
+        'correctivemeasure.description.tooltip': 'Corrective measure description - field is required',
+        'correctivemeasure.deadline': 'Implementation deadline',
+        'correctivemeasure.deadline.tooltip': 'Date until which the measure should be implemented',
 
         'initial.panel-title': 'Initial reports',
         'initial.table-report': 'Report',

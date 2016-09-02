@@ -92,5 +92,12 @@ module.exports = {
     AUDIT_REPORT_LIST_ITEM_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.reportlist.AuditReportDto',
 
     // Audit finding level, numbering starts at 1 and the maximum is included
-    FINDING_LEVEL_MAX: 2
+    FINDING_LEVEL_MAX: 2,
+
+    // Currently supported corrective measure attributes
+    CORRECTIVE_MEASURE: {
+        DESCRIPTION: 'description',
+        DEADLINE: 'deadline',
+        IMPLEMENTED: 'implemented'
+    }
 };
