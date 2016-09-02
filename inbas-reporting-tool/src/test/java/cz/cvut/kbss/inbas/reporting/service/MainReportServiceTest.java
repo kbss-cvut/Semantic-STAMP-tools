@@ -4,6 +4,7 @@ import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.inbas.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
@@ -16,8 +17,11 @@ import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.SafetyIssueReportDao;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
@@ -58,7 +62,16 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     private OccurrenceReportService occurrenceReportService;
 
     @Autowired
+    private SafetyIssueReportDao safetyIssueReportDao;
+
+    @Autowired
     private SafetyIssueReportService safetyIssueReportService;
+
+    @Autowired
+    private AuditReportDao auditReportDao;
+
+    @Autowired
+    private AuditReportService auditReportService;
 
     @Autowired
     private ReportCache reportCache;
@@ -133,6 +146,28 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         report.setAuthor(author);
         safetyIssueReportService.persist(report);
         return report;
+    }
+
+    @Test
+    public void testFindAuditReportByKey() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(false);
+        report.setAuthor(author);
+        auditReportService.persist(report);
+
+        final AuditReport result = reportService.findByKey(report.getKey());
+        assertNotNull(result);
+        assertEquals(report.getUri(), result.getUri());
+    }
+
+    @Test
+    public void testPersistAuditReport() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(false);
+        report.setAuthor(author);
+        reportService.persist(report);
+
+        final AuditReport result = auditReportService.find(report.getUri());
+        assertNotNull(result);
+        assertEquals(report.getUri(), result.getUri());
     }
 
     @Test(expected = UnsupportedReportTypeException.class)
@@ -315,7 +350,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Test
     public void findAllReturnsLatestRevisionsOfAllReportChains() {
         // Once other report types are added, they should be added into this tests
-        final List<LogicalDocument> latestRevisions = initReportChains();
+        final List<LogicalDocument> latestRevisions = initOccurrenceReportChains();
 
         final List<ReportDto> result = reportService.findAll();
         assertTrue(Environment.areEqual(latestRevisions, result));
@@ -324,7 +359,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Test
     public void findAllPutsRetrievedReportsIntoCache() {
         // Once other report types are added, they should be added into this tests
-        initReportChains();
+        initOccurrenceReportChains();
 
         assertTrue(reportCache.getAll().isEmpty());
         final List<ReportDto> result = reportService.findAll();
@@ -334,7 +369,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void findAllRetrievesInstancesFromReportCache() {
-        initReportChains();
+        initOccurrenceReportChains();
         // First time will put the reports into cache
         reportService.findAll();
         reportService.findAll();
@@ -347,7 +382,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
      *
      * @return List of latest revisions of the generated chains, ordered by date created descending
      */
-    private List<LogicalDocument> initReportChains() {
+    private List<LogicalDocument> initOccurrenceReportChains() {
         final List<LogicalDocument> latestRevisions = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final List<OccurrenceReport> chain = persistOccurrenceReportChain();
@@ -413,7 +448,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void findAllAfterCacheEvictLoadsReportsFromRepository() throws Exception {
-        initReportChains();
+        initOccurrenceReportChains();
         assertTrue(reportCache.getAll().isEmpty());
         assertFalse(reportService.findAll().isEmpty());
         assertFalse(reportCache.getAll().isEmpty());
@@ -422,5 +457,32 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertFalse(reportService.findAll().isEmpty());
         assertFalse(reportCache.getAll().isEmpty());
         verify(occurrenceReportService, times(2)).findAll();
+    }
+
+    @Test
+    public void findAllLoadsLatestRevisionsOfAllKindsOfReports() {
+        final List<LogicalDocument> latestRevisions = initReportChainsForFindAll();
+        final List<ReportDto> result = reportService.findAll();
+        assertTrue(Environment.areEqual(latestRevisions, result));
+    }
+
+    private List<LogicalDocument> initReportChainsForFindAll() {
+        final List<LogicalDocument> list = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(1, 10); i++) {
+            final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
+            occurrenceReportDao.persist(chain);
+            list.add(chain.get(chain.size() - 1));
+        }
+        for (int i = 0; i < Generator.randomInt(1, 10); i++) {
+            final List<SafetyIssueReport> chain = SafetyIssueReportGenerator.generateSafetyIssueReportChain(author);
+            safetyIssueReportDao.persist(chain);
+            list.add(chain.get(chain.size() - 1));
+        }
+        for (int i = 0; i < Generator.randomInt(1, 10); i++) {
+            final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(author);
+            auditReportDao.persist(chain);
+            list.add(chain.get(chain.size() - 1));
+        }
+        return list;
     }
 }

@@ -53,4 +53,21 @@ describe('Report factory', () => {
         }
         expect(report.factorGraph.edges.length).toEqual(originalGraph.edges.length);
     });
+
+    it('creates audit report for audit report Java class', () => {
+        var report = ReportFactory.createReport(Constants.AUDIT_REPORT_JAVA_CLASS);
+        expect(report.javaClass).toEqual(Constants.AUDIT_REPORT_JAVA_CLASS);
+    });
+
+    it('creates audit report for audit report OWL class', () => {
+        var report = ReportFactory.createReport(Vocabulary.AUDIT_REPORT);
+        expect(report.javaClass).toEqual(Constants.AUDIT_REPORT_JAVA_CLASS);
+    });
+
+    it('sets audit start and end date', () => {
+        var report = ReportFactory.createReport(Vocabulary.AUDIT_REPORT);
+        expect(report.audit).toBeDefined();
+        expect(report.audit.startDate).toBeDefined();
+        expect(report.audit.endDate).toBeDefined();
+    });
 });

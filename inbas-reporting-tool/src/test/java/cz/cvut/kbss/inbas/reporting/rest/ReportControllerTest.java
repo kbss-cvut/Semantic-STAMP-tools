@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
+import cz.cvut.kbss.inbas.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
@@ -17,6 +18,7 @@ import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
@@ -94,6 +96,12 @@ public class ReportControllerTest extends BaseControllerTestRunner {
             r.setAuthor(author);
             dtos.add(r.toReportDto());
         }
+        for (int i = 0; i < count; i++) {
+            final AuditReport r = AuditReportGenerator.generateAuditReport(true);
+            r.setUri(Generator.generateUri());
+            r.setAuthor(author);
+            dtos.add(r.toReportDto());
+        }
         // Some random shuffling
         Collections.shuffle(dtos);
         return dtos;
@@ -143,6 +151,21 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         assertNotNull(res);
         assertEquals(latestRevision.getUri(), res.getUri());
         assertEquals(latestRevision.getRevision(), res.getRevision());
+    }
+
+    @Test
+    public void testGetReportForAuditReport() throws Exception {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+        report.getAudit().setUri(Generator.generateUri());
+        report.setKey(IdentificationUtils.generateKey());
+        report.setUri(Generator.generateUri());
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final MvcResult result = mockMvc.perform(get(REPORTS_PATH + report.getKey())).andExpect(status().isOk())
+                                        .andReturn();
+        final AuditReport res = readValue(result, AuditReport.class);
+        assertNotNull(res);
+        assertEquals(report.getUri(), res.getUri());
+        assertEquals(report.getKey(), res.getKey());
     }
 
     @Test

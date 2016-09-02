@@ -1,5 +1,5 @@
 #
-# Generic query to get event types
+# Gets locations for the audit module
 #
 BASE <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 
@@ -15,7 +15,7 @@ CONSTRUCT {
   ?term rdfs:label ?label ;
     a ?type.
 } WHERE {
-  SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
+  SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
     # all events
     eccairs-current:a-5 eccairs-model:has-child+   ?term.
     ?term rdfs:label ?label.

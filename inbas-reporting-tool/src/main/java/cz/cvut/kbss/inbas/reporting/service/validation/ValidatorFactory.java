@@ -15,4 +15,9 @@ public class ValidatorFactory {
     public OccurrenceReportValidator occurrenceReportValidator(ReportValidator reportValidator) {
         return new OccurrenceReportValidator(reportValidator);
     }
+
+    @Bean
+    public AuditReportValidator auditReportValidator(ReportValidator reportValidator) {
+        return new AuditReportValidator(reportValidator);
+    }
 }

@@ -14,6 +14,10 @@ var SafetyIssueReportController = React.createClass({
         ReportDetailControllerMixin
     ],
 
+    componentDidMount: function() {
+        Actions.loadOptions('factorType');
+    },
+
     onSuccess: function (key) {
         if (this.props.report.isNew) {
             Routing.transitionTo(Routes.reports);

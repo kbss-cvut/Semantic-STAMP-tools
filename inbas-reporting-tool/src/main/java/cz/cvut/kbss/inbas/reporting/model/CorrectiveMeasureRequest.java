@@ -43,6 +43,9 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     @OWLObjectProperty(iri = Vocabulary.s_p_has_evaluation, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private CorrectiveMeasureImplementationEvaluation evaluation;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_is_implemented)
+    private Boolean implemented;
+
     public CorrectiveMeasureRequest() {
     }
 
@@ -58,6 +61,7 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
         this.description = other.description;
         this.deadline = other.deadline;
         this.phase = other.phase;
+        this.implemented = other.implemented;
         if (other.responsiblePersons != null) {
             this.responsiblePersons = new HashSet<>(other.responsiblePersons);
         }
@@ -104,6 +108,9 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     }
 
     public Set<Organization> getResponsibleOrganizations() {
+        if (responsibleOrganizations == null) {
+            this.responsibleOrganizations = new HashSet<>();
+        }
         return responsibleOrganizations;
     }
 
@@ -144,6 +151,14 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
 
     public void setEvaluation(CorrectiveMeasureImplementationEvaluation evaluation) {
         this.evaluation = evaluation;
+    }
+
+    public Boolean isImplemented() {
+        return implemented;
+    }
+
+    public void setImplemented(Boolean implemented) {
+        this.implemented = implemented;
     }
 
     @Override

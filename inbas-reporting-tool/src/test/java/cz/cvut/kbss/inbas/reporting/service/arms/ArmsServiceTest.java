@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 public class ArmsServiceTest {
@@ -32,12 +34,10 @@ public class ArmsServiceTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         this.report = OccurrenceReportGenerator.generateOccurrenceReport(false);
-        doReturn(new RawJson(Environment.loadData("data/accidentOutcome.json", String.class))).when(optionsService)
-                                                                                              .getOptions(
-                                                                                                      "accidentOutcome");
-        doReturn(new RawJson(Environment.loadData("data/barrierEffectiveness.json", String.class))).when(optionsService)
-                                                                                                   .getOptions(
-                                                                                                           "barrierEffectiveness");
+        doReturn(new RawJson(Environment.loadData("data/accidentOutcome.json", String.class)))
+                .when(optionsService).getOptions(eq("accidentOutcome"), anyMap());
+        doReturn(new RawJson(Environment.loadData("data/barrierEffectiveness.json", String.class)))
+                .when(optionsService).getOptions(eq("barrierEffectiveness"), anyMap());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ArmsServiceTest {
 
     @Test
     public void calculateArmsReturnsZeroWhenItWasUnableToLoadArmsValues() {
-        doReturn(new RawJson("")).when(optionsService).getOptions("accidentOutcome");
+        doReturn(new RawJson("")).when(optionsService).getOptions(eq("accidentOutcome"), anyMap());
         armsService.initArmsAttributes();
         assertEquals(0, armsService.calculateArmsIndex(OccurrenceReportGenerator.ACCIDENT_MINOR,
                 OccurrenceReportGenerator.BARRIER_EFFECTIVE));

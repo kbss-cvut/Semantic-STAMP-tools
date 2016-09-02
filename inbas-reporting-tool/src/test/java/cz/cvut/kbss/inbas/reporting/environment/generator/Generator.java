@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.environment.generator;
 import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.model.qam.Answer;
 import cz.cvut.kbss.inbas.reporting.model.qam.Question;
+import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 
 import java.net.URI;
 import java.util.*;
@@ -191,6 +192,7 @@ public class Generator {
             cmr.setDescription(UUID.randomUUID().toString());
             cmr.setDeadline(new Date());
             cmr.setPhase(generateUri());
+            cmr.setImplemented(randomBoolean());
             if (Generator.randomBoolean()) {
                 cmr.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
                 final CorrectiveMeasureImplementationEvaluation evaluation = new CorrectiveMeasureImplementationEvaluation();
@@ -203,5 +205,13 @@ public class Generator {
             set.add(cmr);
         }
         return set;
+    }
+
+    static void setReportAttributes(AbstractReport report) {
+        report.setAuthor(Generator.getPerson());
+        report.setDateCreated(new Date());
+        report.setKey(IdentificationUtils.generateKey());
+        report.setFileNumber((long) Generator.randomInt(Integer.MAX_VALUE));
+        report.setRevision(1);
     }
 }

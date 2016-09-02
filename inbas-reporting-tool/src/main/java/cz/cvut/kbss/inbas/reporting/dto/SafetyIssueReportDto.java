@@ -4,13 +4,12 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.SafetyIssueDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 
 import java.util.Set;
 
 // Safety issue must come before the factor graph
 @JsonPropertyOrder(value = {"uri, key, safetyIssue, factorGraph"})
-public class SafetyIssueReportDto extends AbstractReportDto implements LogicalDocument {
+public class SafetyIssueReportDto extends AbstractReportDto {
 
     private SafetyIssueDto safetyIssue;
 

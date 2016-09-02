@@ -12,11 +12,13 @@ import cz.cvut.kbss.inbas.reporting.dto.event.*;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
+import cz.cvut.kbss.inbas.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
@@ -60,6 +62,7 @@ public class DtoMapperTest {
         assertNotNull(dto);
         assertEquals(req.getUri(), dto.getUri());
         assertEquals(req.getDescription(), dto.getDescription());
+        assertEquals(req.isImplemented(), dto.isImplemented());
     }
 
     @Test
@@ -117,6 +120,7 @@ public class DtoMapperTest {
             organizations.add(org);
         }
         request.setResponsibleOrganizations(organizations);
+        request.setImplemented(Generator.randomBoolean());
         return request;
     }
 
@@ -181,12 +185,14 @@ public class DtoMapperTest {
         assertNotNull(req);
         assertEquals(dto.getUri(), req.getUri());
         assertEquals(dto.getDescription(), req.getDescription());
+        assertEquals(dto.isImplemented(), req.isImplemented());
     }
 
     private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDto() {
         final CorrectiveMeasureRequestDto dto = new CorrectiveMeasureRequestDto();
         dto.setUri(URI.create(Vocabulary.s_c_corrective_measure_request + "#req"));
         dto.setDescription("Sample corrective measure.");
+        dto.setImplemented(Generator.randomBoolean());
         return dto;
     }
 
@@ -419,5 +425,34 @@ public class DtoMapperTest {
         assertNotNull(result);
         assertEquals(1, result.getBasedOn().size());
         assertEquals(basedOn, result.getBasedOn().iterator().next());
+    }
+
+    @Test
+    public void reportToReportDtoReturnsTheSameInstanceWithAddedTypeForAuditReport() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+        assertFalse(report.getTypes().contains(Vocabulary.s_c_audit_report));
+
+        final LogicalDocument dto = mapper.reportToReportDto(report);
+        assertSame(report, dto);
+        final AuditReport result = (AuditReport) dto;
+        assertTrue(result.getTypes().contains(Vocabulary.s_c_audit_report));
+    }
+
+    @Test
+    public void reportDtoToReportReturnsTheSameInstanceForAuditReport() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+
+        final LogicalDocument result = mapper.reportDtoToReport(report);
+        assertSame(report, result);
+    }
+
+    @Test
+    public void reportDtoToReportRemovesAuditReportClassFromAuditReportTypes() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+        report.addType(Vocabulary.s_c_audit_report);
+
+        final LogicalDocument result = mapper.reportDtoToReport(report);
+        assertSame(report, result);
+        assertFalse(((AuditReport) result).getTypes().contains(Vocabulary.s_c_audit_report));
     }
 }

@@ -201,6 +201,17 @@ td.actions button {
     font-size: 11px;
 }
 
+.inline-mask {
+    display: inline-block;
+    background: rgba(245, 245, 245, 0.6);
+    z-index: 101;
+}
+
+.inline-mask .spinner-container {
+    text-align: center;
+    vertical-align: middle;
+}
+
 .dashboard-sector {
     text-align: center;
     vertical-align: middle;
@@ -259,12 +270,6 @@ td.actions button {
 .gantt-zoom-label {
     margin: 10px 0;
 }
-
-/*.gantt_grid_head_add {*/
-/*background-image: none;*/
-/*cursor: default;*/
-/*pointer-events: none;*/
-/*}*/
 
 .gantt-link-causes {
     background-color: #ff0000;
@@ -539,4 +544,32 @@ button.reset-filters {
 .buttons-right {
     margin-top: 1em;
     margin-bottom: 0.5em;
+}
+
+.add-icon-glyph {
+    margin-right: 5px;
+}
+
+.remove-icon-glyph {
+    margin-left: 5px;
+}
+
+.finding-factor-label {
+    margin-right: 0.5em;
+    padding: 0.4em;
+    font-size: 95%;
+    display: inline-block;
+}
+
+.finding-factor-row-with-margin {
+    margin-top: 0.8em;
+}
+
+.help-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    padding-top: 10px;
+    margin-left: -15px;
+    vertical-align: bottom;
 }

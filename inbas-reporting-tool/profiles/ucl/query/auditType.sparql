@@ -1,0 +1,18 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX documentation: <http://onto.fel.cvut.cz/ontologies/documentation/>
+
+CONSTRUCT {
+    ?audit_type rdfs:label ?label .
+} WHERE {
+    SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/binbas-checklist> {
+        ?audit_type a documentation:checklist .
+        OPTIONAL {
+            ?audit_type rdfs:label ?label .
+            FILTER(lang(?label)=?prefLang)
+        }
+        OPTIONAL {
+            ?audit_type rdfs:label ?label .
+        }
+    }
+}
+VALUES (?prefLang) {("cs")}

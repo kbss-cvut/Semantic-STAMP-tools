@@ -20,6 +20,9 @@ module.exports = {
      * @param date The date to format
      */
     formatDate: function (date) {
+        if (!date) {
+            return '';
+        }
         var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate().toString();
         var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1).toString();
         var year = (date.getFullYear() % 100).toString();
@@ -218,5 +221,22 @@ module.exports = {
             return Constants.TIME_SCALES.MINUTE;
         }
         return Constants.TIME_SCALES.HOUR;
+    },
+
+    /**
+     * Given a set of type URIs and a collection of options, finds the first option, whose id matches any of the types.
+     * @param types Type URIs
+     * @param options Typeahead options
+     */
+    resolveType: function (types, options) {
+        if (!options || options.length === 0 || !types || types.length === 0) {
+            return null;
+        }
+        for (var i = 0, len = options.length; i < len; i++) {
+            if (types.indexOf(options[i].id) !== -1) {
+                return options[i];
+            }
+        }
+        return null;
     }
 };

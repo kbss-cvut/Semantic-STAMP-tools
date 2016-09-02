@@ -26,7 +26,7 @@ public class SafetyIssueReportDao extends BaseReportDao<SafetyIssueReport> {
                 "?x a ?type ; " +
                 "?hasFileNumber ?fileNo ;" +
                 "?hasRevision ?revision ;" +
-                "?wasCreated ?dateCreated" +
+                "?wasCreated ?dateCreated ." +
                 "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
                 "{ ?y a ?type; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . } GROUP BY ?iFileNo }" +
                 "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +

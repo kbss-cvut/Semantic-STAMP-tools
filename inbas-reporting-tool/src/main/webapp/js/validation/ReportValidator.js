@@ -112,4 +112,25 @@ var SafetyIssueReportValidator = {
 
 validators[Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS] = SafetyIssueReportValidator;
 
+var AuditReportValidator = {
+    getValidationMessage: function (report) {
+        if (!report.audit) {
+            return 'detail.invalid-tooltip';
+        }
+        if (!report.audit.name || report.audit.name.length === 0) {
+            return 'detail.invalid-tooltip';
+        }
+        if (!report.audit.auditee) {
+            return 'detail.invalid-tooltip';
+        }
+        return null;
+    },
+
+    getRenderError: function (report) {
+        return null;
+    }
+};
+
+validators[Constants.AUDIT_REPORT_JAVA_CLASS] = AuditReportValidator;
+
 module.exports = ReportValidator;

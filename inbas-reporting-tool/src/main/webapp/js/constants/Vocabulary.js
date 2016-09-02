@@ -9,6 +9,7 @@ module.exports = {
 
     OCCURRENCE_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/occurrence_report',
     SAFETY_ISSUE_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/safety_issue_report',
+    AUDIT_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/audit_report',
 
     HAS_PART: 'http://onto.fel.cvut.cz/ontologies/ufo/has_part',
     TRANSITION_LABEL: 'http://onto.fel.cvut.cz/ontologies/documentation/transition_label'

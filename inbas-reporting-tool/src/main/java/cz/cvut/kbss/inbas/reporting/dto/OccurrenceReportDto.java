@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.FormGenData;
 
@@ -13,7 +12,7 @@ import java.util.Set;
 
 // It is important that occurrence comes before factorGraph, because it defines a reference to the occurrence, which can the be used
 @JsonPropertyOrder(value = {"uri, key, occurrence, factorGraph"})
-public class OccurrenceReportDto extends AbstractReportDto implements LogicalDocument, FormGenData {
+public class OccurrenceReportDto extends AbstractReportDto implements FormGenData {
 
     private URI phase;
 

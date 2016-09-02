@@ -19,6 +19,7 @@ public class CorrectiveMeasureRequestTest {
         assertEquals(measure.getDescription(), copy.getDescription());
         assertEquals(measure.getDeadline(), copy.getDeadline());
         assertEquals(measure.getPhase(), copy.getPhase());
+        assertEquals(measure.isImplemented(), copy.isImplemented());
     }
 
     @Test

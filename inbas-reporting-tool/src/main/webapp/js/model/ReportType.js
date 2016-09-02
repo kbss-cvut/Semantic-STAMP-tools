@@ -158,6 +158,47 @@ class SafetyIssueReport {
         }
     }
 }
+
+class AuditReport {
+    constructor(data) {
+        assign(this, data);
+    }
+
+    static getDetailController() {
+        // Use require in method call to prevent circular dependencies with RevisionInfo
+        return require('../components/report/audit/AuditReportController');
+    }
+
+    getPhase() {
+        return '';
+    }
+
+    getLabel() {
+        return 'auditreport.label';
+    }
+
+    toString() {
+        return 'auditreport.title';
+    }
+
+    getHeadline() {
+        return this.audit.name;
+    }
+
+    renderMoreInfo() {
+        return <CollapsibleText text={this.summary}/>;
+    }
+
+    toReportListItem() {
+        var result = assign({}, this);
+        delete result.audit;
+        result.identification = this.audit.name;
+        result.date = this.audit.startDate;
+        result.javaClass = Constants.AUDIT_REPORT_LIST_ITEM_JAVA_CLASS;
+        return result;
+    }
+}
+
 var REPORT_TYPES = {};
 
 REPORT_TYPES[Vocabulary.OCCURRENCE_REPORT] = OccurrenceReport;
@@ -166,6 +207,9 @@ REPORT_TYPES[Constants.OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS] = OccurrenceRepor
 REPORT_TYPES[Vocabulary.SAFETY_ISSUE_REPORT] = SafetyIssueReport;
 REPORT_TYPES[Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS] = SafetyIssueReport;
 REPORT_TYPES[Constants.SAFETY_ISSUE_REPORT_LIST_ITEM_JAVA_CLASS] = SafetyIssueReport;
+REPORT_TYPES[Vocabulary.AUDIT_REPORT] = AuditReport;
+REPORT_TYPES[Constants.AUDIT_REPORT_JAVA_CLASS] = AuditReport;
+REPORT_TYPES[Constants.AUDIT_REPORT_LIST_ITEM_JAVA_CLASS] = AuditReport;
 
 var ReportType = {
 

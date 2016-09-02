@@ -79,6 +79,7 @@ module.exports = {
         'dashboard.view-all-tile': 'Prohlížet všechna hlášení',
         'dashboard.create-new-occurrence-report-tile': 'Nové hlášení o události',
         'dashboard.create-new-safety-issue-tile': 'Nový bezpečnostní problém',
+        'dashboard.create-new-audit-report-tile': 'Nová zpráva o auditu',
         'dashboard.create-import-tile': 'Importovat hlášení',
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
@@ -127,6 +128,68 @@ module.exports = {
 
         'safety-issue.name-tooltip': 'Krátké pojmenování problému - pole je povinné',
 
+        'audit.name-tooltip': 'Název auditu (např. jméno auditované organizace + datum) - pole je povinné',
+        'audit.type.label': 'Druh kontroly',
+        'audit.type.placeholder': 'Vyberte druh kontroly',
+        'audit.auditee.label': 'Kontrolované organizace',
+        'audit.auditee.placeholder': 'Vyberte kontrolovanou organizaci',
+        'audit.location.label': 'Místo kontroly',
+        'audit.location.placeholder': 'Vyberte místo kontroly',
+        'audit.start-date': 'Začátek kontroly',
+        'audit.start-date.tooltip': 'Datum a čas prvního kontrolního úkonu',
+        'audit.end-date': 'Konec kontroly',
+        'audit.end-date.tooltip': 'Datum a čas posledního kontrolního úkonu',
+        'audit.remarks': 'Poznámky',
+        'audit.remarks.placeholder': 'Poznámky k auditu',
+        'audit.findings.header': 'Kontrolní zjištění',
+        'audit.findings.no-findings-message': 'Nebyla zadána žádná kontrolní zjištění.',
+        'audit.findings.table.description': 'Popis nálezu',
+        'audit.findings.table.type': 'Typ nálezu',
+        'audit.findings.table.level': 'Úroveň nálezu',
+        'audit.findings.table.open-tooltip': 'Zobrazit a editovat toto zjištění',
+        'audit.findings.table.delete-tooltip': 'Odstranit toto zjištění',
+        'audit.findings.add-tooltip': 'Přidat nové zjištění',
+        'audit.finding.header': 'Kontrolní zjištění',
+        'audit.finding.type.label': 'Typ zjištění',
+        'audit.finding.type.placeholder': 'Vyberte typ zjištění',
+        'audit.finding.type.edit-tooltip': 'Klikněte zde pro editaci typu zjištění',
+        'audit.finding.level': 'Nález úrovně {level}',
+        'audit.finding.level-1.help': 'A level 1 finding shall be issued by the competent authority when any significant noncompliance '
+        + 'is detected with the applicable requirements of Regulation (EC) No 216/2008 and '
+        + 'its Implementing Rules, with the organisation’s procedures and manuals or with the terms of '
+        + 'an approval or certificate or with the content of a declaration which lowers safety or seriously '
+        + 'hazards flight safety. '
+        + 'The level 1 findings shall include: '
+        + '(1) failure to give the competent authority access to the organisation\'s facilities as defined '
+        + 'in ORO.GEN.140 during normal operating hours and after two written requests; '
+        + '(2) obtaining or maintaining the validity of the organisation certificate by falsification of '
+        + 'submitted documentary evidence; '
+        + '(3) evidence of malpractice or fraudulent use of the organisation certificate; and '
+        + '(4) the lack of an accountable manager.',
+        'audit.finding.level-2.help': 'A level 2 finding shall be issued by the competent authority when any non-compliance is '
+        + 'detected with the applicable requirements of Regulation (EC) No 216/2008 and its '
+        + 'Implementing Rules, with the organisation\'s procedures and manuals or with the terms of an '
+        + 'approval or certificate or with the content of a declaration which could lower safety or hazard '
+        + 'flight safety.',
+        'audit.finding.description-tooltip': 'Popis zjištěného nálezu',
+        'audit.finding.factors': 'Faktory nálezu',
+        'audit.finding.factors.placeholder': 'Typ faktoru',
+        'audit.finding.factors.remove-tooltip': 'Klikněte pro odstranení faktoru',
+        'audit.finding.measures.no-measures-message': 'Nebyla definována žádná nápravná opatření',
+        'audit.finding.measures.description': 'Popis opatření',
+        'audit.finding.measures.deadline': 'Termín zavedení',
+        'audit.finding.measures.implemented': 'Bylo zavedeno?',
+        'audit.finding.measures.implemented.yes': 'Nápravné opatření bylo zavedeno',
+        'audit.finding.measures.implemented.no': 'Nápravné opatření ještě nebylo zavedeno',
+        'audit.finding.measures.open-tooltip': 'Zobrazit a editovat toto nápravné opatření',
+        'audit.finding.measures.delete-tooltip': 'Odstranit toto nápravné opatření',
+
+        'correctivemeasure.title': 'Nápravné opatření',
+        'correctivemeasure.description.placeholder': 'Popis nápravného opatření',
+        'correctivemeasure.description.tooltip': 'Popis nápravného opatření - pole je povinné',
+        'correctivemeasure.deadline': 'Nejpozdější termín zavedení',
+        'correctivemeasure.deadline.tooltip': 'Datum, do kdy by opatření mělo být zavedeno',
+
         'initial.panel-title': 'Prvotní hlášení',
         'initial.table-report': 'Hlášení',
         'initial.wizard.add-title': 'Přidat prvotní hlášení',
@@ -167,6 +230,8 @@ module.exports = {
         'safetyissue.based-on': 'Vytvořeno na základě',
         'safetyissue.base-add-success': 'Podklad safety issue úspěšně přidán. Změny uložíte kliknutím na tlačítko \'Uložit\'',
         'safetyissue.base-add-duplicate': 'Safety issue již je založeno na daném hlášení.',
+        'auditreport.title': 'Hlášení o auditu',
+        'auditreport.label': 'Audit',
 
         'wizard.finish': 'Dokončit',
         'wizard.next': 'Další',

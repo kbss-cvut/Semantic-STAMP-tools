@@ -4,7 +4,6 @@ import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.SafetyIssueReportDto;
 import cz.cvut.kbss.inbas.reporting.model.AbstractReport;
 import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
-import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
@@ -14,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @OWLClass(iri = Vocabulary.s_c_safety_issue_report)
-public class SafetyIssueReport extends AbstractReport implements LogicalDocument, Serializable {
+public class SafetyIssueReport extends AbstractReport implements Serializable {
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.s_p_documents, fetch = FetchType.EAGER)
@@ -27,9 +26,7 @@ public class SafetyIssueReport extends AbstractReport implements LogicalDocument
     }
 
     public SafetyIssueReport(SafetyIssueReport other) {
-        this.fileNumber = other.fileNumber;
-        this.summary = other.summary;
-        types.addAll(other.getTypes());
+        super(other);
         this.safetyIssue = SafetyIssue.copyOf(other.safetyIssue);
         if (other.getCorrectiveMeasures() != null) {
             this.correctiveMeasures = other.getCorrectiveMeasures().stream().map(CorrectiveMeasureRequest::new).collect(

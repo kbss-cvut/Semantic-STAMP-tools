@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.*;
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
@@ -40,6 +41,9 @@ public abstract class DtoMapper {
         final Map<Class<?>, Class<?>> map = new HashMap<>();
         map.put(OccurrenceReport.class, OccurrenceReportDto.class);
         map.put(OccurrenceReportDto.class, OccurrenceReport.class);
+        map.put(SafetyIssueReport.class, SafetyIssueReportDto.class);
+        map.put(SafetyIssueReportDto.class, SafetyIssueReport.class);
+        map.put(AuditReport.class, AuditReport.class);
         map.put(CorrectiveMeasureRequest.class, CorrectiveMeasureRequestDto.class);
         map.put(CorrectiveMeasureRequestDto.class, CorrectiveMeasureRequest.class);
         map.put(Person.class, PersonDto.class);
@@ -80,6 +84,9 @@ public abstract class DtoMapper {
         if (report instanceof SafetyIssueReport) {
             return safetyIssueReportToSafetyIssueReportDto((SafetyIssueReport) report);
         }
+        if (report instanceof AuditReport) {
+            return auditReportToAuditReportDto((AuditReport) report);
+        }
         return report;
     }
 
@@ -93,6 +100,9 @@ public abstract class DtoMapper {
         }
         if (dto instanceof SafetyIssueReportDto) {
             return safetyIssueReportDtoToSafetyIssueReport((SafetyIssueReportDto) dto);
+        }
+        if (dto instanceof AuditReport) {
+            return auditReportDtoToAuditReport((AuditReport) dto);
         }
         return dto;
     }
@@ -111,6 +121,18 @@ public abstract class DtoMapper {
     @Mapping(source = "factorGraph", target = "safetyIssue")
     public abstract SafetyIssueReport safetyIssueReportDtoToSafetyIssueReport(SafetyIssueReportDto dto);
 
+    public AuditReport auditReportToAuditReportDto(AuditReport report) {
+        assert report != null;
+        report.addType(Vocabulary.s_c_audit_report);
+        return report;
+    }
+
+    public AuditReport auditReportDtoToAuditReport(AuditReport dto) {
+        assert dto != null;
+        dto.getTypes().remove(Vocabulary.s_c_audit_report);
+        return dto;
+    }
+
     public CorrectiveMeasureRequestDto correctiveMeasureRequestToDto(CorrectiveMeasureRequest req) {
         if (req == null) {
             return null;
@@ -118,6 +140,7 @@ public abstract class DtoMapper {
         final CorrectiveMeasureRequestDto dto = new CorrectiveMeasureRequestDto();
         dto.setUri(req.getUri());
         dto.setDescription(req.getDescription());
+        dto.setImplemented(req.isImplemented());
         final Set<AgentDto> agents = new HashSet<>();
         if (req.getResponsibleOrganizations() != null) {
             req.getResponsibleOrganizations().forEach(o -> agents.add(organizationToOrganizationDto(o)));
@@ -141,6 +164,7 @@ public abstract class DtoMapper {
         final CorrectiveMeasureRequest req = new CorrectiveMeasureRequest();
         req.setUri(dto.getUri());
         req.setDescription(dto.getDescription());
+        req.setImplemented(dto.isImplemented());
         if (dto.getResponsibleAgents() != null) {
             final Set<Person> persons = new HashSet<>(dto.getResponsibleAgents().size());
             final Set<Organization> organizations = new HashSet<>(dto.getResponsibleAgents().size());

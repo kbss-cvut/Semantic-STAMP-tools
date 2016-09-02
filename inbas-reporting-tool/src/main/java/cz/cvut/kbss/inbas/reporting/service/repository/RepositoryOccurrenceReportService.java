@@ -7,14 +7,10 @@ import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
-import cz.cvut.kbss.inbas.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.reporting.service.validation.OccurrenceReportValidator;
-import cz.cvut.kbss.inbas.reporting.util.Constants;
-import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Objects;
 
 @Service
@@ -25,7 +21,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     private OccurrenceReportDao reportDao;
 
     @Autowired
-    private SecurityUtils securityUtils;
+    private ReportMetadataService reportMetadataService;
 
     @Autowired
     private OccurrenceReportValidator validator;
@@ -50,7 +46,10 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
 
     @Override
     protected void prePersist(OccurrenceReport instance) {
-        initReportData(instance);
+        reportMetadataService.initMetadataForPersist(instance);
+        if (instance.getPhase() == null) {
+            instance.setPhase(phaseService.getDefaultPhase());
+        }
         validator.validateForPersist(instance);
     }
 
@@ -59,24 +58,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         setArmsIndex(instance);
     }
 
-    private void initReportData(OccurrenceReport instance) {
-        initReportProvenance(instance);
-        instance.setFileNumber(IdentificationUtils.generateFileNumber());
-        instance.setRevision(Constants.INITIAL_REVISION);
-        if (instance.getPhase() == null) {
-            instance.setPhase(phaseService.getDefaultPhase());
-        }
-    }
-
-    private void initReportProvenance(OccurrenceReport instance) {
-        instance.setAuthor(securityUtils.getCurrentUser());
-        instance.setDateCreated(new Date());
-    }
-
     @Override
     protected void preUpdate(OccurrenceReport instance) {
-        instance.setLastModifiedBy(securityUtils.getCurrentUser());
-        instance.setLastModified(new Date());
+        reportMetadataService.initMetadataForUpdate(instance);
         validator.validateForUpdate(instance, find(instance.getUri()));
     }
 
@@ -84,11 +68,11 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     public OccurrenceReport createNewRevision(Long fileNumber) {
         final OccurrenceReport latest = findLatestRevision(fileNumber);
         if (latest == null) {
-            throw NotFoundException.create("OccurrenceReport", fileNumber);
+            throw NotFoundException.create("Occurrence report chain", fileNumber);
         }
         final OccurrenceReport newRevision = new OccurrenceReport(latest);
         newRevision.setRevision(latest.getRevision() + 1);
-        initReportProvenance(newRevision);
+        reportMetadataService.initReportProvenanceMetadata(newRevision);
         reportDao.persist(newRevision);
         newRevision.setArmsIndex(armsService.calculateArmsIndex(newRevision));
         return newRevision;

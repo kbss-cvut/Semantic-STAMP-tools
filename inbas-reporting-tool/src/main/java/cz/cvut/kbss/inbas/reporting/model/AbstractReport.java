@@ -5,6 +5,7 @@ import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @MappedSuperclass
@@ -47,6 +48,13 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
     protected AbstractReport() {
         this.types = new HashSet<>(4);
         types.add(Vocabulary.s_c_report);
+    }
+
+    protected AbstractReport(AbstractReport other) {
+        Objects.requireNonNull(other);
+        this.fileNumber = other.fileNumber;
+        this.summary = other.summary;
+        this.types = new HashSet<>(other.types);
     }
 
     @Override
@@ -128,6 +136,19 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    /**
+     * Adds the specified type to this report's types
+     *
+     * @param type The type to add
+     */
+    public void addType(String type) {
+        Objects.requireNonNull(type);
+        if (types == null) {
+            this.types = new HashSet<>();
+        }
+        types.add(type);
     }
 
     protected void copyAttributes(ReportDto dto) {

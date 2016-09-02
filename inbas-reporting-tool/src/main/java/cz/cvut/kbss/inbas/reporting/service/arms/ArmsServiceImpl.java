@@ -52,12 +52,12 @@ public class ArmsServiceImpl implements ArmsService {
     }
 
     private List<URI> initAccidents() throws IOException {
-        final RawJson json = (RawJson) optionsService.getOptions(ACCIDENT_OUTCOME_PARAM);
+        final RawJson json = (RawJson) optionsService.getOptions(ACCIDENT_OUTCOME_PARAM, Collections.emptyMap());
         return JsonLdProcessing.getOrderedOptions(json, GREATER_THAN_URI);
     }
 
     private List<URI> initBarriers() throws IOException {
-        final RawJson json = (RawJson) optionsService.getOptions(BARRIER_EFFECTIVENESS_PARAM);
+        final RawJson json = (RawJson) optionsService.getOptions(BARRIER_EFFECTIVENESS_PARAM, Collections.emptyMap());
         return JsonLdProcessing.getOrderedOptions(json, GREATER_THAN_URI);
     }
 

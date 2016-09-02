@@ -7,6 +7,12 @@ describe('Utility functions tests', function () {
         Vocabulary = require('../../js/constants/Vocabulary'),
         Generator = require('../environment/Generator').default;
 
+    describe('formatDate', () => {
+        it('returns empty string when no date is specified', () => {
+            expect(Utils.formatDate(null)).toEqual('');
+        });
+    });
+
     it('Transforms a constant with known preposition/auxiliary word into text with spaces and correctly capitalized words', function () {
         expect(Utils.constantToString('BARRIER_NOT_EFFECTIVE', true)).toEqual('Barrier not Effective');
         expect(Utils.constantToString('NOT_EFFECTIVE', true)).toEqual('Not Effective');
@@ -159,5 +165,37 @@ describe('Utility functions tests', function () {
             delete root.endTime;
             expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.RELATIVE);
         });
+    });
+
+    describe('resolveType', () => {
+        it('returns null when there are no options', () => {
+            var options = null,
+                types = [Generator.randomCategory().id];
+            expect(Utils.resolveType(types, options)).toBeNull();
+            options = [];
+            expect(Utils.resolveType(types, options)).toBeNull();
+        });
+
+        it('returns null when there are no types', () => {
+            var options = Generator.getCategories(),
+                types = null;
+            expect(Utils.resolveType(types, options)).toBeNull();
+            types = [];
+            expect(Utils.resolveType(types, options)).toBeNull();
+        });
+
+        it('returns first option whose id is in types', () => {
+            var options = Generator.getCategories(),
+                option = Generator.randomCategory(),
+                types = [option.id];
+            expect(Utils.resolveType(types, options)).toEqual(option);
+        });
+
+        it('returns null if none of the options matches types', () => {
+            var options = Generator.getCategories(),
+                option = Generator.randomCategory(),
+                types = [Generator.getRandomUri()];
+            expect(Utils.resolveType(types, options)).toBeNull();
+        })
     });
 });

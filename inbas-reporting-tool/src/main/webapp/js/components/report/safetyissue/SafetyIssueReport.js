@@ -98,7 +98,7 @@ var SafetyIssueReport = React.createClass({
                                 <Input type='text' name='name' value={report.safetyIssue.name}
                                        onChange={this.onNameChange}
                                        label={this.i18n('name') + '*'}
-                                       title={this.i18n('safety-issue.headline-tooltip')}/>
+                                       title={this.i18n('safety-issue.name-tooltip')}/>
                             </div>
                         </div>
                     </div>

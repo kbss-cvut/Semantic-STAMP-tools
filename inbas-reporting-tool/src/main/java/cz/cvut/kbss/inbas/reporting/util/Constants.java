@@ -87,7 +87,7 @@ public final class Constants {
 
     /**
      * Folder containing options files for the application.
-     *
+     * <p>
      * Some options can be stored directly in the application.
      */
     public static final String OPTION_FILES_DIRECTORY = "option";
@@ -96,4 +96,9 @@ public final class Constants {
      * File with a query for getting report statistics.
      */
     public static final String STATISTICS_QUERY_FILE = "query/statistics.sparql";
+
+    /**
+     * Name of the URL parameter specifying type of options for loading.
+     */
+    public static final String OPTIONS_TYPE_QUERY_PARAM = "type";
 }
