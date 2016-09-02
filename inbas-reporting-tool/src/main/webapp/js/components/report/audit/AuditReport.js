@@ -1,16 +1,13 @@
 'use strict';
 
 var React = require('react');
-var Reflux = require('reflux');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
-var assign = require('object-assign');
 
 var Audit = require('./Audit').default;
 var I18nMixin = require('../../../i18n/I18nMixin');
 var injectIntl = require('../../../utils/injectIntl');
-var Input = require('../../Input');
 var MessageMixin = require('../../mixin/MessageMixin');
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
