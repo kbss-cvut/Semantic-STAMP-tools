@@ -8,6 +8,7 @@ import Typeahead from "react-bootstrap-typeahead";
 import Constants from "../../../constants/Constants";
 import FindingFactors from "./FindingFactors";
 import FindingMeasures from "./FindingMeasures";
+import HelpIcon from "../../misc/HelpIcon";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import Input from "../../Input";
@@ -147,9 +148,16 @@ class AuditFinding extends React.Component {
             levels = [];
         for (var i = 1; i <= Constants.FINDING_LEVEL_MAX; i++) {
             levels.push(<div className='col-xs-2' key={'level_' + i}>
-                <Input type='radio' name='level' value={i} checked={finding.level === i}
-                       onChange={this._onLevelSelected}
-                       label={this.props.formatMessage('audit.finding.level', {level: i})}/>
+                <div className='row'>
+                    <div className='col-xs-8'>
+                        <Input type='radio' name='level' value={i} checked={finding.level === i}
+                               onChange={this._onLevelSelected}
+                               label={this.props.formatMessage('audit.finding.level', {level: i})}/>
+                    </div>
+                    <div className='col-xs-1'>
+                        <HelpIcon text={this.i18n('audit.finding.level-' + i + '.help')}/>
+                    </div>
+                </div>
             </div>);
         }
         return levels;

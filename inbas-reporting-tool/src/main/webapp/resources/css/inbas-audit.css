@@ -564,3 +564,12 @@ button.reset-filters {
 .finding-factor-row-with-margin {
     margin-top: 0.8em;
 }
+
+.help-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    padding-top: 10px;
+    margin-left: -15px;
+    vertical-align: bottom;
+}

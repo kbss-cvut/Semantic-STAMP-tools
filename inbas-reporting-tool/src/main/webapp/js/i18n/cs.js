@@ -154,6 +154,23 @@ module.exports = {
         'audit.finding.type.placeholder': 'Vyberte typ zjištění',
         'audit.finding.type.edit-tooltip': 'Klikněte zde pro editaci typu zjištění',
         'audit.finding.level': 'Nález úrovně {level}',
+        'audit.finding.level-1.help': 'A level 1 finding shall be issued by the competent authority when any significant noncompliance '
+        + 'is detected with the applicable requirements of Regulation (EC) No 216/2008 and '
+        + 'its Implementing Rules, with the organisation’s procedures and manuals or with the terms of '
+        + 'an approval or certificate or with the content of a declaration which lowers safety or seriously '
+        + 'hazards flight safety. '
+        + 'The level 1 findings shall include: '
+        + '(1) failure to give the competent authority access to the organisation\'s facilities as defined '
+        + 'in ORO.GEN.140 during normal operating hours and after two written requests; '
+        + '(2) obtaining or maintaining the validity of the organisation certificate by falsification of '
+        + 'submitted documentary evidence; '
+        + '(3) evidence of malpractice or fraudulent use of the organisation certificate; and '
+        + '(4) the lack of an accountable manager.',
+        'audit.finding.level-2.help': 'A level 2 finding shall be issued by the competent authority when any non-compliance is '
+        + 'detected with the applicable requirements of Regulation (EC) No 216/2008 and its '
+        + 'Implementing Rules, with the organisation\'s procedures and manuals or with the terms of an '
+        + 'approval or certificate or with the content of a declaration which could lower safety or hazard '
+        + 'flight safety.',
         'audit.finding.description-tooltip': 'Popis zjištěného nálezu',
         'audit.finding.factors': 'Faktory nálezu',
         'audit.finding.factors.placeholder': 'Typ faktoru',
