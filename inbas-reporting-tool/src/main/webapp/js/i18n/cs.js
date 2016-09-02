@@ -139,6 +139,8 @@ module.exports = {
         'audit.start-date.tooltip': 'Datum a čas prvního kontrolního úkonu',
         'audit.end-date': 'Konec kontroly',
         'audit.end-date.tooltip': 'Datum a čas posledního kontrolního úkonu',
+        'audit.remarks': 'Poznámky',
+        'audit.remarks.placeholder': 'Poznámky k auditu',
         'audit.findings.header': 'Kontrolní zjištění',
         'audit.findings.no-findings-message': 'Nebyla zadána žádná kontrolní zjištění.',
         'audit.findings.table.description': 'Popis nálezu',

@@ -201,6 +201,17 @@ td.actions button {
     font-size: 11px;
 }
 
+.inline-mask {
+    display: inline-block;
+    background: rgba(245, 245, 245, 0.6);
+    z-index: 101;
+}
+
+.inline-mask .spinner-container {
+    text-align: center;
+    vertical-align: middle;
+}
+
 .dashboard-sector {
     text-align: center;
     vertical-align: middle;

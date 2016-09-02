@@ -8,16 +8,16 @@ CONSTRUCT {
 } WHERE {
   SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/binbas-checklist> {
     ?audit_type a documentation:checklist ;
-        	caa-checklist:has_child+ ?audit_finding_type .
-              OPTIONAL {
-                ?audit_finding_type caa-checklist:has_full_text ?label ;
-                                    caa-checklist:has_full_order ?order .
-                FILTER(lang(?label)=?prefLang)
-              }
-              OPTIONAL {
-                ?audit_finding_type caa-checklist:has_full_text ?label ;
-                                    caa-checklist:has_full_order ?order .
-              }
+                      	caa-checklist:has_child+ ?audit_finding_type .
+                    OPTIONAL {
+                      ?audit_finding_type caa-checklist:has-full-text ?label ;
+                                          caa-checklist:has-full-order ?order .
+                      FILTER(lang(?label)=?prefLang)
+                    }
+                    OPTIONAL {
+                      ?audit_finding_type caa-checklist:has-full-text ?label ;
+                                          caa-checklist:has-full-order ?order .
+                    }
     }
 } ORDER BY asc(str(?order))
 VALUES (?prefLang) {("cs")}

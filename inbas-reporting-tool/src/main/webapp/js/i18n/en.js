@@ -137,6 +137,8 @@ module.exports = {
         'audit.start-date.tooltip': 'Date and time of the first action of the audit',
         'audit.end-date': 'Audit end',
         'audit.end-date.tooltip': 'Date and time of the last action of the audit',
+        'audit.remarks': 'Remarks',
+        'audit.remarks.placeholder': 'Audit remarks',
         'audit.findings.header': 'Audit findings',
         'audit.findings.no-findings-message': 'There are no audit findings.',
         'audit.findings.table.description': 'Finding description',

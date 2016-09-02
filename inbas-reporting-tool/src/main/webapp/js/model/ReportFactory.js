@@ -69,8 +69,8 @@ module.exports = {
             audit: {
                 name: '',
                 // Round to whole minutes. Start date a minute before end date
-                startDate: (Date.now() / (60 * 1000)) * 60 * 1000 - 60000,
-                endDate: (Date.now() / (60 * 1000)) * 60 * 1000
+                startDate: Math.floor((Date.now() / (60 * 1000)) * 60 * 1000 - 60000),
+                endDate: Math.floor((Date.now() / (60 * 1000)) * 60 * 1000)
             },
             isNew: true,
             javaClass: Constants.AUDIT_REPORT_JAVA_CLASS

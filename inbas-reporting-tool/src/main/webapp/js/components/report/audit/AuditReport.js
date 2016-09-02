@@ -5,13 +5,14 @@ var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 
+var Actions = require('../../../actions/Actions');
 var Audit = require('./Audit').default;
 var I18nMixin = require('../../../i18n/I18nMixin');
 var injectIntl = require('../../../utils/injectIntl');
+var Input = require('../../Input');
 var MessageMixin = require('../../mixin/MessageMixin');
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
-var ReportSummary = require('../ReportSummary').default;
 var ReportValidator = require('../../../validation/ReportValidator');
 
 var AuditReport = React.createClass({
@@ -55,7 +56,10 @@ var AuditReport = React.createClass({
                 <Audit audit={report.audit} onChange={this.props.handlers.onChange}/>
                 <div className='row'>
                     <div className='col-xs-12'>
-                        <ReportSummary report={report} onChange={this.onChange}/>
+                        <Input type='textarea' rows='8' label={this.i18n('audit.remarks')} name='summary'
+                               placeholder={this.i18n('audit.remarks.placeholder')}
+                               value={report.summary} onChange={this.onChange}
+                               title={this.i18n('audit.remarks.placeholder')}/>
                     </div>
                 </div>
 

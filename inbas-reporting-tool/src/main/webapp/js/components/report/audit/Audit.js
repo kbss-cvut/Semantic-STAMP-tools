@@ -9,6 +9,7 @@ import Actions from "../../../actions/Actions";
 import AuditFindings from "./AuditFindings";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
+import InlineMask from "../../InlineMask";
 import Input from "../../Input";
 import OptionsStore from "../../../stores/OptionsStore";
 import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
@@ -91,14 +92,13 @@ class Audit extends React.Component {
         if (locations.length === 0 || !auditLoc) {
             return null;
         }
-        var loc = locations.find((item) => item.id === auditLoc);
-        return loc ? loc.name : '';
+        return locations.find((item) => item.id === auditLoc);
     }
 
     render() {
         var audit = this.props.audit,
-            i18n = this.i18n,
-            auditType = this._resolveAuditType();
+            auditType = this._resolveAuditType(),
+            i18n = this.i18n;
         return <div>
             <div className='form-group'>
                 <div className='row'>
@@ -111,15 +111,7 @@ class Audit extends React.Component {
                 </div>
 
                 <div className='row'>
-                    <div className='col-xs-4'>
-                        <label className='control-label'>{i18n('audit.type.label')}</label>
-                        <Typeahead className='form-group form-group-sm' formInputOption='id'
-                                   placeholder={i18n('audit.type.placeholder')}
-                                   onOptionSelected={this._onTypeSelected} filterOption='name' displayOption='name'
-                                   value={auditType ? auditType.name : ''} options={this.state.auditType}
-                                   customClasses={{input: 'form-control'}} optionsButton={true}
-                                   customListComponent={TypeaheadResultList}/>
-                    </div>
+                    {this._renderAuditType(auditType)}
                 </div>
 
                 <div className='row'>
@@ -136,16 +128,7 @@ class Audit extends React.Component {
                 </div>
 
                 <div className='row'>
-                    <div className='col-xs-4'>
-                        <label className='control-label'>{i18n('audit.location.label')}</label>
-                        <Typeahead className='form-group form-group-sm' formInputOption='id'
-                                   placeholder={i18n('audit.location.placeholder')}
-                                   onOptionSelected={(opt) => this._mergeChange({location: opt.id})} filterOption='name'
-                                   displayOption='name'
-                                   value={this._resolveLocation()} options={this.state.location}
-                                   customClasses={{input: 'form-control'}}
-                                   customListComponent={TypeaheadResultList}/>
-                    </div>
+                    {this._renderLocation()}
                 </div>
 
                 <div className='row'>
@@ -164,6 +147,40 @@ class Audit extends React.Component {
                 </div>
             </div>
             <AuditFindings audit={audit} auditType={auditType ? auditType.id : ''} onChange={this._mergeChange}/>
+        </div>;
+    }
+
+    _renderAuditType(auditType) {
+        var i18n = this.i18n;
+        if (this.state.auditType.length === 0) {
+            return <div className='col-xs-4 form-group'><InlineMask/></div>;
+        }
+        return <div className='col-xs-4'>
+            <label className='control-label'>{i18n('audit.type.label')}</label>
+            <Typeahead className='form-group form-group-sm' formInputOption='id'
+                       placeholder={i18n('audit.type.placeholder')}
+                       onOptionSelected={this._onTypeSelected} filterOption='name' displayOption='name'
+                       value={auditType ? auditType.name : ''} options={this.state.auditType}
+                       customClasses={{input: 'form-control'}} optionsButton={true}
+                       customListComponent={TypeaheadResultList}/>
+        </div>;
+    }
+
+    _renderLocation() {
+        var location = this._resolveLocation(),
+            i18n = this.i18n;
+        if (this.state.location.length === 0) {
+            return <div className='col-xs-4 form-group'><InlineMask/></div>;
+        }
+        return <div className='col-xs-4'>
+            <label className='control-label'>{i18n('audit.location.label')}</label>
+            <Typeahead className='form-group form-group-sm' formInputOption='id'
+                       placeholder={i18n('audit.location.placeholder')}
+                       onOptionSelected={(opt) => this._mergeChange({location: opt.id})} filterOption='name'
+                       displayOption='name'
+                       value={location ? location.name : ''} options={this.state.location}
+                       customClasses={{input: 'form-control'}}
+                       customListComponent={TypeaheadResultList}/>
         </div>;
     }
 }
