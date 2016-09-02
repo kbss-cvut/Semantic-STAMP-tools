@@ -132,6 +132,30 @@ public class AuditDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
+    public void updateMergesUpdatedCorrectiveMeasures() {
+        final Audit audit = prepareAuditWithCorrectiveMeasures();
+        dao.persist(audit);
+        for (AuditFinding f : audit.getFindings()) {
+            for (CorrectiveMeasureRequest cm : f.getCorrectiveMeasures()) {
+                cm.setDescription(cm.getDescription() + " Updated!");
+            }
+        }
+        dao.update(audit);
+
+        final EntityManager em = emf.createEntityManager();
+        try {
+            for (AuditFinding f : audit.getFindings()) {
+                for (CorrectiveMeasureRequest cm : f.getCorrectiveMeasures()) {
+                    final CorrectiveMeasureRequest result = em.find(CorrectiveMeasureRequest.class, cm.getUri());
+                    assertEquals(cm.getDescription(), result.getDescription());
+                }
+            }
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
     public void updateRemovesOrphanedCorrectiveMeasures() {
         final Audit audit = prepareAuditWithCorrectiveMeasures();
         dao.persist(audit);

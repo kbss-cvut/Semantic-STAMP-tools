@@ -65,7 +65,8 @@ public class AuditDao extends BaseDao<Audit> {
         final OrphanRemover remover = new OrphanRemover(em);
         remover.removeOrphans(original.getFindings(), entity.getFindings());
         reduceActualMeasures(entity, measureMap);
-        removeOrphans(measureMap, em);
+        removeOrphansAndUpdateOthers(measureMap, em);
+        updateExistingCorrectiveMeasures(entity, em);
         persistCorrectiveMeasures(entity, em);
         super.update(entity, em);
     }
@@ -80,8 +81,12 @@ public class AuditDao extends BaseDao<Audit> {
         traverseCorrectiveMeasures(entity, m -> map.containsKey(m.getUri()), m -> map.get(m.getUri()).counter++);
     }
 
-    private void removeOrphans(Map<URI, MeasureCounter> map, EntityManager em) {
+    private void removeOrphansAndUpdateOthers(Map<URI, MeasureCounter> map, EntityManager em) {
         map.values().stream().filter(counter -> counter.counter == 0).forEach(counter -> em.remove(counter.measure));
+    }
+
+    private void updateExistingCorrectiveMeasures(Audit entity, EntityManager em) {
+        traverseCorrectiveMeasures(entity, cm -> cm.getUri() != null, em::merge);
     }
 
     @Override

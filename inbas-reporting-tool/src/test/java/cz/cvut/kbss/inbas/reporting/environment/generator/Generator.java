@@ -192,6 +192,7 @@ public class Generator {
             cmr.setDescription(UUID.randomUUID().toString());
             cmr.setDeadline(new Date());
             cmr.setPhase(generateUri());
+            cmr.setImplemented(randomBoolean());
             if (Generator.randomBoolean()) {
                 cmr.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
                 final CorrectiveMeasureImplementationEvaluation evaluation = new CorrectiveMeasureImplementationEvaluation();

@@ -19,6 +19,8 @@ public class CorrectiveMeasureRequestDto {
 
     private CorrectiveMeasureImplementationEvaluation evaluation;
 
+    private Boolean implemented;
+
     public URI getUri() {
         return uri;
     }
@@ -57,5 +59,13 @@ public class CorrectiveMeasureRequestDto {
 
     public void setEvaluation(CorrectiveMeasureImplementationEvaluation evaluation) {
         this.evaluation = evaluation;
+    }
+
+    public Boolean isImplemented() {
+        return implemented;
+    }
+
+    public void setImplemented(Boolean implemented) {
+        this.implemented = implemented;
     }
 }

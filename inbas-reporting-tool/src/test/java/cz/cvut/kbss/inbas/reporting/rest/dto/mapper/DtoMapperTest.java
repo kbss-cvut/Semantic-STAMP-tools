@@ -62,6 +62,7 @@ public class DtoMapperTest {
         assertNotNull(dto);
         assertEquals(req.getUri(), dto.getUri());
         assertEquals(req.getDescription(), dto.getDescription());
+        assertEquals(req.isImplemented(), dto.isImplemented());
     }
 
     @Test
@@ -119,6 +120,7 @@ public class DtoMapperTest {
             organizations.add(org);
         }
         request.setResponsibleOrganizations(organizations);
+        request.setImplemented(Generator.randomBoolean());
         return request;
     }
 
@@ -183,12 +185,14 @@ public class DtoMapperTest {
         assertNotNull(req);
         assertEquals(dto.getUri(), req.getUri());
         assertEquals(dto.getDescription(), req.getDescription());
+        assertEquals(dto.isImplemented(), req.isImplemented());
     }
 
     private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDto() {
         final CorrectiveMeasureRequestDto dto = new CorrectiveMeasureRequestDto();
         dto.setUri(URI.create(Vocabulary.s_c_corrective_measure_request + "#req"));
         dto.setDescription("Sample corrective measure.");
+        dto.setImplemented(Generator.randomBoolean());
         return dto;
     }
 

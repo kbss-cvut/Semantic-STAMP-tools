@@ -140,6 +140,7 @@ public abstract class DtoMapper {
         final CorrectiveMeasureRequestDto dto = new CorrectiveMeasureRequestDto();
         dto.setUri(req.getUri());
         dto.setDescription(req.getDescription());
+        dto.setImplemented(req.isImplemented());
         final Set<AgentDto> agents = new HashSet<>();
         if (req.getResponsibleOrganizations() != null) {
             req.getResponsibleOrganizations().forEach(o -> agents.add(organizationToOrganizationDto(o)));
@@ -163,6 +164,7 @@ public abstract class DtoMapper {
         final CorrectiveMeasureRequest req = new CorrectiveMeasureRequest();
         req.setUri(dto.getUri());
         req.setDescription(dto.getDescription());
+        req.setImplemented(dto.isImplemented());
         if (dto.getResponsibleAgents() != null) {
             final Set<Person> persons = new HashSet<>(dto.getResponsibleAgents().size());
             final Set<Organization> organizations = new HashSet<>(dto.getResponsibleAgents().size());
