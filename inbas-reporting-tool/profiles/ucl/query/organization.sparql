@@ -1,28 +1,26 @@
 #
 # Generic query to get event types
 #
-BASE <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
-
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
 PREFIX eccairs-model: <http://onto.fel.cvut.cz/ontologies/eccairs/model/>
 PREFIX eccairs: <http://onto.fel.cvut.cz/ontologies/eccairs/>
 PREFIX a-s: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 PREFIX eccairs-current: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/>
 PREFIX ns1: <http://onto.fel.cvut.cz/ontologies/cz/caa/lr/model/>
-
 CONSTRUCT {
   ?operator rdfs:label ?label ;
     a ?type.
 } WHERE {
-  SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
+  SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/cz-caa-lr> {
     ?a a ns1:aircraft.
     ?a ns1:has-operator-name ?name.
     ?a ns1:has-operator-id ?id.
+    ?a ns1:has-registration-mark ?m.
   }
+  FILTER(!contains(str(?m),"Vymazáno"))
   FILTER(!REGEX(str(?id), "^\\s*$")) 
   BIND(a-s:operator_organization as ?type)
   BIND(concat(?name,"-",?id) as ?label)
-  BIND(ENCODE_FOR_URI(concat("http://onto.fel.cvut.cz/ontologies/cz/caa/lr/operator/",?label)) as ?operator )
+  BIND(IRI(concat("http://onto.fel.cvut.cz/ontologies/cz/caa/lr/operator/",ENCODE_FOR_URI(?label))) as ?operator )
 }
