@@ -16,9 +16,67 @@ CONSTRUCT {
     a ?type.
 } WHERE {
   SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
-    # all events
-    eccairs-current:a-5 eccairs-model:has-child+   ?term.
+    ?selection eccairs-model:has-child* ?term.
     ?term rdfs:label ?label.
   }
   BIND(a-s:Location as ?type)
+  # for all locations eccairs-current:a-5
+  VALUES ?selection{
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-101000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-105000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-11000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-114000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-115000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-123000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-132000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-141000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-147000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-15000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-157000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-159000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-16000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-166000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-167000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-168000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-178000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-179000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-188000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-191000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-197000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-202000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-203000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-209000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-21000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-211000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-214000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-22000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-222000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-226000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-227000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-28000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-3000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-33000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-49000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-51000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-52000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-54000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-61000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-67000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-68000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-71000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-72000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-74000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-75000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-76000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-87000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-88000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-94000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-95000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-96000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-999105>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-999113>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-999117>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-231000>
+    <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-v4-cd-location-indicators/v-214000>
+  }
 }
