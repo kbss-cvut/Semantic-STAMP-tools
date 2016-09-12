@@ -536,9 +536,8 @@ button.reset-filters {
 
 .statistics-frame {
     width: 100%;
-    min-height: 58em;
-    border: 1px solid #cecece;
-    border-radius: 3px;
+    min-height: 800px;
+    border: none;
 }
 
 .buttons-right {
@@ -572,4 +571,11 @@ button.reset-filters {
     padding-top: 10px;
     margin-left: -15px;
     vertical-align: bottom;
+}
+
+.navbrand-text {
+    display: block;
+    content: url('../images/sisel_text.png');
+    vertical-align: bottom;
+    padding: 2px 2px !important; /* Override default navbrand padding */
 }
