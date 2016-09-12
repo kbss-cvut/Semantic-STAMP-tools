@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 public class AuditReportTest {
 
     @Test
-    public void toDtoCopiesAttributesToSafetyIssueReportDto() {
+    public void toDtoCopiesAttributesToDto() {
         final AuditReport original = AuditReportGenerator.generateAuditReport(true);
         original.setUri(Generator.generateUri());
         final ReportDto dto = original.toReportDto();
@@ -29,6 +29,15 @@ public class AuditReportTest {
         assertEquals(original.getRevision(), result.getRevision());
         assertEquals(original.getAudit().getName(), result.getIdentification());
         assertTrue(result.getTypes().containsAll(original.getTypes()));
+    }
+
+    @Test
+    public void toDtoSetsDtoDateAndIdentification() {
+        final AuditReport original = AuditReportGenerator.generateAuditReport(true);
+        original.setUri(Generator.generateUri());
+        final ReportDto dto = original.toReportDto();
+        assertEquals(original.getAudit().getName(), dto.getIdentification());
+        assertEquals(original.getAudit().getStartDate(), dto.getDate());
     }
 
     @Test

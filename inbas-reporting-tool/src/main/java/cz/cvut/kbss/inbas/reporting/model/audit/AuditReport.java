@@ -40,6 +40,7 @@ public class AuditReport extends AbstractReport implements Serializable {
         final AuditReportDto dto = new AuditReportDto();
         copyAttributes(dto);
         dto.setIdentification(audit.getName());
+        dto.setDate(audit.getStartDate());
         dto.setSummary(summary);
         dto.getTypes().add(AuditReport.class.getDeclaredAnnotation(OWLClass.class).iri());
         return dto;
