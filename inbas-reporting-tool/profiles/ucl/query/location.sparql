@@ -13,12 +13,14 @@ PREFIX eccairs-current: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4
 
 CONSTRUCT {
   ?term rdfs:label ?label ;
-    a ?type.
+    a a-s:Location.
 } WHERE {
   SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
-    # all events
-    eccairs-current:a-5 eccairs-model:has-child+   ?term.
+    SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/reports-refactoring> {
+      GRAPH <http://onto.fel.cvut.cz/ontologies/report/ucl/old/options/locations>{
+        ?term a a-s:Location.
+      }
+    }
     ?term rdfs:label ?label.
   }
-  BIND(a-s:Location as ?type)
 }
