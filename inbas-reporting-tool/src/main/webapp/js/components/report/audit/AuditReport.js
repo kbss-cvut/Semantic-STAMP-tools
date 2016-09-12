@@ -117,11 +117,10 @@ var AuditReport = React.createClass({
     },
 
     _renderSubmitButton: function () {
-        return (
-            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')}
-                    onClick={this.onSubmit}>
+        return this.props.report.isNew ? null :
+            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')} onClick={this.onSubmit}>
                 {this.i18n('detail.submit')}
-            </Button>);
+            </Button>;
     }
 });
 

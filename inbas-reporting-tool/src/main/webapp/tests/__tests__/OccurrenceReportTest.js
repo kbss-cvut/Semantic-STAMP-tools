@@ -3,13 +3,14 @@
 describe('OccurrenceReport', function () {
 
     var React = require('react'),
+        TestUtils = require('react-addons-test-utils'),
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         ReportFactory = require('../../js/model/ReportFactory'),
         OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),
-        messages = require('../../js/i18n/en'),
+        messages = require('../../js/i18n/en').messages,
         handlers,
         report;
 
@@ -64,5 +65,11 @@ describe('OccurrenceReport', function () {
         report = ReportFactory.createOccurrenceReport();
         var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
         expect(Environment.getComponentByTagAndContainedText(component, 'h3', messages['fileNo'])).toBeNull();
-    })
+    });
+
+    it('does not display \'Create new revision\' button for new reports', () => {
+        report = ReportFactory.createOccurrenceReport();
+        var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
+        expect(Environment.getComponentByTagAndText(component, 'button', messages['detail.submit'])).toBeNull();
+    });
 });

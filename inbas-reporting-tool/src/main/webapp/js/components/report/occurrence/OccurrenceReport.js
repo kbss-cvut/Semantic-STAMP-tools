@@ -189,10 +189,10 @@ var OccurrenceReport = React.createClass({
     },
 
     renderSubmitButton: function () {
-        return <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')}
-                       onClick={this.onSubmit}>
-            {this.i18n('detail.submit')}
-        </Button>;
+        return this.props.report.isNew ? null :
+            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')} onClick={this.onSubmit}>
+                {this.i18n('detail.submit')}
+            </Button>;
     },
 
     _renderCreateSafetyIssueButton: function () {

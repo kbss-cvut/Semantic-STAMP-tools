@@ -1,6 +1,6 @@
 'use strict';
 
-describe('OccurrenceReport', function () {
+describe('AuditReport', () => {
 
     var React = require('react'),
         rewire = require('rewire'),
@@ -8,7 +8,8 @@ describe('OccurrenceReport', function () {
         Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         messages = require('../../js/i18n/en').messages,
-        SafetyIssueReport = rewire('../../js/components/report/safetyissue/SafetyIssueReport'),
+        AuditReport = rewire('../../js/components/report/audit/AuditReport'),
+        ReportFactory = require('../../js/model/ReportFactory'),
         handlers,
         report;
 
@@ -18,24 +19,12 @@ describe('OccurrenceReport', function () {
         spyOn(Actions, 'loadOccurrenceCategories');
         spyOn(Actions, 'loadEventTypes');
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
-        Environment.mockFactors(SafetyIssueReport);
-        report = Generator.generateSafetyIssueReport();
-    });
-
-    it('Gets factor graph on submit', () => {
-        var component = Environment.render(<SafetyIssueReport report={report} handlers={handlers}/>),
-            saveEvent = {
-                preventDefault: function () {
-                }
-            },
-            FactorJsonSerializer = SafetyIssueReport.__get__('Factors').__get__('FactorJsonSerializer');
-        component.onSave(saveEvent);
-        expect(FactorJsonSerializer.getFactorGraph).toHaveBeenCalled();
+        report = ReportFactory.createAuditReport();
     });
 
     it('does not display \'Create new revision\' button for new reports', () => {
         report.isNew = true;
-        var component = Environment.render(<SafetyIssueReport report={report} handlers={handlers}/>);
+        var component = Environment.render(<AuditReport report={report} handlers={handlers}/>);
         expect(Environment.getComponentByTagAndText(component, 'button', messages['detail.submit'])).toBeNull();
     });
 });
