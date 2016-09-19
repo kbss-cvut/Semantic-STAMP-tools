@@ -1,10 +1,11 @@
 'use strict';
 
 import React from "react";
-import {Button, Glyphicon, Panel, Table} from "react-bootstrap";
+import {Button, Dropdown, Glyphicon, MenuItem, Panel, Table} from "react-bootstrap";
 import CollapsibleText from "../../CollapsibleText";
 import Constants from "../../../constants/Constants";
 import CorrectiveMeasure from "../../correctivemeasure/CorrectiveMeasure";
+import ExistingMeasureSelector from "./ExistingMeasureSelector";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import Utils from "../../../utils/Utils";
@@ -14,6 +15,8 @@ const MEASURE_ATTRIBUTES = [Constants.CORRECTIVE_MEASURE.DESCRIPTION, Constants.
 
 class FindingMeasures extends React.Component {
     static propTypes = {
+        audit: React.PropTypes.object,
+        finding: React.PropTypes.object,
         correctiveMeasures: React.PropTypes.array,
         onChange: React.PropTypes.func.isRequired
     };
@@ -27,6 +30,7 @@ class FindingMeasures extends React.Component {
         this.i18n = props.i18n;
         this.state = {
             showWindow: false,
+            showMeasureSelect: false,
             currentMeasure: null
         };
     }
@@ -39,8 +43,18 @@ class FindingMeasures extends React.Component {
         this._onEditMeasure(measure);
     };
 
+    _onSelectMeasure = () => {
+        this.setState({showMeasureSelect: true});
+    };
+
+    _onMeasureSelected = (measure) => {
+        var measures = this.props.correctiveMeasures ? this.props.correctiveMeasures.slice() : [];
+        measures.push(measure);
+        this.props.onChange({correctiveMeasures: measures});
+    };
+
     _onEditMeasure = (measure) => {
-        this.setState({showWindow: true, currentMeasure: measure});
+        this.setState({showWindow: true, showMeasureSelect: false, currentMeasure: measure});
     };
 
     _onEditFinished = (measure) => {
@@ -79,11 +93,25 @@ class FindingMeasures extends React.Component {
             <Panel header={<h5>{this.i18n('report.corrective.panel-title')}</h5>} bsStyle='info'>
                 {this._renderPanelContent()}
                 <div className={this._hasMeasures() > 0 ? 'float-right' : ''}>
-                    <Button bsStyle='primary' bsSize='small' onClick={this._onAddMeasure}
-                            title={this.props.i18n('report.corrective.add-tooltip')}>
-                        <Glyphicon glyph='plus' className='add-icon-glyph'/>
-                        {this.props.i18n('add')}
-                    </Button>
+                    <Dropdown id='finding-measures-add'>
+                        <Dropdown.Toggle className='btn btn-sm btn-primary'>
+                            <Glyphicon glyph='plus' className='add-icon-glyph'/>
+                            {this.i18n('add')}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <MenuItem onClick={this._onSelectMeasure}
+                                      title={this.i18n('audit.finding.measures.add.select-existing-tooltip')}>
+                                {this.i18n('audit.finding.measures.add.select-existing')}</MenuItem>
+                            <MenuItem onClick={this._onAddMeasure}
+                                      title={this.props.i18n('audit.finding.measures.add.create-new-tooltip')}>
+                                {this.i18n('audit.finding.measures.add.create-new')}
+                            </MenuItem>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
+                <div style={{clear: 'both', margin: '0.5em 0 0 0'}}/>
+                <div className='float-right row col-xs-3'>
+                    {this._renderMeasureSelect()}
                 </div>
             </Panel>
         </div>;
@@ -122,6 +150,14 @@ class FindingMeasures extends React.Component {
         }
         return rows;
     }
+
+    _renderMeasureSelect() {
+        if (!this.state.showMeasureSelect) {
+            return null;
+        }
+        return <ExistingMeasureSelector audit={this.props.audit} finding={this.props.finding}
+                                        onChange={this._onMeasureSelected}/>;
+    }
 }
 
 var MeasureRow = (props) => {
@@ -138,7 +174,7 @@ var MeasureRow = (props) => {
             <Button bsStyle='primary' bsSize='small' title={props.i18n('audit.finding.measures.open-tooltip')}
                     onClick={() => props.onEdit(measure)}>{props.i18n('open')}</Button>
             <Button bsStyle='warning' bsSize='small' title={props.i18n('audit.finding.measures.delete-tooltip')}
-                    onClick={() => props.onDelete(measure)}>{props.i18n('delete')}</Button>
+                    onClick={() => props.onDelete(measure)}>{props.i18n('remove')}</Button>
         </td>
     </tr>
 };

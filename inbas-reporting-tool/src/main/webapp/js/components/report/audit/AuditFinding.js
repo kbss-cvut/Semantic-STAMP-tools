@@ -20,6 +20,7 @@ const INDEX_PROPERTY = 'http://onto.fel.cvut.cz/ontologies/aviation/cz/caa/cat/a
 
 class AuditFinding extends React.Component {
     static propTypes = {
+        audit: React.PropTypes.object,
         finding: React.PropTypes.object,
         onSave: React.PropTypes.func.isRequired,
         onClose: React.PropTypes.func.isRequired
@@ -131,7 +132,8 @@ class AuditFinding extends React.Component {
                 </div>
                 <div className='row'>
                     <div className='col-xs-12'>
-                        <FindingMeasures correctiveMeasures={finding.correctiveMeasures} onChange={this._mergeChange}/>
+                        <FindingMeasures audit={this.props.audit} finding={this.props.finding}
+                                         correctiveMeasures={finding.correctiveMeasures} onChange={this._mergeChange}/>
                     </div>
                 </div>
             </div>

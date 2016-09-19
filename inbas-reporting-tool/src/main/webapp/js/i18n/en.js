@@ -16,6 +16,7 @@ module.exports = {
         'cancel-tooltip': 'Discard changes',
         'save': 'Save',
         'delete': 'Delete',
+        'remove': 'Remove',
         'headline': 'Headline',
         'name': 'Name',
         'summary': 'Summary',
@@ -181,6 +182,10 @@ module.exports = {
         'audit.finding.measures.implemented.no': 'The corrective measure has not been implemented, yet',
         'audit.finding.measures.open-tooltip': 'View and edit this corrective measure',
         'audit.finding.measures.delete-tooltip': 'Remove this corrective measure',
+        'audit.finding.measures.add.select-existing': 'Select existing',
+        'audit.finding.measures.add.select-existing-tooltip': 'Select corrective measure from another finding of this audit',
+        'audit.finding.measures.add.create-new': 'Create new',
+        'audit.finding.measures.add.create-new-tooltip': 'Create a new corrective measure',
 
         'correctivemeasure.title': 'Corrective measure',
         'correctivemeasure.description.placeholder': 'Corrective measure description',

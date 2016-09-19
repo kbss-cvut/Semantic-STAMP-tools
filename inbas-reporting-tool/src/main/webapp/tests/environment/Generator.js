@@ -275,4 +275,21 @@ export default class Generator {
     static getJsonLdSample() {
         return JSON_LD;
     }
+
+    /**
+     * Generates a random number (between 2 and 10) of corrective measures.
+     * @return {Array} Generated measures
+     */
+    static generateCorrectiveMeasures() {
+        var measures = [];
+        for (var i = 0; i < Generator.getRandomPositiveInt(2, 10); i++) {
+            measures.push({
+                uri: Generator.getRandomUri(),
+                description: 'Corrective measure ' + i,
+                deadline: Date.now(),
+                implemented: Generator.getRandomBoolean()
+            });
+        }
+        return measures;
+    }
 }

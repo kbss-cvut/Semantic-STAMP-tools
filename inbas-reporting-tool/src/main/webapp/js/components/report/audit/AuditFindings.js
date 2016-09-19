@@ -30,7 +30,9 @@ class AuditFindings extends React.Component {
 
     componentDidMount() {
         if (this.state.findingType.length === 0) {
-            Actions.loadOptions('findingType', this.props.auditType ? {'audit_type': encodeURIComponent(this.props.auditType)} : null);
+            if (this.props.auditType != null) {
+                Actions.loadOptions('findingType', this.props.auditType ? {'audit_type': encodeURIComponent(this.props.auditType)} : null);
+            }
         }
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
     }
@@ -102,7 +104,7 @@ class AuditFindings extends React.Component {
     render() {
         var addClass = this._hasFindings() ? 'float-right' : '';
         return <div>
-            <AuditFinding show={this.state.showWindow} finding={this.state.currentFinding}
+            <AuditFinding show={this.state.showWindow} finding={this.state.currentFinding} audit={this.props.audit}
                           onSave={this._onEditFinish} onClose={this._onEditClose}/>
             <Panel header={<h5>{this.i18n('audit.findings.header')}</h5>} bsStyle='info'>
                 {this._renderPanelContent()}

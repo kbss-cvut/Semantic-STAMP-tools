@@ -19,7 +19,7 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>email-import.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>${catalina.base}/logs/email-import.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- keep 15 days' worth of history capped at 1GB total size -->
             <maxHistory>15</maxHistory>

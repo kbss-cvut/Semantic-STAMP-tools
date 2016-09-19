@@ -146,7 +146,9 @@ class Audit extends React.Component {
                     </div>
                 </div>
             </div>
-            <AuditFindings audit={audit} auditType={auditType ? auditType.id : ''} onChange={this._mergeChange}/>
+            <AuditFindings audit={audit}
+                           auditType={auditType ? auditType.id : (this.state.auditType.length > 0 ? '' : null)}
+                           onChange={this._mergeChange}/>
         </div>;
     }
 

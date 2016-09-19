@@ -12,15 +12,7 @@ describe('FindingMeasures', () => {
 
     beforeEach(() => {
         onChange = jasmine.createSpy('onChange');
-        measures = [];
-        for (var i = 0; i < Generator.getRandomPositiveInt(2, 10); i++) {
-            measures.push({
-                uri: Generator.getRandomUri(),
-                description: 'Corrective measure ' + i,
-                deadline: Date.now(),
-                implemented: Generator.getRandomBoolean()
-            });
-        }
+        measures = Generator.generateCorrectiveMeasures();
     });
 
     it('removes corrective measure from measures on delete', () => {

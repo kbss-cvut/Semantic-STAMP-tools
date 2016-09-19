@@ -16,6 +16,7 @@ module.exports = {
         'cancel-tooltip': 'Zrušit a zahodit změny',
         'save': 'Uložit',
         'delete': 'Smazat',
+        'remove': 'Odstranit',
         'headline': 'Název',
         'name': 'Název',
         'summary': 'Shrnutí',
@@ -183,6 +184,10 @@ module.exports = {
         'audit.finding.measures.implemented.no': 'Nápravné opatření ještě nebylo zavedeno',
         'audit.finding.measures.open-tooltip': 'Zobrazit a editovat toto nápravné opatření',
         'audit.finding.measures.delete-tooltip': 'Odstranit toto nápravné opatření',
+        'audit.finding.measures.add.select-existing': 'Vybrat existující',
+        'audit.finding.measures.add.select-existing-tooltip': 'Vybrat nápravné opatření použité u jiného nálezu v tomto auditu',
+        'audit.finding.measures.add.create-new': 'Vytvořit nové',
+        'audit.finding.measures.add.create-new-tooltip': 'Vytvořit nové nápravné opatření',
 
         'correctivemeasure.title': 'Nápravné opatření',
         'correctivemeasure.description.placeholder': 'Popis nápravného opatření',
