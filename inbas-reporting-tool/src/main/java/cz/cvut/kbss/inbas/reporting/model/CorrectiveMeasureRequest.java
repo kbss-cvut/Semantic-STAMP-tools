@@ -1,5 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
@@ -14,6 +16,7 @@ import java.util.Set;
  * inheritance in JOPA. This should be handled on DTO level, where these fields should be replaced with ones using
  * inheritance between agent - Person/Organization and Event - Occurrence.
  */
+@JsonIdentityInfo(property = "referenceId", generator = ObjectIdGenerators.UUIDGenerator.class)
 @OWLClass(iri = Vocabulary.s_c_corrective_measure_request)
 public class CorrectiveMeasureRequest extends AbstractEntity implements Serializable {
 
@@ -45,6 +48,9 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
 
     @OWLDataProperty(iri = Vocabulary.s_p_is_implemented)
     private Boolean implemented;
+
+    @Transient
+    private Integer referenceId;    // JSON identity
 
     public CorrectiveMeasureRequest() {
     }
@@ -159,6 +165,14 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
 
     public void setImplemented(Boolean implemented) {
         this.implemented = implemented;
+    }
+
+    public Integer getReferenceId() {
+        return referenceId;
+    }
+
+    public void setReferenceId(Integer referenceId) {
+        this.referenceId = referenceId;
     }
 
     @Override

@@ -5,6 +5,7 @@ var Reflux = require('reflux');
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
 var Constants = require('../constants/Constants');
+var JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
 var ReportType = require('../model/ReportType');
 var Utils = require('../utils/Utils');
 
@@ -52,6 +53,7 @@ var ReportStore = Reflux.createStore({
         this._pendingLoad = key;
         Ajax.get(BASE_URL_WITH_SLASH + key).end(function (data) {
             this._resetPendingLoad();
+            JsonReferenceResolver.resolveReferences(data);
             this.trigger({
                 action: Actions.loadReport,
                 report: data
@@ -75,6 +77,7 @@ var ReportStore = Reflux.createStore({
     },
 
     onCreateReport: function (report, onSuccess, onError) {
+        JsonReferenceResolver.encodeReferences(report);
         Ajax.post(BASE_URL, report).end(function (data, resp) {
             if (onSuccess) {
                 var key = Utils.extractKeyFromLocationHeader(resp);
@@ -94,6 +97,7 @@ var ReportStore = Reflux.createStore({
     },
 
     onUpdateReport: function (report, onSuccess, onError) {
+        JsonReferenceResolver.encodeReferences(report);
         Ajax.put(BASE_URL_WITH_SLASH + report.key).send(report).end(onSuccess, onError);
     },
 
