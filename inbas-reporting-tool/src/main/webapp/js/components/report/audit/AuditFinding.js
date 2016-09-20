@@ -132,7 +132,7 @@ class AuditFinding extends React.Component {
                 </div>
                 <div className='row'>
                     <div className='col-xs-12'>
-                        <FindingMeasures audit={this.props.audit} finding={this.props.finding}
+                        <FindingMeasures audit={this.props.audit} finding={finding}
                                          correctiveMeasures={finding.correctiveMeasures} onChange={this._mergeChange}/>
                     </div>
                 </div>

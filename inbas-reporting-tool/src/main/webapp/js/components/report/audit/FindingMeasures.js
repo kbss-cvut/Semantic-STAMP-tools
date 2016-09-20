@@ -51,6 +51,7 @@ class FindingMeasures extends React.Component {
         var measures = this.props.correctiveMeasures ? this.props.correctiveMeasures.slice() : [];
         measures.push(measure);
         this.props.onChange({correctiveMeasures: measures});
+        this.setState({showMeasureSelect: false});
     };
 
     _onEditMeasure = (measure) => {

@@ -32,15 +32,13 @@ class CorrectiveMeasure extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            correctiveMeasure: this.props.correctiveMeasure ? assign({}, this.props.correctiveMeasure) : {
-                deadline: Date.now()
-            }
+            correctiveMeasure: this.props.correctiveMeasure ? this.props.correctiveMeasure : {deadline: Date.now()}
         };
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.correctiveMeasure && nextProps.correctiveMeasure !== this.props.correctiveMeasure) {
-            this.setState({correctiveMeasure: assign({}, nextProps.correctiveMeasure)});
+            this.setState({correctiveMeasure: nextProps.correctiveMeasure});
         }
     }
 
@@ -49,7 +47,7 @@ class CorrectiveMeasure extends React.Component {
     }
 
     _onChange = (change) => {
-        var measure = assign({}, this.state.correctiveMeasure, change);
+        var measure = assign(this.state.correctiveMeasure, change);
         this.setState({correctiveMeasure: measure});
     };
 
