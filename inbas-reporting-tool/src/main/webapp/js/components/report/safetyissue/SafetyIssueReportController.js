@@ -36,7 +36,7 @@ var SafetyIssueReportController = React.createClass({
     },
 
     onCancel: function () {
-        var handlers = RouterStore.getViewHandlers(Routes.editReport.name);
+        var handlers = RouterStore.getViewHandlers(this.props.report.isNew ? Routes.createReport.name : Routes.editReport.name);
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
         } else {

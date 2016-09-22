@@ -57,7 +57,7 @@ var DashboardController = React.createClass({
     openReport: function (report) {
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
-            handlers: {onCancel: Routes.dashboard}
+            handlers: {onCancel: Routes.reports}
         });
     },
 
