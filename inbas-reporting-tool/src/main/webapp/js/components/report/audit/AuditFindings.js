@@ -130,8 +130,8 @@ class AuditFindings extends React.Component {
         return <Table striped bordered condensed hover>
             <thead>
             <tr>
-                <th className='col-xs-5 content-center'>{this.i18n('audit.findings.table.description')}</th>
                 <th className='col-xs-4 content-center'>{this.i18n('audit.findings.table.type')}</th>
+                <th className='col-xs-5 content-center'>{this.i18n('audit.findings.table.description')}</th>
                 <th className='col-xs-1 content-center'>{this.i18n('audit.findings.table.level')}</th>
                 <th className='col-xs-2 content-center'>{this.i18n('table-actions')}</th>
             </tr>
@@ -157,8 +157,8 @@ var FindingRow = (props) => {
     var finding = props.finding,
         type = Utils.resolveType(finding.types, props.findingType);
     return <tr>
-        <td className='report-row'><CollapsibleText text={finding.description}/></td>
         <td className='report-row content-center'><CollapsibleText text={type ? type.name : ''}/></td>
+        <td className='report-row'><CollapsibleText text={finding.description}/></td>
         <td className='report-row content-center'>{finding.level}</td>
         <td className='report-row actions'>
             <Button bsStyle='primary' bsSize='small' title={props.i18n('audit.findings.table.open-tooltip')}
