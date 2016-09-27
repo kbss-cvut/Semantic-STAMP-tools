@@ -33,6 +33,9 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
     @OWLObjectProperty(iri = Vocabulary.s_p_based_on, fetch = FetchType.EAGER)
     private Set<OccurrenceReport> basedOn;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_safety_issue_state)
+    private URI state;
+
     public SafetyIssue() {
         this.types = new HashSet<>(4);
         types.add(Vocabulary.s_c_event_type);
@@ -45,6 +48,7 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
         if (other.basedOn != null) {
             this.basedOn = new HashSet<>(other.basedOn);
         }
+        this.state = other.state;
     }
 
     public String getName() {
@@ -107,6 +111,14 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
 
     public void setBasedOn(Set<OccurrenceReport> basedOn) {
         this.basedOn = basedOn;
+    }
+
+    public URI getState() {
+        return state;
+    }
+
+    public void setState(URI state) {
+        this.state = state;
     }
 
     @Override

@@ -6,6 +6,7 @@ var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 var assign = require('object-assign');
+var classNames = require('classnames');
 
 var Actions = require('../../../actions/Actions');
 var BasedOn = require('./BasedOn').default;
@@ -61,6 +62,16 @@ var SafetyIssueReport = React.createClass({
         this.onChanges({safetyIssue: issue});
     },
 
+    _isIssueActive: function () {
+        return this.props.report.safetyIssue.state === Constants.SAFETY_ISSUE_STATE.OPEN;
+    },
+
+    _onSafetyIssueStatusChange: function () {
+        var issue = assign({}, this.props.report.safetyIssue);
+        issue.state = this._isIssueActive() ? Constants.SAFETY_ISSUE_STATE.CLOSED : Constants.SAFETY_ISSUE_STATE.OPEN;
+        this.onChanges({safetyIssue: issue});
+    },
+
     onChanges: function (changes) {
         this.props.handlers.onChange(changes);
     },
@@ -91,6 +102,7 @@ var SafetyIssueReport = React.createClass({
                           onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
+                {this._renderStateChanger()}
                 <form>
                     <div className='form-group'>
                         <div className='row'>
@@ -134,18 +146,34 @@ var SafetyIssueReport = React.createClass({
     },
 
     renderHeader: function () {
-        var fileNo = null;
+        var fileNo = null,
+            isActive = this.props.report.safetyIssue.state === Constants.SAFETY_ISSUE_STATE.OPEN,
+            titleClass = classNames('panel-title', 'pull-left', {'italics': !isActive});
         if (this.props.report.fileNumber) {
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
         }
-        return (
-            <div>
-                <h2 className='panel-title pull-left'>{this.i18n('safetyissuereport.title')}</h2>
-                {fileNo}
-                <div style={{clear: 'both'}}/>
-            </div>
-        )
+        return <div>
+            <h2 className={titleClass}
+                title={this.i18n(isActive ? 'safety-issue.panel.active-tooltip' : 'safety-issue.panel.inactive-tooltip')}>
+                {this.i18n('safetyissuereport.title')}
+            </h2>
+            {fileNo}
+            <div style={{clear: 'both'}}/>
+        </div>;
+    },
+
+    _renderStateChanger: function () {
+        if (this.props.report.isNew) {
+            return null;
+        }
+        var isActive = this._isIssueActive();
+        return <ButtonToolbar className='float-right'>
+            <Button bsStyle='primary' onClick={this._onSafetyIssueStatusChange}
+                    title={this.i18n(isActive ? 'safety-issue.deactivate-tooltip' : 'safety-issue.activate-tooltip')}>
+                {this.i18n(isActive ? 'safety-issue.deactivate' : 'safety-issue.activate')}
+            </Button>
+        </ButtonToolbar>;
     },
 
     renderButtons: function () {

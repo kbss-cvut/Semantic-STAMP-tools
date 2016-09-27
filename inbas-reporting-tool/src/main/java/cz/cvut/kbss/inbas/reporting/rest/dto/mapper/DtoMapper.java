@@ -300,6 +300,7 @@ public abstract class DtoMapper {
             dto.setTypes(new HashSet<>(issue.getTypes()));
         }
         dto.setName(issue.getName());
+        dto.setState(issue.getState());
         dto.setReferenceId(random.nextInt());
         if (issue.getBasedOn() != null) {
             dto.setBasedOn(issue.getBasedOn().stream().map(OccurrenceReport::toReportDto)

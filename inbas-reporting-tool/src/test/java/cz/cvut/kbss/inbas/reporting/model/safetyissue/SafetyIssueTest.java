@@ -15,12 +15,13 @@ import static org.junit.Assert.*;
 public class SafetyIssueTest {
 
     @Test
-    public void copyOfCopiesNameAndTypes() {
+    public void copyOfCopiesNameTypesAndActivityStatus() {
         final SafetyIssue original = SafetyIssueReportGenerator.generateSafetyIssue();
         final SafetyIssue copy = SafetyIssue.copyOf(original);
         assertNotNull(copy);
         assertEquals(original.getName(), copy.getName());
         assertEquals(original.getTypes(), copy.getTypes());
+        assertEquals(original.getState(), copy.getState());
     }
 
     @Test

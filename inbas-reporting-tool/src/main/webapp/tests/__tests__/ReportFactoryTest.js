@@ -54,6 +54,11 @@ describe('Report factory', () => {
         expect(report.factorGraph.edges.length).toEqual(originalGraph.edges.length);
     });
 
+    it('creates safety issue which is open by default', () => {
+        var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
+        expect(report.safetyIssue.state).toEqual(Constants.SAFETY_ISSUE_STATE.OPEN);
+    });
+
     it('creates audit report for audit report Java class', () => {
         var report = ReportFactory.createReport(Constants.AUDIT_REPORT_JAVA_CLASS);
         expect(report.javaClass).toEqual(Constants.AUDIT_REPORT_JAVA_CLASS);

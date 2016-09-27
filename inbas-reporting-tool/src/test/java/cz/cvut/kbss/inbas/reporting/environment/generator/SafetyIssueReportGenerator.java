@@ -15,6 +15,7 @@ public class SafetyIssueReportGenerator {
     public static SafetyIssue generateSafetyIssue() {
         final SafetyIssue issue = new SafetyIssue();
         issue.setName("SafetyIssue" + Generator.randomInt());
+        issue.setState(Generator.generateUri());
         return issue;
     }
 

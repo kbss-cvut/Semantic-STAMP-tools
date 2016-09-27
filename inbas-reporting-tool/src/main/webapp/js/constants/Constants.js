@@ -99,5 +99,10 @@ module.exports = {
         DESCRIPTION: 'description',
         DEADLINE: 'deadline',
         IMPLEMENTED: 'implemented'
+    },
+
+    SAFETY_ISSUE_STATE: {
+        OPEN: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/opened-safety-issue-state',
+        CLOSED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/closed-safety-issue-state'
     }
 };

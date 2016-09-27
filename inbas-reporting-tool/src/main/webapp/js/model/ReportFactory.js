@@ -44,6 +44,7 @@ module.exports = {
             safetyIssue: {
                 javaClass: Constants.SAFETY_ISSUE_JAVA_CLASS,
                 referenceId: Utils.randomInt(),
+                state: Constants.SAFETY_ISSUE_STATE.OPEN,
                 name: ''
             },
             isNew: true,

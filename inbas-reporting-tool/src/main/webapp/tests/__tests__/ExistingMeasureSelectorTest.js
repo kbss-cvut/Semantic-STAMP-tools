@@ -56,8 +56,9 @@ describe('Existing measure selector', () => {
                                                                     finding={finding}/>);
         var select = TestUtils.findRenderedDOMComponentWithTag(component, 'select'),
             options = TestUtils.scryRenderedDOMComponentsWithTag(component, 'option'),
-            selectedIndex = Generator.getRandomPositiveInt(0, options.length),
-            selectedOption = options[selectedIndex + 1];    // There is one extra option - the --Select-- one
+            selectedIndex = Generator.getRandomPositiveInt(0, component.measures.length),
+            //There is one extra option - the --Select-- one
+            selectedOption = options[selectedIndex + 1];
         TestUtils.Simulate.change(select, {target: {value: selectedOption.value}});
         expect(onChange).toHaveBeenCalledWith(component.measures[selectedIndex]);
     });
