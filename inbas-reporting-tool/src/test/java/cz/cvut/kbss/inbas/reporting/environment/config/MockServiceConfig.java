@@ -34,7 +34,7 @@ public class MockServiceConfig {
         return mock(PersonService.class);
     }
 
-    @Bean
+    @Bean(name = "cachingReportBusinessService")
     public ReportBusinessService reportService() {
         return mock(ReportBusinessService.class);
     }
