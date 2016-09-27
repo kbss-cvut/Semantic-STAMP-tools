@@ -9,6 +9,7 @@ import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import java.util.List;
 public class ReportController extends BaseController {
 
     @Autowired
+    @Qualifier("cachingReportBusinessService")
     private ReportBusinessService reportService;
 
     @Autowired
