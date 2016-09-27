@@ -125,7 +125,13 @@ module.exports = {
         'occurrence.class': 'Occurrence class',
         'occurrence.class-tooltip': 'Occurrence class - this field is required',
 
+        'safety-issue.panel.active-tooltip': 'This safety issue is currently active',
+        'safety-issue.panel.inactive-tooltip': 'This safety issue is currently not active',
         'safety-issue.name-tooltip': 'Short descriptive name of the issue - this field is required',
+        'safety-issue.activate': 'Activate',
+        'safety-issue.activate-tooltip': 'Make this safety issue active',
+        'safety-issue.deactivate': 'Deactivate',
+        'safety-issue.deactivate-tooltip': 'Deactivate this safety issue',
 
         'audit.name-tooltip': 'Short descriptive name of the audit (e.g. audited organization name + date of audit) - this field is required',
         'audit.type.label': 'Audit type',

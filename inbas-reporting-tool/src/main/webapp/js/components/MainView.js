@@ -49,8 +49,7 @@ var MainView = React.createClass({
             <div>
                 <header>
                     <Navbar fluid={true}>
-                        <NavBrand className='navbrand-text'>{Constants.APP_NAME}
-                        </NavBrand>
+                        <NavBrand className='navbrand-text'>{Constants.APP_NAME}</NavBrand>
                         <Nav>
                             <LinkContainer
                                 to='dashboard'><NavItem>{this.i18n('main.dashboard-nav')}</NavItem></LinkContainer>

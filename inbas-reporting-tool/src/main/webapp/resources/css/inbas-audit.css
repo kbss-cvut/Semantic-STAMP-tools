@@ -574,8 +574,18 @@ button.reset-filters {
 }
 
 .navbrand-text {
-    display: block;
-    content: url('../images/sisel_text.png');
     vertical-align: bottom;
     padding: 2px 2px !important; /* Override default navbrand padding */
+    height: 46px;
+    width: 105px;
+    overflow: hidden;
+}
+
+.navbrand-text::before {
+    display: inline-block;
+    content: url('../images/sisel_text.png');
+    font-size: 0;
+    line-height: 0;
+    height: 46px;
+    width: 105px;
 }
