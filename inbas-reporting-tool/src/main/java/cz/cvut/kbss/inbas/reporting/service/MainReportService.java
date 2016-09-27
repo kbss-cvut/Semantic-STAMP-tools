@@ -36,9 +36,6 @@ public class MainReportService implements ReportBusinessService {
     private ReportDao reportDao;
 
     @Autowired
-    private ReportCache reportCache;
-
-    @Autowired
     private ReportImporter reportImporter;
 
     @Autowired

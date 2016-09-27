@@ -7,6 +7,7 @@ import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -37,6 +38,14 @@ public class CachingReportBusinessService implements ReportBusinessService {
     public <T extends LogicalDocument> void persist(T report) {
         reportService.persist(report);
         reportCache.put(report.toReportDto());
+    }
+
+    @Override
+    public <T extends LogicalDocument> T importReportFromFile(String fileName, InputStream input) {
+        final T report = reportService.importReportFromFile(fileName, input);
+        assert report != null;
+        reportCache.put(report.toReportDto());
+        return report;
     }
 
     @Override
