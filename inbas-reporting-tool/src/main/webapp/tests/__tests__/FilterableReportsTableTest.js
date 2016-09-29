@@ -32,7 +32,8 @@ describe('ReportsFilter', function () {
     it('shows a set of existing report types in the filter', function () {
         var reports = prepareReports(),
             uniqueTypes = resolveReportTypes(reports),
-            filter = Environment.render(<FilterableReportsTable actions={actions} reports={reports}/>);
+            filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                reports={reports}/>);
 
         var options = filter._getReportTypes();
         expect(options.length).toEqual(uniqueTypes.length);
@@ -85,7 +86,8 @@ describe('ReportsFilter', function () {
     it('calls filter change when filter value changes', function () {
         var reports = prepareReports(),
             uniqueTypes = resolveReportTypes(reports),
-            filter = Environment.render(<FilterableReportsTable actions={actions} reports={reports}/>),
+            filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                reports={reports}/>),
             evt = {
                 target: {
                     name: 'types',
@@ -103,7 +105,7 @@ describe('ReportsFilter', function () {
             filter;
 
         resolveReportTypes(reports);
-        filter = Environment.render(<FilterableReportsTable actions={actions} reports={reports}/>);
+        filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports} reports={reports}/>);
         Object.getOwnPropertyNames(filter.state).forEach((key) => {
             filter.state[key] = Generator.getRandomInt();
         });
@@ -117,7 +119,8 @@ describe('ReportsFilter', function () {
     it('renders buttons for all existing report types', () => {
         var reports = prepareReports(),
             types = resolveReportTypes(reports),
-            filter = Environment.render(<FilterableReportsTable actions={actions} reports={reports}/>),
+            filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                reports={reports}/>),
 
             toolbar = TestUtils.findRenderedComponentWithType(filter, require('react-bootstrap').ButtonToolbar),
             buttons = TestUtils.scryRenderedDOMComponentsWithTag(toolbar, 'button');
@@ -127,7 +130,8 @@ describe('ReportsFilter', function () {
     it('removes the \'All\' type when other type is selected', () => {
         var reports = prepareReports(),
             types = resolveReportTypes(reports),
-            filter = Environment.render(<FilterableReportsTable actions={actions} reports={reports}/>),
+            filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                reports={reports}/>),
 
             toolbar = TestUtils.findRenderedComponentWithType(filter, require('react-bootstrap').ButtonToolbar),
             buttons = TestUtils.scryRenderedDOMComponentsWithTag(toolbar, 'button'),
@@ -143,7 +147,8 @@ describe('ReportsFilter', function () {
     it('adds type to filter when additional type is selected', () => {
         var reports = prepareReports(),
             types = resolveReportTypes(reports),
-            filter = Environment.render(<FilterableReportsTable actions={actions} reports={reports}/>),
+            filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                reports={reports}/>),
 
             toolbar = TestUtils.findRenderedComponentWithType(filter, require('react-bootstrap').ButtonToolbar),
             buttons = TestUtils.scryRenderedDOMComponentsWithTag(toolbar, 'button'), button, newFilter;
@@ -161,7 +166,8 @@ describe('ReportsFilter', function () {
     it('removes selection of other types when \'All\' is selected', () => {
         var reports = prepareReports(),
             types = resolveReportTypes(reports),
-            filter = Environment.render(<FilterableReportsTable actions={actions} reports={reports}/>),
+            filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                reports={reports}/>),
 
             toolbar = TestUtils.findRenderedComponentWithType(filter, require('react-bootstrap').ButtonToolbar),
             buttons = TestUtils.scryRenderedDOMComponentsWithTag(toolbar, 'button'),
@@ -185,7 +191,8 @@ describe('ReportsFilter', function () {
             report.uri = Generator.getRandomUri();
             reports.push(report);
         }
-        var filter = Environment.render(<FilterableReportsTable actions={actions} reports={reports}/>),
+        var filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                reports={reports}/>),
 
             toolbar = TestUtils.scryRenderedComponentsWithType(filter, require('react-bootstrap').ButtonToolbar);
         expect(toolbar.length).toEqual(0);
