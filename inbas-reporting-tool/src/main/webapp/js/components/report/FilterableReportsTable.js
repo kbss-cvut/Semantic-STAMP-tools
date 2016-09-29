@@ -137,7 +137,7 @@ var FilterableReportsTable = React.createClass({
         var types = [],
             typeSet = [],
             reportTypes,
-            reports = this.props.reports;
+            reports = this.props.allReports;
         for (var i = 0, len = reports.length; i < len; i++) {
             reportTypes = reports[i].types;
             if (!reportTypes || reportTypes.length === 0) {
