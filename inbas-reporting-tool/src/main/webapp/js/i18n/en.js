@@ -104,7 +104,7 @@ module.exports = {
         'reports.filter.label': 'Filter',
         'reports.filter.type.tooltip': 'Select report type',
         'reports.filter.type.all': 'All',
-        'reports.filter.type.preliminary': 'Preliminary',
+        'reports.filter.type.label': 'Report type filters:',
         'reports.filter.no-matching-found': 'No reports match the selected filters.',
         'reports.filter.reset': 'Reset filters',
         'reports.paging.item-count': 'Showing {showing} of {total} items.',
