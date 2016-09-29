@@ -80,6 +80,7 @@ describe('ReportsFilter', function () {
                 }
             }
         }
+        cats.sort((a, b) => a.localeCompare(b));
         return cats;
     }
 
@@ -196,5 +197,47 @@ describe('ReportsFilter', function () {
 
             toolbar = TestUtils.scryRenderedComponentsWithType(filter, require('react-bootstrap').ButtonToolbar);
         expect(toolbar.length).toEqual(0);
+    });
+
+    it('removes filter when the button is toggled again', () => {
+        var reports = prepareReports(),
+            types = resolveReportTypes(reports),
+            filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                reports={reports}/>),
+
+            toolbar = TestUtils.findRenderedComponentWithType(filter, require('react-bootstrap').ButtonToolbar),
+            buttons = TestUtils.scryRenderedDOMComponentsWithTag(toolbar, 'button'), button, newFilter;
+        for (var i = 0, len = types.length; i < len; i++) {
+            button = buttons[i + 1];
+            TestUtils.Simulate.click(button);
+            newFilter = onFilterChange.calls.argsFor(i)[0];
+            expect(newFilter['types'].indexOf(types[i])).not.toEqual(-1);
+        }
+        for (i = 0, len = types.length; i < len; i++) {
+            button = buttons[i + 1];
+            TestUtils.Simulate.click(button);
+            newFilter = onFilterChange.calls.argsFor(i + types.length)[0];
+            expect(newFilter['types'].indexOf(types[i])).toEqual(-1);   // Type removed from filter
+        }
+    });
+
+    it('sets type filter back to \'All\' when the last remaining filter button is toggled again', () => {
+        var reports = prepareReports(),
+            types = resolveReportTypes(reports),
+            filter = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                reports={reports}/>),
+
+            toolbar = TestUtils.findRenderedComponentWithType(filter, require('react-bootstrap').ButtonToolbar),
+            buttons = TestUtils.scryRenderedDOMComponentsWithTag(toolbar, 'button'),
+            index = Generator.getRandomInt(types.length),
+            selectedType = types[index],
+            typeButton = buttons[index + 1]; // Skip the All button
+        TestUtils.Simulate.click(typeButton);
+        var newFilter = onFilterChange.calls.argsFor(0)[0];
+        expect(newFilter['types']).toEqual([selectedType]);
+
+        TestUtils.Simulate.click(typeButton);   // Selected the All button
+        newFilter = onFilterChange.calls.argsFor(1)[0];
+        expect(newFilter['types']).toEqual(Constants.FILTER_DEFAULT);
     });
 });
