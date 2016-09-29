@@ -52,12 +52,21 @@ var FilterableReportsTable = React.createClass({
     _onTypeToggle: function (type) {
         var change = {};
         if (type !== Constants.FILTER_DEFAULT) {
-            change['types'] = [type];
-            if (Array.isArray(this.state.types)) {
-                change.types = change.types.concat(this.state.types);
+            var origTypes = Array.isArray(this.state.types) ? this.state.types.slice() : [this.state.types];
+            if (origTypes.indexOf(type) === -1) {   // Add type to filter
+                change.types = [type].concat(origTypes);
+                if (change.types.indexOf(Constants.FILTER_DEFAULT) !== -1) {
+                    change.types.splice(change.types.indexOf(Constants.FILTER_DEFAULT), 1);
+                }
+            } else {    // Remove type from filter
+                origTypes.splice(origTypes.indexOf(type), 1);
+                change.types = origTypes;
+            }
+            if (change.types.length === 0) {    // If no filters left, reset back to All
+                change.types = Constants.FILTER_DEFAULT;
             }
         } else {
-            change['types'] = Constants.FILTER_DEFAULT;
+            change.types = Constants.FILTER_DEFAULT;
         }
         this.setState(change);
         this.props.actions.onFilterChange(change);
@@ -151,6 +160,7 @@ var FilterableReportsTable = React.createClass({
                 }
             }
         }
+        types.sort((a, b) => a.label.localeCompare(b.label));   // Sort types by label
         return types;
     },
 
