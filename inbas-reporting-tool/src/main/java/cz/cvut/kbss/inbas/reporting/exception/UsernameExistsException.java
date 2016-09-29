@@ -1,22 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.exception;
 
 /**
- * @author ledvima1
+ * Thrown when trying to add an user whose username already exists in the repository.
  */
 public class UsernameExistsException extends RuntimeException {
 
-    public UsernameExistsException() {
-    }
-
     public UsernameExistsException(String message) {
         super(message);
-    }
-
-    public UsernameExistsException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public UsernameExistsException(Throwable cause) {
-        super(cause);
     }
 }

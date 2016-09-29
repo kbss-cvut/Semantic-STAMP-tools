@@ -112,10 +112,10 @@ var ReportsController = React.createClass({
     onFilterChange: function (filter) {
         var newFilter = assign({}, this.state.filter, filter);
         this.setState({filter: newFilter});
-        this._rememberFilterAndStort(newFilter, this.state.sort);
+        this._rememberFilterAndSort(newFilter, this.state.sort);
     },
 
-    _rememberFilterAndStort: function (filter, sort) {
+    _rememberFilterAndSort: function (filter, sort) {
         Actions.rememberComponentState(ReportsController.displayName, {
             filter: filter,
             sort: sort
@@ -127,7 +127,7 @@ var ReportsController = React.createClass({
         change[column] = sortStateTransition(this.state.sort[column]);
         newSort = assign(this.state.sort, change);
         this.setState({sort: newSort});
-        this._rememberFilterAndStort(this.state.filter, newSort);
+        this._rememberFilterAndSort(this.state.filter, newSort);
     },
 
     _filterReports: function (reports) {

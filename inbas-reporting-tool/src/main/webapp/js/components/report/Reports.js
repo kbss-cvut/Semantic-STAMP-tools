@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -11,7 +7,7 @@ var Panel = require('react-bootstrap').Panel;
 var injectIntl = require('../../utils/injectIntl');
 
 var Constants = require('../../constants/Constants');
-var ReportsTable = require('./ReportsTable');
+var FilterableReportsTable = require('./FilterableReportsTable');
 var Mask = require('./../Mask').default;
 var Routing = require('../../utils/Routing');
 var I18nMixin = require('../../i18n/I18nMixin');
@@ -34,15 +30,12 @@ var Reports = React.createClass({
     render: function () {
         var reports = this.props.reports;
         if (reports === null) {
-            return (
-                <Mask text={this.i18n('reports.loading-mask')}/>
-            );
+            return <Mask text={this.i18n('reports.loading-mask')}/>;
         }
-        return (
-            <Panel header={<h3>{this.i18n('reports.panel-title')}</h3>} bsStyle='primary'>
-                <ReportsTable {...this.props}/>
+        return <Panel header={<h3>{this.i18n('reports.panel-title')}</h3>} bsStyle='primary'>
+                <FilterableReportsTable {...this.props}/>
                 {this.renderNoReports()}
-            </Panel>);
+            </Panel>;
     },
 
     renderNoReports: function () {
@@ -54,13 +47,12 @@ var Reports = React.createClass({
         if (this._areReportsFiltered()) {
             return <div className='no-reports-notice italics'>{this.i18n('reports.filter.no-matching-found')}</div>;
         } else {
-            return (
-                <div className='no-reports-notice italics'>
+            return <div className='no-reports-notice italics'>
                     {this.i18n('reports.no-reports')}
                     <a href='#' onClick={this.createReport} title={this.i18n('reports.no-reports.link-tooltip')}>
                         {this.i18n('reports.no-reports.link')}
                     </a>
-                </div>);
+                </div>;
         }
     },
 

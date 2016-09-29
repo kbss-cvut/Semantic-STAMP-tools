@@ -588,3 +588,16 @@ button.reset-filters {
     height: 46px;
     width: 105px;
 }
+
+.type-filters-label {
+    margin-top: 0.6em;
+    margin-bottom: 0.8em;
+}
+
+.type-filters {
+    padding-bottom: 1em;
+}
+
+.type-filters button {
+    min-width: 80px;
+}

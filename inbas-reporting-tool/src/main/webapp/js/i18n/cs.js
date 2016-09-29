@@ -109,7 +109,7 @@ module.exports = {
         'reports.filter.label': 'Zobrazit',
         'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',
         'reports.filter.type.all': 'Všechna',
-        'reports.filter.type.preliminary': 'Předběžná',
+        'reports.filter.type.label': 'Filtr typu hlášení:',
         'reports.filter.no-matching-found': 'Žádná hlášení neodpovídají zvoleným parametrům.',
         'reports.filter.reset': 'Zrušit filtry',
         'reports.paging.item-count': 'Zobrazuji {showing} z {total} položek.',
