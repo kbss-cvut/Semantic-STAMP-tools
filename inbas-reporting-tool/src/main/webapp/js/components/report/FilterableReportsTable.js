@@ -95,10 +95,10 @@ var FilterableReportsTable = React.createClass({
             return null;
         }
         return <div className='row'>
-            <div className='col-xs-1'>
-                <label className='control-label type-filters-label'>{this.i18n('reports.filter.type.label')}</label>
+            <div className='type-filters-label'>
+                <label className='control-label'>{this.i18n('reports.filter.type.label')}</label>
             </div>
-            <div className='col-xs-11'>
+            <div className='col-xs-10'>
                 {this._renderReportTypeFilterButtons(types)}
             </div>
         </div>;
