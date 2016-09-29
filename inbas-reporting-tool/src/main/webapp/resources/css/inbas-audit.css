@@ -82,7 +82,7 @@ body {
 }
 
 td.report-row {
-    vertical-align: middle !important;  /* Use important to override bootstrap */
+    vertical-align: middle !important; /* Use important to override bootstrap */
 }
 
 ul.autocomplete-results {
@@ -533,4 +533,17 @@ button.reset-filters {
     min-height: 58em;
     border: 1px solid #cecece;
     border-radius: 3px;
+}
+
+.type-filters-label {
+    margin-top: 0.6em;
+    margin-bottom: 0.8em;
+}
+
+.type-filters {
+    padding-bottom: 1em;
+}
+
+.type-filters button {
+    min-width: 80px;
 }

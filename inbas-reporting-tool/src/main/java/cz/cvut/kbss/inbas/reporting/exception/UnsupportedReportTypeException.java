@@ -5,9 +5,6 @@ package cz.cvut.kbss.inbas.reporting.exception;
  */
 public class UnsupportedReportTypeException extends RuntimeException {
 
-    public UnsupportedReportTypeException() {
-    }
-
     public UnsupportedReportTypeException(String message) {
         super(message);
     }

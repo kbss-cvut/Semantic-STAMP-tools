@@ -7,7 +7,6 @@ var Glyphicon = require('react-bootstrap').Glyphicon;
 var injectIntl = require('../../utils/injectIntl');
 
 var Constants = require('../../constants/Constants');
-var ReportFilter = require('./ReportsFilter');
 var ReportRow = require('./ReportRow');
 var I18nMixin = require('../../i18n/I18nMixin');
 var PagingMixin = require('../mixin/PagingMixin');
@@ -36,8 +35,7 @@ var ReportsTable = React.createClass({
             <Table striped bordered condensed hover>
                 {this.renderHeader()}
                 <tbody>
-                <ReportFilter onFilterChange={this._onFilterChange} filter={this.props.filter}
-                              reports={this.props.allReports}/>
+                {this.props.children}
                 {this.renderReports()}
                 </tbody>
             </Table>
