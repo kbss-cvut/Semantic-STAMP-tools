@@ -5,10 +5,6 @@ package cz.cvut.kbss.inbas.reporting.exception;
  */
 public class WebServiceIntegrationException extends RuntimeException {
 
-    public WebServiceIntegrationException(String message) {
-        super(message);
-    }
-
     public WebServiceIntegrationException(String message, Throwable cause) {
         super(message, cause);
     }
