@@ -1,5 +1,8 @@
 # SISEL Release Notes
 
+### 0.7.6 - September 30, 2016
+- Allow safety issue base removal (Feature #177).
+
 ### 0.7.5 - September 30, 2016
 - Fixed issue with unpersisted change exception when audited organization changes in audit report.
 

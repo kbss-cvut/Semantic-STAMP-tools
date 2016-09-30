@@ -72,6 +72,14 @@ var SafetyIssueReport = React.createClass({
         this.onChanges({safetyIssue: issue});
     },
 
+    _onBaseRemove: function (base) {
+        var issue = assign({}, this.props.report.safetyIssue),
+            basedOn = issue.basedOn.slice();
+        basedOn.splice(basedOn.indexOf(base), 1);
+        issue.basedOn = basedOn;
+        this.onChanges({safetyIssue: issue});
+    },
+
     onChanges: function (changes) {
         this.props.handlers.onChange(changes);
     },
@@ -121,7 +129,7 @@ var SafetyIssueReport = React.createClass({
                     </div>
 
                     <div className='form-group'>
-                        <BasedOn report={report}/>
+                        <BasedOn report={report} onRemove={this._onBaseRemove}/>
                     </div>
 
                     <div className='form-group'>

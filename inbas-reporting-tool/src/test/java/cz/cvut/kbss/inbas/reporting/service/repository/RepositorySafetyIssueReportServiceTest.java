@@ -1,11 +1,15 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
+import cz.cvut.kbss.inbas.reporting.model.AbstractEntity;
+import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.SafetyIssueReportDao;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.service.SafetyIssueReportService;
@@ -14,7 +18,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -25,6 +34,9 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
 
     @Autowired
     private SafetyIssueReportDao dao;
+
+    @Autowired
+    private OccurrenceReportDao occurrenceReportDao;
 
     private Person author;
 
@@ -112,5 +124,43 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
         final SafetyIssueReport result = service.findRevision(report.getFileNumber(), report.getRevision());
         assertNotNull(result);
         assertEquals(report.getUri(), result.getUri());
+    }
+
+    @Test
+    public void updateRemovesBaseReport() {
+        final SafetyIssueReport report = persistSafetyIssueWithBases();
+
+        final Set<OccurrenceReport> removed = new HashSet<>();
+        final Iterator<OccurrenceReport> it = report.getSafetyIssue().getBasedOn().iterator();
+        while (it.hasNext()) {
+            final OccurrenceReport r = it.next();
+            if (Generator.randomBoolean()) {
+                it.remove();
+                removed.add(r);
+            }
+        }
+        assertFalse(removed.isEmpty());
+        service.update(report);
+
+        final SafetyIssueReport result = service.find(report.getUri());
+        assertEquals(report.getSafetyIssue().getBasedOn().size(), result.getSafetyIssue().getBasedOn().size());
+        final Set<URI> uris = result.getSafetyIssue().getBasedOn().stream().map(AbstractEntity::getUri)
+                                    .collect(Collectors.toSet());
+        removed.forEach(r -> {
+            assertFalse(uris.contains(r.getUri()));
+            assertNotNull(occurrenceReportDao.find(r.getUri()));
+        });
+    }
+
+    private SafetyIssueReport persistSafetyIssueWithBases() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
+        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
+            final OccurrenceReport base = OccurrenceReportGenerator.generateOccurrenceReport(true);
+            base.setAuthor(author);
+            occurrenceReportDao.persist(base);
+            report.getSafetyIssue().addBase(base);
+        }
+        service.persist(report);
+        return report;
     }
 }
