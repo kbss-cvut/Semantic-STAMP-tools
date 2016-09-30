@@ -245,6 +245,25 @@ public class AuditDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
+    public void updatePersistsAuditeeWhenItDoesNotExist() {
+        final Audit audit = AuditReportGenerator.generateAudit();
+        dao.persist(audit);
+        final Organization originalOrganization = audit.getAuditee();
+        final Organization newOrganization = Generator.generateOrganization();
+        audit.setAuditee(newOrganization);
+        dao.update(audit);
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNotNull(em.find(Organization.class, originalOrganization.getUri()));
+            assertNotNull(em.find(Organization.class, newOrganization.getUri()));
+        } finally {
+            em.close();
+        }
+        final Audit result = dao.find(audit.getUri());
+        assertEquals(newOrganization, result.getAuditee());
+    }
+
+    @Test
     public void removeRemovesAlsoCorrectiveMeasures() {
         final Audit audit = prepareAuditWithCorrectiveMeasures();
         dao.persist(audit);

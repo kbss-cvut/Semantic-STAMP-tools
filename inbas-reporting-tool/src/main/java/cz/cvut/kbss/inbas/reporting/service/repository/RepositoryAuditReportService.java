@@ -10,6 +10,7 @@ import cz.cvut.kbss.inbas.reporting.service.validation.AuditReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Objects;
 
 @Service
@@ -42,7 +43,7 @@ public class RepositoryAuditReportService extends KeySupportingRepositoryService
         if (instance.getAudit().getFindings() != null) {
             instance.getAudit().getFindings().stream().filter(f -> f.getCorrectiveMeasures() != null)
                     .forEach(f -> f.getCorrectiveMeasures().forEach(m -> {
-                        m.getResponsibleOrganizations().add(auditee);
+                        m.setResponsibleOrganizations(Collections.singleton(auditee));
                     }));
         }
     }

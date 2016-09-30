@@ -6,7 +6,9 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
+import cz.cvut.kbss.inbas.reporting.model.Organization;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
@@ -20,6 +22,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -143,7 +146,32 @@ public class RepositoryAuditReportServiceTest extends BaseServiceTestRunner {
         try {
             final CorrectiveMeasureRequest result = em.find(CorrectiveMeasureRequest.class, newOne.getUri());
             assertNotNull(result);
+            assertEquals(1, result.getResponsibleOrganizations().size());
             assertTrue(result.getResponsibleOrganizations().contains(report.getAudit().getAuditee()));
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void updateReplacesResponsibleOrganizationOfCorrectiveMeasuresWhenAuditeeChanges() {
+        final AuditReport report = initAuditReportWithCorrectiveMeasures();
+        service.persist(report);
+        final Organization newAuditee = Generator.generateOrganization();
+        report.getAudit().setAuditee(newAuditee);
+        service.update(report);
+
+        final EntityManager em = emf.createEntityManager();
+        try {
+            final List<CorrectiveMeasureRequest> result = em
+                    .createNativeQuery("SELECT ?x WHERE { ?x a ?type . }", CorrectiveMeasureRequest.class)
+                    .setParameter("type",
+                            URI.create(Vocabulary.s_c_corrective_measure_request)).getResultList();
+            assertFalse(result.isEmpty());
+            for (CorrectiveMeasureRequest m : result) {
+                assertEquals(1, m.getResponsibleOrganizations().size());
+                assertTrue(m.getResponsibleOrganizations().contains(newAuditee));
+            }
         } finally {
             em.close();
         }
