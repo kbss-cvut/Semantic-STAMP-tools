@@ -211,12 +211,14 @@ td.actions button {
     vertical-align: middle;
 }
 
+.main-dashboard {
+    min-height: 19em;
+}
+
 .dashboard-sector {
     text-align: center;
     vertical-align: middle;
-    padding-top: 1em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    padding: 1em 0.5em;
 }
 
 .dashboard-sector-search {
@@ -228,9 +230,9 @@ td.actions button {
 }
 
 .dashboard-tile {
-    min-height: 7em;
+    min-height: 5em;
     width: 100%;
-    max-width: 15em;
+    max-width: 12em;
     padding: 10px 16px;
     font-size: 18px;
     line-height: 1.3;

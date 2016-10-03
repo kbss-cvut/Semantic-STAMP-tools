@@ -64,7 +64,7 @@ var Dashboard = React.createClass({
         return (
             <div style={{margin: '0 -15px 0 -15px'}}>
                 <div className='col-xs-8'>
-                    <Jumbotron>
+                    <Jumbotron className='main-dashboard'>
                         {this.renderTitle()}
                         {this.renderDashboardContent()}
                     </Jumbotron>
