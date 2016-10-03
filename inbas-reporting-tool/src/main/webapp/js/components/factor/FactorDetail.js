@@ -9,6 +9,9 @@ var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 var Glyphicon = require('react-bootstrap').Glyphicon;
 var Label = require('react-bootstrap').Label;
+var FormGroup = require('react-bootstrap').FormGroup;
+var InputGroup = require('react-bootstrap').InputGroup;
+var FormControl = require('react-bootstrap').FormControl;
 // require().default is needed for default-exported components using the ES6 syntax
 var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
 var injectIntl = require('../../utils/injectIntl');
@@ -16,7 +19,7 @@ var FormattedMessage = require('react-intl').FormattedMessage;
 var JsonLdUtils = require('jsonld-utils').default;
 
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
-var Input = require('../Input');
+var Input = require('../Input').default;
 var Mask = require('../Mask').default;
 var Utils = require('../../utils/Utils');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
@@ -183,9 +186,6 @@ var FactorDetail = React.createClass({
 
     render: function () {
         var eventTypeLabel = this.props.factor.text,
-            durationMinus = <Button bsSize='small' disabled={this.state.duration === 0}
-                                    onClick={this.onDurationMinus}><Glyphicon glyph='minus'/></Button>,
-            durationPlus = <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon glyph='plus'/></Button>,
             eventTypeBadge = this.renderFactorTypeIcon(),
             eventTypeClassNames = classNames({
                 'col-xs-12': true,
@@ -224,13 +224,11 @@ var FactorDetail = React.createClass({
                                 <label className='control-label'>{this.i18n('factors.detail.time-period')}</label>
                             </div>
                             <div className='row'>
-                                <div className='col-xs-2 bold'
-                                     style={{padding: '7px 0 7px 15px'}}>{this.i18n('factors.detail.start')}</div>
-                                <div className='col-xs-4 picker-container form-group-sm'
-                                     style={{padding: '0 15px 0 0'}}>
+                                <div className='col-xs-6'>
                                     <DateTimePicker inputFormat='DD-MM-YY HH:mm'
                                                     dateTime={this.state.startDate.toString()}
                                                     onChange={this.onDateChange}
+                                                    label={this.i18n('factors.detail.start')}
                                                     inputProps={{
                                                         title: this.i18n('occurrence.start-time-tooltip'),
                                                         bsSize: 'small'
@@ -240,8 +238,21 @@ var FactorDetail = React.createClass({
                                      style={{padding: '7px 0 7px 15px'}}>{this.i18n('factors.detail.duration')}</div>
                                 <div className='col-xs-4' style={{padding: '0 15px 0 0'}}>
                                     <div className='col-xs-7' style={{padding: '0'}}>
-                                        <Input type='text' buttonBefore={durationMinus} buttonAfter={durationPlus}
-                                               value={this.state.duration} onChange={this.onDurationSet}/>
+                                        <FormGroup>
+                                            <InputGroup>
+                                                <InputGroup.Button>
+                                                    <Button bsSize='small' disabled={this.state.duration === 0}
+                                                            onClick={this.onDurationMinus}><Glyphicon
+                                                        glyph='minus'/></Button>
+                                                </InputGroup.Button>
+                                                <FormControl type='text' value={this.state.duration}
+                                                             onChange={this.onDurationSet}/>
+                                                <InputGroup.Button>
+                                                    <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon
+                                                        glyph='plus'/></Button>
+                                                </InputGroup.Button>
+                                            </InputGroup>
+                                        </FormGroup>
                                     </div>
                                     <div className='col-xs-5' style={{padding: '7px 15px'}}>
                                         {this.renderDuration()}
