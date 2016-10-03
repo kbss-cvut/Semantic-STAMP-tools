@@ -1,5 +1,9 @@
 # SISEL Release Notes
 
+### 0.7.7 - October 3, 2016
+- New SISel logo (Support #180).
+- New BI views and their switching in the statistics tab (Feature #179).
+
 ### 0.7.6 - September 30, 2016
 - Allow safety issue base removal (Feature #177).
 
