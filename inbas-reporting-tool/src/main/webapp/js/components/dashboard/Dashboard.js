@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -15,6 +11,7 @@ var FormattedMessage = require('react-intl').FormattedMessage;
 
 var Constants = require('../../constants/Constants');
 var CreateReportDashboard = require('./CreateReportDashboard').default;
+var DashboardStatistics = require('../statistics/DashboardStatistics').default;
 var ImportReportDashboard = require('./ImportReportDashboard').default;
 var Tile = require('./DashboardTile').default;
 var ReportTypeahead = require('../typeahead/ReportTypeahead');
@@ -71,6 +68,7 @@ var Dashboard = React.createClass({
                         {this.renderTitle()}
                         {this.renderDashboardContent()}
                     </Jumbotron>
+                    <DashboardStatistics/>
                 </div>
                 <div className='col-xs-4'>
                     <div>

@@ -214,7 +214,9 @@ td.actions button {
 .dashboard-sector {
     text-align: center;
     vertical-align: middle;
-    padding: 3em 0.5em;
+    padding-top: 1em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
 }
 
 .dashboard-sector-search {
@@ -533,6 +535,13 @@ button.reset-filters {
     background-color: rgba(217, 83, 79, 0.3) !important;
 }
 
+.dashboard-statistics-frame {
+    width: 100%;
+    border: none;
+    min-height: 720px;
+    overflow: auto;
+}
+
 .statistics-frame {
     width: 100%;
     min-height: 800px;
@@ -607,4 +616,15 @@ button.reset-filters {
 
 .type-filters button {
     min-width: 80px;
+}
+
+.statistics-switchers {
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.statistics-switchers button {
+    min-width: 100px;
+    margin: 0 0.8em;
 }

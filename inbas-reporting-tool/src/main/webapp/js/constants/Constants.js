@@ -31,7 +31,12 @@ module.exports = {
     /**
      * URL of the remote BI solution providing statistics for the app
      */
-    STATISTICS_URL: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3ADashboard.wcdf/generatedContent',
+    STATISTICS: {
+        general: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_General.wcdf/generatedContent',
+        eventTypes: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_Event_Types.wcdf/generatedContent',
+        audit: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_Audit.wcdf/generatedContent'
+    },
+    DASHBOARD_STATISTICS_URL: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AMain_Dashboard.wcdf/generatedContent',
 
     /**
      * Sorting glyph icons

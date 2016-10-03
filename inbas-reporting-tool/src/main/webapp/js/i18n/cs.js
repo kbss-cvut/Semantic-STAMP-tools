@@ -308,6 +308,10 @@ module.exports = {
         'arms.barrier-effectiveness': 'Efektivita bariér',
         'arms.barrier-effectiveness.tooltip': 'Jaká byla efektivita bariér zbývajících mezi touto událostí a nejpravděpodobnějším nehodovým scénářem?',
         'arms.index': 'ARMS index',
-        'arms.index.tooltip': 'ARMS index je '
+        'arms.index.tooltip': 'ARMS index je ',
+
+        'statistics.type.general': 'Obecné',
+        'statistics.type.eventTypes': 'Typy událostí',
+        'statistics.type.audit': 'Audity'
     }
 };

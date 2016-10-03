@@ -307,6 +307,10 @@ module.exports = {
         'arms.barrier-effectiveness': 'Barrier effectiveness',
         'arms.barrier-effectiveness.tooltip': 'What was the effectiveness of the remaining barriers between this event and the most probable accident scenario?',
         'arms.index': 'ARMS index',
-        'arms.index.tooltip': 'ARMS index is '
+        'arms.index.tooltip': 'ARMS index is ',
+
+        'statistics.type.general': 'General',
+        'statistics.type.eventTypes': 'Event types',
+        'statistics.type.audit': 'Audit'
     }
 };
