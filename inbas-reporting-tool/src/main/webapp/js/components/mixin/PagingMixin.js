@@ -43,8 +43,7 @@ var PagingMixin = {
         return {activePage: page};
     },
 
-    _onPageSelect: function (e, selectedEvent) {
-        var page = selectedEvent.eventKey;
+    _onPageSelect: function (page) {
         this.setState({activePage: page});
         if (this.getDisplayName) {
             Actions.rememberComponentState(this.getDisplayName(), {activePage: page});
