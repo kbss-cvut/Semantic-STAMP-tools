@@ -48,32 +48,31 @@ var Occurrence = React.createClass({
 
     render: function () {
         var report = this.props.report;
-        return (
-            <div>
-                <div className='row'>
-                    <div className='col-xs-4'>
-                        <Input type='text' name='name' value={report.occurrence.name} onChange={this.onChange}
-                               label={this.i18n('headline') + '*'}
-                               title={this.i18n('occurrence.headline-tooltip')}/>
-                    </div>
-                </div>
-
-                <div className='row'>
-                    <div className='picker-container form-group form-group-sm col-xs-4'>
-                        <label className='control-label'>{this.i18n('occurrence.start-time')}</label>
-                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrence.startTime.toString()}
-                                        onChange={this.onStartChange}
-                                        inputProps={{title: this.i18n('occurrence.start-time-tooltip'), bsSize: 'small'}}/>
-                    </div>
-                    <div className='picker-container form-group form-group-sm col-xs-4'>
-                        <label className='control-label'>{this.i18n('occurrence.end-time')}</label>
-                        <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrence.endTime.toString()}
-                                        onChange={this.onEndChange}
-                                        inputProps={{title: this.i18n('occurrence.end-time-tooltip'), bsSize: 'small'}}/>
-                    </div>
+        return <div>
+            <div className='row'>
+                <div className='col-xs-4'>
+                    <Input type='text' name='name' value={report.occurrence.name} onChange={this.onChange}
+                           label={this.i18n('headline') + '*'}
+                           title={this.i18n('occurrence.headline-tooltip')}/>
                 </div>
             </div>
-        );
+
+            <div className='row'>
+                <div className='picker-container form-group form-group-sm col-xs-4'>
+                    <label className='control-label'>{this.i18n('occurrence.start-time')}</label>
+                    <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss'
+                                    dateTime={report.occurrence.startTime.toString()}
+                                    onChange={this.onStartChange} size='small'
+                                    inputProps={{title: this.i18n('occurrence.start-time-tooltip')}}/>
+                </div>
+                <div className='picker-container form-group form-group-sm col-xs-4'>
+                    <label className='control-label'>{this.i18n('occurrence.end-time')}</label>
+                    <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrence.endTime.toString()}
+                                    onChange={this.onEndChange} size='small'
+                                    inputProps={{title: this.i18n('occurrence.end-time-tooltip')}}/>
+                </div>
+            </div>
+        </div>;
     }
 });
 

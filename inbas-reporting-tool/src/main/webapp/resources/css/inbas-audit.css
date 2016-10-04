@@ -446,10 +446,6 @@ button.reset-filters {
     vertical-align: bottom;
 }
 
-.external-link-factor-detail {
-    margin-top: 7px;
-}
-
 .external-link-gantt {
     content: url('../images/icons/external.png');
     width: 16px;
@@ -553,4 +549,8 @@ button.reset-filters {
 
 .type-filters button {
     min-width: 80px;
+}
+
+.inline-input {
+    margin-left: 0.5em;
 }
