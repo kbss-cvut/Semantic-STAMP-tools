@@ -21,7 +21,6 @@ var FormattedMessage = require('react-intl').FormattedMessage;
 var JsonLdUtils = require('jsonld-utils').default;
 
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
-var Input = require('../Input').default;
 var Mask = require('../Mask').default;
 var Utils = require('../../utils/Utils');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
