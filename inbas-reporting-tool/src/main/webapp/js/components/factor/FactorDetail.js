@@ -206,62 +206,52 @@ var FactorDetail = React.createClass({
                 </Modal.Header>
 
                 <Modal.Body ref={comp => this._modalContent = comp}>
-                        {this._renderMask()}
-                        {this.renderDeleteDialog()}
-                        <div className='row'>
-                            {eventTypeBadge}
-                            <div className={eventTypeClassNames}>
-                                <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
-                                                    value={eventTypeLabel}
-                                                    label={this.i18n('factors.detail.type')}
-                                                    onSelect={this.onEventTypeChange} focus={true}/>
-                            </div>
-                            {this._renderEventTypeLink()}
+                    {this._renderMask()}
+                    {this.renderDeleteDialog()}
+                    <div className='row'>
+                        {eventTypeBadge}
+                        <div className={eventTypeClassNames}>
+                            <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
+                                                value={eventTypeLabel}
+                                                label={this.i18n('factors.detail.type')}
+                                                onSelect={this.onEventTypeChange} focus={true}/>
                         </div>
+                        {this._renderEventTypeLink()}
+                    </div>
+                    <div>
                         <div>
-                            <div>
-                                <label className='control-label'>{this.i18n('factors.detail.time-period')}</label>
-                            </div>
-                            <div className='row'>
-                                <Form inline>
-                                    <div className='col-xs-5'>
-                                        <DateTimePicker inputFormat='DD-MM-YY HH:mm'
-                                                        dateTime={this.state.startDate.toString()}
-                                                        label={this.i18n('factors.detail.start')}
-                                                        onChange={this.onDateChange} size='small'
-                                                        inputProps={{
-                                                            title: this.i18n('occurrence.start-time-tooltip'),
-                                                            className: 'inline-input',
-                                                            size: 12
-                                                        }}/>
-                                    </div>
-                                    <div className='col-xs-7'>
-                                        <div className='col-xs-8'>
-                                            <FormGroup bsSize='small'>
-                                                <ControlLabel>{this.i18n('factors.detail.duration')}</ControlLabel>
-                                                <InputGroup className='inline-input'>
-                                                    <InputGroup.Button>
-                                                        <Button bsSize='small' disabled={this.state.duration === 0}
-                                                                onClick={this.onDurationMinus}><Glyphicon
-                                                            glyph='minus'/></Button>
-                                                    </InputGroup.Button>
-                                                    <FormControl type='text' value={this.state.duration}
-                                                                 onChange={this.onDurationSet} size={3}/>
-                                                    <InputGroup.Button>
-                                                        <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon
-                                                            glyph='plus'/></Button>
-                                                    </InputGroup.Button>
-                                                </InputGroup>
-                                            </FormGroup>
-                                        </div>
-                                        <div className='col-xs-3' style={{padding: '7px 0 7px 0'}}>
-                                            {this.renderDuration()}
-                                        </div>
-                                    </div>
-                                </Form>
-                            </div>
+                            <label className='control-label'>{this.i18n('factors.detail.time-period')}</label>
                         </div>
-                    </Modal.Body>
+                        <div className='row'>
+                            <Form inline>
+                                {this._renderStartTimePicker()}
+                                <div className='col-xs-7'>
+                                    <div className='col-xs-8'>
+                                        <FormGroup bsSize='small'>
+                                            <ControlLabel>{this.i18n('factors.detail.duration')}</ControlLabel>
+                                            <InputGroup className='inline-input'>
+                                                <InputGroup.Button>
+                                                    <Button bsSize='small' disabled={this.state.duration === 0}
+                                                            onClick={this.onDurationMinus}><Glyphicon
+                                                        glyph='minus'/></Button>
+                                                </InputGroup.Button>
+                                                <FormControl type='text' value={this.state.duration}
+                                                             onChange={this.onDurationSet} size={3}/>
+                                                <InputGroup.Button>
+                                                    <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon
+                                                        glyph='plus'/></Button>
+                                                </InputGroup.Button>
+                                            </InputGroup>
+                                        </FormGroup>
+                                    </div>
+                                    <div className='col-xs-3' style={{padding: '7px 0 7px 0'}}>
+                                        {this.renderDuration()}
+                                    </div>
+                                </div>
+                            </Form>
+                        </div>
+                    </div>
+                </Modal.Body>
 
                 <Modal.Footer>
                     <Button bsSize='small' bsStyle='success' onClick={this.onSave}
@@ -304,19 +294,16 @@ var FactorDetail = React.createClass({
         if (this.props.scale === Constants.TIME_SCALES.RELATIVE) {
             return null;
         }
-        return <div className='col-xs-6 row'>
-            <div className='col-xs-4 bold'
-                 style={{padding: '7px 0 7px 15px'}}>{this.i18n('factors.detail.start')}</div>
-            <div className='col-xs-8 picker-container form-group-sm'
-                 style={{padding: '0 15px 0 0'}}>
-                <DateTimePicker inputFormat='DD-MM-YY HH:mm'
-                                dateTime={this.state.startDate.toString()}
-                                onChange={this.onDateChange}
-                                inputProps={{
-                                    title: this.i18n('occurrence.start-time-tooltip'),
-                                    bsSize: 'small'
-                                }}/>
-            </div>
+        return <div className='col-xs-5'>
+            <DateTimePicker inputFormat='DD-MM-YY HH:mm'
+                            dateTime={this.state.startDate.toString()}
+                            label={this.i18n('factors.detail.start')}
+                            onChange={this.onDateChange} size='small'
+                            inputProps={{
+                                title: this.i18n('occurrence.start-time-tooltip'),
+                                className: 'inline-input',
+                                size: 12
+                            }}/>
         </div>;
     },
 

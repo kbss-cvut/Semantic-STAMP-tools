@@ -49,7 +49,7 @@ describe('ARMS attributes', () => {
         var selects = TestUtils.scryRenderedComponentsWithType(root, Select);
         for (var i = 0; i < selects.length; i++) {
             if (selects[i].props.name === change.target.name) {
-                TestUtils.Simulate.change(selects[i].getWrappedInstance().refs.select.refs.input.getInputDOMNode(), change);
+                TestUtils.Simulate.change(selects[i].getWrappedInstance().getInputNode(), change);
                 break;
             }
         }

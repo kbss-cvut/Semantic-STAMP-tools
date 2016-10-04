@@ -161,7 +161,7 @@ describe('Factors component tests', function () {
     it('does not show scale options when enableScaleChange is set to false', () => {
         var factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}
                                                   enableScaleChange={false}/>),
-            scaleOptions = TestUtils.scryRenderedComponentsWithType(factors, require('../../js/components/Input'));
+            scaleOptions = TestUtils.scryRenderedComponentsWithType(factors, require('../../js/components/Input').default);
         expect(scaleOptions.length).toEqual(1); // Only the currently selected scale
         expect(scaleOptions[0].props.value).toEqual(factors.state.scale);
     });
