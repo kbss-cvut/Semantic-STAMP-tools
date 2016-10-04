@@ -83,33 +83,25 @@ var OccurrenceClassification = React.createClass({
     },
 
     render: function () {
-        var classes = {
-                input: 'form-control'
-            },
-            report = this.props.report;
-        return (
-            <div className='row'>
-                <div className='col-xs-4'>
-                    <Select label={this.i18n('occurrence.class') + '*'} name='severityAssessment'
-                            title={this.i18n('occurrence.class-tooltip')} addDefault={true}
-                            value={report.severityAssessment} options={this._transformOccurrenceClasses()}
-                            onChange={this.onChange}/>
-                </div>
-                <div className='col-xs-4'>
-                    <label className='control-label'>
-                        {this.i18n('report.occurrence.category.label') + '*'}
-                    </label>
-                    <Typeahead className='form-group form-group-sm' name='occurrenceCategory'
-                               ref='occurrenceCategory' formInputOption='id' optionsButton={true}
-                               placeholder={this.i18n('report.occurrence.category.label')}
-                               onOptionSelected={this.onCategorySelect} filterOption='name'
-                               value={this._resolveCategoryValue()}
-                               displayOption='name' options={this.state.occurrenceCategories}
-                               customClasses={classes} customListComponent={TypeaheadResultList}/>
-                </div>
-                {this._renderCategoryLink()}
+        var report = this.props.report;
+        return <div className='row'>
+            <div className='col-xs-4'>
+                <Select label={this.i18n('occurrence.class') + '*'} name='severityAssessment'
+                        title={this.i18n('occurrence.class-tooltip')} addDefault={true}
+                        value={report.severityAssessment} options={this._transformOccurrenceClasses()}
+                        onChange={this.onChange}/>
             </div>
-        );
+            <div className='col-xs-4'>
+                <Typeahead name='occurrenceCategory' label={this.i18n('report.occurrence.category.label') + '*'}
+                           ref='occurrenceCategory' formInputOption='id' optionsButton={true}
+                           placeholder={this.i18n('report.occurrence.category.label')}
+                           onOptionSelected={this.onCategorySelect} filterOption='name'
+                           value={this._resolveCategoryValue()} size='small'
+                           displayOption='name' options={this.state.occurrenceCategories}
+                           customListComponent={TypeaheadResultList}/>
+            </div>
+            {this._renderCategoryLink()}
+        </div>;
     },
 
     _resolveCategoryValue: function () {

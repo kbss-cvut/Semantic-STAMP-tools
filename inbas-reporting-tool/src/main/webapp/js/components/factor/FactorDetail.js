@@ -7,8 +7,13 @@ var assign = require('object-assign');
 var classNames = require('classnames');
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
+var ControlLabel = require('react-bootstrap').ControlLabel;
+var Form = require('react-bootstrap').Form;
 var Glyphicon = require('react-bootstrap').Glyphicon;
 var Label = require('react-bootstrap').Label;
+var FormGroup = require('react-bootstrap').FormGroup;
+var InputGroup = require('react-bootstrap').InputGroup;
+var FormControl = require('react-bootstrap').FormControl;
 // require().default is needed for default-exported components using the ES6 syntax
 var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
 var injectIntl = require('../../utils/injectIntl');
@@ -16,7 +21,6 @@ var FormattedMessage = require('react-intl').FormattedMessage;
 var JsonLdUtils = require('jsonld-utils').default;
 
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
-var Input = require('../Input');
 var Mask = require('../Mask').default;
 var Utils = require('../../utils/Utils');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
@@ -183,12 +187,9 @@ var FactorDetail = React.createClass({
 
     render: function () {
         var eventTypeLabel = this.props.factor.text,
-            durationMinus = <Button bsSize='small' disabled={this.state.duration === 0}
-                                    onClick={this.onDurationMinus}><Glyphicon glyph='minus'/></Button>,
-            durationPlus = <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon glyph='plus'/></Button>,
             eventTypeBadge = this.renderFactorTypeIcon(),
             eventTypeClassNames = classNames({
-                'col-xs-12': true,
+                'col-xs-12': !this.state.eventType,
                 'col-xs-11': this.state.eventType,
                 'col-xs-10': this.state.eventType && eventTypeBadge
             });
@@ -206,15 +207,11 @@ var FactorDetail = React.createClass({
                         {this._renderMask()}
                         {this.renderDeleteDialog()}
                         <div className='row'>
-                            <div className='col-xs-12'>
-                                <label className='control-label'>{this.i18n('factors.detail.type')}</label>
-                            </div>
-                        </div>
-                        <div className='form-group row'>
                             {eventTypeBadge}
                             <div className={eventTypeClassNames}>
                                 <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
                                                     value={eventTypeLabel}
+                                                    label={this.i18n('factors.detail.type')}
                                                     onSelect={this.onEventTypeChange} focus={true}/>
                             </div>
                             {this._renderEventTypeLink()}
@@ -224,29 +221,42 @@ var FactorDetail = React.createClass({
                                 <label className='control-label'>{this.i18n('factors.detail.time-period')}</label>
                             </div>
                             <div className='row'>
-                                <div className='col-xs-2 bold'
-                                     style={{padding: '7px 0 7px 15px'}}>{this.i18n('factors.detail.start')}</div>
-                                <div className='col-xs-4 picker-container form-group-sm'
-                                     style={{padding: '0 15px 0 0'}}>
-                                    <DateTimePicker inputFormat='DD-MM-YY HH:mm'
-                                                    dateTime={this.state.startDate.toString()}
-                                                    onChange={this.onDateChange}
-                                                    inputProps={{
-                                                        title: this.i18n('occurrence.start-time-tooltip'),
-                                                        bsSize: 'small'
-                                                    }}/>
-                                </div>
-                                <div className='col-xs-2 bold'
-                                     style={{padding: '7px 0 7px 15px'}}>{this.i18n('factors.detail.duration')}</div>
-                                <div className='col-xs-4' style={{padding: '0 15px 0 0'}}>
-                                    <div className='col-xs-7' style={{padding: '0'}}>
-                                        <Input type='text' buttonBefore={durationMinus} buttonAfter={durationPlus}
-                                               value={this.state.duration} onChange={this.onDurationSet}/>
+                                <Form inline>
+                                    <div className='col-xs-5'>
+                                        <DateTimePicker inputFormat='DD-MM-YY HH:mm'
+                                                        dateTime={this.state.startDate.toString()}
+                                                        label={this.i18n('factors.detail.start')}
+                                                        onChange={this.onDateChange} size='small'
+                                                        inputProps={{
+                                                            title: this.i18n('occurrence.start-time-tooltip'),
+                                                            className: 'inline-input',
+                                                            size: 12
+                                                        }}/>
                                     </div>
-                                    <div className='col-xs-5' style={{padding: '7px 15px'}}>
-                                        {this.renderDuration()}
+                                    <div className='col-xs-7'>
+                                        <div className='col-xs-8'>
+                                            <FormGroup bsSize='small'>
+                                                <ControlLabel>{this.i18n('factors.detail.duration')}</ControlLabel>
+                                                <InputGroup className='inline-input'>
+                                                    <InputGroup.Button>
+                                                        <Button bsSize='small' disabled={this.state.duration === 0}
+                                                                onClick={this.onDurationMinus}><Glyphicon
+                                                            glyph='minus'/></Button>
+                                                    </InputGroup.Button>
+                                                    <FormControl type='text' value={this.state.duration}
+                                                                 onChange={this.onDurationSet} size={3}/>
+                                                    <InputGroup.Button>
+                                                        <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon
+                                                            glyph='plus'/></Button>
+                                                    </InputGroup.Button>
+                                                </InputGroup>
+                                            </FormGroup>
+                                        </div>
+                                        <div className='col-xs-3' style={{padding: '7px 0 7px 0'}}>
+                                            {this.renderDuration()}
+                                        </div>
                                     </div>
-                                </div>
+                                </Form>
                             </div>
                         </div>
                     </Modal.Body>
@@ -284,7 +294,7 @@ var FactorDetail = React.createClass({
         var et = this.state.eventType;
         return et ?
             <div className='col-xs-1'>
-                <ExternalLink url={et.id} title={et.name + '\n' + et.id} className='external-link-factor-detail'/>
+                <ExternalLink url={et.id} title={et.name + '\n' + et.id} className='external-link'/>
             </div> : null;
     },
 

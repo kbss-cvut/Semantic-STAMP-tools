@@ -4,7 +4,7 @@ var React = require('react');
 var assign = require('object-assign');
 var injectIntl = require('../../utils/injectIntl');
 
-var Input = require('../Input');
+var Input = require('../Input').default;
 var I18nMixin = require('../../i18n/I18nMixin');
 var WizardStore = require('../../stores/WizardStore');
 

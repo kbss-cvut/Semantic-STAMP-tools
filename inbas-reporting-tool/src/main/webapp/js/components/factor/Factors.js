@@ -10,7 +10,7 @@ var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 var JsonLdUtils = require('jsonld-utils').default;
 
-var Input = require('../Input');
+var Input = require('../Input').default;
 var Select = require('../Select');
 
 var Actions = require('../../actions/Actions');
