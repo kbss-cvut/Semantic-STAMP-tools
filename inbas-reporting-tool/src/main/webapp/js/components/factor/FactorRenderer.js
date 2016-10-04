@@ -150,8 +150,8 @@ var FactorRendererImpl = {
     _addLinks: function (links) {
         for (var i = 0, len = links.length; i < len; i++) {
             GanttController.addLink({
-                source: links[i].from,
-                target: links[i].to,
+                source: links[i].from.referenceId,
+                target: links[i].to.referenceId,
                 factorType: links[i].linkType
             });
         }

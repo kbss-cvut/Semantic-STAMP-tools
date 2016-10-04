@@ -136,7 +136,7 @@ export default class Generator {
                 childCount = Generator.getRandomPositiveInt(1, nodes.length - index);
                 var parent = parents[j];
                 for (var i = index; i < index + childCount; i++) {
-                    links.push({from: parent.referenceId, to: nodes[i].referenceId, linkType: Vocabulary.HAS_PART});
+                    links.push({from: parent, to: nodes[i], linkType: Vocabulary.HAS_PART});
                     newParents.push(nodes[i]);
                 }
                 index += childCount;
@@ -157,8 +157,8 @@ export default class Generator {
             var fromInd = Generator.getRandomInt(nodes.length),
                 toInd = Generator.getRandomInt(nodes.length);
             lnk = {
-                from: nodes[fromInd].referenceId,
-                to: nodes[toInd].referenceId,
+                from: nodes[fromInd],
+                to: nodes[toInd],
                 linkType: Generator._getRandomFactorType()
             };
             links.push(lnk);

@@ -82,8 +82,8 @@ var FactorSerializer = {
             }
             for (var i = 0, len = children.length; i < len; i++) {
                 partOfEdges.push({
-                    from: this.ganttIdsToNodes[item.id].referenceId,
-                    to: this.ganttIdsToNodes[children[i].id].referenceId,
+                    from: this.ganttIdsToNodes[item.id],
+                    to: this.ganttIdsToNodes[children[i].id],
                     linkType: Vocabulary.HAS_PART
                 });
             }
@@ -96,8 +96,8 @@ var FactorSerializer = {
             edges = [];
         for (var i = 0, len = links.length; i < len; i++) {
             edges.push({
-                from: this.ganttIdsToNodes[links[i].source].referenceId,
-                to: this.ganttIdsToNodes[links[i].target].referenceId,
+                from: this.ganttIdsToNodes[links[i].source],
+                to: this.ganttIdsToNodes[links[i].target],
                 linkType: links[i].factorType
             });
         }

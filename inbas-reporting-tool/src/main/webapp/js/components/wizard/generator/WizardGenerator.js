@@ -7,6 +7,7 @@ var Ajax = require('../../../utils/Ajax');
 var Actions = require('../../../actions/Actions');
 var FormGenStore = require('../../../stores/FormGenStore');
 var I18nStore = require('../../../stores/I18nStore');
+var JsonReferenceResolver = require('../../../utils/JsonReferenceResolver').default;
 var Logger = require('../../../utils/Logger');
 var Input = require('../../Input').default;
 var TypeaheadResultList = require('../../typeahead/TypeaheadResultList');
@@ -19,7 +20,8 @@ const FORM_GEN_URL = 'rest/formGen';
 
 module.exports = {
 
-    generateSummaryWizard: function(report, wizardTitle, renderCallback) {
+    generateSummaryWizard: function (report, wizardTitle, renderCallback) {
+        JsonReferenceResolver.encodeReferences(report);
         Ajax.post(FORM_GEN_URL, report).end((data) => {
             Configuration.actions = Actions;
             Configuration.wizardStore = WizardStore;
@@ -36,6 +38,7 @@ module.exports = {
 
     generateWizard: function (report, event, wizardTitle, renderCallback) {
         var url = this._initUrlWithParameters(event);
+        JsonReferenceResolver.encodeReferences(report);
         Ajax.post(url, report).end((data) => {
             Configuration.actions = Actions;
             Configuration.wizardStore = WizardStore;

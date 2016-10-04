@@ -64,10 +64,10 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
     function initGetChildrenStub(nodes, partOfLinks) {
         GanttController.getChildren.and.callFake((id) => {
             var childLinks = partOfLinks.filter((lnk) => {
-                return lnk.from === id;
+                return lnk.from.referenceId === id;
             });
             var childIds = childLinks.map((item) => {
-                return item.to;
+                return item.to.referenceId;
             });
             var children = [];
             for (var i = 0, len = nodes.length; i < len; i++) {
