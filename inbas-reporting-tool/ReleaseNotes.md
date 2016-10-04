@@ -1,5 +1,9 @@
 # SISEL Release Notes
 
+### 0.7.8 - October 4, 2016
+- Upgraded to react-bootstrap 0.30.3.
+- Upgraded all the related components - datetime picker, typeahead, semforms.
+
 ### 0.7.7 - October 3, 2016
 - New SISel logo (Support #180).
 - New BI views and their switching in the statistics tab (Feature #179).
@@ -9,10 +13,6 @@
 
 ### 0.7.5 - September 30, 2016
 - Fixed issue with unpersisted change exception when audited organization changes in audit report.
-
-### 0.7.8 - October 4, 2016
-- Upgraded to react-bootstrap 0.30.3.
-- Upgraded all the related components - datetime picker, typeahead, semforms.
 
 ### 0.7.4 - September 29, 2016
 - Report type filter buttons above the reports table (Feature #173).
