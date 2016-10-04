@@ -5,7 +5,6 @@ var Reflux = require('reflux');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var JsonLdUtils = require('jsonld-utils').default;
-var assign = require('object-assign');
 
 var Constants = require('../../constants/Constants');
 var injectIntl = require('../../utils/injectIntl');

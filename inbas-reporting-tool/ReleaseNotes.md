@@ -10,6 +10,10 @@
 ### 0.7.5 - September 30, 2016
 - Fixed issue with unpersisted change exception when audited organization changes in audit report.
 
+### 0.7.8 - October 4, 2016
+- Upgraded to react-bootstrap 0.30.3.
+- Upgraded all the related components - datetime picker, typeahead, semforms.
+
 ### 0.7.4 - September 29, 2016
 - Report type filter buttons above the reports table (Feature #173).
 - The filter buttons do not show when there is only one kind of reports present.
