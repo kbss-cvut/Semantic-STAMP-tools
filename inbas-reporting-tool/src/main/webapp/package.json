@@ -23,12 +23,13 @@
     "semforms": "https://kbss.felk.cvut.cz/dist/semforms-0.1.0.tgz",
     "remarkable": "~1.6.2",
     "js-cookie": "~2.1.0",
-    "halogen": "0.2.0",
+    "halogen": "https://kbss.felk.cvut.cz/dist/halogen-0.2.1.tgz",
     "react-intl": "~2.0.1",
     "jsonld": "~0.4.6",
-    "react-dropzone": "~3.4.0",
+    "react-dropzone": "~3.6.0",
     "react-pivot": "1.14.1",
-    "react-d3": "0.4.0"
+    "react-d3": "0.4.0",
+    "babel-runtime": "^6.7.5"
   },
   "devDependencies": {
     "babel-core": "^6.7.5",
@@ -57,7 +58,7 @@
     "webpack": "^1.12.15"
   },
   "scripts": {
-    "start": "watchify -o js/bundle.js -v -d js/app.js",
+    "start": "watchify -o ../../../target/inbas-reporting-tool-0.7.8/js/bundle.js -v -d js/app.js",
     "browserify": "browserify . -t [envify --NODE_ENV production] -o js/bundle.js",
     "build-js": "browserify . -t [envify --NODE_ENV production] | uglifyjs -cm > ../../../profiles/production/js/bundle.min.js",
     "build-css": "cleancss --skip-rebase -d -o ../../../profiles/production/resources/css/inbas-audit.min.css resources/css/inbas-audit.css",
