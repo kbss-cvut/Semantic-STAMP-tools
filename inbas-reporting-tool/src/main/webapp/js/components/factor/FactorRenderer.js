@@ -110,7 +110,7 @@ var FactorRendererImpl = {
         if (edges) {
             for (var i = 0, len = edges.length; i < len; i++) {
                 if (edges[i].linkType === Vocabulary.HAS_PART) {
-                    nodesToParents[edges[i].to] = edges[i].from;
+                    nodesToParents[edges[i].to.referenceId] = edges[i].from.referenceId;
                 } else {
                     links.push(edges[i]);
                 }
