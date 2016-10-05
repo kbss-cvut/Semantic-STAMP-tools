@@ -224,7 +224,7 @@ td.actions button {
 .dashboard-sector-search {
     text-align: center;
     vertical-align: top;
-    margin-top: -2.8em;
+    margin-top: -0.9em;
     padding-left: 0.5em;
     padding-right: 0.5em;
 }
@@ -533,17 +533,34 @@ button.reset-filters {
     background-color: rgba(217, 83, 79, 0.3) !important;
 }
 
-.dashboard-statistics-frame {
-    width: 100%;
-    border: none;
-    min-height: 720px;
-    overflow: auto;
+@media screen and (max-height: 900px) {
+    .dashboard-statistics-frame {
+        width: 100%;
+        border: none;
+        min-height: 520px;
+        overflow: auto;
+    }
+
+    .statistics-frame {
+        width: 100%;
+        min-height: 600px;
+        border: none;
+    }
 }
 
-.statistics-frame {
-    width: 100%;
-    min-height: 800px;
-    border: none;
+@media screen and (min-height: 900px) {
+    .dashboard-statistics-frame {
+        width: 100%;
+        border: none;
+        min-height: 720px;
+        overflow: auto;
+    }
+
+    .statistics-frame {
+        width: 100%;
+        min-height: 800px;
+        border: none;
+    }
 }
 
 .buttons-right {
