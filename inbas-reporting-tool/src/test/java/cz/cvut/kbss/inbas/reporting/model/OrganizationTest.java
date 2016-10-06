@@ -4,6 +4,8 @@ import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.junit.Test;
 
+import java.net.URI;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -38,5 +40,14 @@ public class OrganizationTest {
             organization.generateUri();
             assertEquals(expected, organization.getUri().toString());
         }
+    }
+
+    @Test
+    public void generateUriDoesNotRewriteUriIfItIsAlreadyPresent() {
+        final Organization organization = new Organization();
+        final URI originalUri = Generator.generateUri();
+        organization.setUri(originalUri);
+        organization.generateUri();
+        assertEquals(originalUri, organization.getUri());
     }
 }
