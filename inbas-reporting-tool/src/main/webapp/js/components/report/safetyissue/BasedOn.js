@@ -54,7 +54,7 @@ var Row = (props) => {
         <td className='report-row content-center'>
             <Label title={i18n(report.toString())}>{i18n(report.getLabel())}</Label>
         </td>
-        <td className='actions'>
+        <td className='report-row actions'>
             <Button bsStyle='warning' onClick={() => props.onRemove(props.report)} bsSize='small'
                     title={i18n('safety-issue.base.remove-tooltip')}>{i18n('remove')}</Button>
         </td>
