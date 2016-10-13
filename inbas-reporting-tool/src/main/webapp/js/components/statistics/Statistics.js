@@ -31,7 +31,7 @@ class Statistics extends React.Component {
     }
 
     _renderStatisticsTypeButtons() {
-        var buttons = [], type;
+        var buttons = [];
         Object.getOwnPropertyNames(Constants.STATISTICS).forEach(type => {
             buttons.push(<Button key={type} bsStyle={this.state.type === type ? 'primary' : 'default'}
                                  onClick={() => this._onTypeSelect(type)}>{this.i18n('statistics.type.' + type)}</Button>);

@@ -134,7 +134,7 @@ class SafetyIssueReport {
         }
         var referenceMap = {};
         referenceMap[source.factorGraph.nodes[0].referenceId] = this.safetyIssue;   //This is the occurrence
-        var node, newReferenceId, nodeClone;
+        var node, nodeClone;
         for (var i = 1, len = source.factorGraph.nodes.length; i < len; i++) {
             node = source.factorGraph.nodes[i];
             nodeClone = {

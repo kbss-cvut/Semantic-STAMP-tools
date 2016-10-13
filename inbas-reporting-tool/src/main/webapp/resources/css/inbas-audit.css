@@ -673,6 +673,12 @@ button.reset-filters {
         color: #003c68;
     }
 
+    span.item-label {
+        margin-bottom: 2px;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
     .navbar-search {
         padding-top: 10px;
         padding-bottom: 10px;
