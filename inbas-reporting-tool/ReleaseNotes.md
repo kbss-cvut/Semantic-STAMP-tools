@@ -1,5 +1,9 @@
 # SISEL Release Notes
 
+### 0.7.9 - October 13, 2016
+- Fixed bug in factor graph copying for safety issue base addition (Bug #186).
+- Restructured the dashboard (Support #183).
+
 ### 0.7.8 - October 4, 2016
 - Upgraded to react-bootstrap 0.30.3.
 - Upgraded all the related components - datetime picker, typeahead, semforms.
