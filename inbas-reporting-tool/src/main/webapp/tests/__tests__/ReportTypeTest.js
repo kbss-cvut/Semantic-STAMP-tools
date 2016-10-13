@@ -19,18 +19,24 @@ describe('ReportType', function () {
     describe('- safety issue report - addBase()', () => {
 
         it('adds factor graph to a new instance', () => {
-            var basedOn = generateSafetyIssueBase();
-            var originalGraph = basedOn.factorGraph;
+            var basedOn = generateSafetyIssueBase(),
+                originalGraph = basedOn.factorGraph,
+                i, len, edge;
 
             var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
             report = ReportType.getReport(report);
             report.addBase(basedOn);
             expect(report.factorGraph).not.toBeNull();
             expect(report.factorGraph.nodes.length).toEqual(originalGraph.nodes.length);
-            for (var i = 0; i < report.factorGraph.nodes.length; i++) {
+            for (i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
                 expect(report.factorGraph.nodes[i].uri).not.toBeDefined();
             }
             expect(report.factorGraph.edges.length).toEqual(originalGraph.edges.length);
+            for (i = 0, len = report.factorGraph.edges.length; i < len; i++) {
+                edge = report.factorGraph.edges[i];
+                expect(report.factorGraph.nodes.indexOf(edge.from)).not.toEqual(-1);
+                expect(report.factorGraph.nodes.indexOf(edge.to)).not.toEqual(-1);
+            }
         });
 
         function generateSafetyIssueBase() {
@@ -49,7 +55,8 @@ describe('ReportType', function () {
                 newBase = generateSafetyIssueBase(),
                 originalFactorGraph = basedOn.factorGraph,
                 newBaseFactorGraph = newBase.factorGraph,
-                report, result;
+                report, result,
+                i, len, edge;
 
             report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {basedOn: basedOn});
             expect(report.factorGraph).not.toBeNull();
@@ -59,10 +66,15 @@ describe('ReportType', function () {
             // The occurrence will be counted twice, but we need only one, which is transformed to safety issue (the
             // graph's root)
             expect(report.factorGraph.nodes.length).toEqual(originalFactorGraph.nodes.length + newBaseFactorGraph.nodes.length - 1);
-            for (var i = 0; i < report.factorGraph.nodes.length; i++) {
+            for (i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
                 expect(report.factorGraph.nodes[i].uri).not.toBeDefined();
             }
             expect(report.factorGraph.edges.length).toEqual(originalFactorGraph.edges.length + newBaseFactorGraph.edges.length);
+            for (i = 0, len = report.factorGraph.edges.length; i < len; i++) {
+                edge = report.factorGraph.edges[i];
+                expect(report.factorGraph.nodes.indexOf(edge.from)).not.toEqual(-1);
+                expect(report.factorGraph.nodes.indexOf(edge.to)).not.toEqual(-1);
+            }
         });
 
         it('does not add base if it already exists in safety issue', () => {

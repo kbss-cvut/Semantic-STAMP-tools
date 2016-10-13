@@ -67,8 +67,7 @@ class SafetyIssueSelector extends React.Component {
             return null;
         }
         var i18n = this.props.i18n;
-        return <Typeahead ref='safetyIssueTypeahead' className='form-group form-group-sm' optionsButton={true}
-                          formInputOption='id'
+        return <Typeahead ref='safetyIssueTypeahead' size='small' optionsButton={true} formInputOption='id'
                           placeholder={i18n('occurrencereport.add-as-safety-issue-base-placeholder')}
                           onOptionSelected={this._onOptionSelected} filterOption='identification'
                           displayOption='identification' options={this.state.reports}

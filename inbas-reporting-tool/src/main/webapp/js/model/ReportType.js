@@ -130,30 +130,30 @@ class SafetyIssueReport {
                 nodes: [],
                 edges: []
             };
-            this.factorGraph.nodes.push(this.safetyIssue.referenceId);
+            this.factorGraph.nodes.push(this.safetyIssue);
         }
         var referenceMap = {};
-        referenceMap[source.factorGraph.nodes[0].referenceId] = this.safetyIssue.referenceId;
-        var node, newReferenceId;
+        referenceMap[source.factorGraph.nodes[0].referenceId] = this.safetyIssue;   //This is the occurrence
+        var node, newReferenceId, nodeClone;
         for (var i = 1, len = source.factorGraph.nodes.length; i < len; i++) {
             node = source.factorGraph.nodes[i];
-            newReferenceId = Utils.randomInt();
-            referenceMap[node.referenceId] = newReferenceId;
-            this.factorGraph.nodes.push({
-                referenceId: newReferenceId,
+            nodeClone = {
+                referenceId: Utils.randomInt(),
                 eventType: node.eventType,
                 types: node.types,
                 index: node.index,
                 javaClass: node.javaClass
-            });
+            };
+            referenceMap[node.referenceId] = nodeClone;
+            this.factorGraph.nodes.push(nodeClone);
         }
         var edge;
         for (i = 0, len = source.factorGraph.edges.length; i < len; i++) {
             edge = source.factorGraph.edges[i];
             this.factorGraph.edges.push({
                 linkType: edge.linkType,
-                from: referenceMap[edge.from],
-                to: referenceMap[edge.to]
+                from: referenceMap[edge.from.referenceId],
+                to: referenceMap[edge.to.referenceId]
             });
         }
     }

@@ -126,6 +126,7 @@ var ReportStore = Reflux.createStore({
     onAddSafetyIssueBase: function (key, newBase) {
         this._pendingLoad = key;
         Ajax.get(BASE_URL_WITH_SLASH + key).end(function (data) {
+            JsonReferenceResolver.resolveReferences(data);
             this._addSafetyIssueBase(data, newBase);
         }.bind(this), function () {
             this._resetPendingLoad();
