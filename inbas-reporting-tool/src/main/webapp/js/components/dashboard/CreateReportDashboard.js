@@ -1,7 +1,7 @@
 'use strict';
 
 import React from "react";
-import {Button, Col, Grid, Row} from "react-bootstrap";
+import {Col, Grid, Row} from "react-bootstrap";
 import DashboardTile from "./DashboardTile";
 import injectIntl from "../../utils/injectIntl";
 import I18nWrapper from "../../i18n/I18nWrapper";
@@ -30,18 +30,12 @@ const CreateReportDashboard = (props) => {
                 <DashboardTile onClick={props.importReport}>{i18n('dashboard.create-import-tile')}</DashboardTile>
             </Col>
         </Row>
-        <Row>
-            <Col xs={6}>
-                <Button bsSize='large' bsStyle='default' onClick={props.goBack}>{i18n('back')}</Button>
-            </Col>
-        </Row>
     </Grid>;
 };
 
 CreateReportDashboard.propTypes = {
     createReport: React.PropTypes.func.isRequired,
-    importReport: React.PropTypes.func.isRequired,
-    goBack: React.PropTypes.func.isRequired
+    importReport: React.PropTypes.func.isRequired
 };
 
 export default injectIntl(I18nWrapper(CreateReportDashboard));

@@ -71,12 +71,9 @@ module.exports = {
         'main.reports-nav': 'Reports',
         'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
+        'main.search-placeholder': 'Search',
 
         'dashboard.welcome': 'Hello {name}, Welcome to ' + Constants.APP_NAME + '.',
-        'dashboard.create-tile': 'Create Report',
-        'dashboard.search-tile': 'Search for Report',
-        'dashboard.search-placeholder': 'Report headline',
-        'dashboard.view-all-tile': 'View All Reports',
         'dashboard.create-new-occurrence-report-tile': 'Create New Occurrence Report',
         'dashboard.create-new-safety-issue-tile': 'Create New Safety Issue',
         'dashboard.create-new-audit-report-tile': 'Create New Audit Report',

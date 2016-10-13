@@ -72,14 +72,11 @@ module.exports = {
         'main.reports-nav': 'Hlášení',
         'main.statistics-nav': 'Statistiky',
         'main.logout': 'Odhlásit se',
+        'main.search-placeholder': 'Hledat',
 
         'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',
-        'dashboard.create-tile': 'Vytvořit hlášení',
-        'dashboard.search-tile': 'Hledat hlášení',
-        'dashboard.search-placeholder': 'Název hlášení',
-        'dashboard.view-all-tile': 'Prohlížet všechna hlášení',
         'dashboard.create-new-occurrence-report-tile': 'Nové hlášení o události',
-        'dashboard.create-new-safety-issue-tile': 'Nový bezpečnostní problém',
+        'dashboard.create-new-safety-issue-tile': 'Nová safety issue',
         'dashboard.create-new-audit-report-tile': 'Nová zpráva o auditu',
         'dashboard.create-import-tile': 'Importovat hlášení',
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
@@ -89,7 +86,7 @@ module.exports = {
 
         'dashboard.unprocessed': 'Máte {count} nezpracovaných hlášení.',
 
-        'dropzone.title': 'Přetáhněte soubor sem nebo klikněte pro výběr souboru k nahrání.',
+        'dropzone.title': 'Přetáhněte sem soubor nebo klikněte pro výběr souboru k nahrání.',
         'dropzone-tooltip': 'Klikněte zde pro výber souboru k nahrání',
 
         'reports.no-reports': 'Nenalezena žádná hlášení. Nové hlášení můžete vytvořit ',

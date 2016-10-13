@@ -212,7 +212,12 @@ td.actions button {
 }
 
 .main-dashboard {
-    min-height: 19em;
+    min-height: 10em;
+}
+
+.dashboard-welcome {
+    border-bottom: 1px solid #eeeeee;
+    margin: 10px 0;
 }
 
 .dashboard-sector {
@@ -247,11 +252,12 @@ td.actions button {
 
 .dashboard-report-search-results {
     text-align: left;
-    width: 350px;
+    width: 450px;
     margin-left: auto;
     margin-right: auto;
     left: 0;
     right: 0;
+    overflow: hidden;
 }
 
 .factors-gantt {
@@ -480,13 +486,15 @@ button.reset-filters {
 .dropzone {
     border-radius: 6px;
     color: #fff;
-    background-color: #337ab7;
+    background-color: #003c68;
     border: 2px dashed #adadad;
-    min-height: 7.5em;
+    min-height: 5em;
     width: 100%;
-    max-width: 20em;
+    max-width: 12em;
     padding: 10px 16px;
+    font-size: 18px;
     line-height: 1.3;
+    white-space: normal;
     cursor: pointer;
     display: inline-block;
 }
@@ -494,7 +502,7 @@ button.reset-filters {
 .dropzone-active {
     border-radius: 6px;
     color: #fff;
-    background-color: #337ab7;
+    background-color: #001f35;
     border: 2px solid #adadad;
     min-height: 7.5em;
     width: 100%;
@@ -508,10 +516,6 @@ button.reset-filters {
 .dropzone .message {
     margin: 2em 0 1.3em 0;
     vertical-align: bottom;
-}
-
-.import-error {
-    margin: 15px 15px -35px 15px;
 }
 
 .paging-item-count-info {
@@ -646,4 +650,32 @@ button.reset-filters {
 .statistics-switchers button {
     min-width: 100px;
     margin: 0 0.8em;
+}
+
+@media (min-width: 768px) {
+    .navbar-search-input {
+        width: 350px;
+        margin: 0 auto;
+    }
+
+    .navbar-search-results {
+        text-align: left;
+        width: 550px;
+        margin-left: auto;
+        margin-right: auto;
+        left: -100px;
+        right: 0;
+        overflow: hidden;
+        border: 1px solid #003c68;
+    }
+
+    .navbar-search-results > .item {
+        color: #003c68;
+    }
+
+    .navbar-search {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-bottom: -15px;
+    }
 }
