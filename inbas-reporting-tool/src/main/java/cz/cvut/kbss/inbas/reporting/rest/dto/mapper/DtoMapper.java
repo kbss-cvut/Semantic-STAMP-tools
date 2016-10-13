@@ -20,7 +20,6 @@ import org.mapstruct.Mapping;
 import java.net.URI;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
 public abstract class DtoMapper {
@@ -302,10 +301,6 @@ public abstract class DtoMapper {
         dto.setName(issue.getName());
         dto.setState(issue.getState());
         dto.setReferenceId(random.nextInt());
-        if (issue.getBasedOn() != null) {
-            dto.setBasedOn(issue.getBasedOn().stream().map(OccurrenceReport::toReportDto)
-                                .collect(Collectors.toSet()));
-        }
         eventDtoRegistry.put(dto.getUri(), dto);
 
         return dto;
