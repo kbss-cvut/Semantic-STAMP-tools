@@ -43,6 +43,9 @@ var ReportTypeahead = React.createClass({
     },
 
     _processReports: function (reports) {
+        if (!reports) {
+            return [];
+        }
         var options = [];
         for (var i = 0, len = reports.length; i < len; i++) {
             options.push(ReportType.getReport(reports[i]));
@@ -64,7 +67,7 @@ var ReportTypeahead = React.createClass({
             return option.identification + ' (' + date + this.i18n(option.toString()) + ')';
         }.bind(this);
         return (
-            <Typeahead ref='reportTypeahead' className='form-group form-group-sm' name={this.props.name}
+            <Typeahead ref='reportTypeahead' size='small' name={this.props.name}
                        formInputOption='id' placeholder={this.i18n('dashboard.search-placeholder')}
                        onOptionSelected={this.onOptionSelected} filterOption='identification'
                        displayOption={optionLabel} options={this.state.options} customClasses={classes}

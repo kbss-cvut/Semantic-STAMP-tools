@@ -104,12 +104,11 @@ class AuditFinding extends React.Component {
                 <div className='row'>
                     <div className='col-xs-12'>
                         <label className='control-label'>{this.i18n('audit.finding.type.label')}</label>
-                        <Typeahead className='form-group form-group-sm' formInputOption='id'
+                        <Typeahead formInputOption='id' size='small'
                                    placeholder={this.i18n('audit.finding.type.placeholder')}
                                    onOptionSelected={this._onTypeSelected} filterOption='name' displayOption='name'
                                    value={findingType} options={this.state.findingType}
-                                   customClasses={{input: 'form-control'}} optionsButton={true}
-                                   inputProps={{title: findingType}}
+                                   optionsButton={true} inputProps={{title: findingType}}
                                    customListComponent={TypeaheadResultList}/>
                     </div>
                 </div>

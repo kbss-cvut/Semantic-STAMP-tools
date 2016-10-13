@@ -117,8 +117,7 @@ class Audit extends React.Component {
                 <div className='row'>
                     <div className='col-xs-4'>
                         <label className='control-label'>{i18n('audit.auditee.label') + '*'}</label>
-                        <Typeahead className='form-group form-group-sm' formInputOption='id'
-                                   placeholder={i18n('audit.auditee.placeholder')}
+                        <Typeahead formInputOption='id' size='small' placeholder={i18n('audit.auditee.placeholder')}
                                    onOptionSelected={this._onAuditeeSelected} filterOption='name'
                                    displayOption='name'
                                    value={audit.auditee ? audit.auditee.name : null} options={this.state.organization}
@@ -135,14 +134,14 @@ class Audit extends React.Component {
                     <div className='picker-container form-group form-group-sm col-xs-4'>
                         <label className='control-label'>{this.i18n('audit.start-date')}</label>
                         <DateTimePicker inputFormat='DD-MM-YY HH:mm' dateTime={audit.startDate.toString()}
-                                        onChange={(val) => this._mergeChange({startDate: Number(val)})}
-                                        inputProps={{title: this.i18n('audit.start-date.tooltip'), bsSize: 'small'}}/>
+                                        onChange={(val) => this._mergeChange({startDate: Number(val)})} size='small'
+                                        inputProps={{title: this.i18n('audit.start-date.tooltip')}}/>
                     </div>
                     <div className='picker-container form-group form-group-sm col-xs-4'>
                         <label className='control-label'>{this.i18n('audit.end-date')}</label>
                         <DateTimePicker inputFormat='DD-MM-YY HH:mm' dateTime={audit.endDate.toString()}
-                                        onChange={(val) => this._mergeChange({endDate: Number(val)})}
-                                        inputProps={{title: this.i18n('audit.end-date.tooltip'), bsSize: 'small'}}/>
+                                        onChange={(val) => this._mergeChange({endDate: Number(val)})} size='small'
+                                        inputProps={{title: this.i18n('audit.end-date.tooltip')}}/>
                     </div>
                 </div>
             </div>
@@ -159,12 +158,10 @@ class Audit extends React.Component {
         }
         return <div className='col-xs-4'>
             <label className='control-label'>{i18n('audit.type.label')}</label>
-            <Typeahead className='form-group form-group-sm' formInputOption='id'
-                       placeholder={i18n('audit.type.placeholder')}
+            <Typeahead formInputOption='id' size='small' placeholder={i18n('audit.type.placeholder')}
                        onOptionSelected={this._onTypeSelected} filterOption='name' displayOption='name'
                        value={auditType ? auditType.name : ''} options={this.state.auditType}
-                       customClasses={{input: 'form-control'}} optionsButton={true}
-                       customListComponent={TypeaheadResultList}/>
+                       optionsButton={true} customListComponent={TypeaheadResultList}/>
         </div>;
     }
 
@@ -176,12 +173,10 @@ class Audit extends React.Component {
         }
         return <div className='col-xs-4'>
             <label className='control-label'>{i18n('audit.location.label')}</label>
-            <Typeahead className='form-group form-group-sm' formInputOption='id'
-                       placeholder={i18n('audit.location.placeholder')}
+            <Typeahead formInputOption='id' size='small' placeholder={i18n('audit.location.placeholder')}
                        onOptionSelected={(opt) => this._mergeChange({location: opt.id})} filterOption='name'
                        displayOption='name'
                        value={location ? location.name : ''} options={this.state.location}
-                       customClasses={{input: 'form-control'}}
                        customListComponent={TypeaheadResultList}/>
         </div>;
     }
