@@ -3,8 +3,6 @@ package cz.cvut.kbss.inbas.reporting.service;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 
-import java.util.Collection;
-
 public interface OccurrenceService extends BaseService<Occurrence> {
 
     /**
@@ -16,10 +14,10 @@ public interface OccurrenceService extends BaseService<Occurrence> {
     Occurrence findByKey(String key);
 
     /**
-     * Gets reports related to the specified occurrence.
+     * Gets report related to the specified occurrence.
      *
-     * @param occurrence Occurrence to find reports for
-     * @return Collection of matching reports (possibly empty)
+     * @param occurrence Occurrence to find report for
+     * @return Matching report, possibly {@code null}
      */
-    Collection<OccurrenceReport> getReports(Occurrence occurrence);
+    OccurrenceReport findByOccurrence(Occurrence occurrence);
 }

@@ -2,7 +2,6 @@ package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
-import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.*;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -129,55 +128,14 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findByOccurrenceGetsReportsWithMatchingOccurrence() {
-        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
-        occurrenceDao.persist(occurrence);
-        final List<OccurrenceReport> reports = persistReportsForOccurrence(occurrence);
-        // This one is just so that the method does not simply select all reports
-        persistReport();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportDao.persist(report);
+        final Occurrence occurrence = report.getOccurrence();
 
-        final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
-        assertTrue(Environment.areEqual(reports, result));
-    }
-
-    private List<OccurrenceReport> persistReportsForOccurrence(Occurrence occurrence) {
-        final List<OccurrenceReport> reports = new ArrayList<>();
-        for (int i = 0; i < Generator.randomInt(10); i++) {
-            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
-            r.setOccurrence(occurrence);
-            r.setAuthor(author);
-            reports.add(r);
-        }
-        occurrenceReportDao.persist(reports);
-        return reports;
-    }
-
-    @Test
-    public void findByOccurrenceReturnsLatestRevisionsOfMatchingReportChains() throws Exception {
-        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
-        occurrenceDao.persist(occurrence);
-        final Set<URI> reportUris = new HashSet<>();
-        for (int i = 0; i < Generator.randomInt(10); i++) {
-            final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
-            chain.forEach(r -> r.setOccurrence(occurrence));
-            occurrenceReportDao.persist(chain);
-            reportUris.add(chain.get(chain.size() - 1).getUri());
-        }
-
-        final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
-        assertEquals(reportUris.size(), result.size());
-        result.forEach(r -> assertTrue(reportUris.contains(r.getUri())));
-    }
-
-    @Test
-    public void findByOccurrenceReturnsReportsOrderedByOccurrenceStartDescending() {
-        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
-        occurrenceDao.persist(occurrence);
-        final List<OccurrenceReport> reports = persistReportsForOccurrence(occurrence);
-        Collections.sort(reports,
-                (a, b) -> b.getOccurrence().getStartTime().compareTo(a.getOccurrence().getStartTime()));  // Descending
-
-        final List<OccurrenceReport> result = occurrenceReportDao.findByOccurrence(occurrence);
-        assertTrue(Environment.areEqual(reports, result));
+        final OccurrenceReport result = occurrenceReportDao.findByOccurrence(occurrence);
+        assertNotNull(result);
+        assertEquals(report.getUri(), result.getUri());
     }
 
     @Test
