@@ -1,5 +1,9 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.7.10 - October 14, 2016
+- Get report by occurrence no longer returns a list of reports, it returns just the report that
+documents the occurrence. There cannot be multiple.
+
 ### 0.7.8 - October 4, 2016
 - Upgraded to react-bootstrap 0.30.3.
 - Upgraded all the related components - datetime picker, typeahead, semforms.
