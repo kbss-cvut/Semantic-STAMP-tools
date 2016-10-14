@@ -9,7 +9,6 @@ import cz.cvut.kbss.inbas.reporting.service.OccurrenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Objects;
 
 @Service
@@ -28,7 +27,7 @@ public class RepositoryOccurrenceService extends KeySupportingRepositoryService<
     }
 
     @Override
-    public Collection<OccurrenceReport> getReports(Occurrence occurrence) {
+    public OccurrenceReport findByOccurrence(Occurrence occurrence) {
         Objects.requireNonNull(occurrence);
         return reportDao.findByOccurrence(occurrence);
     }
