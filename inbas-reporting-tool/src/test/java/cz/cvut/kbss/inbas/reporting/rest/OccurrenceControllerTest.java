@@ -8,7 +8,6 @@ import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenera
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.rest.dto.model.OccurrenceReportDtoList;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceService;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Before;
@@ -21,8 +20,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -72,32 +69,27 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
     }
 
     @Test
-    public void getOccurrenceReportsReturnsLatestRevisionsOfReportsRelatedToOccurrence() throws Exception {
-        final Occurrence occurrence = generateOccurrence();
-        final List<OccurrenceReport> reports = generateReportsForOccurrence(occurrence);
+    public void getOccurrenceReportReturnsReportDocumentingOccurrence() throws Exception {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setUri(Generator.generateUri());
+        report.setKey(IdentificationUtils.generateKey());
+        final Occurrence occurrence = report.getOccurrence();
+        occurrence.setKey(IdentificationUtils.generateKey());
         when(occurrenceService.findByKey(occurrence.getKey())).thenReturn(occurrence);
-        when(occurrenceService.getReports(occurrence)).thenReturn(reports);
-        final MvcResult result = mockMvc.perform(get("/occurrences/" + occurrence.getKey() + "/reports").accept(
+        when(occurrenceService.findByOccurrence(occurrence)).thenReturn(report);
+        final MvcResult result = mockMvc.perform(get("/occurrences/" + occurrence.getKey() + "/report").accept(
                 MediaType.APPLICATION_JSON_VALUE)).andReturn();
-        System.out.println(result.getResponse().getContentAsString());
-        final List<OccurrenceReportDto> res = readValue(result, OccurrenceReportDtoList.class);
+        final OccurrenceReportDto res = readValue(result, OccurrenceReportDto.class);
         assertNotNull(res);
-        assertEquals(reports.size(), res.size());
-        for (int i = 0; i < reports.size(); i++) {
-            assertEquals(reports.get(i).getUri(), res.get(i).getUri());
-            assertEquals(reports.get(i).getCorrectiveMeasures().size(),
-                    res.get(i).getCorrectiveMeasures().size());
-        }
+        assertEquals(report.getUri(), res.getUri());
     }
 
-    private List<OccurrenceReport> generateReportsForOccurrence(Occurrence occurrence) {
-        final List<OccurrenceReport> reports = new ArrayList<>();
-        for (int i = 0; i < Generator.randomInt(10); i++) {
-            final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
-            report.setOccurrence(occurrence);
-            report.setCorrectiveMeasures(OccurrenceReportGenerator.generateCorrectiveMeasureRequests());
-            reports.add(report);
-        }
-        return reports;
+    @Test
+    public void getOccurrenceReportReturnsNotFoundForUnknownOccurrence() throws Exception {
+        final String unknownKey = IdentificationUtils.generateKey();
+        when(occurrenceService.findByKey(unknownKey)).thenReturn(null);
+        final MvcResult result = mockMvc.perform(get("/occurrences/" + unknownKey + "/report")).andReturn();
+        assertEquals(HttpStatus.NOT_FOUND, HttpStatus.valueOf(result.getResponse().getStatus()));
+        verify(occurrenceService).findByKey(unknownKey);
     }
 }
