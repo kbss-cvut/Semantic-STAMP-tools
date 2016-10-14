@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.audit.Audit;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.jopa.model.EntityManager;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -92,5 +94,33 @@ public class AuditReportDaoTest extends BaseDaoTestRunner {
             result.add(chain.get(chain.size() - 1));    // Last one is the latest revision
         }
         return result;
+    }
+
+    @Test
+    public void findByAuditFindingsReturnsMatchingAuditReport() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+        persistPerson(report.getAuthor());
+        final Set<AuditFinding> findings = AuditReportGenerator.generateFindings();
+        report.getAudit().setFindings(findings);
+        dao.persist(report);
+
+        for (AuditFinding f : findings) {
+            final AuditReport result = dao.findByAuditFinding(f);
+            assertNotNull(result);
+            assertEquals(report.getUri(), result.getUri());
+        }
+    }
+
+    @Test
+    public void findByAuditFindingReturnsNullForUnknownAuditFinding() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
+        persistPerson(report.getAuthor());
+        final Set<AuditFinding> findings = AuditReportGenerator.generateFindings();
+        report.getAudit().setFindings(findings);
+        dao.persist(report);
+
+        final AuditFinding unknownFinding = AuditReportGenerator.generateFinding();
+        unknownFinding.setUri(Generator.generateUri());
+        assertNull(dao.findByAuditFinding(unknownFinding));
     }
 }

@@ -1,6 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.dto.safetyissue;
 
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Objects;
 
 public class OccurrenceBase extends SafetyIssueBase {
 
@@ -22,6 +27,17 @@ public class OccurrenceBase extends SafetyIssueBase {
 
     public void setSeverity(URI severity) {
         this.severity = severity;
+    }
+
+    public OccurrenceBase() {
+    }
+
+    public OccurrenceBase(Occurrence occurrence) {
+        Objects.requireNonNull(occurrence);
+        this.setUri(occurrence.getUri());
+        this.setName(occurrence.getName());
+        this.setTypes(new HashSet<>(occurrence.getTypes()));
+        this.getTypes().add(Vocabulary.s_c_Occurrence);
     }
 
     @Override

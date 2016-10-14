@@ -23,6 +23,7 @@ import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -242,5 +243,17 @@ public class RepositoryAuditReportServiceTest extends BaseServiceTestRunner {
         assertEquals(latest.getRevision(), result.getRevision());
         assertEquals(latest.getLastModified(), result.getLastModified());
         assertEquals(latest.getLastModifiedBy(), result.getLastModifiedBy());
+    }
+
+    @Test
+    public void findByAuditFindingReturnsMatchingAuditReport() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(false);
+        final AuditFinding finding = AuditReportGenerator.generateFinding();
+        report.getAudit().setFindings(Collections.singleton(finding));
+        service.persist(report);
+
+        final AuditReport result = service.findByAuditFinding(finding);
+        assertNotNull(result);
+        assertEquals(report.getUri(), result.getUri());
     }
 }

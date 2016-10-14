@@ -1,10 +1,26 @@
 package cz.cvut.kbss.inbas.reporting.dto.safetyissue;
 
+import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
+
+import java.util.HashSet;
+
 public class AuditFindingBase extends SafetyIssueBase {
 
     private String description;
 
     private Integer level;
+
+    public AuditFindingBase() {
+    }
+
+    public AuditFindingBase(AuditFinding finding) {
+        setUri(finding.getUri());
+        this.description = finding.getDescription();
+        this.level = finding.getLevel();
+        setTypes(new HashSet<>(finding.getTypes()));
+        getTypes().add(Vocabulary.s_c_audit_finding);
+    }
 
     public String getDescription() {
         return description;

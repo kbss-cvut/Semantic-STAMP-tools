@@ -120,12 +120,28 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
         this.basedOnOccurrences = basedOnOccurrences;
     }
 
+    public void addBase(Occurrence occurrence) {
+        Objects.requireNonNull(occurrence);
+        if (basedOnOccurrences == null) {
+            this.basedOnOccurrences = new HashSet<>();
+        }
+        basedOnOccurrences.add(occurrence);
+    }
+
     public Set<AuditFinding> getBasedOnFindings() {
         return basedOnFindings;
     }
 
     public void setBasedOnFindings(Set<AuditFinding> basedOnFindings) {
         this.basedOnFindings = basedOnFindings;
+    }
+
+    public void addBase(AuditFinding finding) {
+        Objects.requireNonNull(finding);
+        if (basedOnFindings == null) {
+            this.basedOnFindings = new HashSet<>();
+        }
+        basedOnFindings.add(finding);
     }
 
     public URI getState() {

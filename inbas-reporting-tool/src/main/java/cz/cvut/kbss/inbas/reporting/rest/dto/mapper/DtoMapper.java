@@ -7,15 +7,23 @@ import cz.cvut.kbss.inbas.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.inbas.reporting.dto.agent.PersonDto;
 import cz.cvut.kbss.inbas.reporting.dto.event.*;
+import cz.cvut.kbss.inbas.reporting.dto.safetyissue.AuditFindingBase;
+import cz.cvut.kbss.inbas.reporting.dto.safetyissue.OccurrenceBase;
+import cz.cvut.kbss.inbas.reporting.dto.safetyissue.SafetyIssueBase;
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.DefaultFactorGraphTraverser;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.inbas.reporting.service.AuditReportService;
+import cz.cvut.kbss.inbas.reporting.service.OccurrenceService;
+import cz.cvut.kbss.inbas.reporting.service.repository.GenericEntityService;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
 import java.util.*;
@@ -30,6 +38,15 @@ public abstract class DtoMapper {
     private static final Map<Class<?>, Class<?>> mappedClasses = initMappedClasses();
 
     private Map<URI, EventDto> eventDtoRegistry;
+
+    @Autowired
+    private OccurrenceService occurrenceService;
+
+    @Autowired
+    private AuditReportService auditReportService;
+
+    @Autowired
+    private GenericEntityService entityService;
 
     private void reset() {
         this.eventDtoRegistry = new LinkedHashMap<>();
@@ -302,11 +319,57 @@ public abstract class DtoMapper {
         dto.setState(issue.getState());
         dto.setReferenceId(random.nextInt());
         eventDtoRegistry.put(dto.getUri(), dto);
-
+        if (issue.getBasedOnOccurrences() != null) {
+            issue.getBasedOnOccurrences().forEach(o -> dto.addBase(occurrenceToSafetyIssueBase(o)));
+        }
+        if (issue.getBasedOnFindings() != null) {
+            issue.getBasedOnFindings().forEach(f -> dto.addBase(auditFindingToSafetyIssueBase(f)));
+        }
         return dto;
     }
 
-    public abstract SafetyIssue safetyIssueDtoToSafetyIssue(SafetyIssueDto dto);
+    private SafetyIssueBase occurrenceToSafetyIssueBase(Occurrence occurrence) {
+        final OccurrenceBase base = new OccurrenceBase(occurrence);
+        final OccurrenceReport report = occurrenceService.findByOccurrence(occurrence);
+        assert report != null;
+        base.setReportKey(report.getKey());
+        base.setSeverity(report.getSeverityAssessment());
+        return base;
+    }
+
+    private SafetyIssueBase auditFindingToSafetyIssueBase(AuditFinding finding) {
+        final AuditFindingBase base = new AuditFindingBase(finding);
+        final AuditReport report = auditReportService.findByAuditFinding(finding);
+        assert report != null;
+        base.setReportKey(report.getKey());
+        return base;
+    }
+
+    public SafetyIssue safetyIssueDtoToSafetyIssue(SafetyIssueDto dto) {
+        if (dto == null) {
+            return null;
+        }
+        SafetyIssue issue = new SafetyIssue();
+        issue.setUri(dto.getUri());
+        issue.setName(dto.getName());
+        if (dto.getTypes() != null) {
+            issue.setTypes(new HashSet<>(dto.getTypes()));
+        }
+        issue.setState(dto.getState());
+        if (dto.getBasedOn() != null) {
+            dto.getBasedOn().forEach(base -> safetyIssueDtoBaseToBase(base, issue));
+        }
+
+        return issue;
+    }
+
+    private void safetyIssueDtoBaseToBase(SafetyIssueBase base, SafetyIssue target) {
+        if (base.getTypes().contains(Vocabulary.s_c_Occurrence)) {
+            target.addBase(occurrenceService.find(base.getUri()));
+        } else if (base.getTypes().contains(Vocabulary.s_c_audit_finding)) {
+            target.addBase(entityService.find(AuditFinding.class, base.getUri()));
+        }
+    }
 
     public FactorGraph safetyIssueToFactorGraph(SafetyIssue issue) {
         return serializeFactorGraph(issue);

@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.service.repository;
 
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.Organization;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
@@ -94,5 +95,11 @@ public class RepositoryAuditReportService extends KeySupportingRepositoryService
     @Override
     public void transitionToNextPhase(AuditReport report) {
         // Do nothing, no phases for safety issue reports
+    }
+
+    @Override
+    public AuditReport findByAuditFinding(AuditFinding finding) {
+        Objects.requireNonNull(finding);
+        return reportDao.findByAuditFinding(finding);
     }
 }

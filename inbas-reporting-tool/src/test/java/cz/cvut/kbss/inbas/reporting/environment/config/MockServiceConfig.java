@@ -7,6 +7,7 @@ import cz.cvut.kbss.inbas.reporting.service.data.RemoteDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
+import cz.cvut.kbss.inbas.reporting.service.repository.GenericEntityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,6 +28,11 @@ public class MockServiceConfig {
     @Bean
     public OrganizationService organizationService() {
         return mock(OrganizationService.class);
+    }
+
+    @Bean
+    public AuditReportService auditReportService() {
+        return mock(AuditReportService.class);
     }
 
     @Bean
@@ -92,5 +98,10 @@ public class MockServiceConfig {
     @Bean
     public ReportImporter reportImporter() {
         return mock(ReportImporter.class);
+    }
+
+    @Bean
+    public GenericEntityService genericEntityService() {
+        return mock(GenericEntityService.class);
     }
 }

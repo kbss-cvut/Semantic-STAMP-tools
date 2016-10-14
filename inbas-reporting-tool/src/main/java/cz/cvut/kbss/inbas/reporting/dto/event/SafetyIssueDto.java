@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import cz.cvut.kbss.inbas.reporting.dto.safetyissue.SafetyIssueBase;
 
 import java.net.URI;
+import java.util.HashSet;
 import java.util.Set;
 
 @JsonIdentityInfo(property = "referenceId", generator = ObjectIdGenerators.PropertyGenerator.class)
@@ -30,6 +31,13 @@ public class SafetyIssueDto extends EventDto {
 
     public void setBasedOn(Set<SafetyIssueBase> basedOn) {
         this.basedOn = basedOn;
+    }
+
+    public void addBase(SafetyIssueBase base) {
+        if (basedOn == null) {
+            this.basedOn = new HashSet<>();
+        }
+        basedOn.add(base);
     }
 
     public URI getState() {
