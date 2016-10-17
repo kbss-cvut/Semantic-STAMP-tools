@@ -15,6 +15,7 @@ var MessageMixin = {
 
     dismissMessage: function () {
         this.setState({message: null});
+        this.messageTimeout = null;
     },
 
     showInfoMessage: function (text) {
@@ -29,7 +30,7 @@ var MessageMixin = {
                 text: text
             }
         });
-        setTimeout(() => this.dismissMessage(), this.dismissInterval);
+        this.messageTimeout = setTimeout(() => this.dismissMessage(), this.dismissInterval);
     },
 
     showSuccessMessage: function (text) {
@@ -53,6 +54,12 @@ var MessageMixin = {
                 <p>{this.state.message.text}</p>
             </Alert>
         </div> : null;
+    },
+
+    cleanupMessages: function () {
+        if (this.messageTimeout) {
+            clearTimeout(this.messageTimeout);
+        }
     }
 };
 

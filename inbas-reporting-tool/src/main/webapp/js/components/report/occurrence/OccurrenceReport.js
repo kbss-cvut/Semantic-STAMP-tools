@@ -45,6 +45,10 @@ var OccurrenceReport = React.createClass({
         };
     },
 
+    componentWillUnmount: function() {
+        this.cleanupMessages();
+    },
+
     onChanges: function (changes) {
         this.props.handlers.onChange(changes);
     },

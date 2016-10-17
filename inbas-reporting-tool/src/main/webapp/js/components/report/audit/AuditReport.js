@@ -33,6 +33,10 @@ var AuditReport = React.createClass({
         };
     },
 
+    componentWillUnmount: function() {
+        this.cleanupMessages();
+    },
+
     onSave: function () {
         var report = this.props.report;
         this.onLoading();

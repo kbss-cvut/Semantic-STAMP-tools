@@ -42,6 +42,10 @@ var SafetyIssueReport = React.createClass({
         };
     },
 
+    componentWillUnmount: function() {
+        this.cleanupMessages();
+    },
+
     onMessage: function (msg) {
         if (msg.source !== Actions.addSafetyIssueBase) {
             return;
