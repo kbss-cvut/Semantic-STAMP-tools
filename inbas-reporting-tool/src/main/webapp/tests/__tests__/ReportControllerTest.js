@@ -51,7 +51,7 @@ describe('ReportController', function () {
                 }
             },
             render() {
-                return <ReportController ref='sut' {...this.state}/>;
+                return <ReportController ref={c => this.sut = c} {...this.state}/>;
             }
         });
         spyOn(Actions, 'loadReport');
@@ -64,7 +64,7 @@ describe('ReportController', function () {
         parent.setState({
             params: {}
         });
-        var controllerState = parent.refs.sut.state;
+        var controllerState = parent.sut.state;
         expect(controllerState.report.isNew).toBeTruthy();
         expect(controllerState.report.javaClass).toEqual(Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS);
         expect(controllerState.report.safetyIssue).toBeDefined();

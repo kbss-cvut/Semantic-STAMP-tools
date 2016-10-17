@@ -132,7 +132,6 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
         initForEachStub(nodes);
         initGetChildrenStub(nodes, partOfLinks);
         expected = nodes.slice();
-        expected[0] = report.occurrence.referenceId; // Occurrence is represented by ids reference id, see the next test
 
         var factorGraph = FactorJsonSerializer.getFactorGraph(report);
         expect(factorGraph.nodes).not.toBeNull();
@@ -140,38 +139,6 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
         expect(factorGraph.edges).not.toBeNull();
         expect(factorGraph.edges.length).toEqual(partOfLinks.length + factorLinks.length);
         verifyLinks(partOfLinks.concat(factorLinks), factorGraph.edges);
-    });
-
-    it('Uses occurrence reference id in factor graph for an occurrence report', () => {
-        var nodes = [report.occurrence];
-        Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
-        var factorLinks = Generator.generateFactorLinksForNodes(nodes);
-        var partOfLinks = Generator.generatePartOfLinksForNodes(report.occurrence, nodes);
-        initGetLinksStub(factorLinks);
-        initGetFactorStub(nodes);
-        initForEachStub(nodes);
-        initGetChildrenStub(nodes, partOfLinks);
-
-        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
-        var occurrenceRefId = report.occurrence.referenceId;
-        expect(factorGraph.nodes.indexOf(occurrenceRefId)).not.toEqual(-1);
-    });
-
-    it('uses safety issue reference id in factor graph for a safety issue report', () => {
-        report = Generator.generateSafetyIssueReport();
-        report.safetyIssue.referenceId = 117;
-        var nodes = [report.safetyIssue];
-        Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
-        var factorLinks = Generator.generateFactorLinksForNodes(nodes);
-        var partOfLinks = Generator.generatePartOfLinksForNodes(report.safetyIssue, nodes);
-        initGetLinksStub(factorLinks);
-        initGetFactorStub(nodes);
-        initForEachStub(nodes);
-        initGetChildrenStub(nodes, partOfLinks);
-
-        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
-        var refId = report.safetyIssue.referenceId;
-        expect(factorGraph.nodes.indexOf(refId)).not.toEqual(-1);
     });
 
     it('removes start and end times from safety issue factor graph nodes', () => {

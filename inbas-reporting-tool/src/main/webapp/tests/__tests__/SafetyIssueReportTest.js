@@ -10,6 +10,7 @@ describe('SafetyIssueReport', function () {
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
         messages = require('../../js/i18n/en').messages,
+        SafetyIssueBase = require('../../js/model/SafetyIssueBase').default,
         SafetyIssueReport = rewire('../../js/components/report/safetyissue/SafetyIssueReport'),
         handlers,
         report;
@@ -70,7 +71,7 @@ describe('SafetyIssueReport', function () {
         for (var i = 0, cnt = Generator.getRandomPositiveInt(5, 10); i < cnt; i++) {
             base = Generator.generateOccurrenceReport();
             base.uri = Generator.getRandomUri();
-            bases.push(base);
+            bases.push(SafetyIssueBase.create(null, base));
         }
         report.safetyIssue.basedOn = bases;
         var component = Environment.render(<SafetyIssueReport report={report} handlers={handlers}/>),

@@ -4,8 +4,8 @@ import React from "react";
 import {Button, Label, Panel, Table} from "react-bootstrap";
 import injectIntl from "../../../utils/injectIntl";
 import I18nWrapper from "../../../i18n/I18nWrapper";
-import ReportType from "../../../model/ReportType";
 import Routes from "../../../utils/Routes";
+import SafetyIssueBase from "../../../model/SafetyIssueBase";
 
 /**
  * Displays a table of reports on which a safety issue is based.
@@ -20,7 +20,7 @@ var BasedOn = (props) => {
     }
     var rows = [];
     for (var i = 0, len = basedOn.length; i < len; i++) {
-        rows.push(<Row key={'based_on-' + basedOn[i].key} report={basedOn[i]} onRemove={props.onRemove}/>);
+        rows.push(<BasedOnRow key={'based_on-' + basedOn[i].uri} base={basedOn[i]} onRemove={props.onRemove}/>);
     }
     return <Panel header={<h5>{i18n('safetyissue.based-on')}</h5>} bsStyle='info'>
         <Table striped bordered condensed hover>
@@ -44,28 +44,28 @@ BasedOn.propTypes = {
     onRemove: React.PropTypes.func.isRequired
 };
 
-var Row = (props) => {
+var BasedOnRow = (props) => {
     var i18n = props.i18n,
-        report = ReportType.getReport(props.report);
+        base = SafetyIssueBase.create(props.base);
     return <tr>
-        <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + report.key}
-                                      title={i18n('reports.open-tooltip')}>{report.identification}</a></td>
-        <td className='report-row'>{report.renderMoreInfo()}</td>
+        <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + base.reportKey}
+                                      title={i18n('reports.open-tooltip')}>{base.getName()}</a></td>
+        <td className='report-row'>{base.renderMoreInfo()}</td>
         <td className='report-row content-center'>
-            <Label title={i18n(report.toString())}>{i18n(report.getLabel())}</Label>
+            <Label title={i18n(base.getLabel())}>{i18n(base.getLabel())}</Label>
         </td>
         <td className='report-row actions'>
-            <Button bsStyle='warning' onClick={() => props.onRemove(props.report)} bsSize='small'
+            <Button bsStyle='warning' onClick={() => props.onRemove(props.base)} bsSize='small'
                     title={i18n('safety-issue.base.remove-tooltip')}>{i18n('remove')}</Button>
         </td>
     </tr>
 };
 
-Row.propTypes = {
-    report: React.PropTypes.object.isRequired,
+BasedOnRow.propTypes = {
+    base: React.PropTypes.object.isRequired,
     onRemove: React.PropTypes.func.isRequired
 };
 
-Row = injectIntl(I18nWrapper(Row));
+BasedOnRow = injectIntl(I18nWrapper(BasedOnRow));
 
 export default injectIntl(I18nWrapper(BasedOn));

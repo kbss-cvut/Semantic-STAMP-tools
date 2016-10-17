@@ -38,6 +38,7 @@ function encode(parent, property, object, refProperty) {
                     instanceMap[object[refProperty]] = object;
                 } else {
                     replace(parent, property, object, object[refProperty]);
+                    return;
                 }
             }
             Object.getOwnPropertyNames(object).filter(n => n !== refProperty).forEach(n => {

@@ -31,6 +31,7 @@ describe('ReportType', function () {
             for (i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
                 expect(report.factorGraph.nodes[i].uri).not.toBeDefined();
             }
+            expect(report.safetyIssue.basedOn[0].types.indexOf(Vocabulary.OCCURRENCE)).not.toEqual(-1);
             expect(report.factorGraph.edges.length).toEqual(originalGraph.edges.length);
             for (i = 0, len = report.factorGraph.edges.length; i < len; i++) {
                 edge = report.factorGraph.edges[i];
@@ -75,6 +76,9 @@ describe('ReportType', function () {
                 expect(report.factorGraph.nodes.indexOf(edge.from)).not.toEqual(-1);
                 expect(report.factorGraph.nodes.indexOf(edge.to)).not.toEqual(-1);
             }
+            for (i = 0, len = report.safetyIssue.basedOn.length; i < len; i++) {
+                expect(report.safetyIssue.basedOn[i].types.indexOf(Vocabulary.OCCURRENCE)).not.toEqual(-1);
+            }
         });
 
         it('does not add base if it already exists in safety issue', () => {
@@ -94,23 +98,5 @@ describe('ReportType', function () {
             expect(report.factorGraph.edges.length).toEqual(originalFactorGraph.edges.length);
             expect(report.safetyIssue.basedOn.length).toEqual(1);
         });
-
-        it('transforms base report to report list item before adding it as base', () => {
-            var basedOn = generateSafetyIssueBase(),
-                newBase = generateSafetyIssueBase(),
-                report, result;
-            report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {basedOn: basedOn});
-            expect(report.factorGraph).not.toBeNull();
-            report = ReportType.getReport(report);
-            result = report.addBase(newBase);
-            expect(result).toBeTruthy();
-            for (var i = 0; i < report.safetyIssue.basedOn.length; i++) {
-                expect(report.safetyIssue.basedOn[i].identification).toBeDefined();
-                expect(report.safetyIssue.basedOn[i].occurrence).not.toBeDefined();
-                expect(report.safetyIssue.basedOn[i].factorGraph).not.toBeDefined();
-                expect(report.safetyIssue.basedOn[i].correctiveMeasures).not.toBeDefined();
-                expect(report.safetyIssue.basedOn[i].javaClass).toEqual(Constants.OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS);
-            }
-        })
     });
 });

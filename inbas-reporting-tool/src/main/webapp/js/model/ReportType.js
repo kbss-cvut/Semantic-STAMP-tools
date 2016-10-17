@@ -5,6 +5,7 @@ var assign = require('object-assign');
 var JsonLdUtils = require('jsonld-utils').default;
 var CollapsibleText = require('../components/CollapsibleText');
 var Constants = require('../constants/Constants');
+var SafetyIssueBase = require('./SafetyIssueBase').default;
 var Utils = require('../utils/Utils');
 var Vocabulary = require('../constants/Vocabulary');
 
@@ -45,18 +46,6 @@ class OccurrenceReport {
     renderMoreInfo() {
         return <CollapsibleText text={this.summary}/>;
     }
-
-    toReportListItem() {
-        var result = assign({}, this);
-        delete result.occurrence;
-        delete result.factorGraph;
-        delete result.correctiveMeasures;
-        result.identification = this.occurrence.name;
-        result.date = this.occurrence.startTime;
-        result.occurrenceCategory = this.occurrence.eventType;
-        result.javaClass = Constants.OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS;
-        return result;
-    }
 }
 
 class SafetyIssueReport {
@@ -88,28 +77,18 @@ class SafetyIssueReport {
         return <CollapsibleText text={this.summary}/>;
     }
 
-    toReportListItem() {
-        var result = assign({}, this);
-        delete result.safetyIssue;
-        delete result.factorGraph;
-        delete result.correctiveMeasures;
-        result.identification = this.safetyIssue.name;
-        result.javaClass = Constants.SAFETY_ISSUE_REPORT_LIST_ITEM_JAVA_CLASS;
-        return result;
-    }
-
     /**
      * Adds the specified report as this safety issue report's base.
      * @param baseReport The new base
      */
     addBase(baseReport) {
         if (this.safetyIssue.basedOn) {
-            if (this.safetyIssue.basedOn.find((item) => item.key === baseReport.key)) {
+            if (this.safetyIssue.basedOn.find((item) => item.uri === baseReport.occurrence.uri)) {
                 return false;
             }
-            this.safetyIssue.basedOn.push(SafetyIssueReport._reportToListItem(baseReport));
+            this.safetyIssue.basedOn.push(SafetyIssueBase.create(null, baseReport));
         } else {
-            this.safetyIssue.basedOn = [SafetyIssueReport._reportToListItem(baseReport)];
+            this.safetyIssue.basedOn = [SafetyIssueBase.create(null, baseReport)];
         }
         if (baseReport.factorGraph) {
             this._copyFactorGraph(baseReport);
@@ -118,10 +97,6 @@ class SafetyIssueReport {
             delete baseReport.factorGraph;
         }
         return true;
-    }
-
-    static _reportToListItem(baseReport) {
-        return ReportType.getReport(baseReport).toReportListItem();
     }
 
     _copyFactorGraph(source) {
@@ -187,15 +162,6 @@ class AuditReport {
 
     renderMoreInfo() {
         return <CollapsibleText text={this.summary}/>;
-    }
-
-    toReportListItem() {
-        var result = assign({}, this);
-        delete result.audit;
-        result.identification = this.audit.name;
-        result.date = this.audit.startDate;
-        result.javaClass = Constants.AUDIT_REPORT_LIST_ITEM_JAVA_CLASS;
-        return result;
     }
 }
 

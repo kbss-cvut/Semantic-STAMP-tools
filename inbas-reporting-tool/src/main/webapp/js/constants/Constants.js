@@ -66,6 +66,7 @@ module.exports = {
     INPUT_LENGTH_THRESHOLD: 70,
 
     OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
+    OCCURRENCE_SAFETY_ISSUE_BASE_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.safetyissue.OccurrenceBase',
     EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
     OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
     OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto',
@@ -74,6 +75,7 @@ module.exports = {
     SAFETY_ISSUE_REPORT_LIST_ITEM_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.reportlist.SafetyIssueReportDto',
     AUDIT_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.model.audit.AuditReport',
     AUDIT_REPORT_LIST_ITEM_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.reportlist.AuditReportDto',
+    AUDIT_FINDING_SAFETY_ISSUE_BASE_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.safetyissue.AuditFindingBase',
 
     // Audit finding level, numbering starts at 1 and the maximum is included
     FINDING_LEVEL_MAX: 2,
