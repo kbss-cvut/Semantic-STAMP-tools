@@ -73,6 +73,7 @@ module.exports = {
         'main.statistics-nav': 'Statistiky',
         'main.logout': 'Odhlásit se',
         'main.search-placeholder': 'Hledat',
+        'main.tacr-notice': 'Projekt byl podpořen Technologickou agenturou České republiky.',
 
         'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',
         'dashboard.create-new-occurrence-report-tile': 'Nové hlášení o události',

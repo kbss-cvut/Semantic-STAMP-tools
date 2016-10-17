@@ -72,6 +72,7 @@ module.exports = {
         'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
         'main.search-placeholder': 'Search',
+        'main.tacr-notice': 'Project was supported by the Technology Agency of the Czech Republic.',
 
         'dashboard.welcome': 'Hello {name}, Welcome to ' + Constants.APP_NAME + '.',
         'dashboard.create-new-occurrence-report-tile': 'Create New Occurrence Report',

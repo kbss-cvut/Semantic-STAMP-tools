@@ -2,6 +2,7 @@
 
 ### 0.7.11 - October 17, 2016
 - Support for safety issues based on audit findings (Feature #182).
+- Mandatory TACR publicity (Feature #185).
 
 ### 0.7.10 - October 14, 2016
 - Get report by occurrence no longer returns a list of reports, it returns just the report that

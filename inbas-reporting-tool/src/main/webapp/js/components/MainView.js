@@ -65,6 +65,9 @@ var MainView = React.createClass({
                         <NavDropdown id='logout' title={name}>
                             <MenuItem href='#' onClick={Authentication.logout}>{this.i18n('main.logout')}</MenuItem>
                         </NavDropdown>
+                        <li>
+                            <div className='tacr-logo' title={this.i18n('main.tacr-notice')}/>
+                        </li>
                     </Nav>
                 </Navbar>
             </header>
