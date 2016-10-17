@@ -76,7 +76,7 @@ export default class SafetyIssueBase {
                 base = new OccurrenceBase();
                 base.initWith(report.occurrence, report);
             } else if (report.javaClass && report.javaClass === Constants.AUDIT_REPORT_JAVA_CLASS) {
-                base = new AuditFindingBase(event, report);
+                base = new AuditFindingBase();
                 base.initWith(event, report);
             }
         } else if (event.javaClass === Constants.OCCURRENCE_SAFETY_ISSUE_BASE_CLASS) {

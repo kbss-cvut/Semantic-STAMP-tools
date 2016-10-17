@@ -60,7 +60,7 @@ module.exports = {
         }
         report = ReportType.getReport(report);
         if (options.basedOn) {
-            report.addBase(options.basedOn);
+            report.addBase(options.basedOn.event, options.basedOn.report);
         }
         return report;
     },

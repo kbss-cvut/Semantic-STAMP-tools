@@ -56,10 +56,14 @@ describe('ReportController', function () {
         });
         spyOn(Actions, 'loadReport');
         var params = {reportKey: 12345},
-            parent = Environment.render(<TestParent/>);
+            parent = Environment.render(<TestParent/>),
+            baseReport = Generator.generateOccurrenceReport();
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue({
             reportType: Vocabulary.SAFETY_ISSUE_REPORT,
-            basedOn: Generator.generateOccurrenceReport()
+            basedOn: {
+                report: baseReport,
+                event: baseReport.occurrence
+            }
         });
         parent.setState({
             params: {}

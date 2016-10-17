@@ -8,17 +8,22 @@ import AuditFinding from "../../js/components/report/audit/AuditFinding";
 describe('AuditFinding', () => {
 
     var finding,
+        report,
         onSave, onClose;
 
     beforeEach(() => {
         finding = {};
+        report = {
+            isNew: true
+        };
         onSave = jasmine.createSpy('onSave');
         onClose = jasmine.createSpy('onClose');
     });
 
     it('sets finding type on new finding when type is selected', () => {
         var selectedType = Generator.randomCategory(),
-            component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}/>);
+            component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
+                                                         report={report}/>);
         component.getWrappedComponent().state.findingType = Generator.getCategories();
         component.getWrappedComponent()._onTypeSelected(selectedType);
 
@@ -30,7 +35,8 @@ describe('AuditFinding', () => {
         var originalType = Generator.randomCategory(),
             selectedType = Generator.randomCategory();
         finding.types = [originalType.id];
-        var component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}/>);
+        var component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
+                                                         report={report}/>);
         component.getWrappedComponent().state.findingType = Generator.getCategories();
         component.getWrappedComponent()._onTypeSelected(selectedType);
 

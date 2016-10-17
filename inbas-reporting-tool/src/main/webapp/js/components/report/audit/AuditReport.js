@@ -33,7 +33,7 @@ var AuditReport = React.createClass({
         };
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         this.cleanupMessages();
     },
 
@@ -57,7 +57,7 @@ var AuditReport = React.createClass({
 
         return <div><Panel header={this._renderHeader()} bsStyle='primary'>
             <form>
-                <Audit audit={report.audit} onChange={this.props.handlers.onChange}/>
+                <Audit audit={report.audit} onChange={this.props.handlers.onChange} report={report}/>
                 <div className='row'>
                     <div className='col-xs-12'>
                         <Input type='textarea' rows='8' label={this.i18n('audit.remarks')} name='summary'

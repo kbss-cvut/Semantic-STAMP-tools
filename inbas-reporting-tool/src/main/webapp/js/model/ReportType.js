@@ -79,22 +79,23 @@ class SafetyIssueReport {
 
     /**
      * Adds the specified report as this safety issue report's base.
-     * @param baseReport The new base
+     * @param newBase The new base
+     * @param report Report documenting the new base
      */
-    addBase(baseReport) {
+    addBase(newBase, report) {
         if (this.safetyIssue.basedOn) {
-            if (this.safetyIssue.basedOn.find((item) => item.uri === baseReport.occurrence.uri)) {
+            if (this.safetyIssue.basedOn.find((item) => item.uri === newBase.uri)) {
                 return false;
             }
-            this.safetyIssue.basedOn.push(SafetyIssueBase.create(null, baseReport));
+            this.safetyIssue.basedOn.push(SafetyIssueBase.create(newBase, report));
         } else {
-            this.safetyIssue.basedOn = [SafetyIssueBase.create(null, baseReport)];
+            this.safetyIssue.basedOn = [SafetyIssueBase.create(newBase, report)];
         }
-        if (baseReport.factorGraph) {
-            this._copyFactorGraph(baseReport);
-            // Get rid of the original factor graph. We don't need it for safety issue persisting and it causes
-            // deserialization issues
-            delete baseReport.factorGraph;
+        if (report && report.factorGraph) {
+            this._copyFactorGraph(report);
+        }
+        if (newBase.factors) {
+            this._addFactorsToFactorGraph(newBase);
         }
         return true;
     }
@@ -129,6 +130,31 @@ class SafetyIssueReport {
                 linkType: edge.linkType,
                 from: referenceMap[edge.from.referenceId],
                 to: referenceMap[edge.to.referenceId]
+            });
+        }
+    }
+
+    _addFactorsToFactorGraph(finding) {
+        if (!this.factorGraph) {
+            this.factorGraph = {
+                nodes: [],
+                edges: []
+            };
+            this.factorGraph.nodes.push(this.safetyIssue);
+        }
+        var node;
+        for (var i = 0, len = finding.factors.length; i < len; i++) {
+            node = {
+                eventType: finding.factors[i],
+                types: [finding.factors[i]],
+                referenceId: Utils.randomInt(),
+                javaClass: Constants.EVENT_JAVA_CLASS
+            };
+            this.factorGraph.nodes.push(node);
+            this.factorGraph.edges.push({
+                from: this.factorGraph.nodes[0],
+                to: node,
+                linkType: Vocabulary.HAS_PART
             });
         }
     }

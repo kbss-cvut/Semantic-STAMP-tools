@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -19,7 +15,7 @@ var OccurrenceReportController = React.createClass({
         ReportDetailControllerMixin
     ],
 
-    componentDidMount: function() {
+    componentDidMount: function () {
         Actions.loadOptions();
         Actions.loadOccurrenceCategories();
         Actions.loadOptions('department');
@@ -56,7 +52,10 @@ var OccurrenceReportController = React.createClass({
         Routing.transitionTo(Routes.createReport, {
             payload: {
                 reportType: Vocabulary.SAFETY_ISSUE_REPORT,
-                basedOn: this.props.report
+                basedOn: {
+                    event: this.props.report.occurrence,
+                    report: this.props.report
+                }
             }
         });
     },

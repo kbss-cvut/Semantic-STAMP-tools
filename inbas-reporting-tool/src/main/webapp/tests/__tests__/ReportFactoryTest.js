@@ -28,24 +28,36 @@ describe('Report factory', () => {
     });
 
     it('creates safety issue based on report', () => {
-        var basedOn = Generator.generateOccurrenceReport();
-        basedOn.occurrence.referenceId = 117;
+        var basedOnReport = Generator.generateOccurrenceReport(),
+            basedOn = basedOnReport.occurrence;
+        basedOn.referenceId = 117;
 
-        var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {basedOn: basedOn});
+        var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {
+            basedOn: {
+                event: basedOn,
+                report: basedOnReport
+            }
+        });
         expect(report.safetyIssue.basedOn).toBeDefined();
     });
 
     it('creates safety issue report with copied factor graph.', () => {
-        var basedOn = Generator.generateOccurrenceReport();
-        basedOn.occurrence.referenceId = 117;
-        basedOn.factorGraph = {
-            nodes: [basedOn.occurrence.referenceId]
+        var basedOnReport = Generator.generateOccurrenceReport(),
+            basedOn = basedOnReport.occurrence;
+        basedOn.referenceId = 117;
+        basedOnReport.factorGraph = {
+            nodes: [basedOn.referenceId]
         };
-        Array.prototype.push.apply(basedOn.factorGraph.nodes, Generator.generateFactorGraphNodes());
-        basedOn.factorGraph.edges = Generator.generateFactorLinksForNodes(basedOn.factorGraph.nodes);
-        var originalGraph = basedOn.factorGraph;
+        Array.prototype.push.apply(basedOnReport.factorGraph.nodes, Generator.generateFactorGraphNodes());
+        basedOnReport.factorGraph.edges = Generator.generateFactorLinksForNodes(basedOnReport.factorGraph.nodes);
+        var originalGraph = basedOnReport.factorGraph;
 
-        var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {basedOn: basedOn});
+        var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {
+            basedOn: {
+                event: basedOn,
+                report: basedOnReport
+            }
+        });
         expect(report.factorGraph).not.toBeNull();
         expect(report.factorGraph.nodes.length).toEqual(originalGraph.nodes.length);
         for (var i = 0; i < report.factorGraph.nodes.length; i++) {

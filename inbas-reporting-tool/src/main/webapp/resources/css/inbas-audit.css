@@ -572,6 +572,11 @@ button.reset-filters {
     margin-bottom: 0.5em;
 }
 
+.issue-selector {
+    margin-top: 0.5em;
+    text-align: left;
+}
+
 .add-icon-glyph {
     margin-right: 5px;
 }

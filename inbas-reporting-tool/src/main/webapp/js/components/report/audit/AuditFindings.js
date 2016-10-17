@@ -15,7 +15,8 @@ class AuditFindings extends React.Component {
     static propTypes = {
         audit: React.PropTypes.object.isRequired,
         auditType: React.PropTypes.string,
-        onChange: React.PropTypes.func.isRequired
+        onChange: React.PropTypes.func.isRequired,
+        report: React.PropTypes.object
     };
 
     constructor(props) {
@@ -105,7 +106,7 @@ class AuditFindings extends React.Component {
         var addClass = this._hasFindings() ? 'float-right' : '';
         return <div>
             <AuditFinding show={this.state.showWindow} finding={this.state.currentFinding} audit={this.props.audit}
-                          onSave={this._onEditFinish} onClose={this._onEditClose}/>
+                          onSave={this._onEditFinish} onClose={this._onEditClose} report={this.props.report}/>
             <Panel header={<h5>{this.i18n('audit.findings.header')}</h5>} bsStyle='info'>
                 {this._renderPanelContent()}
                 <div className={addClass}>

@@ -18,7 +18,8 @@ import Utils from "../../../utils/Utils";
 class Audit extends React.Component {
     static propTypes = {
         audit: React.PropTypes.object.isRequired,
-        onChange: React.PropTypes.func.isRequired
+        onChange: React.PropTypes.func.isRequired,
+        report: React.PropTypes.object
     };
 
     constructor(props) {
@@ -147,7 +148,7 @@ class Audit extends React.Component {
             </div>
             <AuditFindings audit={audit}
                            auditType={auditType ? auditType.id : (this.state.auditType.length > 0 ? '' : null)}
-                           onChange={this._mergeChange}/>
+                           onChange={this._mergeChange} report={this.props.report}/>
         </div>;
     }
 

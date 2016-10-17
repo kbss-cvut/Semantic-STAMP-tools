@@ -3,7 +3,7 @@
 import React from "react";
 import JsonLdUtils from "jsonld-utils";
 import assign from "object-assign";
-import {Button, Modal} from "react-bootstrap";
+import {Button, ButtonToolbar, DropdownButton, MenuItem, Modal} from "react-bootstrap";
 import Typeahead from "react-bootstrap-typeahead";
 import Constants from "../../../constants/Constants";
 import FindingFactors from "./FindingFactors";
@@ -13,8 +13,12 @@ import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import Input from "../../Input";
 import OptionsStore from "../../../stores/OptionsStore";
+import Routes from "../../../utils/Routes";
+import Routing from "../../../utils/Routing";
+import SafetyIssueSelector from "../safetyissue/SafetyIssueSelector";
 import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 import Utils from "../../../utils/Utils";
+import Vocabulary from "../../../constants/Vocabulary";
 
 const INDEX_PROPERTY = 'http://onto.fel.cvut.cz/ontologies/aviation/cz/caa/cat/audit/checklist/has_full_order';
 
@@ -23,7 +27,8 @@ class AuditFinding extends React.Component {
         audit: React.PropTypes.object,
         finding: React.PropTypes.object,
         onSave: React.PropTypes.func.isRequired,
-        onClose: React.PropTypes.func.isRequired
+        onClose: React.PropTypes.func.isRequired,
+        report: React.PropTypes.object
     };
 
     constructor(props) {
@@ -31,7 +36,8 @@ class AuditFinding extends React.Component {
         this.i18n = props.i18n;
         this.state = {
             finding: props.finding ? assign({}, props.finding) : null,
-            findingType: this._processOptions(OptionsStore.getOptions('findingType'))
+            findingType: this._processOptions(OptionsStore.getOptions('findingType')),
+            showSafetyIssueSelector: false
         };
     }
 
@@ -89,6 +95,22 @@ class AuditFinding extends React.Component {
         this.setState({finding: finding});
     };
 
+    _onOpenSafetyIssueSelector = () => {
+        this.setState({showSafetyIssueSelector: true});
+    };
+
+    _onCreateSafetyIssue = () => {
+        Routing.transitionTo(Routes.createReport, {
+            payload: {
+                reportType: Vocabulary.SAFETY_ISSUE_REPORT,
+                basedOn: {
+                    event: this.props.finding,
+                    report: this.props.report
+                }
+            }
+        });
+    };
+
     render() {
         var finding = this.state.finding;
         if (!finding) {
@@ -137,9 +159,14 @@ class AuditFinding extends React.Component {
                 </div>
             </div>
             <Modal.Footer>
-                <Button bsSize='small' bsStyle='success'
-                        onClick={() => this.props.onSave(finding)}>{this.i18n('save')}</Button>
-                <Button bsSize='small' onClick={this.props.onClose}>{this.i18n('cancel')}</Button>
+                <ButtonToolbar className='pull-right'>
+                    <Button bsSize='small' bsStyle='success'
+                            onClick={() => this.props.onSave(finding)}>{this.i18n('save')}</Button>
+                    <Button bsSize='small' onClick={this.props.onClose}>{this.i18n('cancel')}</Button>
+                    {this._renderCreateSafetyIssueButton()}
+                </ButtonToolbar>
+                <div style={{clear: 'both'}}/>
+                {this._renderSafetyIssueSelector()}
             </Modal.Footer>
         </Modal>;
     }
@@ -162,6 +189,27 @@ class AuditFinding extends React.Component {
             </div>);
         }
         return levels;
+    }
+
+    _renderCreateSafetyIssueButton() {
+        if (this.props.report.isNew) {
+            return null;
+        }
+        return <DropdownButton id='safetyIssueSelector' bsStyle='primary' bsSize='small'
+                               title={this.i18n('safetyissuereport.label')}
+                               pullRight={true}>
+            <MenuItem onClick={this._onCreateSafetyIssue}
+                      title={this.i18n('occurrencereport.create-safety-issue-tooltip')}>{this.i18n('occurrencereport.create-safety-issue')}</MenuItem>
+            <MenuItem onClick={this._onOpenSafetyIssueSelector}
+                      title={this.i18n('occurrencereport.add-as-safety-issue-base-tooltip')}>{this.i18n('occurrencereport.add-as-safety-issue-base')}</MenuItem>
+        </DropdownButton>;
+    }
+
+    _renderSafetyIssueSelector() {
+        return this.state.showSafetyIssueSelector ?
+            <div className='float-right row col-xs-3 issue-selector'>
+                <SafetyIssueSelector report={this.props.report} event={this.props.finding}/>
+            </div> : null;
     }
 }
 

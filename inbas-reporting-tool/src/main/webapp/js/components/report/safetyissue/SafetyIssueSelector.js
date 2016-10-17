@@ -14,6 +14,7 @@ import Vocabulary from "../../../constants/Vocabulary";
 
 class SafetyIssueSelector extends React.Component {
     static propTypes = {
+        event: React.PropTypes.object.isRequired,
         report: React.PropTypes.object.isRequired
     };
 
@@ -26,7 +27,6 @@ class SafetyIssueSelector extends React.Component {
 
     /**
      * Returns only safety issue reports.
-     * @private
      */
     static _filterReports(allReports) {
         if (!allReports) {
@@ -55,7 +55,10 @@ class SafetyIssueSelector extends React.Component {
     _onOptionSelected = (option) => {
         var issueKey = option.key,
             report = this.props.report;
-        Actions.addSafetyIssueBase(issueKey, report);
+        Actions.addSafetyIssueBase(issueKey, {
+            event: this.props.event,
+            report: this.props.report
+        });
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: issueKey}
         });
