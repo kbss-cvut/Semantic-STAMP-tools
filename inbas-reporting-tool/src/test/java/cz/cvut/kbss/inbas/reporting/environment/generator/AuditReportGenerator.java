@@ -51,7 +51,7 @@ public class AuditReportGenerator {
 
     public static Set<AuditFinding> generateFindings() {
         final Set<AuditFinding> findings = new HashSet<>();
-        for (int i = 0; i < Generator.randomInt(3, 10); i++) {
+        for (int i = 0; i < Generator.randomInt(10, 15); i++) {
             final AuditFinding finding = generateFinding();
             findings.add(finding);
         }

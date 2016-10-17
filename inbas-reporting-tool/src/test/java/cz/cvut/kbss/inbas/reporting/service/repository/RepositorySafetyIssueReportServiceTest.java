@@ -163,7 +163,7 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
     private SafetyIssueReport persistSafetyIssueWithBases() {
         final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
         final Set<Occurrence> bases = new HashSet<>();
-        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
+        for (int i = 0; i < Generator.randomInt(10, 15); i++) {
             final Occurrence base = OccurrenceReportGenerator.generateOccurrenceReport(true).getOccurrence();
             bases.add(base);
         }
@@ -189,7 +189,6 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
 
         final Set<AuditFinding> removed = new HashSet<>();
         final Iterator<AuditFinding> it = report.getSafetyIssue().getBasedOnFindings().iterator();
-        boolean first = true;
         while (it.hasNext()) {
             final AuditFinding finding = it.next();
             if (Generator.randomBoolean() && report.getSafetyIssue().getBasedOnFindings().size() > 1) {
