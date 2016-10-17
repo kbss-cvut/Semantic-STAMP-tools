@@ -141,7 +141,7 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
         final Iterator<Occurrence> it = report.getSafetyIssue().getBasedOnOccurrences().iterator();
         while (it.hasNext()) {
             final Occurrence o = it.next();
-            if (Generator.randomBoolean()) {
+            if (Generator.randomBoolean() && report.getSafetyIssue().getBasedOnOccurrences().size() > 1) {
                 it.remove();
                 removed.add(o);
             }
@@ -189,9 +189,10 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
 
         final Set<AuditFinding> removed = new HashSet<>();
         final Iterator<AuditFinding> it = report.getSafetyIssue().getBasedOnFindings().iterator();
+        boolean first = true;
         while (it.hasNext()) {
             final AuditFinding finding = it.next();
-            if (Generator.randomBoolean()) {
+            if (Generator.randomBoolean() && report.getSafetyIssue().getBasedOnFindings().size() > 1) {
                 it.remove();
                 removed.add(finding);
             }

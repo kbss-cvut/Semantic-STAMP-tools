@@ -193,6 +193,10 @@ public class AuditDaoTest extends BaseDaoTestRunner {
                  af.getCorrectiveMeasures().clear();
                  emptyFindings.add(af);
              });
+        // Make sure there is at least one finding where the corrective measure remains
+        if (emptyFindings.size() == audit.getFindings().size()) {
+            audit.getFindings().iterator().next().setCorrectiveMeasures(new HashSet<>(Collections.singletonList(cm)));
+        }
         dao.update(audit);
 
         final EntityManager em = emf.createEntityManager();
