@@ -1,7 +1,11 @@
 'use strict';
 
+import React from "react";
 import assign from "object-assign";
+import JsonLdUtils from "jsonld-utils";
 import Constants from "../constants/Constants";
+import I18nStore from "../stores/I18nStore";
+import ObjectTypeResolver from "../utils/ObjectTypeResolver";
 import Vocabulary from "../constants/Vocabulary";
 
 class OccurrenceBase {
@@ -30,9 +34,9 @@ class OccurrenceBase {
         return this.name;
     }
 
-    renderMoreInfo() {
-        // TODO
-        return '';
+    renderMoreInfo(options) {
+        var type = ObjectTypeResolver.resolveType(this, options.category);
+        return type ? JsonLdUtils.getJsonAttValue(type, Vocabulary.RDFS_LABEL) : '';
     }
 }
 
@@ -61,9 +65,15 @@ class AuditFindingBase {
         return this.description;
     }
 
-    renderMoreInfo() {
-        // TODO
-        return '';
+    renderMoreInfo(options) {
+        var type = ObjectTypeResolver.resolveType(this, options.findingType),
+            label = type ? JsonLdUtils.getJsonAttValue(type, Vocabulary.RDFS_LABEL) + ',' : '';
+        return <div>
+            <span className='issue-base-more-info'>{label}</span>
+            <span className='issue-base-more-info'>
+                {I18nStore.i18n('audit.findings.table.level') + ' ' + this.level}
+            </span>
+        </div>;
     }
 }
 

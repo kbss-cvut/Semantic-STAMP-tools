@@ -690,3 +690,7 @@ button.reset-filters {
         margin-bottom: -15px;
     }
 }
+
+.issue-base-more-info:first-child {
+    padding-right: 0.5em;
+}

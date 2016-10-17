@@ -11,6 +11,7 @@ var URL = 'rest/options?type=';
 var eventTypes = [];
 var occurrenceCategories = [];
 
+// TODO Get rid of this store and use only OptionsStore
 var TypeaheadStore = Reflux.createStore({
 
     init: function () {

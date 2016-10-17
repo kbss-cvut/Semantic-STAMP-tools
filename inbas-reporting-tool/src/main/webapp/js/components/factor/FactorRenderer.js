@@ -4,7 +4,7 @@ var JsonLdUtils = require('jsonld-utils').default;
 var GanttController = require('./GanttController');
 var Constants = require('../../constants/Constants');
 var Vocabulary = require('../../constants/Vocabulary');
-var EventTypeFactory = require('../../model/EventTypeFactory');
+var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
 
 var FactorRenderer = {
 
@@ -130,7 +130,7 @@ var FactorRendererImpl = {
             if (typeof node.name !== 'undefined' && node.name !== null) {
                 text = node.name;
             } else if (node.eventType) {
-                var eventType = EventTypeFactory.resolveEventType(node.eventType, eventTypes);
+                var eventType = ObjectTypeResolver.resolveType(node.eventType, eventTypes);
                 text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
             }
             GanttController.addFactor({

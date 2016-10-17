@@ -53,8 +53,7 @@ class SafetyIssueSelector extends React.Component {
     }
 
     _onOptionSelected = (option) => {
-        var issueKey = option.key,
-            report = this.props.report;
+        var issueKey = option.key;
         Actions.addSafetyIssueBase(issueKey, {
             event: this.props.event,
             report: this.props.report
