@@ -1,7 +1,7 @@
 'use strict';
 
 import React from "react";
-import {Label} from "react-bootstrap";
+import {Button, Glyphicon} from "react-bootstrap";
 import Typeahead from "react-bootstrap-typeahead";
 import Actions from "../../actions/Actions";
 import I18nWrapper from "../../i18n/I18nWrapper";
@@ -10,7 +10,7 @@ import ReportType from "../../model/ReportType";
 import ReportStore from "../../stores/ReportStore";
 import Routes from "../../utils/Routes";
 import Routing from "../../utils/Routing";
-import TypeaheadResultList from "../typeahead/TypeaheadResultList";
+import ReportSearchResultList from "../typeahead/ReportSearchResultList";
 import Utils from "../../utils/Utils";
 
 const OPTION_IDENTIFICATION_THRESHOLD = 45;
@@ -20,7 +20,8 @@ class NavSearch extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            options: NavSearch._processReports(ReportStore.getReports())
+            options: NavSearch._processReports(ReportStore.getReports()),
+            fullTextDisabled: true
         }
     }
 
@@ -64,17 +65,35 @@ class NavSearch extends React.Component {
         this.typeahead.setEntryText('');
     };
 
+    _onSearchTextChange = (e) => {
+        this.setState({fullTextDisabled: e.target.value.length === 0});
+    };
+
     render() {
         var classes = {
-            input: 'navbar-search-input',
-            results: 'navbar-search-results list-unstyled'
-        };
-        var optionLabel = this._getOptionLabelFunction();
-        return <Typeahead ref={(c) => this.typeahead = c} size='small' name={this.props.name} className='navbar-search'
-                          formInputOption='id' placeholder={this.i18n('main.search-placeholder')}
-                          onOptionSelected={this._onOptionSelected} filterOption='identification'
-                          displayOption={optionLabel} options={this.state.options} customClasses={classes}
-                          customListComponent={TypeaheadResultList}/>;
+                input: 'navbar-search-input',
+                results: 'navbar-search-results list-unstyled'
+            },
+            optionLabel = this._getOptionLabelFunction();
+
+        return <div className='navbar-search-panel'>
+            <div className='col-xs-11 navbar-search'>
+                <Typeahead ref={(c) => this.typeahead = c} size='small' name={this.props.name}
+                           formInputOption='id'
+                           placeholder={this.i18n('main.search-placeholder')}
+                           onOptionSelected={this._onOptionSelected} onChange={this._onSearchTextChange}
+                           filterOption='identification'
+                           displayOption={optionLabel} options={this.state.options}
+                           customClasses={classes}
+                           customListComponent={ReportSearchResultList}/>
+            </div>
+            <div className='col-xs-1 navbar-search'>
+                <Button bsSize='small' title={this.i18n('main.search.fulltext-tooltip')}
+                        disabled={this.state.fullTextDisabled}>
+                    <Glyphicon glyph='search'/>
+                </Button>
+            </div>
+        </div>;
     }
 
     _getOptionLabelFunction() {
@@ -82,10 +101,8 @@ class NavSearch extends React.Component {
             var date = option.date ? Utils.formatDate(new Date(option.date)) : '',
                 label = option.identification.length > OPTION_IDENTIFICATION_THRESHOLD ?
                 option.identification.substring(0, OPTION_IDENTIFICATION_THRESHOLD) + '...' : option.identification;
-            return <span>
-                <Label className='item-label'>{this.i18n(option.getLabel())}</Label>
-                {label + ' (' + date + ')'}
-            </span>;
+
+            return label + ' (' + date + ')';
         }.bind(this);
     }
 }
