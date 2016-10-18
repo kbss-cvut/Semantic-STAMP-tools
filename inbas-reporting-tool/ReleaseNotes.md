@@ -1,5 +1,9 @@
 # SISEL Release Notes
 
+### 0.7.12 - October 18, 2016
+- Fixed issue in report search - result list items did not lead to their corresponding reports.
+- Added support for full text search (Feature #156).
+
 ### 0.7.11 - October 17, 2016
 - Support for safety issues based on audit findings (Feature #182).
 - Mandatory TACR publicity (Feature #185).
