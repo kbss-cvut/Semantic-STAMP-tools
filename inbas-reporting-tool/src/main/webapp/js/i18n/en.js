@@ -311,6 +311,11 @@ module.exports = {
 
         'statistics.type.general': 'General',
         'statistics.type.eventTypes': 'Event types',
-        'statistics.type.audit': 'Audit'
+        'statistics.type.audit': 'Audit',
+
+        'search.loading': 'Searching...',
+        'search.title': 'Search results',
+        'search.headline': 'Search for {expression} found {count, plural, one {# result} other {# results}}.',
+        'search.results.match': 'Matching snippet'
     }
 };

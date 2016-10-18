@@ -69,6 +69,14 @@ class NavSearch extends React.Component {
         this.setState({fullTextDisabled: e.target.value.length === 0});
     };
 
+    _onFullTextSearch = () => {
+        var expr = this.typeahead.getEntryText();
+        Routing.transitionTo(Routes.searchResults, {
+            query: "?expression=" + encodeURIComponent(expr)
+        });
+        this.typeahead.setEntryText('');
+    };
+
     render() {
         var classes = {
                 input: 'navbar-search-input',
@@ -89,7 +97,7 @@ class NavSearch extends React.Component {
             </div>
             <div className='col-xs-1 navbar-search'>
                 <Button bsSize='small' title={this.i18n('main.search.fulltext-tooltip')}
-                        disabled={this.state.fullTextDisabled}>
+                        onClick={this._onFullTextSearch} disabled={this.state.fullTextDisabled}>
                     <Glyphicon glyph='search'/>
                 </Button>
             </div>

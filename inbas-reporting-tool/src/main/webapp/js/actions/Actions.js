@@ -21,7 +21,9 @@ var Actions = Reflux.createActions([
 
     'publishMessage',
 
-    'addSafetyIssueBase'
+    'addSafetyIssueBase',
+
+    'fullTextSearch'
 ]);
 
 module.exports = Actions;

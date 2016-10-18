@@ -47,6 +47,7 @@ var ReportsController = require('./components/report/ReportsController');
 var StatisticsController = require('./components/statistics/Statistics').default;
 var ReportDetailController = require('./components/report/ReportController');
 var RoutingRules = require('./utils/RoutingRules');
+var SearchResultController = require('./components/search/SearchResultController').default;
 
 function onRouteEnter() {
     RoutingRules.execute(this.path);
@@ -66,6 +67,7 @@ var App = React.createClass({
                     <Route path={Routes.statistics.path} onEnter={onRouteEnter} component={StatisticsController}/>
                     <Route path={Routes.createReport.path} onEnter={onRouteEnter} component={ReportDetailController}/>
                     <Route path={Routes.editReport.path} onEnter={onRouteEnter} component={ReportDetailController}/>
+                    <Route path={Routes.searchResults.path} onEnter={onRouteEnter} component={SearchResultController}/>
                 </Route>
             </Router>
         </IntlProvider>;

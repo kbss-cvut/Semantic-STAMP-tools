@@ -312,6 +312,11 @@ module.exports = {
 
         'statistics.type.general': 'Obecné',
         'statistics.type.eventTypes': 'Typy událostí',
-        'statistics.type.audit': 'Audity'
+        'statistics.type.audit': 'Audity',
+
+        'search.loading': 'Probíhá hledání...',
+        'search.title': 'Výsledky hledání',
+        'search.headline': 'Nalezeno {count, plural, one {# výskyt} few {# výskyty} other {# výskytů}} výrazu {expression}.',
+        'search.results.match': 'Výsledek hledání'
     }
 };
