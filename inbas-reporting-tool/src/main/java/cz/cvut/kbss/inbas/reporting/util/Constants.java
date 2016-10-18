@@ -94,7 +94,7 @@ public final class Constants {
     public static final String STATISTICS_QUERY_FILE = "query/statistics.sparql";
 
     /**
-     * File with the full text search query.
+     * File with the full text fullTextSearch query.
      */
     public static final String FULL_TEXT_SEARCH_QUERY_FILE = "query/fullTextSearch.sparql";
 

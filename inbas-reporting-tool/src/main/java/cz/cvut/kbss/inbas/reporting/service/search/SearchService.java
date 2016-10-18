@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-public class FullTextSearchService {
+public class SearchService {
 
     private static final String EXPRESSION_PLACEHOLDER = "?expression";
 
@@ -40,7 +40,7 @@ public class FullTextSearchService {
      * @param expression The expression to search for
      * @return Search results in JSON-LD
      */
-    public RawJson search(String expression) {
+    public RawJson fullTextSearch(String expression) {
         Objects.requireNonNull(expression);
         String query = getQuery(expression);
         try {

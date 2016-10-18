@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
 import cz.cvut.kbss.inbas.reporting.service.repository.GenericEntityService;
+import cz.cvut.kbss.inbas.reporting.service.search.SearchService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -103,5 +104,10 @@ public class MockServiceConfig {
     @Bean
     public GenericEntityService genericEntityService() {
         return mock(GenericEntityService.class);
+    }
+
+    @Bean
+    public SearchService searchService() {
+        return mock(SearchService.class);
     }
 }

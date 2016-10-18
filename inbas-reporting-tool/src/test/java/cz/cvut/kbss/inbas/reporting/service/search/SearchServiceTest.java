@@ -26,7 +26,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @ContextConfiguration(initializers = PropertyMockingApplicationContextInitializer.class)
-public class FullTextSearchServiceTest extends BaseServiceTestRunner {
+public class SearchServiceTest extends BaseServiceTestRunner {
 
     private static final String DATA = "[{\"a\": 1}, {\"a\": 2}]";
     private static final String URL = "http://localhost/openrdf-sesame";
@@ -43,7 +43,7 @@ public class FullTextSearchServiceTest extends BaseServiceTestRunner {
     private MockRestServiceServer mockServer;
 
     @Autowired
-    private FullTextSearchService searchService;
+    private SearchService searchService;
 
     @Before
     public void setUp() {
@@ -54,10 +54,10 @@ public class FullTextSearchServiceTest extends BaseServiceTestRunner {
 
     @Test
     public void searchReturnsResultsOfRemoteSearch() throws Exception {
-        final String expr = "search expression";
+        final String expr = "fullTextSearch expression";
         mockServer.expect(requestTo(expectedUrl(expr))).andExpect(method(HttpMethod.GET))
                   .andRespond(withSuccess(DATA, MediaType.APPLICATION_JSON));
-        final RawJson result = searchService.search(expr);
+        final RawJson result = searchService.fullTextSearch(expr);
         assertEquals(DATA, result.getValue());
     }
 
