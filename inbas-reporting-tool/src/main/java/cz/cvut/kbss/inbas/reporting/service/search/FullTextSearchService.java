@@ -1,6 +1,7 @@
-package cz.cvut.kbss.inbas.reporting.service;
+package cz.cvut.kbss.inbas.reporting.service.search;
 
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
+import cz.cvut.kbss.inbas.reporting.service.ConfigReader;
 import cz.cvut.kbss.inbas.reporting.service.data.DataLoader;
 import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
@@ -18,7 +19,9 @@ import java.util.Map;
 import java.util.Objects;
 
 @Service
-public class StatisticsService {
+public class FullTextSearchService {
+
+    private static final String EXPRESSION_PLACEHOLDER = "?expression";
 
     @Autowired
     @Qualifier("remoteDataLoader")
@@ -31,19 +34,31 @@ public class StatisticsService {
     @Autowired
     private ConfigReader configReader;
 
-    public RawJson getStatistics() {
-        final String repositoryUrl = configReader.getConfig(ConfigParam.REPOSITORY_URL);
-        assert !Objects.equals(repositoryUrl, "");
-        String query = localLoader.loadData(Constants.STATISTICS_QUERY_FILE, Collections.emptyMap());
+    /**
+     * Runs a full-text search for the specified expression.
+     *
+     * @param expression The expression to search for
+     * @return Search results in JSON-LD
+     */
+    public RawJson search(String expression) {
+        Objects.requireNonNull(expression);
+        String query = getQuery(expression);
         try {
             query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
-            final Map<String, String> params = new HashMap<>();
+            final Map<String, String> params = new HashMap<>(4);
             params.put(Constants.QUERY_QUERY_PARAM, query);
             params.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+            final String repositoryUrl = configReader.getConfig(ConfigParam.REPOSITORY_URL);
+            assert !"".equals(repositoryUrl);
             final String data = remoteLoader.loadData(repositoryUrl, params);
             return new RawJson(data);
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unable to find encoding " + Constants.UTF_8_ENCODING, e);
         }
+    }
+
+    private String getQuery(String searchExpression) {
+        final String query = localLoader.loadData(Constants.FULL_TEXT_SEARCH_QUERY_FILE, Collections.emptyMap());
+        return query.replace(EXPRESSION_PLACEHOLDER, "\"" + searchExpression + "\"");
     }
 }
