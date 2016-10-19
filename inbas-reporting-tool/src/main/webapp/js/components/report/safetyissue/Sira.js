@@ -20,7 +20,7 @@ class Sira extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            options: Utils.neighbourSort(JsonLdUtils.processSelectOptions(OptionsStore.getOptions('sira')))
+            options: JsonLdUtils.processSelectOptions(Utils.neighbourSort(OptionsStore.getOptions('sira')))
         }
     }
 
