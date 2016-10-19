@@ -139,6 +139,13 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
+    public void findByOccurrenceReturnsNullForUnknownOccurrence() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        occurrence.setUri(Generator.generateUri());
+        assertNull(occurrenceReportDao.findByOccurrence(occurrence));
+    }
+
+    @Test
     public void persistPersistsReportWithCorrectiveMeasureRequestsWithResponsibleAgentsAndRelatedOccurrence() {
         final OccurrenceReport report = prepareReportWithMeasureRequests();
         occurrenceReportDao.persist(report);
