@@ -104,7 +104,7 @@ describe('FactorRenderer', function () {
             if (edges[i].linkType !== Vocabulary.HAS_PART) {
                 continue;
             }
-            expect(GanttController.addFactor).toHaveBeenCalledWith(jasmine.any(Object), edges[i].from);
+            expect(GanttController.addFactor).toHaveBeenCalledWith(jasmine.any(Object), edges[i].from.referenceId);
         }
     }
 
@@ -124,8 +124,8 @@ describe('FactorRenderer', function () {
                 continue;
             }
             var added = GanttController.addLink.calls.argsFor(counter++)[0];
-            expect(added.source).toEqual(edges[i].from);
-            expect(added.target).toEqual(edges[i].to);
+            expect(added.source).toEqual(edges[i].from.referenceId);
+            expect(added.target).toEqual(edges[i].to.referenceId);
         }
     }
 

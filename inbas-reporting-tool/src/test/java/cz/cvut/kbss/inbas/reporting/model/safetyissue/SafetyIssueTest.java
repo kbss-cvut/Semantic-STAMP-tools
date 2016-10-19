@@ -1,10 +1,12 @@
 package cz.cvut.kbss.inbas.reporting.model.safetyissue;
 
+import cz.cvut.kbss.inbas.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.model.Event;
-import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -52,15 +54,25 @@ public class SafetyIssueTest {
     }
 
     @Test
-    public void copyOfReusesReportsTheIssueIsBasedOn() {
+    public void copyOfReusesOccurrencesTheIssueIsBasedOn() {
         final SafetyIssue original = SafetyIssueReportGenerator.generateSafetyIssue();
-        final Set<OccurrenceReport> reports = new HashSet<>();
+        final Set<Occurrence> occurrences = new HashSet<>();
         for (int i = 0; i < Generator.randomInt(2, 5); i++) {
-            reports.add(OccurrenceReportGenerator.generateOccurrenceReport(true));
+            occurrences.add(OccurrenceReportGenerator.generateOccurrenceReport(true).getOccurrence());
         }
-        original.setBasedOn(reports);
+        original.setBasedOnOccurrences(occurrences);
 
         final SafetyIssue copy = SafetyIssue.copyOf(original);
-        assertEquals(original.getBasedOn(), copy.getBasedOn());
+        assertEquals(original.getBasedOnOccurrences(), copy.getBasedOnOccurrences());
+    }
+
+    @Test
+    public void copyOfReusesAuditFindingsTheIssueIsBasedOn() {
+        final SafetyIssue original = SafetyIssueReportGenerator.generateSafetyIssue();
+        final Set<AuditFinding> findings = AuditReportGenerator.generateFindings();
+        original.setBasedOnFindings(findings);
+
+        final SafetyIssue copy = SafetyIssue.copyOf(original);
+        assertEquals(original.getBasedOnFindings(), copy.getBasedOnFindings());
     }
 }

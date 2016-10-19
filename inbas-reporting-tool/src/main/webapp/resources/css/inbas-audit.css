@@ -55,8 +55,7 @@ body {
 }
 
 .actions {
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    padding: 0.1em 0.5em !important;
 }
 
 .large-modal {
@@ -212,24 +211,33 @@ td.actions button {
     vertical-align: middle;
 }
 
+.main-dashboard {
+    min-height: 10em;
+}
+
+.dashboard-welcome {
+    border-bottom: 1px solid #eeeeee;
+    margin: 10px 0;
+}
+
 .dashboard-sector {
     text-align: center;
     vertical-align: middle;
-    padding: 3em 0.5em;
+    padding: 1em 0.5em;
 }
 
 .dashboard-sector-search {
     text-align: center;
     vertical-align: top;
-    margin-top: -2.8em;
+    margin-top: -0.9em;
     padding-left: 0.5em;
     padding-right: 0.5em;
 }
 
 .dashboard-tile {
-    min-height: 7em;
+    min-height: 5em;
     width: 100%;
-    max-width: 15em;
+    max-width: 12em;
     padding: 10px 16px;
     font-size: 18px;
     line-height: 1.3;
@@ -244,11 +252,12 @@ td.actions button {
 
 .dashboard-report-search-results {
     text-align: left;
-    width: 350px;
+    width: 450px;
     margin-left: auto;
     margin-right: auto;
     left: 0;
     right: 0;
+    overflow: hidden;
 }
 
 .factors-gantt {
@@ -394,7 +403,7 @@ ul.event-type {
 
 .event-type-label {
     display: inline-block;
-    margin-top: 0.8em;
+    margin-top: 30px;
 }
 
 .notice-small {
@@ -452,10 +461,6 @@ button.reset-filters {
     vertical-align: bottom;
 }
 
-.external-link-factor-detail {
-    margin-top: 7px;
-}
-
 .external-link-gantt {
     content: url('../images/icons/external.png');
     width: 16px;
@@ -481,13 +486,15 @@ button.reset-filters {
 .dropzone {
     border-radius: 6px;
     color: #fff;
-    background-color: #337ab7;
+    background-color: #003c68;
     border: 2px dashed #adadad;
-    min-height: 7.5em;
+    min-height: 5em;
     width: 100%;
-    max-width: 20em;
+    max-width: 12em;
     padding: 10px 16px;
+    font-size: 18px;
     line-height: 1.3;
+    white-space: normal;
     cursor: pointer;
     display: inline-block;
 }
@@ -495,7 +502,7 @@ button.reset-filters {
 .dropzone-active {
     border-radius: 6px;
     color: #fff;
-    background-color: #337ab7;
+    background-color: #001f35;
     border: 2px solid #adadad;
     min-height: 7.5em;
     width: 100%;
@@ -509,10 +516,6 @@ button.reset-filters {
 .dropzone .message {
     margin: 2em 0 1.3em 0;
     vertical-align: bottom;
-}
-
-.import-error {
-    margin: 15px 15px -35px 15px;
 }
 
 .paging-item-count-info {
@@ -534,15 +537,44 @@ button.reset-filters {
     background-color: rgba(217, 83, 79, 0.3) !important;
 }
 
-.statistics-frame {
-    width: 100%;
-    min-height: 800px;
-    border: none;
+@media screen and (max-height: 900px) {
+    .dashboard-statistics-frame {
+        width: 100%;
+        border: none;
+        min-height: 520px;
+        overflow: auto;
+    }
+
+    .statistics-frame {
+        width: 100%;
+        min-height: 600px;
+        border: none;
+    }
+}
+
+@media screen and (min-height: 900px) {
+    .dashboard-statistics-frame {
+        width: 100%;
+        border: none;
+        min-height: 720px;
+        overflow: auto;
+    }
+
+    .statistics-frame {
+        width: 100%;
+        min-height: 800px;
+        border: none;
+    }
 }
 
 .buttons-right {
     margin-top: 1em;
     margin-bottom: 0.5em;
+}
+
+.issue-selector {
+    margin-top: 0.5em;
+    text-align: left;
 }
 
 .add-icon-glyph {
@@ -583,9 +615,102 @@ button.reset-filters {
 
 .navbrand-text::before {
     display: inline-block;
-    content: url('../images/sisel_text.png');
+    content: url('../images/sisel-logo.png');
     font-size: 0;
     line-height: 0;
     height: 46px;
     width: 105px;
+}
+
+.tacr-logo {
+    display: inline-block;
+    content: url('../images/logo_TACR_zakl.png');
+    font-size: 0;
+    line-height: 0;
+    margin: 3px 5px 0 0;
+    height: 42px;
+    width: 42px;
+}
+
+.type-filters-label {
+    float: left;
+    position: relative;
+    padding-left: 15px;
+    min-height: 1px;
+}
+
+.type-filters-label label {
+    margin-top: 0.6em;
+    margin-bottom: 0.8em;
+}
+
+.type-filters {
+    padding-bottom: 1em;
+}
+
+.type-filters button {
+    min-width: 80px;
+}
+
+.inline-input {
+    margin-left: 0.5em;
+}
+
+.statistics-switchers {
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.statistics-switchers button {
+    min-width: 100px;
+    margin: 0 0.8em;
+}
+
+@media (min-width: 768px) {
+    .navbar-search-input {
+        width: 350px;
+        margin: 0 auto;
+    }
+
+    .navbar-search-results {
+        text-align: left;
+        width: 550px;
+        margin-left: auto;
+        margin-right: auto;
+        left: -100px;
+        right: 0;
+        overflow: hidden;
+        border: 1px solid #003c68;
+    }
+
+    .navbar-search-results > .item {
+        color: #003c68;
+    }
+
+    span.item-label {
+        margin-bottom: 2px;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .navbar-search {
+        padding: 5px 5px 5px 0;
+        margin-bottom: -15px;
+    }
+}
+
+.navbar-search-panel {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 0 10px 0 5px;
+    min-height: 41px;
+    background-color: #f5f5f5;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.issue-base-more-info:first-child {
+    padding-right: 0.5em;
 }

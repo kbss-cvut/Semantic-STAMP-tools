@@ -72,14 +72,14 @@ module.exports = {
         'main.reports-nav': 'Hlášení',
         'main.statistics-nav': 'Statistiky',
         'main.logout': 'Odhlásit se',
+        'main.search-placeholder': 'Hledat',
+        'main.search.fulltext': 'Hledat všude',
+        'main.search.fulltext-tooltip': 'Hledat daný výraz ve všech hlášeních',
+        'main.tacr-notice': 'Projekt byl podpořen Technologickou agenturou České republiky.',
 
         'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',
-        'dashboard.create-tile': 'Vytvořit hlášení',
-        'dashboard.search-tile': 'Hledat hlášení',
-        'dashboard.search-placeholder': 'Název hlášení',
-        'dashboard.view-all-tile': 'Prohlížet všechna hlášení',
         'dashboard.create-new-occurrence-report-tile': 'Nové hlášení o události',
-        'dashboard.create-new-safety-issue-tile': 'Nový bezpečnostní problém',
+        'dashboard.create-new-safety-issue-tile': 'Nová safety issue',
         'dashboard.create-new-audit-report-tile': 'Nová zpráva o auditu',
         'dashboard.create-import-tile': 'Importovat hlášení',
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
@@ -89,7 +89,7 @@ module.exports = {
 
         'dashboard.unprocessed': 'Máte {count} nezpracovaných hlášení.',
 
-        'dropzone.title': 'Přetáhněte soubor sem nebo klikněte pro výběr souboru k nahrání.',
+        'dropzone.title': 'Přetáhněte sem soubor nebo klikněte pro výběr souboru k nahrání.',
         'dropzone-tooltip': 'Klikněte zde pro výber souboru k nahrání',
 
         'reports.no-reports': 'Nenalezena žádná hlášení. Nové hlášení můžete vytvořit ',
@@ -109,7 +109,7 @@ module.exports = {
         'reports.filter.label': 'Zobrazit',
         'reports.filter.type.tooltip': 'Vyberte typ hlášení, která chcete zobrazit',
         'reports.filter.type.all': 'Všechna',
-        'reports.filter.type.preliminary': 'Předběžná',
+        'reports.filter.type.label': 'Filtr typu hlášení:',
         'reports.filter.no-matching-found': 'Žádná hlášení neodpovídají zvoleným parametrům.',
         'reports.filter.reset': 'Zrušit filtry',
         'reports.paging.item-count': 'Zobrazuji {showing} z {total} položek.',
@@ -134,6 +134,8 @@ module.exports = {
         'safety-issue.activate-tooltip': 'Nastavit tuto safety issue jako aktivní',
         'safety-issue.deactivate': 'Deaktivovat',
         'safety-issue.deactivate-tooltip': 'Nastavit tuto safety issue jako neaktivní',
+        'safety-issue.base.remove-tooltip': 'Odebrat toto hlášení z podkladů této safety issue',
+        'safety-issue.base.no-bases': 'Tato safety issue není založena na základě žádných existujících hlášení.',
 
         'audit.name-tooltip': 'Název auditu (např. jméno auditované organizace + datum) - pole je povinné',
         'audit.type.label': 'Druh kontroly',
@@ -306,6 +308,15 @@ module.exports = {
         'arms.barrier-effectiveness': 'Efektivita bariér',
         'arms.barrier-effectiveness.tooltip': 'Jaká byla efektivita bariér zbývajících mezi touto událostí a nejpravděpodobnějším nehodovým scénářem?',
         'arms.index': 'ARMS index',
-        'arms.index.tooltip': 'ARMS index je '
+        'arms.index.tooltip': 'ARMS index je ',
+
+        'statistics.type.general': 'Obecné',
+        'statistics.type.eventTypes': 'Typy událostí',
+        'statistics.type.audit': 'Audity',
+
+        'search.loading': 'Probíhá hledání...',
+        'search.title': 'Výsledky hledání',
+        'search.headline': 'Nalezeno {count, plural, one {# výskyt} few {# výskyty} other {# výskytů}} výrazu {expression}.',
+        'search.results.match': 'Výsledek hledání'
     }
 };

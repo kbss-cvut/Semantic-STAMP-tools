@@ -34,6 +34,9 @@ public class Organization implements HasDerivableUri, Serializable {
 
     @Override
     public void generateUri() {
+        if (uri != null) {
+            return;
+        }
         if (name == null || name.isEmpty()) {
             throw new IllegalStateException("Cannot generate URI. Missing organization name.");
         }
@@ -93,7 +96,7 @@ public class Organization implements HasDerivableUri, Serializable {
     public String toString() {
         String res = "Organization {" + name;
         if (uri != null) {
-            res += " (" + uri + ')';
+            res += " <" + uri + '>';
         }
         res += '}';
         return res;

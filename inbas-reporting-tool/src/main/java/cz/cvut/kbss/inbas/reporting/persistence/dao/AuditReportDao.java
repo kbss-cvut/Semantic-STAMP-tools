@@ -1,13 +1,16 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
+import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class AuditReportDao extends BaseReportDao<AuditReport> {
@@ -37,6 +40,30 @@ public class AuditReportDao extends BaseReportDao<AuditReport> {
                  .setParameter("documents", URI.create(Vocabulary.s_p_documents))
                  .setParameter("auditDate", URI.create(Vocabulary.s_p_has_start_time))
                  .getResultList();
+    }
+
+    /**
+     * Finds audit report, which documents an audit which contains the specified finding.
+     *
+     * @param finding Finding contained in audit
+     * @return Matching audit report or {@code null}, if there is no matching report
+     */
+    public AuditReport findByAuditFinding(AuditFinding finding) {
+        Objects.requireNonNull(finding);
+        final EntityManager em = entityManager();
+        try {
+            return em.createNativeQuery("SELECT ?x WHERE {" +
+                    "?x a ?type ;" +
+                    "?documents ?audit ." +
+                    "?audit ?hasFinding ?finding . }", type)
+                     .setParameter("type", typeUri).setParameter("documents", URI.create(Vocabulary.s_p_documents))
+                     .setParameter("hasFinding", URI.create(Vocabulary.s_p_has_part))
+                     .setParameter("finding", finding.getUri()).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
     }
 
     @Override

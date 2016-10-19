@@ -51,12 +51,18 @@ public class AuditReportGenerator {
 
     public static Set<AuditFinding> generateFindings() {
         final Set<AuditFinding> findings = new HashSet<>();
-        for (int i = 0; i < Generator.randomInt(3, 10); i++) {
-            final AuditFinding finding = new AuditFinding();
-            finding.setDescription("Random audit finding number " + i);
-            finding.getTypes().add(Generator.generateEventType().toString());
+        for (int i = 0; i < Generator.randomInt(10, 15); i++) {
+            final AuditFinding finding = generateFinding();
             findings.add(finding);
         }
         return findings;
+    }
+
+    public static AuditFinding generateFinding() {
+        final AuditFinding finding = new AuditFinding();
+        finding.setDescription("Finding" + Generator.randomInt());
+        finding.getTypes().add(Generator.generateEventType().toString());
+        finding.setLevel(Generator.randomInt(3));
+        return finding;
     }
 }

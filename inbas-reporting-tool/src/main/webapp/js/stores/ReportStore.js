@@ -126,6 +126,7 @@ var ReportStore = Reflux.createStore({
     onAddSafetyIssueBase: function (key, newBase) {
         this._pendingLoad = key;
         Ajax.get(BASE_URL_WITH_SLASH + key).end(function (data) {
+            JsonReferenceResolver.resolveReferences(data);
             this._addSafetyIssueBase(data, newBase);
         }.bind(this), function () {
             this._resetPendingLoad();
@@ -139,7 +140,7 @@ var ReportStore = Reflux.createStore({
     _addSafetyIssueBase: function (issue, newBase) {
         var report = ReportType.getReport(issue),
             result, message;
-        result = report.addBase(newBase);
+        result = report.addBase(newBase.event, newBase.report);
         message = result ? 'safetyissue.base-add-success' : 'safetyissue.base-add-duplicate';
         this._resetPendingLoad();
         this.trigger({

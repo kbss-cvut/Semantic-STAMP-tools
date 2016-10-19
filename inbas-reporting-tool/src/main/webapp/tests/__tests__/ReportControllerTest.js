@@ -51,20 +51,24 @@ describe('ReportController', function () {
                 }
             },
             render() {
-                return <ReportController ref='sut' {...this.state}/>;
+                return <ReportController ref={c => this.sut = c} {...this.state}/>;
             }
         });
         spyOn(Actions, 'loadReport');
         var params = {reportKey: 12345},
-            parent = Environment.render(<TestParent/>);
+            parent = Environment.render(<TestParent/>),
+            baseReport = Generator.generateOccurrenceReport();
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue({
             reportType: Vocabulary.SAFETY_ISSUE_REPORT,
-            basedOn: Generator.generateOccurrenceReport()
+            basedOn: {
+                report: baseReport,
+                event: baseReport.occurrence
+            }
         });
         parent.setState({
             params: {}
         });
-        var controllerState = parent.refs.sut.state;
+        var controllerState = parent.sut.state;
         expect(controllerState.report.isNew).toBeTruthy();
         expect(controllerState.report.javaClass).toEqual(Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS);
         expect(controllerState.report.safetyIssue).toBeDefined();

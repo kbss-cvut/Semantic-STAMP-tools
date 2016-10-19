@@ -1,20 +1,33 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
+import cz.cvut.kbss.inbas.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
+import cz.cvut.kbss.inbas.reporting.model.AbstractEntity;
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.SafetyIssueReportDao;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.service.SafetyIssueReportService;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -25,6 +38,12 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
 
     @Autowired
     private SafetyIssueReportDao dao;
+
+    @Autowired
+    private OccurrenceDao occurrenceDao;
+
+    @Autowired
+    private EntityManagerFactory emf;
 
     private Person author;
 
@@ -112,5 +131,87 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
         final SafetyIssueReport result = service.findRevision(report.getFileNumber(), report.getRevision());
         assertNotNull(result);
         assertEquals(report.getUri(), result.getUri());
+    }
+
+    @Test
+    public void updateRemovesBaseOccurrence() {
+        final SafetyIssueReport report = persistSafetyIssueWithBases();
+
+        final Set<Occurrence> removed = new HashSet<>();
+        final Iterator<Occurrence> it = report.getSafetyIssue().getBasedOnOccurrences().iterator();
+        while (it.hasNext()) {
+            final Occurrence o = it.next();
+            if (Generator.randomBoolean() && report.getSafetyIssue().getBasedOnOccurrences().size() > 1) {
+                it.remove();
+                removed.add(o);
+            }
+        }
+        assertFalse(removed.isEmpty());
+        service.update(report);
+
+        final SafetyIssueReport result = service.find(report.getUri());
+        assertEquals(report.getSafetyIssue().getBasedOnOccurrences().size(),
+                result.getSafetyIssue().getBasedOnOccurrences().size());
+        final Set<URI> uris = result.getSafetyIssue().getBasedOnOccurrences().stream().map(AbstractEntity::getUri)
+                                    .collect(Collectors.toSet());
+        removed.forEach(o -> {
+            assertFalse(uris.contains(o.getUri()));
+            assertNotNull(occurrenceDao.find(o.getUri()));
+        });
+    }
+
+    private SafetyIssueReport persistSafetyIssueWithBases() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
+        final Set<Occurrence> bases = new HashSet<>();
+        for (int i = 0; i < Generator.randomInt(10, 15); i++) {
+            final Occurrence base = OccurrenceReportGenerator.generateOccurrenceReport(true).getOccurrence();
+            bases.add(base);
+        }
+        occurrenceDao.persist(bases);
+        report.getSafetyIssue().setBasedOnOccurrences(bases);
+        final Set<AuditFinding> findings = AuditReportGenerator.generateFindings();
+        final EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            findings.forEach(em::persist);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        report.getSafetyIssue().setBasedOnFindings(findings);
+        service.persist(report);
+        return report;
+    }
+
+    @Test
+    public void updateRemovesBaseFindings() {
+        final SafetyIssueReport report = persistSafetyIssueWithBases();
+
+        final Set<AuditFinding> removed = new HashSet<>();
+        final Iterator<AuditFinding> it = report.getSafetyIssue().getBasedOnFindings().iterator();
+        while (it.hasNext()) {
+            final AuditFinding finding = it.next();
+            if (Generator.randomBoolean() && report.getSafetyIssue().getBasedOnFindings().size() > 1) {
+                it.remove();
+                removed.add(finding);
+            }
+        }
+        assertFalse(removed.isEmpty());
+        service.update(report);
+
+        final SafetyIssueReport result = service.find(report.getUri());
+        assertEquals(report.getSafetyIssue().getBasedOnFindings().size(),
+                result.getSafetyIssue().getBasedOnFindings().size());
+        final Set<URI> uris = result.getSafetyIssue().getBasedOnFindings().stream().map(AbstractEntity::getUri)
+                                    .collect(Collectors.toSet());
+        final EntityManager em = emf.createEntityManager();
+        try {
+            removed.forEach(o -> {
+                assertFalse(uris.contains(o.getUri()));
+                assertNotNull(em.find(AuditFinding.class, o.getUri()));
+            });
+        } finally {
+            em.close();
+        }
     }
 }

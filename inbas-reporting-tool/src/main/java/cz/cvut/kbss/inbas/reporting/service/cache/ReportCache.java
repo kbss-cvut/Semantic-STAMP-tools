@@ -8,10 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -30,6 +27,14 @@ public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
 
     private final Map<Long, ReportDto> cache = new ConcurrentHashMap<>();
 
+    private volatile boolean initialized = false;
+
+    public void initialize(Collection<ReportDto> dtos) {
+        Objects.requireNonNull(dtos);
+        dtos.forEach(dto -> cache.put(dto.getFileNumber(), dto));
+        this.initialized = true;
+    }
+
     /**
      * Puts the specified report into the cache, possibly replacing its previous version.
      *
@@ -44,6 +49,7 @@ public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
      */
     public void evict() {
         cache.clear();
+        this.initialized = false;
     }
 
     public void evict(Long fileNumber) {
@@ -75,7 +81,7 @@ public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
      *
      * @return Emptiness status
      */
-    public boolean isEmpty() {
-        return cache.isEmpty();
+    public boolean isInitialized() {
+        return initialized;
     }
 }

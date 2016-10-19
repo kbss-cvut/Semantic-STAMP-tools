@@ -1,13 +1,9 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
 var injectIntl = require('../utils/injectIntl');
 
-var Input = require('./Input');
+var Input = require('./Input').default;
 var I18nMixin = require('../i18n/I18nMixin');
 
 var Select = React.createClass({
@@ -37,8 +33,8 @@ var Select = React.createClass({
         return options;
     },
 
-    getInputNode: function() {
-        return this.refs.select.refs.input;
+    getInputNode: function () {
+        return this.select.getInputDOMNode();
     },
 
     render: function () {
@@ -48,12 +44,11 @@ var Select = React.createClass({
                 {this.i18n('select.default')}
             </option>);
         }
-        return (
-            <Input ref='select' type='select' name={this.props.name} title={this.props.title} label={this.props.label}
-                   value={this.props.value ? this.props.value : ''} onChange={this.props.onChange}>
-                {options}
-            </Input>
-        );
+        return <Input ref={c => this.select = c} type='select' name={this.props.name} title={this.props.title}
+                      label={this.props.label}
+                      value={this.props.value ? this.props.value : ''} onChange={this.props.onChange}>
+            {options}
+        </Input>;
     }
 });
 

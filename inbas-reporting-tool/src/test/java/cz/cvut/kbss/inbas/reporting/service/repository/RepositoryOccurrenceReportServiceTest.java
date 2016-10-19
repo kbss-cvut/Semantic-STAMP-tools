@@ -233,4 +233,15 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         final OccurrenceReport result = occurrenceReportService.find(report.getUri());
         assertEquals(report.getPhase(), result.getPhase());
     }
+
+    @Test
+    public void removeRemovesReport() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportService.persist(report);
+
+        assertNotNull(occurrenceReportService.find(report.getUri()));
+        occurrenceReportService.remove(report);
+        assertNull(occurrenceReportService.find(report.getUri()));
+    }
 }

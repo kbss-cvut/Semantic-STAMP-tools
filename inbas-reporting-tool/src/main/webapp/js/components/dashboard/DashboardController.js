@@ -9,7 +9,6 @@ var Actions = require('../../actions/Actions');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var UserStore = require('../../stores/UserStore');
-var RouterStore = require('../../stores/RouterStore');
 var Dashboard = require('./Dashboard');
 var I18nMixin = require('../../i18n/I18nMixin');
 
@@ -71,14 +70,8 @@ var DashboardController = React.createClass({
             <Dashboard userFirstName={this.state.firstName}
                        showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
                        importE5Report={this.importE5Report}
-                       openReport={this.openReport} dashboard={this._resolveDashboard()}/>
+                       openReport={this.openReport}/>
         </div>;
-    },
-
-    _resolveDashboard: function () {
-        var payload = RouterStore.getTransitionPayload(Routes.dashboard.name);
-        RouterStore.setTransitionPayload(Routes.dashboard.name, null);
-        return payload ? payload.dashboard : null;
     }
 });
 

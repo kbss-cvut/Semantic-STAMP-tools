@@ -10,10 +10,12 @@ import Audit from "../../js/components/report/audit/Audit";
 describe('Audit', () => {
 
     var audit,
+        report,
         onChange;
 
     beforeEach(() => {
-        audit = ReportFactory.createAuditReport().audit;
+        report = ReportFactory.createAuditReport();
+        audit = report.audit;
         onChange = jasmine.createSpy('onChange');
         spyOn(Actions, 'loadOptions');
     });
@@ -22,7 +24,7 @@ describe('Audit', () => {
         var originalCategory = Generator.randomCategory(),
             selectedCategory = Generator.randomCategory();
         audit.types = ['http://onto.fel.cvut.cz/ontologies/ufo/Event', originalCategory];
-        var component = Environment.render(<Audit audit={audit} onChange={onChange}/>);
+        var component = Environment.render(<Audit audit={audit} report={report} onChange={onChange}/>);
         component.getWrappedComponent().state.auditType = Generator.getCategories();
         component.getWrappedComponent()._onTypeSelected(selectedCategory);
         expect(onChange).toHaveBeenCalled();
@@ -36,7 +38,7 @@ describe('Audit', () => {
 
     it('adds selected audit type when no other types where present in audit on audit type select', () => {
         var selectedCategory = Generator.randomCategory();
-        var component = Environment.render(<Audit audit={audit} onChange={onChange}/>);
+        var component = Environment.render(<Audit audit={audit} report={report} onChange={onChange}/>);
         component.getWrappedComponent().state.auditType = Generator.getCategories();
         component.getWrappedComponent()._onTypeSelected(selectedCategory);
         expect(onChange).toHaveBeenCalled();

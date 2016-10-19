@@ -97,4 +97,22 @@ public class ReportCacheTest {
         cache.onApplicationEvent(new InvalidateCacheEvent(this));
         assertTrue(cache.getAll().isEmpty());
     }
+
+    @Test
+    public void initializeSetsInitializedStatusOnCache() {
+        final List<ReportDto> lst = generateReports();
+        assertFalse(cache.isInitialized());
+        cache.initialize(lst);
+        assertTrue(cache.isInitialized());
+        assertEquals(lst, cache.getAll());
+    }
+
+    @Test
+    public void evictingCacheMakesItUninitialized() {
+        final List<ReportDto> lst = generateReports();
+        cache.initialize(lst);
+        assertTrue(cache.isInitialized());
+        cache.evict();
+        assertFalse(cache.isInitialized());
+    }
 }

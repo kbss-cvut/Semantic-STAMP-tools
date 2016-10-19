@@ -61,6 +61,9 @@ public class AuditDao extends BaseDao<Audit> {
     @Override
     protected void update(Audit entity, EntityManager em) {
         final Audit original = em.find(Audit.class, entity.getUri());
+        if (entity.getAuditee().getUri() == null || !organizationDao.exists(entity.getAuditee().getUri(), em)) {
+            organizationDao.persist(entity.getAuditee(), em);
+        }
         final Map<URI, MeasureCounter> measureMap = mapCorrectiveMeasures(original);
         final OrphanRemover remover = new OrphanRemover(em);
         remover.removeOrphans(original.getFindings(), entity.getFindings());

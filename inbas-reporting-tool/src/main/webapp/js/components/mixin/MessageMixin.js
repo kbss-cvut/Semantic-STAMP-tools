@@ -15,6 +15,7 @@ var MessageMixin = {
 
     dismissMessage: function () {
         this.setState({message: null});
+        this.messageTimeout = null;
     },
 
     showInfoMessage: function (text) {
@@ -29,6 +30,7 @@ var MessageMixin = {
                 text: text
             }
         });
+        this.messageTimeout = setTimeout(() => this.dismissMessage(), this.dismissInterval);
     },
 
     showSuccessMessage: function (text) {
@@ -47,14 +49,17 @@ var MessageMixin = {
     },
 
     renderMessage: function () {
-        return this.state.message ? (
-            <div className='form-group'>
-                <Alert bsStyle={this.state.message.type} onDismiss={this.dismissMessage}
-                       dismissAfter={this.dismissInterval}>
-                    <p>{this.state.message.text}</p>
-                </Alert>
-            </div>
-        ) : null;
+        return this.state.message ? <div className='form-group'>
+            <Alert bsStyle={this.state.message.type} onDismiss={this.dismissMessage}>
+                <p>{this.state.message.text}</p>
+            </Alert>
+        </div> : null;
+    },
+
+    cleanupMessages: function () {
+        if (this.messageTimeout) {
+            clearTimeout(this.messageTimeout);
+        }
     }
 };
 

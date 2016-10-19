@@ -72,8 +72,8 @@ class FindingFactors extends React.Component {
             </div>
             <div className='row'>
                 <div className='col-xs-4'>
-                    <Typeahead ref={(c) => this.typeahead = c} className='form-group form-group-sm'
-                               formInputOption='id' placeholder={this.i18n('audit.finding.factors.placeholder')}
+                    <Typeahead ref={(c) => this.typeahead = c} size='small' formInputOption='id'
+                               placeholder={this.i18n('audit.finding.factors.placeholder')}
                                onOptionSelected={this._onFactorTypeSelected}
                                filterOption='name' value={null} displayOption='name' options={this.state.eventType}
                                customListComponent={TypeaheadResultList}/>

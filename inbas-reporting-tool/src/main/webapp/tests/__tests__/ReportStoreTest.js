@@ -118,7 +118,8 @@ describe('Report store', function () {
     });
 
     it('loads safety issue and adds base to it when addSafetyIssueBase is triggered', () => {
-        var base = Generator.generateOccurrenceReport(),
+        var baseReport = Generator.generateOccurrenceReport(),
+            base = baseReport.occurrence,
             issue = Generator.generateSafetyIssueReport();
         spyOn(ReportStore, 'trigger').and.callThrough();
         reqMock.end.and.callFake(function (handler) {
@@ -126,11 +127,11 @@ describe('Report store', function () {
                 body: issue
             });
         });
-        ReportStore.onAddSafetyIssueBase(issue.key, base);
+        ReportStore.onAddSafetyIssueBase(issue.key, {event: base, report: baseReport});
         expect(reqMock.end).toHaveBeenCalled();
         expect(issue.safetyIssue.basedOn).toBeDefined();
         expect(issue.safetyIssue.basedOn[0].uri).toEqual(base.uri);
-        expect(issue.safetyIssue.basedOn[0].key).toEqual(base.key);
+        expect(issue.safetyIssue.basedOn[0].reportKey).toEqual(baseReport.key);
         expect(ReportStore.trigger).toHaveBeenCalled();
     });
 

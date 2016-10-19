@@ -15,7 +15,7 @@ var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').d
 var Factors = require('../../factor/Factors');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var injectIntl = require('../../../utils/injectIntl');
-var Input = require('../../Input');
+var Input = require('../../Input').default;
 var MessageMixin = require('../../mixin/MessageMixin');
 var MessageStore = require('../../../stores/MessageStore');
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
@@ -40,6 +40,10 @@ var SafetyIssueReport = React.createClass({
             isWizardOpen: false,
             wizardProperties: null
         };
+    },
+
+    componentWillUnmount: function() {
+        this.cleanupMessages();
     },
 
     onMessage: function (msg) {
@@ -69,6 +73,14 @@ var SafetyIssueReport = React.createClass({
     _onSafetyIssueStatusChange: function () {
         var issue = assign({}, this.props.report.safetyIssue);
         issue.state = this._isIssueActive() ? Constants.SAFETY_ISSUE_STATE.CLOSED : Constants.SAFETY_ISSUE_STATE.OPEN;
+        this.onChanges({safetyIssue: issue});
+    },
+
+    _onBaseRemove: function (base) {
+        var issue = assign({}, this.props.report.safetyIssue),
+            basedOn = issue.basedOn.slice();
+        basedOn.splice(basedOn.indexOf(base), 1);
+        issue.basedOn = basedOn;
         this.onChanges({safetyIssue: issue});
     },
 
@@ -121,7 +133,7 @@ var SafetyIssueReport = React.createClass({
                     </div>
 
                     <div className='form-group'>
-                        <BasedOn report={report}/>
+                        <BasedOn report={report} onRemove={this._onBaseRemove}/>
                     </div>
 
                     <div className='form-group'>

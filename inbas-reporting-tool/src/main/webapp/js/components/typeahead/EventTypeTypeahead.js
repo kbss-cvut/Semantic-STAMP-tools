@@ -41,20 +41,13 @@ var EventTypeTypeahead = React.createClass({
     },
 
     render: function () {
-        var classes = {
-            input: 'form-control'
-        };
-        var label = this.props.label ? (<label className='control-label'>{this.props.label}</label>) : null,
-            value = this.props.value ? this.props.value : null,
+        var value = this.props.value ? this.props.value : null,
             placeholder = this.props.placeholder ? this.props.placeholder : this.i18n('eventtype.title');
-        return (
-            <div>
-                {label}
-                <Typeahead ref='eventTypeSelect' className='form-group form-group-sm' name='eventType'
-                           formInputOption='id' placeholder={placeholder} onOptionSelected={this.props.onSelect}
-                           filterOption='name' value={value} displayOption='name' options={this.state.options}
-                           customClasses={classes} customListComponent={TypeaheadResultList}/>
-            </div>);
+
+        return <Typeahead ref='eventTypeSelect' label={this.props.label} name='eventType' size='small'
+                          formInputOption='id' placeholder={placeholder} onOptionSelected={this.props.onSelect}
+                          filterOption='name' value={value} displayOption='name' options={this.state.options}
+                          customListComponent={TypeaheadResultList}/>;
     }
 });
 

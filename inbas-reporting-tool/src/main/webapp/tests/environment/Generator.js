@@ -136,7 +136,7 @@ export default class Generator {
                 childCount = Generator.getRandomPositiveInt(1, nodes.length - index);
                 var parent = parents[j];
                 for (var i = index; i < index + childCount; i++) {
-                    links.push({from: parent.referenceId, to: nodes[i].referenceId, linkType: Vocabulary.HAS_PART});
+                    links.push({from: parent, to: nodes[i], linkType: Vocabulary.HAS_PART});
                     newParents.push(nodes[i]);
                 }
                 index += childCount;
@@ -157,8 +157,8 @@ export default class Generator {
             var fromInd = Generator.getRandomInt(nodes.length),
                 toInd = Generator.getRandomInt(nodes.length);
             lnk = {
-                from: nodes[fromInd].referenceId,
-                to: nodes[toInd].referenceId,
+                from: nodes[fromInd],
+                to: nodes[toInd],
                 linkType: Generator._getRandomFactorType()
             };
             links.push(lnk);
@@ -175,10 +175,13 @@ export default class Generator {
      */
     static generateOccurrenceReport() {
         return {
+            uri: Generator.getRandomUri(),
             key: Generator.getRandomInt().toString(),
             revision: 1,
             javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS,
+            severityAssessment: 'http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100',
             occurrence: {
+                uri: Generator.getRandomUri(),
                 key: Generator.getRandomInt().toString(),
                 javaClass: Constants.OCCURRENCE_JAVA_CLASS,
                 name: 'TestOccurrence',
@@ -291,5 +294,34 @@ export default class Generator {
             });
         }
         return measures;
+    }
+
+    /**
+     * Generates audit report with audit findings.
+     */
+    static generateAuditReport() {
+        var report = {
+            key: Generator.getRandomInt().toString(),
+            revision: 1,
+            javaClass: Constants.AUDIT_REPORT_JAVA_CLASS,
+            audit: {
+                name: 'TestAudit',
+                startDate: Date.now() - 10000,
+                endDate: Date.now() - 100,
+                auditee: {
+                    uri: Generator.getRandomUri(),
+                    name: 'Random organization'
+                },
+                findings: []
+            }
+        };
+        for (var i = 0, count = Generator.getRandomPositiveInt(5, 10); i < count; i++) {
+            report.audit.findings.push({
+                uri: Generator.getRandomUri(),
+                description: 'Finding description ' + i,
+                level: i
+            });
+        }
+        return report;
     }
 }

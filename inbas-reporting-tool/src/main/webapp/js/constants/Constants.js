@@ -31,7 +31,12 @@ module.exports = {
     /**
      * URL of the remote BI solution providing statistics for the app
      */
-    STATISTICS_URL: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3ADashboard.wcdf/generatedContent',
+    STATISTICS: {
+        general: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_General.wcdf/generatedContent',
+        eventTypes: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_Event_Types.wcdf/generatedContent',
+        audit: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_Audit.wcdf/generatedContent'
+    },
+    DASHBOARD_STATISTICS_URL: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AMain_Dashboard.wcdf/generatedContent',
 
     /**
      * Sorting glyph icons
@@ -46,34 +51,13 @@ module.exports = {
 
     FILTER_DEFAULT: 'all',
 
-    DASHBOARDS: {
-        MAIN: {
-            id: 'main',
-            title: 'dashboard.welcome'
-        },
-        CREATE_REPORT: {
-            id: 'createReport',
-            title: 'dashboard.create-tile'
-        },
-        IMPORT_REPORT: {
-            id: 'importReport',
-            title: 'dashboard.create-import-tile'
-        }
-    },
-
-    /**
-     * Navigation between dashboards. Key is the current dashboard, value is the target to navigate to on goBack
-     */
-    DASHBOARD_GO_BACK: {
-        'main': 'main',
-        'createReport': 'main',
-        'importReport': 'createReport'
-    },
-
     MINUTE: 60 * 1000,   // Minute in milliseconds
 
     // Maximum number of columns supported by Bootstrap
     COLUMN_COUNT: 12,
+
+    // Default page size (used by the PagingMixin)
+    PAGE_SIZE: 20,
 
     // Maximum time difference between occurrence start and end. 24 hours in millis
     MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24,
@@ -82,6 +66,7 @@ module.exports = {
     INPUT_LENGTH_THRESHOLD: 70,
 
     OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
+    OCCURRENCE_SAFETY_ISSUE_BASE_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.safetyissue.OccurrenceBase',
     EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
     OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
     OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto',
@@ -90,6 +75,7 @@ module.exports = {
     SAFETY_ISSUE_REPORT_LIST_ITEM_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.reportlist.SafetyIssueReportDto',
     AUDIT_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.model.audit.AuditReport',
     AUDIT_REPORT_LIST_ITEM_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.reportlist.AuditReportDto',
+    AUDIT_FINDING_SAFETY_ISSUE_BASE_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.safetyissue.AuditFindingBase',
 
     // Audit finding level, numbering starts at 1 and the maximum is included
     FINDING_LEVEL_MAX: 2,

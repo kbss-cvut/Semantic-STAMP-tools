@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.model.safetyissue;
 
 import cz.cvut.kbss.inbas.reporting.model.*;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.clone.EdgeCloningVisitor;
@@ -30,8 +31,11 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
             CascadeType.REMOVE})
     private Set<Event> children;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_based_on, fetch = FetchType.EAGER)
-    private Set<OccurrenceReport> basedOn;
+    @OWLObjectProperty(iri = Vocabulary.s_p_based_on_occurrence, fetch = FetchType.EAGER)
+    private Set<Occurrence> basedOnOccurrences;
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_based_on_finding, fetch = FetchType.EAGER)
+    private Set<AuditFinding> basedOnFindings;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_safety_issue_state)
     private URI state;
@@ -45,8 +49,11 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
         this();
         this.name = other.name;
         this.types.addAll(other.getTypes());
-        if (other.basedOn != null) {
-            this.basedOn = new HashSet<>(other.basedOn);
+        if (other.basedOnOccurrences != null) {
+            this.basedOnOccurrences = new HashSet<>(other.basedOnOccurrences);
+        }
+        if (other.basedOnFindings != null) {
+            this.basedOnFindings = new HashSet<>(other.basedOnFindings);
         }
         this.state = other.state;
     }
@@ -105,12 +112,36 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
         children.add(child);
     }
 
-    public Set<OccurrenceReport> getBasedOn() {
-        return basedOn;
+    public Set<Occurrence> getBasedOnOccurrences() {
+        return basedOnOccurrences;
     }
 
-    public void setBasedOn(Set<OccurrenceReport> basedOn) {
-        this.basedOn = basedOn;
+    public void setBasedOnOccurrences(Set<Occurrence> basedOnOccurrences) {
+        this.basedOnOccurrences = basedOnOccurrences;
+    }
+
+    public void addBase(Occurrence occurrence) {
+        Objects.requireNonNull(occurrence);
+        if (basedOnOccurrences == null) {
+            this.basedOnOccurrences = new HashSet<>();
+        }
+        basedOnOccurrences.add(occurrence);
+    }
+
+    public Set<AuditFinding> getBasedOnFindings() {
+        return basedOnFindings;
+    }
+
+    public void setBasedOnFindings(Set<AuditFinding> basedOnFindings) {
+        this.basedOnFindings = basedOnFindings;
+    }
+
+    public void addBase(AuditFinding finding) {
+        Objects.requireNonNull(finding);
+        if (basedOnFindings == null) {
+            this.basedOnFindings = new HashSet<>();
+        }
+        basedOnFindings.add(finding);
     }
 
     public URI getState() {

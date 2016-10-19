@@ -2,10 +2,6 @@ package cz.cvut.kbss.inbas.reporting.util;
 
 public final class Constants {
 
-    private Constants() {
-        throw new AssertionError();
-    }
-
     /**
      * Language used by the persistence unit.
      */
@@ -98,7 +94,21 @@ public final class Constants {
     public static final String STATISTICS_QUERY_FILE = "query/statistics.sparql";
 
     /**
+     * File with the full text fullTextSearch query.
+     */
+    public static final String FULL_TEXT_SEARCH_QUERY_FILE = "query/fullTextSearch.sparql";
+
+    /**
      * Name of the URL parameter specifying type of options for loading.
      */
     public static final String OPTIONS_TYPE_QUERY_PARAM = "type";
+
+    /**
+     * Name of the URL parameter specifying query sent to remote repository.
+     */
+    public static final String QUERY_QUERY_PARAM = "query";
+
+    private Constants() {
+        throw new AssertionError();
+    }
 }

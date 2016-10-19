@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.service.repository;
 
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.Organization;
+import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
@@ -10,6 +11,7 @@ import cz.cvut.kbss.inbas.reporting.service.validation.AuditReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Objects;
 
 @Service
@@ -42,7 +44,7 @@ public class RepositoryAuditReportService extends KeySupportingRepositoryService
         if (instance.getAudit().getFindings() != null) {
             instance.getAudit().getFindings().stream().filter(f -> f.getCorrectiveMeasures() != null)
                     .forEach(f -> f.getCorrectiveMeasures().forEach(m -> {
-                        m.getResponsibleOrganizations().add(auditee);
+                        m.setResponsibleOrganizations(Collections.singleton(auditee));
                     }));
         }
     }
@@ -93,5 +95,11 @@ public class RepositoryAuditReportService extends KeySupportingRepositoryService
     @Override
     public void transitionToNextPhase(AuditReport report) {
         // Do nothing, no phases for safety issue reports
+    }
+
+    @Override
+    public AuditReport findByAuditFinding(AuditFinding finding) {
+        Objects.requireNonNull(finding);
+        return reportDao.findByAuditFinding(finding);
     }
 }

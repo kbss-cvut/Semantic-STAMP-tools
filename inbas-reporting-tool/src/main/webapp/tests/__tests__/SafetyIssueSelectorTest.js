@@ -17,7 +17,8 @@ describe('Safety issue selector', () => {
     });
 
     it('uses only safety issues as options for the typeahead', () => {
-        var component = Environment.render(<SafetyIssueSelector report={report}/>).getWrappedComponent(),
+        var component = Environment.render(<SafetyIssueSelector event={report.occurrence}
+                                                                report={report}/>).getWrappedComponent(),
             reports = Generator.generateReports(),
             expectedOptions = getSafetyIssueReports(reports),
             options;

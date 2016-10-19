@@ -5,6 +5,7 @@ var assign = require('object-assign');
 var JsonLdUtils = require('jsonld-utils').default;
 var CollapsibleText = require('../components/CollapsibleText');
 var Constants = require('../constants/Constants');
+var SafetyIssueBase = require('./SafetyIssueBase').default;
 var Utils = require('../utils/Utils');
 var Vocabulary = require('../constants/Vocabulary');
 
@@ -45,18 +46,6 @@ class OccurrenceReport {
     renderMoreInfo() {
         return <CollapsibleText text={this.summary}/>;
     }
-
-    toReportListItem() {
-        var result = assign({}, this);
-        delete result.occurrence;
-        delete result.factorGraph;
-        delete result.correctiveMeasures;
-        result.identification = this.occurrence.name;
-        result.date = this.occurrence.startTime;
-        result.occurrenceCategory = this.occurrence.eventType;
-        result.javaClass = Constants.OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS;
-        return result;
-    }
 }
 
 class SafetyIssueReport {
@@ -88,40 +77,27 @@ class SafetyIssueReport {
         return <CollapsibleText text={this.summary}/>;
     }
 
-    toReportListItem() {
-        var result = assign({}, this);
-        delete result.safetyIssue;
-        delete result.factorGraph;
-        delete result.correctiveMeasures;
-        result.identification = this.safetyIssue.name;
-        result.javaClass = Constants.SAFETY_ISSUE_REPORT_LIST_ITEM_JAVA_CLASS;
-        return result;
-    }
-
     /**
      * Adds the specified report as this safety issue report's base.
-     * @param baseReport The new base
+     * @param newBase The new base
+     * @param report Report documenting the new base
      */
-    addBase(baseReport) {
+    addBase(newBase, report) {
         if (this.safetyIssue.basedOn) {
-            if (this.safetyIssue.basedOn.find((item) => item.key === baseReport.key)) {
+            if (this.safetyIssue.basedOn.find((item) => item.uri === newBase.uri)) {
                 return false;
             }
-            this.safetyIssue.basedOn.push(SafetyIssueReport._reportToListItem(baseReport));
+            this.safetyIssue.basedOn.push(SafetyIssueBase.create(newBase, report));
         } else {
-            this.safetyIssue.basedOn = [SafetyIssueReport._reportToListItem(baseReport)];
+            this.safetyIssue.basedOn = [SafetyIssueBase.create(newBase, report)];
         }
-        if (baseReport.factorGraph) {
-            this._copyFactorGraph(baseReport);
-            // Get rid of the original factor graph. We don't need it for safety issue persisting and it causes
-            // deserialization issues
-            delete baseReport.factorGraph;
+        if (report && report.factorGraph) {
+            this._copyFactorGraph(report);
+        }
+        if (newBase.factors) {
+            this._addFactorsToFactorGraph(newBase);
         }
         return true;
-    }
-
-    static _reportToListItem(baseReport) {
-        return ReportType.getReport(baseReport).toReportListItem();
     }
 
     _copyFactorGraph(source) {
@@ -130,30 +106,55 @@ class SafetyIssueReport {
                 nodes: [],
                 edges: []
             };
-            this.factorGraph.nodes.push(this.safetyIssue.referenceId);
+            this.factorGraph.nodes.push(this.safetyIssue);
         }
         var referenceMap = {};
-        referenceMap[source.factorGraph.nodes[0].referenceId] = this.safetyIssue.referenceId;
-        var node, newReferenceId;
+        referenceMap[source.factorGraph.nodes[0].referenceId] = this.safetyIssue;   //This is the occurrence
+        var node, nodeClone;
         for (var i = 1, len = source.factorGraph.nodes.length; i < len; i++) {
             node = source.factorGraph.nodes[i];
-            newReferenceId = Utils.randomInt();
-            referenceMap[node.referenceId] = newReferenceId;
-            this.factorGraph.nodes.push({
-                referenceId: newReferenceId,
+            nodeClone = {
+                referenceId: Utils.randomInt(),
                 eventType: node.eventType,
                 types: node.types,
                 index: node.index,
                 javaClass: node.javaClass
-            });
+            };
+            referenceMap[node.referenceId] = nodeClone;
+            this.factorGraph.nodes.push(nodeClone);
         }
         var edge;
         for (i = 0, len = source.factorGraph.edges.length; i < len; i++) {
             edge = source.factorGraph.edges[i];
             this.factorGraph.edges.push({
                 linkType: edge.linkType,
-                from: referenceMap[edge.from],
-                to: referenceMap[edge.to]
+                from: referenceMap[edge.from.referenceId],
+                to: referenceMap[edge.to.referenceId]
+            });
+        }
+    }
+
+    _addFactorsToFactorGraph(finding) {
+        if (!this.factorGraph) {
+            this.factorGraph = {
+                nodes: [],
+                edges: []
+            };
+            this.factorGraph.nodes.push(this.safetyIssue);
+        }
+        var node;
+        for (var i = 0, len = finding.factors.length; i < len; i++) {
+            node = {
+                eventType: finding.factors[i],
+                types: [finding.factors[i]],
+                referenceId: Utils.randomInt(),
+                javaClass: Constants.EVENT_JAVA_CLASS
+            };
+            this.factorGraph.nodes.push(node);
+            this.factorGraph.edges.push({
+                from: this.factorGraph.nodes[0],
+                to: node,
+                linkType: Vocabulary.HAS_PART
             });
         }
     }
@@ -187,15 +188,6 @@ class AuditReport {
 
     renderMoreInfo() {
         return <CollapsibleText text={this.summary}/>;
-    }
-
-    toReportListItem() {
-        var result = assign({}, this);
-        delete result.audit;
-        result.identification = this.audit.name;
-        result.date = this.audit.startDate;
-        result.javaClass = Constants.AUDIT_REPORT_LIST_ITEM_JAVA_CLASS;
-        return result;
     }
 }
 

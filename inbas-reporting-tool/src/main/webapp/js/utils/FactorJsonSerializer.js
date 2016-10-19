@@ -17,10 +17,8 @@ var FactorJsonSerializer = {
 
     getFactorGraph: function (report) {
         this._verifyGanttControllerIsSet();
-        if (report.occurrence) {
-            return OccurrenceFactorSerializer.getFactorGraph(report);
-        } else if (report.safetyIssue) {
-            return SafetyIssueFactorSerializer.getFactorGraph(report);
+        if (report.safetyIssue) {
+            return SafetyIssueFactorSerializer.getFactorGraph();
         }
         return FactorSerializer.getFactorGraph();
     },
@@ -82,8 +80,8 @@ var FactorSerializer = {
             }
             for (var i = 0, len = children.length; i < len; i++) {
                 partOfEdges.push({
-                    from: this.ganttIdsToNodes[item.id].referenceId,
-                    to: this.ganttIdsToNodes[children[i].id].referenceId,
+                    from: this.ganttIdsToNodes[item.id],
+                    to: this.ganttIdsToNodes[children[i].id],
                     linkType: Vocabulary.HAS_PART
                 });
             }
@@ -96,8 +94,8 @@ var FactorSerializer = {
             edges = [];
         for (var i = 0, len = links.length; i < len; i++) {
             edges.push({
-                from: this.ganttIdsToNodes[links[i].source].referenceId,
-                to: this.ganttIdsToNodes[links[i].target].referenceId,
+                from: this.ganttIdsToNodes[links[i].source],
+                to: this.ganttIdsToNodes[links[i].target],
                 linkType: links[i].factorType
             });
         }
@@ -105,38 +103,15 @@ var FactorSerializer = {
     }
 };
 
-/**
- * Wraps the serialization algorithm with additional behaviour.
- *
- * In this case, we are reusing the occurrence reference id, so that when the data are deserialized, there is only one
- * instance of occurrence.
- */
-var OccurrenceFactorSerializer = {
-
-    getFactorGraph: function (report) {
-        var graph = FactorSerializer.getFactorGraph();
-        for (var i = 0, len = graph.nodes.length; i < len; i++) {
-            if (report.occurrence.referenceId === graph.nodes[i].referenceId) {
-                graph.nodes[i] = report.occurrence.referenceId;
-                break;  // Occurrence is there only once
-            }
-        }
-        return graph;
-    }
-};
-
 var SafetyIssueFactorSerializer = {
 
-    getFactorGraph: function (report) {
+    getFactorGraph: function () {
         var graph = FactorSerializer.getFactorGraph(),
             node;
         for (var i = 0, len = graph.nodes.length; i < len; i++) {
             node = graph.nodes[i];
             delete node.startTime;
             delete node.endTime;
-            if (report.safetyIssue.referenceId === node.referenceId) {
-                graph.nodes[i] = report.safetyIssue.referenceId;
-            }
         }
         return graph;
     }

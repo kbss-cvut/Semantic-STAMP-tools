@@ -71,12 +71,12 @@ module.exports = {
         'main.reports-nav': 'Reports',
         'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
+        'main.search-placeholder': 'Search',
+        'main.search.fulltext': 'Full text',
+        'main.search.fulltext-tooltip': 'Search for the specified string everywhere',
+        'main.tacr-notice': 'Project was supported by the Technology Agency of the Czech Republic.',
 
         'dashboard.welcome': 'Hello {name}, Welcome to ' + Constants.APP_NAME + '.',
-        'dashboard.create-tile': 'Create Report',
-        'dashboard.search-tile': 'Search for Report',
-        'dashboard.search-placeholder': 'Report headline',
-        'dashboard.view-all-tile': 'View All Reports',
         'dashboard.create-new-occurrence-report-tile': 'Create New Occurrence Report',
         'dashboard.create-new-safety-issue-tile': 'Create New Safety Issue',
         'dashboard.create-new-audit-report-tile': 'Create New Audit Report',
@@ -108,7 +108,7 @@ module.exports = {
         'reports.filter.label': 'Filter',
         'reports.filter.type.tooltip': 'Select report type',
         'reports.filter.type.all': 'All',
-        'reports.filter.type.preliminary': 'Preliminary',
+        'reports.filter.type.label': 'Report type filters:',
         'reports.filter.no-matching-found': 'No reports match the selected filters.',
         'reports.filter.reset': 'Reset filters',
         'reports.paging.item-count': 'Showing {showing} of {total} items.',
@@ -132,6 +132,8 @@ module.exports = {
         'safety-issue.activate-tooltip': 'Make this safety issue active',
         'safety-issue.deactivate': 'Deactivate',
         'safety-issue.deactivate-tooltip': 'Deactivate this safety issue',
+        'safety-issue.base.remove-tooltip': 'Remove this report from this safety issue\'s bases',
+        'safety-issue.base.no-bases': 'This safety issue is not based on any existing reports.',
 
         'audit.name-tooltip': 'Short descriptive name of the audit (e.g. audited organization name + date of audit) - this field is required',
         'audit.type.label': 'Audit type',
@@ -305,6 +307,15 @@ module.exports = {
         'arms.barrier-effectiveness': 'Barrier effectiveness',
         'arms.barrier-effectiveness.tooltip': 'What was the effectiveness of the remaining barriers between this event and the most probable accident scenario?',
         'arms.index': 'ARMS index',
-        'arms.index.tooltip': 'ARMS index is '
+        'arms.index.tooltip': 'ARMS index is ',
+
+        'statistics.type.general': 'General',
+        'statistics.type.eventTypes': 'Event types',
+        'statistics.type.audit': 'Audit',
+
+        'search.loading': 'Searching...',
+        'search.title': 'Search results',
+        'search.headline': 'Search for {expression} found {count, plural, one {# result} other {# results}}.',
+        'search.results.match': 'Matching snippet'
     }
 };

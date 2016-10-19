@@ -2,7 +2,6 @@ package cz.cvut.kbss.inbas.reporting.service;
 
 import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
@@ -22,8 +21,6 @@ import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.SafetyIssueReportDao;
-import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
-import cz.cvut.kbss.inbas.reporting.service.cache.ReportCache;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import org.junit.Before;
@@ -41,7 +38,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 public class MainReportServiceTest extends BaseServiceTestRunner {
 
@@ -72,12 +69,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private AuditReportService auditReportService;
-
-    @Autowired
-    private ReportCache reportCache;
-
-    @Autowired
-    private ArmsService armsService;
 
     @Autowired
     private ReportImporter reportImporterMock;
@@ -111,16 +102,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     public void persistThrowsUnsupportedReportTypeForUnsupportedReportType() {
         final UnsupportedReport report = new UnsupportedReport();
         reportService.persist(report);
-    }
-
-    @Test
-    public void persistAddsReportIntoCache() {
-        assertTrue(reportCache.getAll().isEmpty());
-        final OccurrenceReport report = persistOccurrenceReport();
-
-        final List<ReportDto> res = reportCache.getAll();
-        assertEquals(1, res.size());
-        assertEquals(report.getUri(), res.get(0).getUri());
     }
 
     @Test
@@ -202,19 +183,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void updateReplacesPreviousInstanceInReportCache() {
-        final OccurrenceReport report = persistOccurrenceReport();
-        assertEquals(1, reportCache.getAll().size());
-        final String summary = "Occurrence report summary.";
-        report.setSummary(summary);
-        reportService.update(report);
-
-        final OccurrenceReportDto dto = (OccurrenceReportDto) reportCache.getAll().get(0);
-        assertEquals(report.getUri(), dto.getUri());
-        assertEquals(summary, dto.getSummary());
-    }
-
-    @Test
     public void testFindLatestRevisionForOccurrenceReportChain() {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
         final OccurrenceReport latest = chain.get(chain.size() - 1);
@@ -255,17 +223,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void removeReportChainRemovesInstanceFromReportCache() {
-        final List<OccurrenceReport> chain = persistOccurrenceReportChain();
-        reportCache.put(chain.get(chain.size() - 1).toReportDto());
-        assertEquals(1, reportCache.getAll().size());
-        final Long fileNumber = chain.get(0).getFileNumber();
-
-        reportService.removeReportChain(fileNumber);
-        assertTrue(reportCache.getAll().isEmpty());
-    }
-
-    @Test
     public void getChainRevisionsReturnsListOfRevisionInfosForChainOrderedByRevisionDescending() {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
         final Long fileNumber = chain.get(0).getFileNumber();
@@ -303,36 +260,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void createNewRevisionReplacesInstanceInReportCache() {
-        final List<OccurrenceReport> chain = persistOccurrenceReportChain();
-        // Because we are persisting the chain outside MainReportService, the cache does not know about it
-        reportCache.put(chain.get(chain.size() - 1).toReportDto());
-        assertEquals(1, reportCache.getAll().size());
-
-        final OccurrenceReport newRevision = reportService.createNewRevision(chain.get(0).getFileNumber());
-        assertEquals(1, reportCache.getAll().size());
-        final OccurrenceReportDto dto = (OccurrenceReportDto) reportCache.getAll().get(0);
-        assertEquals(newRevision.getUri(), dto.getUri());
-        assertEquals(newRevision.getRevision(), dto.getRevision());
-    }
-
-    @Test
-    public void createNewRevisionSetsArmsIndexBeforePuttingInstanceIntoCache() {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
-        report.setAccidentOutcome(OccurrenceReportGenerator.ACCIDENT_NEGLIGIBLE);
-        report.setBarrierEffectiveness(OccurrenceReportGenerator.BARRIER_LIMITED);
-        reportService.persist(report);
-        final int armsIndex = 117;
-        when(armsService.calculateArmsIndex(any(OccurrenceReport.class))).thenReturn(armsIndex);
-
-        final OccurrenceReport newRevision = reportService.createNewRevision(report.getFileNumber());
-        assertNotNull(newRevision.getArmsIndex());
-        assertEquals(armsIndex, newRevision.getArmsIndex().intValue());
-        final OccurrenceReportDto dto = (OccurrenceReportDto) reportCache.getAll().get(0);
-        assertEquals(armsIndex, dto.getArmsIndex().intValue());
-    }
-
-    @Test
     public void testFindRevisionForOccurrenceReport() {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
         final OccurrenceReport report = Environment.randomElement(chain);
@@ -354,27 +281,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
         final List<ReportDto> result = reportService.findAll();
         assertTrue(Environment.areEqual(latestRevisions, result));
-    }
-
-    @Test
-    public void findAllPutsRetrievedReportsIntoCache() {
-        // Once other report types are added, they should be added into this tests
-        initOccurrenceReportChains();
-
-        assertTrue(reportCache.getAll().isEmpty());
-        final List<ReportDto> result = reportService.findAll();
-        assertFalse(reportCache.getAll().isEmpty());
-        assertEquals(result, reportCache.getAll());
-    }
-
-    @Test
-    public void findAllRetrievesInstancesFromReportCache() {
-        initOccurrenceReportChains();
-        // First time will put the reports into cache
-        reportService.findAll();
-        reportService.findAll();
-        // Two calls to service, but only one call to the DAO
-        verify(occurrenceReportService).findAll();
     }
 
     /**
@@ -444,19 +350,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertTrue(res instanceof OccurrenceReport);
         final OccurrenceReport resultReport = reportService.findByKey(res.getKey());
         assertEquals(reports.get(0).getUri(), resultReport.getUri());
-    }
-
-    @Test
-    public void findAllAfterCacheEvictLoadsReportsFromRepository() throws Exception {
-        initOccurrenceReportChains();
-        assertTrue(reportCache.getAll().isEmpty());
-        assertFalse(reportService.findAll().isEmpty());
-        assertFalse(reportCache.getAll().isEmpty());
-        reportCache.evict();
-        assertTrue(reportCache.getAll().isEmpty());
-        assertFalse(reportService.findAll().isEmpty());
-        assertFalse(reportCache.getAll().isEmpty());
-        verify(occurrenceReportService, times(2)).findAll();
     }
 
     @Test

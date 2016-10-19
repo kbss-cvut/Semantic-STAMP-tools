@@ -4,7 +4,7 @@ var JsonLdUtils = require('jsonld-utils').default;
 var GanttController = require('./GanttController');
 var Constants = require('../../constants/Constants');
 var Vocabulary = require('../../constants/Vocabulary');
-var EventTypeFactory = require('../../model/EventTypeFactory');
+var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
 
 var FactorRenderer = {
 
@@ -110,7 +110,7 @@ var FactorRendererImpl = {
         if (edges) {
             for (var i = 0, len = edges.length; i < len; i++) {
                 if (edges[i].linkType === Vocabulary.HAS_PART) {
-                    nodesToParents[edges[i].to] = edges[i].from;
+                    nodesToParents[edges[i].to.referenceId] = edges[i].from.referenceId;
                 } else {
                     links.push(edges[i]);
                 }
@@ -130,7 +130,7 @@ var FactorRendererImpl = {
             if (typeof node.name !== 'undefined' && node.name !== null) {
                 text = node.name;
             } else if (node.eventType) {
-                var eventType = EventTypeFactory.resolveEventType(node.eventType, eventTypes);
+                var eventType = ObjectTypeResolver.resolveType(node.eventType, eventTypes);
                 text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
             }
             GanttController.addFactor({
@@ -150,8 +150,8 @@ var FactorRendererImpl = {
     _addLinks: function (links) {
         for (var i = 0, len = links.length; i < len; i++) {
             GanttController.addLink({
-                source: links[i].from,
-                target: links[i].to,
+                source: links[i].from.referenceId,
+                target: links[i].to.referenceId,
                 factorType: links[i].linkType
             });
         }

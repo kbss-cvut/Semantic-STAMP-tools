@@ -45,6 +45,10 @@ var OccurrenceReport = React.createClass({
         };
     },
 
+    componentWillUnmount: function () {
+        this.cleanupMessages();
+    },
+
     onChanges: function (changes) {
         this.props.handlers.onChange(changes);
     },
@@ -149,13 +153,11 @@ var OccurrenceReport = React.createClass({
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
         }
-        return (
-            <div>
-                <h2 className='panel-title pull-left'>{this.i18n('occurrencereport.title')}</h2>
-                {fileNo}
-                <div style={{clear: 'both'}}/>
-            </div>
-        )
+        return <div>
+            <h2 className='panel-title pull-left'>{this.i18n('occurrencereport.title')}</h2>
+            {fileNo}
+            <div style={{clear: 'both'}}/>
+        </div>;
     },
 
     renderButtons: function () {
@@ -212,7 +214,7 @@ var OccurrenceReport = React.createClass({
     _renderSafetyIssueSelector: function () {
         return this.state.showSafetyIssueSelector ?
             <div className='float-right row col-xs-3'>
-                <SafetyIssueSelector report={this.props.report}/>
+                <SafetyIssueSelector report={this.props.report} event={this.props.report.occurrence}/>
             </div> : null;
     }
 });

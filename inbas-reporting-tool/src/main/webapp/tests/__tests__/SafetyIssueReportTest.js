@@ -3,12 +3,14 @@
 describe('SafetyIssueReport', function () {
 
     var React = require('react'),
+        TestUtils = require('react-addons-test-utils'),
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
         messages = require('../../js/i18n/en').messages,
+        SafetyIssueBase = require('../../js/model/SafetyIssueBase').default,
         SafetyIssueReport = rewire('../../js/components/report/safetyissue/SafetyIssueReport'),
         handlers,
         report;
@@ -62,5 +64,34 @@ describe('SafetyIssueReport', function () {
         expect(button).toBeNull();
         button = Environment.getComponentByTagAndText(component, 'button', messages['safety-issue.activate']);
         expect(button).toBeNull();
+    });
+
+    it('removes safety issue base when row remove is clicked', () => {
+        var bases = [], base;
+        for (var i = 0, cnt = Generator.getRandomPositiveInt(5, 10); i < cnt; i++) {
+            base = Generator.generateOccurrenceReport();
+            base.uri = Generator.getRandomUri();
+            bases.push(SafetyIssueBase.create(null, base));
+        }
+        report.safetyIssue.basedOn = bases;
+        var component = Environment.render(<SafetyIssueReport report={report} handlers={handlers}/>),
+
+            basedOn = TestUtils.findRenderedComponentWithType(component, require('../../js/components/report/safetyissue/BasedOn').default),
+            buttons = TestUtils.scryRenderedDOMComponentsWithTag(basedOn, 'button');
+        expect(buttons.length).toEqual(bases.length);
+        var indexToRemove = Generator.getRandomInt(bases.length);
+        TestUtils.Simulate.click(buttons[indexToRemove]);
+        expect(handlers.onChange).toHaveBeenCalled();
+        var change = handlers.onChange.calls.argsFor(0)[0];
+        expect(change.safetyIssue.basedOn.length).toEqual(bases.length - 1);
+        expect(change.safetyIssue.basedOn.indexOf(bases[indexToRemove])).toEqual(-1);
+    });
+
+    it('shows no bases info message when safety issue has no bases', () => {
+        report.safetyIssue.basedOn = [];
+        var component = Environment.render(<SafetyIssueReport report={report} handlers={handlers}/>),
+
+            notice = Environment.getComponentByTagAndText(component, 'div', messages['safety-issue.base.no-bases']);
+        expect(notice).not.toBeNull();
     });
 });

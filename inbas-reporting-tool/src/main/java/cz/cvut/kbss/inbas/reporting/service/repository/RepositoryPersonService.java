@@ -45,7 +45,7 @@ public class RepositoryPersonService extends BaseRepositoryService<Person> imple
     public void update(Person instance) {
         final Person orig = personDao.find(instance.getUri());
         if (orig == null) {
-            throw new IllegalArgumentException("Cannot update person URI.");
+            throw new IllegalArgumentException("Cannot update person's URI. Person: " + instance);
         }
         if (!orig.getPassword().equals(instance.getPassword())) {
             instance.encodePassword(passwordEncoder);

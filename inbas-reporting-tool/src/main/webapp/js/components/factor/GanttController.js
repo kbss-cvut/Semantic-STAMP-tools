@@ -2,8 +2,9 @@
 
 var Constants = require('../../constants/Constants');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
-var EventTypeFactory = require('../../model/EventTypeFactory');
 var Factory = require('../../model/ReportFactory');
+var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
+var TypeaheadStore = require('../../stores/TypeaheadStore');
 
 var I18nStore = require('../../stores/I18nStore');
 
@@ -132,7 +133,7 @@ var GanttController = {
             if (!task.parent) {
                 return 'factor-root-event';
             }
-            eventType = EventTypeFactory.resolveEventType(task.statement.eventType);
+            eventType = ObjectTypeResolver.resolveType(task.statement.eventType, TypeaheadStore.getEventTypes());
             return eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '';
         };
         gantt.templates.tooltip_date_format = function (date) {

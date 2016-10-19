@@ -104,7 +104,9 @@ public class OccurrenceReportGenerator {
     public static Occurrence generateOccurrence() {
         final Occurrence occurrence = new Occurrence();
         occurrence.setName(UUID.randomUUID().toString());
-        occurrence.setEventType(Generator.generateEventType());
+        final URI type = Generator.generateEventType();
+        occurrence.setEventType(type);
+        occurrence.getTypes().add(type.toString());
         occurrence.setStartTime(new Date(System.currentTimeMillis() - 100000));
         occurrence.setEndTime(new Date());
         return occurrence;

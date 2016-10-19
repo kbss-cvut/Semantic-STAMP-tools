@@ -9,7 +9,7 @@ var Actions = require('../../../actions/Actions');
 var Audit = require('./Audit').default;
 var I18nMixin = require('../../../i18n/I18nMixin');
 var injectIntl = require('../../../utils/injectIntl');
-var Input = require('../../Input');
+var Input = require('../../Input').default;
 var MessageMixin = require('../../mixin/MessageMixin');
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
@@ -33,6 +33,10 @@ var AuditReport = React.createClass({
         };
     },
 
+    componentWillUnmount: function () {
+        this.cleanupMessages();
+    },
+
     onSave: function () {
         var report = this.props.report;
         this.onLoading();
@@ -53,7 +57,7 @@ var AuditReport = React.createClass({
 
         return <div><Panel header={this._renderHeader()} bsStyle='primary'>
             <form>
-                <Audit audit={report.audit} onChange={this.props.handlers.onChange}/>
+                <Audit audit={report.audit} onChange={this.props.handlers.onChange} report={report}/>
                 <div className='row'>
                     <div className='col-xs-12'>
                         <Input type='textarea' rows='8' label={this.i18n('audit.remarks')} name='summary'

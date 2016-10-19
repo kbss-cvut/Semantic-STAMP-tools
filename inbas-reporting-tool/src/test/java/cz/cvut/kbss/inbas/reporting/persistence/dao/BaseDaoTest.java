@@ -125,6 +125,19 @@ public class BaseDaoTest extends BaseDaoTestRunner {
         }
     }
 
+    @Test
+    public void persistCollectionDoesNothingWhenCollectionIsEmpty() {
+        final List<Person> persons = new ArrayList<>();
+        personDao.persist(persons);
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertFalse(em.createNativeQuery("ASK { ?x a ?person . }", Boolean.class).setParameter("person",
+                    URI.create(Vocabulary.s_c_Person)).getSingleResult());
+        } finally {
+            em.close();
+        }
+    }
+
     @Test(expected = PersistenceException.class)
     public void updateThrowsPersistenceExceptionWhenExceptionIsThrownByPersistenceProvider() {
         final Person person = Generator.getPerson();

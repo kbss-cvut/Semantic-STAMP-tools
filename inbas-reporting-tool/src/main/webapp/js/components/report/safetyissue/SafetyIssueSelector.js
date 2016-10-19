@@ -14,6 +14,7 @@ import Vocabulary from "../../../constants/Vocabulary";
 
 class SafetyIssueSelector extends React.Component {
     static propTypes = {
+        event: React.PropTypes.object.isRequired,
         report: React.PropTypes.object.isRequired
     };
 
@@ -26,7 +27,6 @@ class SafetyIssueSelector extends React.Component {
 
     /**
      * Returns only safety issue reports.
-     * @private
      */
     static _filterReports(allReports) {
         if (!allReports) {
@@ -53,9 +53,11 @@ class SafetyIssueSelector extends React.Component {
     }
 
     _onOptionSelected = (option) => {
-        var issueKey = option.key,
-            report = this.props.report;
-        Actions.addSafetyIssueBase(issueKey, report);
+        var issueKey = option.key;
+        Actions.addSafetyIssueBase(issueKey, {
+            event: this.props.event,
+            report: this.props.report
+        });
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: issueKey}
         });
@@ -67,8 +69,7 @@ class SafetyIssueSelector extends React.Component {
             return null;
         }
         var i18n = this.props.i18n;
-        return <Typeahead ref='safetyIssueTypeahead' className='form-group form-group-sm' optionsButton={true}
-                          formInputOption='id'
+        return <Typeahead ref='safetyIssueTypeahead' size='small' optionsButton={true} formInputOption='id'
                           placeholder={i18n('occurrencereport.add-as-safety-issue-base-placeholder')}
                           onOptionSelected={this._onOptionSelected} filterOption='identification'
                           displayOption='identification' options={this.state.reports}

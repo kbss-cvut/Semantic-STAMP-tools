@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react');
-var Input = require('../Input');
+var Input = require('../Input').default;
 
 var Logger = require('../../utils/Logger');
 var Utils = require('../../utils/Utils');
