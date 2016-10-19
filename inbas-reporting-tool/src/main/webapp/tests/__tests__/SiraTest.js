@@ -18,22 +18,22 @@ describe('Sira', () => {
     });
 
     it('sets select CSS class based on the selected SIRA value', () => {
-        var safetyIssue = Generator.generateSafetyIssueReport().safetyIssue,
+        var report = Generator.generateSafetyIssueReport(),
             TestParent = React.createClass({
                 getInitialState: function () {
                     return {
-                        safetyIssue: safetyIssue
+                        report: report
                     }
                 },
                 render() {
-                    return <Sira safetyIssue={this.state.safetyIssue} onChange={onChange}/>;
+                    return <Sira report={this.state.report} onChange={onChange}/>;
                 }
             });
         var component = Environment.render(<TestParent/>),
             select = TestUtils.findRenderedDOMComponentWithTag(component, 'select');
         Object.getOwnPropertyNames(Constants.SIRA_COLORS).forEach(sira => {
-            safetyIssue.sira = sira;
-            component.setState({safetyIssue: safetyIssue});
+            report.sira = sira;
+            component.setState({report: report});
             expect(select.className.indexOf(Constants.SIRA_COLORS[sira])).not.toEqual(-1);
         });
     });

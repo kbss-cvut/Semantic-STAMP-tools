@@ -317,7 +317,6 @@ public abstract class DtoMapper {
         }
         dto.setName(issue.getName());
         dto.setState(issue.getState());
-        dto.setSira(issue.getSira());
         dto.setReferenceId(random.nextInt());
         eventDtoRegistry.put(dto.getUri(), dto);
         if (issue.getBasedOnOccurrences() != null) {
@@ -357,7 +356,6 @@ public abstract class DtoMapper {
             issue.setTypes(new HashSet<>(dto.getTypes()));
         }
         issue.setState(dto.getState());
-        issue.setSira(dto.getSira());
         if (dto.getBasedOn() != null) {
             dto.getBasedOn().forEach(base -> safetyIssueDtoBaseToBase(base, issue));
         }

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('ReportsFilter', function () {
+describe('Filterable reports table', function () {
 
     var React = require('react'),
         assign = require('object-assign'),
@@ -21,6 +21,8 @@ describe('ReportsFilter', function () {
             obj.renderMoreInfo = () => '';
             obj.getLabel = () => 'Label';
             obj.getPhase = () => '';
+            obj.getStatusCssClass = () => '';
+            obj.getStatusInfo = () => '';
             return obj;
         });
         onFilterChange = jasmine.createSpy('onFilterChange');

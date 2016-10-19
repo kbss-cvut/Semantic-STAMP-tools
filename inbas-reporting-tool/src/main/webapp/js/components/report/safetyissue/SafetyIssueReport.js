@@ -129,7 +129,7 @@ var SafetyIssueReport = React.createClass({
                     </div>
 
                     <div className='form-group'>
-                        <Sira safetyIssue={report.safetyIssue} onChange={this.props.handlers.onChange}/>
+                        <Sira report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <div className='form-group'>

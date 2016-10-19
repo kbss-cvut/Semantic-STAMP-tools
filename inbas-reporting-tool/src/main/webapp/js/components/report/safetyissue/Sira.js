@@ -1,7 +1,6 @@
 'use strict';
 
 import React from "react";
-import assign from "object-assign";
 import JsonLdUtils from "jsonld-utils";
 import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
@@ -12,7 +11,7 @@ import Select from "../../Select";
 
 class Sira extends React.Component {
     static propTypes = {
-        safetyIssue: React.PropTypes.object.isRequired,
+        report: React.PropTypes.object.isRequired,
         onChange: React.PropTypes.func.isRequired
     };
 
@@ -43,21 +42,19 @@ class Sira extends React.Component {
     }
 
     _onOptionSelected = (e) => {
-        var issue = assign({}, this.props.safetyIssue);
-        issue.sira = e.target.value;
-        this.props.onChange({safetyIssue: issue});
+        this.props.onChange({sira: e.target.value});
     };
 
     render() {
-        var safetyIssue = this.props.safetyIssue,
+        var report = this.props.report,
             inputProps = {
-                className: safetyIssue.sira ? Constants.SIRA_COLORS[safetyIssue.sira] : ''
+                className: report.sira ? Constants.SIRA_COLORS[report.sira] : ''
             };
         return <div className='row'>
             <div className='col-xs-4'>
                 <Select label={this.i18n('safety-issue.sira.label')} onChange={this._onOptionSelected}
                         title={this.i18n('safety-issue.sira-tooltip')} inputProps={inputProps}
-                        options={this.state.options} addDefault={true} value={safetyIssue.sira}/>
+                        options={this.state.options} addDefault={true} value={report.sira}/>
             </div>
         </div>;
     }

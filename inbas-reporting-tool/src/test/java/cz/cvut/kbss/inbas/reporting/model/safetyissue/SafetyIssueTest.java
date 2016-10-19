@@ -24,7 +24,6 @@ public class SafetyIssueTest {
         assertEquals(original.getName(), copy.getName());
         assertEquals(original.getTypes(), copy.getTypes());
         assertEquals(original.getState(), copy.getState());
-        assertEquals(original.getSira(), copy.getSira());
     }
 
     @Test

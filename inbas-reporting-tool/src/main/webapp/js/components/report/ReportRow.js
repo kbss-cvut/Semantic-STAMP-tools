@@ -8,7 +8,6 @@ var classNames = require('classnames');
 
 var injectIntl = require('../../utils/injectIntl');
 
-var ArmsUtils = require('../../utils/ArmsUtils').default;
 var Utils = require('../../utils/Utils.js');
 var OptionsStore = require('../../stores/OptionsStore');
 var ReportType = require('../../model/ReportType');
@@ -17,7 +16,7 @@ var DeleteReportDialog = require('./DeleteReportDialog');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportRow = React.createClass({
-    mixins: [I18nMixin, Reflux.listenTo(OptionsStore, '_onPhasesLoaded')],
+    mixins: [I18nMixin, Reflux.listenTo(OptionsStore, '_onOptionsLoaded')],
 
     getInitialState: function () {
         return {
@@ -25,8 +24,8 @@ var ReportRow = React.createClass({
         };
     },
 
-    _onPhasesLoaded(type) {
-        if (type === 'reportingPhase') {
+    _onOptionsLoaded(type) {
+        if (type === 'reportingPhase' || type === 'sira') {
             this.forceUpdate();
         }
     },
@@ -56,25 +55,19 @@ var ReportRow = React.createClass({
 
     render: function () {
         var report = ReportType.getReport(this.props.report),
-            formattedDate = '',
-            stateClasses = ['report-row', 'content-center'], stateTooltip = null;
-        if (report.date) {
-            formattedDate = Utils.formatDate(new Date(report.date));
-        }
-        if (report.armsIndex) {
-            stateClasses.push(ArmsUtils.resolveArmsIndexClass(report.armsIndex));
-            stateTooltip = this.i18n('arms.index.tooltip') + report.armsIndex;
-        }
+            statusClasses = classNames(['report-row', 'content-center'], report.getStatusCssClass());
+
         return <tr onDoubleClick={this.onDoubleClick}>
             <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + report.key}
                                           title={this.i18n('reports.open-tooltip')}>{report.identification}</a>
             </td>
-            <td className='report-row content-center'>{formattedDate}</td>
+            <td className='report-row content-center'>{this._renderDate(report)}</td>
             <td className='report-row'>{report.renderMoreInfo()}</td>
-            <td className='report-row content-center'>
+            <td className={statusClasses}
+                title={report.getStatusInfo(OptionsStore.getOptions('sira'), this.props.intl)}>
                 <Label title={this.i18n(report.toString())}>{this.i18n(report.getLabel())}</Label>
             </td>
-            <td className={classNames(stateClasses)} title={stateTooltip}>
+            <td className='report-row content-center'>
                 {report.getPhase(OptionsStore.getOptions('reportingPhase'), this.props.intl)}
             </td>
             <td className='report-row actions'>
@@ -87,6 +80,10 @@ var ReportRow = React.createClass({
                                     onSubmit={this.removeReport}/>
             </td>
         </tr>;
+    },
+
+    _renderDate: function (report) {
+        return report.date ? Utils.formatDate(new Date(report.date)) : '';
     }
 });
 

@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.inbas.reporting.dto.event.SafetyIssueDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 
+import java.net.URI;
 import java.util.Set;
 
 // Safety issue must come before the factor graph
@@ -16,6 +17,8 @@ public class SafetyIssueReportDto extends AbstractReportDto {
     private FactorGraph factorGraph;
 
     private Set<CorrectiveMeasureRequestDto> correctiveMeasures;
+
+    private URI sira;
 
     public SafetyIssueDto getSafetyIssue() {
         return safetyIssue;
@@ -42,11 +45,20 @@ public class SafetyIssueReportDto extends AbstractReportDto {
         this.correctiveMeasures = correctiveMeasures;
     }
 
+    public URI getSira() {
+        return sira;
+    }
+
+    public void setSira(URI sira) {
+        this.sira = sira;
+    }
+
     @Override
     public ReportDto toReportDto() {
         final cz.cvut.kbss.inbas.reporting.dto.reportlist.SafetyIssueReportDto dto = new cz.cvut.kbss.inbas.reporting.dto.reportlist.SafetyIssueReportDto();
         copyAttributes(dto);
         dto.setSummary(getSummary());
+        dto.setSira(sira);
         dto.setIdentification(safetyIssue.getName());
         return dto;
     }

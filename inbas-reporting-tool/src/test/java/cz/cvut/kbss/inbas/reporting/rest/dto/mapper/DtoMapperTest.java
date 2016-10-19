@@ -376,6 +376,7 @@ public class DtoMapperTest {
         final SafetyIssueReportDto result = (SafetyIssueReportDto) dto;
         verifyBasicReportAttributes(report, result);
         assertNotNull(result.getSafetyIssue());
+        assertEquals(report.getSira(), result.getSira());
         assertEquals(report.getCorrectiveMeasures().size(), result.getCorrectiveMeasures().size());
     }
 
