@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Utility functions tests', function () {
+describe('Utility functions -', function () {
 
     var Utils = require('../../js/utils/Utils'),
         Constants = require('../../js/constants/Constants'),
@@ -197,5 +197,52 @@ describe('Utility functions tests', function () {
                 types = [Generator.getRandomUri()];
             expect(Utils.resolveType(types, options)).toBeNull();
         })
+    });
+
+    describe('neighbourSort', () => {
+
+        var data = [{
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept"
+        }, {
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor",
+            "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": {
+                "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept"
+            }
+        }, {
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure",
+            "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": {
+                "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor"
+            }
+        }, {
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve",
+            "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": {
+                "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure"
+            }
+        }, {
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/stop",
+            "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": {
+                "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve"
+            }
+        }];
+
+        it('sorts JSON-LD data based on the is_higher_than property', () => {
+            var options = Generator.shuffleArray(data.slice());
+            Utils.neighbourSort(options);
+            for (var i = 0, len = data.length; i < len; i++) {
+                expect(options[i]['@id']).toEqual(data[i]['@id']);
+            }
+        });
+
+        it('JSON-LD array without order specification is left as is', () => {
+            var original = Generator.shuffleArray(data.slice()),
+                options = original.slice();
+            for (var i = 0, len = options.length; i < len; i++) {
+                delete options[i][Vocabulary.GREATER_THAN];
+            }
+            Utils.neighbourSort(options);
+            for (i = 0, len = data.length; i < len; i++) {
+                expect(options[i]['@id']).toEqual(original[i]['@id']);
+            }
+        });
     });
 });

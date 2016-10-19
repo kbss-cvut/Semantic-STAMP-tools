@@ -8,6 +8,7 @@ import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import OptionsStore from "../../../stores/OptionsStore";
 import Select from "../../Select";
+import Utils from "../../../utils/Utils";
 
 class Sira extends React.Component {
     static propTypes = {
@@ -19,7 +20,7 @@ class Sira extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            options: JsonLdUtils.processSelectOptions(OptionsStore.getOptions('sira'))
+            options: Utils.neighbourSort(JsonLdUtils.processSelectOptions(OptionsStore.getOptions('sira')))
         }
     }
 
@@ -34,6 +35,7 @@ class Sira extends React.Component {
         if (type !== 'sira') {
             return;
         }
+        Utils.neighbourSort(data);
         this.setState({options: JsonLdUtils.processSelectOptions(data)});
     };
 

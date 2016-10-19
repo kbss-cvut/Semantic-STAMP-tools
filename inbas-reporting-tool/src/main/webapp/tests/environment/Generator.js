@@ -323,4 +323,23 @@ export default class Generator {
         }
         return report;
     }
+
+    /**
+     * Randomly shuffles the specified array, using the Knuth shuffle algorithm.
+     * @param arr The array to shuffle
+     * @return {*} The shuffled array (it is the same instance as the parameter)
+     */
+    static shuffleArray(arr) {
+        var currentIndex = arr.length,
+            tmp, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            tmp = arr[currentIndex];
+            arr[currentIndex] = arr[randomIndex];
+            arr[randomIndex] = tmp;
+        }
+        return arr;
+    }
 }

@@ -61,7 +61,7 @@ describe('ReportsController', () => {
         var controller = Environment.render(<ReportsController />),
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
             renderedReports;
-        randomShuffle(reports);
+        Generator.shuffleArray(reports);
         controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
@@ -91,7 +91,7 @@ describe('ReportsController', () => {
         var controller = Environment.render(<ReportsController />),
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
             renderedReports;
-        randomShuffle(reports);
+        Generator.shuffleArray(reports);
         controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
@@ -109,7 +109,7 @@ describe('ReportsController', () => {
         var controller = Environment.render(<ReportsController />),
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
             renderedReports;
-        randomShuffle(reports);
+        Generator.shuffleArray(reports);
         setEqualIdentifications();
         controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         renderedReports = reportsComponent.props.reports;
@@ -229,22 +229,5 @@ describe('ReportsController', () => {
                 }
             }
         }
-    }
-
-    /**
-     * Knuth shuffle algorithm.
-     */
-    function randomShuffle(arr) {
-        var currentIndex = arr.length,
-            tmp, randomIndex;
-        while (currentIndex !== 0) {
-            randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex -= 1;
-
-            tmp = arr[currentIndex];
-            arr[currentIndex] = arr[randomIndex];
-            arr[randomIndex] = tmp;
-        }
-        return arr;
     }
 });
