@@ -1,5 +1,8 @@
 # SISEL Release Notes
 
+### 0.7.13 - October 19, 2016
+- SIRA support (Feature #187).
+
 ### 0.7.12 - October 18, 2016
 - Fixed issue in report search - result list items did not lead to their corresponding reports.
 - Added support for full text search (Feature #156).
