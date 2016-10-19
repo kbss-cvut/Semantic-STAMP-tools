@@ -40,6 +40,9 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
     @OWLObjectProperty(iri = Vocabulary.s_p_has_safety_issue_state)
     private URI state;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_safety_issue_risk_assessment)
+    private URI sira;
+
     public SafetyIssue() {
         this.types = new HashSet<>(4);
         types.add(Vocabulary.s_c_event_type);
@@ -56,6 +59,7 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
             this.basedOnFindings = new HashSet<>(other.basedOnFindings);
         }
         this.state = other.state;
+        this.sira = other.sira;
     }
 
     public String getName() {
@@ -150,6 +154,14 @@ public class SafetyIssue extends AbstractEntity implements Serializable, FactorG
 
     public void setState(URI state) {
         this.state = state;
+    }
+
+    public URI getSira() {
+        return sira;
+    }
+
+    public void setSira(URI sira) {
+        this.sira = sira;
     }
 
     @Override

@@ -136,6 +136,8 @@ module.exports = {
         'safety-issue.deactivate-tooltip': 'Nastavit tuto safety issue jako neaktivní',
         'safety-issue.base.remove-tooltip': 'Odebrat toto hlášení z podkladů této safety issue',
         'safety-issue.base.no-bases': 'Tato safety issue není založena na základě žádných existujících hlášení.',
+        'safety-issue.sira.label': 'Hodnocení rizika safety issue (SIRA)',
+        'safety-issue.sira-tooltip': 'SIRA, dle https://essi.easa.europa.eu/documents/Methodology.pdf',
 
         'audit.name-tooltip': 'Název auditu (např. jméno auditované organizace + datum) - pole je povinné',
         'audit.type.label': 'Druh kontroly',

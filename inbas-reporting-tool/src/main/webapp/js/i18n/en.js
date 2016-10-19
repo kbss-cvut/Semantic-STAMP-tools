@@ -134,6 +134,8 @@ module.exports = {
         'safety-issue.deactivate-tooltip': 'Deactivate this safety issue',
         'safety-issue.base.remove-tooltip': 'Remove this report from this safety issue\'s bases',
         'safety-issue.base.no-bases': 'This safety issue is not based on any existing reports.',
+        'safety-issue.sira.label': 'Safety issue risk assessment (SIRA)',
+        'safety-issue.sira-tooltip': 'SIRA, based on https://essi.easa.europa.eu/documents/Methodology.pdf',
 
         'audit.name-tooltip': 'Short descriptive name of the audit (e.g. audited organization name + date of audit) - this field is required',
         'audit.type.label': 'Audit type',

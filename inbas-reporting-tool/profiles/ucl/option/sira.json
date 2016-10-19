@@ -1,0 +1,37 @@
+[
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/stop",
+    "http://www.w3.org/2000/01/rdf-schema#label": [{
+        "@language": "en",
+        "@value": "Stop"
+      }]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve",
+    "http://www.w3.org/2000/01/rdf-schema#label": [{
+      "@language": "en",
+      "@value": "Improve"
+    }]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure",
+    "http://www.w3.org/2000/01/rdf-schema#label": [{
+      "@language": "en",
+      "@value": "Secure"
+    }]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor",
+    "http://www.w3.org/2000/01/rdf-schema#label": [{
+      "@language": "en",
+      "@value": "Monitor"
+    }]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept",
+    "http://www.w3.org/2000/01/rdf-schema#label": [{
+      "@language": "en",
+      "@value": "Accept"
+    }]
+  }
+]

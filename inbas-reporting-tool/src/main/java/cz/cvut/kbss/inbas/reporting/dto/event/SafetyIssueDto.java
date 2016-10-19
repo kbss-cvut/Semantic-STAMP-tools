@@ -17,6 +17,8 @@ public class SafetyIssueDto extends EventDto {
 
     private URI state;
 
+    private URI sira;
+
     public String getName() {
         return name;
     }
@@ -46,5 +48,13 @@ public class SafetyIssueDto extends EventDto {
 
     public void setState(URI state) {
         this.state = state;
+    }
+
+    public URI getSira() {
+        return sira;
+    }
+
+    public void setSira(URI sira) {
+        this.sira = sira;
     }
 }

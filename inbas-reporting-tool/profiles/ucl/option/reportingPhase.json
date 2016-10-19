@@ -58,11 +58,11 @@
     "http://www.w3.org/2000/01/rdf-schema#label": [
       {
         "@language": "en",
-        "@value": "Submitted to SAG"
+        "@value": "Presented to SAG"
       },
       {
         "@language": "cs",
-        "@value": "Odesláno do SAG"
+        "@value": "Projednáno na SAG"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": [

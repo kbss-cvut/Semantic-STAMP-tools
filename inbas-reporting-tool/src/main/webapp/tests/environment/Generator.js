@@ -202,8 +202,7 @@ export default class Generator {
             javaClass: Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS,
             safetyIssue: {
                 javaClass: Constants.SAFETY_ISSUE_JAVA_CLASS,
-                name: 'TestSafetyIssue',
-                eventType: Generator.randomCategory().id
+                name: 'TestSafetyIssue'
             }
         };
     }

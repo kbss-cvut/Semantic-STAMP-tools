@@ -714,3 +714,24 @@ button.reset-filters {
 .issue-base-more-info:first-child {
     padding-right: 0.5em;
 }
+
+/* SIRA */
+.sira-green {
+    background-color: rgba(68, 157, 68, 0.3);
+}
+
+.sira-aqua {
+    background-color: rgba(0, 255, 255, 0.3);
+}
+
+.sira-yellow {
+    background-color: rgba(236, 151, 31, 0.3);
+}
+
+.sira-orange {
+    background-color: rgba(255, 191, 0, 0.3);
+}
+
+.sira-red {
+    background-color: rgba(217, 83, 79, 0.3);
+}

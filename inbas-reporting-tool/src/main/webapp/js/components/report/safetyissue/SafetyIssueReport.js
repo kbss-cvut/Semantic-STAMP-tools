@@ -22,6 +22,7 @@ var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
 var ReportSummary = require('../ReportSummary').default;
 var ReportValidator = require('../../../validation/ReportValidator');
+var Sira = require('./Sira').default;
 var WizardWindow = require('../../wizard/WizardWindow');
 
 var SafetyIssueReport = React.createClass({
@@ -42,7 +43,7 @@ var SafetyIssueReport = React.createClass({
         };
     },
 
-    componentWillUnmount: function() {
+    componentWillUnmount: function () {
         this.cleanupMessages();
     },
 
@@ -125,6 +126,10 @@ var SafetyIssueReport = React.createClass({
                                        title={this.i18n('safety-issue.name-tooltip')}/>
                             </div>
                         </div>
+                    </div>
+
+                    <div className='form-group'>
+                        <Sira safetyIssue={report.safetyIssue} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <div className='form-group'>
