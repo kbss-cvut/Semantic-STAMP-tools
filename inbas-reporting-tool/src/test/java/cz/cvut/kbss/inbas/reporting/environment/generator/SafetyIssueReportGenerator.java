@@ -22,6 +22,7 @@ public class SafetyIssueReportGenerator {
     public static SafetyIssueReport generateSafetyIssueReport(boolean setAttributes, boolean generateMeasures) {
         final SafetyIssueReport report = new SafetyIssueReport();
         report.setSafetyIssue(generateSafetyIssue());
+        report.setSira(Generator.generateUri());
         report.setSummary("Safety issue report " + Generator.randomInt());
         if (setAttributes) {
             Generator.setReportAttributes(report);

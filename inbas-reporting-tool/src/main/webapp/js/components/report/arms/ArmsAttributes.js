@@ -10,27 +10,11 @@ import ArmsUtils from "../../../utils/ArmsUtils";
 import Input from "../../Input";
 import OptionsStore from "../../../stores/OptionsStore";
 import Select from "../../Select";
+import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 
-const GREATER_THAN = 'http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than';
 const ACCIDENT_OUTCOME = 'accidentOutcome';
 const BARRIER_EFFECTIVENESS = 'barrierEffectiveness';
-
-/**
- * Have to sort the array this way, because every item only knows only its immediate successor
- * @param arr The array to sort
- */
-function neighbourSort(arr) {
-    for (var i = 0, len = arr.length; i < len; i++) {
-        for (var j = i; j < len; j++) {
-            if (arr[i][GREATER_THAN] && arr[i][GREATER_THAN]['@id'] === arr[j]['@id']) {
-                var tmp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = tmp;
-            }
-        }
-    }
-}
 
 class ArmsAttributes extends React.Component {
     static propTypes = {
@@ -59,11 +43,11 @@ class ArmsAttributes extends React.Component {
     _onOptionsLoaded = (type, data) => {
         var update = {};
         if (type === ACCIDENT_OUTCOME) {
-            neighbourSort(data);
+            Utils.neighbourSort(data);
             update[ACCIDENT_OUTCOME] = this._transformOutcomesOptions(data);
             this.setState(update);
         } else if (type === BARRIER_EFFECTIVENESS) {
-            neighbourSort(data);
+            Utils.neighbourSort(data);
             update[BARRIER_EFFECTIVENESS] = this._transformBarrierOptions(data);
             this.setState(update);
         }

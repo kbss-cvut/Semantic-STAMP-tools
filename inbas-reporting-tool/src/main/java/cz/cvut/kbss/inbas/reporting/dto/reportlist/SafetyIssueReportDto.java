@@ -1,8 +1,12 @@
 package cz.cvut.kbss.inbas.reporting.dto.reportlist;
 
+import java.net.URI;
+
 public class SafetyIssueReportDto extends ReportDto {
 
     private String summary;
+
+    private URI sira;
 
     public String getSummary() {
         return summary;
@@ -10,6 +14,14 @@ public class SafetyIssueReportDto extends ReportDto {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public URI getSira() {
+        return sira;
+    }
+
+    public void setSira(URI sira) {
+        this.sira = sira;
     }
 
     @Override

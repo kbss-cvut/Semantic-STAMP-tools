@@ -3,8 +3,10 @@
 var React = require('react');
 var assign = require('object-assign');
 var JsonLdUtils = require('jsonld-utils').default;
+var ArmsUtils = require('../utils/ArmsUtils').default;
 var CollapsibleText = require('../components/CollapsibleText');
 var Constants = require('../constants/Constants');
+var I18nStore = require('../stores/I18nStore');
 var SafetyIssueBase = require('./SafetyIssueBase').default;
 var Utils = require('../utils/Utils');
 var Vocabulary = require('../constants/Vocabulary');
@@ -29,6 +31,24 @@ class OccurrenceReport {
             }
         }
         return this.phase;
+    }
+
+    /**
+     * Gets a CSS class representing status of this report.
+     *
+     * More specifically, it represents ARMS index evaluation.
+     */
+    getStatusCssClass() {
+        return ArmsUtils.resolveArmsIndexClass(this.armsIndex);
+    }
+
+    /**
+     * Gets textual information about the status of this report.
+     *
+     * More specifically, it returns text containing the ARMS index value.
+     */
+    getStatusInfo() {
+        return this.armsIndex ? I18nStore.i18n('arms.index.tooltip') + this.armsIndex : '';
     }
 
     getLabel() {
@@ -58,6 +78,31 @@ class SafetyIssueReport {
     }
 
     getPhase() {
+        return '';
+    }
+
+    /**
+     * Gets a CSS class representing status of this report.
+     *
+     * More specifically, it represents safety issue risk assessment (SIRA).
+     */
+    getStatusCssClass() {
+        return this.sira ? Constants.SIRA_COLORS[this.sira] : '';
+    }
+
+    /**
+     * Gets textual information about the status of this report.
+     *
+     * More specifically, it returns text containing the SIRA value.
+     */
+    getStatusInfo(options, intl) {
+        if (this.sira) {
+            for (var i = 0, len = options.length; i < len; i++) {
+                if (this.sira === options[i]['@id']) {
+                    return JsonLdUtils.getLocalized(options[i][Vocabulary.RDFS_LABEL], intl);
+                }
+            }
+        }
         return '';
     }
 
@@ -171,6 +216,24 @@ class AuditReport {
     }
 
     getPhase() {
+        return '';
+    }
+
+    /**
+     * Gets a CSS class representing status of this report.
+     *
+     * Currently, audit reports do not have any kind of status representation, so this method returns an empty string.
+     */
+    getStatusCssClass() {
+        return '';
+    }
+
+    /**
+     * Gets textual information about this report's status.
+     *
+     * Currently, audit reports do not have any kind of status representation, so this method returns an empty string.
+     */
+    getStatusInfo() {
         return '';
     }
 

@@ -15,5 +15,7 @@ module.exports = {
     AUDIT_FINDING: 'http://onto.fel.cvut.cz/ontologies/audit/audit_finding',
 
     HAS_PART: 'http://onto.fel.cvut.cz/ontologies/ufo/has_part',
-    TRANSITION_LABEL: 'http://onto.fel.cvut.cz/ontologies/documentation/transition_label'
+    TRANSITION_LABEL: 'http://onto.fel.cvut.cz/ontologies/documentation/transition_label',
+
+    GREATER_THAN: 'http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than'
 };

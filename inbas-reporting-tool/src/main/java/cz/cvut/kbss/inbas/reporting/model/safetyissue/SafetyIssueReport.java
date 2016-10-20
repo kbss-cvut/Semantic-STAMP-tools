@@ -8,6 +8,7 @@ import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,12 +23,16 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_safety_issue_risk_assessment)
+    private URI sira;
+
     public SafetyIssueReport() {
     }
 
     public SafetyIssueReport(SafetyIssueReport other) {
         super(other);
         this.safetyIssue = SafetyIssue.copyOf(other.safetyIssue);
+        this.sira = other.sira;
         if (other.getCorrectiveMeasures() != null) {
             this.correctiveMeasures = other.getCorrectiveMeasures().stream().map(CorrectiveMeasureRequest::new).collect(
                     Collectors.toSet());
@@ -49,9 +54,16 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
         return correctiveMeasures;
     }
 
-    public void setCorrectiveMeasures(
-            Set<CorrectiveMeasureRequest> correctiveMeasures) {
+    public void setCorrectiveMeasures(Set<CorrectiveMeasureRequest> correctiveMeasures) {
         this.correctiveMeasures = correctiveMeasures;
+    }
+
+    public URI getSira() {
+        return sira;
+    }
+
+    public void setSira(URI sira) {
+        this.sira = sira;
     }
 
     @Override
@@ -60,6 +72,7 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
         copyAttributes(dto);
         dto.setSummary(summary);
         dto.setIdentification(safetyIssue.getName());
+        dto.setSira(sira);
         dto.getTypes().add(SafetyIssueReport.class.getDeclaredAnnotation(OWLClass.class).iri());
         return dto;
     }

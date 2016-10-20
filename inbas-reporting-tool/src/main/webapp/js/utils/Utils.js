@@ -1,6 +1,7 @@
 'use strict';
 
 var Constants = require('../constants/Constants');
+var Vocabulary = require('../constants/Vocabulary');
 
 /**
  * Common propositions that should not be capitalized
@@ -238,5 +239,33 @@ module.exports = {
             }
         }
         return null;
+    },
+
+    /**
+     * Sorts the specified JSON-LD data using a neighbour sort.
+     *
+     * This is useful for situations where each item only knows its immediate neighbour in the list.
+     * @param data The data to sort, should be an array
+     * @param gtProperty Property specifying that an item is greater than another item. It is used for comparison.
+     *     Defaults to Vocabulary.GREATER_THAN
+     */
+    neighbourSort: function (data, gtProperty = Vocabulary.GREATER_THAN) {
+        var swapped;
+        do {
+            swapped = false;
+            for (var i = 0, len = data.length; i < len; i++) {
+                for (var j = i; j < len; j++) {
+                    if (data[i][gtProperty] && data[i][gtProperty]['@id'] === data[j]['@id']) {
+                        var tmp = data[i];
+                        data[i] = data[j];
+                        data[j] = tmp;
+                        swapped = true;
+                        break;
+                    }
+                }
+            }
+        } while (swapped);
+
+        return data;
     }
 };

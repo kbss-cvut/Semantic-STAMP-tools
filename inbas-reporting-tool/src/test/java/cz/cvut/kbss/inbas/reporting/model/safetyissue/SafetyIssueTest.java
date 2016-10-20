@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 public class SafetyIssueTest {
 
     @Test
-    public void copyOfCopiesNameTypesAndActivityStatus() {
+    public void copyOfCopiesBasicAttributes() {
         final SafetyIssue original = SafetyIssueReportGenerator.generateSafetyIssue();
         final SafetyIssue copy = SafetyIssue.copyOf(original);
         assertNotNull(copy);

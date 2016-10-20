@@ -90,5 +90,13 @@ module.exports = {
     SAFETY_ISSUE_STATE: {
         OPEN: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/opened-safety-issue-state',
         CLOSED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/closed-safety-issue-state'
+    },
+
+    SIRA_COLORS: {
+        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/stop': 'sira-red',
+        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve': 'sira-orange',
+        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure': 'sira-yellow',
+        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor': 'sira-aqua',
+        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept': 'sira-green'
     }
 };

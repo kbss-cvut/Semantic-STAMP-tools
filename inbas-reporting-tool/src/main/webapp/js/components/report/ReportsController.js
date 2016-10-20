@@ -90,6 +90,7 @@ var ReportsController = React.createClass({
     componentDidMount: function () {
         Actions.loadAllReports();
         Actions.loadOptions('reportingPhase');
+        Actions.loadOptions('sira');
     },
 
     onReportsLoaded: function (data) {

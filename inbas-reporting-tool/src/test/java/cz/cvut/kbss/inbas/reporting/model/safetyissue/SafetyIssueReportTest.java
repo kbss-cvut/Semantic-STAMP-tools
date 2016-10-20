@@ -29,6 +29,7 @@ public class SafetyIssueReportTest {
         assertEquals(original.getFileNumber(), copy.getFileNumber());
         assertEquals(original.getSummary(), copy.getSummary());
         assertEquals(original.getTypes(), copy.getTypes());
+        assertEquals(original.getSira(), copy.getSira());
     }
 
     @Test
@@ -80,6 +81,7 @@ public class SafetyIssueReportTest {
         assertEquals(original.getRevision(), result.getRevision());
         assertEquals(original.getSafetyIssue().getName(), result.getIdentification());
         assertTrue(result.getTypes().containsAll(original.getTypes()));
+        assertEquals(original.getSira(), result.getSira());
     }
 
     @Test
