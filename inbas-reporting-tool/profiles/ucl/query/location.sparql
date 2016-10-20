@@ -16,7 +16,7 @@ CONSTRUCT {
     a a-s:Location.
 } WHERE {
   SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
-    SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/reports-refactoring> {
+    SERVICE <http://dev.inbas.cz/openrdf-sesame/repositories/sisel-dev> {
       GRAPH <http://onto.fel.cvut.cz/ontologies/report/ucl/old/options/locations>{
         ?term a a-s:Location.
       }
