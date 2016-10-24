@@ -56,7 +56,7 @@ class Sira extends React.Component {
             <div className='col-xs-4'>
                 <Select label={this.i18n('safety-issue.sira.label')} onChange={this._onOptionSelected}
                         title={this.i18n('safety-issue.sira-tooltip')} inputProps={inputProps}
-                        options={this.state.options} addDefault={true} value={report.sira}/>
+                        options={this.state.options} value={report.sira}/>
             </div>
         </div>;
     }

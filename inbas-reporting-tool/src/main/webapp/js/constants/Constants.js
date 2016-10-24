@@ -97,7 +97,8 @@ module.exports = {
         'http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve': 'sira-orange',
         'http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure': 'sira-yellow',
         'http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor': 'sira-aqua',
-        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept': 'sira-green'
+        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept': 'sira-green',
+        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/unassigned': ''
     },
 
     FULL_TEXT_SEARCH_OPTION: {
