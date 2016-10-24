@@ -149,8 +149,8 @@ class DepartmentInput extends React.Component {
                 <label className='control-label'>
                     {i18n('report.responsible-department')}
                 </label>
-                <Typeahead className='form-group form-group-sm' formInputOption='id' optionsButton={true}
-                           ref='typeahead'
+                <Typeahead formInputOption='id' optionsButton={true}
+                           ref='typeahead' size='small'
                            placeholder={i18n('report.responsible-department')}
                            onOptionSelected={this._onChange} filterOption='name'
                            value={value ? value.name : ''} displayOption='name' options={this.props.options}

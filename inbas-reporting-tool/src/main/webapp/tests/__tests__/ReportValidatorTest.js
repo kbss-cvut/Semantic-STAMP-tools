@@ -16,16 +16,10 @@ describe('Report validator', function () {
                     name: 'TestReport',
                     startTime: Date.now() - 1000,
                     endTime: Date.now(),
-                    eventType: 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-28'
+                    eventTypes: ['http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-28']
                 },
                 severityAssessment: 'INCIDENT',
-                summary: 'Report narrative',
-                typeAssessments: [{
-                    eventType: {
-                        id: 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-1-31-31-14-390-2000000-2200000-2200100',
-                        name: '2200100 - Runway incursions'
-                    }
-                }]
+                summary: 'Report narrative'
             };
         });
 
@@ -49,7 +43,12 @@ describe('Report validator', function () {
         });
 
         it('marks report without occurrence category as invalid', function () {
-            delete report.occurrence.eventType;
+            delete report.occurrence.eventTypes;
+            expect(ReportValidator.isValid(report)).toBeFalsy();
+        });
+
+        it('marks report with no empty occurrence categories as invalid', () => {
+            report.occurrence.eventTypes = [];
             expect(ReportValidator.isValid(report)).toBeFalsy();
         });
 

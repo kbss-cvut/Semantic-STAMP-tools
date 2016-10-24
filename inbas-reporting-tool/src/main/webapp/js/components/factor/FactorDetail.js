@@ -62,7 +62,7 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventType, TypeaheadStore.getEventTypes())),
+            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventTypes, TypeaheadStore.getEventTypes())),
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement,
@@ -180,7 +180,7 @@ var FactorDetail = React.createClass({
     },
 
     _mergeStatementState(statement) {
-        statement.eventType = this.state.eventType.id;
+        statement.eventTypes = [this.state.eventType.id];
         statement.startTime = this.state.startDate;
         statement.endTime = gantt.calculateEndDate(new Date(statement.startTime), this.state.duration, gantt.config.duration_unit).getTime();
         statement.question = this.state.statement.question;

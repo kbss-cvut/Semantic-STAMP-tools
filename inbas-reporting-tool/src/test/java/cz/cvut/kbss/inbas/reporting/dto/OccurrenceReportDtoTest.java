@@ -34,7 +34,7 @@ public class OccurrenceReportDtoTest {
         assertEquals(dto.getOccurrence().getStartTime(), result.getDate());
         assertTrue(result.getTypes().containsAll(dto.getTypes()));
         assertEquals(dto.getSeverityAssessment(), result.getSeverityAssessment());
-        assertEquals(dto.getOccurrence().getEventType(), result.getOccurrenceCategory());
+        assertEquals(dto.getOccurrence().getEventTypes(), result.getOccurrenceCategories());
         assertEquals(dto.getSummary(), result.getSummary());
     }
 

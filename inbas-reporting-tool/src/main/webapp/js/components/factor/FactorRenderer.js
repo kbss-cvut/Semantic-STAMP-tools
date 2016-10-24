@@ -129,9 +129,9 @@ var FactorRendererImpl = {
             var text = '';
             if (typeof node.name !== 'undefined' && node.name !== null) {
                 text = node.name;
-            } else if (node.eventType) {
-                var eventType = ObjectTypeResolver.resolveType(node.eventType, eventTypes);
-                text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
+            } else if (node.eventTypes) {
+                var eventType = ObjectTypeResolver.resolveType(node.eventTypes, eventTypes);
+                text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventTypes[0];
             }
             GanttController.addFactor({
                 id: node.referenceId,

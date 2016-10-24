@@ -457,7 +457,6 @@ button.reset-filters {
     width: 16px;
     height: 16px;
     margin-top: 28px;
-    margin-left: -20px;
     vertical-align: bottom;
 }
 
@@ -728,4 +727,12 @@ button.reset-filters {
 
 .sira-red {
     background-color: rgba(217, 83, 79, 0.3);
+}
+
+button.in-input-line {
+    margin-top: 22px;
+}
+
+button.remove-secondary-category {
+    margin-left: -15px;
 }

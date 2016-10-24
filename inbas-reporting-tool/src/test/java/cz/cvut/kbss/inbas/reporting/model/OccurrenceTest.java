@@ -59,7 +59,7 @@ public class OccurrenceTest {
         visited.add(original.getUri());
         assertNotSame(original, copy);
         assertEquals(original.getIndex(), copy.getIndex());
-        assertEquals(original.getEventType(), copy.getEventType());
+        assertEquals(original.getEventTypes(), copy.getEventTypes());
         assertEquals(original.getStartTime(), copy.getStartTime());
         verifyChildren(original.getChildren(), copy.getChildren(), visited);
         verifyFactors(original.getFactors(), copy.getFactors(), visited);
@@ -76,7 +76,7 @@ public class OccurrenceTest {
         for (Factor of : original) {
             found = false;
             for (Factor cf : copy) {
-                if (of.getEvent().getEventType().equals(cf.getEvent().getEventType())) {
+                if (of.getEvent().getEventTypes().equals(cf.getEvent().getEventTypes())) {
                     found = true;
                     assertEquals(of.getTypes(), cf.getTypes());
                     verifyEvents(of.getEvent(), cf.getEvent(), visited);
@@ -128,7 +128,7 @@ public class OccurrenceTest {
 
     private Event event() {
         final Event e = new Event();
-        e.setEventType(Generator.generateEventType());
+        e.setEventTypes(Collections.singleton(Generator.generateEventType()));
         e.setStartTime(new Date());
         e.setEndTime(new Date());
         e.setUri(URI.create(Vocabulary.s_c_Event + "-instance" + Generator.randomInt()));
@@ -136,10 +136,10 @@ public class OccurrenceTest {
     }
 
     @Test
-    public void setEventTypeAddsEventTypeToTypesToo() {
+    public void setEventTypesAddsEventTypesToTypesToo() {
         final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         final URI eventType = Generator.generateEventType();
-        occurrence.setEventType(eventType);
+        occurrence.setEventTypes(Collections.singleton(eventType));
         assertTrue(occurrence.getTypes().contains(eventType.toString()));
     }
 

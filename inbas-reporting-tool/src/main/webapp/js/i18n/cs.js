@@ -127,6 +127,8 @@ module.exports = {
         'occurrence.end-time-tooltip': 'Datum a čas kdy událost skončila',
         'occurrence.class': 'Třída závažnosti',
         'occurrence.class-tooltip': 'Třída závažnosti - pole je povinné',
+        'occurrence.add-category': 'Přidat další klasifikaci události',
+        'occurrence.remove-category-tooltip': 'Odebrat klasifikaci události',
 
         'safety-issue.panel.active-tooltip': 'Tato safety issue je v současné době aktivní',
         'safety-issue.panel.inactive-tooltip': 'Tato safety issue není v současné době aktivní',

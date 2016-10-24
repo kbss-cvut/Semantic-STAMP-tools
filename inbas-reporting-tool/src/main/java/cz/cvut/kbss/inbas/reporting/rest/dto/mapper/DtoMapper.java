@@ -229,7 +229,7 @@ public abstract class DtoMapper {
         dto.setName(occurrence.getName());
         dto.setStartTime(occurrence.getStartTime());
         dto.setEndTime(occurrence.getEndTime());
-        dto.setEventType(occurrence.getEventType());
+        dto.setEventTypes(occurrence.getEventTypes());
         dto.setQuestion(occurrence.getQuestion());
         dto.setReferenceId(random.nextInt());
         eventDtoRegistry.put(dto.getUri(), dto);

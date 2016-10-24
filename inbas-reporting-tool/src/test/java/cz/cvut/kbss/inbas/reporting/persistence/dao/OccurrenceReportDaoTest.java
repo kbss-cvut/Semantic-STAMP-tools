@@ -256,7 +256,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final Event addedOne = new Event();
         addedOne.setStartTime(report.getOccurrence().getStartTime());
         addedOne.setEndTime(report.getOccurrence().getEndTime());
-        addedOne.setEventType(Generator.generateEventType());
+        addedOne.setEventTypes(Collections.singleton(Generator.generateEventType()));
         final Factor newF = new Factor();
         newF.setEvent(addedOne);
         newF.addType(Generator.randomFactorType());
@@ -264,7 +264,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final Event addedChild = new Event();
         addedChild.setStartTime(report.getOccurrence().getStartTime());
         addedChild.setEndTime(report.getOccurrence().getEndTime());
-        addedChild.setEventType(Generator.generateEventType());
+        addedChild.setEventTypes(Collections.singleton(Generator.generateEventType()));
         report.getOccurrence().getChildren().iterator().next().addChild(addedChild);
 
         occurrenceReportDao.update(report);

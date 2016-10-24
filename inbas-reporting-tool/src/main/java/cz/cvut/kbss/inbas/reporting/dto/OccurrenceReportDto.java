@@ -117,7 +117,7 @@ public class OccurrenceReportDto extends AbstractReportDto implements FormGenDat
         res.setDate(occurrence.getStartTime());
         res.setSummary(getSummary());
         res.setSeverityAssessment(severityAssessment);
-        res.setOccurrenceCategory(occurrence.getEventType());
+        res.setOccurrenceCategories(occurrence.getEventTypes());
         return res;
     }
 }

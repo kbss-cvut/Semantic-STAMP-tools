@@ -125,6 +125,8 @@ module.exports = {
         'occurrence.end-time-tooltip': 'Date and time when the event ended',
         'occurrence.class': 'Occurrence class',
         'occurrence.class-tooltip': 'Occurrence class - this field is required',
+        'occurrence.add-category': 'Add occurrence category',
+        'occurrence.remove-category-tooltip': 'Remove occurrence category',
 
         'safety-issue.panel.active-tooltip': 'This safety issue is currently active',
         'safety-issue.panel.inactive-tooltip': 'This safety issue is currently not active',
