@@ -72,7 +72,8 @@ module.exports = {
         'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
         'main.search-placeholder': 'Search',
-        'main.search.fulltext': 'Full text',
+        'main.search.fulltext': 'Search in all narratives',
+        'main.search.fulltext.label': 'Full text',
         'main.search.fulltext-tooltip': 'Search for the specified string everywhere',
         'main.tacr-notice': 'Project was supported by the Technology Agency of the Czech Republic.',
 

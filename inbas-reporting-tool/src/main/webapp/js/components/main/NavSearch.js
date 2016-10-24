@@ -1,9 +1,9 @@
 'use strict';
 
 import React from "react";
-import {Button, Glyphicon} from "react-bootstrap";
 import Typeahead from "react-bootstrap-typeahead";
 import Actions from "../../actions/Actions";
+import Constants from "../../constants/Constants";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import ReportType from "../../model/ReportType";
@@ -57,11 +57,15 @@ class NavSearch extends React.Component {
         return options;
     }
 
-    _onOptionSelected = (report) => {
-        Routing.transitionTo(Routes.editReport, {
-            params: {reportKey: report.key},
-            handlers: {onCancel: Routes.reports}
-        });
+    _onOptionSelected = (option) => {
+        if (option === Constants.FULL_TEXT_SEARCH_OPTION) {
+            this._onFullTextSearch();
+        } else {
+            Routing.transitionTo(Routes.editReport, {
+                params: {reportKey: option.key},
+                handlers: {onCancel: Routes.reports}
+            });
+        }
         this.typeahead.setEntryText('');
     };
 
@@ -84,24 +88,14 @@ class NavSearch extends React.Component {
             },
             optionLabel = this._getOptionLabelFunction();
 
-        return <div className='navbar-search-panel'>
-            <div className='col-xs-11 navbar-search'>
-                <Typeahead ref={(c) => this.typeahead = c} size='small' name={this.props.name}
-                           formInputOption='id'
-                           placeholder={this.i18n('main.search-placeholder')}
-                           onOptionSelected={this._onOptionSelected} onChange={this._onSearchTextChange}
-                           filterOption='identification'
-                           displayOption={optionLabel} options={this.state.options}
-                           customClasses={classes}
-                           customListComponent={ReportSearchResultList}/>
-            </div>
-            <div className='col-xs-1 navbar-search'>
-                <Button bsSize='small' title={this.i18n('main.search.fulltext-tooltip')}
-                        onClick={this._onFullTextSearch} disabled={this.state.fullTextDisabled}>
-                    <Glyphicon glyph='search'/>
-                </Button>
-            </div>
-        </div>;
+        return <Typeahead ref={(c) => this.typeahead = c} size='small' name={this.props.name}
+                          formInputOption='id' className='navbar-search'
+                          placeholder={this.i18n('main.search-placeholder')}
+                          onOptionSelected={this._onOptionSelected} onChange={this._onSearchTextChange}
+                          filterOption='identification'
+                          displayOption={optionLabel} options={this.state.options}
+                          customClasses={classes}
+                          customListComponent={ReportSearchResultList}/>;
     }
 
     _getOptionLabelFunction() {
