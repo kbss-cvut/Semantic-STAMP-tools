@@ -96,11 +96,11 @@ describe('Occurrence classification', () => {
     });
 
     it('removes secondary category when remove is clicked', () => {
-        report.occurrence.eventTypes = [Generator.randomCategory()['id'], Generator.randomCategory()['id']];
+        report.occurrence.eventTypes = [Generator.randomCategory()['id'], Generator.getRandomUri()];
         var toRemove = report.occurrence.eventTypes[1], // The second one will be removed
             component = Environment.render(<OccurrenceClassification report={report} onChange={onChange}/>),
 
-            removeButton = TestUtils.findRenderedDOMComponentWithClass(component, 'remove-secondary-category');
+            removeButton = TestUtils.findRenderedDOMComponentWithClass(component, 'in-input-line');
         TestUtils.Simulate.click(removeButton);
         var change = onChange.calls.argsFor(0)[0];
         expect(change.occurrence.eventTypes.length).toEqual(1);
@@ -112,7 +112,7 @@ describe('Occurrence classification', () => {
         var toRemove = report.occurrence.eventTypes[1], // The second one will be removed
             component = Environment.render(<OccurrenceClassification report={report} onChange={onChange}/>),
 
-            removeButton = TestUtils.findRenderedDOMComponentWithClass(component, 'remove-secondary-category');
+            removeButton = TestUtils.findRenderedDOMComponentWithClass(component, 'in-input-line');
         TestUtils.Simulate.click(removeButton);
 
         var button = Environment.getComponentByTagAndText(component, 'button', messages['occurrence.add-category']);

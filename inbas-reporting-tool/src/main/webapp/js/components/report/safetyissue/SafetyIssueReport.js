@@ -39,7 +39,8 @@ var SafetyIssueReport = React.createClass({
             submitting: false,
             loadingWizard: false,
             isWizardOpen: false,
-            wizardProperties: null
+            wizardProperties: null,
+            showDeleteDialog: false
         };
     },
 
@@ -159,6 +160,7 @@ var SafetyIssueReport = React.createClass({
                 </form>
             </Panel>
             {this.renderMessage()}
+            {this.renderDeleteDialog()}
         </div>;
     },
 
@@ -207,6 +209,7 @@ var SafetyIssueReport = React.createClass({
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this.renderSubmitButton()}
+            {this.renderDeleteButton()}
         </ButtonToolbar>;
     },
 

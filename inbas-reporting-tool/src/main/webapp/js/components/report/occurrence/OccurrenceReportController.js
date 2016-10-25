@@ -66,12 +66,11 @@ var OccurrenceReportController = React.createClass({
             onChange: this.onChange,
             onSuccess: this.onSuccess,
             onCancel: this.onCancel,
+            onRemove: this.onRemove,
             onCreateSafetyIssue: this.onCreateSafetyIssue
         };
-        return (
-            <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
-                          readOnly={!this.isLatestRevision()}/>
-        );
+        return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+                             readOnly={!this.isLatestRevision()}/>;
     }
 });
 

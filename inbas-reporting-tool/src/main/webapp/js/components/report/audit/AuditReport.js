@@ -29,7 +29,8 @@ var AuditReport = React.createClass({
             submitting: false,
             loadingWizard: false,
             isWizardOpen: false,
-            wizardProperties: null
+            wizardProperties: null,
+            showDeleteDialog: false
         };
     },
 
@@ -55,26 +56,28 @@ var AuditReport = React.createClass({
     render: function () {
         var report = this.props.report;
 
-        return <div><Panel header={this._renderHeader()} bsStyle='primary'>
-            <form>
-                <Audit audit={report.audit} onChange={this.props.handlers.onChange} report={report}/>
-                <div className='row'>
-                    <div className='col-xs-12'>
-                        <Input type='textarea' rows='8' label={this.i18n('audit.remarks')} name='summary'
-                               placeholder={this.i18n('audit.remarks.placeholder')}
-                               value={report.summary} onChange={this.onChange}
-                               title={this.i18n('audit.remarks.placeholder')}/>
+        return <div>
+            <Panel header={this._renderHeader()} bsStyle='primary'>
+                <form>
+                    <Audit audit={report.audit} onChange={this.props.handlers.onChange} report={report}/>
+                    <div className='row'>
+                        <div className='col-xs-12'>
+                            <Input type='textarea' rows='8' label={this.i18n('audit.remarks')} name='summary'
+                                   placeholder={this.i18n('audit.remarks.placeholder')}
+                                   value={report.summary} onChange={this.onChange}
+                                   title={this.i18n('audit.remarks.placeholder')}/>
+                        </div>
                     </div>
-                </div>
 
-                <Panel>
-                    <ReportProvenance report={report} revisions={this.props.revisions}/>
-                </Panel>
+                    <Panel>
+                        <ReportProvenance report={report} revisions={this.props.revisions}/>
+                    </Panel>
 
-                {this._renderButtons()}
-            </form>
-        </Panel>
+                    {this._renderButtons()}
+                </form>
+            </Panel>
             {this.renderMessage()}
+            {this.renderDeleteDialog()}
         </div>;
     },
 
@@ -107,6 +110,7 @@ var AuditReport = React.createClass({
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this._renderSubmitButton()}
+            {this.renderDeleteButton()}
         </ButtonToolbar>;
     },
 

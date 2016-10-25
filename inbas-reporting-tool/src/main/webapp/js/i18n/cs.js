@@ -48,6 +48,7 @@ module.exports = {
         'detail.phase-transition-failed-message': 'Přechod do další fáze se nezdařil. Zachycena chyba: ',
         'detail.loading': 'Načítám hlášení...',
         'detail.not-found.title': 'Hlášení nenalezeno',
+        'detail.remove-failed-message': 'Hlášení se nepodařilo odstranit. Odpověď serveru: ',
 
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',

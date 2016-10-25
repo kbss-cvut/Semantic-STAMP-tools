@@ -48,6 +48,7 @@ module.exports = {
         'detail.phase-transition-failed-message': 'Report phase transition failed with error: ',
         'detail.loading': 'Loading report...',
         'detail.not-found.title': 'Report not found',
+        'detail.remove-failed-message': 'Unable to remove report chain. Server responded with message: ',
 
         'login.title': Constants.APP_NAME + ' - Login',
         'login.username': 'Username',
