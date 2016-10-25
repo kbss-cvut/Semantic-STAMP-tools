@@ -154,7 +154,7 @@ var OccurrenceClassification = React.createClass({
     },
 
     _renderCategoryLink: function (categoryId) {
-        return categoryId ? <div className='col-xs-1'>
+        return categoryId ? <div className='external-link-container'>
             <ExternalLink url={categoryId} title={this._resolveCategoryValue(categoryId) + '\n' + categoryId}/>
         </div> : null;
     },
@@ -197,8 +197,8 @@ var OccurrenceClassification = React.createClass({
     },
 
     _renderRemoveCategoryButton: function (category) {
-        return category ? <div className='col-xs-1'>
-            <Button bsStyle='warning' bsSize='small' className='in-input-line remove-secondary-category'
+        return category ? <div className='external-link-container'>
+            <Button bsStyle='warning' bsSize='small' className='in-input-line'
                     title={this.i18n('occurrence.remove-category-tooltip')} onClick={this._removeSecondaryCategory}>
                 <Glyphicon glyph='remove'/>
             </Button>

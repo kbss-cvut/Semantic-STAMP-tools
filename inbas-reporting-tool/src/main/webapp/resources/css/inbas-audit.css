@@ -451,6 +451,12 @@ button.reset-filters {
     margin-bottom: -15px !important;
 }
 
+.external-link-container {
+    position: relative;
+    float: left;
+    padding-left: 1%;
+}
+
 .external-link {
     display: block;
     content: url('../images/icons/external.png');
@@ -731,8 +737,4 @@ button.reset-filters {
 
 button.in-input-line {
     margin-top: 22px;
-}
-
-button.remove-secondary-category {
-    margin-left: -15px;
 }

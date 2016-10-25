@@ -286,7 +286,7 @@ var FactorDetail = React.createClass({
     _renderEventTypeLink: function () {
         var et = this.state.eventType;
         return et ?
-            <div className='col-xs-1'>
+            <div className='external-link-container'>
                 <ExternalLink url={et.id} title={et.name + '\n' + et.id} className='external-link'/>
             </div> : null;
     },
