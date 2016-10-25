@@ -1,5 +1,10 @@
 # SISEL Release Notes
 
+### 0.7.14 - October 25, 2016
+- Delete button in report detail (Feature #201).
+- Support for up to two occurrence categories (Feature #157).
+- Support for setting SIRA to "Unassigned" (Feature #197).
+
 ### 0.7.13 - October 19, 2016
 - SIRA support (Feature #187).
 
