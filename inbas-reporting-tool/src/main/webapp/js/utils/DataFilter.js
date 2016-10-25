@@ -25,6 +25,9 @@ var DataFilter = {
                     value = item;
                 for (i = 0, len = path.length; i < len; i++) {
                     value = value[path[i]];
+                    if (!value && i < len) {
+                        return false;
+                    }
                 }
                 var filterValue = filter[key];
                 if (!Array.isArray(filterValue)) {

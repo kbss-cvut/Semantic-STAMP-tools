@@ -57,4 +57,25 @@ describe('Data filter', () => {
         expect(result.length).toBeGreaterThan(0);
         expect(result).toEqual(expected);
     });
+
+    it('filters out data which do not contain value corresponding to filter property path', () => {
+        for (var i = 0; i < 5; i++) {
+            reports.push({
+                uri: Generator.getRandomUri(),
+                key: Date.now(),
+                safetyIssue: {
+                    name: 'Safety issue ' + i
+                }
+            });
+        }
+        var eventType = reports[0].occurrence.eventType,
+            filter = {
+                'occurrence.eventType': eventType
+            },
+            expected = reports.filter((item) => item.occurrence && item.occurrence.eventType === eventType),
+
+            result = DataFilter.filterData(reports, filter);
+        expect(result.length).toBeGreaterThan(0);
+        expect(result).toEqual(expected);
+    });
 });

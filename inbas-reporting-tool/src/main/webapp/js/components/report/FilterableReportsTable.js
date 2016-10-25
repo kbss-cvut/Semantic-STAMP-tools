@@ -4,9 +4,12 @@ var React = require('react');
 var Reflux = require('reflux');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+var OverlayTrigger = require('react-bootstrap').OverlayTrigger;
+var Popover = require('react-bootstrap').Popover;
 var JsonLdUtils = require('jsonld-utils').default;
 
 var Constants = require('../../constants/Constants');
+var Filters = require('../filter/Filters').default;
 var injectIntl = require('../../utils/injectIntl');
 var I18nMixin = require('../../i18n/I18nMixin');
 var OptionsStore = require('../../stores/OptionsStore');
@@ -44,6 +47,10 @@ var FilterableReportsTable = React.createClass({
         var value = e.target.value;
         var change = {};
         change[e.target.name] = value;
+        this.onFilterChange(change);
+    },
+
+    onFilterChange: function (change) {
         this.setState(change);
         this.props.actions.onFilterChange(change);
     },
@@ -83,9 +90,20 @@ var FilterableReportsTable = React.createClass({
 
     render: function () {
         return <div>
+            <div className='type-filters'>
+                <OverlayTrigger trigger='click' placement='right' overlay={this._renderFilters()}>
+                    <Button bsStyle='primary'>{this.i18n('filters.label')}</Button>
+                </OverlayTrigger>
+            </div>
             {this._renderReportTypeFilters()}
             <ReportsTable {...this.props} children={this._renderFiltersInTable()}/>
         </div>;
+    },
+
+    _renderFilters: function () {
+        return <Popover id='popover-filters' title={this.i18n('filters.label')} placement='right'>
+            <Filters filters={this.state} onChange={this.onFilterChange}/>
+        </Popover>;
     },
 
     _renderReportTypeFilters: function () {
