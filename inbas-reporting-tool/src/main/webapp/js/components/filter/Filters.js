@@ -56,7 +56,7 @@ class Filters extends React.Component {
             newState = {};
 
         _processFilters((filter) => {
-            newState[filter.options] = [];
+            newState[filter.options] = [this._getDefaultFilterOption()];
             if (!values[filter.path] || filter.type !== 'select') {
                 return;
             }
@@ -70,6 +70,10 @@ class Filters extends React.Component {
             }
         });
         return newState;
+    }
+
+    _getDefaultFilterOption() {
+        return {value: Constants.FILTER_DEFAULT, label: this.i18n('reports.filter.type.all')};
     }
 
     componentDidMount() {

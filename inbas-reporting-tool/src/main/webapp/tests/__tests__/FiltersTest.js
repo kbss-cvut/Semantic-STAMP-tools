@@ -6,6 +6,7 @@ import Actions from "../../js/actions/Actions";
 import Constants from "../../js/constants/Constants";
 import Environment from "../environment/Environment";
 import Generator from "../environment/Generator";
+import {messages} from "../../js/i18n/en";
 import OptionsStore from "../../js/stores/OptionsStore";
 import Vocabulary from "../../js/constants/Vocabulary";
 import Filters from "../../js/components/filter/Filters";
@@ -23,6 +24,19 @@ describe('Filters', () => {
         spyOn(Actions, 'loadOptions');
     });
 
+    it('adds default filter option - any - to the rendered select', () => {
+        var categories = getCategoriesAsJsonLd(),
+            value = reports[Generator.getRandomInt(reports.length)].occurrenceCategory;
+        spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
+        var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
+                                                    onResetFilters={onResetFilters}/>).getWrappedComponent(),
+            options = component.state[Constants.FILTERS[0].path];
+
+        var defaultOption = options[0];
+        expect(defaultOption.value).toEqual(Constants.FILTER_DEFAULT);
+        expect(defaultOption.label).toEqual(messages['reports.filter.type.all']);
+    });
+
     it('generates options for occurrence categories from categories existing in the data', () => {
         var categories = getCategoriesAsJsonLd();
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
@@ -31,11 +45,11 @@ describe('Filters', () => {
             options = component.state[Constants.FILTERS[0].path],
             categoriesUsed = getCategoriesUsedByReports(categories);
 
-        expect(options.length).toEqual(categoriesUsed.length);
+        expect(options.length).toEqual(categoriesUsed.length + 1);
         for (var i = 0, len = categoriesUsed.length; i < len; i++) {
-            expect(options[i].value).toEqual(categoriesUsed[i]['@id']);
-            expect(options[i].label).toEqual(categoriesUsed[i][Vocabulary.RDFS_LABEL]);
-            expect(options[i].title).toEqual(categoriesUsed[i][Vocabulary.RDFS_COMMENT]);
+            expect(options[i + 1].value).toEqual(categoriesUsed[i]['@id']);
+            expect(options[i + 1].label).toEqual(categoriesUsed[i][Vocabulary.RDFS_LABEL]);
+            expect(options[i + 1].title).toEqual(categoriesUsed[i][Vocabulary.RDFS_COMMENT]);
         }
     });
 
@@ -73,11 +87,11 @@ describe('Filters', () => {
             categoriesUsed = getCategoriesUsedByReports(categories);
 
         var options = TestUtils.scryRenderedDOMComponentsWithTag(component, 'option');
-        expect(options.length).toEqual(categoriesUsed.length);
-        for (var i = 0, len = options.length; i < len; i++) {
-            expect(options[i].value).toEqual(categoriesUsed[i]['@id']);
-            expect(options[i].textContent).toEqual(categoriesUsed[i][Vocabulary.RDFS_LABEL]);
-            expect(options[i].title).toEqual(categoriesUsed[i][Vocabulary.RDFS_COMMENT]);
+        expect(options.length).toEqual(categoriesUsed.length + 1);
+        for (var i = 0, len = categoriesUsed.length; i < len; i++) {
+            expect(options[i + 1].value).toEqual(categoriesUsed[i]['@id']);
+            expect(options[i + 1].textContent).toEqual(categoriesUsed[i][Vocabulary.RDFS_LABEL]);
+            expect(options[i + 1].title).toEqual(categoriesUsed[i][Vocabulary.RDFS_COMMENT]);
         }
     });
 
