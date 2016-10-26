@@ -7,7 +7,6 @@ import Actions from "../../actions/Actions";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import OptionsStore from "../../stores/OptionsStore";
-import TypeaheadStore from "../../stores/TypeaheadStore";
 
 class Filters extends React.Component {
     static propTypes = {
@@ -20,14 +19,13 @@ class Filters extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            occurrenceCategory: JsonLdUtils.processTypeaheadOptions(TypeaheadStore.getOccurrenceCategories())
+            occurrenceCategory: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions('occurrenceCategory'))
         }
     }
 
     componentDidMount() {
-        Actions.loadOccurrenceCategories();
-        this.unsubscribeOptions = OptionsStore.listen(this._onOptionsLoaded);
-        this.unsubscribeTypeahead = TypeaheadStore.listen(this._onTypeaheadOptionsLoaded);
+        Actions.loadOptions('occurrenceCategory');
+        this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
     }
 
     _onOptionsLoaded = (type, options) => {
@@ -36,15 +34,8 @@ class Filters extends React.Component {
         this.setState(update);
     };
 
-    _onTypeaheadOptionsLoaded = (data) => {
-        if (data.action === Actions.loadOccurrenceCategories) {
-            this.setState({occurrenceCategory: JsonLdUtils.processTypeaheadOptions(data.data)});
-        }
-    };
-
     componentWillUnmount() {
-        this.unsubscribeOptions();
-        this.unsubscribeTypeahead();
+        this.unsubscribe();
     }
 
     render() {

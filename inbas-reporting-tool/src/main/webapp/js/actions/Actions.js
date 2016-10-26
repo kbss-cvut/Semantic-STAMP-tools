@@ -9,7 +9,7 @@ var Actions = Reflux.createActions([
     'phaseTransition',
     'loadRevisions', 'loadReport',
 
-    'loadOptions', 'loadEventTypes', 'loadOccurrenceCategories',
+    'loadOptions',
 
     'setTransitionPayload',
     

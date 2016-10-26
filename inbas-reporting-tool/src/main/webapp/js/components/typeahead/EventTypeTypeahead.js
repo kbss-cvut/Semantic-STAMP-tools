@@ -8,7 +8,7 @@ var JsonLdUtils = require('jsonld-utils').default;
 
 var Actions = require('../../actions/Actions');
 var TypeaheadResultList = require('./EventTypeTypeaheadResultList').default;
-var TypeaheadStore = require('../../stores/TypeaheadStore');
+var OptionsStore = require('../../stores/OptionsStore');
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var EventTypeTypeahead = React.createClass({
@@ -25,15 +25,17 @@ var EventTypeTypeahead = React.createClass({
     },
 
     componentDidMount: function () {
-        this.listenTo(TypeaheadStore, this.onEventsLoaded);
-        Actions.loadEventTypes();
+        this.listenTo(OptionsStore, this.onEventsLoaded);
+        Actions.loadOptions('eventType');
         if (this.props.focus) {
             this.focus();
         }
     },
-    onEventsLoaded: function () {
-        var options = TypeaheadStore.getEventTypes();
-        this.setState({options: JsonLdUtils.processTypeaheadOptions(options)});
+
+    onEventsLoaded: function (type, data) {
+        if (type === 'eventType') {
+            this.setState({options: JsonLdUtils.processTypeaheadOptions(data)});
+        }
     },
 
     focus: function () {
