@@ -26,7 +26,7 @@ var OccurrenceClassification = React.createClass({
     getInitialState: function () {
         return {
             occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
-            occurrenceCategories: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions('occurrenceCategory'))
+            occurrenceCategories: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY))
         };
     },
 
@@ -37,7 +37,7 @@ var OccurrenceClassification = React.createClass({
     _onOptionsLoaded: function (type, data) {
         if (type === Constants.OPTIONS.OCCURRENCE_CLASS) {
             this.setState({occurrenceClasses: data});
-        } else if (type === 'occurrenceCategory') {
+        } else if (type === Constants.OPTIONS.OCCURRENCE_CATEGORY) {
             this.setState({occurrenceCategories: JsonLdUtils.processTypeaheadOptions(data)});
             var selected = this._resolveSelectedCategory();
             if (selected) {

@@ -7,7 +7,8 @@ module.exports = {
     ECCAIRS_URL: 'http://www.icao.int/safety/airnavigation/AIG/Documents/ADREP%20Taxonomy/ECCAIRS%20Aviation%201.3.0.12%20(Entities%20and%20Attributes).en.id.pdf',
     HOME_ROUTE: Routes.dashboard,
     OPTIONS: {
-        OCCURRENCE_CLASS: 'occurrenceClass'
+        OCCURRENCE_CLASS: 'occurrenceClass',
+        OCCURRENCE_CATEGORY: 'occurrenceCategory'
     },
 
     TIME_SCALES: {
@@ -86,5 +87,12 @@ module.exports = {
 
     OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
     EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
-    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto'
+    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
+
+    FILTERS: [{
+        path: 'occurrenceCategory',
+        type: 'select',
+        options: 'occurrenceCategory',
+        label: 'report.occurrence.category.label'
+    }]
 };

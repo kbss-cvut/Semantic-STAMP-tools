@@ -4,6 +4,7 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var Actions = require('../../actions/Actions');
+var Constants = require('../../constants/Constants');
 var Logger = require('../../utils/Logger');
 var ReportFactory = require('../../model/ReportFactory');
 var Report = require('./Report');
@@ -45,7 +46,7 @@ var ReportController = React.createClass({
 
     componentDidMount: function () {
         Actions.loadOptions();
-        Actions.loadOptions('occurrenceCategory');
+        Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
         Actions.loadOptions('factorType');
     },
 

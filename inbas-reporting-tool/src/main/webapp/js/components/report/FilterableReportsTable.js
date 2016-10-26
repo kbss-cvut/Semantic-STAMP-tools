@@ -91,7 +91,7 @@ var FilterableReportsTable = React.createClass({
     render: function () {
         return <div>
             <div className='type-filters'>
-                <OverlayTrigger trigger='click' placement='right' overlay={this._renderFilters()}>
+                <OverlayTrigger trigger='click' rootClose placement='right' overlay={this._renderFilters()}>
                     <Button bsStyle='primary'>{this.i18n('filters.label')}</Button>
                 </OverlayTrigger>
             </div>
@@ -102,7 +102,8 @@ var FilterableReportsTable = React.createClass({
 
     _renderFilters: function () {
         return <Popover id='popover-filters' title={this.i18n('filters.label')} placement='right'>
-            <Filters filters={this.state} onChange={this.onFilterChange}/>
+            <Filters filters={this.state} onChange={this.onFilterChange} data={this.props.allReports}
+                     onResetFilters={this.onResetFilters}/>
         </Popover>;
     },
 

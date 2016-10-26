@@ -1,6 +1,7 @@
 'use strict';
 
 var Constants = require('../constants/Constants');
+var Utils = require('../utils/Utils');
 
 /**
  * Filters data according to specified filter(s).
@@ -21,13 +22,9 @@ var DataFilter = {
                 if (!filter.hasOwnProperty(key) || filter[key] === Constants.FILTER_DEFAULT) {
                     continue;
                 }
-                var path = key.split('.'),
-                    value = item;
-                for (i = 0, len = path.length; i < len; i++) {
-                    value = value[path[i]];
-                    if (!value && i < len) {
-                        return false;
-                    }
+                var value = Utils.getPropertyValue(item, key);
+                if (!value) {
+                    return false;
                 }
                 var filterValue = filter[key];
                 if (!Array.isArray(filterValue)) {

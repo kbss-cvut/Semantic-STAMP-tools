@@ -160,4 +160,33 @@ describe('Utility functions tests', function () {
             expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.RELATIVE);
         });
     });
+
+    describe('getPropertyValue', () => {
+
+        it('returns value of property when path has length 1', () => {
+            var object = {},
+                property = 'startTime';
+            object[property] = Date.now();
+            expect(Utils.getPropertyValue(object, property)).toEqual(object[property]);
+        });
+
+        it('returns value of property with graph traversal', () => {
+            var value = 'The fall of Reach',
+                object = {
+                    occurrence: {
+                        name: value
+                    }
+                },
+                property = 'occurrence.name';
+            expect(Utils.getPropertyValue(object, property)).toEqual(value);
+        });
+
+        it('returns null when part of property path is missing', () => {
+            var object = {
+                    startTime: Date.now()
+                },
+                property = 'occurrence.name';
+            expect(Utils.getPropertyValue(object, property)).toBeNull();
+        });
+    });
 });
