@@ -18,8 +18,6 @@ describe('SafetyIssueReport', function () {
     beforeEach(function () {
         spyOn(Actions, 'updateReport');
         spyOn(Actions, 'loadOptions');
-        spyOn(Actions, 'loadOccurrenceCategories');
-        spyOn(Actions, 'loadEventTypes');
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
         Environment.mockFactors(SafetyIssueReport);
         report = Generator.generateSafetyIssueReport();

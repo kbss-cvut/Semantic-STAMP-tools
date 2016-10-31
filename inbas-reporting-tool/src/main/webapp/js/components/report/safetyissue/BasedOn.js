@@ -3,12 +3,12 @@
 import React from "react";
 import {Button, Label, Panel, Table} from "react-bootstrap";
 import Actions from "../../../actions/Actions";
+import Constants from "../../../constants/Constants";
 import injectIntl from "../../../utils/injectIntl";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import OptionsStore from "../../../stores/OptionsStore";
 import Routes from "../../../utils/Routes";
 import SafetyIssueBase from "../../../model/SafetyIssueBase";
-import TypeaheadStore from "../../../stores/TypeaheadStore";
 
 /**
  * Displays a table of reports on which a safety issue is based.
@@ -23,30 +23,27 @@ class BasedOn extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            category: TypeaheadStore.getOccurrenceCategories(),
+            category: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY),
             findingType: OptionsStore.getOptions('findingType'),
         }
     }
 
     componentDidMount() {
         Actions.loadOptions('findingType');
-        Actions.loadOccurrenceCategories();
-        this.unsubscribeOptions = OptionsStore.listen(this._onStoreTrigger);
-        this.unsubscribeCategories = TypeaheadStore.listen(this._onStoreTrigger);
+        Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
+        this.unsubscribe = OptionsStore.listen(this._onStoreTrigger);
     }
 
     _onStoreTrigger = (type, data) => {
         if (type === 'findingType') {
             this.setState({findingType: data});
-        }
-        if (typeof type === 'object' && type.action === Actions.loadOccurrenceCategories) {
-            this.setState({category: type.data});
+        } else if (type === Constants.OPTIONS.OCCURRENCE_CATEGORY) {
+            this.setState({category: data});
         }
     };
 
     componentWillUnmount() {
-        this.unsubscribeCategories();
-        this.unsubscribeOptions();
+        this.unsubscribe();
     }
 
     render() {

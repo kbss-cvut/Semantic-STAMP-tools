@@ -32,7 +32,7 @@ var WizardGenerator = require('../wizard/generator/WizardGenerator');
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
 var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
-var TypeaheadStore = require('../../stores/TypeaheadStore');
+var OptionsStore = require('../../stores/OptionsStore');
 
 function convertDurationToCurrentUnit(factor) {
     var targetUnit = gantt.config.duration_unit;
@@ -62,7 +62,7 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventTypes, TypeaheadStore.getEventTypes())),
+            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventTypes, OptionsStore.getOptions('eventType'))),
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement,

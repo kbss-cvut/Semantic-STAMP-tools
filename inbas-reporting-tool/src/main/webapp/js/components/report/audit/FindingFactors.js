@@ -8,8 +8,8 @@ import Actions from "../../../actions/Actions";
 import FactorStyleInfo from "../../../utils/FactorStyleInfo";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
+import OptionsStore from "../../../stores/OptionsStore";
 import TypeaheadResultList from "../../typeahead/EventTypeTypeaheadResultList";
-import TypeaheadStore from "../../../stores/TypeaheadStore";
 import Utils from "../../../utils/Utils";
 
 const FACTOR_ROW_LENGTH = 3;
@@ -29,20 +29,20 @@ class FindingFactors extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            eventType: JsonLdUtils.processTypeaheadOptions(TypeaheadStore.getEventTypes())
+            eventType: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions('eventType'))
         }
     }
 
     componentDidMount() {
         if (this.state.eventType.length === 0) {
-            Actions.loadEventTypes();
+            Actions.loadOptions('eventType');
         }
-        this.unsubscribe = TypeaheadStore.listen(this._onEventTypesLoaded);
+        this.unsubscribe = OptionsStore.listen(this._onEventTypesLoaded);
     }
 
-    _onEventTypesLoaded = (data) => {
-        if (data.action === Actions.loadEventTypes) {
-            this.setState({eventType: JsonLdUtils.processTypeaheadOptions(data.data)});
+    _onEventTypesLoaded = (type, data) => {
+        if (type === 'eventType') {
+            this.setState({eventType: JsonLdUtils.processTypeaheadOptions(data)});
         }
     };
 

@@ -29,7 +29,7 @@ var OccurrenceClassification = React.createClass({
     getInitialState: function () {
         return {
             occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
-            occurrenceCategories: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY))
+            occurrenceCategories: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY)),
             secondaryCategory: this.props.report.occurrence.eventTypes.length > 1
         };
     },
@@ -42,11 +42,7 @@ var OccurrenceClassification = React.createClass({
         if (type === Constants.OPTIONS.OCCURRENCE_CLASS) {
             this.setState({occurrenceClasses: data});
         } else if (type === Constants.OPTIONS.OCCURRENCE_CATEGORY) {
-            this.setState({occurrenceCategories: JsonLdUtils.processTypeaheadOptions(data)});
-            var selected = this._resolveSelectedCategory();
-            if (selected) {
-                this.refs.occurrenceCategory.selectOption(selected);
-            }
+            this._onOccurrenceCategoriesLoaded(data);
         }
     },
 
@@ -59,15 +55,9 @@ var OccurrenceClassification = React.createClass({
             };
         });
     },
-    
-    // TODO Merge
 
-    onOccurrenceCategoriesLoaded: function (data) {
-        if (data.action !== Actions.loadOccurrenceCategories) {
-            return;
-        }
-        var options = data.data,
-            report = this.props.report,
+    _onOccurrenceCategoriesLoaded: function (options) {
+        var report = this.props.report,
             selected;
         this.setState({occurrenceCategories: JsonLdUtils.processTypeaheadOptions(options)});
         if (report.occurrence.eventTypes.length > 0) {

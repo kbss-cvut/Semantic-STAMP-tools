@@ -107,7 +107,7 @@ var Factors = React.createClass({
         }
         this.factorsRendered = true;
         this.rootReferenceId = this.props.report[this.props.rootAttribute].referenceId;
-        FactorRenderer.renderFactors(this.props.report, TypeaheadStore.getEventTypes());
+        FactorRenderer.renderFactors(this.props.report, eventTypes);
         this.ganttController.expandSubtree(this.ganttController.rootEventId);
         this.factorReferenceIdCounter = FactorRenderer.greatestReferenceId;
     },

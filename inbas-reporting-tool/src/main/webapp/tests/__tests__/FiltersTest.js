@@ -25,8 +25,7 @@ describe('Filters', () => {
     });
 
     it('adds default filter option - any - to the rendered select', () => {
-        var categories = getCategoriesAsJsonLd(),
-            value = reports[Generator.getRandomInt(reports.length)].occurrenceCategory;
+        var categories = getCategoriesAsJsonLd();
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
                                                     onResetFilters={onResetFilters}/>).getWrappedComponent(),

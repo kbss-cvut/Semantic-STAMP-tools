@@ -3,6 +3,7 @@
 var React = require('react');
 
 var Actions = require('../../../actions/Actions');
+var Constants = require('../../../constants/Constants');
 var ReportDetail = require('./OccurrenceReport');
 var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
@@ -17,7 +18,7 @@ var OccurrenceReportController = React.createClass({
 
     componentDidMount: function () {
         Actions.loadOptions();
-        Actions.loadOccurrenceCategories();
+        Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
         Actions.loadOptions('department');
         Actions.loadOptions('factorType');
     },

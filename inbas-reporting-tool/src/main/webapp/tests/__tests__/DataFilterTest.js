@@ -47,11 +47,11 @@ describe('Data filter', () => {
     });
 
     it('filters data using filter with property path', () => {
-        var eventType = reports[0].occurrence.eventType,
+        var eventType = reports[0].occurrence.eventTypes[0],
             filter = {
-                'occurrence.eventType': eventType
+                'occurrence.eventTypes': eventType
             },
-            expected = reports.filter((item) => item.occurrence.eventType === eventType),
+            expected = reports.filter((item) => item.occurrence.eventTypes[0] === eventType),
 
             result = DataFilter.filterData(reports, filter);
         expect(result.length).toBeGreaterThan(0);
@@ -68,11 +68,11 @@ describe('Data filter', () => {
                 }
             });
         }
-        var eventType = reports[0].occurrence.eventType,
+        var eventType = reports[0].occurrence.eventTypes[0],
             filter = {
-                'occurrence.eventType': eventType
+                'occurrence.eventTypes': eventType
             },
-            expected = reports.filter((item) => item.occurrence && item.occurrence.eventType === eventType),
+            expected = reports.filter((item) => item.occurrence && item.occurrence.eventTypes[0] === eventType),
 
             result = DataFilter.filterData(reports, filter);
         expect(result.length).toBeGreaterThan(0);

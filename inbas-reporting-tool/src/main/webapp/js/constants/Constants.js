@@ -108,7 +108,7 @@ module.exports = {
     },
 
     FILTERS: [{
-        path: 'occurrenceCategory',
+        path: 'occurrenceCategories',
         type: 'select',
         options: 'occurrenceCategory',
         label: 'report.occurrence.category.label'

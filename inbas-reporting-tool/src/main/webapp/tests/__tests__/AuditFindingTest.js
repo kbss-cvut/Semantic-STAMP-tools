@@ -21,7 +21,7 @@ describe('AuditFinding', () => {
         };
         onSave = jasmine.createSpy('onSave');
         onClose = jasmine.createSpy('onClose');
-        spyOn(Actions, 'loadEventTypes');
+        spyOn(Actions, 'loadOptions');
     });
 
     it('sets finding type on new finding when type is selected', () => {
