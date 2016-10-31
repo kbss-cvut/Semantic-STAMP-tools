@@ -238,6 +238,7 @@ export default class Generator {
             report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
             report.identification = report.occurrence.name + i;
             report.date = report.occurrence.startTime + i * 1000;
+            report.occurrenceCategory = report.occurrence.eventType;
             delete report.occurrence;
             reports.push(report);
         }

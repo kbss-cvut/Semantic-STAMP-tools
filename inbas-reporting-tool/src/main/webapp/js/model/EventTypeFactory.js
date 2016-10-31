@@ -1,6 +1,6 @@
 'use strict';
 
-var TypeaheadStore = require('../stores/TypeaheadStore');
+var OptionsStore = require('../stores/OptionsStore');
 
 module.exports = {
 
@@ -15,7 +15,7 @@ module.exports = {
             return null;
         }
         if (!items) {
-            items = TypeaheadStore.getEventTypes();
+            items = OptionsStore.getOptions('eventType');
         }
         return items.find((item) => {
             return item['@id'] === id;

@@ -554,3 +554,9 @@ button.reset-filters {
 .inline-input {
     margin-left: 0.5em;
 }
+
+.filters-footer {
+    padding: 5px 15px 0 15px;
+    text-align: right;
+    border-top: 1px solid #e5e5e5;
+}

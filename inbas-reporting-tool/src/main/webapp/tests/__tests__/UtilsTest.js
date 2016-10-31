@@ -14,6 +14,12 @@ describe('Utility functions tests', function () {
         expect(Utils.constantToString('CONSTANT_WITH_UNDERSCORES', true)).toEqual('Constant with Underscores');
     });
 
+    it('formats epoch time to correct string', () => {
+        var date = new Date(0),
+            result = Utils.formatDate(date);
+        expect(result).toMatch(/01-01-70 0(0|1):00/);
+    });
+
     it('Returns the same value when converting to the same unit', function () {
         var value = 117;
         var result = Utils.convertTime('second', 'second', value);
@@ -158,6 +164,43 @@ describe('Utility functions tests', function () {
             expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.RELATIVE);
             delete root.endTime;
             expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.RELATIVE);
+        });
+
+        it('returns seconds when start is Unix epoch and end is a second later', () => {
+            var root = {
+                startTime: 0,
+                endTime: 1000
+            };
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.SECOND);
+        });
+    });
+
+    describe('getPropertyValue', () => {
+
+        it('returns value of property when path has length 1', () => {
+            var object = {},
+                property = 'startTime';
+            object[property] = Date.now();
+            expect(Utils.getPropertyValue(object, property)).toEqual(object[property]);
+        });
+
+        it('returns value of property with graph traversal', () => {
+            var value = 'The fall of Reach',
+                object = {
+                    occurrence: {
+                        name: value
+                    }
+                },
+                property = 'occurrence.name';
+            expect(Utils.getPropertyValue(object, property)).toEqual(value);
+        });
+
+        it('returns null when part of property path is missing', () => {
+            var object = {
+                    startTime: Date.now()
+                },
+                property = 'occurrence.name';
+            expect(Utils.getPropertyValue(object, property)).toBeNull();
         });
     });
 });

@@ -12,8 +12,17 @@ const I18nWrapper = (Component) => class extends React.Component {
         return this.props.intl.messages[id];
     };
 
+    formatMessage = (messageId, values) => {
+        return this.props.intl.formatMessage({id: messageId}, values);
+    };
+
+    getWrappedComponent() {
+        return this._wrappedComponent;
+    }
+
     render() {
-        return <Component i18n={this.i18n} {...this.props}/>;
+        return <Component ref={(c) => this._wrappedComponent = c} i18n={this.i18n}
+                          formatMessage={this.formatMessage} {...this.props}/>;
     }
 };
 

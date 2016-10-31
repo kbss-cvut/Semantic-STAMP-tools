@@ -110,6 +110,8 @@ module.exports = {
         'reports.paging.item-count': 'Showing {showing} of {total} items.',
         'reports.create-report': 'Create report',
 
+        'filters.label': 'Filters',
+
         'delete-dialog.title': 'Delete {type} Report?',
         'delete-dialog.content': 'Are you sure you want to remove this report?',
 

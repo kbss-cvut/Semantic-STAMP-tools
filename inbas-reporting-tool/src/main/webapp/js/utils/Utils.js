@@ -206,7 +206,7 @@ module.exports = {
      * @param rootEvent
      */
     determineTimeScale: function (rootEvent) {
-        if (!rootEvent.startTime || !rootEvent.endTime) {
+        if (rootEvent.startTime === null || rootEvent.startTime === undefined || rootEvent.endTime === null || rootEvent.endTime === undefined) {
             return Constants.TIME_SCALES.RELATIVE;
         }
         var duration = (rootEvent.endTime - rootEvent.startTime) / 1000;    // to seconds
@@ -218,5 +218,26 @@ module.exports = {
             return Constants.TIME_SCALES.MINUTE;
         }
         return Constants.TIME_SCALES.HOUR;
+    },
+
+    /**
+     * Resolves value of the specified property path.
+     *
+     * I.e. the path can contain dots and this method will traverse the object graph (starting in the object) and try
+     * to get value specified by the path. If any part of the property path is missing in the object graph, null is
+     * returned.
+     * @param object The object to read value from (root of object graph)
+     * @param propertyPath Path to the property, use '.' for object traversal
+     */
+    getPropertyValue: function (object, propertyPath) {
+        var path = propertyPath.split('.'),
+            value = object;
+        for (var i = 0, len = path.length; i < len; i++) {
+            value = value[path[i]];
+            if (!value && i < len) {
+                return null;
+            }
+        }
+        return value;
     }
 };
