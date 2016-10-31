@@ -16,6 +16,9 @@
 - Support for safety issues based on audit findings (Feature #182).
 - Mandatory TACR publicity (Feature #185).
 
+### 0.7.15 - October 31, 2016
+- Support for filters in the Reports view (Feature #206).
+
 ### 0.7.10 - October 14, 2016
 - Get report by occurrence no longer returns a list of reports, it returns just the report that
 documents the occurrence. There cannot be multiple.

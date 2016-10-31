@@ -27,7 +27,13 @@ function _resolveUniqueFilterableValues(data) {
         ((item) => {
             _processFilters((filter) => {
                 var value = Utils.getPropertyValue(item, filter.path);
-                if (value && values[filter.path].indexOf(value) === -1) {
+                if (Array.isArray(value)) {
+                    for (var j = 0, lenn = value.length; j < lenn; j++) {
+                        if (values[filter.path].indexOf(value[j]) === -1) {
+                            values[filter.path].push(value[j]);
+                        }
+                    }
+                } else if (value && values[filter.path].indexOf(value) === -1) {
                     values[filter.path].push(value);
                 }
             });
