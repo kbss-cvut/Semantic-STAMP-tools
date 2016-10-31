@@ -1,5 +1,8 @@
 # SISEL Release Notes
 
+### 0.7.15 - October 31, 2016
+- Support for filters in the Reports view (Feature #206).
+
 ### 0.7.14 - October 25, 2016
 - Delete button in report detail (Feature #201).
 - Support for up to two occurrence categories (Feature #157).
@@ -15,9 +18,6 @@
 ### 0.7.11 - October 17, 2016
 - Support for safety issues based on audit findings (Feature #182).
 - Mandatory TACR publicity (Feature #185).
-
-### 0.7.15 - October 31, 2016
-- Support for filters in the Reports view (Feature #206).
 
 ### 0.7.10 - October 14, 2016
 - Get report by occurrence no longer returns a list of reports, it returns just the report that

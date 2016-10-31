@@ -261,7 +261,7 @@ export default class Generator {
             } else {
                 report.types = [Vocabulary.SAFETY_ISSUE_REPORT];
             }
-            report.occurrenceCategory = Generator.randomCategory().id;
+            report.occurrenceCategories = [Generator.randomCategory().id];
             delete report.occurrence;
             reports.push(report);
         }

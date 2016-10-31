@@ -22,6 +22,11 @@ describe('ReportsController', () => {
         spyOn(Actions, 'loadAllReports');
         spyOn(Actions, 'loadOptions');
         reports = Generator.generateReports();
+        ComponentStateStore.onResetComponentState(ReportsController.displayName);
+    });
+
+    afterEach(() => {
+        ComponentStateStore.onResetComponentState(ReportsController.displayName);
     });
 
     it('initializes report sort with default values', () => {
