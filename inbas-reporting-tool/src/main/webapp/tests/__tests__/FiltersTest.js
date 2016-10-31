@@ -25,8 +25,7 @@ describe('Filters', () => {
     });
 
     it('adds default filter option - any - to the rendered select', () => {
-        var categories = getCategoriesAsJsonLd(),
-            value = reports[Generator.getRandomInt(reports.length)].occurrenceCategory;
+        var categories = getCategoriesAsJsonLd();
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
                                                     onResetFilters={onResetFilters}/>).getWrappedComponent(),
@@ -70,7 +69,9 @@ describe('Filters', () => {
         for (var i = 0, len = categories.length; i < len; i++) {
             cat = categories[i];
             for (var j = 0; j < count; j++) {
-                if (cat['@id'] === reports[j].occurrenceCategory && categoriesUsed.indexOf(cat) === -1) {
+                if (categoriesUsed.indexOf(cat) === -1 &&
+                    (cat['@id'] === reports[j].occurrenceCategory || Array.isArray(reports[j].occurrenceCategory) &&
+                    reports[j].occurrenceCategory.indexOf(cat['@id']) !== -1)) {
                     categoriesUsed.push(cat);
                     break;
                 }
@@ -78,6 +79,37 @@ describe('Filters', () => {
         }
         return categoriesUsed;
     }
+
+    it('generates options for occurrence categories existing in data when multiple categories per record exist', () => {
+        var multipleCats = false;
+        for (var i = 0, len = reports.length; i < len; i++) {
+            if (!multipleCats || Generator.getRandomBoolean()) {
+                reports[i].occurrenceCategory = [reports[i].occurrenceCategory, Generator.randomCategory().id];
+                multipleCats = true;
+            }
+        }
+        var categories = getCategoriesAsJsonLd();
+        spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
+        var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
+                                                    onResetFilters={onResetFilters}/>).getWrappedComponent(),
+            options = component.state[Constants.FILTERS[0].path],
+            categoriesUsed = getCategoriesUsedByReports(categories);
+
+        expect(options.length).toEqual(categoriesUsed.length + 1);
+        var found;
+        for (i = 0, len = categoriesUsed.length; i < len; i++) {
+            found = false;
+            for (var j = 1, lenn = options.length; j < lenn; j++) {
+                if (categoriesUsed[i]['@id'] === options[j].value) {
+                    expect(options[j].label).toEqual(categoriesUsed[i][Vocabulary.RDFS_LABEL]);
+                    expect(options[j].title).toEqual(categoriesUsed[i][Vocabulary.RDFS_COMMENT]);
+                    found = true;
+                    break;
+                }
+            }
+            expect(found).toBeTruthy();
+        }
+    });
 
     it('renders select with options corresponding to all unique categories used by data', () => {
         var categories = getCategoriesAsJsonLd();
