@@ -11,10 +11,8 @@ var JsonLdUtils = require('jsonld-utils').default;
 
 var injectIntl = require('../../../utils/injectIntl');
 
-var Actions = require('../../../actions/Actions');
 var Select = require('../../Select');
 var OptionsStore = require('../../../stores/OptionsStore');
-var TypeaheadStore = require('../../../stores/TypeaheadStore');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var Constants = require('../../../constants/Constants');
 var Vocabulary = require('../../../constants/Vocabulary');
@@ -31,21 +29,25 @@ var OccurrenceClassification = React.createClass({
     getInitialState: function () {
         return {
             occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
-            occurrenceCategories: JsonLdUtils.processTypeaheadOptions(TypeaheadStore.getOccurrenceCategories()),
+            occurrenceCategories: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY))
             secondaryCategory: this.props.report.occurrence.eventTypes.length > 1
         };
     },
 
     componentDidMount: function () {
-        this.listenTo(OptionsStore, this.onOccurrenceClassesLoaded);
-        this.listenTo(TypeaheadStore, this.onOccurrenceCategoriesLoaded)
+        this.listenTo(OptionsStore, this._onOptionsLoaded);
     },
 
-    onOccurrenceClassesLoaded: function (type, data) {
-        if (type !== Constants.OPTIONS.OCCURRENCE_CLASS) {
-            return;
+    _onOptionsLoaded: function (type, data) {
+        if (type === Constants.OPTIONS.OCCURRENCE_CLASS) {
+            this.setState({occurrenceClasses: data});
+        } else if (type === Constants.OPTIONS.OCCURRENCE_CATEGORY) {
+            this.setState({occurrenceCategories: JsonLdUtils.processTypeaheadOptions(data)});
+            var selected = this._resolveSelectedCategory();
+            if (selected) {
+                this.refs.occurrenceCategory.selectOption(selected);
+            }
         }
-        this.setState({occurrenceClasses: data});
     },
 
     _transformOccurrenceClasses: function () {
@@ -57,6 +59,8 @@ var OccurrenceClassification = React.createClass({
             };
         });
     },
+    
+    // TODO Merge
 
     onOccurrenceCategoriesLoaded: function (data) {
         if (data.action !== Actions.loadOccurrenceCategories) {

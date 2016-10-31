@@ -136,7 +136,8 @@ var FactorRendererImpl = {
             GanttController.addFactor({
                 id: node.referenceId,
                 text: text,
-                start_date: new Date(node.startTime),
+                // Temporary fix for gantt issue with 0 as task start/end time
+                start_date: new Date(node.startTime === 0 ? node.startTime + 1 : node.startTime),
                 end_date: new Date(node.endTime),
                 readonly: node.readOnly,
                 statement: node

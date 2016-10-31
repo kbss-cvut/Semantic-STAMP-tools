@@ -20,7 +20,6 @@ describe('ReportsController', () => {
     beforeEach(() => {
         jasmine.addMatchers(Environment.customMatchers);
         spyOn(Actions, 'loadAllReports');
-        spyOn(Actions, 'loadEventTypes');
         spyOn(Actions, 'loadOptions');
         reports = Generator.generateReports();
     });

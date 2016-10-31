@@ -23,10 +23,9 @@ var I18nMixin = require('../../i18n/I18nMixin');
 var Utils = require('../../utils/Utils');
 
 var OptionsStore = require('../../stores/OptionsStore');
-var TypeaheadStore = require('../../stores/TypeaheadStore');
 
 var Factors = React.createClass({
-    mixins: [I18nMixin, Reflux.listenTo(TypeaheadStore, 'renderFactors'), Reflux.listenTo(OptionsStore, '_factorTypesLoaded')],
+    mixins: [I18nMixin, Reflux.listenTo(OptionsStore, '_onOptionsLoaded')],
 
     propTypes: {
         report: React.PropTypes.object.isRequired,
@@ -76,7 +75,7 @@ var Factors = React.createClass({
     },
 
     componentWillMount: function () {
-        Actions.loadEventTypes();
+        Actions.loadOptions('eventType');
     },
 
     componentDidMount: function () {
@@ -89,22 +88,21 @@ var Factors = React.createClass({
             onDeleteLink: this.onDeleteLink
         });
         this.ganttController.setScale(this.state.scale);
-        if (TypeaheadStore.getEventTypes().length !== 0) {
-            this.renderFactors();
+        if (OptionsStore.getOptions('eventType').length !== 0) {
+            this.renderFactors(OptionsStore.getOptions('eventType'));
         }
     },
 
-    _factorTypesLoaded: function (type, data) {
-        if (type === 'factorType') {
+    _onOptionsLoaded: function (type, data) {
+        if (type === 'eventType') {
+            this.renderFactors(data);
+        } else if (type === 'factorType') {
             this.setState({factorTypeOptions: JsonLdUtils.processSelectOptions(data)});
         }
     },
 
-    renderFactors: function (data) {
+    renderFactors: function (eventTypes) {
         if (this.factorsRendered) {
-            return;
-        }
-        if (data && data.action !== Actions.loadEventTypes) {
             return;
         }
         this.factorsRendered = true;

@@ -18,6 +18,11 @@ var I18nMixin = require('../../i18n/I18nMixin');
 var ReportRow = React.createClass({
     mixins: [I18nMixin, Reflux.listenTo(OptionsStore, '_onOptionsLoaded')],
 
+    propTypes: {
+        actions: React.PropTypes.object.isRequired,
+        report: React.PropTypes.object.isRequired
+    },
+
     getInitialState: function () {
         return {
             modalOpen: false
@@ -82,7 +87,7 @@ var ReportRow = React.createClass({
     },
 
     _renderDate: function (report) {
-        return report.date ? Utils.formatDate(new Date(report.date)) : '';
+        return report.date !== null && report.date !== undefined ? Utils.formatDate(new Date(report.date)) : '';
     }
 });
 

@@ -117,6 +117,8 @@ module.exports = {
         'reports.paging.item-count': 'Zobrazuji {showing} z {total} položek.',
         'reports.create-report': 'Nové hlášení',
 
+        'filters.label': 'Filtry',
+
         'delete-dialog.title': 'Smazat hlášení?',
         'delete-dialog.content': 'Skutečně chcete smazat toto hlášení?',
         'delete-dialog.submit': 'Smazat',

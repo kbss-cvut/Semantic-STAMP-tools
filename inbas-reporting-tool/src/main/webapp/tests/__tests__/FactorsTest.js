@@ -32,7 +32,7 @@ describe('Factors component tests', function () {
         });
         GanttController.getChildCount.and.returnValue(0);
         onChange = jasmine.createSpy('onChange');
-        spyOn(Actions, 'loadEventTypes');
+        spyOn(Actions, 'loadOptions');
         jasmine.getGlobal().gantt = {
             config: {
                 duration_unit: 'second'
@@ -54,7 +54,7 @@ describe('Factors component tests', function () {
             factor = arg;
         });
         var factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>);
-        factors.renderFactors({action: Actions.loadEventTypes, data: []});
+        factors.renderFactors([]);
         expect(GanttController.addFactor).toHaveBeenCalled();
         expect(factor).toBeDefined();
         expect(factor.text).toEqual(report.occurrence.name);
@@ -80,7 +80,7 @@ describe('Factors component tests', function () {
                 text: '2180100 - Loss of Separation',
                 statement: {}
             };
-        factors.renderFactors({action: Actions.loadEventTypes, data: []});
+        factors.renderFactors([]);
         factors.state.currentFactor = newFactor;
         factors.onSaveFactor();
         expect(GanttController.addFactor).toHaveBeenCalled();
@@ -108,7 +108,7 @@ describe('Factors component tests', function () {
         report.occurrence.referenceId = referenceId;
         GanttController.getFactor.and.returnValue(parent);
         component = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>);
-        component.renderFactors({action: Actions.loadEventTypes, data: []});
+        component.renderFactors([]);
         component.onCreateFactor(newFactor);
 
         expect(newFactor.statement.referenceId).toEqual(referenceId + 1);
@@ -118,16 +118,10 @@ describe('Factors component tests', function () {
     it('Renders factor graph only after event types have been loaded', () => {
         spyOn(FactorRenderer, 'renderFactors');
         var factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>),
-            eventTypes = [
-                {id: 'test'}
-            ],
-            TypeaheadStore = require('../../js/stores/TypeaheadStore');
-        spyOn(TypeaheadStore, 'getEventTypes').and.returnValue(eventTypes);
+            eventTypes = Generator.getJsonLdSample(),
+            OptionsStore = require('../../js/stores/OptionsStore');
         expect(FactorRenderer.renderFactors).not.toHaveBeenCalled();
-        factors.renderFactors({
-            action: Actions.loadEventTypes,
-            data: eventTypes
-        });
+        OptionsStore.trigger('eventType', eventTypes);
         expect(FactorRenderer.renderFactors).toHaveBeenCalledWith(report, eventTypes);
     });
 
@@ -149,7 +143,7 @@ describe('Factors component tests', function () {
         GanttController.getChildCount.and.returnValue(childCount);
         GanttController.getFactor.and.returnValue(parent);
         component = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>);
-        component.renderFactors({action: Actions.loadEventTypes, data: []});
+        component.renderFactors([]);
         component.setState({
             currentFactor: newFactor
         });
