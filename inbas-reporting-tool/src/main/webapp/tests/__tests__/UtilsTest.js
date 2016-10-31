@@ -14,6 +14,12 @@ describe('Utility functions tests', function () {
         expect(Utils.constantToString('CONSTANT_WITH_UNDERSCORES', true)).toEqual('Constant with Underscores');
     });
 
+    it('formats epoch time to correct string', () => {
+        var date = new Date(0),
+            result = Utils.formatDate(date);
+        expect(result).toMatch(/01-01-70 0(0|1):00/);
+    });
+
     it('Returns the same value when converting to the same unit', function () {
         var value = 117;
         var result = Utils.convertTime('second', 'second', value);
