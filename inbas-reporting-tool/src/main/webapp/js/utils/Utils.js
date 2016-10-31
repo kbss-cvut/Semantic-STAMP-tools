@@ -206,7 +206,7 @@ module.exports = {
      * @param rootEvent
      */
     determineTimeScale: function (rootEvent) {
-        if (!rootEvent.startTime || !rootEvent.endTime) {
+        if (rootEvent.startTime === null || rootEvent.startTime === undefined || rootEvent.endTime === null || rootEvent.endTime === undefined) {
             return Constants.TIME_SCALES.RELATIVE;
         }
         var duration = (rootEvent.endTime - rootEvent.startTime) / 1000;    // to seconds

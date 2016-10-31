@@ -165,6 +165,14 @@ describe('Utility functions tests', function () {
             delete root.endTime;
             expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.RELATIVE);
         });
+
+        it('returns seconds when start is Unix epoch and end is a second later', () => {
+            var root = {
+                startTime: 0,
+                endTime: 1000
+            };
+            expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.SECOND);
+        });
     });
 
     describe('getPropertyValue', () => {
