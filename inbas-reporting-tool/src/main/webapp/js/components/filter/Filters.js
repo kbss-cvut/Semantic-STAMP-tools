@@ -52,6 +52,7 @@ class Filters extends React.Component {
 
     constructor(props) {
         super(props);
+        // TODO Support passing original filter values
         this.i18n = props.i18n;
         this.state = this._generateOptions();
     }
@@ -70,7 +71,7 @@ class Filters extends React.Component {
             for (var i = 0, len = options.length; i < len; i++) {
                 for (var j = 0, lenn = values[filter.path].length; j < lenn; j++) {
                     if (options[i]['@id'] === values[filter.path][j]) {
-                        newState[filter.options].push(JsonLdUtils.jsonLdToSelectOption(options[i]));
+                        newState[filter.options].push(JsonLdUtils.jsonLdToSelectOption(options[i], this.props.intl));
                     }
                 }
             }

@@ -19,7 +19,7 @@ var Select = require('../Select');
 var Vocabulary = require('../../constants/Vocabulary');
 
 var FilterableReportsTable = React.createClass({
-    mixins: [I18nMixin, Reflux.listenTo(OptionsStore, '_onPhasesLoaded')],
+    mixins: [I18nMixin],
 
     propTypes: {
         allReports: React.PropTypes.array,
@@ -32,14 +32,7 @@ var FilterableReportsTable = React.createClass({
     getInitialState: function () {
         var filterInit = this.props.filter ? this.props.filter : {};
         return {
-            phase: filterInit['phase'] ? filterInit['phase'] : Constants.FILTER_DEFAULT,
             types: filterInit['types'] ? filterInit['types'] : Constants.FILTER_DEFAULT
-        }
-    },
-
-    _onPhasesLoaded(type) {
-        if (type === 'reportingPhase') {
-            this.forceUpdate();
         }
     },
 
@@ -96,7 +89,7 @@ var FilterableReportsTable = React.createClass({
                 </OverlayTrigger>
             </div>
             {this._renderReportTypeFilters()}
-            <ReportsTable {...this.props} children={this._renderFiltersInTable()}/>
+            <ReportsTable {...this.props}/>
         </div>;
     },
 
@@ -141,20 +134,6 @@ var FilterableReportsTable = React.createClass({
         </ButtonToolbar>;
     },
 
-    _renderFiltersInTable: function () {
-        return <tr className='filter'>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>{this._renderSelect('phase', this.state.phase, this._getReportingPhaseOptions())}</td>
-            <td >
-                <Button bsStyle='primary' bsSize='small' className='reset-filters'
-                        onClick={this.onResetFilters}>{this.i18n('reports.filter.reset')}</Button>
-            </td>
-        </tr>;
-    },
-
     _renderSelect: function (name, value, options) {
         options.unshift(this._allFilterOption());
         return <Select name={name} value={value} options={options} onChange={this.onSelect}/>;
@@ -184,18 +163,6 @@ var FilterableReportsTable = React.createClass({
 
     _allFilterOption: function () {
         return {value: Constants.FILTER_DEFAULT, label: this.i18n('reports.filter.type.all')};
-    },
-
-    _getReportingPhaseOptions: function () {
-        var phases = OptionsStore.getOptions('reportingPhase'),
-            options = [];
-        for (var i = 0, len = phases.length; i < len; i++) {
-            options.push({
-                value: phases[i]['@id'],
-                label: JsonLdUtils.getLocalized(phases[i][Vocabulary.RDFS_LABEL], this.props.intl)
-            });
-        }
-        return options;
     }
 });
 

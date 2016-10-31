@@ -144,11 +144,8 @@ describe('ReportsController', () => {
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
         controller = Environment.render(<ReportsController/>);
         controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
-        var filters = TestUtils.scryRenderedComponentsWithType(controller, require('../../js/components/Select'));
-        var phaseFilter = filters.find((item) => {
-            return item.props.name === 'phase';
-        });
-        expect(phaseFilter.props.value).toEqual(filter.phase);
+        var filterableTable = TestUtils.findRenderedComponentWithType(controller, require('../../js/components/report/FilterableReportsTable'));
+        expect(filterableTable.props.filter[Constants.FILTERS[1].path]).toEqual(filter.phase);
     });
 
     it('clears transition payload after it has read it', () => {
