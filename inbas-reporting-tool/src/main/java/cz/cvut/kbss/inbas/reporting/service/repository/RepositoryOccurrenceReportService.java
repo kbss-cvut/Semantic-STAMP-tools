@@ -1,13 +1,17 @@
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.inbas.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.inbas.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.inbas.reporting.service.validation.OccurrenceReportValidator;
+import cz.cvut.kbss.inbas.reporting.service.visitor.EventTypeSynchronizer;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     @Autowired
     private ReportingPhaseService phaseService;
 
+    @Autowired
+    private EventTypeSynchronizer eventTypeSynchronizer;
+
     @Override
     protected OwlKeySupportingDao<OccurrenceReport> getPrimaryDao() {
         return reportDao;
@@ -40,6 +47,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     @Override
     protected void prePersist(OccurrenceReport instance) {
         initReportData(instance);
+        synchronizeEventTypes(instance.getOccurrence());
     }
 
     private void initReportData(OccurrenceReport instance) {
@@ -56,7 +64,13 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     protected void preUpdate(OccurrenceReport instance) {
         instance.setLastModifiedBy(securityUtils.getCurrentUser());
         instance.setLastModified(new Date());
+        synchronizeEventTypes(instance.getOccurrence());
         validator.validateForUpdate(instance, find(instance.getUri()));
+    }
+
+    private void synchronizeEventTypes(Occurrence occurrence) {
+        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(eventTypeSynchronizer, null);
+        traverser.traverse(occurrence);
     }
 
     @Override
