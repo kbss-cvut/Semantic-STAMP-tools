@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenera
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
+import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
@@ -243,5 +244,23 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         assertNotNull(occurrenceReportService.find(report.getUri()));
         occurrenceReportService.remove(report);
         assertNull(occurrenceReportService.find(report.getUri()));
+    }
+
+    @Test
+    public void synchronizesEventTypeAndTypesOnUpdate() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        report.setPhase(phaseService.getInitialPhase());
+        occurrenceReportService.persist(report);
+
+        final URI originalType = report.getOccurrence().getEventType();
+        final URI newType = Generator.generateEventType();
+        report.getOccurrence().setEventType(newType);
+
+        occurrenceReportService.update(report);
+
+        final Occurrence occurrence = occurrenceReportService.find(report.getUri()).getOccurrence();
+        assertEquals(newType, occurrence.getEventType());
+        assertFalse(occurrence.getTypes().contains(originalType.toString()));
     }
 }
