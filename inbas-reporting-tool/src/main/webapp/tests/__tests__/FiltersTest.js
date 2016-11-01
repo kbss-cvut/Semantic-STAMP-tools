@@ -29,7 +29,7 @@ describe('Filters', () => {
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
                                                     onResetFilters={onResetFilters}/>).getWrappedComponent(),
-            options = component.state[Constants.FILTERS[0].path];
+            options = component.state[Constants.FILTERS[0].options];
 
         var defaultOption = options[0];
         expect(defaultOption.value).toEqual(Constants.FILTER_DEFAULT);
@@ -41,7 +41,7 @@ describe('Filters', () => {
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
                                                     onResetFilters={onResetFilters}/>).getWrappedComponent(),
-            options = component.state[Constants.FILTERS[0].path],
+            options = component.state[Constants.FILTERS[0].options],
             categoriesUsed = getCategoriesUsedByReports(categories);
 
         expect(options.length).toEqual(categoriesUsed.length + 1);
@@ -92,7 +92,7 @@ describe('Filters', () => {
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
                                                     onResetFilters={onResetFilters}/>).getWrappedComponent(),
-            options = component.state[Constants.FILTERS[0].path],
+            options = component.state[Constants.FILTERS[0].options],
             categoriesUsed = getCategoriesUsedByReports(categories);
 
         expect(options.length).toEqual(categoriesUsed.length + 1);
@@ -118,7 +118,8 @@ describe('Filters', () => {
                                                     onResetFilters={onResetFilters}/>).getWrappedComponent(),
             categoriesUsed = getCategoriesUsedByReports(categories);
 
-        var options = TestUtils.scryRenderedDOMComponentsWithTag(component, 'option');
+        var select = TestUtils.scryRenderedComponentsWithType(component, require('../../js/components/Select'))[0],
+            options = TestUtils.scryRenderedDOMComponentsWithTag(select, 'option');
         expect(options.length).toEqual(categoriesUsed.length + 1);
         for (var i = 0, len = categoriesUsed.length; i < len; i++) {
             expect(options[i + 1].value).toEqual(categoriesUsed[i]['@id']);
@@ -134,7 +135,7 @@ describe('Filters', () => {
         var component = Environment.render(<Filters filters={{occurrenceCategory: value}} data={reports}
                                                     onChange={onChange} onResetFilters={onResetFilters}/>),
 
-            select = TestUtils.findRenderedDOMComponentWithTag(component, 'select');
+            select = TestUtils.scryRenderedDOMComponentsWithTag(component, 'select')[0];
         expect(select.value).toEqual(value);
     });
 
@@ -145,7 +146,7 @@ describe('Filters', () => {
         var component = Environment.render(<Filters filters={{}} data={reports}
                                                     onChange={onChange} onResetFilters={onResetFilters}/>),
 
-            select = TestUtils.findRenderedDOMComponentWithTag(component, 'select');
+            select = TestUtils.scryRenderedDOMComponentsWithTag(component, 'select')[0];
         select.value = value;
         TestUtils.Simulate.change(select);
         expect(onChange).toHaveBeenCalledWith({occurrenceCategory: value});

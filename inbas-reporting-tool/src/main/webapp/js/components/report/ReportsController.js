@@ -70,7 +70,7 @@ var ReportsController = React.createClass({
         var payload = RouterStore.getTransitionPayload(Routes.reports.name),
             sort = null, filter, storedState;
         RouterStore.setTransitionPayload(Routes.reports.name);  // Clear payload
-        filter = payload ? payload.filter : null;
+        filter = payload ? payload.filter : undefined;
         if ((storedState = ComponentStateStore.getComponentState(ReportsController.displayName))) {
             sort = storedState.sort;
             if (!filter) {
