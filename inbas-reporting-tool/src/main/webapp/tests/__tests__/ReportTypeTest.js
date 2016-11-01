@@ -52,6 +52,25 @@ describe('ReportType', function () {
             return basedOn;
         }
 
+        it('copies event types correctly when adding factor graph to new safety issue', () => {
+            var basedOnReport = generateSafetyIssueBase(),
+                newBase = basedOnReport.occurrence,
+                originalGraph = basedOnReport.factorGraph,
+                i, len, edge;
+
+            var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
+            report = ReportType.getReport(report);
+            report.addBase(newBase, basedOnReport);
+            expect(report.factorGraph).not.toBeNull();
+            expect(report.factorGraph.nodes.length).toEqual(originalGraph.nodes.length);
+            for (i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
+                expect(report.factorGraph.nodes[i].uri).not.toBeDefined();
+                if (i > 0) {
+                    expect(report.factorGraph.nodes[i].eventTypes).toEqual(basedOnReport.factorGraph.nodes[i].eventTypes);
+                }
+            }
+        });
+
         it('adds another report as base', () => {
             var basedOnReport = generateSafetyIssueBase(),
                 basedOn = basedOnReport.occurrence,
@@ -168,7 +187,7 @@ describe('ReportType', function () {
             expect(report.factorGraph.nodes.length).toEqual(finding.factors.length + 1);    // factors + root
             expect(report.factorGraph.edges.length).toEqual(finding.factors.length);
             for (i = 0, len = finding.factors.length; i < len; i++) {
-                expect(report.factorGraph.nodes[i + 1].eventType).toEqual(finding.factors[i]);
+                expect(report.factorGraph.nodes[i + 1].eventTypes).toEqual([finding.factors[i]]);
                 expect(report.factorGraph.nodes[i + 1].types.indexOf(finding.factors[i])).not.toEqual(-1);
                 expect(report.factorGraph.nodes[i + 1].javaClass).toEqual(Constants.EVENT_JAVA_CLASS);
                 expect(report.factorGraph.edges[i].from).toEqual(report.factorGraph.nodes[0]);
