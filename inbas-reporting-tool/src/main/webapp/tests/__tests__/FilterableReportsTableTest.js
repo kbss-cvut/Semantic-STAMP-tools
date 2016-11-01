@@ -7,6 +7,7 @@ describe('ReportsFilter', function () {
         TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
+        Actions = require('../../js/actions/Actions'),
         FilterableReportsTable = require('../../js/components/report/FilterableReportsTable'),
         Constants = require('../../js/constants/Constants'),
         Vocabulary = require('../../js/constants/Vocabulary'),
@@ -26,7 +27,8 @@ describe('ReportsFilter', function () {
         onFilterChange = jasmine.createSpy('onFilterChange');
         actions = {
             onFilterChange: onFilterChange
-        }
+        };
+        spyOn(Actions, 'loadOptions');
     });
 
     it('shows a set of existing report types in the filter', function () {
@@ -239,5 +241,22 @@ describe('ReportsFilter', function () {
         TestUtils.Simulate.click(typeButton);   // Selected the All button
         newFilter = onFilterChange.calls.argsFor(1)[0];
         expect(newFilter['types']).toEqual(Constants.FILTER_DEFAULT);
+    });
+
+    it('passes remembered filter values to the Filters component', () => {
+        var reports = prepareReports(),
+            filterPath = Constants.FILTERS[0].path,
+            cat = Generator.randomCategory().id,
+            filters = {};
+        filters[filterPath] = cat;
+
+        var component = Environment.render(<FilterableReportsTable actions={actions} allReports={reports}
+                                                                   reports={reports} filter={filters}/>);
+        var trigger = TestUtils.findRenderedComponentWithType(component, require('react-bootstrap').OverlayTrigger),
+            button = TestUtils.findRenderedDOMComponentWithTag(trigger, 'button');
+        TestUtils.Simulate.click(button);
+
+        var filtersComp = component.filters;
+        expect(filtersComp.props.filters[filterPath]).toEqual(cat);
     });
 });

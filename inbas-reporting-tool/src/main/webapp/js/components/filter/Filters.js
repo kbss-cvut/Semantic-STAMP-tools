@@ -70,7 +70,7 @@ class Filters extends React.Component {
             for (var i = 0, len = options.length; i < len; i++) {
                 for (var j = 0, lenn = values[filter.path].length; j < lenn; j++) {
                     if (options[i]['@id'] === values[filter.path][j]) {
-                        newState[filter.options].push(JsonLdUtils.jsonLdToSelectOption(options[i]));
+                        newState[filter.options].push(JsonLdUtils.jsonLdToSelectOption(options[i], this.props.intl));
                     }
                 }
             }
@@ -107,6 +107,14 @@ class Filters extends React.Component {
         this.props.onChange(change);
     };
 
+    _onResetFilters = () => {
+        var reset = {};
+        Object.getOwnPropertyNames(this.props.filters).forEach(prop => {
+            reset[prop] = Constants.FILTER_DEFAULT
+        });
+        this.props.onResetFilters(reset);
+    };
+
     render() {
         return <div>
             <div>
@@ -115,7 +123,7 @@ class Filters extends React.Component {
             <div className='row filters-footer'>
                 <ButtonToolbar className='float-right'>
                     <Button bsSize='small' bsStyle='primary'
-                            onClick={this.props.onResetFilters}>{this.i18n('reports.filter.reset')}</Button>
+                            onClick={this._onResetFilters}>{this.i18n('reports.filter.reset')}</Button>
                 </ButtonToolbar>
             </div>
         </div>;

@@ -94,5 +94,10 @@ module.exports = {
         type: 'select',
         options: 'occurrenceCategory',
         label: 'report.occurrence.category.label'
+    }, {
+        path: 'phase',
+        type: 'select',
+        options: 'reportingPhase',
+        label: 'reports.phase'
     }]
 };

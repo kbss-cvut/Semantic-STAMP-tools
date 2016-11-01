@@ -132,20 +132,6 @@ describe('ReportsController', () => {
         expect(controller.state.filter).toEqual(filter);
     });
 
-    it('passes initial filter setting to the filter component', () => {
-        var filter = {
-            phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
-        }, controller;
-        spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
-        controller = Environment.render(<ReportsController/>);
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
-        var filters = TestUtils.scryRenderedComponentsWithType(controller, require('../../js/components/Select'));
-        var phaseFilter = filters.find((item) => {
-            return item.props.name === 'phase';
-        });
-        expect(phaseFilter.props.value).toEqual(filter.phase);
-    });
-
     it('clears transition payload after it has read it', () => {
         var filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
