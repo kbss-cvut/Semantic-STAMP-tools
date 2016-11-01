@@ -108,6 +108,14 @@ class Filters extends React.Component {
         this.props.onChange(change);
     };
 
+    _onResetFilters = () => {
+        var reset = {};
+        Object.getOwnPropertyNames(this.props.filters).forEach(prop => {
+            reset[prop] = Constants.FILTER_DEFAULT
+        });
+        this.props.onResetFilters(reset);
+    };
+
     render() {
         return <div>
             <div>
@@ -116,7 +124,7 @@ class Filters extends React.Component {
             <div className='row filters-footer'>
                 <ButtonToolbar className='float-right'>
                     <Button bsSize='small' bsStyle='primary'
-                            onClick={this.props.onResetFilters}>{this.i18n('reports.filter.reset')}</Button>
+                            onClick={this._onResetFilters}>{this.i18n('reports.filter.reset')}</Button>
                 </ButtonToolbar>
             </div>
         </div>;

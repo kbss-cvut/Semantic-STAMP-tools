@@ -1,22 +1,19 @@
 'use strict';
 
 var React = require('react');
-var Reflux = require('reflux');
+var assign = require('object-assign');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var OverlayTrigger = require('react-bootstrap').OverlayTrigger;
 var Popover = require('react-bootstrap').Popover;
-var JsonLdUtils = require('jsonld-utils').default;
 
 var Constants = require('../../constants/Constants');
 var Filters = require('../filter/Filters').default;
 var injectIntl = require('../../utils/injectIntl');
 var I18nMixin = require('../../i18n/I18nMixin');
-var OptionsStore = require('../../stores/OptionsStore');
 var ReportsTable = require('./ReportsTable');
 var ReportType = require('../../model/ReportType');
 var Select = require('../Select');
-var Vocabulary = require('../../constants/Vocabulary');
 
 var FilterableReportsTable = React.createClass({
     mixins: [I18nMixin],
@@ -29,11 +26,16 @@ var FilterableReportsTable = React.createClass({
         filter: React.PropTypes.object
     },
 
-    getInitialState: function () {
-        var filterInit = this.props.filter ? this.props.filter : {};
+    getDefaultProps: function () {
         return {
-            types: filterInit['types'] ? filterInit['types'] : Constants.FILTER_DEFAULT
+            filter: {}
         }
+    },
+
+    getInitialState: function () {
+        return {
+            types: this.props.filter['types'] ? this.props.filter['types'] : Constants.FILTER_DEFAULT
+        };
     },
 
     onSelect: function (e) {
@@ -71,13 +73,13 @@ var FilterableReportsTable = React.createClass({
         this.props.actions.onFilterChange(change);
     },
 
-    onResetFilters: function () {
+    onResetFilters: function (reset) {
         var newState = {};
         Object.getOwnPropertyNames(this.state).forEach((key) => {
             newState[key] = Constants.FILTER_DEFAULT;
         });
         this.setState(newState);
-        this.props.actions.onFilterChange(newState);
+        this.props.actions.onFilterChange(assign({}, newState, reset));
     },
 
 
@@ -95,8 +97,8 @@ var FilterableReportsTable = React.createClass({
 
     _renderFilters: function () {
         return <Popover id='popover-filters' title={this.i18n('filters.label')} placement='right'>
-            <Filters filters={this.state} onChange={this.onFilterChange} data={this.props.allReports}
-                     onResetFilters={this.onResetFilters}/>
+            <Filters ref={c => this.filters = c} filters={this.props.filter} onChange={this.onFilterChange}
+                     data={this.props.allReports} onResetFilters={this.onResetFilters}/>
         </Popover>;
     },
 
