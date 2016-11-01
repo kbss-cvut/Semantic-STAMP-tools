@@ -253,14 +253,14 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         report.setPhase(phaseService.getInitialPhase());
         occurrenceReportService.persist(report);
 
-        final URI originalType = report.getOccurrence().getEventType();
+        final Set<URI> originalType = report.getOccurrence().getEventTypes();
         final URI newType = Generator.generateEventType();
-        report.getOccurrence().setEventType(newType);
+        report.getOccurrence().setEventTypes(Collections.singleton(newType));
 
         occurrenceReportService.update(report);
 
         final Occurrence occurrence = occurrenceReportService.find(report.getUri()).getOccurrence();
-        assertEquals(newType, occurrence.getEventType());
-        assertFalse(occurrence.getTypes().contains(originalType.toString()));
+        assertEquals(newType, occurrence.getEventTypes().iterator().next());
+        originalType.forEach(t -> assertFalse(occurrence.getTypes().contains(originalType.toString())));
     }
 }

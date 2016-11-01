@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
@@ -31,62 +32,62 @@ public class EventTypeSynchronizerTest extends BaseServiceTestRunner {
     @Test
     public void addsEventTypeForOccurrenceToItsTypesForNewOccurrence() {
         final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
-        occurrence.getTypes().remove(occurrence.getEventType().toString());
-        assertFalse(occurrence.getTypes().contains(occurrence.getEventType().toString()));
+        occurrence.getEventTypes().forEach(t -> occurrence.getTypes().remove(t.toString()));
+        occurrence.getEventTypes().forEach(t -> assertFalse(occurrence.getTypes().contains(t.toString())));
         occurrence.accept(synchronizer);
-        assertTrue(occurrence.getTypes().contains(occurrence.getEventType().toString()));
+        occurrence.getEventTypes().forEach(t -> assertTrue(occurrence.getTypes().contains(t.toString())));
     }
 
     @Test
     public void removesOriginalEventTypeWhenNewOneWasSetOnOccurrence() {
         final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrenceDao.persist(occurrence);
-        final URI originalType = occurrence.getEventType();
-        final URI newType = Generator.generateEventType();
-        occurrence.setEventType(newType);
+        final Set<URI> originalType = occurrence.getEventTypes();
+        final Set<URI> newType = Collections.singleton(Generator.generateEventType());
+        occurrence.setEventTypes(newType);
         occurrence.accept(synchronizer);
-        assertEquals(newType, occurrence.getEventType());
-        assertTrue(occurrence.getTypes().contains(newType.toString()));
-        assertFalse(occurrence.getTypes().contains(originalType.toString()));
+        assertEquals(newType, occurrence.getEventTypes());
+        newType.forEach(t -> assertTrue(occurrence.getTypes().contains(t.toString())));
+        originalType.forEach(t -> assertFalse(occurrence.getTypes().contains(t.toString())));
     }
 
     @Test
     public void leaveOtherTypesIntactWhenSynchronizingUpdatedTypesOnOccurrence() {
         final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrenceDao.persist(occurrence);
-        final URI originalType = occurrence.getEventType();
+        final Set<URI> originalType = occurrence.getEventTypes();
         final Set<String> origTypes = occurrence.getTypes();
-        origTypes.remove(originalType.toString());
-        occurrence.setEventType(Generator.generateEventType());
+        originalType.forEach(t -> origTypes.remove(t.toString()));
+        occurrence.setEventTypes(Collections.singleton(Generator.generateEventType()));
         occurrence.accept(synchronizer);
-        assertFalse(occurrence.getTypes().contains(originalType.toString()));
+        originalType.forEach(t -> assertFalse(occurrence.getTypes().contains(t.toString())));
         assertTrue(occurrence.getTypes().containsAll(origTypes));
     }
 
     @Test
     public void addsEventTypeToTypesForNewEvent() {
         final Event event = new Event();
-        event.setEventType(Generator.generateEventType());
-        event.getTypes().remove(event.getEventType().toString());
-        assertFalse(event.getTypes().contains(event.getEventType().toString()));
+        event.setEventTypes(Collections.singleton(Generator.generateEventType()));
+        event.getEventTypes().forEach(t -> event.getTypes().remove(t.toString()));
+        event.getEventTypes().forEach(t -> assertFalse(event.getTypes().contains(t.toString())));
         event.accept(synchronizer);
-        assertTrue(event.getTypes().contains(event.getEventType().toString()));
+        event.getEventTypes().forEach(t -> assertTrue(event.getTypes().contains(t.toString())));
     }
 
     @Test
     public void removesOriginalEventTypeWhenNewOneIsSetOnEvent() {
         final Event event = new Event();
-        event.setEventType(Generator.generateEventType());
+        event.setEventTypes(Collections.singleton(Generator.generateEventType()));
         event.setStartTime(new Date());
         event.setEndTime(new Date());
         persistEvent(event);
-        final URI originalType = event.getEventType();
-        final URI newEventType = Generator.generateEventType();
-        event.setEventType(newEventType);
+        final Set<URI> originalType = event.getEventTypes();
+        final Set<URI> newEventType = Collections.singleton(Generator.generateEventType());
+        event.setEventTypes(newEventType);
         event.accept(synchronizer);
-        assertEquals(newEventType, event.getEventType());
-        assertFalse(event.getTypes().contains(originalType.toString()));
-        assertTrue(event.getTypes().contains(newEventType.toString()));
+        assertEquals(newEventType, event.getEventTypes());
+        originalType.forEach(t -> assertFalse(event.getTypes().contains(t.toString())));
+        newEventType.forEach(t -> assertTrue(event.getTypes().contains(t.toString())));
     }
 
     private void persistEvent(Event event) {
@@ -106,11 +107,11 @@ public class EventTypeSynchronizerTest extends BaseServiceTestRunner {
         event.setStartTime(new Date());
         event.setEndTime(new Date());
         persistEvent(event);
-        final URI newEventType = Generator.generateEventType();
-        event.setEventType(newEventType);
+        final Set<URI> newEventType = Collections.singleton(Generator.generateEventType());
+        event.setEventTypes(newEventType);
         event.accept(synchronizer);
-        assertEquals(newEventType, event.getEventType());
-        assertTrue(event.getTypes().contains(newEventType.toString()));
+        assertEquals(newEventType, event.getEventTypes());
+        newEventType.forEach(t -> assertTrue(event.getTypes().contains(t.toString())));
     }
 
     @Test
@@ -118,12 +119,12 @@ public class EventTypeSynchronizerTest extends BaseServiceTestRunner {
         final Event event = new Event();
         event.setStartTime(new Date());
         event.setEndTime(new Date());
-        event.setEventType(Generator.generateEventType());
+        event.setEventTypes(Collections.singleton(Generator.generateEventType()));
         persistEvent(event);
-        final URI originalType = event.getEventType();
-        event.setEventType(null);
+        final Set<URI> originalType = event.getEventTypes();
+        event.setEventTypes(null);
         event.accept(synchronizer);
-        assertFalse(event.getTypes().contains(originalType.toString()));
+        originalType.forEach(t -> assertFalse(event.getTypes().contains(t.toString())));
     }
 
     @Test
@@ -131,14 +132,14 @@ public class EventTypeSynchronizerTest extends BaseServiceTestRunner {
         final Event event = new Event();
         event.setStartTime(new Date());
         event.setEndTime(new Date());
-        event.setEventType(Generator.generateEventType());
+        event.setEventTypes(Collections.singleton(Generator.generateEventType()));
         persistEvent(event);
-        final URI originalType = event.getEventType();
+        final Set<URI> originalType = event.getEventTypes();
         final Set<String> origTypes = event.getTypes();
-        origTypes.remove(originalType.toString());
-        event.setEventType(Generator.generateEventType());
+        originalType.forEach(t -> origTypes.remove(t.toString()));
+        event.setEventTypes(Collections.singleton(Generator.generateEventType()));
         event.accept(synchronizer);
-        assertFalse(event.getTypes().contains(originalType.toString()));
+        originalType.forEach(t -> assertFalse(event.getTypes().contains(t.toString())));
         assertTrue(event.getTypes().containsAll(origTypes));
     }
 }

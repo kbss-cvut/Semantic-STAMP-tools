@@ -12,8 +12,6 @@ import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.inbas.reporting.service.validation.OccurrenceReportValidator;
 import cz.cvut.kbss.inbas.reporting.service.visitor.EventTypeSynchronizer;
-import cz.cvut.kbss.inbas.reporting.util.Constants;
-import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,9 +53,12 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
 
     @Override
     protected void prePersist(OccurrenceReport instance) {
-        initReportData(instance);
         synchronizeEventTypes(instance.getOccurrence());
         reportMetadataService.initMetadataForPersist(instance);
+        if (instance.getPhase() == null) {
+            instance.setPhase(phaseService.getDefaultPhase());
+        }
+        validator.validateForPersist(instance);
     }
 
     @Override
