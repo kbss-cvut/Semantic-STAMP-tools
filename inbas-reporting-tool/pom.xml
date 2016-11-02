@@ -231,12 +231,8 @@
                 </plugins>
             </build>
         </profile>
-
         <profile>
             <id>production</id>
-            <properties>
-                <profile.name>production</profile.name>
-            </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -307,8 +303,8 @@
                         </executions>
                         <configuration>
                             <ignoreMissingFile>false</ignoreMissingFile>
-                            <file>${project.basedir}/profiles/production/index.html</file>
-                            <outputFile>${project.basedir}/profiles/production/index.html</outputFile>
+                            <file>${project.basedir}/profiles/production/src/main/webapp/index.html</file>
+                            <outputFile>${project.basedir}/profiles/production/src/main/webapp/index.html</outputFile>
                             <regex>false</regex>
                             <token>$VERSION$</token>
                             <value>${project.version}</value>
@@ -323,7 +319,7 @@
                             <failOnMissingWebXml>false</failOnMissingWebXml>
                             <webResources>
                                 <resource>
-                                    <directory>profiles/production</directory>
+                                    <directory>profiles/production/src/main/webapp</directory>
                                 </resource>
                             </webResources>
                             <packagingExcludes>
@@ -342,31 +338,48 @@
         <profile>
             <id>fd</id>
             <properties>
-                <profile.name>fd</profile.name>
+                <profile-deployment.name>fd</profile-deployment.name>
             </properties>
         </profile>
         <profile>
             <id>ucl</id>
             <properties>
-                <profile.name>ucl</profile.name>
+                <profile-deployment.name>ucl</profile-deployment.name>
             </properties>
         </profile>
         <profile>
             <id>lkpr</id>
             <properties>
-                <profile.name>lkpr</profile.name>
+                <profile-deployment.name>lkpr</profile-deployment.name>
             </properties>
         </profile>
         <profile>
             <id>csat</id>
             <properties>
-                <profile.name>csat</profile.name>
+                <profile-deployment.name>csat</profile-deployment.name>
             </properties>
         </profile>
         <profile>
             <id>rlp</id>
             <properties>
-                <profile.name>rlp</profile.name>
+                <profile-deployment.name>rlp</profile-deployment.name>
+            </properties>
+        </profile>
+
+        <!-- Profiles for eccairs deployment - CVUT/UZPLN -->
+        <profile>
+            <id>eccairs-cvut</id>
+            <properties>
+                <profile-eccairs.name>eccairs-cvut</profile-eccairs.name>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>eccairs-uzpln</id>
+            <properties>
+                <profile-eccairs.name>eccairs-uzpln</profile-eccairs.name>
             </properties>
         </profile>
     </profiles>
@@ -477,12 +490,15 @@
                             <outputDirectory>${basedir}/target/classes</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>profiles/${profile.name}</directory>
+                                    <directory>profiles/${profile-deployment.name}/src/main/java/resources</directory>
                                     <includes>
-                                        <includes>option/*.json</includes>
-                                        <include>query/*.sparql</include>
-                                        <include>logback.xml</include>
-                                        <include>config.properties</include>
+                                        <includes>**/*</includes>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>profiles/${profile-eccairs.name}/src/main/java/resources</directory>
+                                    <includes>
+                                        <includes>**/*</includes>
                                     </includes>
                                 </resource>
                             </resources>
@@ -506,6 +522,33 @@
                                 <source>src/main/generated-sources</source>
                             </sources>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>3.1.6</version>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sourceRoot>${project.basedir}/src/main/generated-sources</sourceRoot>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>${project.basedir}/profiles/${profile-eccairs.name}/src/main/java/resources/webapi/webapi.wsdl</wsdl>
+                                    <wsdlLocation>webapi/webapi.wsdl</wsdlLocation>
+                                    <extraargs>
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>cz.cvut.kbss.eccairs.webapi</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
+                            </wsdlOptions>
+                        </configuration>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
