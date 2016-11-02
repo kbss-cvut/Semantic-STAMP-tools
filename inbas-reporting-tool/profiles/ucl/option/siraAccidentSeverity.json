@@ -1,0 +1,85 @@
+[
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/catastrophic",
+    "@type": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/sira-option",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Catastrophic"
+      }
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#comment": [
+      {
+        "@language": "en",
+        "@value": "3 fatalities or more"
+      }
+    ],
+    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.000000001,
+    "http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than": [
+      {
+        "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/major"
+      }
+    ]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/major",
+    "@type": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/sira-option",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Major"
+      }
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#comment": [
+      {
+        "@language": "en",
+        "@value": "Serious injuries"
+      }
+    ],
+    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.0000001,
+    "http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than": [
+      {
+        "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor"
+      }
+    ]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor",
+    "@type": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/sira-option",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Minor"
+      }
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#comment": [
+      {
+        "@language": "en",
+        "@value": "Minor injuries"
+      }
+    ],
+    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.00001,
+    "http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than": [
+      {
+        "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/negligible"
+      }
+    ]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/negligible",
+    "@type": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/sira-option",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Negligible"
+      }
+    ],
+    "http://www.w3.org/2000/01/rdf-schema#comment": [
+      {
+        "@language": "en",
+        "@value": "Negligible"
+      }
+    ],
+    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 1
+  }
+]

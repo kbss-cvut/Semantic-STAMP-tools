@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.service.arms;
 
 import cz.cvut.kbss.inbas.reporting.exception.JsonProcessingException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueRiskAssessment;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
 import cz.cvut.kbss.inbas.reporting.util.JsonLdProcessing;
@@ -12,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Service for ARMS-related business logic.
@@ -31,6 +30,13 @@ public class ArmsServiceImpl implements ArmsService {
 
     private static final String ACCIDENT_OUTCOME_PARAM = "accidentOutcome";
     private static final String BARRIER_EFFECTIVENESS_PARAM = "barrierEffectiveness";
+
+    private static final String INITIAL_EVENT_FREQUENCY_PARAM = "siraInitialEventFrequency";
+    private static final String BARRIER_UOS_AVOIDANCE_FAIL_FREQUENCY_PARAM = "siraBarrierUOSAvoidanceFailFrequency";
+    private static final String BARRIER_RECOVERY_FAIL_FREQUENCY_PARAM = "siraBarrierRecoveryFailFrequency";
+    private static final String ACCIDENT_SEVERITY_PARAM = "siraAccidentSeverity";
+    private static final String SIRA_PARAM = "sira";
+
     private static final String GREATER_THAN_URI = "http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than";
 
     @Autowired
@@ -39,11 +45,23 @@ public class ArmsServiceImpl implements ArmsService {
     private List<URI> accidents;
     private List<URI> barriers;
 
+    // SIRA
+    private Map<URI, SiraOption> initialEventFrequencies;
+    private Map<URI, SiraOption> barrierUosAvoidanceFailFrequencies;
+    private Map<URI, SiraOption> barrierRecoveryFailFrequencies;
+    private Map<URI, SiraOption> accidentSeverities;
+    private List<SiraOption> siraValues;
+
     @PostConstruct
     void initArmsAttributes() {
         try {
             this.accidents = initAccidents();
             this.barriers = initBarriers();
+            this.initialEventFrequencies = readSiraOptions(INITIAL_EVENT_FREQUENCY_PARAM);
+            this.barrierUosAvoidanceFailFrequencies = readSiraOptions(BARRIER_UOS_AVOIDANCE_FAIL_FREQUENCY_PARAM);
+            this.barrierRecoveryFailFrequencies = readSiraOptions(BARRIER_RECOVERY_FAIL_FREQUENCY_PARAM);
+            this.accidentSeverities = readSiraOptions(ACCIDENT_SEVERITY_PARAM);
+            this.siraValues = readSiraValues();
         } catch (IOException | JsonProcessingException e) {
             LOG.error("Unable to initialize ARMS values.", e);
             this.accidents = Collections.emptyList();
@@ -59,6 +77,21 @@ public class ArmsServiceImpl implements ArmsService {
     private List<URI> initBarriers() throws IOException {
         final RawJson json = (RawJson) optionsService.getOptions(BARRIER_EFFECTIVENESS_PARAM, Collections.emptyMap());
         return JsonLdProcessing.getOrderedOptions(json, GREATER_THAN_URI);
+    }
+
+    private Map<URI, SiraOption> readSiraOptions(String paramName) {
+        final RawJson json = (RawJson) optionsService.getOptions(paramName, Collections.emptyMap());
+        final List<SiraOption> options = JsonLdProcessing.readFromJsonLd(json, SiraOption.class);
+        final Map<URI, SiraOption> map = new HashMap<>(options.size());
+        options.forEach(o -> map.put(o.getUri(), o));
+        return map;
+    }
+
+    private List<SiraOption> readSiraValues() {
+        final RawJson json = (RawJson) optionsService.getOptions(SIRA_PARAM, Collections.emptyMap());
+        final List<SiraOption> options = JsonLdProcessing.readFromJsonLd(json, SiraOption.class);
+        Collections.sort(options);
+        return options;
     }
 
     @Override
@@ -102,5 +135,36 @@ public class ArmsServiceImpl implements ArmsService {
             }
         }
         return value;
+    }
+
+    @Override
+    public URI calculateSafetyIssueRiskAssessment(SafetyIssueRiskAssessment sira) {
+        Objects.requireNonNull(sira);
+        if (sira.getInitialEventFrequency() == null || sira.getBarrierUosAvoidanceFailFrequency() == null ||
+                sira.getBarrierRecoveryFailFrequency() == null || sira.getAccidentSeverity() == null) {
+            LOG.warn("Missing at least one of the values necessary for computing SIRA. {}", sira);
+            return null;
+        }
+        final SiraOption initialEventFrequency = initialEventFrequencies.get(sira.getInitialEventFrequency());
+        final SiraOption barrierUosAvoidanceFailFrequency = barrierUosAvoidanceFailFrequencies
+                .get(sira.getBarrierUosAvoidanceFailFrequency());
+        final SiraOption barrierRecoveryFailFrequency = barrierRecoveryFailFrequencies
+                .get(sira.getBarrierRecoveryFailFrequency());
+        final SiraOption accidentSeverity = accidentSeverities.get(sira.getAccidentSeverity());
+        if (initialEventFrequency == null || barrierUosAvoidanceFailFrequency == null ||
+                barrierRecoveryFailFrequency == null || accidentSeverity == null) {
+            throw new IllegalArgumentException("One of the risk assessment attribute values is invalid. " + sira);
+        }
+
+        double value = initialEventFrequency.getDataValue() * barrierUosAvoidanceFailFrequency.getDataValue() *
+                barrierRecoveryFailFrequency.getDataValue() / accidentSeverity.getDataValue();
+        SiraOption result = siraValues.get(0);
+        for (SiraOption siraValue : siraValues) {
+            if (siraValue.getDataValue() > value) {
+                break;
+            }
+            result = siraValue;
+        }
+        return result.getUri();
     }
 }

@@ -1,12 +1,17 @@
 package cz.cvut.kbss.inbas.reporting.service.arms;
 
+import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
+import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueRiskAssessment;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -15,12 +20,15 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 public class ArmsServiceTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Mock
     private OptionsService optionsService;
@@ -38,12 +46,22 @@ public class ArmsServiceTest {
                 .when(optionsService).getOptions(eq("accidentOutcome"), anyMap());
         doReturn(new RawJson(Environment.loadData("data/barrierEffectiveness.json", String.class)))
                 .when(optionsService).getOptions(eq("barrierEffectiveness"), anyMap());
+        doReturn(new RawJson(Environment.loadData("option/siraInitialEventFrequency.json", String.class)))
+                .when(optionsService).getOptions(eq("siraInitialEventFrequency"), anyMap());
+        doReturn(new RawJson(Environment.loadData("option/siraBarrierUOSAvoidanceFailFrequency.json", String.class)))
+                .when(optionsService).getOptions(eq("siraBarrierUOSAvoidanceFailFrequency"), anyMap());
+        doReturn(new RawJson(Environment.loadData("option/siraBarrierRecoveryFailFrequency.json", String.class)))
+                .when(optionsService).getOptions(eq("siraBarrierRecoveryFailFrequency"), anyMap());
+        doReturn(new RawJson(Environment.loadData("option/siraAccidentSeverity.json", String.class)))
+                .when(optionsService).getOptions(eq("siraAccidentSeverity"), anyMap());
+        doReturn(new RawJson(Environment.loadData("option/sira.json", String.class)))
+                .when(optionsService).getOptions(eq("sira"), anyMap());
     }
 
     @Test
     public void testArmsCalculationForReport() {
         armsService.initArmsAttributes();
-        final List<ArmsTriple> testValues = initTestValues();
+        final List<ArmsTriple> testValues = initArmsTestValues();
         for (ArmsTriple at : testValues) {
             report.setAccidentOutcome(at.accidentOutcome);
             report.setBarrierEffectiveness(at.barrierEffectiveness);
@@ -55,7 +73,7 @@ public class ArmsServiceTest {
     @Test
     public void testArmsCalculation() {
         armsService.initArmsAttributes();
-        for (ArmsTriple at : initTestValues()) {
+        for (ArmsTriple at : initArmsTestValues()) {
             final int armsIndex = armsService.calculateArmsIndex(at.accidentOutcome, at.barrierEffectiveness);
             assertEquals(at.expectedArmsIndex, armsIndex);
         }
@@ -105,10 +123,91 @@ public class ArmsServiceTest {
                 OccurrenceReportGenerator.BARRIER_EFFECTIVE));
     }
 
+    @Test
+    public void calculateSafetyIssueRiskAssessmentReturnsNullForAnyMissingValue() {
+        armsService.initArmsAttributes();
+        SafetyIssueRiskAssessment sira = SafetyIssueReportGenerator.generateSira();
+        sira.setInitialEventFrequency(null);
+        assertNull(armsService.calculateSafetyIssueRiskAssessment(sira));
+
+        sira = SafetyIssueReportGenerator.generateSira();
+        sira.setBarrierUosAvoidanceFailFrequency(null);
+        assertNull(armsService.calculateSafetyIssueRiskAssessment(sira));
+
+        sira = SafetyIssueReportGenerator.generateSira();
+        sira.setBarrierRecoveryFailFrequency(null);
+        assertNull(armsService.calculateSafetyIssueRiskAssessment(sira));
+
+        sira = SafetyIssueReportGenerator.generateSira();
+        sira.setAccidentSeverity(null);
+        assertNull(armsService.calculateSafetyIssueRiskAssessment(sira));
+    }
+
+    @Test
+    public void testCalculateSafetyIssueRiskAssessment() {
+        armsService.initArmsAttributes();
+        final List<SiraQuintuple> values = initSiraTestData();
+        for (SiraQuintuple quintuple : values) {
+            final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(quintuple);
+            final URI result = armsService.calculateSafetyIssueRiskAssessment(sira);
+            assertNotNull(result);
+            assertEquals("For values: " + sira, URI.create(quintuple.sira), result);
+        }
+    }
+
+    @Test
+    public void throwsIllegalArgumentWhenInitialEventFrequencyIsInvalidUri() {
+        armsService.initArmsAttributes();
+        final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(initSiraTestData().get(0));
+        sira.setInitialEventFrequency(Generator.generateUri());
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("One of the risk assessment attribute values is invalid. " + sira);
+        armsService.calculateSafetyIssueRiskAssessment(sira);
+    }
+
+    private SafetyIssueRiskAssessment initSafetyIssueRiskAssessment(SiraQuintuple quintuple) {
+        final SafetyIssueRiskAssessment sira = new SafetyIssueRiskAssessment();
+        sira.setInitialEventFrequency(URI.create(quintuple.initialEventFrequency));
+        sira.setBarrierUosAvoidanceFailFrequency(URI.create(quintuple.barrierUosAvoidanceFailFrequency));
+        sira.setBarrierRecoveryFailFrequency(URI.create(quintuple.barrierRecoveryFailFrequency));
+        sira.setAccidentSeverity(URI.create(quintuple.accidentSeverity));
+        return sira;
+    }
+
+    @Test
+    public void throwsIllegalArgumentWhenBarrierUOSAvoidanceFailFrequencyIsInvalidUri() {
+        armsService.initArmsAttributes();
+        final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(initSiraTestData().get(0));
+        sira.setBarrierUosAvoidanceFailFrequency(Generator.generateUri());
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("One of the risk assessment attribute values is invalid. " + sira);
+        armsService.calculateSafetyIssueRiskAssessment(sira);
+    }
+
+    @Test
+    public void throwsIllegalArgumentWhenBarrierRecoveryFailFrequencyIsInvalidUri() {
+        armsService.initArmsAttributes();
+        final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(initSiraTestData().get(0));
+        sira.setBarrierRecoveryFailFrequency(Generator.generateUri());
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("One of the risk assessment attribute values is invalid. " + sira);
+        armsService.calculateSafetyIssueRiskAssessment(sira);
+    }
+
+    @Test
+    public void throwsIllegalArgumentWhenAccidentSeverityIsInvalidUri() {
+        armsService.initArmsAttributes();
+        final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(initSiraTestData().get(0));
+        sira.setAccidentSeverity(Generator.generateUri());
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("One of the risk assessment attribute values is invalid. " + sira);
+        armsService.calculateSafetyIssueRiskAssessment(sira);
+    }
+
     /**
      * ARMS values according to https://essi.easa.europa.eu/documents/Methodology.pdf, page 19.
      */
-    private List<ArmsTriple> initTestValues() {
+    private List<ArmsTriple> initArmsTestValues() {
         final List<ArmsTriple> lst = new ArrayList<>();
         lst.add(new ArmsTriple(OccurrenceReportGenerator.ACCIDENT_NEGLIGIBLE,
                 OccurrenceReportGenerator.BARRIER_EFFECTIVE, 1));
@@ -154,6 +253,58 @@ public class ArmsServiceTest {
             this.accidentOutcome = accidentOutcome;
             this.barrierEffectiveness = barrierEffectiveness;
             this.expectedArmsIndex = expectedArmsIndex;
+        }
+    }
+
+    private List<SiraQuintuple> initSiraTestData() {
+        final List<SiraQuintuple> lst = new ArrayList<>();
+        lst.add(new SiraQuintuple(
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/virtually-every-flight",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/practically-always",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/practically-always",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/catastrophic",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/stop"));
+        lst.add(new SiraQuintuple(
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/almost-every-flight",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/once-every-ten",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/once-in-hundred",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve"));
+        lst.add(new SiraQuintuple(
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/almost-every-flight",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/once-in-hundred",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/once-in-hundred",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure"));
+        lst.add(new SiraQuintuple(
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/almost-every-flight",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/once-in-ten-thousand",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/once-every-ten",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor"));
+        lst.add(new SiraQuintuple(
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/every-hundred-thousand",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/once-in-ten-thousand",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/once-every-ten",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor",
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept"));
+        return lst;
+    }
+
+    private static final class SiraQuintuple {
+        private final String initialEventFrequency;
+        private final String barrierUosAvoidanceFailFrequency;
+        private final String barrierRecoveryFailFrequency;
+        private final String accidentSeverity;
+        private final String sira;
+
+        private SiraQuintuple(String initialEventFrequency, String barrierUosAvoidanceFailFrequency,
+                             String barrierRecoveryFailFrequency, String accidentSeverity, String sira) {
+            this.initialEventFrequency = initialEventFrequency;
+            this.barrierUosAvoidanceFailFrequency = barrierUosAvoidanceFailFrequency;
+            this.barrierRecoveryFailFrequency = barrierRecoveryFailFrequency;
+            this.accidentSeverity = accidentSeverity;
+            this.sira = sira;
         }
     }
 }

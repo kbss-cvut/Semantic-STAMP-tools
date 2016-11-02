@@ -64,6 +64,15 @@ public class SafetyIssueReportTest {
     }
 
     @Test
+    public void copyConstructorCopiesSira() {
+        final SafetyIssueReport original = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
+        final SafetyIssueReport copy = new SafetyIssueReport(original);
+        assertNotNull(copy.getSira());
+        assertNotSame(original.getSira(), copy.getSira());
+        assertEquals(original.getSira(), copy.getSira());
+    }
+
+    @Test
     public void toDtoCopiesAttributesToSafetyIssueReportDto() {
         final SafetyIssueReport original = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
         original.setUri(Generator.generateUri());
@@ -81,7 +90,6 @@ public class SafetyIssueReportTest {
         assertEquals(original.getRevision(), result.getRevision());
         assertEquals(original.getSafetyIssue().getName(), result.getIdentification());
         assertTrue(result.getTypes().containsAll(original.getTypes()));
-        assertEquals(original.getSira(), result.getSira());
     }
 
     @Test
