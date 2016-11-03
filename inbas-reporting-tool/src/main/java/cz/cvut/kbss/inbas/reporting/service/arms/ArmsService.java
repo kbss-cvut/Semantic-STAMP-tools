@@ -31,6 +31,7 @@ public interface ArmsService {
      *
      * @param sira Safety issue risk assessment
      * @return SIRA value, can be {@code null} in case any of the required values are missing
+     * @throws IllegalArgumentException If any of the values is invalid, i.e. unsupported URI
      */
     URI calculateSafetyIssueRiskAssessment(SafetyIssueRiskAssessment sira);
 }

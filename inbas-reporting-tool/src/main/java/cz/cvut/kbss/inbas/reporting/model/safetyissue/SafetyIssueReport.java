@@ -71,6 +71,9 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
         copyAttributes(dto);
         dto.setSummary(summary);
         dto.setIdentification(safetyIssue.getName());
+        if (sira != null) {
+            dto.setSira(sira.getSiraValue());
+        }
         dto.getTypes().add(SafetyIssueReport.class.getDeclaredAnnotation(OWLClass.class).iri());
         return dto;
     }

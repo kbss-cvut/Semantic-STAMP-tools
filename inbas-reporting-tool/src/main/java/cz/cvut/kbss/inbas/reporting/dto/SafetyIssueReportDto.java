@@ -59,6 +59,9 @@ public class SafetyIssueReportDto extends AbstractReportDto {
         copyAttributes(dto);
         dto.setSummary(getSummary());
         dto.setIdentification(safetyIssue.getName());
+        if (sira != null) {
+            dto.setSira(sira.getSiraValue());
+        }
         return dto;
     }
 }

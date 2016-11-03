@@ -98,4 +98,12 @@ public class SafetyIssueReportTest {
         final ReportDto dto = original.toReportDto();
         assertTrue(dto.getTypes().contains(Vocabulary.s_c_safety_issue_report));
     }
+
+    @Test
+    public void toDtoCopiesSiraValue() {
+        final SafetyIssueReport original = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
+        original.getSira().setSiraValue(Generator.generateUri());
+        final SafetyIssueReportDto dto = (SafetyIssueReportDto) original.toReportDto();
+        assertEquals(original.getSira().getSiraValue(), dto.getSira());
+    }
 }
