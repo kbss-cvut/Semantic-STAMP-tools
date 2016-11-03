@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.*;
 
@@ -158,9 +159,14 @@ public class ArmsServiceImpl implements ArmsService {
 
         double value = initialEventFrequency.getDataValue() * barrierUosAvoidanceFailFrequency.getDataValue() *
                 barrierRecoveryFailFrequency.getDataValue() / accidentSeverity.getDataValue();
+        // Use BigDecimal and rounding to prevent double precision issues
+        BigDecimal decimal = new BigDecimal(value);
+        decimal = decimal.setScale(3, BigDecimal.ROUND_HALF_UP);
         SiraOption result = siraValues.get(0);
         for (SiraOption siraValue : siraValues) {
-            if (siraValue.getDataValue() > value) {
+            BigDecimal bdSiraVal = new BigDecimal(siraValue.getDataValue());
+            bdSiraVal = bdSiraVal.setScale(3, BigDecimal.ROUND_HALF_UP);
+            if (bdSiraVal.compareTo(decimal) > 0) {
                 break;
             }
             result = siraValue;

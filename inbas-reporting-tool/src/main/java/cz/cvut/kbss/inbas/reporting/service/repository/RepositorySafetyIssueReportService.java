@@ -2,9 +2,11 @@ package cz.cvut.kbss.inbas.reporting.service.repository;
 
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueRiskAssessment;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.SafetyIssueReportDao;
 import cz.cvut.kbss.inbas.reporting.service.SafetyIssueReportService;
+import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.validation.ReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,6 +26,9 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
     @Autowired
     private ReportValidator validator;
 
+    @Autowired
+    private ArmsService armsService;
+
     @Override
     protected OwlKeySupportingDao<SafetyIssueReport> getPrimaryDao() {
         return dao;
@@ -36,6 +41,14 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
     }
 
     @Override
+    protected void postLoad(SafetyIssueReport instance) {
+        if (instance != null && instance.getSira() != null) {
+            final SafetyIssueRiskAssessment sira = instance.getSira();
+            sira.setSiraValue(armsService.calculateSafetyIssueRiskAssessment(sira));
+        }
+    }
+
+    @Override
     protected void preUpdate(SafetyIssueReport instance) {
         reportMetadataService.initMetadataForUpdate(instance);
     }
@@ -43,7 +56,9 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
     @Override
     public SafetyIssueReport findLatestRevision(Long fileNumber) {
         Objects.requireNonNull(fileNumber);
-        return dao.findLatestRevision(fileNumber);
+        final SafetyIssueReport report = dao.findLatestRevision(fileNumber);
+        postLoad(report);
+        return report;
     }
 
     @Override
@@ -69,7 +84,9 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
     public SafetyIssueReport findRevision(Long fileNumber, Integer revision) {
         Objects.requireNonNull(fileNumber);
         Objects.requireNonNull(revision);
-        return dao.findRevision(fileNumber, revision);
+        final SafetyIssueReport report = dao.findRevision(fileNumber, revision);
+        postLoad(report);
+        return report;
     }
 
     @Override

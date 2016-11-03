@@ -13,13 +13,13 @@ public class SafetyIssueRiskAssessmentTest {
     public void copyConstructorCopiesAllAttributes() {
         final SafetyIssueRiskAssessment original = SafetyIssueReportGenerator.generateSira();
         original.setUri(Generator.generateUri());
-        original.setSira(Generator.generateUri());
+        original.setSiraValue(Generator.generateUri());
         final SafetyIssueRiskAssessment copy = new SafetyIssueRiskAssessment(original);
         assertNull(copy.getUri());
         assertEquals(original.getInitialEventFrequency(), copy.getInitialEventFrequency());
         assertEquals(original.getBarrierUosAvoidanceFailFrequency(), copy.getBarrierUosAvoidanceFailFrequency());
         assertEquals(original.getBarrierRecoveryFailFrequency(), copy.getBarrierRecoveryFailFrequency());
         assertEquals(original.getAccidentSeverity(), copy.getAccidentSeverity());
-        assertEquals(original.getSira(), copy.getSira());
+        assertEquals(original.getSiraValue(), copy.getSiraValue());
     }
 }

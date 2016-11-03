@@ -25,7 +25,7 @@ public class SafetyIssueRiskAssessment extends AbstractEntity {
     private URI accidentSeverity;
 
     @Transient
-    private URI sira;
+    private URI siraValue;
 
     public SafetyIssueRiskAssessment() {
     }
@@ -36,7 +36,7 @@ public class SafetyIssueRiskAssessment extends AbstractEntity {
         this.barrierUosAvoidanceFailFrequency = other.barrierUosAvoidanceFailFrequency;
         this.barrierRecoveryFailFrequency = other.barrierRecoveryFailFrequency;
         this.accidentSeverity = other.accidentSeverity;
-        this.sira = other.sira;
+        this.siraValue = other.siraValue;
     }
 
     public URI getInitialEventFrequency() {
@@ -71,12 +71,12 @@ public class SafetyIssueRiskAssessment extends AbstractEntity {
         this.accidentSeverity = accidentSeverity;
     }
 
-    public URI getSira() {
-        return sira;
+    public URI getSiraValue() {
+        return siraValue;
     }
 
-    public void setSira(URI sira) {
-        this.sira = sira;
+    public void setSiraValue(URI siraValue) {
+        this.siraValue = siraValue;
     }
 
     @Override

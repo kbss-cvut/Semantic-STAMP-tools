@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,12 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 
 public class ArmsServiceTest {
+
+    private static final String INITIAL_EVENT_FREQUENCY_PREFIX = "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/";
+    private static final String BARRIER_UOS_AVOID_FAIL_FREQ_PREFIX = "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/";
+    private static final String BARRIER_RECOVERY_FAIL_FREQ_PREFIX = "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/";
+    private static final String ACCIDENT_SEVERITY_PREFIX = "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/";
+    private static final String SIRA_PREFIX = "http://onto.fel.cvut.cz/ontologies/arms/sira/model/";
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -144,7 +152,7 @@ public class ArmsServiceTest {
     }
 
     @Test
-    public void testCalculateSafetyIssueRiskAssessment() {
+    public void testCalculateSafetyIssueRiskAssessment() throws Exception {
         armsService.initArmsAttributes();
         final List<SiraQuintuple> values = initSiraTestData();
         for (SiraQuintuple quintuple : values) {
@@ -156,7 +164,7 @@ public class ArmsServiceTest {
     }
 
     @Test
-    public void throwsIllegalArgumentWhenInitialEventFrequencyIsInvalidUri() {
+    public void throwsIllegalArgumentWhenInitialEventFrequencyIsInvalidUri() throws Exception {
         armsService.initArmsAttributes();
         final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(initSiraTestData().get(0));
         sira.setInitialEventFrequency(Generator.generateUri());
@@ -175,7 +183,7 @@ public class ArmsServiceTest {
     }
 
     @Test
-    public void throwsIllegalArgumentWhenBarrierUOSAvoidanceFailFrequencyIsInvalidUri() {
+    public void throwsIllegalArgumentWhenBarrierUOSAvoidanceFailFrequencyIsInvalidUri() throws Exception {
         armsService.initArmsAttributes();
         final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(initSiraTestData().get(0));
         sira.setBarrierUosAvoidanceFailFrequency(Generator.generateUri());
@@ -185,7 +193,7 @@ public class ArmsServiceTest {
     }
 
     @Test
-    public void throwsIllegalArgumentWhenBarrierRecoveryFailFrequencyIsInvalidUri() {
+    public void throwsIllegalArgumentWhenBarrierRecoveryFailFrequencyIsInvalidUri() throws Exception {
         armsService.initArmsAttributes();
         final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(initSiraTestData().get(0));
         sira.setBarrierRecoveryFailFrequency(Generator.generateUri());
@@ -195,7 +203,7 @@ public class ArmsServiceTest {
     }
 
     @Test
-    public void throwsIllegalArgumentWhenAccidentSeverityIsInvalidUri() {
+    public void throwsIllegalArgumentWhenAccidentSeverityIsInvalidUri() throws Exception {
         armsService.initArmsAttributes();
         final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(initSiraTestData().get(0));
         sira.setAccidentSeverity(Generator.generateUri());
@@ -256,38 +264,19 @@ public class ArmsServiceTest {
         }
     }
 
-    private List<SiraQuintuple> initSiraTestData() {
+    private List<SiraQuintuple> initSiraTestData() throws Exception {
         final List<SiraQuintuple> lst = new ArrayList<>();
-        lst.add(new SiraQuintuple(
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/virtually-every-flight",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/practically-always",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/practically-always",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/catastrophic",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/stop"));
-        lst.add(new SiraQuintuple(
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/almost-every-flight",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/once-every-ten",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/once-in-hundred",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve"));
-        lst.add(new SiraQuintuple(
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/almost-every-flight",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/once-in-hundred",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/once-in-hundred",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure"));
-        lst.add(new SiraQuintuple(
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/almost-every-flight",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/once-in-ten-thousand",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/once-every-ten",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor"));
-        lst.add(new SiraQuintuple(
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial-event-frequency/every-hundred-thousand",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/once-in-ten-thousand",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/once-every-ten",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor",
-                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept"));
+        try (final BufferedReader in = new BufferedReader(
+                new InputStreamReader(getClass().getClassLoader().getResourceAsStream("data/siraTestData.csv")))) {
+            String line;
+            while ((line = in.readLine()) != null && !line.isEmpty()) {
+                final String[] values = line.split(",");
+                lst.add(new SiraQuintuple(INITIAL_EVENT_FREQUENCY_PREFIX + values[0],
+                        BARRIER_UOS_AVOID_FAIL_FREQ_PREFIX + values[1],
+                        BARRIER_RECOVERY_FAIL_FREQ_PREFIX + values[2], ACCIDENT_SEVERITY_PREFIX + values[3],
+                        SIRA_PREFIX + values[4]));
+            }
+        }
         return lst;
     }
 
@@ -299,7 +288,7 @@ public class ArmsServiceTest {
         private final String sira;
 
         private SiraQuintuple(String initialEventFrequency, String barrierUosAvoidanceFailFrequency,
-                             String barrierRecoveryFailFrequency, String accidentSeverity, String sira) {
+                              String barrierRecoveryFailFrequency, String accidentSeverity, String sira) {
             this.initialEventFrequency = initialEventFrequency;
             this.barrierUosAvoidanceFailFrequency = barrierUosAvoidanceFailFrequency;
             this.barrierRecoveryFailFrequency = barrierRecoveryFailFrequency;
