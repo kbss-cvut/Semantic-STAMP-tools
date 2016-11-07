@@ -106,6 +106,10 @@ var ReportsController = React.createClass({
         });
     },
 
+    onEccairsMatch: function (report) {
+        Actions.findLatestEccairsVersion(report);
+    },
+
     onRemove: function (report) {
         Actions.deleteReportChain(report.fileNumber);
     },
@@ -148,6 +152,7 @@ var ReportsController = React.createClass({
 
     render: function () {
         var actions = {
+                onEccairsMatch: this.onEccairsMatch,
                 onEdit: this.onEdit,
                 onRemove: this.onRemove,
                 onFilterChange: this.onFilterChange,

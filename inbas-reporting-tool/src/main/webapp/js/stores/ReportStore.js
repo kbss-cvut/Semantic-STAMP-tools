@@ -12,6 +12,8 @@ var Utils = require('../utils/Utils');
 var BASE_URL = 'rest/reports';
 var BASE_URL_WITH_SLASH = 'rest/reports/';
 
+var BASE_ECCAIRS_URL_WITH_SLASH = 'rest/eccairs/';
+
 // When reports are being loaded, do not send the request again
 var reportsLoading = false;
 
@@ -116,6 +118,15 @@ var ReportStore = Reflux.createStore({
 
     onDeleteReportChain: function (fileNumber, onSuccess, onError) {
         Ajax.del(BASE_URL_WITH_SLASH + 'chain/' + fileNumber).end(function () {
+            if (onSuccess) {
+                onSuccess();
+            }
+            this.onLoadAllReports();
+        }.bind(this), onError);
+    },
+
+    onFindLatestEccairsVersion: function (report, onSuccess, onError) {
+        Ajax.get(BASE_ECCAIRS_URL_WITH_SLASH + 'latest/'+ report.key, report).end(function () {
             if (onSuccess) {
                 onSuccess();
             }

@@ -9,6 +9,8 @@ var Actions = Reflux.createActions([
     'phaseTransition',
     'loadRevisions', 'loadReport',
 
+    'findLatestEccairsVersion',
+
     'loadOptions',
 
     'setTransitionPayload',

@@ -110,6 +110,13 @@
             <version>${com.fasterxml.jackson.version}</version>
         </dependency>
 
+        <!-- JSON search engine -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
         <!-- Servlet-API -->
         <dependency>
             <groupId>javax.servlet</groupId>

@@ -15,6 +15,8 @@ var Routes = require('../../utils/Routes');
 var DeleteReportDialog = require('./DeleteReportDialog').default;
 var I18nMixin = require('../../i18n/I18nMixin');
 
+var Constants = require('../../constants/Constants');
+
 var ReportRow = React.createClass({
     mixins: [I18nMixin, Reflux.listenTo(OptionsStore, '_onOptionsLoaded')],
 
@@ -48,6 +50,10 @@ var ReportRow = React.createClass({
         this.setState({modalOpen: true});
     },
 
+    onEccairsMatchClick: function () {
+        this.props.actions.onEccairsMatch(this.props.report);
+    },
+
     onCloseModal: function () {
         this.setState({modalOpen: false});
     },
@@ -60,7 +66,6 @@ var ReportRow = React.createClass({
     render: function () {
         var report = ReportType.getReport(this.props.report),
             statusClasses = classNames(['report-row', 'content-center'], report.getStatusCssClass());
-
         return <tr onDoubleClick={this.onDoubleClick}>
             <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + report.key}
                                           title={this.i18n('reports.open-tooltip')}>{report.identification}</a>
@@ -79,6 +84,11 @@ var ReportRow = React.createClass({
                         onClick={this.onEditClick}>{this.i18n('open')}</Button>
                 <Button bsStyle='warning' bsSize='small' title={this.i18n('reports.delete-tooltip')}
                         onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>
+                {
+                    report.javaClass == Constants.OCCURRENCE_REPORT_LIST_ITEM_JAVA_CLASS ?
+                    <Button bsStyle='warning' bsSize='small' title="ECCAIRS" onClick={this.onEccairsMatchClick} >ECCAIRS Match</Button>
+                        : null
+                }
 
                 <DeleteReportDialog show={this.state.modalOpen} onClose={this.onCloseModal}
                                     onSubmit={this.removeReport}/>
