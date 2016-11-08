@@ -26,7 +26,7 @@ public class ArmsController {
         }
     }
 
-    @RequestMapping(value = "/sira", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/sira", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public URI getSiraValue(@RequestBody SafetyIssueRiskAssessment sira) {
         final URI result;
         try {

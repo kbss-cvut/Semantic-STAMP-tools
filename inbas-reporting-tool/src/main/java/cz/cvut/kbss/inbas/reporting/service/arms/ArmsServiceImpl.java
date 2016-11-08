@@ -32,10 +32,10 @@ public class ArmsServiceImpl implements ArmsService {
     private static final String ACCIDENT_OUTCOME_PARAM = "accidentOutcome";
     private static final String BARRIER_EFFECTIVENESS_PARAM = "barrierEffectiveness";
 
-    private static final String INITIAL_EVENT_FREQUENCY_PARAM = "siraInitialEventFrequency";
-    private static final String BARRIER_UOS_AVOIDANCE_FAIL_FREQUENCY_PARAM = "siraBarrierUOSAvoidanceFailFrequency";
-    private static final String BARRIER_RECOVERY_FAIL_FREQUENCY_PARAM = "siraBarrierRecoveryFailFrequency";
-    private static final String ACCIDENT_SEVERITY_PARAM = "siraAccidentSeverity";
+    private static final String INITIAL_EVENT_FREQUENCY_PARAM = "initialEventFrequency";
+    private static final String BARRIER_UOS_AVOIDANCE_FAIL_FREQUENCY_PARAM = "barrierUosAvoidanceFailFrequency";
+    private static final String BARRIER_RECOVERY_FAIL_FREQUENCY_PARAM = "barrierRecoveryFailFrequency";
+    private static final String ACCIDENT_SEVERITY_PARAM = "accidentSeverity";
     private static final String SIRA_PARAM = "sira";
 
     private static final String GREATER_THAN_URI = "http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than";

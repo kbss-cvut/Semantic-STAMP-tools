@@ -54,14 +54,14 @@ public class ArmsServiceTest {
                 .when(optionsService).getOptions(eq("accidentOutcome"), anyMap());
         doReturn(new RawJson(Environment.loadData("data/barrierEffectiveness.json", String.class)))
                 .when(optionsService).getOptions(eq("barrierEffectiveness"), anyMap());
-        doReturn(new RawJson(Environment.loadData("option/siraInitialEventFrequency.json", String.class)))
-                .when(optionsService).getOptions(eq("siraInitialEventFrequency"), anyMap());
-        doReturn(new RawJson(Environment.loadData("option/siraBarrierUOSAvoidanceFailFrequency.json", String.class)))
-                .when(optionsService).getOptions(eq("siraBarrierUOSAvoidanceFailFrequency"), anyMap());
-        doReturn(new RawJson(Environment.loadData("option/siraBarrierRecoveryFailFrequency.json", String.class)))
-                .when(optionsService).getOptions(eq("siraBarrierRecoveryFailFrequency"), anyMap());
-        doReturn(new RawJson(Environment.loadData("option/siraAccidentSeverity.json", String.class)))
-                .when(optionsService).getOptions(eq("siraAccidentSeverity"), anyMap());
+        doReturn(new RawJson(Environment.loadData("option/initialEventFrequency.json", String.class)))
+                .when(optionsService).getOptions(eq("initialEventFrequency"), anyMap());
+        doReturn(new RawJson(Environment.loadData("option/barrierUosAvoidanceFailFrequency.json", String.class)))
+                .when(optionsService).getOptions(eq("barrierUosAvoidanceFailFrequency"), anyMap());
+        doReturn(new RawJson(Environment.loadData("option/barrierRecoveryFailFrequency.json", String.class)))
+                .when(optionsService).getOptions(eq("barrierRecoveryFailFrequency"), anyMap());
+        doReturn(new RawJson(Environment.loadData("option/accidentSeverity.json", String.class)))
+                .when(optionsService).getOptions(eq("accidentSeverity"), anyMap());
         doReturn(new RawJson(Environment.loadData("option/sira.json", String.class)))
                 .when(optionsService).getOptions(eq("sira"), anyMap());
     }

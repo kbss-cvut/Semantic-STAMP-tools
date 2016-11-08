@@ -93,6 +93,11 @@ module.exports = {
         CLOSED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/closed-safety-issue-state'
     },
 
+    ARMS: {
+        ACCIDENT_OUTCOME: 'accidentOutcome',
+        BARRIER_EFFECTIVENESS: 'barrierEffectiveness'
+    },
+
     SIRA_COLORS: {
         'http://onto.fel.cvut.cz/ontologies/arms/sira/model/stop': 'sira-red',
         'http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve': 'sira-orange',

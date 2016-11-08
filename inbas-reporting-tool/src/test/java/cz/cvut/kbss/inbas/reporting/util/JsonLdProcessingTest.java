@@ -90,7 +90,7 @@ public class JsonLdProcessingTest {
 
     @Test
     public void readJsonLdReturnsListOfInstancesReadFromInput() throws Exception {
-        final RawJson jsonLd = new RawJson(Environment.loadData("option/siraAccidentSeverity.json", String.class));
+        final RawJson jsonLd = new RawJson(Environment.loadData("option/accidentSeverity.json", String.class));
         final List<SiraOption> result = JsonLdProcessing.readFromJsonLd(jsonLd, SiraOption.class);
         assertNotNull(result);
         assertEquals(EXPECTED_SIRA_OPTIONS.length, result.size());

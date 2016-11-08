@@ -20,6 +20,7 @@ import java.net.URI;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
@@ -58,7 +59,7 @@ public class ArmsControllerTest extends BaseControllerTestRunner {
         final URI siraValue = Generator.generateUri();
         when(armsService.calculateSafetyIssueRiskAssessment(sira)).thenReturn(siraValue);
         final MvcResult mvcResult = mockMvc
-                .perform(get(PATH + "/sira").content(objectMapper.writeValueAsBytes(sira)).contentType(
+                .perform(post(PATH + "/sira").content(objectMapper.writeValueAsBytes(sira)).contentType(
                         MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isOk()).andReturn();
         final URI result = readValue(mvcResult, URI.class);
         assertEquals(siraValue, result);
@@ -72,7 +73,7 @@ public class ArmsControllerTest extends BaseControllerTestRunner {
         when(armsService.calculateSafetyIssueRiskAssessment(sira))
                 .thenThrow(new IllegalArgumentException(errorMessage));
         final MvcResult mvcResult = mockMvc
-                .perform(get(PATH + "/sira").content(objectMapper.writeValueAsBytes(sira)).contentType(
+                .perform(post(PATH + "/sira").content(objectMapper.writeValueAsBytes(sira)).contentType(
                         MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isBadRequest()).andReturn();
         final ErrorInfo errorInfo = readValue(mvcResult, ErrorInfo.class);
         assertEquals(errorMessage, errorInfo.getMessage());
@@ -83,7 +84,7 @@ public class ArmsControllerTest extends BaseControllerTestRunner {
         final SafetyIssueRiskAssessment sira = SafetyIssueReportGenerator.generateSira();
         sira.setInitialEventFrequency(null);
         when(armsService.calculateSafetyIssueRiskAssessment(sira)).thenReturn(null);
-        mockMvc.perform(get(PATH + "/sira").content(objectMapper.writeValueAsBytes(sira)).contentType(
+        mockMvc.perform(post(PATH + "/sira").content(objectMapper.writeValueAsBytes(sira)).contentType(
                 MediaType.APPLICATION_JSON_VALUE)).andExpect(status().isConflict());
     }
 }
