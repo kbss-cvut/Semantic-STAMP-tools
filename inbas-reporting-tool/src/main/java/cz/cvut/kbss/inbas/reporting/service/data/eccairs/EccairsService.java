@@ -21,11 +21,9 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
-import javax.xml.xpath.XPath;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author Petr Křemen
@@ -148,40 +146,18 @@ public class EccairsService {
     public String getCurrentEccairsReportByInitialFileNumberAndReportingEntity(final String reportingEntity, final String reportNumber) {
         String userToken = login();
 
-        final String pLibrary = env.getProperty("eccairs.repository.library");
         final String pQueryGetOccurrenceByFileNumber = env.getProperty("eccairs.repository.query.getOccurrenceByInitialFileNumberAndReportingEntity");
 
-        String query1 = getService().getQueryObject(userToken, pLibrary, pQueryGetOccurrenceByFileNumber,0).getData().getValue();
-        final EccairsQueryUtils q = new EccairsQueryUtils();
-        query1 = q.setAttributeValuesForQueryObjectJSON(query1, new HashMap<String,String>() {{
+        final List<String> occurrenceE5Fs = getOccurrencesByAttributeValueQuery(userToken,pQueryGetOccurrenceByFileNumber, new HashMap<String,String>() {{
             put("447", reportingEntity);
             put("438", reportNumber);
         }});
 
-        EwaResult result = getService().executeQueryObject(userToken, query1, 0, 1, 1);
-        DocumentContext document = JsonPath.parse(result.getData().getValue());
-        final String operationID = document.read("$.OperationID");
-        LOG.info("- executing query with OperationID = {}", operationID);
-
-        result = getService().getQueryResult(userToken,operationID,0,"");
-        document = JsonPath.parse(result.getData().getValue());
-        final List<String> occurrenceKeys = document.read("$.Rows[*][0]");
-        if ( occurrenceKeys.size() != 1 ) {
-            LOG.info("- found {} occurrence keys{}, skipping", occurrenceKeys.size(),occurrenceKeys.size() > 1 ? " "+ occurrenceKeys: "");
+        if ( occurrenceE5Fs.size() != 1 ) {
+            LOG.info("- found {} occurrence keys instead of 1, skipping", occurrenceE5Fs.size());
         }
-        String occurrenceKey = occurrenceKeys.get(0);
-        LOG.info("- found occurrence with key = {}", occurrenceKey);
 
-        result = getService().releaseQueryResult(userToken,operationID);
-        LOG.info("- query operation {} released with result {}", operationID, result.getReturnCode().value());
-
-        result = getService().getOccurrenceDataByKey(userToken, occurrenceKey);
-        String occurrenceE5F = result.getData().getValue();
-        LOG.info("- found occurrence data = {}", occurrenceE5F);
-
-        logout(userToken);
-
-        return occurrenceE5F;
+        return occurrenceE5Fs.get(0);
     }
 
     /**
@@ -190,8 +166,6 @@ public class EccairsService {
      * @return a list of E5F serializations in strings
      */
     public List<String> getAllOccurrences() {
-        final List<String> occurrenceE5Fs = new ArrayList<>();
-
         String userToken = login();
 
         final String pLibrary = env.getProperty("eccairs.repository.library");
@@ -201,22 +175,119 @@ public class EccairsService {
         String result = getService().executeQueryAsTable(userToken, pLibrary, pQueryGetAllOccurrences,0).getData().getValue();
         LOG.info("- found occurrences (string length={})", result.length());
 
-        List<String> keys = EccairsQueryUtils.xpathTextContent(result,"/NewDataSet/ALL/KEY/text()");
+        List<String> occurrenceKeys = EccairsQueryUtils.xpathTextContent(result,"/NewDataSet/ALL/KEY/text()");
 
-        for( final String occurrenceKey : keys) {
-            EwaResult eResult = getService().getOccurrenceDataByKey(userToken, occurrenceKey);
-            String occurrenceE5F = eResult.getData().getValue();
-            LOG.debug("- found occurrence data = {}", occurrenceE5F);
-            occurrenceE5Fs.add(occurrenceE5F);
-        }
+        final List<String> occurrenceE5Fs = getFullOccurrencesForReferences(userToken,occurrenceKeys);
 
         logout(userToken);
 
         return occurrenceE5Fs;
     }
 
-    // TODO getReportsAfterModifiedDate(Date from)
-    //
-    // TODO getReportsAfterCreatedDate(Date from)
+    private List<String> getOccurrencesByAttributeValueQuery(final String userToken, final String queryName, final Map<String,String> attributeValueMap) {
+        final String pLibrary = env.getProperty("eccairs.repository.library");
 
+        EwaResult result = getService().getQueryObject(userToken, pLibrary, queryName,0);
+        if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
+            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+            return Collections.emptyList();
+        }
+        final EccairsQueryUtils q = new EccairsQueryUtils();
+        String queryString = q.setAttributeValuesForQueryObjectJSON(result.getData().getValue(), attributeValueMap);
+        LOG.info("- executing query {}", queryString);
+
+        result = getService().executeQueryObject(userToken, queryString, 0, 10000000, 10000000);
+        if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
+            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+            return Collections.emptyList();
+        }
+        DocumentContext document = JsonPath.parse(result.getData().getValue());
+        final String operationID = document.read("$.OperationID");
+        LOG.info("- executing query with OperationID = {}", operationID);
+
+        result = getService().getQueryResult(userToken,operationID,0,"");
+        if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
+            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+            return Collections.emptyList();
+        }
+        document = JsonPath.parse(result.getData().getValue());
+        final List<String> occurrenceKeys = document.read("$.Rows[*][0]");
+        LOG.info("- found occurrences with keys = {}", occurrenceKeys);
+
+        result = getService().releaseQueryResult(userToken,operationID);
+        if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
+            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+            return Collections.emptyList();
+        }
+        LOG.info("- query operation {} released with result {}", operationID, result.getReturnCode().value());
+
+        List<String> fullOccurrences = getFullOccurrencesForReferences(userToken,occurrenceKeys);
+        LOG.info("- # of occurrences found = {}", fullOccurrences.size());
+
+        return fullOccurrences;
+    }
+
+    private List<String> getFullOccurrencesForReferences(final String userToken, final List<String> occurrenceKeys ) {
+        List<String> fullOccurrences = new ArrayList<>();
+
+        for( final String occurrenceKey : occurrenceKeys) {
+            EwaResult result = getService().getOccurrenceDataByKey(userToken, occurrenceKey);
+            if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
+                LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+                fullOccurrences.clear();
+                break;
+            }
+            String occurrenceE5F = result.getData().getValue();
+            LOG.debug("- found occurrence data = {}", occurrenceE5F);
+            fullOccurrences.add(occurrenceE5F);
+        }
+        return fullOccurrences;
+    }
+
+    /**
+     * Returns an ECCAIRS occurrence that is backed an initial report with the given identification.
+     *
+     * Example: final Calendar cal = Calendar.getInstance();
+     *          cal.set(2015,12,01);
+     *          getOccurrencesAfterCreationDate(cal);
+     *
+     * @return an E5F serialization of the report
+     */
+    public String getOccurrencesAfterCreationDate(final Calendar minimumCreationDate) {
+        String userToken = login();
+
+        final String pQuery = env.getProperty("eccairs.repository.query.getOccurrencesAfterCreatedDate");
+
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        format.setTimeZone(minimumCreationDate.getTimeZone());
+
+        final List<String> occurrenceE5Fs = getOccurrencesByAttributeValueQuery(userToken,pQuery, new HashMap<String,String>() {{
+            put("434",format.format(minimumCreationDate.getTime()));
+        }});
+
+        return occurrenceE5Fs.size() != 1 ? null : occurrenceE5Fs.get(0);
+    }
+
+    /**
+     * Returns an ECCAIRS occurrence that is backed an initial report with the given identification.
+     *
+     * Example: final Calendar cal = Calendar.getInstance();
+     *          cal.set(2016,02,01);
+     *          getOccurrencesAfterModifiedDate(cal);
+     * @return an E5F serialization of the report
+     */
+    public String getOccurrencesAfterModifiedDate(final Calendar minimumModifiedDate) {
+        String userToken = login();
+//        The date when the report was last modified. This date is formatted using the standard format 'YYYY/MM/DD HH:MM:SS' e.g. '2001/01/26 09:11:27'. (en)
+        final String pQuery = env.getProperty("eccairs.repository.query.getOccurrencesAfterModifiedDate");
+
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        format.setTimeZone(minimumModifiedDate.getTimeZone());
+
+        final List<String> occurrenceE5Fs = getOccurrencesByAttributeValueQuery(userToken,pQuery, new HashMap<String,String>() {{
+            put("435", format.format(minimumModifiedDate.getTime()));
+        }});
+
+        return occurrenceE5Fs.size() != 1 ? null : occurrenceE5Fs.get(0);
+    }
 }
