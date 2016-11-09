@@ -142,7 +142,7 @@ module.exports = {
         'safety-issue.base.no-bases': 'This safety issue is not based on any existing reports.',
         'safety-issue.sira.label': 'Safety issue risk assessment (SIRA)',
         'safety-issue.sira-tooltip': 'SIRA, based on https://essi.easa.europa.eu/documents/Methodology.pdf',
-        'safety-issue.sira.initialEventFrequency': 'Estimated frequency of the triggering event',
+        'safety-issue.sira.initialEventFrequency': 'Est. frequency of the triggering event',
         'safety-issue.sira.initialEventFrequency-tooltip': 'The estimated frequency of the triggering event (per flight sectors) is:',
         'safety-issue.sira.barrierUosAvoidanceFailFrequency': 'Barrier UOS avoidance fail frequency',
         'safety-issue.sira.barrierUosAvoidanceFailFrequency-tooltip': 'The barriers will fail in AVOIDING the Undesirable Operational State...',

@@ -118,8 +118,9 @@ class Sira extends React.Component {
     };
 
     render() {
-        return <Panel header={<h5>{this.i18n('safety-issue.sira.label')}</h5>} bsStyle='info'
-                      title={this.i18n('safety-issue.sira-tooltip')}>
+        return <Panel
+            header={<h5 title={this.i18n('safety-issue.sira-tooltip')}>{this.i18n('safety-issue.sira.label')}</h5>}
+            bsStyle='info'>
             <div className='row'>
                 {this._renderAttributeSelections()}
                 {this._renderSiraValue()}
