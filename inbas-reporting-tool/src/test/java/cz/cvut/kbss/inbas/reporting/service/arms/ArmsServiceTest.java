@@ -18,9 +18,11 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyMap;
@@ -210,6 +212,32 @@ public class ArmsServiceTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("One of the risk assessment attribute values is invalid. " + sira);
         armsService.calculateSafetyIssueRiskAssessment(sira);
+    }
+
+    @Test
+    public void initializesSiraValuesToEmptyCollectionsWhenInitializationFromDataFails() throws Exception {
+        doReturn(new RawJson("")).when(optionsService).getOptions(eq("accidentOutcome"), anyMap());
+        armsService.initArmsAttributes();
+        assertTrue(((Map) getFieldContent("initialEventFrequencies")).isEmpty());
+        assertTrue(((Map) getFieldContent("barrierUosAvoidanceFailFrequencies")).isEmpty());
+        assertTrue(((Map) getFieldContent("barrierRecoveryFailFrequencies")).isEmpty());
+        assertTrue(((Map) getFieldContent("accidentSeverities")).isEmpty());
+        assertTrue(((List) getFieldContent("siraValues")).isEmpty());
+    }
+
+    private Object getFieldContent(String fieldName) throws Exception {
+        final Field field = ArmsServiceImpl.class.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.get(armsService);
+    }
+
+    @Test
+    public void siraCalculationReturnsNullWhenSiraValuesAreNotInitialized() throws Exception {
+        doReturn(new RawJson("")).when(optionsService).getOptions(eq("accidentOutcome"), anyMap());
+        armsService.initArmsAttributes();
+        final SafetyIssueRiskAssessment sira = initSafetyIssueRiskAssessment(initSiraTestData().get(0));
+
+        assertNull(armsService.calculateSafetyIssueRiskAssessment(sira));
     }
 
     /**

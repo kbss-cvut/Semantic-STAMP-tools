@@ -53,6 +53,8 @@ public class ArmsServiceImpl implements ArmsService {
     private Map<URI, SiraOption> accidentSeverities;
     private List<SiraOption> siraValues;
 
+    private boolean siraInitialized;
+
     @PostConstruct
     void initArmsAttributes() {
         try {
@@ -63,10 +65,16 @@ public class ArmsServiceImpl implements ArmsService {
             this.barrierRecoveryFailFrequencies = readSiraOptions(BARRIER_RECOVERY_FAIL_FREQUENCY_PARAM);
             this.accidentSeverities = readSiraOptions(ACCIDENT_SEVERITY_PARAM);
             this.siraValues = readSiraValues();
+            this.siraInitialized = true;
         } catch (IOException | JsonProcessingException e) {
-            LOG.error("Unable to initialize ARMS values.", e);
+            LOG.error("Unable to initialize ARMS or SIRA values.", e);
             this.accidents = Collections.emptyList();
             this.barriers = Collections.emptyList();
+            this.initialEventFrequencies = Collections.emptyMap();
+            this.barrierUosAvoidanceFailFrequencies = Collections.emptyMap();
+            this.barrierRecoveryFailFrequencies = Collections.emptyMap();
+            this.accidentSeverities = Collections.emptyMap();
+            this.siraValues = Collections.emptyList();
         }
     }
 
@@ -146,6 +154,10 @@ public class ArmsServiceImpl implements ArmsService {
             LOG.warn("Missing at least one of the values necessary for computing SIRA. {}", sira);
             return null;
         }
+        if (!siraInitialized) {
+            LOG.warn("Cannot calculate SIRA, options have not been initialized.");
+            return null;
+        }
         final SiraOption initialEventFrequency = initialEventFrequencies.get(sira.getInitialEventFrequency());
         final SiraOption barrierUosAvoidanceFailFrequency = barrierUosAvoidanceFailFrequencies
                 .get(sira.getBarrierUosAvoidanceFailFrequency());
@@ -157,6 +169,12 @@ public class ArmsServiceImpl implements ArmsService {
             throw new IllegalArgumentException("One of the risk assessment attribute values is invalid. " + sira);
         }
 
+        return calculateSiraValue(initialEventFrequency, barrierUosAvoidanceFailFrequency, barrierRecoveryFailFrequency,
+                accidentSeverity);
+    }
+
+    private URI calculateSiraValue(SiraOption initialEventFrequency, SiraOption barrierUosAvoidanceFailFrequency,
+                                   SiraOption barrierRecoveryFailFrequency, SiraOption accidentSeverity) {
         double value = initialEventFrequency.getDataValue() * barrierUosAvoidanceFailFrequency.getDataValue() *
                 barrierRecoveryFailFrequency.getDataValue() / accidentSeverity.getDataValue();
         // Use BigDecimal and rounding to prevent double precision issues
