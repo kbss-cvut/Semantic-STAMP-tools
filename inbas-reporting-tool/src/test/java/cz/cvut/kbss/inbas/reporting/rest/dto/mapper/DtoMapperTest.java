@@ -155,14 +155,14 @@ public class DtoMapperTest {
         assertNotNull(dto.getBasedOn());
         final EventDto eventDto = dto.getBasedOn();
         assertEquals(req.getBasedOnEvent().getUri(), eventDto.getUri());
-        assertEquals(req.getBasedOnEvent().getEventType(), eventDto.getEventType());
+        assertEquals(req.getBasedOnEvent().getEventTypes(), eventDto.getEventTypes());
     }
 
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequestBasedOnEvent() {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
         final Event event = new Event();
         event.setUri(URI.create(Vocabulary.s_c_Event + "#instance"));
-        event.setEventType(Generator.generateEventType());
+        event.setEventTypes(Collections.singleton(Generator.generateEventType()));
         req.setBasedOnEvent(event);
         return req;
     }
@@ -249,13 +249,13 @@ public class DtoMapperTest {
         assertNotNull(req.getBasedOnEvent());
         assertNull(req.getBasedOnOccurrence());
         assertEquals(dto.getBasedOn().getUri(), req.getBasedOnEvent().getUri());
-        assertEquals(dto.getBasedOn().getEventType(), req.getBasedOnEvent().getEventType());
+        assertEquals(dto.getBasedOn().getEventTypes(), req.getBasedOnEvent().getEventTypes());
     }
 
     private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDtoBasedOnEvent() {
         final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
         final EventDto eventDto = new EventDto();
-        eventDto.setEventType(Generator.generateEventType());
+        eventDto.setEventTypes(Collections.singleton(Generator.generateEventType()));
         eventDto.setUri(URI.create(Vocabulary.s_c_Event + "#instance"));
         dto.setBasedOn(eventDto);
         return dto;
@@ -280,7 +280,7 @@ public class DtoMapperTest {
         occurrenceDto.setUri(URI.create(Vocabulary.s_c_Occurrence + "#instance"));
         occurrenceDto.setKey(IdentificationUtils.generateKey());
         occurrenceDto.setName("Some occurrence");
-        occurrenceDto.setEventType(Generator.generateEventType());
+        occurrenceDto.setEventTypes(Collections.singleton(Generator.generateEventType()));
         dto.setBasedOn(occurrenceDto);
         return dto;
     }

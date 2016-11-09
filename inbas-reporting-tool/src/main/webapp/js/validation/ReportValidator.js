@@ -70,7 +70,7 @@ var OccurrenceReportValidator = {
         if (!report.summary || report.summary.length === 0) {
             return 'detail.invalid-tooltip';
         }
-        if (!report.occurrence.eventType) {
+        if (!report.occurrence.eventTypes || report.occurrence.eventTypes.length === 0) {
             return 'detail.invalid-tooltip';
         }
         if (!this._isOccurrenceStartEndTimeDiffValid(report)) {

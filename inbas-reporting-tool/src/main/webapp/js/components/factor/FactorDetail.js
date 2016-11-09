@@ -32,7 +32,7 @@ var WizardGenerator = require('../wizard/generator/WizardGenerator');
 var WizardWindow = require('../wizard/WizardWindow');
 var I18nMixin = require('../../i18n/I18nMixin');
 var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
-var TypeaheadStore = require('../../stores/TypeaheadStore');
+var OptionsStore = require('../../stores/OptionsStore');
 
 function convertDurationToCurrentUnit(factor) {
     var targetUnit = gantt.config.duration_unit;
@@ -62,7 +62,7 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventType, TypeaheadStore.getEventTypes())),
+            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventTypes, OptionsStore.getOptions('eventType'))),
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement,
@@ -180,7 +180,7 @@ var FactorDetail = React.createClass({
     },
 
     _mergeStatementState(statement) {
-        statement.eventType = this.state.eventType.id;
+        statement.eventTypes = [this.state.eventType.id];
         statement.startTime = this.state.startDate;
         statement.endTime = gantt.calculateEndDate(new Date(statement.startTime), this.state.duration, gantt.config.duration_unit).getTime();
         statement.question = this.state.statement.question;
@@ -227,7 +227,7 @@ var FactorDetail = React.createClass({
                             <Form inline>
                                 {this._renderStartTimePicker()}
                                 <div className='col-xs-7'>
-                                    <div className='col-xs-8'>
+                                    <div className='col-xs-9'>
                                         <FormGroup bsSize='small'>
                                             <ControlLabel>{this.i18n('factors.detail.duration')}</ControlLabel>
                                             <InputGroup className='inline-input'>
@@ -286,7 +286,7 @@ var FactorDetail = React.createClass({
     _renderEventTypeLink: function () {
         var et = this.state.eventType;
         return et ?
-            <div className='col-xs-1'>
+            <div className='external-link-container'>
                 <ExternalLink url={et.id} title={et.name + '\n' + et.id} className='external-link'/>
             </div> : null;
     },

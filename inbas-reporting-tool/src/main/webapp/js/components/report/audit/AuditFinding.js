@@ -122,7 +122,7 @@ class AuditFinding extends React.Component {
             <Modal.Header closeButton>
                 <Modal.Title>{this.i18n('audit.finding.header')}</Modal.Title>
             </Modal.Header>
-            <div className='modal-body'>
+            <Modal.Body>
                 <div className='row'>
                     <div className='col-xs-12'>
                         <label className='control-label'>{this.i18n('audit.finding.type.label')}</label>
@@ -157,8 +157,8 @@ class AuditFinding extends React.Component {
                                          correctiveMeasures={finding.correctiveMeasures} onChange={this._mergeChange}/>
                     </div>
                 </div>
-            </div>
-            <Modal.Footer>
+            </Modal.Body>
+            <Modal.Footer ref={comp => this._modalFooter = comp}>
                 <ButtonToolbar className='pull-right'>
                     <Button bsSize='small' bsStyle='success'
                             onClick={() => this.props.onSave(finding)}>{this.i18n('save')}</Button>
@@ -192,7 +192,7 @@ class AuditFinding extends React.Component {
     }
 
     _renderCreateSafetyIssueButton() {
-        if (this.props.report.isNew) {
+        if (this.props.report.isNew || (this.props.finding && !this.props.finding.uri)) {
             return null;
         }
         return <DropdownButton id='safetyIssueSelector' bsStyle='primary' bsSize='small'

@@ -41,7 +41,8 @@ var OccurrenceReport = React.createClass({
             loadingWizard: false,
             isWizardOpen: false,
             wizardProperties: null,
-            showSafetyIssueSelector: false
+            showSafetyIssueSelector: false,
+            showDeleteDialog: false
         };
     },
 
@@ -144,6 +145,7 @@ var OccurrenceReport = React.createClass({
                 </form>
             </Panel>
             {this.renderMessage()}
+            {this.renderDeleteDialog()}
         </div>;
     },
 
@@ -177,6 +179,7 @@ var OccurrenceReport = React.createClass({
             <PhaseTransition report={this.props.report} onLoading={this.onLoading}
                              onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
             {this._renderCreateSafetyIssueButton()}
+            {this.renderDeleteButton()}
         </ButtonToolbar>;
     },
 

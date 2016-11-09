@@ -48,6 +48,7 @@ module.exports = {
         'detail.phase-transition-failed-message': 'Report phase transition failed with error: ',
         'detail.loading': 'Loading report...',
         'detail.not-found.title': 'Report not found',
+        'detail.remove-failed-message': 'Unable to remove report chain. Server responded with message: ',
 
         'login.title': Constants.APP_NAME + ' - Login',
         'login.username': 'Username',
@@ -72,7 +73,8 @@ module.exports = {
         'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
         'main.search-placeholder': 'Search',
-        'main.search.fulltext': 'Full text',
+        'main.search.fulltext': 'Search in all narratives',
+        'main.search.fulltext.label': 'Full text',
         'main.search.fulltext-tooltip': 'Search for the specified string everywhere',
         'main.tacr-notice': 'Project was supported by the Technology Agency of the Czech Republic.',
 
@@ -114,6 +116,8 @@ module.exports = {
         'reports.paging.item-count': 'Showing {showing} of {total} items.',
         'reports.create-report': 'Create report',
 
+        'filters.label': 'Filters',
+
         'delete-dialog.title': 'Delete {type} Report?',
         'delete-dialog.content': 'Are you sure you want to remove this report?',
 
@@ -124,6 +128,8 @@ module.exports = {
         'occurrence.end-time-tooltip': 'Date and time when the event ended',
         'occurrence.class': 'Occurrence class',
         'occurrence.class-tooltip': 'Occurrence class - this field is required',
+        'occurrence.add-category': 'Add occurrence category',
+        'occurrence.remove-category-tooltip': 'Remove occurrence category',
 
         'safety-issue.panel.active-tooltip': 'This safety issue is currently active',
         'safety-issue.panel.inactive-tooltip': 'This safety issue is currently not active',
@@ -136,6 +142,17 @@ module.exports = {
         'safety-issue.base.no-bases': 'This safety issue is not based on any existing reports.',
         'safety-issue.sira.label': 'Safety issue risk assessment (SIRA)',
         'safety-issue.sira-tooltip': 'SIRA, based on https://essi.easa.europa.eu/documents/Methodology.pdf',
+        'safety-issue.sira.initialEventFrequency': 'Estimated frequency of the triggering event',
+        'safety-issue.sira.initialEventFrequency-tooltip': 'The estimated frequency of the triggering event (per flight sectors) is:',
+        'safety-issue.sira.barrierUosAvoidanceFailFrequency': 'Barrier UOS avoidance fail frequency',
+        'safety-issue.sira.barrierUosAvoidanceFailFrequency-tooltip': 'The barriers will fail in AVOIDING the Undesirable Operational State...',
+        'safety-issue.sira.barrierRecoveryFailFrequency': 'Barrier situation recovery fail frequency',
+        'safety-issue.sira.barrierRecoveryFailFrequency-tooltip': 'The barriers will fail in RECOVERING the situation before the ACCIDENT...',
+        'safety-issue.sira.accidentSeverity': 'Accident severity',
+        'safety-issue.sira.accidentSeverity-tooltip': 'The accident severity would be...',
+        'safety-issue.sira.value-label': 'SIRA value',
+        'safety-issue.sira.reset': 'Reset SIRA',
+        'safety-issue.sira.reset-tooltip': 'Reset SIRA values',
 
         'audit.name-tooltip': 'Short descriptive name of the audit (e.g. audited organization name + date of audit) - this field is required',
         'audit.type.label': 'Audit type',

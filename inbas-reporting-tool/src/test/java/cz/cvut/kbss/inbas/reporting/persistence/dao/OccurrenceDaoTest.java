@@ -15,10 +15,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -70,7 +67,7 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
         final Event evt = new Event();
         evt.setStartTime(new Date());
         evt.setEndTime(new Date());
-        evt.setEventType(Generator.generateEventType());
+        evt.setEventTypes(Collections.singleton(Generator.generateEventType()));
         events.add(evt);
         return evt;
     }

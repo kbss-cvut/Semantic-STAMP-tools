@@ -3,6 +3,7 @@
 var React = require('react');
 
 var Actions = require('../../../actions/Actions');
+var Constants = require('../../../constants/Constants');
 var ReportDetail = require('./OccurrenceReport');
 var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
@@ -17,7 +18,7 @@ var OccurrenceReportController = React.createClass({
 
     componentDidMount: function () {
         Actions.loadOptions();
-        Actions.loadOccurrenceCategories();
+        Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
         Actions.loadOptions('department');
         Actions.loadOptions('factorType');
     },
@@ -66,12 +67,11 @@ var OccurrenceReportController = React.createClass({
             onChange: this.onChange,
             onSuccess: this.onSuccess,
             onCancel: this.onCancel,
+            onRemove: this.onRemove,
             onCreateSafetyIssue: this.onCreateSafetyIssue
         };
-        return (
-            <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
-                          readOnly={!this.isLatestRevision()}/>
-        );
+        return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+                             readOnly={!this.isLatestRevision()}/>;
     }
 });
 

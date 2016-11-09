@@ -146,7 +146,7 @@ public class OccurrenceReport extends AbstractReport implements LogicalDocument,
         res.setArmsIndex(armsIndex);
         res.setSummary(summary);
         res.setSeverityAssessment(severityAssessment);
-        res.setOccurrenceCategory(occurrence.getEventType());
+        res.setOccurrenceCategories(occurrence.getEventTypes());
         return res;
     }
 }

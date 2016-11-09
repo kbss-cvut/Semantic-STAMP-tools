@@ -1,48 +1,35 @@
 'use strict';
 
-var React = require('react');
+import React from "react";
+import I18nWrapper from "../../i18n/I18nWrapper";
+import injectIntl from "../../utils/injectIntl";
+import Mask from "../Mask";
+import ReportType from "../../model/ReportType";
+import ReportValidator from "../../validation/ReportValidator";
+import ReportNotRenderable from "../ReportNotRenderable";
+import ResourceNotFound from "../ResourceNotFound";
 
-var I18nMixin = require('../../i18n/I18nMixin');
-var injectIntl = require('../../utils/injectIntl');
-var Mask = require('../Mask').default;
-var ReportType = require('../../model/ReportType');
-var ResourceNotFound = require('../ResourceNotFound');
-var ReportNotRenderable = require('../ReportNotRenderable');
-var ReportValidator = require('../../validation/ReportValidator');
-
-var Report = React.createClass({
-    mixins: [I18nMixin],
-
-    propTypes: {
-        report: React.PropTypes.object,
-        revisions: React.PropTypes.array,
-        loading: React.PropTypes.bool
-    },
-
-    render: function () {
-        if (this.props.loading) {
-            return (
-                <Mask text={this.i18n('detail.loading')}/>
-            );
-        }
-        if (!this.props.report) {
-            return (<ResourceNotFound resource={this.i18n('detail.not-found.title')}/>);
-        }
-        if (!ReportValidator.canRender(this.props.report)) {
-            return (<ReportNotRenderable messageId={ReportValidator.getRenderError(this.props.report)}/>);
-        }
-        return this.renderDetail();
-    },
-
-    renderDetail: function () {
-        var report = this.props.report,
-            detailComponent = ReportType.getDetailController(report);
-
-        return React.createElement(detailComponent, {
-            report: report,
-            revisions: this.props.revisions
-        });
+var Report = (props) => {
+    var report = props.report;
+    if (props.loading) {
+        return <Mask text={props.i18n('detail.loading')}/>;
     }
-});
+    if (!report) {
+        return <ResourceNotFound resource={props.i18n('detail.not-found.title')}/>;
+    }
+    if (!ReportValidator.canRender(report)) {
+        return <ReportNotRenderable messageId={ReportValidator.getRenderError(report)}/>;
+    }
+    return React.createElement(ReportType.getDetailController(report), {
+        report: report,
+        revisions: props.revisions
+    });
+};
 
-module.exports = injectIntl(Report);
+Report.propTypes = {
+    report: React.PropTypes.object,
+    revisions: React.PropTypes.array,
+    loading: React.PropTypes.bool
+};
+
+export default injectIntl(I18nWrapper(Report));

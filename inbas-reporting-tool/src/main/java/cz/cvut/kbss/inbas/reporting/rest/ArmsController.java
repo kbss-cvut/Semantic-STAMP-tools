@@ -1,12 +1,11 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueRiskAssessment;
 import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -25,5 +24,19 @@ public class ArmsController {
         } catch (IllegalArgumentException e) {
             throw new BadRequestException(e.getMessage());
         }
+    }
+
+    @RequestMapping(value = "/sira", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public URI getSiraValue(@RequestBody SafetyIssueRiskAssessment sira) {
+        final URI result;
+        try {
+            result = armsService.calculateSafetyIssueRiskAssessment(sira);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+        if (result == null) {
+            throw new IllegalArgumentException("Missing some of the values required for SIRA calculation.");
+        }
+        return result;
     }
 }

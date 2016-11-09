@@ -32,7 +32,8 @@ module.exports = {
                 name: '',
                 // Round the time to whole seconds
                 startTime: (Date.now() / 1000) * 1000,
-                endTime: (Date.now() / 1000) * 1000
+                endTime: (Date.now() / 1000) * 1000,
+                eventTypes: []
             },
             isNew: true,
             javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS
@@ -47,6 +48,7 @@ module.exports = {
                 state: Constants.SAFETY_ISSUE_STATE.OPEN,
                 name: ''
             },
+            sira: {},
             isNew: true,
             javaClass: Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS
         };

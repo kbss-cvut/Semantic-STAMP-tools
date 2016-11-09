@@ -20,9 +20,13 @@ describe('ReportsController', () => {
     beforeEach(() => {
         jasmine.addMatchers(Environment.customMatchers);
         spyOn(Actions, 'loadAllReports');
-        spyOn(Actions, 'loadEventTypes');
         spyOn(Actions, 'loadOptions');
         reports = Generator.generateReports();
+        ComponentStateStore.onResetComponentState(ReportsController.displayName);
+    });
+
+    afterEach(() => {
+        ComponentStateStore.onResetComponentState(ReportsController.displayName);
     });
 
     it('initializes report sort with default values', () => {
@@ -140,11 +144,8 @@ describe('ReportsController', () => {
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
         controller = Environment.render(<ReportsController/>);
         controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
-        var filters = TestUtils.scryRenderedComponentsWithType(controller, require('../../js/components/Select'));
-        var phaseFilter = filters.find((item) => {
-            return item.props.name === 'phase';
-        });
-        expect(phaseFilter.props.value).toEqual(filter.phase);
+        var filterableTable = TestUtils.findRenderedComponentWithType(controller, require('../../js/components/report/FilterableReportsTable'));
+        expect(filterableTable.props.filter[Constants.FILTERS[1].path]).toEqual(filter.phase);
     });
 
     it('clears transition payload after it has read it', () => {

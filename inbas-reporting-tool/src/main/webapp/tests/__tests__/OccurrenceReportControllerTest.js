@@ -5,16 +5,17 @@ describe('Occurrence report controller', function () {
     var React = require('react'),
         Button = require('react-bootstrap').Button,
         rewire = require('rewire'),
+        TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         ReportController = rewire('../../js/components/report/occurrence/OccurrenceReportController'),
         OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),
-        Actions = require('../../js/actions/Actions');
+        Actions = require('../../js/actions/Actions'),
+        Routing = require('../../js/utils/Routing'),
+        Routes = require('../../js/utils/Routes');
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
-        spyOn(Actions, 'loadOccurrenceCategories');
-        spyOn(Actions, 'loadEventTypes');
         Environment.mockFactors(OccurrenceReport);
         ReportController.__set__('ReportDetail', OccurrenceReport);
     });
@@ -80,5 +81,51 @@ describe('Occurrence report controller', function () {
 
         result.onSuccess();
         expect(Actions.loadReport).toHaveBeenCalled();
+    });
+
+    // Since report removal is implemented in the ReportDetailControllerMixin, the following tests test all the report
+    // detail controllers
+
+    it('removes report chain when on remove is called', () => {
+        var report = Generator.generateOccurrenceReport();
+        report.fileNumber = Date.now();
+        var component = Environment.render(<ReportController report={report}/>);
+        spyOn(Actions, 'deleteReportChain');
+
+        component.onRemove();
+        expect(Actions.deleteReportChain).toHaveBeenCalled();
+        var args = Actions.deleteReportChain.calls.argsFor(0);
+        expect(args[0]).toEqual(report.fileNumber);
+    });
+
+    it('transitions to reports list when remove is successful', () => {
+        var report = Generator.generateOccurrenceReport();
+        report.fileNumber = Date.now();
+        var component = Environment.render(<ReportController report={report}/>);
+        spyOn(Actions, 'deleteReportChain').and.callFake((fileNo, onSuccess) => {
+            onSuccess();
+        });
+        spyOn(Routing, 'transitionTo');
+
+        component.onRemove();
+        expect(Routing.transitionTo).toHaveBeenCalledWith(Routes.reports);
+    });
+
+    it('shows error message when report remove fails', () => {
+        var report = Generator.generateOccurrenceReport(),
+            errorMessage: 'I failed to remove the report';
+        report.fileNumber = Date.now();
+        var component = Environment.render(<ReportController report={report}/>);
+        spyOn(Actions, 'deleteReportChain').and.callFake((fileNo, onSuccess, onError) => {
+            onError({
+                message: errorMessage
+            });
+        });
+
+        var detailComponent = TestUtils.findRenderedComponentWithType(component, OccurrenceReport.wrappedComponent);
+        detailComponent.refs.wrappedInstance._onDelete();
+        expect(Actions.deleteReportChain).toHaveBeenCalled();
+        var errorMsg = Environment.getComponentByTagAndContainedText(component, 'div', errorMessage);
+        expect(errorMessage).not.toBeNull();
     });
 });

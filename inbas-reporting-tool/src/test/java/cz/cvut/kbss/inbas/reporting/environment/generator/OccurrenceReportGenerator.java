@@ -55,17 +55,17 @@ public class OccurrenceReportGenerator {
         final Event childOne = new Event();
         childOne.setStartTime(report.getOccurrence().getStartTime());
         childOne.setEndTime(report.getOccurrence().getEndTime());
-        childOne.setEventType(Generator.generateEventType());
+        childOne.setEventTypes(Collections.singleton(Generator.generateEventType()));
         report.getOccurrence().addChild(childOne);
         final Event childOneOne = new Event();
         childOneOne.setStartTime(report.getOccurrence().getStartTime());
         childOneOne.setEndTime(report.getOccurrence().getEndTime());
-        childOneOne.setEventType(Generator.generateEventType());
+        childOneOne.setEventTypes(Collections.singleton(Generator.generateEventType()));
         childOne.addChild(childOneOne);
         final Event fOne = new Event();
         fOne.setStartTime(report.getOccurrence().getStartTime());
         fOne.setEndTime(report.getOccurrence().getEndTime());
-        fOne.setEventType(Generator.generateEventType());
+        fOne.setEventTypes(Collections.singleton(Generator.generateEventType()));
         final Factor f = new Factor();
         f.addType(Generator.randomFactorType());
         f.setEvent(fOne);
@@ -73,7 +73,7 @@ public class OccurrenceReportGenerator {
         final Event fOneChildOne = new Event();
         fOneChildOne.setStartTime(report.getOccurrence().getStartTime());
         fOneChildOne.setEndTime(report.getOccurrence().getEndTime());
-        fOneChildOne.setEventType(Generator.generateEventType());
+        fOneChildOne.setEventTypes(Collections.singleton(Generator.generateEventType()));
         fOne.addChild(fOneChildOne);
         return report;
     }
@@ -105,7 +105,7 @@ public class OccurrenceReportGenerator {
         final Occurrence occurrence = new Occurrence();
         occurrence.setName(UUID.randomUUID().toString());
         final URI type = Generator.generateEventType();
-        occurrence.setEventType(type);
+        occurrence.setEventTypes(Collections.singleton(type));
         occurrence.getTypes().add(type.toString());
         occurrence.setStartTime(new Date(System.currentTimeMillis() - 100000));
         occurrence.setEndTime(new Date());
@@ -131,7 +131,7 @@ public class OccurrenceReportGenerator {
             child.setStartTime(new Date());
             child.setEndTime(new Date());
             child.setUri(URI.create(Vocabulary.s_c_Event + "-instance" + Generator.randomInt()));
-            child.setEventType(Generator.generateEventType());
+            child.setEventTypes(Collections.singleton(Generator.generateEventType()));
             child.setIndex(i);
             parent.getChildren().add(child);
             generateChildEvents(child, depth + 1, maxDepth, childCount);

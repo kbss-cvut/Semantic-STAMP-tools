@@ -16,8 +16,6 @@ describe('AuditReport', () => {
     beforeEach(function () {
         spyOn(Actions, 'updateReport');
         spyOn(Actions, 'loadOptions');
-        spyOn(Actions, 'loadOccurrenceCategories');
-        spyOn(Actions, 'loadEventTypes');
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
         report = ReportFactory.createAuditReport();
     });

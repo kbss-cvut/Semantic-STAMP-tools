@@ -1,6 +1,7 @@
 'use strict';
 
 var Constants = require('../constants/Constants');
+var Utils = require('../utils/Utils');
 
 /**
  * Filters data according to specified filter(s).
@@ -21,25 +22,29 @@ var DataFilter = {
                 if (!filter.hasOwnProperty(key) || filter[key] === Constants.FILTER_DEFAULT) {
                     continue;
                 }
-                var path = key.split('.'),
-                    value = item;
-                for (i = 0, len = path.length; i < len; i++) {
-                    value = value[path[i]];
+                var value = Utils.getPropertyValue(item, key);
+                if (!value) {
+                    return false;
                 }
-                var filterValue = filter[key];
+                var filterValue = filter[key],
+                    result = false;
                 if (!Array.isArray(filterValue)) {
-                    return (Array.isArray(value) && value.indexOf(filterValue) !== -1) || (!Array.isArray(value) && value === filterValue);
+                    result = (Array.isArray(value) && value.indexOf(filterValue) !== -1) || (!Array.isArray(value) && value === filterValue);
 
                 } else {
                     // If the filter itself is an array it suffices when a single value from the filter is present
                     for (i = 0, len = filterValue.length; i < len; i++) {
                         if (value === filterValue[i] || Array.isArray(value) && value.indexOf(filterValue[i]) !== -1) {
-                            return true;
+                            result = true;
+                            break;
                         }
                     }
+                }
+                if (!result) {
                     return false;
                 }
             }
+            return true;
         });
     },
 

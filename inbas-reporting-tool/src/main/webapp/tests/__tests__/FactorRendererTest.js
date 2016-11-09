@@ -35,7 +35,7 @@ describe('FactorRenderer', function () {
             uri: 'http://krizik.felk.cvut.cz/ontologies/inbas-2015#Occurrence_instance319360066',
             key: '25857640490956897',
             name: 'Runway incursion',
-            eventType: Generator.randomCategory().id,
+            eventTypes: [Generator.randomCategory().id],
             startTime: 1447144734937,
             endTime: 1447144800937,
             referenceId: 1

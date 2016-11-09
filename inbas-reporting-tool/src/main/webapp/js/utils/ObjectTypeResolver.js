@@ -14,7 +14,7 @@ module.exports = {
         if (!object || !options) {
             return null;
         }
-        var types = typeof object === 'object' ? object.types : [object],
+        var types = typeof object === 'object' ? (Array.isArray(object) ? object : object.types) : [object],
             tLen = types.length, j;
         for (var i = 0, len = options.length; i < len; i++) {
             var option = options[i];

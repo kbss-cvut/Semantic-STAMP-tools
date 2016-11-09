@@ -13,7 +13,7 @@
 
     <name>INBAS Reporting Tool</name>
     <artifactId>inbas-reporting-tool</artifactId>
-    <version>0.7.13</version>
+    <version>0.7.15</version>
     <packaging>war</packaging>
 
     <properties>
@@ -21,7 +21,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <cz.cvut.kbss.jopa.version>0.8.6</cz.cvut.kbss.jopa.version>
+        <cz.cvut.kbss.jopa.version>0.8.7</cz.cvut.kbss.jopa.version>
+        <cz.cvut.kbss.jaxb-jsonld.version>0.0.6</cz.cvut.kbss.jaxb-jsonld.version>
         <org.springframework.version>4.1.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.0.2.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.7.3</com.fasterxml.jackson.version>
@@ -128,6 +129,13 @@
             <groupId>cz.cvut.kbss.jopa</groupId>
             <artifactId>ontodriver-sesame</artifactId>
             <version>${cz.cvut.kbss.jopa.version}</version>
+        </dependency>
+
+        <!-- JAXB JSON-LD for Jackson -->
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>jaxb-jsonld-jackson</artifactId>
+            <version>${cz.cvut.kbss.jaxb-jsonld.version}</version>
         </dependency>
 
         <!-- Sesame Data access -->

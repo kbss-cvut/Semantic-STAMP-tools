@@ -129,14 +129,15 @@ var FactorRendererImpl = {
             var text = '';
             if (typeof node.name !== 'undefined' && node.name !== null) {
                 text = node.name;
-            } else if (node.eventType) {
-                var eventType = ObjectTypeResolver.resolveType(node.eventType, eventTypes);
-                text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
+            } else if (node.eventTypes) {
+                var eventType = ObjectTypeResolver.resolveType(node.eventTypes, eventTypes);
+                text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventTypes[0];
             }
             GanttController.addFactor({
                 id: node.referenceId,
                 text: text,
-                start_date: new Date(node.startTime),
+                // Temporary fix for gantt issue with 0 as task start/end time
+                start_date: new Date(node.startTime === 0 ? node.startTime + 1 : node.startTime),
                 end_date: new Date(node.endTime),
                 readonly: node.readOnly,
                 statement: node

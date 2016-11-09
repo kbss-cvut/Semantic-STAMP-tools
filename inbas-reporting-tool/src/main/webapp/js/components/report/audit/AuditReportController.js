@@ -45,12 +45,11 @@ var AuditReportController = React.createClass({
         var handlers = {
             onChange: this.onChange,
             onSuccess: this.onSuccess,
-            onCancel: this.onCancel
+            onCancel: this.onCancel,
+            onRemove: this.onRemove
         };
-        return (
-            <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
-                          readOnly={!this.isLatestRevision()}/>
-        );
+        return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+                             readOnly={!this.isLatestRevision()}/>;
     }
 });
 

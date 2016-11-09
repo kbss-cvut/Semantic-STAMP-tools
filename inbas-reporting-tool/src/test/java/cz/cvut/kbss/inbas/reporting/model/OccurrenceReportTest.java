@@ -102,7 +102,7 @@ public class OccurrenceReportTest {
         assertEquals(report.getOccurrence().getStartTime(), result.getDate());
         assertTrue(result.getTypes().containsAll(report.getTypes()));
         assertEquals(report.getSeverityAssessment(), result.getSeverityAssessment());
-        assertEquals(report.getOccurrence().getEventType(), result.getOccurrenceCategory());
+        assertEquals(report.getOccurrence().getEventTypes(), result.getOccurrenceCategories());
         assertEquals(report.getSummary(), result.getSummary());
     }
 

@@ -48,6 +48,7 @@ module.exports = {
         'detail.phase-transition-failed-message': 'Přechod do další fáze se nezdařil. Zachycena chyba: ',
         'detail.loading': 'Načítám hlášení...',
         'detail.not-found.title': 'Hlášení nenalezeno',
+        'detail.remove-failed-message': 'Hlášení se nepodařilo odstranit. Odpověď serveru: ',
 
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
@@ -73,7 +74,8 @@ module.exports = {
         'main.statistics-nav': 'Statistiky',
         'main.logout': 'Odhlásit se',
         'main.search-placeholder': 'Hledat',
-        'main.search.fulltext': 'Hledat všude',
+        'main.search.fulltext': 'Hledat ve všech popisech',
+        'main.search.fulltext.label': 'Hledat všude',
         'main.search.fulltext-tooltip': 'Hledat daný výraz ve všech hlášeních',
         'main.tacr-notice': 'Projekt byl podpořen Technologickou agenturou České republiky.',
 
@@ -115,6 +117,8 @@ module.exports = {
         'reports.paging.item-count': 'Zobrazuji {showing} z {total} položek.',
         'reports.create-report': 'Nové hlášení',
 
+        'filters.label': 'Filtry',
+
         'delete-dialog.title': 'Smazat hlášení?',
         'delete-dialog.content': 'Skutečně chcete smazat toto hlášení?',
         'delete-dialog.submit': 'Smazat',
@@ -126,6 +130,8 @@ module.exports = {
         'occurrence.end-time-tooltip': 'Datum a čas kdy událost skončila',
         'occurrence.class': 'Třída závažnosti',
         'occurrence.class-tooltip': 'Třída závažnosti - pole je povinné',
+        'occurrence.add-category': 'Přidat další klasifikaci události',
+        'occurrence.remove-category-tooltip': 'Odebrat klasifikaci události',
 
         'safety-issue.panel.active-tooltip': 'Tato safety issue je v současné době aktivní',
         'safety-issue.panel.inactive-tooltip': 'Tato safety issue není v současné době aktivní',
@@ -138,6 +144,17 @@ module.exports = {
         'safety-issue.base.no-bases': 'Tato safety issue není založena na základě žádných existujících hlášení.',
         'safety-issue.sira.label': 'Hodnocení rizika safety issue (SIRA)',
         'safety-issue.sira-tooltip': 'SIRA, dle https://essi.easa.europa.eu/documents/Methodology.pdf',
+        'safety-issue.sira.initialEventFrequency': 'Odhad četnosti výskytu spouštějící události',
+        'safety-issue.sira.initialEventFrequency-tooltip': 'Odhadovaná četnost výskytu spouštějící události (ku letovým sektorům):',
+        'safety-issue.sira.barrierUosAvoidanceFailFrequency': 'Četnost selhání bariér proti UOS',
+        'safety-issue.sira.barrierUosAvoidanceFailFrequency-tooltip': 'Bariéry selžou při prevenci UOS (Undesirable Operational State)...',
+        'safety-issue.sira.barrierRecoveryFailFrequency': 'Četnost selhání bariér před nehodou',
+        'safety-issue.sira.barrierRecoveryFailFrequency-tooltip': 'Bariéry nedokáží zabránit nehodové situaci...',
+        'safety-issue.sira.accidentSeverity': 'Závažnost nehody',
+        'safety-issue.sira.accidentSeverity-tooltip': 'Závažnost nehody by byla...',
+        'safety-issue.sira.value-label': 'Hodnota SIRA',
+        'safety-issue.sira.reset': 'Resetovat SIRA',
+        'safety-issue.sira.reset-tooltip': 'Zrušit SIRA hodnocení',
 
         'audit.name-tooltip': 'Název auditu (např. jméno auditované organizace + datum) - pole je povinné',
         'audit.type.label': 'Druh kontroly',

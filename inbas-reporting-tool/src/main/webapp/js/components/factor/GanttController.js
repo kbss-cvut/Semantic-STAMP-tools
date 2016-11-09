@@ -4,7 +4,7 @@ var Constants = require('../../constants/Constants');
 var FactorStyleInfo = require('../../utils/FactorStyleInfo');
 var Factory = require('../../model/ReportFactory');
 var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
-var TypeaheadStore = require('../../stores/TypeaheadStore');
+var OptionsStore = require('../../stores/OptionsStore');
 
 var I18nStore = require('../../stores/I18nStore');
 
@@ -15,7 +15,7 @@ var COLUMN_DEFINITIONS = {
     'startDate': {name: 'start_date', label: I18nStore.i18n('factors.detail.start'), width: '*', align: 'center'},
     'eventType': {
         name: 'event_type', label: I18nStore.i18n('factors.detail.type'), template: function (task) {
-            var et = task.statement.eventType;
+            var et = task.statement.eventTypes;
             return '<a href="' + et + '" title="' + et + '" target="_blank" class="external-link-gantt"></a>';
         }, align: 'center', width: 44
     },
@@ -133,7 +133,7 @@ var GanttController = {
             if (!task.parent) {
                 return 'factor-root-event';
             }
-            eventType = ObjectTypeResolver.resolveType(task.statement.eventType, TypeaheadStore.getEventTypes());
+            eventType = ObjectTypeResolver.resolveType(task.statement.eventTypes, OptionsStore.getOptions('eventType'));
             return eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '';
         };
         gantt.templates.tooltip_date_format = function (date) {

@@ -4,18 +4,27 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.exception.JsonProcessingException;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
+import cz.cvut.kbss.inbas.reporting.service.arms.SiraOption;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class JsonLdProcessingTest {
+
+    private static final URI[] EXPECTED_SIRA_OPTIONS = {
+            URI.create("http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/catastrophic"),
+            URI.create("http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/major"),
+            URI.create("http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/minor"),
+            URI.create("http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident-severity/negligible")
+    };
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -57,7 +66,8 @@ public class JsonLdProcessingTest {
     @Test
     public void getItemWithTypeHandlesItemWithTypeNotAnArray() throws Exception {
         final URI expected = URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second");
-        final String json = "[{\"@id\": \"" + expected.toString() + "\", \"@type\": \"" + Vocabulary.s_c_default_phase + "\"}]";
+        final String json =
+                "[{\"@id\": \"" + expected.toString() + "\", \"@type\": \"" + Vocabulary.s_c_default_phase + "\"}]";
 
         final URI result = JsonLdProcessing.getItemWithType(new RawJson(json), Vocabulary.s_c_default_phase);
         assertEquals(expected, result);
@@ -76,5 +86,15 @@ public class JsonLdProcessingTest {
         thrown.expect(JsonProcessingException.class);
         thrown.expectMessage("The specified JSON is not valid. JSON: " + invalidJson);
         JsonLdProcessing.getItemWithType(new RawJson(invalidJson), Vocabulary.s_c_default_phase);
+    }
+
+    @Test
+    public void readJsonLdReturnsListOfInstancesReadFromInput() throws Exception {
+        final RawJson jsonLd = new RawJson(Environment.loadData("option/accidentSeverity.json", String.class));
+        final List<SiraOption> result = JsonLdProcessing.readFromJsonLd(jsonLd, SiraOption.class);
+        assertNotNull(result);
+        assertEquals(EXPECTED_SIRA_OPTIONS.length, result.size());
+        final Set<URI> expected = new HashSet<>(Arrays.asList(EXPECTED_SIRA_OPTIONS));
+        result.forEach(o -> assertTrue(expected.contains(o.getUri())));
     }
 }

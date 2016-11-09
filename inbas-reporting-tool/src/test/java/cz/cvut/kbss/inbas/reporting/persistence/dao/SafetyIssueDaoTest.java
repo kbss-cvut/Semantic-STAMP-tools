@@ -65,7 +65,7 @@ public class SafetyIssueDaoTest extends BaseDaoTestRunner {
         for (int i = 0; i < Generator.randomInt(2, 5); i++) {
             final Event e = new Event();
             e.setIndex(highestIndex + i);
-            e.setEventType(Generator.generateEventType());
+            e.setEventTypes(Collections.singleton(Generator.generateEventType()));
             issue.addChild(e);
         }
         dao.update(issue);

@@ -116,7 +116,7 @@ export default class Generator {
                 uri: "http://onto.fel.cvut.cz/ontologies/ufo/Event-" + i,
                 startTime: Date.now() - 60000,
                 endTime: Date.now(),
-                eventType: Generator.randomCategory().id,
+                eventTypes: [Generator.randomCategory().id],
                 referenceId: referenceIdCounter++
             });
         }
@@ -187,7 +187,7 @@ export default class Generator {
                 name: 'TestOccurrence',
                 startTime: Date.now() - 10000,
                 endTime: Date.now(),
-                eventType: Generator.randomCategory().id
+                eventTypes: [Generator.randomCategory().id]
             }
         };
     }
@@ -261,6 +261,8 @@ export default class Generator {
             } else {
                 report.types = [Vocabulary.SAFETY_ISSUE_REPORT];
             }
+            report.occurrenceCategories = [Generator.randomCategory().id];
+            delete report.occurrence;
             reports.push(report);
         }
         return reports;

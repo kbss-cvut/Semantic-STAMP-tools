@@ -4,11 +4,11 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var Actions = require('../../actions/Actions');
+var Constants = require('../../constants/Constants');
 var Logger = require('../../utils/Logger');
 var ReportFactory = require('../../model/ReportFactory');
-var Report = require('./Report');
+var Report = require('./Report').default;
 var OptionsStore = require('../../stores/OptionsStore'); // Force store initialization, so that it can listen to actions
-var TypeaheadStore = require('../../stores/TypeaheadStore');
 var ReportStore = require('../../stores/ReportStore');
 var RouterStore = require('../../stores/RouterStore');
 var Routes = require('../../utils/Routes');
@@ -47,6 +47,12 @@ var ReportController = React.createClass({
         }
     },
 
+    componentDidMount: function () {
+        Actions.loadOptions();
+        Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
+        Actions.loadOptions('factorType');
+    },
+
     _loadReport: function (reportKey) {
         Actions.loadReport(reportKey);
         this.setState({loading: true, key: reportKey});
@@ -81,10 +87,8 @@ var ReportController = React.createClass({
     },
 
 
-    // Rendering
-
     render: function () {
-        return (<Report report={this.state.report} revisions={this.state.revisions} loading={this.state.loading}/>);
+        return <Report report={this.state.report} revisions={this.state.revisions} loading={this.state.loading}/>;
     }
 });
 

@@ -14,6 +14,8 @@ abstract class KeySupportingRepositoryService<T extends HasOwlKey> extends BaseR
     protected abstract OwlKeySupportingDao<T> getPrimaryDao();
 
     public T findByKey(String key) {
-        return getPrimaryDao().findByKey(key);
+        final T result = getPrimaryDao().findByKey(key);
+        postLoad(result);
+        return result;
     }
 }

@@ -37,7 +37,7 @@ describe('Factor detail dialog', function () {
             durationUnit: 'minute',
             statement: ReportFactory.createFactor()
         };
-        spyOn(Actions, 'loadEventTypes');
+        spyOn(Actions, 'loadOptions');
     });
 
     it('Updates factor with new values upon save', function () {

@@ -35,7 +35,7 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.s_p_has_event_type)
-    private URI eventType;
+    private Set<URI> eventTypes;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
@@ -64,7 +64,7 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
         this.name = other.name;
         this.startTime = other.startTime;
         this.endTime = other.endTime;
-        this.eventType = other.eventType;
+        this.eventTypes = other.eventTypes;
         this.types = new HashSet<>(other.types);
         if (other.question != null) {
             this.question = new Question(other.question);
@@ -105,8 +105,8 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
         this.endTime = endTime;
     }
 
-    public URI getEventType() {
-        return eventType;
+    public Set<URI> getEventTypes() {
+        return eventTypes;
     }
 
     /**
@@ -114,16 +114,13 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
      * <p>
      * Also adds the event type's URI to this instance's types.
      *
-     * @param eventType The type to set
+     * @param eventTypes The type to set
      * @see Vocabulary#s_p_has_event_type
      */
-    public void setEventType(URI eventType) {
-        this.eventType = eventType;
-        if (eventType != null) {
-            if (types == null) {
-                this.types = new HashSet<>(4);
-            }
-            types.add(eventType.toString());
+    public void setEventTypes(Set<URI> eventTypes) {
+        this.eventTypes = eventTypes;
+        if (eventTypes != null) {
+            eventTypes.forEach(e -> types.add(e.toString()));
         }
     }
 

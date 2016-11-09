@@ -12,11 +12,16 @@ var Utils = require('../../utils/Utils.js');
 var OptionsStore = require('../../stores/OptionsStore');
 var ReportType = require('../../model/ReportType');
 var Routes = require('../../utils/Routes');
-var DeleteReportDialog = require('./DeleteReportDialog');
+var DeleteReportDialog = require('./DeleteReportDialog').default;
 var I18nMixin = require('../../i18n/I18nMixin');
 
 var ReportRow = React.createClass({
     mixins: [I18nMixin, Reflux.listenTo(OptionsStore, '_onOptionsLoaded')],
+
+    propTypes: {
+        actions: React.PropTypes.object.isRequired,
+        report: React.PropTypes.object.isRequired
+    },
 
     getInitialState: function () {
         return {
@@ -49,7 +54,6 @@ var ReportRow = React.createClass({
 
     removeReport: function () {
         this.props.actions.onRemove(this.props.report);
-        this.onCloseModal();
     },
 
 
@@ -83,7 +87,7 @@ var ReportRow = React.createClass({
     },
 
     _renderDate: function (report) {
-        return report.date ? Utils.formatDate(new Date(report.date)) : '';
+        return report.date !== null && report.date !== undefined ? Utils.formatDate(new Date(report.date)) : '';
     }
 });
 

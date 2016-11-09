@@ -3,6 +3,7 @@
 import React from "react";
 import classNames from "classnames";
 import {Label} from "react-bootstrap";
+import Constants from "../../constants/Constants";
 import I18nStore from "../../stores/I18nStore";
 
 const ResultListItem = (props) => {
@@ -45,6 +46,7 @@ class ReportSearchResultList extends React.Component {
                 'autocomplete-results extended': options.length >= 21
             }, this.props.customClasses.results);
         var items = [];
+        items.push(this._renderFullTextSearchOption());
         for (var i = 0, len = options.length; i < len; i++) {
             const option = options[i];
             var onClick = this._onClick.bind(this, option);
@@ -54,6 +56,14 @@ class ReportSearchResultList extends React.Component {
         return <ul className={listCls}>
             {items}
         </ul>;
+    }
+
+    _renderFullTextSearchOption() {
+        return <li className='btn-link item fulltext' title={I18nStore.i18n('main.search.fulltext-tooltip')}
+                   onClick={(e) => this._onClick(Constants.FULL_TEXT_SEARCH_OPTION, e)}>
+            <Label className='item-label'>{I18nStore.i18n('main.search.fulltext.label')}</Label>
+            {I18nStore.i18n('main.search.fulltext')}
+        </li>;
     }
 }
 

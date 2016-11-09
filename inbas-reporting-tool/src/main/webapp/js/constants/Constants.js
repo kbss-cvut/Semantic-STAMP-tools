@@ -7,7 +7,8 @@ module.exports = {
     ECCAIRS_URL: 'http://www.icao.int/safety/airnavigation/AIG/Documents/ADREP%20Taxonomy/ECCAIRS%20Aviation%201.3.0.12%20(Entities%20and%20Attributes).en.id.pdf',
     HOME_ROUTE: Routes.dashboard,
     OPTIONS: {
-        OCCURRENCE_CLASS: 'occurrenceClass'
+        OCCURRENCE_CLASS: 'occurrenceClass',
+        OCCURRENCE_CATEGORY: 'occurrenceCategory'
     },
 
     TIME_SCALES: {
@@ -92,11 +93,34 @@ module.exports = {
         CLOSED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/closed-safety-issue-state'
     },
 
+    ARMS: {
+        ACCIDENT_OUTCOME: 'accidentOutcome',
+        BARRIER_EFFECTIVENESS: 'barrierEffectiveness'
+    },
+
     SIRA_COLORS: {
         'http://onto.fel.cvut.cz/ontologies/arms/sira/model/stop': 'sira-red',
         'http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve': 'sira-orange',
         'http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure': 'sira-yellow',
         'http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor': 'sira-aqua',
-        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept': 'sira-green'
-    }
+        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept': 'sira-green',
+        'http://onto.fel.cvut.cz/ontologies/arms/sira/model/unassigned': ''
+    },
+
+    FULL_TEXT_SEARCH_OPTION: {
+        id: 'full-text-search',
+        identification: 'Full text search'
+    },
+
+    FILTERS: [{
+        path: 'occurrenceCategories',
+        type: 'select',
+        options: 'occurrenceCategory',
+        label: 'report.occurrence.category.label'
+    }, {
+        path: 'phase',
+        type: 'select',
+        options: 'reportingPhase',
+        label: 'reports.phase'
+    }]
 };

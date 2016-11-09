@@ -2,6 +2,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
+var DeleteReportDialog = require('../report/DeleteReportDialog').default;
 
 /**
  * Aggregates some of the functionality of the report detail view.
@@ -58,19 +59,45 @@ var ReportDetailMixin = {
         this.showErrorMessage(this.i18n('detail.phase-transition-failed-message') + error.message);
     },
 
+    _onDeleteClick: function () {
+        this.setState({showDeleteDialog: true});
+    },
+
+    onDeleteCancel: function () {
+        this.setState({showDeleteDialog: false});
+    },
+
+    _onDelete: function () {
+        this.props.handlers.onRemove(this.onDeleteError);
+    },
+
+    onDeleteError: function (error) {
+        this.showErrorMessage(this.i18n('detail.remove-failed-message') + error.message);
+    },
+
+
+    renderDeleteButton: function () {
+        return this.props.report.isNew ? null :
+            <Button bsStyle='warning' bsSize='small' title={this.i18n('reports.delete-tooltip')}
+                    onClick={this._onDeleteClick}>{this.i18n('delete')}</Button>;
+    },
+
+    renderDeleteDialog: function () {
+        return <DeleteReportDialog show={this.state.showDeleteDialog} onClose={this.onDeleteCancel}
+                                   onSubmit={this._onDelete}/>;
+    },
 
     renderReadOnlyButtons: function () {
-        return (
-            <div>
-                <div className='float-right'>
-                    <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
-                            onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-                </div>
-                <div style={{clear: 'both'}}/>
-                <div className='notice-small float-right'>
-                    {this.i18n('revisions.readonly-notice')}
-                </div>
-            </div>);
+        return <div>
+            <div className='float-right'>
+                <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                        onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+            </div>
+            <div style={{clear: 'both'}}/>
+            <div className='notice-small float-right'>
+                {this.i18n('revisions.readonly-notice')}
+            </div>
+        </div>;
     }
 };
 

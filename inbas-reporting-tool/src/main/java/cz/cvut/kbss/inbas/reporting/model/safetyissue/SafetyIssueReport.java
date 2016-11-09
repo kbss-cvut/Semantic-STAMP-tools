@@ -8,7 +8,6 @@ import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.io.Serializable;
-import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,8 +22,8 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_safety_issue_risk_assessment)
-    private URI sira;
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_safety_issue_risk_assessment, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private SafetyIssueRiskAssessment sira;
 
     public SafetyIssueReport() {
     }
@@ -32,7 +31,7 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
     public SafetyIssueReport(SafetyIssueReport other) {
         super(other);
         this.safetyIssue = SafetyIssue.copyOf(other.safetyIssue);
-        this.sira = other.sira;
+        this.sira = other.sira != null ? new SafetyIssueRiskAssessment(other.sira) : null;
         if (other.getCorrectiveMeasures() != null) {
             this.correctiveMeasures = other.getCorrectiveMeasures().stream().map(CorrectiveMeasureRequest::new).collect(
                     Collectors.toSet());
@@ -58,11 +57,11 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
         this.correctiveMeasures = correctiveMeasures;
     }
 
-    public URI getSira() {
+    public SafetyIssueRiskAssessment getSira() {
         return sira;
     }
 
-    public void setSira(URI sira) {
+    public void setSira(SafetyIssueRiskAssessment sira) {
         this.sira = sira;
     }
 
@@ -72,7 +71,9 @@ public class SafetyIssueReport extends AbstractReport implements Serializable {
         copyAttributes(dto);
         dto.setSummary(summary);
         dto.setIdentification(safetyIssue.getName());
-        dto.setSira(sira);
+        if (sira != null) {
+            dto.setSira(sira.getSiraValue());
+        }
         dto.getTypes().add(SafetyIssueReport.class.getDeclaredAnnotation(OWLClass.class).iri());
         return dto;
     }
