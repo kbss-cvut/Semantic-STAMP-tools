@@ -153,6 +153,8 @@ module.exports = {
         'safety-issue.sira.accidentSeverity': 'Závažnost nehody',
         'safety-issue.sira.accidentSeverity-tooltip': 'Závažnost nehody by byla...',
         'safety-issue.sira.value-label': 'Hodnota SIRA',
+        'safety-issue.sira.reset': 'Resetovat SIRA',
+        'safety-issue.sira.reset-tooltip': 'Zrušit SIRA hodnocení',
 
         'audit.name-tooltip': 'Název auditu (např. jméno auditované organizace + datum) - pole je povinné',
         'audit.type.label': 'Druh kontroly',

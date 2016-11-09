@@ -151,6 +151,8 @@ module.exports = {
         'safety-issue.sira.accidentSeverity': 'Accident severity',
         'safety-issue.sira.accidentSeverity-tooltip': 'The accident severity would be...',
         'safety-issue.sira.value-label': 'SIRA value',
+        'safety-issue.sira.reset': 'Reset SIRA',
+        'safety-issue.sira.reset-tooltip': 'Reset SIRA values',
 
         'audit.name-tooltip': 'Short descriptive name of the audit (e.g. audited organization name + date of audit) - this field is required',
         'audit.type.label': 'Audit type',

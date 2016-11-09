@@ -3,7 +3,7 @@
 import React from "react";
 import assign from "object-assign";
 import JsonLdUtils from "jsonld-utils";
-import {Panel} from "react-bootstrap";
+import {Button, Panel} from "react-bootstrap";
 import Actions from "../../../actions/Actions";
 import ArmsStore from "../../../stores/ArmsStore";
 import Constants from "../../../constants/Constants";
@@ -108,12 +108,22 @@ class Sira extends React.Component {
         return '';
     }
 
+    _resetSira = () => {
+        let change = assign({}, this.props.report.sira);
+        processOptions((item) => {
+            change[item] = null;
+        });
+        change.siraValue = null;
+        this.props.onChange({sira: change});
+    };
+
     render() {
         return <Panel header={<h5>{this.i18n('safety-issue.sira.label')}</h5>} bsStyle='info'
                       title={this.i18n('safety-issue.sira-tooltip')}>
             <div className='row'>
                 {this._renderAttributeSelections()}
                 {this._renderSiraValue()}
+                {this._renderResetSiraButton()}
             </div>
         </Panel>;
     }
@@ -141,6 +151,14 @@ class Sira extends React.Component {
             <Input label={this.i18n('safety-issue.sira.value-label')} value={sira} className={inputClass}
                    readOnly={true}/>
         </div>;
+    }
+
+    _renderResetSiraButton() {
+        let sira = this.props.report.sira;
+        return sira && sira.siraValue ? <div className='col-xs-1'>
+            <Button bsStyle='primary' bsSize='small' onClick={this._resetSira} className='in-input-line'
+                    title={this.i18n('safety-issue.sira.reset-tooltip')}>{this.i18n('safety-issue.sira.reset')}</Button>
+        </div> : null;
     }
 }
 
