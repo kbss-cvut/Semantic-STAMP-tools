@@ -5,6 +5,10 @@
       {
         "@language": "en",
         "@value": "Stop"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zastavit"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 100,
@@ -20,6 +24,10 @@
       {
         "@language": "en",
         "@value": "Improve"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zlepšit"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 10,
@@ -35,6 +43,10 @@
       {
         "@language": "en",
         "@value": "Secure"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zajistit"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 1,
@@ -50,6 +62,10 @@
       {
         "@language": "en",
         "@value": "Monitor"
+      },
+      {
+        "@language": "cs",
+        "@value": "Sledovat"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.1,
@@ -65,6 +81,10 @@
       {
         "@language": "en",
         "@value": "Accept"
+      },
+      {
+        "@language": "cs",
+        "@value": "Přijmout"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.01

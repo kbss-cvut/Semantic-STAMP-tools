@@ -5,6 +5,10 @@
       {
         "@language": "en",
         "@value": "Virtually every flight"
+      },
+      {
+        "@language": "cs",
+        "@value": "Prakticky každý let"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 1,
@@ -20,6 +24,10 @@
       {
         "@language": "en",
         "@value": "Once every 10 times"
+      },
+      {
+        "@language": "cs",
+        "@value": "Jednou z 10 případů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.1,
@@ -35,6 +43,10 @@
       {
         "@language": "en",
         "@value": "Once in 100 times"
+      },
+      {
+        "@language": "cs",
+        "@value": "Jednou ze 100 případů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.01,
@@ -50,6 +62,10 @@
       {
         "@language": "en",
         "@value": "Once in 1000 times"
+      },
+      {
+        "@language": "cs",
+        "@value": "Jednou z 1000 případů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.001,
@@ -65,6 +81,10 @@
       {
         "@language": "en",
         "@value": "Once in 10 000 times"
+      },
+      {
+        "@language": "cs",
+        "@value": "Jednou z 10 000 případů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.0001,
@@ -80,6 +100,10 @@
       {
         "@language": "en",
         "@value": "Once in 100 000 times"
+      },
+      {
+        "@language": "cs",
+        "@value": "Jednou ze 100 000 případů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.00001,
@@ -95,6 +119,10 @@
       {
         "@language": "en",
         "@value": "Once in 1M times"
+      },
+      {
+        "@language": "cs",
+        "@value": "Jednou z milionu případů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.000001,
@@ -110,6 +138,10 @@
       {
         "@language": "en",
         "@value": "Once in 10M times"
+      },
+      {
+        "@language": "cs",
+        "@value": "Jednou z 10 milionů případů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.0000001

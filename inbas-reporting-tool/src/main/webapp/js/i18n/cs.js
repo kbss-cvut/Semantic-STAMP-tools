@@ -322,7 +322,7 @@ module.exports = {
 
         // ----------- ARMS -------------
         'arms.title': 'ARMS',
-        'arms.accident-outcome': 'Výsledek nehody',
+        'arms.accident-outcome': 'Následky nehody',
         'arms.accident-outcome.tooltip': 'Pokud by tato událost vedla až nehodě, jaký by byl její nejpravděpodobnější výsledek?',
         'arms.barrier-effectiveness': 'Efektivita bariér',
         'arms.barrier-effectiveness.tooltip': 'Jaká byla efektivita bariér zbývajících mezi touto událostí a nejpravděpodobnějším nehodovým scénářem?',

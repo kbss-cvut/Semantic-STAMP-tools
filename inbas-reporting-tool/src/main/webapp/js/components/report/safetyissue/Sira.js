@@ -36,7 +36,7 @@ class Sira extends React.Component {
         this.i18n = props.i18n;
         let state = {};
         processOptions((item) => {
-            state[item] = JsonLdUtils.processSelectOptions(Utils.neighbourSort(OptionsStore.getOptions(item)));
+            state[item] = JsonLdUtils.processSelectOptions(Utils.neighbourSort(OptionsStore.getOptions(item)), this.props.intl);
         });
         state[SIRA] = OptionsStore.getOptions(SIRA);
         this.state = state;
@@ -64,7 +64,7 @@ class Sira extends React.Component {
             stateUpdate[SIRA] = data;
         } else {
             Utils.neighbourSort(data, 'http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than');
-            stateUpdate[type] = JsonLdUtils.processSelectOptions(data);
+            stateUpdate[type] = JsonLdUtils.processSelectOptions(data, this.props.intl);
         }
         this.setState(stateUpdate);
     };

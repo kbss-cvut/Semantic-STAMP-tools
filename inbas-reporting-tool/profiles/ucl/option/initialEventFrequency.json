@@ -5,6 +5,10 @@
       {
         "@language": "en",
         "@value": "Virtually every flight"
+      },
+      {
+        "@language": "cs",
+        "@value": "Prakticky každý let"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 1,
@@ -20,6 +24,10 @@
       {
         "@language": "en",
         "@value": "Almost every flight"
+      },
+      {
+        "@language": "cs",
+        "@value": "Téměř každý let"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.1,
@@ -35,6 +43,10 @@
       {
         "@language": "en",
         "@value": "About every 100 sectors"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zhruba každých 100 sektorů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.01,
@@ -50,6 +62,10 @@
       {
         "@language": "en",
         "@value": "About every 1000 sectors"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zhruba každých 1000 sektorů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.001,
@@ -65,6 +81,10 @@
       {
         "@language": "en",
         "@value": "About every 10 000 sectors"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zhruba každých 10 000 sektorů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.0001,
@@ -80,6 +100,10 @@
       {
         "@language": "en",
         "@value": "About every 100 000 sectors"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zhruba každých 100 000 sektorů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.00001,
@@ -95,6 +119,10 @@
       {
         "@language": "en",
         "@value": "About every 1M sectors"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zhruba každý milion sektorů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.000001,
@@ -110,6 +138,10 @@
       {
         "@language": "en",
         "@value": "About every 10M sectors"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zhruba každých 10 milionů sektorů"
       }
     ],
     "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.0000001
