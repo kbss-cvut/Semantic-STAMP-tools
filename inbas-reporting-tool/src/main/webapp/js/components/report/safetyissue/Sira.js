@@ -123,8 +123,12 @@ class Sira extends React.Component {
             bsStyle='info'>
             <div className='row'>
                 {this._renderAttributeSelections()}
+            </div>
+            <div className='row'>
+                <div className='col-xs-4'>&nbsp;</div>
                 {this._renderSiraValue()}
                 {this._renderResetSiraButton()}
+                <div className='col-xs-4'>&nbsp;</div>
             </div>
         </Panel>;
     }
@@ -134,7 +138,7 @@ class Sira extends React.Component {
             i18n = this.i18n,
             report = this.props.report;
         processOptions((item) => {
-            items.push(<div key={item} className='col-xs-2'>
+            items.push(<div key={item} className='col-xs-3'>
                 <Select name={item} label={i18n('safety-issue.sira.' + item)} addDefault={true}
                         title={i18n('safety-issue.sira.' + item + '-tooltip')} options={this.state[item]}
                         value={report.sira ? report.sira[item] : ''} onChange={this._onOptionSelected}/>
@@ -148,7 +152,7 @@ class Sira extends React.Component {
             sira = this._resolveSiraValue(siraValue),
             inputClass = siraValue ? Constants.SIRA_COLORS[siraValue] : '';
 
-        return <div className='col-xs-2'>
+        return <div className='col-xs-3'>
             <Input label={this.i18n('safety-issue.sira.value-label')} value={sira} className={inputClass}
                    readOnly={true}/>
         </div>;

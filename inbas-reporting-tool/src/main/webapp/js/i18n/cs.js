@@ -144,7 +144,7 @@ module.exports = {
         'safety-issue.base.no-bases': 'Tato safety issue není založena na základě žádných existujících hlášení.',
         'safety-issue.sira.label': 'Hodnocení rizika safety issue (SIRA)',
         'safety-issue.sira-tooltip': 'SIRA, dle https://essi.easa.europa.eu/documents/Methodology.pdf',
-        'safety-issue.sira.initialEventFrequency': 'Odhad četnosti výskytu spouštějící události',
+        'safety-issue.sira.initialEventFrequency': 'Četnost výskytu spouštějící události',
         'safety-issue.sira.initialEventFrequency-tooltip': 'Odhadovaná četnost výskytu spouštějící události (ku letovým sektorům):',
         'safety-issue.sira.barrierUosAvoidanceFailFrequency': 'Četnost selhání bariér proti UOS',
         'safety-issue.sira.barrierUosAvoidanceFailFrequency-tooltip': 'Bariéry selžou při prevenci UOS (Undesirable Operational State)...',
