@@ -8,6 +8,8 @@ import cz.cvut.kbss.eccairs.webapi.EwaResult;
 import cz.cvut.kbss.eccairs.webapi.EwaWebServer;
 import cz.cvut.kbss.eccairs.webapi.ResultReturnCode;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.EccairsReportImporter;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -22,6 +24,7 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import java.io.StringReader;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -36,7 +39,13 @@ public class EccairsService {
 
     @Autowired
     protected Environment env;
-
+    
+    @Autowired
+    protected EccairsReportImporter importer;
+    
+    @Autowired
+    protected OccurrenceReportDao occurrenceReportDao;
+    
     private EwaIWebServer service;
 
     private EwaIWebServer getService() {
@@ -131,6 +140,11 @@ public class EccairsService {
             LOG.info("Report matched to report: repEntity={} : repFileNumber={}", reportingEntity, reportingEntityFileNumber);
 
             final String reportE5F = getCurrentEccairsReportByInitialFileNumberAndReportingEntity(reportingEntity, reportingEntityFileNumber);
+            List<URI> reports = importer.importE5FXmlFromString(reportE5F);
+            if(reports != null && !reports.isEmpty()){
+                URI reportUri = reports.get(0);
+                return occurrenceReportDao.find(reportUri);
+            }
         }
 
         // TODO
