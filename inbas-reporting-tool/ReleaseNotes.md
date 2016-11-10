@@ -1,5 +1,8 @@
 # SISEL Release Notes
 
+### 0.7.16 - November 10, 2016
+- SIRA calculation (Feature #196).
+
 ### 0.7.15 - October 31, 2016
 - Support for filters in the Reports view (Feature #206).
 
