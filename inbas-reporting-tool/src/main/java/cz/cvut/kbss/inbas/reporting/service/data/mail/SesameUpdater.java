@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
+@Deprecated
 public class SesameUpdater {
 
     private static final Logger LOG = LoggerFactory.getLogger(SesameUpdater.class);
@@ -47,14 +48,8 @@ public class SesameUpdater {
             }
             c.commit();
             // Do not close the repository, it may be used by the application persistence
-        } catch (RepositoryException | MalformedQueryException | UpdateExecutionException ex) {
-            if (c.isActive())
-                c.rollback();
-            throw ex;
-//            LOG.error("Exception caught when executing Sesame update.", ex);
         } finally {
             c.close();
-            repository.shutDown();
         }
     }
 }
