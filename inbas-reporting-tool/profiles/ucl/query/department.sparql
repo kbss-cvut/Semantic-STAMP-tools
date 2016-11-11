@@ -1,36 +1,39 @@
 PREFIX caa-os: <http://onto.fel.cvut.cz/ontologies/cz/caa/os/>
 PREFIX caa-os-model: <http://onto.fel.cvut.cz/ontologies/cz/caa/os/model/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <http://onto.fel.cvut.cz/ontologies/cz/caa/os/model#>
 
 CONSTRUCT {
   ?ucl_part rdfs:label ?ucl_part_label .
 } WHERE {
   SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/cz-caa-os> {
-      ?x0 rdfs:label ?l0
+      {?x0 rdfs:label ?l0
       FILTER(lang(?l0)='cs')
       OPTIONAL {
-            ?x0 (caa-os-model:has-organizational-part|caa-os-model:has-administrative-part|caa-os-model:has-director) ?x1 .
+            {?x0 (caa-os-model:has-organizational-part|caa-os-model:has-administrative-part|caa-os-model:has-director) ?x1 .
             ?x1 rdfs:label ?l1 .
             FILTER(lang(?l1)='cs')
             OPTIONAL {
-                    ?x1 (caa-os-model:has-organizational-part|caa-os-model:has-administrative-part|caa-os-model:has-director) ?x2 .
+                    {?x1 (caa-os-model:has-organizational-part|caa-os-model:has-administrative-part|caa-os-model:has-director) ?x2 .
                     ?x2 rdfs:label ?l2 .
                     FILTER(lang(?l2)='cs')
                     OPTIONAL {
-                            ?x2 (caa-os-model:has-organizational-part|caa-os-model:has-administrative-part|caa-os-model:has-director) ?x3 .
+                            {?x2 (caa-os-model:has-organizational-part|caa-os-model:has-administrative-part|caa-os-model:has-director) ?x3 .
                             ?x3 rdfs:label ?l3 .
-                            FILTER(lang(?l3)='cs')
-                    }
-            }
-      }
+                  FILTER(lang(?l3)='cs')} UNION { BIND("" AS ?l3)}
+                    }} UNION { BIND("" AS ?l2) }
+          }
+         }
+    }
+    }
   }
   BIND (
     concat(str(?l1),
-      if(bound(?l2),
-      	concat(' ==> ',
+      if(bound(?x2),
+        concat(' \u25B8 ',
           concat(str(?l2),
-            if(bound(?l3),
-             concat(' ==> ',
+            if(bound(?x3),
+             concat(' \u25B8 ',
                 str(?l3)),
               ""))),"")) AS ?ucl_part_label )
   BIND (
