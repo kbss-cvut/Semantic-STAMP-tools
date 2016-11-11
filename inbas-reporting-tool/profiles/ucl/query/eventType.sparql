@@ -21,14 +21,14 @@ CONSTRUCT {
   rdfs:comment ?comment ;
 } WHERE {
     {
-      SERVICE repoURL: {
-         # all occurrence categories
-         <a-430> eccairs-model:has-child+  ?term.
-         ?term rdfs:label ?label.
-         ?term eccairs-model:has-explanation ?comment.
-       }
-       BIND(eccairs:occurrence-category as ?type)
-    } UNION {
+#      SERVICE repoURL: {
+#         # all occurrence categories
+#         <a-430> eccairs-model:has-child+  ?term.
+#         ?term rdfs:label ?label.
+#         ?term eccairs-model:has-explanation ?comment.
+#       }
+#       BIND(eccairs:occurrence-category as ?type)
+#    } UNION {
       SERVICE repoURL: {
          # all events
          <a-390> eccairs-model:has-child+  ?term.
