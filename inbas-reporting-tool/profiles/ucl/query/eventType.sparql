@@ -13,13 +13,23 @@ PREFIX eccairs-3.4.0.2: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4
 
 PREFIX aviation-safety: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 
+PREFIX repoURL: <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2>
+
 CONSTRUCT {
   ?term rdfs:label ?label ;
   a ?type ;
   rdfs:comment ?comment ;
 } WHERE {
     {
-      SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
+      SERVICE repoURL: {
+         # all occurrence categories
+         <a-430> eccairs-model:has-child+  ?term.
+         ?term rdfs:label ?label.
+         ?term eccairs-model:has-explanation ?comment.
+       }
+       BIND(eccairs:occurrence-category as ?type)
+    } UNION {
+      SERVICE repoURL: {
          # all events
          <a-390> eccairs-model:has-child+  ?term.
          ?term rdfs:label ?label.
@@ -27,7 +37,7 @@ CONSTRUCT {
       }
       BIND(eccairs:event-type as ?type)
     } UNION {
-      SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
+      SERVICE repoURL: {
          # all descriptive factors
          <a-385> eccairs-model:has-child+  ?term.
          ?term rdfs:label ?label.
@@ -35,18 +45,18 @@ CONSTRUCT {
       }
       BIND(eccairs:descriptive-factor as ?type)
     } UNION {
-      SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/eccairs-aviation-3.4.0.2> {
+      SERVICE repoURL: {
          # all explanatory factors
          <a-392> eccairs-model:has-child+  ?term.
          ?term rdfs:label ?label.
          ?term eccairs-model:has-explanation ?comment.
       }
       BIND(eccairs:explanatory-factor as ?type)
-    } UNION {
-      ?term rdfs:subClassOf+ aviation-safety:safety_event .
-      # add all labels - not everything is returned due to missing labels
-      ?term rdfs:label ?label.
-      OPTIONAL {  ?term rdfs:comment ?comment.}
-      BIND(aviation-safety:aviation-ontology-safety-event as ?type)
+#    } UNION {
+#      ?term rdfs:subClassOf+ aviation-safety:safety_event .
+#      # add all labels - not everything is returned due to missing labels
+#      ?term rdfs:label ?label.
+#      OPTIONAL {  ?term rdfs:comment ?comment.}
+#      BIND(aviation-safety:aviation-ontology-safety-event as ?type)
   }
 }
