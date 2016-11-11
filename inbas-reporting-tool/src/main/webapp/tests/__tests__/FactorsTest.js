@@ -11,6 +11,7 @@ describe('Factors component tests', function () {
         FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
+        OptionsStore = require('../../js/stores/OptionsStore'),
         Utils = require('../../js/utils/Utils'),
         GanttController = null, onChange,
         report = {
@@ -118,8 +119,7 @@ describe('Factors component tests', function () {
     it('Renders factor graph only after event types have been loaded', () => {
         spyOn(FactorRenderer, 'renderFactors');
         var factors = Environment.render(<Factors report={report} rootAttribute='occurrence' onChange={onChange}/>),
-            eventTypes = Generator.getJsonLdSample(),
-            OptionsStore = require('../../js/stores/OptionsStore');
+            eventTypes = Generator.getJsonLdSample();
         expect(FactorRenderer.renderFactors).not.toHaveBeenCalled();
         OptionsStore.trigger('eventType', eventTypes);
         expect(FactorRenderer.renderFactors).toHaveBeenCalledWith(report, eventTypes);

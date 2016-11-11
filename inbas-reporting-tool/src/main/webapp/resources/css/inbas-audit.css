@@ -722,23 +722,23 @@ button.reset-filters {
 
 /* SIRA */
 .sira-green {
-    background-color: rgba(68, 157, 68, 0.3);
+    background-color: rgba(0, 255, 0, 0.6) !important; /* important to override default read-only gray background. */
 }
 
 .sira-aqua {
-    background-color: rgba(0, 255, 255, 0.3);
+    background-color: rgba(0, 204, 255, 0.6) !important;
 }
 
 .sira-yellow {
-    background-color: rgba(255, 255, 0, 0.3);
+    background-color: rgba(255, 255, 0, 0.6) !important;
 }
 
 .sira-orange {
-    background-color: rgba(255, 160, 0, 0.3);
+    background-color: rgba(255, 204, 0, 0.6) !important;
 }
 
 .sira-red {
-    background-color: rgba(217, 83, 79, 0.3);
+    background-color: rgba(255, 0, 0, 0.6) !important;
 }
 
 button.in-input-line {

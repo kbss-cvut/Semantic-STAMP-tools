@@ -48,6 +48,7 @@ module.exports = {
                 state: Constants.SAFETY_ISSUE_STATE.OPEN,
                 name: ''
             },
+            sira: {},
             isNew: true,
             javaClass: Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS
         };

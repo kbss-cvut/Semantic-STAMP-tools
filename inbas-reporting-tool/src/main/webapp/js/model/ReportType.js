@@ -160,7 +160,7 @@ class SafetyIssueReport {
             node = source.factorGraph.nodes[i];
             nodeClone = {
                 referenceId: Utils.randomInt(),
-                eventType: node.eventType,
+                eventTypes: node.eventTypes,
                 types: node.types,
                 index: node.index,
                 javaClass: node.javaClass
@@ -190,7 +190,7 @@ class SafetyIssueReport {
         var node;
         for (var i = 0, len = finding.factors.length; i < len; i++) {
             node = {
-                eventType: finding.factors[i],
+                eventTypes: [finding.factors[i]],
                 types: [finding.factors[i]],
                 referenceId: Utils.randomInt(),
                 javaClass: Constants.EVENT_JAVA_CLASS

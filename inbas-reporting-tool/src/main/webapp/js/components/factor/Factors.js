@@ -64,7 +64,7 @@ var Factors = React.createClass({
             if (this._reportReloaded()) {
                 this.factorsRendered = false;
                 this.ganttController.clearAll();
-                this.renderFactors();
+                this.renderFactors(OptionsStore.getOptions('eventType'));
             } else
                 this.ganttController.updateRootEvent(this.props.report[this.props.rootAttribute]);
         }

@@ -5,16 +5,17 @@ import {Panel} from "react-bootstrap";
 import injectIntl from "../../../utils/injectIntl";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import Actions from "../../../actions/Actions";
-import Ajax from "../../../utils/Ajax";
+import ArmsStore from "../../../stores/ArmsStore";
 import ArmsUtils from "../../../utils/ArmsUtils";
+import Constants from "../../../constants/Constants";
 import Input from "../../Input";
 import OptionsStore from "../../../stores/OptionsStore";
 import Select from "../../Select";
 import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 
-const ACCIDENT_OUTCOME = 'accidentOutcome';
-const BARRIER_EFFECTIVENESS = 'barrierEffectiveness';
+const ACCIDENT_OUTCOME = Constants.ARMS.ACCIDENT_OUTCOME;
+const BARRIER_EFFECTIVENESS = Constants.ARMS.BARRIER_EFFECTIVENESS;
 
 class ArmsAttributes extends React.Component {
     static propTypes = {
@@ -34,10 +35,12 @@ class ArmsAttributes extends React.Component {
         Actions.loadOptions(ACCIDENT_OUTCOME);
         Actions.loadOptions(BARRIER_EFFECTIVENESS);
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
+        this.unsubscribeArms = ArmsStore.listen(this._onArmsIndexCalculated);
     };
 
     componentWillUnmount() {
         this.unsubscribe();
+        this.unsubscribeArms();
     };
 
     _onOptionsLoaded = (type, data) => {
@@ -72,6 +75,12 @@ class ArmsAttributes extends React.Component {
         });
     }
 
+    _onArmsIndexCalculated = (data) => {
+        if (data.action === Actions.calculateArmsIndex) {
+            this.props.onChange({'armsIndex': data.armsIndex});
+        }
+    };
+
     _onChange = (e) => {
         var change = {};
         change[e.target.name] = e.target.value;
@@ -84,10 +93,7 @@ class ArmsAttributes extends React.Component {
         if (!report.barrierEffectiveness || !report.accidentOutcome) {
             return;
         }
-        Ajax.get('rest/arms?' + ACCIDENT_OUTCOME + '=' + report.accidentOutcome +
-            '&' + BARRIER_EFFECTIVENESS + '=' + report.barrierEffectiveness).end((data) => {
-            this.props.onChange({'armsIndex': Number(data)});
-        });
+        Actions.calculateArmsIndex(report);
     }
 
     render() {

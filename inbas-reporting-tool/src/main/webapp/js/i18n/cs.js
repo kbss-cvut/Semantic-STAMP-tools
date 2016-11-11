@@ -144,6 +144,17 @@ module.exports = {
         'safety-issue.base.no-bases': 'Tato safety issue není založena na základě žádných existujících hlášení.',
         'safety-issue.sira.label': 'Hodnocení rizika safety issue (SIRA)',
         'safety-issue.sira-tooltip': 'SIRA, dle https://essi.easa.europa.eu/documents/Methodology.pdf',
+        'safety-issue.sira.initialEventFrequency': 'Četnost výskytu spouštějící události',
+        'safety-issue.sira.initialEventFrequency-tooltip': 'Odhadovaná četnost výskytu spouštějící události (ku letovým sektorům):',
+        'safety-issue.sira.barrierUosAvoidanceFailFrequency': 'Četnost selhání bariér proti UOS',
+        'safety-issue.sira.barrierUosAvoidanceFailFrequency-tooltip': 'Bariéry selžou při prevenci UOS (Undesirable Operational State)...',
+        'safety-issue.sira.barrierRecoveryFailFrequency': 'Četnost selhání bariér před nehodou',
+        'safety-issue.sira.barrierRecoveryFailFrequency-tooltip': 'Bariéry nedokáží zabránit nehodové situaci...',
+        'safety-issue.sira.accidentSeverity': 'Závažnost nehody',
+        'safety-issue.sira.accidentSeverity-tooltip': 'Závažnost nehody by byla...',
+        'safety-issue.sira.value-label': 'Hodnota SIRA',
+        'safety-issue.sira.reset': 'Resetovat SIRA',
+        'safety-issue.sira.reset-tooltip': 'Zrušit SIRA hodnocení',
 
         'audit.name-tooltip': 'Název auditu (např. jméno auditované organizace + datum) - pole je povinné',
         'audit.type.label': 'Druh kontroly',
@@ -311,7 +322,7 @@ module.exports = {
 
         // ----------- ARMS -------------
         'arms.title': 'ARMS',
-        'arms.accident-outcome': 'Výsledek nehody',
+        'arms.accident-outcome': 'Následky nehody',
         'arms.accident-outcome.tooltip': 'Pokud by tato událost vedla až nehodě, jaký by byl její nejpravděpodobnější výsledek?',
         'arms.barrier-effectiveness': 'Efektivita bariér',
         'arms.barrier-effectiveness.tooltip': 'Jaká byla efektivita bariér zbývajících mezi touto událostí a nejpravděpodobnějším nehodovým scénářem?',

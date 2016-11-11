@@ -8,22 +8,18 @@ describe('ARMS attributes', () => {
         Environment = require('../environment/Environment'),
         ArmsAttributes = require('../../js/components/report/arms/ArmsAttributes').default,
         Actions = require('../../js/actions/Actions'),
-        Ajax = require('../../js/utils/Ajax'),
         Select = require('../../js/components/Select'),
         report, onChange,
         accident = 'http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/negligible',
         barrier = 'http://onto.fel.cvut.cz/ontologies/arms/sira/barrier-effectiveness/effective';
 
     beforeEach(() => {
-        spyOn(Ajax, 'get').and.callFake(() => {
-            return Ajax
-        });
-        spyOn(Ajax, 'end');
         report = {};
         onChange = function (change) {
             assign(report, change);
         };
         spyOn(Actions, 'loadOptions');
+        spyOn(Actions, 'calculateArmsIndex');
     });
 
     it('does not request ARMS index calculation when only one ARMS attribute is set', () => {
@@ -34,7 +30,7 @@ describe('ARMS attributes', () => {
                 value: barrier
             }
         });
-        expect(Ajax.get).not.toHaveBeenCalled();
+        expect(Actions.calculateArmsIndex).not.toHaveBeenCalled();
         delete report.barrierEffectiveness;
         simulateChange(component, {
             target: {
@@ -42,7 +38,7 @@ describe('ARMS attributes', () => {
                 value: accident
             }
         });
-        expect(Ajax.get).not.toHaveBeenCalled();
+        expect(Actions.calculateArmsIndex).not.toHaveBeenCalled();
     });
 
     function simulateChange(root, change) {
@@ -69,6 +65,6 @@ describe('ARMS attributes', () => {
                 value: accident
             }
         });
-        expect(Ajax.get).toHaveBeenCalledWith('rest/arms?accidentOutcome=' + accident + '&barrierEffectiveness=' + barrier);
+        expect(Actions.calculateArmsIndex).toHaveBeenCalledWith(report);
     })
 });
