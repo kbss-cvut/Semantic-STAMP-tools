@@ -197,6 +197,36 @@ describe('Tests for the gantt component controller', function () {
         expect(gantt.updateTask).toHaveBeenCalledWith(child.id);
     });
 
+    it('Moves children when parent node moves too', () => {
+        var occurrence = {
+                startTime: Date.now() - 86400000,
+                endTime: Date.now() - 86401000
+            },
+            parent = {
+                id: 1,
+                start_date: new Date(),
+                end_date: new Date(Date.now() + 10000)
+            }, child = {
+                id: 2,
+                parent: 1,
+                start_date: parent.start_date,
+                end_date: parent.end_date
+            };
+        spyOn(gantt, 'getTask').and.callFake(function (id) {
+            return id === parent.id ? parent : child;
+        });
+        gantt.getChildren.and.callFake(fid => fid ===parent.id ? [child] : []);
+        spyOn(GanttController, 'ensureNonZeroDuration');
+        spyOn(GanttController, 'extendAncestorsIfNecessary');
+        spyOn(GanttController, 'applyUpdates');
+        GanttController.rootEventId = parent.id;
+        GanttController.updateRootEvent(occurrence);
+
+        expect(GanttController.applyUpdates).toHaveBeenCalled();
+        expect(child.start_date.getTime()).toEqual(occurrence.startTime);
+        expect(child.end_date.getTime()).toEqual(occurrence.endTime);
+    });
+
     it('Extends occurrence event accordingly if event is added which starts after occurrence event end', function () {
         var start = new Date(),
             occurrenceEvt = {
@@ -436,11 +466,11 @@ describe('Tests for the gantt component controller', function () {
 
     it('Expands subtrees recursively', function () {
         var root = {
-                id: 1,
-                text: 'Root',
-                start_date: new Date(report.occurrence.startTime),
-                end_date: new Date(report.occurrence.endTime)
-            };
+            id: 1,
+            text: 'Root',
+            start_date: new Date(report.occurrence.startTime),
+            end_date: new Date(report.occurrence.endTime)
+        };
         gantt.getChildren.and.callFake(function (nodeId) {
             switch (nodeId) {
                 case 1:
@@ -474,7 +504,7 @@ describe('Tests for the gantt component controller', function () {
         expect(props.onLinkAdded).not.toHaveBeenCalled();
     });
 
-    it('Returns number of children when getChildCount is called', function() {
+    it('Returns number of children when getChildCount is called', function () {
         var id = 117,
             children = [{id: 1}, {id: 2}, {id: 3}, {id: 4}];
         gantt.getChildren.and.returnValue(children);

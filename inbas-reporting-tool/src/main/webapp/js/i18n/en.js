@@ -123,7 +123,7 @@ module.exports = {
 
         'occurrence.headline-tooltip': 'Short descriptive summary of the occurrence - this field is required',
         'occurrence.start-time': 'Occurrence start',
-        'occurrence.start-time-tooltip': 'Date and time when the event occurred',
+        'occurrence.start-time-tooltip': 'Date and time when the event occurred. Note: changing start time moves the whole occurrence in time, changing its end time modifies its duration.',
         'occurrence.end-time': 'Occurrence end',
         'occurrence.end-time-tooltip': 'Date and time when the event ended',
         'occurrence.class': 'Occurrence class',
