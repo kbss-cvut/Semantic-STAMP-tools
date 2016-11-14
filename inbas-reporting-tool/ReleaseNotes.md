@@ -1,5 +1,8 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.7.16 - November 14, 2016
+- Move occurrence when its start time changes (Feature #176).
+
 ### 0.7.15 - October 31, 2016
 - Support for filters in the Reports view (Feature #206).
 
