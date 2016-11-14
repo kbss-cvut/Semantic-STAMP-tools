@@ -31,11 +31,14 @@ var Occurrence = React.createClass({
     },
 
     onStartChange: function (value) {
-        var occurrence = assign({}, this.props.report.occurrence);
+        var occurrence = assign({}, this.props.report.occurrence),
+            timeDiff = occurrence.startTime - Number(value);
         occurrence.startTime = Number(value);
         if (this.props.report.isNew && !this.state.startTimeChanged) {
             occurrence.endTime = Number(value) + Constants.MINUTE;
             this.setState({startTimeChanged: true});
+        } else {
+            occurrence.endTime = occurrence.endTime - timeDiff;
         }
         this.props.onChange({'occurrence': occurrence});
     },
