@@ -2,8 +2,6 @@
 
 ### 0.7.16 - November 10, 2016
 - SIRA calculation (Feature #196).
-
-### 0.7.16 - November 14, 2016
 - Move occurrence when its start time changes (Feature #176).
 
 ### 0.7.15 - October 31, 2016
