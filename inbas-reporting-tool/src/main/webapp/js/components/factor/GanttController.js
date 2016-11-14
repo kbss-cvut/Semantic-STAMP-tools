@@ -229,11 +229,11 @@ var GanttController = {
         for (var i = 0, len = children.length; i < len; i++) {
             child = gantt.getTask(children[i]);
             changed = false;
-            if (child.start_date < factor.start_date) {
+            if (child.start_date < factor.start_date || child.start_date > factor.end_date) {
                 child.start_date = factor.start_date;
                 changed = true;
             }
-            if (child.end_date > factor.end_date) {
+            if (child.end_date > factor.end_date || child.end_date < factor.start_date) {
                 child.end_date = factor.end_date;
                 changed = true;
             }
