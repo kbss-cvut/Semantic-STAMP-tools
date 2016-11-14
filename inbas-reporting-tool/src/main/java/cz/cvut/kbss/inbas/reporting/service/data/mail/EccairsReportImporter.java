@@ -20,7 +20,6 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
 import java.io.IOException;
-import java.io.StringReader;
 import org.apache.jena.rdf.model.Model;
 import org.jooq.lambda.Unchecked;
 import org.slf4j.Logger;
@@ -33,17 +32,13 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.ReaderInputStream;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
@@ -180,7 +175,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
      * @param reportStr string of the contents of an e5f/xml file (the unziped xml file).
      * @return
      */
-    public List<URI> importE5FXmlFromString(String reportStr){
+    public List<URI> importE5FXmlFromString(String reportStr){ 
         try {
             E5FXMLParser e5fXmlParser = new E5FXMLParser(eaf);
             e5fXmlParser.parseDocument(new NamedStream("imported-from-eccairs", IOUtils.toInputStream(reportStr, Charset.forName("UTF-8"))));
