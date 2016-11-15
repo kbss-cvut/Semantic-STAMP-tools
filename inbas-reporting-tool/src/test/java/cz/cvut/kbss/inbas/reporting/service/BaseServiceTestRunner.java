@@ -22,7 +22,7 @@ public abstract class BaseServiceTestRunner {
     protected PersonDao personDao;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    protected PasswordEncoder passwordEncoder;
 
     protected Person persistPerson() {
         final Person p = Generator.getPerson();

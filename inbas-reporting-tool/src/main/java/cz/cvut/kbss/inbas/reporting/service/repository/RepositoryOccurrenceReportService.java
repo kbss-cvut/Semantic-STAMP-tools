@@ -74,6 +74,16 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     }
 
     @Override
+    protected void postLoad(OccurrenceReport instance) {
+        if (instance != null) {
+            instance.getAuthor().erasePassword();
+            if (instance.getLastModifiedBy() != null) {
+                instance.getLastModifiedBy().erasePassword();
+            }
+        }
+    }
+
+    @Override
     public OccurrenceReport createNewRevision(Long fileNumber) {
         final OccurrenceReport latest = findLatestRevision(fileNumber);
         if (latest == null) {

@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.Resource;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.FormGenData;
 
@@ -45,6 +46,8 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
     private Set<CorrectiveMeasureRequestDto> correctiveMeasures;
 
     private String summary;
+
+    private Set<Resource> references;
 
     private Set<String> types;
 
@@ -159,6 +162,14 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     public void setCorrectiveMeasures(Set<CorrectiveMeasureRequestDto> correctiveMeasures) {
         this.correctiveMeasures = correctiveMeasures;
+    }
+
+    public Set<Resource> getReferences() {
+        return references;
+    }
+
+    public void setReferences(Set<Resource> references) {
+        this.references = references;
     }
 
     public String getSummary() {

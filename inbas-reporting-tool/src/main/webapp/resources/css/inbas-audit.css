@@ -259,12 +259,6 @@ td.actions button {
     margin: 10px 0;
 }
 
-/*.gantt_grid_head_add {*/
-/*background-image: none;*/
-/*cursor: default;*/
-/*pointer-events: none;*/
-/*}*/
-
 .gantt-link-causes {
     background-color: #ff0000;
 }
@@ -559,4 +553,8 @@ button.reset-filters {
     padding: 5px 15px 0 15px;
     text-align: right;
     border-top: 1px solid #e5e5e5;
+}
+
+button.in-input-line {
+    margin-top: 22px;
 }

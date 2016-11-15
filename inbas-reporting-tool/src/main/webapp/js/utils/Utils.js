@@ -239,5 +239,25 @@ module.exports = {
             }
         }
         return value;
+    },
+
+    /**
+     * Calculates hash code of the specified string, similarly to the Java implementation.
+     * @param str The string to calculate hash for
+     * @return {number} Hash
+     */
+    stringHashCode: function (str) {
+        let hash = 0,
+            len = str.length,
+            i, c;
+        if (len === 0) {
+            return hash;
+        }
+        for (i = 0; i < len; i++) {
+            c = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + c;
+            hash &= hash;
+        }
+        return hash;
     }
 };

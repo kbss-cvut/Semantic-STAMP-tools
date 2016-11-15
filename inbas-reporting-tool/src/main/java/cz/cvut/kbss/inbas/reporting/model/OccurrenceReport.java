@@ -56,6 +56,9 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_references, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Resource> references;
+
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String summary;
 
@@ -78,6 +81,9 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
         if (other.correctiveMeasures != null) {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
                                                               .collect(Collectors.toSet());
+        }
+        if (other.references != null) {
+            this.references = other.references.stream().map(Resource::new).collect(Collectors.toSet());
         }
     }
 
@@ -167,6 +173,14 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
 
     public void setCorrectiveMeasures(Set<CorrectiveMeasureRequest> correctiveMeasures) {
         this.correctiveMeasures = correctiveMeasures;
+    }
+
+    public Set<Resource> getReferences() {
+        return references;
+    }
+
+    public void setReferences(Set<Resource> references) {
+        this.references = references;
     }
 
     public String getSummary() {
