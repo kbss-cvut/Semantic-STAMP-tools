@@ -8,6 +8,7 @@ var assign = require('object-assign');
 var injectIntl = require('../../../utils/injectIntl');
 
 var Actions = require('../../../actions/Actions');
+var Attachments = require('../attachment/Attachments').default;
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
 var Factors = require('../../factor/Factors');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
@@ -85,7 +86,7 @@ var OccurrenceReport = React.createClass({
 
         return <div>
             <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
-                                                           onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
+                          onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <ButtonToolbar className='float-right'>
@@ -109,6 +110,10 @@ var OccurrenceReport = React.createClass({
                         <div className='col-xs-12'>
                             <ReportSummary report={report} onChange={this.onChange}/>
                         </div>
+                    </div>
+
+                    <div className='form-group'>
+                        <Attachments report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <Panel>

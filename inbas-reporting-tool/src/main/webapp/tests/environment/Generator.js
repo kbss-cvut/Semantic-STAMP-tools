@@ -256,4 +256,16 @@ export default class Generator {
     static getJsonLdSample() {
         return JSON_LD;
     }
+
+    static generateAttachments() {
+        let attachments = [];
+        for (let i = 0, cnt = Generator.getRandomPositiveInt(5, 10); i < cnt; i++) {
+            attachments.push({
+                uri: Generator.getRandomUri(),
+                reference: 'http://some.document.com/on/the/web' + i,
+                description: 'Textual description of the attachment ' + i
+            });
+        }
+        return attachments;
+    }
 }
