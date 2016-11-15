@@ -250,6 +250,13 @@ module.exports = {
         'report.organization': 'Organizace',
         'report.responsible-department': 'Zodpovědné oddělení',
         'report.responsible-department.add-tooltip': 'Přidat další zodpovědné oddělení',
+        'report.attachments.title': 'Přílohy',
+        'report.attachments.create.button': 'Přiložit',
+        'report.attachments.create.reference-label': 'Příloha',
+        'report.attachments.create.reference-tooltip': 'Příloha, např. adresa dokumentu - pole je povinné',
+        'report.attachments.create.description-label': 'Popis',
+        'report.attachments.create.description-tooltip': 'Volitelný popis přílohy',
+        'report.attachments.table.reference': 'Příloha',
 
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',

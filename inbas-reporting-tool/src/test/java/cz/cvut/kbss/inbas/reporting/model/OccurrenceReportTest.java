@@ -82,6 +82,22 @@ public class OccurrenceReportTest {
     }
 
     @Test
+    public void copyConstructorCopiesReferences() {
+        final OccurrenceReport original = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        original.setReferences(new HashSet<>());
+        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
+            final Resource ref = new Resource();
+            ref.setReference(Generator.generateUri().toString());
+            ref.setDescription("Resource " + i);
+            original.getReferences().add(ref);
+        }
+
+        final OccurrenceReport copy = new OccurrenceReport(original);
+        assertEquals(original.getReferences().size(), copy.getReferences().size());
+        assertTrue(copy.getReferences().containsAll(original.getReferences()));
+    }
+
+    @Test
     public void testToReportDto() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setPhase(Generator.generateEventType());

@@ -263,4 +263,33 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         assertEquals(newType, occurrence.getEventTypes().iterator().next());
         originalType.forEach(t -> assertFalse(occurrence.getTypes().contains(originalType.toString())));
     }
+
+    @Test
+    public void findErasesAuthorCredentials() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportService.persist(report);
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertNull(result.getAuthor().getPassword());
+    }
+
+    @Test
+    public void findErasesCredentialsOfLastModifier() {
+        final Person lastModifier = new Person();
+        lastModifier.setFirstName("Last");
+        lastModifier.setLastName("Modifier");
+        lastModifier.setUsername("last.modifier@fel.cvut.cz");
+        lastModifier.setPassword("P@ssw0rd01");
+        lastModifier.encodePassword(passwordEncoder);
+        personDao.persist(lastModifier);
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        report.setLastModifiedBy(lastModifier);
+        occurrenceReportService.persist(report);
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertNull(result.getAuthor().getPassword());
+        assertNull(result.getLastModifiedBy().getPassword());
+    }
 }

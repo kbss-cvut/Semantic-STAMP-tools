@@ -11,6 +11,7 @@ var injectIntl = require('../../../utils/injectIntl');
 
 var Actions = require('../../../actions/Actions');
 var ArmsAttributes = require('../arms/ArmsAttributes').default;
+var Attachments = require('../attachment/Attachments').default;
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var Department = require('./Department').default;
@@ -128,6 +129,10 @@ var OccurrenceReport = React.createClass({
                         <div className='col-xs-12'>
                             <ReportSummary report={report} onChange={this.onChange} required={true}/>
                         </div>
+                    </div>
+
+                    <div className='form-group'>
+                        <Attachments report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <div className='form-group'>

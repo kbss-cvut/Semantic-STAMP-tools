@@ -248,6 +248,13 @@ module.exports = {
         'report.organization': 'Organization',
         'report.responsible-department': 'Responsible department',
         'report.responsible-department.add-tooltip': 'Add another responsible department',
+        'report.attachments.title': 'Attachments',
+        'report.attachments.create.button': 'Attach',
+        'report.attachments.create.reference-label': 'Value',
+        'report.attachments.create.reference-tooltip': 'Reference value, for example a document URL - this field is required',
+        'report.attachments.create.description-label': 'Description',
+        'report.attachments.create.description-tooltip': 'Optional description of the attachment',
+        'report.attachments.table.reference': 'Reference',
 
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
