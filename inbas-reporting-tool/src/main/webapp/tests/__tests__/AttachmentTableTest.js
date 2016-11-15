@@ -75,4 +75,19 @@ describe('Attachment table', () => {
         parent.setState({attachments: attachments.concat([{reference: 'http://test'}])});
         expect(TestUtils.scryRenderedComponentsWithType(component, EditableAttachmentRow.wrappedComponent).length).toEqual(0);
     });
+
+    it('renders attachments with URL as link', () => {
+        attachments = [{reference: 'http://testfile.com'}, {reference: 'https://securetestfile.com'}, {reference: 'ftp://ftpfile.com'},
+            {reference: 'ftps://secureftpfile.com'}, {reference: '/opt/data/file1.txt'}];
+        let component = Environment.render(<AttachmentTable onChange={onChange} onRemove={onRemove}
+                                                            attachments={attachments}/>),
+            rows = TestUtils.scryRenderedDOMComponentsWithTag(component, 'tr'),
+            lnk;
+        expect(rows.length).toEqual(attachments.length + 1);    // + 1 - the header row
+        for (let i = 1, len = rows.length - 1; i < len; i++) {
+            lnk = rows[i].firstChild.firstChild;
+            expect(lnk.tagName.toLowerCase()).toEqual('a');
+        }
+        expect(rows[rows.length - 1].firstChild.firstChild.nodeType).toEqual(3);    // Text node
+    });
 });

@@ -79,10 +79,17 @@ class AttachmentTable extends React.Component {
     }
 }
 
+/**
+ * This will match http(s) and ftp(s) urls.
+ */
+const URL_REGEXP = /^(https?:\/\/|ftps?:\/\/)/i;
+
 var AttachmentRow = (props) => {
-    let attachment = props.attachment;
+    let attachment = props.attachment,
+        reference = URL_REGEXP.test(attachment.reference) ?
+            <a href={attachment.reference} target='_blank'>{attachment.reference}</a> : attachment.reference;
     return <tr>
-        <td className='report-row'>{attachment.reference}</td>
+        <td className='report-row'>{reference}</td>
         <td className='report-row'>{attachment.description}</td>
         <td className='report-row actions'>
             <Button bsStyle='primary' bsSize='small'
