@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.dto;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.Person;
+import cz.cvut.kbss.inbas.reporting.model.Resource;
 
 import java.net.URI;
 import java.util.Date;
@@ -28,6 +29,8 @@ public abstract class AbstractReportDto implements LogicalDocument {
     private Integer revision;
 
     private String summary;
+
+    private Set<Resource> references;
 
     private Set<String> types;
 
@@ -103,6 +106,14 @@ public abstract class AbstractReportDto implements LogicalDocument {
 
     public void setRevision(Integer revision) {
         this.revision = revision;
+    }
+
+    public Set<Resource> getReferences() {
+        return references;
+    }
+
+    public void setReferences(Set<Resource> references) {
+        this.references = references;
     }
 
     public String getSummary() {

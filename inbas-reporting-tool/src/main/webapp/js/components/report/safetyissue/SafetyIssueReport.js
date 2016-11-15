@@ -9,6 +9,7 @@ var assign = require('object-assign');
 var classNames = require('classnames');
 
 var Actions = require('../../../actions/Actions');
+var Attachments = require('../attachment/Attachments').default;
 var BasedOn = require('./BasedOn').default;
 var Constants = require('../../../constants/Constants');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
@@ -150,6 +151,10 @@ var SafetyIssueReport = React.createClass({
                         <div className='col-xs-12'>
                             <ReportSummary report={report} onChange={this.onChange}/>
                         </div>
+                    </div>
+
+                    <div className='form-group'>
+                        <Attachments report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <Panel>

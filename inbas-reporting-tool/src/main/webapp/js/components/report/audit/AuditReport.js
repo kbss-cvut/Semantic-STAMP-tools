@@ -6,6 +6,7 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 
 var Actions = require('../../../actions/Actions');
+var Attachments = require('../attachment/Attachments').default;
 var Audit = require('./Audit').default;
 var I18nMixin = require('../../../i18n/I18nMixin');
 var injectIntl = require('../../../utils/injectIntl');
@@ -67,6 +68,10 @@ var AuditReport = React.createClass({
                                    value={report.summary} onChange={this.onChange}
                                    title={this.i18n('audit.remarks.placeholder')}/>
                         </div>
+                    </div>
+
+                    <div className='form-group'>
+                        <Attachments report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <Panel>

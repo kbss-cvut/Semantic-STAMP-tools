@@ -132,11 +132,11 @@ var OccurrenceReport = React.createClass({
                     </div>
 
                     <div className='form-group'>
-                        <Attachments report={report} onChange={this.props.handlers.onChange}/>
+                        <Department report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <div className='form-group'>
-                        <Department report={report} onChange={this.props.handlers.onChange}/>
+                        <Attachments report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
                     <Panel>
