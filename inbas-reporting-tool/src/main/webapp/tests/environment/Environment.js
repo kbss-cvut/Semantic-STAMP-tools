@@ -22,7 +22,7 @@ module.exports = {
             renderedComponent = TestUtils.findRenderedComponentWithType(result, type);
         if (renderedComponent.getWrappedInstance) {
             let wrapped = renderedComponent.getWrappedInstance();
-            return wrapped.getWrappedComponent ? wrapped.getWrappedComponent() : wrapped;
+            return wrapped.getWrappedComponent && wrapped.getWrappedComponent() ? wrapped.getWrappedComponent() : wrapped;
         } else {
             return renderedComponent;
         }

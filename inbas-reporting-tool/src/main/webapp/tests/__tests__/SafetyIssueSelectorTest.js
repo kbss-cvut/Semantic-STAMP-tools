@@ -6,7 +6,6 @@ describe('Safety issue selector', () => {
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
-        ReportStore = require('../../js/stores/ReportStore'),
         SafetyIssueSelector = require('../../js/components/report/safetyissue/SafetyIssueSelector').default,
         Vocabulary = require('../../js/constants/Vocabulary'),
         report;
@@ -17,8 +16,7 @@ describe('Safety issue selector', () => {
     });
 
     it('uses only safety issues as options for the typeahead', () => {
-        var component = Environment.render(<SafetyIssueSelector event={report.occurrence}
-                                                                report={report}/>).getWrappedComponent(),
+        var component = Environment.render(<SafetyIssueSelector event={report.occurrence} report={report}/>),
             reports = Generator.generateReports(),
             expectedOptions = getSafetyIssueReports(reports),
             options;
