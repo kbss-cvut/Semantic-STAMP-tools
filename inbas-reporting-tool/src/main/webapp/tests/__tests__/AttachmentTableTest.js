@@ -26,7 +26,7 @@ describe('Attachment table', () => {
 
             editedRows = TestUtils.scryRenderedComponentsWithType(component, EditableAttachmentRow.wrappedComponent);
         expect(editedRows.length).toEqual(0);
-        component.getWrappedComponent()._onEdit(edited);
+        component._onEdit(edited);
 
         editedRows = TestUtils.scryRenderedComponentsWithType(component, EditableAttachmentRow.wrappedComponent);
         expect(editedRows.length).toEqual(1);
@@ -36,7 +36,7 @@ describe('Attachment table', () => {
         let component = Environment.render(<AttachmentTable onChange={onChange} onRemove={onRemove}
                                                             attachments={attachments}/>),
             edited = attachments[Generator.getRandomInt(attachments.length)];
-        component.getWrappedComponent()._onEdit(edited);
+        component._onEdit(edited);
 
         let editedRow = TestUtils.findRenderedComponentWithType(component, EditableAttachmentRow.wrappedComponent),
             cancelEditButton = TestUtils.scryRenderedDOMComponentsWithTag(editedRow, 'button')[1];
@@ -49,7 +49,7 @@ describe('Attachment table', () => {
         let component = Environment.render(<AttachmentTable onChange={onChange} onRemove={onRemove}
                                                             attachments={attachments}/>),
             edited = attachments[Generator.getRandomInt(attachments.length)];
-        component.getWrappedComponent()._onEdit(edited);
+        component._onEdit(edited);
 
         let editedRow = TestUtils.findRenderedComponentWithType(component, EditableAttachmentRow.wrappedComponent),
             saveEditButton = TestUtils.scryRenderedDOMComponentsWithTag(editedRow, 'button')[0];

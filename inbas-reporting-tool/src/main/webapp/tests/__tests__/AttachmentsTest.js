@@ -23,7 +23,7 @@ describe('Attachments', () => {
                 reference: 'http://added.attachment.com',
                 description: 'Added attachment'
             };
-        component.getWrappedComponent()._onAddAttachment(toAdd);
+        component._onAddAttachment(toAdd);
         expect(onChange).toHaveBeenCalled();
         expect(onChange.calls.argsFor(0)[0].references.length).toEqual(report.references.length + 1);
         // Position at the end
@@ -33,7 +33,7 @@ describe('Attachments', () => {
     it('removes attachment on remove', () => {
         let component = Environment.render(<Attachments report={report} onChange={onChange}/>),
             toRemove = report.references[Generator.getRandomInt(report.references.length)];
-        component.getWrappedComponent()._onRemoveAttachment(toRemove);
+        component._onRemoveAttachment(toRemove);
         expect(onChange).toHaveBeenCalled();
         expect(onChange.calls.argsFor(0)[0].references.length).toEqual(report.references.length - 1);
         expect(onChange.calls.argsFor(0)[0].references.indexOf(toRemove)).toEqual(-1);
@@ -44,7 +44,7 @@ describe('Attachments', () => {
             toUpdate = report.references[Generator.getRandomInt(report.references.length)],
             updated = assign({}, toUpdate);
         updated.reference = 'http://updated.reference.com';
-        component.getWrappedComponent()._onUpdateAttachment(toUpdate, updated);
+        component._onUpdateAttachment(toUpdate, updated);
         expect(onChange).toHaveBeenCalled();
         expect(onChange.calls.argsFor(0)[0].references.indexOf(toUpdate)).toEqual(-1);
         expect(onChange.calls.argsFor(0)[0].references.indexOf(updated)).not.toEqual(-1);
