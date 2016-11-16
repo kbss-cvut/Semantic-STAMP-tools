@@ -383,7 +383,7 @@ public class DtoMapperTest {
     @Test
     public void reportToReportDtoTransformsSafetyIssueReportWithFactorGraph() {
         final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
-        report.setSafetyIssue(SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph());
+        report.setSafetyIssue(SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents());
         final LogicalDocument dto = mapper.reportToReportDto(report);
         assertTrue(dto instanceof SafetyIssueReportDto);
         final SafetyIssueReportDto result = (SafetyIssueReportDto) dto;
@@ -394,7 +394,7 @@ public class DtoMapperTest {
 
     @Test
     public void safetyIssueToSafetyIssueDtoTransformsBasedOnOccurrences() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
         final List<OccurrenceReport> occurrenceReports = generateBaseOccurrences();
         issue.setBasedOnOccurrences(
                 occurrenceReports.stream().map(OccurrenceReport::getOccurrence).collect(Collectors.toSet()));
@@ -435,7 +435,7 @@ public class DtoMapperTest {
 
     @Test
     public void safetyIssueToSafetyIssueDtoTransformsBasedOnFindings() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
         final Map<AuditFinding, AuditReport> bases = generateBaseFindings();
         issue.setBasedOnFindings(new HashSet<>(bases.keySet()));
         bases.entrySet()

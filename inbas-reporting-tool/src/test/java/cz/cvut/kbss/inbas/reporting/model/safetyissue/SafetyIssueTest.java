@@ -4,7 +4,7 @@ import cz.cvut.kbss.inbas.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.inbas.reporting.environment.generator.SafetyIssueReportGenerator;
-import cz.cvut.kbss.inbas.reporting.model.Event;
+import cz.cvut.kbss.inbas.reporting.environment.util.FactorGraphVerifier;
 import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import org.junit.Test;
@@ -12,7 +12,8 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class SafetyIssueTest {
 
@@ -27,30 +28,18 @@ public class SafetyIssueTest {
     }
 
     @Test
-    public void copyOfClonesFactorGraph() {
-        final SafetyIssue original = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+    public void copyOfClonesDescendantsInFactorGraph() {
+        final SafetyIssue original = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
         final SafetyIssue copy = SafetyIssue.copyOf(original);
-        verifyChildren(original.getChildren(), copy.getChildren());
+        new FactorGraphVerifier().verifyFactorGraph(original, copy);
     }
 
-    private void verifyChildren(Set<Event> expected, Set<Event> actual) {
-        if (expected == null) {
-            assertNull(actual);
-            return;
-        }
-        assertEquals(expected.size(), actual.size());
-        boolean found;
-        for (Event e : expected) {
-            found = false;
-            for (Event ee : actual) {
-                if (e.getIndex().equals(ee.getIndex())) {
-                    assertNotSame(e, ee);
-                    found = true;
-                    verifyChildren(e.getChildren(), ee.getChildren());
-                }
-            }
-            assertTrue(found);
-        }
+    @Test
+    public void copyOfClonesFactorGraph() {
+        final SafetyIssue original = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
+        OccurrenceReportGenerator.generateFactors(original);
+        final SafetyIssue copy = SafetyIssue.copyOf(original);
+        new FactorGraphVerifier().verifyFactorGraph(original, copy);
     }
 
     @Test

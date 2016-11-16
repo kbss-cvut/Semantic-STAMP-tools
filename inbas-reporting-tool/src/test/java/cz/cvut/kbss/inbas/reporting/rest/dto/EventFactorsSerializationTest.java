@@ -407,7 +407,7 @@ public class EventFactorsSerializationTest {
 
     @Test
     public void testSerializationOfSafetyIssueWithSubEvents() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
         final FactorGraph result = dtoMapper.safetyIssueToFactorGraph(issue);
         assertNotNull(result);
         verifyStructure(issue, result);
@@ -415,7 +415,7 @@ public class EventFactorsSerializationTest {
 
     @Test
     public void testSerializationOfSafetyIssueWithSubEventsAndFactors() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
         addFactorsToStructure(issue.getChildren());
         final FactorGraph result = dtoMapper.safetyIssueToFactorGraph(issue);
         assertNotNull(result);

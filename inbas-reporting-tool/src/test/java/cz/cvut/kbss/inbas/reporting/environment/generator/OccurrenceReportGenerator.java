@@ -127,14 +127,56 @@ public class OccurrenceReportGenerator {
         }
         parent.setChildren(new LinkedHashSet<>());
         for (int i = 0; i < childCount; i++) {
-            final Event child = new Event();
-            child.setStartTime(new Date());
-            child.setEndTime(new Date());
-            child.setUri(URI.create(Vocabulary.s_c_Event + "-instance" + Generator.randomInt()));
-            child.setEventTypes(Collections.singleton(Generator.generateEventType()));
+            final Event child = generateEvent();
             child.setIndex(i);
             parent.getChildren().add(child);
             generateChildEvents(child, depth + 1, maxDepth, childCount);
+        }
+    }
+
+    public static Event generateEvent() {
+        final Event event = new Event();
+        event.setStartTime(new Date());
+        event.setEndTime(new Date());
+        event.setUri(URI.create(Vocabulary.s_c_Event + "-instance" + Generator.randomInt()));
+        event.setEventTypes(Collections.singleton(Generator.generateEventType()));
+        return event;
+    }
+
+    /**
+     * Generates factors for graph with the specified root.
+     * <p>
+     * For simplicity, factors are generated only for the root and several of its children (if present), the generator
+     * does not descend deeper into the hierarchy.
+     *
+     * @param graphRoot Root of the factor graph
+     */
+    public static void generateFactors(FactorGraphItem graphRoot) {
+        final Event e1 = generateEvent();
+        final Factor f1 = new Factor();
+        f1.setEvent(e1);
+        f1.addType(Generator.randomFactorType());
+        graphRoot.addFactor(f1);
+        final Event e2 = generateEvent();
+        e2.setIndex(0);
+        e1.addChild(e2);
+        final Event e3 = generateEvent();
+        e3.setIndex(1);
+        e1.addChild(e3);
+        final Factor f2 = new Factor();
+        f2.setEvent(e2);
+        f2.addType(Generator.randomFactorType());
+        e3.addFactor(f2);
+        if (graphRoot.getChildren() != null && graphRoot.getChildren().size() > 2) {
+            final List<Event> lst = new ArrayList<>(graphRoot.getChildren());
+            final Event start = lst.get(Generator.randomIndex(lst));
+            final Event end = lst.get(Generator.randomIndex(lst));
+            if (start != end) {
+                final Factor f3 = new Factor();
+                f3.addType(Generator.randomFactorType());
+                f3.setEvent(start);
+                end.addFactor(f3);
+            }
         }
     }
 }

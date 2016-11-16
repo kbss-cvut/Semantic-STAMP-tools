@@ -65,7 +65,7 @@ public class SafetyIssueReportGenerator {
         return chain;
     }
 
-    public static SafetyIssue generateSafetyIssueWithFactorGraph() {
+    public static SafetyIssue generateSafetyIssueWithDescendantEvents() {
         final SafetyIssue issue = generateSafetyIssue();
         issue.setUri(Generator.generateUri());
         final int maxDepth = Generator.randomInt(5);

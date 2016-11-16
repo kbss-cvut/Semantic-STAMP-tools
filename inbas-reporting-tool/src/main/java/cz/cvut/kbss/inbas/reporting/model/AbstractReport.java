@@ -160,9 +160,6 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
      */
     public void addType(String type) {
         Objects.requireNonNull(type);
-        if (types == null) {
-            this.types = new HashSet<>();
-        }
         types.add(type);
     }
 
