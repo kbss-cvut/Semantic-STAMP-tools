@@ -79,6 +79,7 @@ public class DtoMapperTest {
         assertEquals(req.getUri(), dto.getUri());
         assertEquals(req.getDescription(), dto.getDescription());
         assertEquals(req.isImplemented(), dto.isImplemented());
+        assertEquals(req.getPhaseLastModified(), dto.getPhaseLastModified());
     }
 
     @Test
@@ -144,6 +145,7 @@ public class DtoMapperTest {
         final CorrectiveMeasureRequest request = new CorrectiveMeasureRequest();
         request.setUri(URI.create(Vocabulary.s_c_corrective_measure_request + "#req"));
         request.setDescription("Sample corrective measure.");
+        request.setPhaseLastModified(new Date());
         return request;
     }
 
