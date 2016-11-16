@@ -28,7 +28,7 @@ describe('Filters', () => {
         var categories = getCategoriesAsJsonLd();
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
-                                                    onResetFilters={onResetFilters}/>).getWrappedComponent(),
+                                                    onResetFilters={onResetFilters}/>),
             options = component.state[Constants.FILTERS[0].options];
 
         var defaultOption = options[0];
@@ -40,7 +40,7 @@ describe('Filters', () => {
         var categories = getCategoriesAsJsonLd();
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
-                                                    onResetFilters={onResetFilters}/>).getWrappedComponent(),
+                                                    onResetFilters={onResetFilters}/>),
             options = component.state[Constants.FILTERS[0].options],
             categoriesUsed = getCategoriesUsedByReports(categories);
 
@@ -91,7 +91,7 @@ describe('Filters', () => {
         var categories = getCategoriesAsJsonLd();
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
-                                                    onResetFilters={onResetFilters}/>).getWrappedComponent(),
+                                                    onResetFilters={onResetFilters}/>),
             options = component.state[Constants.FILTERS[0].options],
             categoriesUsed = getCategoriesUsedByReports(categories);
 
@@ -115,7 +115,7 @@ describe('Filters', () => {
         var categories = getCategoriesAsJsonLd();
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports} onChange={onChange}
-                                                    onResetFilters={onResetFilters}/>).getWrappedComponent(),
+                                                    onResetFilters={onResetFilters}/>),
             categoriesUsed = getCategoriesUsedByReports(categories);
 
         var select = TestUtils.scryRenderedComponentsWithType(component, require('../../js/components/Select'))[0],

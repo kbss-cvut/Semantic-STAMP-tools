@@ -17,12 +17,12 @@ module.exports = {
      * @return {*|!ReactComponent} The rendered component
      */
     render: function (component) {
-        var type = component.type,
+        let type = component.type,
             result = TestUtils.renderIntoDocument(<TestApp>{component}</TestApp>),
             renderedComponent = TestUtils.findRenderedComponentWithType(result, type);
-        //console.log(renderedComponent);
         if (renderedComponent.getWrappedInstance) {
-            return renderedComponent.getWrappedInstance();
+            let wrapped = renderedComponent.getWrappedInstance();
+            return wrapped.getWrappedComponent ? wrapped.getWrappedComponent() : wrapped;
         } else {
             return renderedComponent;
         }
