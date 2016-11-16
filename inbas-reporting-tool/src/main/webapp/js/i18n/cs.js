@@ -217,6 +217,7 @@ module.exports = {
         'audit.finding.measures.add.select-existing-tooltip': 'Vybrat nápravné opatření použité u jiného nálezu v tomto auditu',
         'audit.finding.measures.add.create-new': 'Vytvořit nové',
         'audit.finding.measures.add.create-new-tooltip': 'Vytvořit nové nápravné opatření',
+        'audit.safa.readonly.message': 'Zprávy ze SAFA auditů jsou pouze pro čtení.',
 
         'correctivemeasure.title': 'Nápravné opatření',
         'correctivemeasure.description.placeholder': 'Popis nápravného opatření',

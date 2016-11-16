@@ -572,11 +572,6 @@ button.reset-filters {
     }
 }
 
-.buttons-right {
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-}
-
 .issue-selector {
     margin-top: 0.5em;
     text-align: left;
@@ -743,4 +738,9 @@ button.reset-filters {
 
 button.in-input-line {
     margin-top: 22px;
+}
+
+.detail-button-toolbar {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
 }

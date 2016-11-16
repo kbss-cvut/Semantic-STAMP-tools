@@ -215,6 +215,7 @@ module.exports = {
         'audit.finding.measures.add.select-existing-tooltip': 'Select corrective measure from another finding of this audit',
         'audit.finding.measures.add.create-new': 'Create new',
         'audit.finding.measures.add.create-new-tooltip': 'Create a new corrective measure',
+        'audit.safa.readonly.message': 'SAFA audit reports are read-only.',
 
         'correctivemeasure.title': 'Corrective measure',
         'correctivemeasure.description.placeholder': 'Corrective measure description',

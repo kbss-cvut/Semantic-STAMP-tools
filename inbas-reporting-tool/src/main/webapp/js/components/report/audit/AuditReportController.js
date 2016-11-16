@@ -8,8 +8,14 @@ var ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMix
 var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
 var RouterStore = require('../../../stores/RouterStore');
+var Vocabulary = require('../../../constants/Vocabulary');
 
 var AuditReportController = React.createClass({
+    propTypes: {
+        report: React.PropTypes.object.isRequired,
+        revisions: React.PropTypes.array
+    },
+
     mixins: [
         ReportDetailControllerMixin
     ],
@@ -40,6 +46,16 @@ var AuditReportController = React.createClass({
         }
     },
 
+    _resolveReadOnlyProps: function () {
+        let roProps = {};
+        roProps.readOnly = !this.isLatestRevision();
+        if (this.props.report.types.indexOf(Vocabulary.SAFA_REPORT) !== -1) {
+            roProps.readOnly = true;
+            roProps.readOnlyMessage = 'audit.safa.readonly.message';
+        }
+        return roProps;
+    },
+
 
     render: function () {
         var handlers = {
@@ -49,7 +65,7 @@ var AuditReportController = React.createClass({
             onRemove: this.onRemove
         };
         return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
-                             readOnly={!this.isLatestRevision()}/>;
+                             {...this._resolveReadOnlyProps()}/>;
     }
 });
 

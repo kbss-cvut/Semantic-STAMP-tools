@@ -314,7 +314,8 @@ export default class Generator {
                     name: 'Random organization'
                 },
                 findings: []
-            }
+            },
+            types: [Vocabulary.AUDIT_REPORT]
         };
         for (var i = 0, count = Generator.getRandomPositiveInt(5, 10); i < count; i++) {
             report.audit.findings.push({

@@ -175,7 +175,7 @@ var OccurrenceReport = React.createClass({
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return <ButtonToolbar className='float-right buttons-right'>
+        return <ButtonToolbar className='float-right detail-button-toolbar'>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
