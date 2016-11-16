@@ -159,6 +159,8 @@ module.exports = {
         'audit.type.placeholder': 'Select audit type',
         'audit.auditee.label': 'Audited organization',
         'audit.auditee.placeholder': 'Audited organization name',
+        'audit.auditor.label': 'Auditor',
+        'audit.auditor.tooltip': 'Organization performing the audit',
         'audit.location.label': 'Audit location',
         'audit.location.placeholder': 'Where the audit took place',
         'audit.start-date': 'Audit start',

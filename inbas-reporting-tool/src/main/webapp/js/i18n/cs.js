@@ -161,6 +161,8 @@ module.exports = {
         'audit.type.placeholder': 'Vyberte druh kontroly',
         'audit.auditee.label': 'Kontrolované organizace',
         'audit.auditee.placeholder': 'Vyberte kontrolovanou organizaci',
+        'audit.auditor.label': 'Auditor',
+        'audit.auditor.tooltip': 'Organizace, která audit prováděla',
         'audit.location.label': 'Místo kontroly',
         'audit.location.placeholder': 'Vyberte místo kontroly',
         'audit.start-date': 'Začátek kontroly',

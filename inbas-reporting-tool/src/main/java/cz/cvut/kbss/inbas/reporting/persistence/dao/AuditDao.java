@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.persistence.dao;
 
 import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureRequest;
+import cz.cvut.kbss.inbas.reporting.model.Organization;
 import cz.cvut.kbss.inbas.reporting.model.audit.Audit;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.util.OrphanRemover;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.util.QuestionSaver;
@@ -28,9 +29,8 @@ public class AuditDao extends BaseDao<Audit> {
 
     @Override
     protected void persist(Audit entity, EntityManager em) {
-        if (entity.getAuditee().getUri() == null || !organizationDao.exists(entity.getAuditee().getUri(), em)) {
-            organizationDao.persist(entity.getAuditee(), em);
-        }
+        persistOrganizationIfNecessary(entity.getAuditee(), em);
+        persistOrganizationIfNecessary(entity.getAuditor(), em);
         if (entity.getQuestion() != null) {
             final QuestionSaver questionSaver = new QuestionSaver();
             questionSaver.persistIfNecessary(entity.getQuestion(), em);
@@ -39,6 +39,13 @@ public class AuditDao extends BaseDao<Audit> {
             persistCorrectiveMeasures(entity, em);
         }
         super.persist(entity, em);
+    }
+
+    private void persistOrganizationIfNecessary(Organization organization, EntityManager em) {
+        if (organization != null &&
+                (organization.getUri() == null || !organizationDao.exists(organization.getUri(), em))) {
+            organizationDao.persist(organization, em);
+        }
     }
 
     private void persistCorrectiveMeasures(Audit audit, EntityManager em) {
@@ -60,10 +67,10 @@ public class AuditDao extends BaseDao<Audit> {
 
     @Override
     protected void update(Audit entity, EntityManager em) {
+        persistOrganizationIfNecessary(entity.getAuditee(), em);
+        persistOrganizationIfNecessary(entity.getAuditor(), em);
+
         final Audit original = em.find(Audit.class, entity.getUri());
-        if (entity.getAuditee().getUri() == null || !organizationDao.exists(entity.getAuditee().getUri(), em)) {
-            organizationDao.persist(entity.getAuditee(), em);
-        }
         final Map<URI, MeasureCounter> measureMap = mapCorrectiveMeasures(original);
         final OrphanRemover remover = new OrphanRemover(em);
         remover.removeOrphans(original.getFindings(), entity.getFindings());

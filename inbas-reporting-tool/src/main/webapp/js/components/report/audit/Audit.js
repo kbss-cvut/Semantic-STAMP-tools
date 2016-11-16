@@ -127,6 +127,8 @@ class Audit extends React.Component {
                     </div>
                 </div>
 
+                {this._renderAuditor()}
+
                 <div className='row'>
                     {this._renderLocation()}
                 </div>
@@ -163,6 +165,19 @@ class Audit extends React.Component {
                        onOptionSelected={this._onTypeSelected} filterOption='name' displayOption='name'
                        value={auditType ? auditType.name : ''} options={this.state.auditType}
                        optionsButton={true} customListComponent={TypeaheadResultList}/>
+        </div>;
+    }
+
+    _renderAuditor() {
+        let auditor = this.props.audit.auditor;
+        if (!auditor) {
+            return null;
+        }
+        return <div className='row'>
+            <div className='col-xs-4'>
+                <Input value={auditor.name} label={this.i18n('audit.auditor.label')}
+                       title={this.i18n('audit.auditor.tooltip')} readOnly/>
+            </div>
         </div>;
     }
 
