@@ -24,7 +24,7 @@ public class SafetyIssueDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void testPersistSafetyIssueWithFactorGraph() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
         dao.persist(issue);
 
         final SafetyIssue result = dao.find(issue.getUri());
@@ -48,7 +48,7 @@ public class SafetyIssueDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void updateRemovesOrphansAndAddsNewEvents() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
         dao.persist(issue);
 
         final List<Event> removed = new ArrayList<>();

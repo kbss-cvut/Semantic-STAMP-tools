@@ -6,6 +6,7 @@ var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var Panel = require('react-bootstrap').Panel;
 
 var Actions = require('../../../actions/Actions');
+var Attachments = require('../attachment/Attachments').default;
 var Audit = require('./Audit').default;
 var I18nMixin = require('../../../i18n/I18nMixin');
 var injectIntl = require('../../../utils/injectIntl');
@@ -21,7 +22,9 @@ var AuditReport = React.createClass({
     propTypes: {
         handlers: React.PropTypes.object,
         report: React.PropTypes.object.isRequired,
-        loading: React.PropTypes.bool
+        loading: React.PropTypes.bool,
+        readOnly: React.PropTypes.bool,
+        readOnlyMessage: React.PropTypes.string
     },
 
     getInitialState: function () {
@@ -69,6 +72,10 @@ var AuditReport = React.createClass({
                         </div>
                     </div>
 
+                    <div className='form-group'>
+                        <Attachments report={report} onChange={this.props.handlers.onChange}/>
+                    </div>
+
                     <Panel>
                         <ReportProvenance report={report} revisions={this.props.revisions}/>
                     </Panel>
@@ -87,24 +94,22 @@ var AuditReport = React.createClass({
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
         }
-        return (
-            <div>
-                <h2 className='panel-title pull-left'>{this.i18n('auditreport.title')}</h2>
-                {fileNo}
-                <div style={{clear: 'both'}}/>
-            </div>
-        )
+        return <div>
+            <h2 className='panel-title pull-left'>{this.i18n('auditreport.title')}</h2>
+            {fileNo}
+            <div style={{clear: 'both'}}/>
+        </div>;
     },
 
     _renderButtons: function () {
         if (this.props.readOnly) {
-            return this.renderReadOnlyButtons();
+            return this.renderReadOnlyButtons(this.props.readOnlyMessage);
         }
         var loading = this.state.submitting,
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
+        return <ButtonToolbar className='float-right detail-button-toolbar'>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this._getSaveButtonTitle()}
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}

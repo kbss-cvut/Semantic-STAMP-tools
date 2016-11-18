@@ -9,6 +9,7 @@ var assign = require('object-assign');
 var classNames = require('classnames');
 
 var Actions = require('../../../actions/Actions');
+var Attachments = require('../attachment/Attachments').default;
 var BasedOn = require('./BasedOn').default;
 var Constants = require('../../../constants/Constants');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
@@ -152,6 +153,10 @@ var SafetyIssueReport = React.createClass({
                         </div>
                     </div>
 
+                    <div className='form-group'>
+                        <Attachments report={report} onChange={this.props.handlers.onChange}/>
+                    </div>
+
                     <Panel>
                         <ReportProvenance report={report} revisions={this.props.revisions}/>
                     </Panel>
@@ -203,7 +208,7 @@ var SafetyIssueReport = React.createClass({
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
+        return <ButtonToolbar className='float-right detail-button-toolbar'>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}

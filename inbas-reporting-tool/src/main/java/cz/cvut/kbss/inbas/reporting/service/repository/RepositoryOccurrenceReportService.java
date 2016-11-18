@@ -62,11 +62,6 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     }
 
     @Override
-    protected void postLoad(OccurrenceReport instance) {
-        setArmsIndex(instance);
-    }
-
-    @Override
     protected void preUpdate(OccurrenceReport instance) {
         reportMetadataService.initMetadataForUpdate(instance);
         synchronizeEventTypes(instance.getOccurrence());
@@ -76,6 +71,17 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     private void synchronizeEventTypes(Occurrence occurrence) {
         final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(eventTypeSynchronizer, null);
         traverser.traverse(occurrence);
+    }
+
+    @Override
+    protected void postLoad(OccurrenceReport instance) {
+        if (instance != null) {
+            setArmsIndex(instance);
+            instance.getAuthor().erasePassword();
+            if (instance.getLastModifiedBy() != null) {
+                instance.getLastModifiedBy().erasePassword();
+            }
+        }
     }
 
     @Override

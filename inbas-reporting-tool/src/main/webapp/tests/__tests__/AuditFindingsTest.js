@@ -57,7 +57,7 @@ describe('AuditFindings', () => {
         var component = Environment.render(<AuditFindings audit={audit} onChange={onChange}/>),
             toRemove = audit.findings[Generator.getRandomInt(audit.findings.length)];
 
-        component.getWrappedComponent()._onDeleteFinding(toRemove);
+        component._onDeleteFinding(toRemove);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0];
         expect(change.findings.length).toEqual(audit.findings.length - 1);
@@ -71,8 +71,8 @@ describe('AuditFindings', () => {
             toEdit = audit.findings[indexToEdit],
             newEdited = {uri: Generator.getRandomUri()};
 
-        component.getWrappedComponent().state.currentFinding = toEdit;
-        component.getWrappedComponent()._onEditFinish(newEdited);
+        component.state.currentFinding = toEdit;
+        component._onEditFinish(newEdited);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0];
         expect(change.findings.indexOf(toEdit)).toEqual(-1);
@@ -87,8 +87,8 @@ describe('AuditFindings', () => {
                 description: 'Test'
             };
 
-        component.getWrappedComponent().state.currentFinding = newFinding;
-        component.getWrappedComponent()._onEditFinish(newFinding);
+        component.state.currentFinding = newFinding;
+        component._onEditFinish(newFinding);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0];
         expect(change.findings.length).toEqual(audit.findings.length + 1);
@@ -103,8 +103,8 @@ describe('AuditFindings', () => {
                 description: 'Test'
             };
 
-        component.getWrappedComponent().state.currentFinding = newFinding;
-        component.getWrappedComponent()._onEditFinish(newFinding);
+        component.state.currentFinding = newFinding;
+        component._onEditFinish(newFinding);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0];
         expect(change.findings.length).toEqual(1);

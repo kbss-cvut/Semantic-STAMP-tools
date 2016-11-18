@@ -2,6 +2,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
+var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var DeleteReportDialog = require('../report/DeleteReportDialog').default;
 
 /**
@@ -87,15 +88,15 @@ var ReportDetailMixin = {
                                    onSubmit={this._onDelete}/>;
     },
 
-    renderReadOnlyButtons: function () {
+    renderReadOnlyButtons: function (notice = 'revisions.readonly-notice') {
         return <div>
-            <div className='float-right'>
+            <ButtonToolbar className='float-right detail-button-toolbar'>
                 <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                         onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-            </div>
+            </ButtonToolbar>
             <div style={{clear: 'both'}}/>
             <div className='notice-small float-right'>
-                {this.i18n('revisions.readonly-notice')}
+                {this.i18n(notice)}
             </div>
         </div>;
     }

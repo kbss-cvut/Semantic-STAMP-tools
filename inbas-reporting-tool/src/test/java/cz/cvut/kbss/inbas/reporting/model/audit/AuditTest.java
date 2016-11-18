@@ -21,6 +21,7 @@ public class AuditTest {
         original.setUri(Generator.generateUri());
         original.setLocation(Generator.generateUri());
         original.setAuditee(Generator.generateOrganization());
+        original.setAuditor(Generator.generateOrganization());
 
         final Audit copy = new Audit(original);
         assertNull(copy.getUri());
@@ -29,6 +30,7 @@ public class AuditTest {
         assertEquals(original.getEndDate(), copy.getEndDate());
         assertEquals(original.getLocation(), copy.getLocation());
         assertEquals(original.getAuditee(), copy.getAuditee());
+        assertEquals(original.getAuditor(), copy.getAuditor());
         assertEquals(original.getTypes(), copy.getTypes());
     }
 

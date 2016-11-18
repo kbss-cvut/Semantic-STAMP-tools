@@ -36,7 +36,7 @@ class Sira extends React.Component {
         this.i18n = props.i18n;
         let state = {};
         processOptions((item) => {
-            state[item] = JsonLdUtils.processSelectOptions(Utils.neighbourSort(OptionsStore.getOptions(item)));
+            state[item] = JsonLdUtils.processSelectOptions(Utils.neighbourSort(OptionsStore.getOptions(item)), this.props.intl);
         });
         state[SIRA] = OptionsStore.getOptions(SIRA);
         this.state = state;
@@ -64,7 +64,7 @@ class Sira extends React.Component {
             stateUpdate[SIRA] = data;
         } else {
             Utils.neighbourSort(data, 'http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than');
-            stateUpdate[type] = JsonLdUtils.processSelectOptions(data);
+            stateUpdate[type] = JsonLdUtils.processSelectOptions(data, this.props.intl);
         }
         this.setState(stateUpdate);
     };
@@ -118,12 +118,17 @@ class Sira extends React.Component {
     };
 
     render() {
-        return <Panel header={<h5>{this.i18n('safety-issue.sira.label')}</h5>} bsStyle='info'
-                      title={this.i18n('safety-issue.sira-tooltip')}>
+        return <Panel
+            header={<h5 title={this.i18n('safety-issue.sira-tooltip')}>{this.i18n('safety-issue.sira.label')}</h5>}
+            bsStyle='info'>
             <div className='row'>
                 {this._renderAttributeSelections()}
+            </div>
+            <div className='row'>
+                <div className='col-xs-4'>&nbsp;</div>
                 {this._renderSiraValue()}
                 {this._renderResetSiraButton()}
+                <div className='col-xs-4'>&nbsp;</div>
             </div>
         </Panel>;
     }
@@ -133,7 +138,7 @@ class Sira extends React.Component {
             i18n = this.i18n,
             report = this.props.report;
         processOptions((item) => {
-            items.push(<div key={item} className='col-xs-2'>
+            items.push(<div key={item} className='col-xs-3'>
                 <Select name={item} label={i18n('safety-issue.sira.' + item)} addDefault={true}
                         title={i18n('safety-issue.sira.' + item + '-tooltip')} options={this.state[item]}
                         value={report.sira ? report.sira[item] : ''} onChange={this._onOptionSelected}/>
@@ -147,7 +152,7 @@ class Sira extends React.Component {
             sira = this._resolveSiraValue(siraValue),
             inputClass = siraValue ? Constants.SIRA_COLORS[siraValue] : '';
 
-        return <div className='col-xs-2'>
+        return <div className='col-xs-3'>
             <Input label={this.i18n('safety-issue.sira.value-label')} value={sira} className={inputClass}
                    readOnly={true}/>
         </div>;

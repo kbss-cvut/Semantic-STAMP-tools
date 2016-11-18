@@ -110,8 +110,8 @@ class CorrectiveMeasure extends React.Component {
             <div className='picker-container form-group form-group-sm col-xs-4'>
                 <label className='control-label'>{this.i18n('correctivemeasure.deadline')}</label>
                 <DateTimePicker inputFormat='DD-MM-YY HH:mm' dateTime={measure.deadline.toString()}
-                                onChange={(val) => this._onChange({endDate: Number(val)})}
-                                inputProps={{title: this.i18n('correctivemeasure.deadline.tooltip'), bsSize: 'small'}}/>
+                                onChange={(val) => this._onChange({endDate: Number(val)})} size='small'
+                                inputProps={{title: this.i18n('correctivemeasure.deadline.tooltip')}}/>
             </div>
         </div>;
     }

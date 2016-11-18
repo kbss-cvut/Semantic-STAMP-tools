@@ -84,6 +84,12 @@ describe('Report validator', function () {
             report = ReportFactory.createSafetyIssueReport();
             expect(ReportValidator.canRender(report)).toBeTruthy();
         });
+
+        it('marks report with occurrence start 0 as valid', () => {
+            report.occurrence.startTime = 0;
+            report.occurrence.endTime = 1000;
+            expect(ReportValidator.isValid(report)).toBeTruthy();
+        });
     });
 
     describe('(Safety issue reports)', () => {

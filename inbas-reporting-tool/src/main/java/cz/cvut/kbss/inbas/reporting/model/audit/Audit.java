@@ -33,6 +33,9 @@ public class Audit extends AbstractEntity implements Serializable {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_auditee, fetch = FetchType.EAGER)
     private Organization auditee;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_auditor, fetch = FetchType.EAGER)
+    private Organization auditor;
+
     @OWLObjectProperty(iri = Vocabulary.s_p_has_location)
     private URI location;
 
@@ -58,6 +61,7 @@ public class Audit extends AbstractEntity implements Serializable {
         this.endDate = other.endDate;
         this.location = other.location;
         this.auditee = other.auditee;
+        this.auditor = other.auditor;
         this.types = new HashSet<>(other.types);
         this.findings =
                 other.findings != null ? other.findings.stream().map(AuditFinding::new).collect(Collectors.toSet()) :
@@ -95,6 +99,14 @@ public class Audit extends AbstractEntity implements Serializable {
 
     public void setAuditee(Organization auditee) {
         this.auditee = auditee;
+    }
+
+    public Organization getAuditor() {
+        return auditor;
+    }
+
+    public void setAuditor(Organization auditor) {
+        this.auditor = auditor;
     }
 
     public URI getLocation() {

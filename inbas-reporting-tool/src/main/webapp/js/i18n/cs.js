@@ -125,7 +125,7 @@ module.exports = {
 
         'occurrence.headline-tooltip': 'Krátké pojmenování události - pole je povinné',
         'occurrence.start-time': 'Počátek události',
-        'occurrence.start-time-tooltip': 'Datum a čas kdy k události došlo',
+        'occurrence.start-time-tooltip': 'Datum a čas kdy k události došlo. Pozn.: Změna počátku události posouvá celou událost v čase. Změna konce události ovlivňuje její trvání.',
         'occurrence.end-time': 'Konec události',
         'occurrence.end-time-tooltip': 'Datum a čas kdy událost skončila',
         'occurrence.class': 'Třída závažnosti',
@@ -144,7 +144,7 @@ module.exports = {
         'safety-issue.base.no-bases': 'Tato safety issue není založena na základě žádných existujících hlášení.',
         'safety-issue.sira.label': 'Hodnocení rizika safety issue (SIRA)',
         'safety-issue.sira-tooltip': 'SIRA, dle https://essi.easa.europa.eu/documents/Methodology.pdf',
-        'safety-issue.sira.initialEventFrequency': 'Odhad četnosti výskytu spouštějící události',
+        'safety-issue.sira.initialEventFrequency': 'Četnost výskytu spouštějící události',
         'safety-issue.sira.initialEventFrequency-tooltip': 'Odhadovaná četnost výskytu spouštějící události (ku letovým sektorům):',
         'safety-issue.sira.barrierUosAvoidanceFailFrequency': 'Četnost selhání bariér proti UOS',
         'safety-issue.sira.barrierUosAvoidanceFailFrequency-tooltip': 'Bariéry selžou při prevenci UOS (Undesirable Operational State)...',
@@ -161,6 +161,8 @@ module.exports = {
         'audit.type.placeholder': 'Vyberte druh kontroly',
         'audit.auditee.label': 'Kontrolované organizace',
         'audit.auditee.placeholder': 'Vyberte kontrolovanou organizaci',
+        'audit.auditor.label': 'Auditor',
+        'audit.auditor.tooltip': 'Organizace, která audit prováděla',
         'audit.location.label': 'Místo kontroly',
         'audit.location.placeholder': 'Vyberte místo kontroly',
         'audit.start-date': 'Začátek kontroly',
@@ -215,6 +217,7 @@ module.exports = {
         'audit.finding.measures.add.select-existing-tooltip': 'Vybrat nápravné opatření použité u jiného nálezu v tomto auditu',
         'audit.finding.measures.add.create-new': 'Vytvořit nové',
         'audit.finding.measures.add.create-new-tooltip': 'Vytvořit nové nápravné opatření',
+        'audit.safa.readonly.message': 'Zprávy ze SAFA auditů jsou pouze pro čtení.',
 
         'correctivemeasure.title': 'Nápravné opatření',
         'correctivemeasure.description.placeholder': 'Popis nápravného opatření',
@@ -250,6 +253,13 @@ module.exports = {
         'report.organization': 'Organizace',
         'report.responsible-department': 'Zodpovědné oddělení',
         'report.responsible-department.add-tooltip': 'Přidat další zodpovědné oddělení',
+        'report.attachments.title': 'Přílohy',
+        'report.attachments.create.button': 'Přiložit',
+        'report.attachments.create.reference-label': 'Příloha',
+        'report.attachments.create.reference-tooltip': 'Příloha, např. adresa dokumentu - pole je povinné',
+        'report.attachments.create.description-label': 'Popis',
+        'report.attachments.create.description-tooltip': 'Volitelný popis přílohy',
+        'report.attachments.table.reference': 'Příloha',
 
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',
@@ -322,7 +332,7 @@ module.exports = {
 
         // ----------- ARMS -------------
         'arms.title': 'ARMS',
-        'arms.accident-outcome': 'Výsledek nehody',
+        'arms.accident-outcome': 'Následky nehody',
         'arms.accident-outcome.tooltip': 'Pokud by tato událost vedla až nehodě, jaký by byl její nejpravděpodobnější výsledek?',
         'arms.barrier-effectiveness': 'Efektivita bariér',
         'arms.barrier-effectiveness.tooltip': 'Jaká byla efektivita bariér zbývajících mezi touto událostí a nejpravděpodobnějším nehodovým scénářem?',

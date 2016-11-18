@@ -25,8 +25,8 @@ describe('Audit', () => {
             selectedCategory = Generator.randomCategory();
         audit.types = ['http://onto.fel.cvut.cz/ontologies/ufo/Event', originalCategory];
         var component = Environment.render(<Audit audit={audit} report={report} onChange={onChange}/>);
-        component.getWrappedComponent().state.auditType = Generator.getCategories();
-        component.getWrappedComponent()._onTypeSelected(selectedCategory);
+        component.state.auditType = Generator.getCategories();
+        component._onTypeSelected(selectedCategory);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0],
             newTypes = change.audit.types;
@@ -39,8 +39,8 @@ describe('Audit', () => {
     it('adds selected audit type when no other types where present in audit on audit type select', () => {
         var selectedCategory = Generator.randomCategory();
         var component = Environment.render(<Audit audit={audit} report={report} onChange={onChange}/>);
-        component.getWrappedComponent().state.auditType = Generator.getCategories();
-        component.getWrappedComponent()._onTypeSelected(selectedCategory);
+        component.state.auditType = Generator.getCategories();
+        component._onTypeSelected(selectedCategory);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0],
             newTypes = change.audit.types;

@@ -97,7 +97,6 @@ describe('Sira', () => {
     });
 
     it('resets SIRA value and attributes when reset button is clicked', () => {
-        // TODO
         spyOn(OptionsStore, 'getOptions').and.returnValue([option]);
         report.sira.siraValue = option['@id'];
         report.sira.initialEventFrequency = option['@id'];

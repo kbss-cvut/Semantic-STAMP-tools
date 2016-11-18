@@ -42,9 +42,16 @@ public class RepositorySafetyIssueReportService extends KeySupportingRepositoryS
 
     @Override
     protected void postLoad(SafetyIssueReport instance) {
-        if (instance != null && instance.getSira() != null) {
-            final SafetyIssueRiskAssessment sira = instance.getSira();
-            sira.setSiraValue(armsService.calculateSafetyIssueRiskAssessment(sira));
+        if (instance != null) {
+            instance.getAuthor().erasePassword();
+            if (instance.getLastModifiedBy() != null) {
+                instance.getLastModifiedBy().erasePassword();
+            }
+            if (instance.getSira() != null) {
+                final SafetyIssueRiskAssessment sira = instance.getSira();
+                sira.setSiraValue(armsService.calculateSafetyIssueRiskAssessment(sira));
+
+            }
         }
     }
 

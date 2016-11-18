@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.dto.event.EventDto;
 import cz.cvut.kbss.inbas.reporting.model.CorrectiveMeasureImplementationEvaluation;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.Set;
 
 public class CorrectiveMeasureRequestDto {
@@ -18,6 +19,8 @@ public class CorrectiveMeasureRequestDto {
     private EventDto basedOn;
 
     private CorrectiveMeasureImplementationEvaluation evaluation;
+
+    private Date phaseLastModified;
 
     private Boolean implemented;
 
@@ -59,6 +62,14 @@ public class CorrectiveMeasureRequestDto {
 
     public void setEvaluation(CorrectiveMeasureImplementationEvaluation evaluation) {
         this.evaluation = evaluation;
+    }
+
+    public Date getPhaseLastModified() {
+        return phaseLastModified;
+    }
+
+    public void setPhaseLastModified(Date phaseLastModified) {
+        this.phaseLastModified = phaseLastModified;
     }
 
     public Boolean isImplemented() {

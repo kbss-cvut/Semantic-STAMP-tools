@@ -1,5 +1,13 @@
 # SISEL Release Notes
 
+### 0.7.17 - November 15, 2016
+- Attach references to additional resources to reports (Feature #184).
+- Erase user credentials before returning objects from REST services (Feature #219).
+
+### 0.7.16 - November 14, 2016
+- - SIRA calculation (Feature #196).
+- Move occurrence when its start time changes (Feature #176).
+
 ### 0.7.15 - October 31, 2016
 - Support for filters in the Reports view (Feature #206).
 
