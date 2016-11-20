@@ -11,6 +11,7 @@ var injectIntl = require('../../../utils/injectIntl');
 
 var Actions = require('../../../actions/Actions');
 var ArmsAttributes = require('../arms/ArmsAttributes').default;
+var Attachments = require('../attachment/Attachments').default;
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var Department = require('./Department').default;
@@ -134,6 +135,10 @@ var OccurrenceReport = React.createClass({
                         <Department report={report} onChange={this.props.handlers.onChange}/>
                     </div>
 
+                    <div className='form-group'>
+                        <Attachments report={report} onChange={this.props.handlers.onChange}/>
+                    </div>
+
                     <Panel>
                         <ReportProvenance report={report} revisions={this.props.revisions}/>
                     </Panel>
@@ -170,7 +175,7 @@ var OccurrenceReport = React.createClass({
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return <ButtonToolbar className='float-right buttons-right'>
+        return <ButtonToolbar className='float-right detail-button-toolbar'>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}

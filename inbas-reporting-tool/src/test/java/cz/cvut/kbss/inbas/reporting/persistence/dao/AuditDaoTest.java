@@ -25,20 +25,30 @@ public class AuditDaoTest extends BaseDaoTestRunner {
     private AuditDao dao;
 
     @Autowired
+    private OrganizationDao organizationDao;
+
+    @Autowired
     private EntityManagerFactory emf;
 
     @Test
-    public void persistPersistsOrganizationIfItDoesNotExistAlready() {
+    public void persistPersistsAuditeeWhenItDoesNotExistAlready() {
         final Audit audit = AuditReportGenerator.generateAudit();
         dao.persist(audit);
         assertNotNull(dao.find(audit.getUri()));
-        final EntityManager em = emf.createEntityManager();
-        try {
-            final Organization res = em.find(Organization.class, audit.getAuditee().getUri());
-            assertNotNull(res);
-        } finally {
-            em.close();
-        }
+        verifyOrganizationExists(audit.getAuditee());
+    }
+
+    private void verifyOrganizationExists(Organization organization) {
+        assertNotNull(organizationDao.find(organization.getUri()));
+    }
+
+    @Test
+    public void persistPersistsAuditorWhenItDoesNotExist() {
+        final Audit audit = AuditReportGenerator.generateAudit();
+        audit.setAuditor(Generator.generateOrganization());
+        dao.persist(audit);
+        assertNotNull(dao.find(audit.getUri()));
+        verifyOrganizationExists(audit.getAuditor());
     }
 
     @Test
@@ -256,15 +266,27 @@ public class AuditDaoTest extends BaseDaoTestRunner {
         final Organization newOrganization = Generator.generateOrganization();
         audit.setAuditee(newOrganization);
         dao.update(audit);
-        final EntityManager em = emf.createEntityManager();
-        try {
-            assertNotNull(em.find(Organization.class, originalOrganization.getUri()));
-            assertNotNull(em.find(Organization.class, newOrganization.getUri()));
-        } finally {
-            em.close();
-        }
+
+        verifyOrganizationExists(originalOrganization);
+        verifyOrganizationExists(newOrganization);
         final Audit result = dao.find(audit.getUri());
         assertEquals(newOrganization, result.getAuditee());
+    }
+
+    @Test
+    public void updatePersistAuditorWhenItDoesNotExist() {
+        final Audit audit = AuditReportGenerator.generateAudit();
+        final Organization originalAuditor = Generator.generateOrganization();
+        audit.setAuditor(originalAuditor);
+        dao.persist(audit);
+        final Organization newAuditor = Generator.generateOrganization();
+        audit.setAuditor(newAuditor);
+        dao.update(audit);
+
+        verifyOrganizationExists(originalAuditor);
+        verifyOrganizationExists(newAuditor);
+        final Audit result = dao.find(audit.getUri());
+        assertEquals(newAuditor, result.getAuditor());
     }
 
     @Test

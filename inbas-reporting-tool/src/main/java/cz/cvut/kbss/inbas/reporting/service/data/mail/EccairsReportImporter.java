@@ -5,6 +5,7 @@ import cz.cvut.kbss.datatools.mail.CompoundProcessor;
 import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
 import cz.cvut.kbss.datatools.mail.model.Message;
 import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
+import cz.cvut.kbss.eccairs.report.e5xml.e5f.E5FXMLParser;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
 import cz.cvut.kbss.eccairs.report.model.dao.EccairsReportDao;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
@@ -13,10 +14,12 @@ import cz.cvut.kbss.inbas.reporting.model.com.EMail;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.EmailDao;
 import cz.cvut.kbss.inbas.reporting.service.PersonService;
 import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
+import cz.cvut.kbss.jopa.exceptions.OWLPersistenceException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
+import java.io.IOException;
 import org.apache.jena.rdf.model.Model;
 import org.jooq.lambda.Unchecked;
 import org.slf4j.Logger;
@@ -28,13 +31,14 @@ import org.springframework.context.ApplicationEventPublisherAware;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.apache.commons.io.IOUtils;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
@@ -57,13 +61,10 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     protected EmailDao emailDao;
 
     @Autowired
-    protected SesameUpdater updater;
-
-    @Autowired
     private PersonService personService;
 
     protected MappingEccairsData2Aso mapping;
-
+    
     private ApplicationEventPublisher eventPublisher;
     protected CompoundProcessor processor = new CompoundProcessor();
 
@@ -102,16 +103,21 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     }
 
     @Override
-    public List<URI> process(NamedStream ns) throws Exception {
+    public List<URI> process(NamedStream ns) throws IOException {
         LOG.trace("Processing NamedStream, emailId = {}, name = {}", ns.getEmailId(), ns.getName());
         E5XMLLoader e5XmlLoader = constructE5XMLLoader(ns);
         Stream<EccairsReport> rs = e5XmlLoader.loadData();
         if (rs == null) {
             return Collections.emptyList();
         }
-        List<URI> ret = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
-                    String sUri = "http://onto.fel.cvut.cz/ontologies/report-" + UUID.randomUUID();
-                    r.setUri(sUri);//"http://onto.fel.cvut.cz/ontologies/report-" + r.getOriginFileName() + "-001";
+        List<URI> ret = parsePersistAndMap(rs);
+        ns.close();
+        return ret;
+    }
+    
+    private List<URI> parsePersistAndMap(Stream<EccairsReport> rs){
+        return rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
+                    String sUri = r.createRandomUri();
                     URI context = URI.create(sUri);
                     EntityManager em = eccairsEmf.createEntityManager();
                     EccairsReportDao eccairsDao = new EccairsReportDao(em);
@@ -121,33 +127,31 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                         em.getTransaction().commit();
                     } catch (Exception e) {// rolback the transanction if something fails
                         em.getTransaction().rollback();
-                        LOG.trace(String.format("failed to persisting eccairs report from file %s.", r.getOriginFileName()), e);                        return null;
+                        LOG.trace(String.format("failed to persisting eccairs report from file %s.", r.getOriginFileName()), e);
+                        return null;
                     }
 
-                    adjustPersistedReport(r, em);
+                    map2OccurrenceReport(r, em);
                     eventPublisher.publishEvent(new InvalidateCacheEvent(this));
 //                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
                     return context;
                 }
 
         )).filter(Objects::nonNull).collect(Collectors.toList());
-        ns.close();
-        return ret;
     }
 
-    private void adjustPersistedReport(EccairsReport r, EntityManager em) {
+    private void map2OccurrenceReport(EccairsReport r, EntityManager em) {
         final String reportUri = r.getUri();
         try {
-            updater.executeUpdate(
-                    mapping.getUFOTypesQuery(r.getTaxonomyVersion(), reportUri),
-                    mapping.generateEventsFromTypes(r.getTaxonomyVersion(), reportUri),
-                    mapping.generatePartOfRelationBetweenEvents(r.getTaxonomyVersion(), reportUri),
-                    mapping.fixOccurrenceReport(r.getTaxonomyVersion(), reportUri, r.getOccurrence()),
-                    mapping.fixOccurrenceAndEvents(r.getTaxonomyVersion(), reportUri, r.getOccurrence()));
-//                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
-        } catch (Exception e) {
+            em.getTransaction().begin();
+            mapping.mapReport(r, em, reportUri);
+            em.getTransaction().commit();
+        } catch (OWLPersistenceException e) {
             LOG.error(String.format("Mapping eccairs report %s to reporting tool report failed. Reverting changes.",
                     r.getOriginFileName()), e);
+            if(em.getTransaction().isActive())
+                em.getTransaction().rollback();
+
             em.getTransaction().begin();
             final Object toRemove = em.merge(r);
             em.remove(toRemove);
@@ -164,6 +168,24 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.eventPublisher = applicationEventPublisher;
+    }
+    
+    /**
+     * This method imports a report from a reportStr. 
+     * @param reportStr string of the contents of an e5f/xml file (the unziped xml file).
+     * @return
+     */
+    public List<URI> importE5FXmlFromString(String reportStr){ 
+        try {
+            E5FXMLParser e5fXmlParser = new E5FXMLParser(eaf);
+            e5fXmlParser.parseDocument(new NamedStream("imported-from-eccairs", IOUtils.toInputStream(reportStr, Charset.forName("UTF-8"))));
+            EccairsReport r = e5fXmlParser.getReport();
+            return parsePersistAndMap(Stream.of(r));
+        } catch (IOException ex) {
+            RuntimeException rex = new RuntimeException("An unexpected exception has been thrown");
+            rex.addSuppressed(ex);
+            throw rex;
+        }
     }
 
     @Override

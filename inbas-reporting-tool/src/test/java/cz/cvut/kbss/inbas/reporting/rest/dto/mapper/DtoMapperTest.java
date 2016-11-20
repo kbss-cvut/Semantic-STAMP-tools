@@ -79,6 +79,7 @@ public class DtoMapperTest {
         assertEquals(req.getUri(), dto.getUri());
         assertEquals(req.getDescription(), dto.getDescription());
         assertEquals(req.isImplemented(), dto.isImplemented());
+        assertEquals(req.getPhaseLastModified(), dto.getPhaseLastModified());
     }
 
     @Test
@@ -144,6 +145,7 @@ public class DtoMapperTest {
         final CorrectiveMeasureRequest request = new CorrectiveMeasureRequest();
         request.setUri(URI.create(Vocabulary.s_c_corrective_measure_request + "#req"));
         request.setDescription("Sample corrective measure.");
+        request.setPhaseLastModified(new Date());
         return request;
     }
 
@@ -383,7 +385,7 @@ public class DtoMapperTest {
     @Test
     public void reportToReportDtoTransformsSafetyIssueReportWithFactorGraph() {
         final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
-        report.setSafetyIssue(SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph());
+        report.setSafetyIssue(SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents());
         final LogicalDocument dto = mapper.reportToReportDto(report);
         assertTrue(dto instanceof SafetyIssueReportDto);
         final SafetyIssueReportDto result = (SafetyIssueReportDto) dto;
@@ -394,7 +396,7 @@ public class DtoMapperTest {
 
     @Test
     public void safetyIssueToSafetyIssueDtoTransformsBasedOnOccurrences() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
         final List<OccurrenceReport> occurrenceReports = generateBaseOccurrences();
         issue.setBasedOnOccurrences(
                 occurrenceReports.stream().map(OccurrenceReport::getOccurrence).collect(Collectors.toSet()));
@@ -435,7 +437,7 @@ public class DtoMapperTest {
 
     @Test
     public void safetyIssueToSafetyIssueDtoTransformsBasedOnFindings() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithFactorGraph();
+        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
         final Map<AuditFinding, AuditReport> bases = generateBaseFindings();
         issue.setBasedOnFindings(new HashSet<>(bases.keySet()));
         bases.entrySet()

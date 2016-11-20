@@ -4,8 +4,10 @@ import cz.cvut.kbss.inbas.reporting.dto.SafetyIssueReportDto;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueRiskAssessment;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +24,8 @@ public class SafetyIssueReportGenerator {
     public static SafetyIssueReport generateSafetyIssueReport(boolean setAttributes, boolean generateMeasures) {
         final SafetyIssueReport report = new SafetyIssueReport();
         report.setSafetyIssue(generateSafetyIssue());
-        report.setSira(Generator.generateUri());
+        final SafetyIssueRiskAssessment sira = generateSira();
+        report.setSira(sira);
         report.setSummary("Safety issue report " + Generator.randomInt());
         if (setAttributes) {
             Generator.setReportAttributes(report);
@@ -31,6 +34,19 @@ public class SafetyIssueReportGenerator {
             report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
         }
         return report;
+    }
+
+    public static SafetyIssueRiskAssessment generateSira() {
+        final SafetyIssueRiskAssessment sira = new SafetyIssueRiskAssessment();
+        sira.setAccidentSeverity(
+                URI.create("http://onto.fel.cvut.cz/ontologies/arms/sira/model/accident_severity/minor"));
+        sira.setBarrierRecoveryFailFrequency(URI.create(
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-recovery-fail-frequency/once-in-hundred"));
+        sira.setInitialEventFrequency(
+                URI.create("http://onto.fel.cvut.cz/ontologies/arms/sira/model/initial_event_frequency/every_hundred"));
+        sira.setBarrierUosAvoidanceFailFrequency(URI.create(
+                "http://onto.fel.cvut.cz/ontologies/arms/sira/model/barrier-uos-avoidance-fail-frequency/once-in-hundred"));
+        return sira;
     }
 
     public static List<SafetyIssueReport> generateSafetyIssueReportChain(Person author) {
@@ -49,7 +65,7 @@ public class SafetyIssueReportGenerator {
         return chain;
     }
 
-    public static SafetyIssue generateSafetyIssueWithFactorGraph() {
+    public static SafetyIssue generateSafetyIssueWithDescendantEvents() {
         final SafetyIssue issue = generateSafetyIssue();
         issue.setUri(Generator.generateUri());
         final int maxDepth = Generator.randomInt(5);

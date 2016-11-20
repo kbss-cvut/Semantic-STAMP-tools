@@ -61,6 +61,16 @@ public class RepositoryAuditReportService extends KeySupportingRepositoryService
     }
 
     @Override
+    protected void postLoad(AuditReport instance) {
+        if (instance != null) {
+            instance.getAuthor().erasePassword();
+            if (instance.getLastModifiedBy() != null) {
+                instance.getLastModifiedBy().erasePassword();
+            }
+        }
+    }
+
+    @Override
     public AuditReport findLatestRevision(Long fileNumber) {
         Objects.requireNonNull(fileNumber);
         return reportDao.findLatestRevision(fileNumber);

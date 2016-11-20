@@ -18,7 +18,7 @@ describe('FindingMeasures', () => {
     it('removes corrective measure from measures on delete', () => {
         var toRemove = measures[Generator.getRandomPositiveInt(0, measures.length)],
             component = Environment.render(<FindingMeasures onChange={onChange} correctiveMeasures={measures}/>);
-        component.getWrappedComponent()._onDeleteMeasure(toRemove);
+        component._onDeleteMeasure(toRemove);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0];
         expect(change.correctiveMeasures.length).toEqual(measures.length - 1);
@@ -30,7 +30,7 @@ describe('FindingMeasures', () => {
             toEdit = measures[index],
             component = Environment.render(<FindingMeasures onChange={onChange} correctiveMeasures={measures}/>);
         toEdit.description = 'Updated description';
-        component.getWrappedComponent()._onEditFinished(toEdit);
+        component._onEditFinished(toEdit);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0];
         expect(change.correctiveMeasures.length).toEqual(measures.length);
@@ -44,7 +44,7 @@ describe('FindingMeasures', () => {
                 description: 'New corrective measure'
             },
             component = Environment.render(<FindingMeasures onChange={onChange} correctiveMeasures={measures}/>);
-        component.getWrappedComponent()._onEditFinished(newMeasure);
+        component._onEditFinished(newMeasure);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0];
         expect(change.correctiveMeasures.length).toEqual(measures.length + 1);
@@ -58,7 +58,7 @@ describe('FindingMeasures', () => {
                 description: 'New corrective measure'
             },
             component = Environment.render(<FindingMeasures onChange={onChange} correctiveMeasures={null}/>);
-        component.getWrappedComponent()._onEditFinished(newMeasure);
+        component._onEditFinished(newMeasure);
         expect(onChange).toHaveBeenCalled();
         var change = onChange.calls.argsFor(0)[0];
         expect(change.correctiveMeasures.length).toEqual(1);

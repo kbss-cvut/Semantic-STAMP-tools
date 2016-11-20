@@ -28,10 +28,10 @@ describe('AuditFinding', () => {
         var selectedType = Generator.randomCategory(),
             component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
                                                          report={report}/>);
-        component.getWrappedComponent().state.findingType = Generator.getCategories();
-        component.getWrappedComponent()._onTypeSelected(selectedType);
+        component.state.findingType = Generator.getCategories();
+        component._onTypeSelected(selectedType);
 
-        var newFinding = component.getWrappedComponent().state.finding;
+        var newFinding = component.state.finding;
         expect(newFinding.types.indexOf(selectedType.id)).not.toEqual(-1);
     });
 
@@ -41,10 +41,10 @@ describe('AuditFinding', () => {
         finding.types = [originalType.id];
         var component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
                                                          report={report}/>);
-        component.getWrappedComponent().state.findingType = Generator.getCategories();
-        component.getWrappedComponent()._onTypeSelected(selectedType);
+        component.state.findingType = Generator.getCategories();
+        component._onTypeSelected(selectedType);
 
-        var newFinding = component.getWrappedComponent().state.finding;
+        var newFinding = component.state.finding;
         expect(newFinding.types.indexOf(selectedType.id)).not.toEqual(-1);
         if (selectedType !== originalType) {
             expect(newFinding.types.indexOf(originalType.id)).toEqual(-1);
@@ -56,7 +56,7 @@ describe('AuditFinding', () => {
         var component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
                                                          report={report} show={true}/>);
 
-        var siButton = TestUtils.scryRenderedComponentsWithType(component.getWrappedComponent()._modalFooter, DropdownButton);
+        var siButton = TestUtils.scryRenderedComponentsWithType(component._modalFooter, DropdownButton);
         expect(siButton.length).toEqual(0);
     });
 
@@ -65,7 +65,7 @@ describe('AuditFinding', () => {
         var component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
                                                          report={report} show={true}/>);
 
-        var siButton = TestUtils.scryRenderedComponentsWithType(component.getWrappedComponent()._modalFooter, DropdownButton);
+        var siButton = TestUtils.scryRenderedComponentsWithType(component._modalFooter, DropdownButton);
         expect(siButton.length).toEqual(0);
     });
 
@@ -75,7 +75,7 @@ describe('AuditFinding', () => {
         var component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
                                                          report={report} show={true}/>);
 
-        var siButton = TestUtils.scryRenderedComponentsWithType(component.getWrappedComponent()._modalFooter, DropdownButton);
+        var siButton = TestUtils.scryRenderedComponentsWithType(component._modalFooter, DropdownButton);
         expect(siButton.length).toEqual(1);
     })
 });

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @MappedSuperclass
 public abstract class AbstractReport extends AbstractEntity implements LogicalDocument {
@@ -42,6 +43,9 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     protected String summary;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_references, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    protected Set<Resource> references;
+
     @Types
     protected Set<String> types;
 
@@ -55,6 +59,9 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
         this.fileNumber = other.fileNumber;
         this.summary = other.summary;
         this.types = new HashSet<>(other.types);
+        if (other.references != null) {
+            this.references = other.references.stream().map(Resource::new).collect(Collectors.toSet());
+        }
     }
 
     @Override
@@ -130,6 +137,14 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
         this.summary = summary;
     }
 
+    public Set<Resource> getReferences() {
+        return references;
+    }
+
+    public void setReferences(Set<Resource> references) {
+        this.references = references;
+    }
+
     public Set<String> getTypes() {
         return types;
     }
@@ -145,9 +160,6 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
      */
     public void addType(String type) {
         Objects.requireNonNull(type);
-        if (types == null) {
-            this.types = new HashSet<>();
-        }
         types.add(type);
     }
 

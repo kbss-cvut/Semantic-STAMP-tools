@@ -11,10 +11,12 @@ import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
+import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueRiskAssessment;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.SafetyIssueReportDao;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.service.SafetyIssueReportService;
+import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
@@ -30,6 +32,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunner {
 
@@ -41,6 +46,9 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
 
     @Autowired
     private OccurrenceDao occurrenceDao;
+
+    @Autowired
+    private ArmsService armsServiceMock;
 
     @Autowired
     private EntityManagerFactory emf;
@@ -213,5 +221,86 @@ public class RepositorySafetyIssueReportServiceTest extends BaseServiceTestRunne
         } finally {
             em.close();
         }
+    }
+
+    @Test
+    public void findSetsReportSiraValueBeforeReturningIt() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
+        service.persist(report);
+        final URI siraValue = Generator.generateUri();
+        when(armsServiceMock.calculateSafetyIssueRiskAssessment(any(SafetyIssueRiskAssessment.class)))
+                .thenReturn(siraValue);
+
+        final SafetyIssueReport result = service.findByKey(report.getKey());
+        assertEquals(siraValue, result.getSira().getSiraValue());
+        verify(armsServiceMock).calculateSafetyIssueRiskAssessment(result.getSira());
+    }
+
+    @Test
+    public void findLatestRevisionSetsSiraValueBeforeReturningReport() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
+        service.persist(report);
+        final URI siraValue = Generator.generateUri();
+        when(armsServiceMock.calculateSafetyIssueRiskAssessment(any(SafetyIssueRiskAssessment.class)))
+                .thenReturn(siraValue);
+
+        final SafetyIssueReport result = service.findLatestRevision(report.getFileNumber());
+        assertEquals(siraValue, result.getSira().getSiraValue());
+        verify(armsServiceMock).calculateSafetyIssueRiskAssessment(result.getSira());
+    }
+
+    @Test
+    public void createNewRevisionCopiesSiraValueToTheNewInstance() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
+        service.persist(report);
+        final URI siraValue = Generator.generateUri();
+        when(armsServiceMock.calculateSafetyIssueRiskAssessment(any(SafetyIssueRiskAssessment.class)))
+                .thenReturn(siraValue);
+
+        final SafetyIssueReport newRevision = service.createNewRevision(report.getFileNumber());
+        assertEquals(siraValue, newRevision.getSira().getSiraValue());
+        verify(armsServiceMock).calculateSafetyIssueRiskAssessment(newRevision.getSira());
+    }
+
+    @Test
+    public void findRevisionSetsSiraValue() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
+        service.persist(report);
+        final URI siraValue = Generator.generateUri();
+        when(armsServiceMock.calculateSafetyIssueRiskAssessment(any(SafetyIssueRiskAssessment.class)))
+                .thenReturn(siraValue);
+
+        final SafetyIssueReport result = service.findRevision(report.getFileNumber(), report.getRevision());
+        assertEquals(siraValue, result.getSira().getSiraValue());
+        verify(armsServiceMock).calculateSafetyIssueRiskAssessment(result.getSira());
+    }
+
+    @Test
+    public void findErasesAuthorCredentials() {
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
+        report.setAuthor(author);
+        service.persist(report);
+
+        final SafetyIssueReport result = service.find(report.getUri());
+        assertNull(result.getAuthor().getPassword());
+    }
+
+    @Test
+    public void findErasesCredentialsOfLastModifier() {
+        final Person lastModifier = new Person();
+        lastModifier.setFirstName("Last");
+        lastModifier.setLastName("Modifier");
+        lastModifier.setUsername("last.modifier@fel.cvut.cz");
+        lastModifier.setPassword("P@ssw0rd01");
+        lastModifier.encodePassword(passwordEncoder);
+        personDao.persist(lastModifier);
+        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
+        report.setAuthor(author);
+        report.setLastModifiedBy(lastModifier);
+        service.persist(report);
+
+        final SafetyIssueReport result = service.find(report.getUri());
+        assertNull(result.getAuthor().getPassword());
+        assertNull(result.getLastModifiedBy().getPassword());
     }
 }

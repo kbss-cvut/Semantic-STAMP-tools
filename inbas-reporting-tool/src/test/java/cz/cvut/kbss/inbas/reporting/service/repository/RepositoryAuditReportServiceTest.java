@@ -256,4 +256,33 @@ public class RepositoryAuditReportServiceTest extends BaseServiceTestRunner {
         assertNotNull(result);
         assertEquals(report.getUri(), result.getUri());
     }
+
+    @Test
+    public void findErasesAuthorCredentials() {
+        final AuditReport report = AuditReportGenerator.generateAuditReport(false);
+        report.setAuthor(author);
+        service.persist(report);
+
+        final AuditReport result = service.find(report.getUri());
+        assertNull(result.getAuthor().getPassword());
+    }
+
+    @Test
+    public void findErasesCredentialsOfLastModifier() {
+        final Person lastModifier = new Person();
+        lastModifier.setFirstName("Last");
+        lastModifier.setLastName("Modifier");
+        lastModifier.setUsername("last.modifier@fel.cvut.cz");
+        lastModifier.setPassword("P@ssw0rd01");
+        lastModifier.encodePassword(passwordEncoder);
+        personDao.persist(lastModifier);
+        final AuditReport report = AuditReportGenerator.generateAuditReport(false);
+        report.setAuthor(author);
+        report.setLastModifiedBy(lastModifier);
+        service.persist(report);
+
+        final AuditReport result = service.find(report.getUri());
+        assertNull(result.getAuthor().getPassword());
+        assertNull(result.getLastModifiedBy().getPassword());
+    }
 }
