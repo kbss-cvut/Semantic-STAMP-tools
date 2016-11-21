@@ -1,5 +1,8 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.7.18 - November 21, 2016
+- Fixed missing sorting icons in reports table (Bug #226).
+
 ### 0.7.17 - November 15, 2016
 - Attach references to additional resources to reports (Feature #184).
 - Erase user credentials before returning objects from REST services (Feature #219).
