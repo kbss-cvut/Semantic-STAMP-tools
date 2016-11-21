@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 public class RepositoryPersonService extends BaseRepositoryService<Person> implements PersonService {
 
@@ -43,10 +45,13 @@ public class RepositoryPersonService extends BaseRepositoryService<Person> imple
 
     @Override
     public void update(Person instance) {
+        Objects.requireNonNull(instance);
         final Person orig = personDao.find(instance.getUri());
         if (orig == null) {
             throw new IllegalArgumentException("Cannot update person's URI. Person: " + instance);
         }
+        LOG.trace("Original password: " + orig.getPassword());
+        LOG.trace("Updated password: " + instance.getPassword());
         if (!orig.getPassword().equals(instance.getPassword())) {
             instance.encodePassword(passwordEncoder);
         }
