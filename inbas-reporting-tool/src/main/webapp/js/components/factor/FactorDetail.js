@@ -234,7 +234,7 @@ var FactorDetail = React.createClass({
                                                         }}/>
                                     </div>
                                     <div className='col-xs-7'>
-                                        <div className='col-xs-8'>
+                                        <div className='col-xs-9'>
                                             <FormGroup bsSize='small'>
                                                 <ControlLabel>{this.i18n('factors.detail.duration')}</ControlLabel>
                                                 <InputGroup className='inline-input'>
