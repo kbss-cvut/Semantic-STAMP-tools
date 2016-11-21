@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+var assign = require('object-assign');
 
 var Actions = require('../../../actions/Actions');
 var ReportDetail = require('./AuditReport');
@@ -19,6 +20,28 @@ var AuditReportController = React.createClass({
     mixins: [
         ReportDetailControllerMixin
     ],
+
+    getInitialState: function () {
+        return {
+            report: this._initReport(this.props.report)
+        };
+    },
+
+    _initReport: function (report) {
+        let copy = assign({}, report);
+        copy.isSafa = function () {
+            return this.types.indexOf(Vocabulary.SAFA_REPORT) !== -1;
+        };
+        return copy;
+    },
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.report !== this.props.report) {
+            this.setState({
+                report: this._initReport(nextProps.report)
+            });
+        }
+    },
 
     onSuccess: function (key) {
         if (this.props.report.isNew) {
@@ -49,7 +72,7 @@ var AuditReportController = React.createClass({
     _resolveReadOnlyProps: function () {
         let roProps = {};
         roProps.readOnly = !this.isLatestRevision();
-        if (this.props.report.types.indexOf(Vocabulary.SAFA_REPORT) !== -1) {
+        if (this.state.report.isSafa()) {
             roProps.readOnly = true;
             roProps.readOnlyMessage = 'audit.safa.readonly.message';
         }
@@ -64,7 +87,7 @@ var AuditReportController = React.createClass({
             onCancel: this.onCancel,
             onRemove: this.onRemove
         };
-        return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+        return <ReportDetail report={this.state.report} handlers={handlers} revisions={this.renderRevisionInfo()}
                              {...this._resolveReadOnlyProps()}/>;
     }
 });

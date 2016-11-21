@@ -8,7 +8,8 @@ module.exports = {
     HOME_ROUTE: Routes.dashboard,
     OPTIONS: {
         OCCURRENCE_CLASS: 'occurrenceClass',
-        OCCURRENCE_CATEGORY: 'occurrenceCategory'
+        OCCURRENCE_CATEGORY: 'occurrenceCategory',
+        AUDIT_FINDING_STATUS: 'auditFindingStatus'
     },
 
     TIME_SCALES: {

@@ -15,6 +15,7 @@ import Input from "../../Input";
 import OptionsStore from "../../../stores/OptionsStore";
 import Routes from "../../../utils/Routes";
 import Routing from "../../../utils/Routing";
+import SafaAuditFindingAttributes from "./SafaAuditFindingAttributes";
 import SafetyIssueSelector from "../safetyissue/SafetyIssueSelector";
 import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 import Utils from "../../../utils/Utils";
@@ -122,7 +123,7 @@ class AuditFinding extends React.Component {
             <Modal.Header closeButton>
                 <Modal.Title>{this.i18n('audit.finding.header')}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body ref={comp => this._modalBody = comp}>
                 <div className='row'>
                     <div className='col-xs-12'>
                         <label className='control-label'>{this.i18n('audit.finding.type.label')}</label>
@@ -139,6 +140,7 @@ class AuditFinding extends React.Component {
                         {this._renderLevels()}
                     </div>
                 </div>
+                {this._renderSafaAttributes()}
                 <div className='row'>
                     <div className='col-xs-12'>
                         <Input type='textarea' label={this.i18n('description')} rows={8} name='description'
@@ -151,12 +153,7 @@ class AuditFinding extends React.Component {
                 <div className='row'>
                     <FindingFactors factors={finding.factors} onChange={this._mergeChange}/>
                 </div>
-                <div className='row'>
-                    <div className='col-xs-12'>
-                        <FindingMeasures audit={this.props.audit} finding={finding}
-                                         correctiveMeasures={finding.correctiveMeasures} onChange={this._mergeChange}/>
-                    </div>
-                </div>
+                {this._renderCorrectiveMeasures()}
             </Modal.Body>
             <Modal.Footer ref={comp => this._modalFooter = comp}>
                 <ButtonToolbar className='pull-right'>
@@ -189,6 +186,20 @@ class AuditFinding extends React.Component {
             </div>);
         }
         return levels;
+    }
+
+    _renderSafaAttributes() {
+        return this.props.report.isSafa() ? <SafaAuditFindingAttributes finding={this.state.finding}/> : null;
+    }
+
+    _renderCorrectiveMeasures() {
+        let finding = this.state.finding;
+        return this.props.report.isSafa() ? null : <div className='row'>
+            <div className='col-xs-12'>
+                <FindingMeasures audit={this.props.audit} finding={finding}
+                                 correctiveMeasures={finding.correctiveMeasures} onChange={this._mergeChange}/>
+            </div>
+        </div>;
     }
 
     _renderCreateSafetyIssueButton() {

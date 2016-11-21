@@ -156,7 +156,6 @@ public abstract class DtoMapper {
         final CorrectiveMeasureRequestDto dto = new CorrectiveMeasureRequestDto();
         dto.setUri(req.getUri());
         dto.setDescription(req.getDescription());
-        dto.setPhaseLastModified(req.getPhaseLastModified());
         dto.setImplemented(req.isImplemented());
         final Set<AgentDto> agents = new HashSet<>();
         if (req.getResponsibleOrganizations() != null) {
