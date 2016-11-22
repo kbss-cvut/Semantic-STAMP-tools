@@ -110,4 +110,9 @@ public class MockServiceConfig {
     public SearchService searchService() {
         return mock(SearchService.class);
     }
+
+    @Bean
+    public OccurrenceReportService occurrenceReportService() {
+        return mock(OccurrenceReportService.class);
+    }
 }
