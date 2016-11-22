@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
@@ -28,12 +29,16 @@ public class AuditFindingTest {
             original.getFactors().add(Generator.generateEventType());
         }
         original.setLevel(1);
+        original.setStatus(Generator.generateUri());
+        original.setStatusLastModified(new Date());
 
         final AuditFinding copy = new AuditFinding(original);
         assertEquals(original.getDescription(), copy.getDescription());
         assertEquals(original.getLevel(), copy.getLevel());
         assertEquals(original.getTypes(), copy.getTypes());
         assertEquals(original.getFactors(), copy.getFactors());
+        assertEquals(original.getStatus(), copy.getStatus());
+        assertEquals(original.getStatusLastModified(), copy.getStatusLastModified());
     }
 
     @Test

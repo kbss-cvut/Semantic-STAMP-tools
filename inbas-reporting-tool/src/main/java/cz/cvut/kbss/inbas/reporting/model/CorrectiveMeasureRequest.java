@@ -43,9 +43,6 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure_phase)
     private URI phase;
 
-    @OWLDataProperty(iri = Vocabulary.s_p_modified)
-    private Date phaseLastModified;
-
     @OWLObjectProperty(iri = Vocabulary.s_p_has_evaluation, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private CorrectiveMeasureImplementationEvaluation evaluation;
 
@@ -70,7 +67,6 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
         this.description = other.description;
         this.deadline = other.deadline;
         this.phase = other.phase;
-        this.phaseLastModified = other.phaseLastModified;
         this.implemented = other.implemented;
         if (other.responsiblePersons != null) {
             this.responsiblePersons = new HashSet<>(other.responsiblePersons);
@@ -153,14 +149,6 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
 
     public void setPhase(URI phase) {
         this.phase = phase;
-    }
-
-    public Date getPhaseLastModified() {
-        return phaseLastModified;
-    }
-
-    public void setPhaseLastModified(Date phaseLastModified) {
-        this.phaseLastModified = phaseLastModified;
     }
 
     public CorrectiveMeasureImplementationEvaluation getEvaluation() {

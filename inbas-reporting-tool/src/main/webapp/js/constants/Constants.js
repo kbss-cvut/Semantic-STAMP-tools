@@ -8,7 +8,8 @@ module.exports = {
     HOME_ROUTE: Routes.dashboard,
     OPTIONS: {
         OCCURRENCE_CLASS: 'occurrenceClass',
-        OCCURRENCE_CATEGORY: 'occurrenceCategory'
+        OCCURRENCE_CATEGORY: 'occurrenceCategory',
+        AUDIT_FINDING_STATUS: 'auditFindingStatus'
     },
 
     TIME_SCALES: {
@@ -44,8 +45,8 @@ module.exports = {
      */
     SORTING: {
         NO: {glyph: 'sort', title: 'sort.no'},
-        ASC: {glyph: 'chevron-up', title: 'sort.asc'},
-        DESC: {glyph: 'chevron-down', title: 'sort.desc'}
+        ASC: {glyph: 'sort-by-$type$', title: 'sort.asc'},
+        DESC: {glyph: 'sort-by-$type$-alt', title: 'sort.desc'}
     },
 
     UNAUTHORIZED_USER: {name: 'unauthorized'},

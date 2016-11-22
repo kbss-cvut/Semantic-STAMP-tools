@@ -1,0 +1,41 @@
+[
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/documentation/audit_finding_status/open",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Open"
+      },
+      {
+        "@language": "cs",
+        "@value": "Otevřeno"
+      }
+    ]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/documentation/audit_finding_status/closed",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Closed"
+      },
+      {
+        "@language": "cs",
+        "@value": "Uzavřeno"
+      }
+    ]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/documentation/audit_finding_status/not_rated",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Not Rated"
+      },
+      {
+        "@language": "cs",
+        "@value": "Nehodnoceno"
+      }
+    ]
+  }
+]
