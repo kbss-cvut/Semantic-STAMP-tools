@@ -20,6 +20,7 @@ var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 var JsonLdUtils = require('jsonld-utils').default;
 
+var Constants = require('../../constants/Constants');
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
 var Mask = require('../Mask').default;
 var Utils = require('../../utils/Utils');
@@ -195,83 +196,73 @@ var FactorDetail = React.createClass({
                 'col-xs-10': this.state.eventType && eventTypeBadge
             });
 
-        return (
-            <div>
-                <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
-                              onHide={this.onCloseDetails} enableForwardSkip={true}/>
-                <Modal show={this.props.show} onHide={this.props.onClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>{this.i18n('factors.detail.title')}</Modal.Title>
-                    </Modal.Header>
+        // Modal body is given ref so that it is accessible in tests. See
+        // https://github.com/react-bootstrap/react-bootstrap/issues/966
+        return <div>
+            <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
+                          onHide={this.onCloseDetails} enableForwardSkip={true}/>
+            <Modal show={this.props.show} onHide={this.props.onClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{this.i18n('factors.detail.title')}</Modal.Title>
+                </Modal.Header>
 
-                    <Modal.Body>
-                        {this._renderMask()}
-                        {this.renderDeleteDialog()}
-                        <div className='row'>
-                            {eventTypeBadge}
-                            <div className={eventTypeClassNames}>
-                                <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
-                                                    value={eventTypeLabel}
-                                                    label={this.i18n('factors.detail.type')}
-                                                    onSelect={this.onEventTypeChange} focus={true}/>
-                            </div>
-                            {this._renderEventTypeLink()}
+                <Modal.Body ref={comp => this._modalContent = comp}>
+                    {this._renderMask()}
+                    {this.renderDeleteDialog()}
+                    <div className='row'>
+                        {eventTypeBadge}
+                        <div className={eventTypeClassNames}>
+                            <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
+                                                value={eventTypeLabel}
+                                                label={this.i18n('factors.detail.type')}
+                                                onSelect={this.onEventTypeChange} focus={true}/>
                         </div>
+                        {this._renderEventTypeLink()}
+                    </div>
+                    <div>
                         <div>
-                            <div>
-                                <label className='control-label'>{this.i18n('factors.detail.time-period')}</label>
-                            </div>
-                            <div className='row'>
-                                <Form inline>
-                                    <div className='col-xs-5'>
-                                        <DateTimePicker inputFormat='DD-MM-YY HH:mm'
-                                                        dateTime={this.state.startDate.toString()}
-                                                        label={this.i18n('factors.detail.start')}
-                                                        onChange={this.onDateChange} size='small'
-                                                        inputProps={{
-                                                            title: this.i18n('occurrence.start-time-tooltip'),
-                                                            className: 'inline-input',
-                                                            size: 12
-                                                        }}/>
-                                    </div>
-                                    <div className='col-xs-7'>
-                                        <div className='col-xs-9'>
-                                            <FormGroup bsSize='small'>
-                                                <ControlLabel>{this.i18n('factors.detail.duration')}</ControlLabel>
-                                                <InputGroup className='inline-input'>
-                                                    <InputGroup.Button>
-                                                        <Button bsSize='small' disabled={this.state.duration === 0}
-                                                                onClick={this.onDurationMinus}><Glyphicon
-                                                            glyph='minus'/></Button>
-                                                    </InputGroup.Button>
-                                                    <FormControl type='text' value={this.state.duration}
-                                                                 onChange={this.onDurationSet} size={3}/>
-                                                    <InputGroup.Button>
-                                                        <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon
-                                                            glyph='plus'/></Button>
-                                                    </InputGroup.Button>
-                                                </InputGroup>
-                                            </FormGroup>
-                                        </div>
-                                        <div className='col-xs-3' style={{padding: '7px 0 7px 0'}}>
-                                            {this.renderDuration()}
-                                        </div>
-                                    </div>
-                                </Form>
-                            </div>
+                            <label className='control-label'>{this.i18n('factors.detail.time-period')}</label>
                         </div>
-                    </Modal.Body>
+                        <div className='row'>
+                            <Form inline>
+                                {this._renderStartTimePicker()}
+                                <div className='col-xs-7'>
+                                    <div className='col-xs-9'>
+                                        <FormGroup bsSize='small'>
+                                            <ControlLabel>{this.i18n('factors.detail.duration')}</ControlLabel>
+                                            <InputGroup className='inline-input'>
+                                                <InputGroup.Button>
+                                                    <Button bsSize='small' disabled={this.state.duration === 0}
+                                                            onClick={this.onDurationMinus}><Glyphicon
+                                                        glyph='minus'/></Button>
+                                                </InputGroup.Button>
+                                                <FormControl type='text' value={this.state.duration}
+                                                             onChange={this.onDurationSet} size={3}/>
+                                                <InputGroup.Button>
+                                                    <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon
+                                                        glyph='plus'/></Button>
+                                                </InputGroup.Button>
+                                            </InputGroup>
+                                        </FormGroup>
+                                    </div>
+                                    <div className='col-xs-3' style={{padding: '7px 0 7px 0'}}>
+                                        {this.renderDuration()}
+                                    </div>
+                                </div>
+                            </Form>
+                        </div>
+                    </div>
+                </Modal.Body>
 
-                    <Modal.Footer>
-                        <Button bsSize='small' bsStyle='success' onClick={this.onSave}
-                                disabled={!this.state.eventType}>{this.i18n('save')}</Button>
-                        <Button bsSize='small' onClick={this.props.onClose}>{this.i18n('cancel')}</Button>
-                        {this.renderDeleteButton()}
-                        {this.renderWizardButton()}
-                    </Modal.Footer>
-                </Modal>
-            </div>
-        )
+                <Modal.Footer>
+                    <Button bsSize='small' bsStyle='success' onClick={this.onSave}
+                            disabled={!this.state.eventType}>{this.i18n('save')}</Button>
+                    <Button bsSize='small' onClick={this.props.onClose}>{this.i18n('cancel')}</Button>
+                    {this.renderDeleteButton()}
+                    {this.renderWizardButton()}
+                </Modal.Footer>
+            </Modal>
+        </div>;
     },
 
     _renderMask: function () {
@@ -294,9 +285,26 @@ var FactorDetail = React.createClass({
     _renderEventTypeLink: function () {
         var et = this.state.eventType;
         return et ?
-            <div className='col-xs-1'>
+            <div className='external-link-container'>
                 <ExternalLink url={et.id} title={et.name + '\n' + et.id} className='external-link'/>
             </div> : null;
+    },
+
+    _renderStartTimePicker: function () {
+        if (this.props.scale === Constants.TIME_SCALES.RELATIVE) {
+            return null;
+        }
+        return <div className='col-xs-5'>
+            <DateTimePicker inputFormat='DD-MM-YY HH:mm'
+                            dateTime={this.state.startDate.toString()}
+                            label={this.i18n('factors.detail.start')}
+                            onChange={this.onDateChange} size='small'
+                            inputProps={{
+                                title: this.i18n('occurrence.start-time-tooltip'),
+                                className: 'inline-input',
+                                size: 12
+                            }}/>
+        </div>;
     },
 
     renderDuration: function () {
@@ -324,21 +332,19 @@ var FactorDetail = React.createClass({
     },
 
     renderDeleteDialog: function () {
-        return (
-            <Modal show={this.state.showDeleteDialog} onHide={this.onCancelDelete}>
-                <Modal.Header>
-                    <Modal.Title>{this.i18n('factors.detail.delete.title')}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {this.i18n('factors.detail.delete.text')}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button bsSize='small' bsStyle='warning'
-                            onClick={this.onDeleteFactor}>{this.i18n('delete')}</Button>
-                    <Button bsSize='small' onClick={this.onCancelDelete}>{this.i18n('cancel')}</Button>
-                </Modal.Footer>
-            </Modal>
-        );
+        return <Modal show={this.state.showDeleteDialog} onHide={this.onCancelDelete}>
+            <Modal.Header>
+                <Modal.Title>{this.i18n('factors.detail.delete.title')}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {this.i18n('factors.detail.delete.text')}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button bsSize='small' bsStyle='warning'
+                        onClick={this.onDeleteFactor}>{this.i18n('delete')}</Button>
+                <Button bsSize='small' onClick={this.onCancelDelete}>{this.i18n('cancel')}</Button>
+            </Modal.Footer>
+        </Modal>;
     }
 });
 

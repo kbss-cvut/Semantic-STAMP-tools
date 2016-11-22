@@ -2,7 +2,6 @@
 
 var JsonLdUtils = require('jsonld-utils').default;
 var GanttController = require('./GanttController');
-var Constants = require('../../constants/Constants');
 var Vocabulary = require('../../constants/Vocabulary');
 var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
 

@@ -2,6 +2,8 @@
 
 var React = require('react');
 var Button = require('react-bootstrap').Button;
+var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+var DeleteReportDialog = require('../report/DeleteReportDialog').default;
 
 /**
  * Aggregates some of the functionality of the report detail view.
@@ -58,19 +60,45 @@ var ReportDetailMixin = {
         this.showErrorMessage(this.i18n('detail.phase-transition-failed-message') + error.message);
     },
 
+    _onDeleteClick: function () {
+        this.setState({showDeleteDialog: true});
+    },
 
-    renderReadOnlyButtons: function () {
-        return (
-            <div>
-                <div className='float-right'>
-                    <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
-                            onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-                </div>
-                <div style={{clear: 'both'}}/>
-                <div className='notice-small float-right'>
-                    {this.i18n('revisions.readonly-notice')}
-                </div>
-            </div>);
+    onDeleteCancel: function () {
+        this.setState({showDeleteDialog: false});
+    },
+
+    _onDelete: function () {
+        this.props.handlers.onRemove(this.onDeleteError);
+    },
+
+    onDeleteError: function (error) {
+        this.showErrorMessage(this.i18n('detail.remove-failed-message') + error.message);
+    },
+
+
+    renderDeleteButton: function () {
+        return this.props.report.isNew ? null :
+            <Button bsStyle='warning' bsSize='small' title={this.i18n('reports.delete-tooltip')}
+                    onClick={this._onDeleteClick}>{this.i18n('delete')}</Button>;
+    },
+
+    renderDeleteDialog: function () {
+        return <DeleteReportDialog show={this.state.showDeleteDialog} onClose={this.onDeleteCancel}
+                                   onSubmit={this._onDelete}/>;
+    },
+
+    renderReadOnlyButtons: function (notice = 'revisions.readonly-notice') {
+        return <div>
+            <ButtonToolbar className='float-right detail-button-toolbar'>
+                <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                        onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+            </ButtonToolbar>
+            <div style={{clear: 'both'}}/>
+            <div className='notice-small float-right'>
+                {this.i18n(notice)}
+            </div>
+        </div>;
     }
 };
 

@@ -9,7 +9,6 @@ var Actions = require('../../actions/Actions');
 var Routing = require('../../utils/Routing');
 var Routes = require('../../utils/Routes');
 var UserStore = require('../../stores/UserStore');
-var RouterStore = require('../../stores/RouterStore');
 var Dashboard = require('./Dashboard');
 var I18nMixin = require('../../i18n/I18nMixin');
 

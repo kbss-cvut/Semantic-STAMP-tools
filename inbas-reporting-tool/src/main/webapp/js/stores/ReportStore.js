@@ -4,9 +4,7 @@ var Reflux = require('reflux');
 
 var Actions = require('../actions/Actions');
 var Ajax = require('../utils/Ajax');
-var Constants = require('../constants/Constants');
 var JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
-var ReportType = require('../model/ReportType');
 var Utils = require('../utils/Utils');
 
 var BASE_URL = 'rest/reports';
