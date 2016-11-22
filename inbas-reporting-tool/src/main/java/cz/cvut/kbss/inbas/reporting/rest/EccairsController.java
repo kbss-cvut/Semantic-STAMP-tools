@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
+import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
@@ -25,12 +26,12 @@ public class EccairsController extends BaseController {
     private EccairsService eccairsService;
 
     @RequestMapping(value = "/latest/{key}", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public OccurrenceReport getEccairsLatest(@PathVariable("key") String key) {
         final OccurrenceReport report = occurrenceReportService.findByKey(key);
         final RawJson s = formGenService.generateForm(report, Collections.emptyMap());
-
-        return eccairsService.getEccairsLatest(s.toString());
-
+        OccurrenceReport op = eccairsService.getEccairsLatest(s.toString());
+        if(op == null)
+            throw new NotFoundException(String.format("Latest eccairs report for report with key %s not found!", key));
+        return op;
     }
 }
