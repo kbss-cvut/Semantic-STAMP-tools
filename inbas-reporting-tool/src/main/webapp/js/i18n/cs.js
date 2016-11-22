@@ -345,6 +345,7 @@ module.exports = {
         'statistics.type.general': 'Obecné',
         'statistics.type.eventTypes': 'Typy událostí',
         'statistics.type.audit': 'Audity',
+        'statistics.type.safetyIssue': 'Safety issue',
 
         'search.loading': 'Probíhá hledání...',
         'search.title': 'Výsledky hledání',
