@@ -123,8 +123,8 @@ export default class Generator {
         return nodes;
     }
 
-    static generatePartOfLinksForNodes(report, nodes) {
-        var parents = [report.occurrence],
+    static generatePartOfLinksForNodes(root, nodes) {
+        var parents = [root],
             links = [], index = 1,
             childCount;
         while (index < nodes.length - 1) {
@@ -136,7 +136,7 @@ export default class Generator {
                 childCount = Generator.getRandomPositiveInt(1, nodes.length - index);
                 var parent = parents[j];
                 for (var i = index; i < index + childCount; i++) {
-                    links.push({from: parent.referenceId, to: nodes[i].referenceId, linkType: Vocabulary.HAS_PART});
+                    links.push({from: parent, to: nodes[i], linkType: Vocabulary.HAS_PART});
                     newParents.push(nodes[i]);
                 }
                 index += childCount;
@@ -157,8 +157,8 @@ export default class Generator {
             var fromInd = Generator.getRandomInt(nodes.length),
                 toInd = Generator.getRandomInt(nodes.length);
             lnk = {
-                from: nodes[fromInd].referenceId,
-                to: nodes[toInd].referenceId,
+                from: nodes[fromInd],
+                to: nodes[toInd],
                 linkType: Generator._getRandomFactorType()
             };
             links.push(lnk);
@@ -175,10 +175,13 @@ export default class Generator {
      */
     static generateOccurrenceReport() {
         return {
+            uri: Generator.getRandomUri(),
             key: Generator.getRandomInt().toString(),
             revision: 1,
             javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS,
+            severityAssessment: 'http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100',
             occurrence: {
+                uri: Generator.getRandomUri(),
                 key: Generator.getRandomInt().toString(),
                 javaClass: Constants.OCCURRENCE_JAVA_CLASS,
                 name: 'TestOccurrence',
@@ -216,7 +219,7 @@ export default class Generator {
      */
     static getRandomPositiveInt(min, max) {
         var bound = max ? max : Number.MAX_SAFE_INTEGER;
-        if (!min) {
+        if (min === null || min === undefined) {
             min = 1;
         }
         return Math.floor(Math.random() * (bound - min)) + min;
@@ -255,6 +258,25 @@ export default class Generator {
 
     static getJsonLdSample() {
         return JSON_LD;
+    }
+
+    /**
+     * Randomly shuffles the specified array, using the Knuth shuffle algorithm.
+     * @param arr The array to shuffle
+     * @return {*} The shuffled array (it is the same instance as the parameter)
+     */
+    static shuffleArray(arr) {
+        var currentIndex = arr.length,
+            tmp, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            tmp = arr[currentIndex];
+            arr[currentIndex] = arr[randomIndex];
+            arr[randomIndex] = tmp;
+        }
+        return arr;
     }
 
     static generateAttachments() {

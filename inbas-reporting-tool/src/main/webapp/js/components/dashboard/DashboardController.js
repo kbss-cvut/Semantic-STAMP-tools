@@ -41,16 +41,6 @@ var DashboardController = React.createClass({
         });
     },
 
-    importE5Report: function (file, onFinish, onError) {
-        Actions.importE5Report(file, function (key) {
-            onFinish();
-            Routing.transitionTo(Routes.editReport, {
-                params: {reportKey: key},
-                handlers: {onCancel: Routes.dashboard}
-            });
-        }, onError);
-    },
-
     openReport: function (report) {
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
@@ -67,15 +57,8 @@ var DashboardController = React.createClass({
         return <div>
             <Dashboard userFirstName={this.state.firstName}
                        showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
-                       importE5Report={this.importE5Report}
-                       openReport={this.openReport} dashboard={this._resolveDashboard()}/>
+                       openReport={this.openReport}/>
         </div>;
-    },
-
-    _resolveDashboard: function () {
-        var payload = RouterStore.getTransitionPayload(Routes.dashboard.name);
-        RouterStore.setTransitionPayload(Routes.dashboard.name, null);
-        return payload ? payload.dashboard : null;
     }
 });
 
