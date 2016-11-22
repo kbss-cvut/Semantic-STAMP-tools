@@ -70,4 +70,21 @@ describe('OccurrenceReport', function () {
         var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
         expect(Environment.getComponentByTagAndText(component, 'button', messages['detail.submit'])).toBeNull();
     });
+
+    it('does not render the ECCAIRS report button for regular occurrence reports', () => {
+        report = ReportFactory.createOccurrenceReport();
+        let component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            topRightButtons = TestUtils.scryRenderedDOMComponentsWithClass(component, 'detail-top-button');
+        expect(topRightButtons.length).toEqual(1);
+    });
+
+    it('renders ECCAIRS report button when displayed report was imported from ECCAIRS', () => {
+        report = ReportFactory.createOccurrenceReport();
+        report.isEccairsReport = function () {
+            return true;
+        };
+        let component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            topRightButtons = TestUtils.scryRenderedDOMComponentsWithClass(component, 'detail-top-button');
+        expect(topRightButtons.length).toEqual(2);
+    });
 });

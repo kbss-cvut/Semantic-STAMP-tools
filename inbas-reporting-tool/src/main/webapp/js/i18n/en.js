@@ -261,6 +261,8 @@ module.exports = {
         'report.attachments.create.description-label': 'Description',
         'report.attachments.create.description-tooltip': 'Optional description of the attachment',
         'report.attachments.table.reference': 'Reference',
+        'report.eccairs.button.label': 'ECCAIRS report',
+        'report.eccairs.button.tooltip': 'View latest ECCAIRS report for this report',
 
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',

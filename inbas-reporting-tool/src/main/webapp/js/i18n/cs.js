@@ -263,6 +263,8 @@ module.exports = {
         'report.attachments.create.description-label': 'Popis',
         'report.attachments.create.description-tooltip': 'Volitelný popis přílohy',
         'report.attachments.table.reference': 'Příloha',
+        'report.eccairs.button.label': 'ECCAIRS hlášení',
+        'report.eccairs.button.tooltip': 'Zobrazit nejnovější ECCAIRS hlášení pro toto hlášení',
 
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',

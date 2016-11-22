@@ -11,6 +11,7 @@ module.exports = {
     SAFETY_ISSUE_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/safety_issue_report',
     AUDIT_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/audit_report',
     SAFA_REPORT: 'http://onto.fel.cvut.cz/ontologies/safa/audit-report',
+    ECCAIRS_REPORT: 'http://onto.fel.cvut.cz/ontologies/eccairs/model/eccairs_report',
 
     OCCURRENCE: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/Occurrence',
     AUDIT_FINDING: 'http://onto.fel.cvut.cz/ontologies/audit/audit_finding',
