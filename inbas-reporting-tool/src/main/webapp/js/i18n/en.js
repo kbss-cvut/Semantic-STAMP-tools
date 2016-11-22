@@ -70,6 +70,10 @@ module.exports = {
         'main.reports-nav': 'Reports',
         'main.statistics-nav': 'Statistics',
         'main.logout': 'Logout',
+        'main.search-placeholder': 'Search',
+        'main.search.fulltext': 'Search in all narratives',
+        'main.search.fulltext.label': 'Full text',
+        'main.search.fulltext-tooltip': 'Search for the specified string everywhere',
 
         'dashboard.welcome': 'Hello {name}, Welcome to ' + Constants.APP_NAME + '.',
         'dashboard.create-tile': 'Create Report',
@@ -172,7 +176,7 @@ module.exports = {
 
         'factors.panel-title': 'Factors',
         'factors.scale': 'Scale',
-        'factors.scale-tooltip': 'Click to select scale in ',
+        'factors.scale-tooltip': 'Click to select scale: {unit}',
         'factors.scale.second': 'Seconds',
         'factors.scale.minute': 'Minutes',
         'factors.scale.hour': 'Hours',
@@ -212,6 +216,11 @@ module.exports = {
 
         'sort.no': 'Click to sort records by this column',
         'sort.asc': 'Records are sorted in ascending order',
-        'sort.desc': 'Records are sorted in descending order'
+        'sort.desc': 'Records are sorted in descending order',
+
+        'search.loading': 'Searching...',
+        'search.title': 'Search results',
+        'search.headline': 'Search for {expression} found {count, plural, one {# result} other {# results}}.',
+        'search.results.match': 'Matching snippet'
     }
 };

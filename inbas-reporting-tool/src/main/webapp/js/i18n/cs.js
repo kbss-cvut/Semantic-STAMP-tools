@@ -47,6 +47,7 @@ module.exports = {
         'detail.phase-transition-failed-message': 'Přechod do další fáze se nezdařil. Zachycena chyba: ',
         'detail.loading': 'Načítám hlášení...',
         'detail.not-found.title': 'Hlášení nenalezeno',
+        'detail.remove-failed-message': 'Hlášení se nepodařilo odstranit. Odpověď serveru: ',
 
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
@@ -71,6 +72,11 @@ module.exports = {
         'main.reports-nav': 'Hlášení',
         'main.statistics-nav': 'Statistiky',
         'main.logout': 'Odhlásit se',
+        'main.search-placeholder': 'Hledat',
+        'main.search.fulltext': 'Hledat ve všech popisech',
+        'main.search.fulltext.label': 'Hledat všude',
+        'main.search.fulltext-tooltip': 'Hledat daný výraz ve všech hlášeních',
+        'main.tacr-notice': 'Projekt byl podpořen Technologickou agenturou České republiky.',
 
         'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',
         'dashboard.create-tile': 'Vytvořit hlášení',
@@ -86,7 +92,7 @@ module.exports = {
 
         'dashboard.unprocessed': 'Máte {count} nezpracovaných hlášení.',
 
-        'dropzone.title': 'Přetáhněte soubor sem nebo klikněte pro výběr souboru k nahrání.',
+        'dropzone.title': 'Přetáhněte sem soubor nebo klikněte pro výběr souboru k nahrání.',
         'dropzone-tooltip': 'Klikněte zde pro výber souboru k nahrání',
 
         'reports.no-reports': 'Nenalezena žádná hlášení. Nové hlášení můžete vytvořit ',
@@ -173,7 +179,7 @@ module.exports = {
 
         'factors.panel-title': 'Faktory',
         'factors.scale': 'Měřítko',
-        'factors.scale-tooltip': 'Kliknutím vyberete měřítko: ',
+        'factors.scale-tooltip': 'Kliknutím vyberete měřítko: {unit}',
         'factors.scale.second': 'Sekundy',
         'factors.scale.minute': 'Minuty',
         'factors.scale.hour': 'Hodiny',
@@ -206,13 +212,18 @@ module.exports = {
         'notrenderable.error': 'Chyba: {message}',
         'notrenderable.error-generic': 'Zkontrolujte, prosím, zda je záznam validní.',
 
-        'revisions.label': 'Revize zprávy',
+        'revisions.label': 'Revize hlášení',
         'revisions.created': 'Vytvořeno',
         'revisions.show-tooltip': 'Zobrazit tuto revizi',
         'revisions.readonly-notice': 'Starší revize jsou pouze ke čtení.',
 
         'sort.no': 'Kliknutím seřadíte záznamy podle tohoto sloupce',
         'sort.asc': 'Záznamy jsou seřazeny vzestupně',
-        'sort.desc': 'Záznamy jsou seřazeny sestupně'
+        'sort.desc': 'Záznamy jsou seřazeny sestupně',
+
+        'search.loading': 'Probíhá hledání...',
+        'search.title': 'Výsledky hledání',
+        'search.headline': 'Nalezeno {count, plural, one {# výskyt} few {# výskyty} other {# výskytů}} výrazu {expression}.',
+        'search.results.match': 'Výsledek hledání'
     }
 };

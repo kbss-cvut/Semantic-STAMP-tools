@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.service.*;
 import cz.cvut.kbss.inbas.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.RemoteDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
+import cz.cvut.kbss.inbas.reporting.service.search.SearchService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -74,5 +75,10 @@ public class MockServiceConfig {
     @Bean
     public OptionsService optionsService() {
         return mock(OptionsService.class);
+    }
+
+    @Bean
+    public SearchService searchService() {
+        return mock(SearchService.class);
     }
 }

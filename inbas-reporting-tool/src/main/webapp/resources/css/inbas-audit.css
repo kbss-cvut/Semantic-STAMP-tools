@@ -232,11 +232,12 @@ td.actions button {
 
 .dashboard-report-search-results {
     text-align: left;
-    width: 350px;
+    width: 450px;
     margin-left: auto;
     margin-right: auto;
     left: 0;
     right: 0;
+    overflow: hidden;
 }
 
 .factors-gantt {
@@ -523,6 +524,44 @@ button.reset-filters {
     min-height: 58em;
     border: 1px solid #cecece;
     border-radius: 3px;
+}
+
+@media (min-width: 768px) {
+    .navbar-search-input {
+        width: 350px;
+        margin: 0 auto;
+    }
+
+    .navbar-search-results {
+        text-align: left;
+        width: 550px;
+        margin-left: auto;
+        margin-right: auto;
+        left: -100px;
+        right: 0;
+        overflow: hidden;
+        border: 1px solid #003c68;
+    }
+
+    .navbar-search-results > .item {
+        color: #003c68;
+    }
+
+    span.item-label {
+        margin-bottom: 2px;
+        display: inline-block;
+        margin-right: 5px;
+    }
+
+    .navbar-search {
+        padding: 10px 5px 5px 0;
+        margin-bottom: -15px;
+    }
+}
+
+.navbar-search-results > .fulltext {
+    font-weight: bold;
+    border-bottom: 2px solid #003c68;
 }
 
 .type-filters-label {

@@ -19,7 +19,9 @@ var Actions = Reflux.createActions([
 
     'loadStatistics',
 
-    'publishMessage'
+    'publishMessage',
+
+    'fullTextSearch'
 ]);
 
 module.exports = Actions;

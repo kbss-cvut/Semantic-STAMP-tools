@@ -14,6 +14,7 @@ var Input = require('../Input').default;
 var Select = require('../Select');
 
 var Actions = require('../../actions/Actions');
+var Constants = require('../../constants/Constants');
 var FactorDetail = require('./FactorDetail');
 var FactorRenderer = require('./FactorRenderer');
 var GanttController = require('./GanttController');
@@ -58,8 +59,17 @@ var Factors = React.createClass({
 
     componentDidUpdate: function () {
         if (this.factorsRendered) {
-            this.ganttController.updateRootEvent(this.props.report[this.props.rootAttribute]);
+            if (this._reportReloaded()) {
+                this.factorsRendered = false;
+                this.ganttController.clearAll();
+                this.renderFactors(OptionsStore.getOptions('eventType'));
+            } else
+                this.ganttController.updateRootEvent(this.props.report[this.props.rootAttribute]);
         }
+    },
+
+    _reportReloaded: function () {
+        return this.rootReferenceId !== this.props.report[this.props.rootAttribute].referenceId;
     },
 
     componentWillMount: function () {
@@ -94,6 +104,7 @@ var Factors = React.createClass({
             return;
         }
         this.factorsRendered = true;
+        this.rootReferenceId = this.props.report[this.props.rootAttribute].referenceId;
         FactorRenderer.renderFactors(this.props.report, eventTypes);
         this.ganttController.expandSubtree(this.ganttController.rootEventId);
         this.factorReferenceIdCounter = FactorRenderer.greatestReferenceId;
@@ -195,46 +206,38 @@ var Factors = React.createClass({
 
 
     render: function () {
-        var scaleTooltip = this.i18n('factors.scale-tooltip');
-        return (
-            <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
-                {this.renderFactorDetailDialog()}
-                {this.renderLinkTypeDialog()}
-                {this.renderDeleteLinkDialog()}
-                <div id='factors_gantt' className='factors-gantt'/>
-                <div className='gantt-zoom'>
-                    <div className='col-xs-5'>
-                        <div className='col-xs-2 gantt-zoom-label bold'>{this.i18n('factors.scale')}:</div>
-                        <div className='col-xs-2'>
-                            <Input type='radio' label={this.i18n('factors.scale.second')} value='second'
-                                   title={scaleTooltip + 'seconds'} checked={this.state.scale === 'second'}
-                                   onChange={this.onScaleChange}/>
-                        </div>
-                        <div className='col-xs-2'>
-                            <Input type='radio' label={this.i18n('factors.scale.minute')} value='minute'
-                                   title={scaleTooltip + 'minutes'}
-                                   checked={this.state.scale === 'minute'}
-                                   onChange={this.onScaleChange}/>
-                        </div>
-                        <div className='col-xs-2'>
-                            <Input type='radio' label={this.i18n('factors.scale.hour')} value='hour'
-                                   title={scaleTooltip + 'hours'}
-                                   checked={this.state.scale === 'hour'} onChange={this.onScaleChange}/>
-                        </div>
-                        <div className='col-xs-2'>
-                            <Input type='radio' label={this.i18n('factors.scale.relative')} value='relative'
-                                   title={this.i18n('factors.scale.relative-tooltip')}
-                                   checked={this.state.scale === 'relative'} onChange={this.onScaleChange}/>
-                        </div>
-                    </div>
-
-                    <div className='col-xs-2'>&nbsp;</div>
-
-                    <div className='col-xs-5 gantt-zoom-label'>
-                        {this._renderLineColors()}
-                    </div>
+        return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
+            {this.renderFactorDetailDialog()}
+            {this.renderLinkTypeDialog()}
+            {this.renderDeleteLinkDialog()}
+            <div id='factors_gantt' className='factors-gantt'/>
+            <div className='gantt-zoom'>
+                <div className='col-xs-5'>
+                    <div className='col-xs-2 gantt-zoom-label bold'>{this.i18n('factors.scale')}:</div>
+                    {this._renderScaleOptions()}
                 </div>
-            </Panel>);
+
+                <div className='col-xs-2'>&nbsp;</div>
+
+                <div className='col-xs-5 gantt-zoom-label'>
+                    {this._renderLineColors()}
+                </div>
+            </div>
+        </Panel>;
+    },
+
+    _renderScaleOptions: function () {
+        var items = [];
+        Object.getOwnPropertyNames(Constants.TIME_SCALES).forEach(scaleName => {
+            var scale = Constants.TIME_SCALES[scaleName];
+            items.push(<div className='col-xs-2' key={scale}>
+                <Input type='radio' label={this.i18n('factors.scale.' + scale)} value={scale}
+                       title={this.formatMessage('factors.scale-tooltip', {unit: this.i18n('factors.scale.' + scale)})}
+                       checked={this.state.scale === scale}
+                       onChange={this.onScaleChange}/>
+            </div>);
+        });
+        return items;
     },
 
     renderFactorDetailDialog: function () {
