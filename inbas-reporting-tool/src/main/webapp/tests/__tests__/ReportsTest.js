@@ -35,16 +35,4 @@ describe('Reports', function () {
         expect(message).not.toBeNull();
         expect(link).not.toBeNull();
     });
-
-    it('sets dashboard in RouterStore on create report click', function () {
-        Routing.transitionToHome.and.callFake(function (options) {
-            RouterStore.setTransitionPayload(Routes.dashboard.name, options.payload);
-        });
-        var result = Environment.render(<Reports allReports={[]} reports={[]} actions={actions}/>);
-
-        expect(RouterStore.getTransitionPayload(Routes.dashboard.name)).not.toBeDefined();
-        result.createReport();
-        expect(RouterStore.getTransitionPayload(Routes.dashboard.name)).toBeDefined();
-        expect(RouterStore.getTransitionPayload(Routes.dashboard.name).dashboard).toEqual(Constants.DASHBOARDS.CREATE_REPORT.id);
-    });
 });

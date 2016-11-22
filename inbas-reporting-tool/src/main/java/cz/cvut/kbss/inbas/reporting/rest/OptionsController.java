@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +21,7 @@ public class OptionsController extends BaseController {
     private OptionsService optionsService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object getOptions(@RequestParam(value = "type") String type) {
+    public Object getOptions(@RequestParam(value = Constants.OPTIONS_TYPE_QUERY_PARAM) String type) {
         try {
             return optionsService.getOptions(type);
         } catch (IllegalArgumentException e) {

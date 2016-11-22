@@ -7,7 +7,7 @@ var Actions = require('../../actions/Actions');
 var Constants = require('../../constants/Constants');
 var Logger = require('../../utils/Logger');
 var ReportFactory = require('../../model/ReportFactory');
-var Report = require('./Report');
+var Report = require('./Report').default;
 var OptionsStore = require('../../stores/OptionsStore'); // Force store initialization, so that it can listen to actions
 var ReportStore = require('../../stores/ReportStore');
 var RouterStore = require('../../stores/RouterStore');
@@ -22,7 +22,7 @@ var ReportController = React.createClass({
             report: this._isNew() ? this.initNewReport() : null,
             revisions: null,
             loading: false
-        }
+        };
     },
 
     _isNew: function () {
@@ -80,10 +80,8 @@ var ReportController = React.createClass({
     },
 
 
-    // Rendering
-
     render: function () {
-        return (<Report report={this.state.report} revisions={this.state.revisions} loading={this.state.loading}/>);
+        return <Report report={this.state.report} revisions={this.state.revisions} loading={this.state.loading}/>;
     }
 });
 

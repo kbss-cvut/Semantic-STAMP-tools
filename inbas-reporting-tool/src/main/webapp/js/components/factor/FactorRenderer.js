@@ -3,7 +3,7 @@
 var JsonLdUtils = require('jsonld-utils').default;
 var GanttController = require('./GanttController');
 var Vocabulary = require('../../constants/Vocabulary');
-var EventTypeFactory = require('../../model/EventTypeFactory');
+var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
 
 var FactorRenderer = {
 
@@ -27,22 +27,28 @@ var FactorRenderer = {
 var OccurrenceReportFactorRenderer = {
 
     renderFactors: function (report, eventTypes) {
-        if (!report.occurrence.referenceId) {
-            report.occurrence.referenceId = Date.now();
+        RootAddingFactorRenderer.renderFactors(report, eventTypes, 'occurrence');
+    }
+};
+
+var RootAddingFactorRenderer = {
+    renderFactors: function (report, eventTypes, rootAttribute) {
+        if (!report[rootAttribute].referenceId) {
+            report[rootAttribute].referenceId = Date.now();
         }
         var factorGraph = report.factorGraph;
         if (factorGraph) {
-            var ind = factorGraph.nodes.indexOf(report.occurrence.referenceId);
+            var ind = factorGraph.nodes.indexOf(report[rootAttribute].referenceId);
             if (ind !== -1) {
-                factorGraph.nodes[ind] = report.occurrence;
+                factorGraph.nodes[ind] = report[rootAttribute];
             }
         } else {
             report.factorGraph = {
-                nodes: [report.occurrence]
+                nodes: [report[rootAttribute]]
             };
         }
-        report.occurrence.readOnly = true;
-        GanttController.setRootEventId(report.occurrence.referenceId);
+        report[rootAttribute].readOnly = true;
+        GanttController.setRootEventId(report[rootAttribute].referenceId);
         FactorRendererImpl.renderFactors(report.factorGraph, eventTypes);
     }
 };
@@ -69,7 +75,7 @@ var FactorRendererImpl = {
         if (edges) {
             for (var i = 0, len = edges.length; i < len; i++) {
                 if (edges[i].linkType === Vocabulary.HAS_PART) {
-                    nodesToParents[edges[i].to] = edges[i].from;
+                    nodesToParents[edges[i].to.referenceId] = edges[i].from.referenceId;
                 } else {
                     links.push(edges[i]);
                 }
@@ -85,11 +91,11 @@ var FactorRendererImpl = {
         var node;
         for (var i = 0, len = nodes.length; i < len; i++) {
             node = nodes[i];
-            var text;
-            if (node.name) {
+            var text = '';
+            if (typeof node.name !== 'undefined' && node.name !== null) {
                 text = node.name;
-            } else {
-                var eventType = EventTypeFactory.resolveEventType(node.eventType, eventTypes);
+            } else if (node.eventType) {
+                var eventType = ObjectTypeResolver.resolveType(node.eventType, eventTypes);
                 text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
             }
             GanttController.addFactor({
@@ -110,8 +116,8 @@ var FactorRendererImpl = {
     _addLinks: function (links) {
         for (var i = 0, len = links.length; i < len; i++) {
             GanttController.addLink({
-                source: links[i].from,
-                target: links[i].to,
+                source: links[i].from.referenceId,
+                target: links[i].to.referenceId,
                 factorType: links[i].linkType
             });
         }

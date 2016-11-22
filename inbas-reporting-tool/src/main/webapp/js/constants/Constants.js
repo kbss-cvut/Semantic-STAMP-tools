@@ -30,11 +30,6 @@ module.exports = {
     },
 
     /**
-     * URL of the remote BI solution providing statistics for the app
-     */
-    STATISTICS_URL: 'http://147.32.84.201:8080/pentaho/api/repos/%3Apublic%3AUCL%3ADashboard.wcdf/generatedContent',
-
-    /**
      * Sorting glyph icons
      */
     SORTING: {
@@ -46,21 +41,6 @@ module.exports = {
     UNAUTHORIZED_USER: {name: 'unauthorized'},
 
     FILTER_DEFAULT: 'all',
-
-    DASHBOARDS: {
-        MAIN: {
-            id: 'main',
-            title: 'dashboard.welcome'
-        },
-        CREATE_REPORT: {
-            id: 'createReport',
-            title: 'dashboard.create-tile'
-        },
-        IMPORT_REPORT: {
-            id: 'importReport',
-            title: 'dashboard.create-import-tile'
-        }
-    },
 
     /**
      * Navigation between dashboards. Key is the current dashboard, value is the target to navigate to on goBack
@@ -88,6 +68,11 @@ module.exports = {
     OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
     EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
     OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
+
+    FULL_TEXT_SEARCH_OPTION: {
+        id: 'full-text-search',
+        identification: 'Full text search'
+    },
 
     FILTERS: [{
         path: 'occurrenceCategory',

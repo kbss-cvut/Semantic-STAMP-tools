@@ -36,8 +36,13 @@ var OccurrenceReport = React.createClass({
             submitting: false,
             loadingWizard: false,
             isWizardOpen: false,
-            wizardProperties: null
+            wizardProperties: null,
+            showDeleteDialog: false
         };
+    },
+
+    componentWillUnmount: function () {
+        this.cleanupMessages();
     },
 
     onChanges: function (changes) {
@@ -124,6 +129,7 @@ var OccurrenceReport = React.createClass({
                 </form>
             </Panel>
             {this.renderMessage()}
+            {this.renderDeleteDialog()}
         </div>;
     },
 
@@ -133,13 +139,11 @@ var OccurrenceReport = React.createClass({
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
         }
-        return (
-            <div>
-                <h2 className='panel-title pull-left'>{this.i18n('occurrencereport.title')}</h2>
-                {fileNo}
-                <div style={{clear: 'both'}}/>
-            </div>
-        )
+        return <div>
+            <h2 className='panel-title pull-left'>{this.i18n('occurrencereport.title')}</h2>
+            {fileNo}
+            <div style={{clear: 'both'}}/>
+        </div>;
     },
 
     renderButtons: function () {
@@ -150,7 +154,7 @@ var OccurrenceReport = React.createClass({
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return <ButtonToolbar className='float-right' style={{margin: '1em 0 0.5em 0'}}>
+        return <ButtonToolbar className='float-right detail-button-toolbar'>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
@@ -158,6 +162,7 @@ var OccurrenceReport = React.createClass({
             {this.renderSubmitButton()}
             <PhaseTransition report={this.props.report} onLoading={this.onLoading}
                              onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
+            {this.renderDeleteButton()}
         </ButtonToolbar>;
     },
 
@@ -172,11 +177,10 @@ var OccurrenceReport = React.createClass({
     },
 
     renderSubmitButton: function () {
-        return (
-            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')}
-                    onClick={this.onSubmit}>
+        return this.props.report.isNew ? null :
+            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')} onClick={this.onSubmit}>
                 {this.i18n('detail.submit')}
-            </Button>);
+            </Button>;
     }
 });
 

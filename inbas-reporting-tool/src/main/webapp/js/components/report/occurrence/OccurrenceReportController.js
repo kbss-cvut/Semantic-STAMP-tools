@@ -1,12 +1,9 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
 
 var Actions = require('../../../actions/Actions');
+var Constants = require('../../../constants/Constants');
 var ReportDetail = require('./OccurrenceReport');
 var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
@@ -17,6 +14,12 @@ var OccurrenceReportController = React.createClass({
     mixins: [
         ReportDetailControllerMixin
     ],
+
+    componentDidMount: function () {
+        Actions.loadOptions();
+        Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
+        Actions.loadOptions('factorType');
+    },
 
     onSuccess: function (key) {
         if (this.props.report.isNew) {
@@ -49,12 +52,11 @@ var OccurrenceReportController = React.createClass({
         var handlers = {
             onChange: this.onChange,
             onSuccess: this.onSuccess,
-            onCancel: this.onCancel
+            onCancel: this.onCancel,
+            onRemove: this.onRemove
         };
-        return (
-            <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
-                          readOnly={!this.isLatestRevision()}/>
-        );
+        return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+                             readOnly={!this.isLatestRevision()}/>;
     }
 });
 

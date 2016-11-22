@@ -6,9 +6,9 @@ var Panel = require('react-bootstrap').Panel;
 
 var injectIntl = require('../../utils/injectIntl');
 
-var Constants = require('../../constants/Constants');
 var FilterableReportsTable = require('./FilterableReportsTable');
 var Mask = require('./../Mask').default;
+var Routes = require('../../utils/Routes');
 var Routing = require('../../utils/Routing');
 var I18nMixin = require('../../i18n/I18nMixin');
 
@@ -23,7 +23,7 @@ var Reports = React.createClass({
     },
 
     createReport: function () {
-        Routing.transitionToHome({payload: {dashboard: Constants.DASHBOARDS.CREATE_REPORT.id}});
+        Routing.transitionTo(Routes.createReport);
     },
 
 
