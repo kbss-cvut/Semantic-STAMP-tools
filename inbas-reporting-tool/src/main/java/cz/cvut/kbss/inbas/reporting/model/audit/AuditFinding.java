@@ -6,6 +6,7 @@ import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -27,6 +28,13 @@ public class AuditFinding extends AbstractEntity {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
+    // For SAFA audits. This would ideally be in a subclass of AuditFinding
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_document_phase)
+    private URI status;
+
+    @OWLDataProperty(iri = Vocabulary.s_p_modified)
+    private Date statusLastModified;
+
     @Types
     private Set<String> types;
 
@@ -44,6 +52,8 @@ public class AuditFinding extends AbstractEntity {
         this.correctiveMeasures = other.correctiveMeasures != null ?
                                   other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new).collect(
                                           Collectors.toSet()) : null;
+        this.status = other.status;
+        this.statusLastModified = other.statusLastModified;
     }
 
     public String getDescription() {
@@ -80,6 +90,22 @@ public class AuditFinding extends AbstractEntity {
     public void setCorrectiveMeasures(
             Set<CorrectiveMeasureRequest> correctiveMeasures) {
         this.correctiveMeasures = correctiveMeasures;
+    }
+
+    public URI getStatus() {
+        return status;
+    }
+
+    public void setStatus(URI status) {
+        this.status = status;
+    }
+
+    public Date getStatusLastModified() {
+        return statusLastModified;
+    }
+
+    public void setStatusLastModified(Date statusLastModified) {
+        this.statusLastModified = statusLastModified;
     }
 
     public Set<String> getTypes() {

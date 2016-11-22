@@ -15,6 +15,9 @@ describe('Audit', () => {
 
     beforeEach(() => {
         report = ReportFactory.createAuditReport();
+        report.isSafa = function () {
+            return false;
+        }
         audit = report.audit;
         onChange = jasmine.createSpy('onChange');
         spyOn(Actions, 'loadOptions');

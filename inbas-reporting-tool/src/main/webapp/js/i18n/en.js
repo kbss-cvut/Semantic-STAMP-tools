@@ -216,6 +216,9 @@ module.exports = {
         'audit.finding.measures.add.create-new': 'Create new',
         'audit.finding.measures.add.create-new-tooltip': 'Create a new corrective measure',
         'audit.safa.readonly.message': 'SAFA audit reports are read-only.',
+        'audit.finding.status.label': 'Status',
+        'audit.finding.status.tooltip': 'Status of this finding',
+        'audit.finding.status.lastModified': 'Finding status last modified {date}.',
 
         'correctivemeasure.title': 'Corrective measure',
         'correctivemeasure.description.placeholder': 'Corrective measure description',

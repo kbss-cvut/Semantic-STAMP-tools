@@ -10,7 +10,7 @@ module.exports = {
     OCCURRENCE_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/occurrence_report',
     SAFETY_ISSUE_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/safety_issue_report',
     AUDIT_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/audit_report',
-    SAFA_REPORT: 'http://onto.fel.cvut.cz/ontologies/audit/safa_audit',
+    SAFA_REPORT: 'http://onto.fel.cvut.cz/ontologies/safa/audit-report',
 
     OCCURRENCE: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/Occurrence',
     AUDIT_FINDING: 'http://onto.fel.cvut.cz/ontologies/audit/audit_finding',

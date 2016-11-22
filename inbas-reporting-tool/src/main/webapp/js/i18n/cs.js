@@ -218,6 +218,9 @@ module.exports = {
         'audit.finding.measures.add.create-new': 'Vytvořit nové',
         'audit.finding.measures.add.create-new-tooltip': 'Vytvořit nové nápravné opatření',
         'audit.safa.readonly.message': 'Zprávy ze SAFA auditů jsou pouze pro čtení.',
+        'audit.finding.status.label': 'Stav',
+        'audit.finding.status.tooltip': 'Stav tohoto nálezu',
+        'audit.finding.status.lastModified': 'Status nálezu naposledy upraven {date}.',
 
         'correctivemeasure.title': 'Nápravné opatření',
         'correctivemeasure.description.placeholder': 'Popis nápravného opatření',

@@ -4,7 +4,6 @@ import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import org.junit.Test;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,13 +15,11 @@ public class CorrectiveMeasureRequestTest {
     @Test
     public void copyConstructorCopiesBasicFields() {
         final CorrectiveMeasureRequest measure = Generator.generateCorrectiveMeasureRequests().iterator().next();
-        measure.setPhaseLastModified(new Date());
         final CorrectiveMeasureRequest copy = new CorrectiveMeasureRequest(measure);
         assertEquals(measure.getDescription(), copy.getDescription());
         assertEquals(measure.getDeadline(), copy.getDeadline());
         assertEquals(measure.getPhase(), copy.getPhase());
         assertEquals(measure.isImplemented(), copy.isImplemented());
-        assertEquals(measure.getPhaseLastModified(), copy.getPhaseLastModified());
     }
 
     @Test

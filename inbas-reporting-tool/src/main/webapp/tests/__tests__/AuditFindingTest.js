@@ -7,6 +7,8 @@ import Environment from "../environment/Environment";
 import Generator from "../environment/Generator";
 import Actions from "../../js/actions/Actions";
 import AuditFinding from "../../js/components/report/audit/AuditFinding";
+import FindingMeasures from "../../js/components/report/audit/FindingMeasures";
+import SafaAuditFindingAttributes from "../../js/components/report/audit/SafaAuditFindingAttributes";
 
 describe('AuditFinding', () => {
 
@@ -17,7 +19,10 @@ describe('AuditFinding', () => {
     beforeEach(() => {
         finding = {};
         report = {
-            isNew: true
+            isNew: true,
+            isSafa: function () {
+                return false;
+            }
         };
         onSave = jasmine.createSpy('onSave');
         onClose = jasmine.createSpy('onClose');
@@ -77,5 +82,38 @@ describe('AuditFinding', () => {
 
         var siButton = TestUtils.scryRenderedComponentsWithType(component._modalFooter, DropdownButton);
         expect(siButton.length).toEqual(1);
-    })
+    });
+
+    it('does not show status and date of last status modification if audit is not a SAFA audit', () => {
+        finding.uri = Generator.getRandomUri();
+
+        let component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
+                                                         report={report} show={true}/>),
+            safaAttributes = TestUtils.scryRenderedComponentsWithType(component._modalBody, SafaAuditFindingAttributes);
+        expect(safaAttributes.length).toEqual(0);
+    });
+
+    it('shows finding status and date of last status modification if audit is SAFA audit', () => {
+        report.isSafa = function () {
+            return true;
+        };
+        finding.uri = Generator.getRandomUri();
+
+        let component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
+                                                         report={report} show={true}/>),
+            safaAttributes = TestUtils.scryRenderedComponentsWithType(component._modalBody, SafaAuditFindingAttributes);
+        expect(safaAttributes.length).toEqual(1);
+    });
+
+    it('does not show corrective measures if audit is SAFA audit', () => {
+        report.isSafa = function () {
+            return true;
+        };
+        finding.uri = Generator.getRandomUri();
+
+        let component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
+                                                         report={report} show={true}/>),
+            measures = TestUtils.scryRenderedComponentsWithType(component._modalBody, FindingMeasures);
+        expect(measures.length).toEqual(0);
+    });
 });

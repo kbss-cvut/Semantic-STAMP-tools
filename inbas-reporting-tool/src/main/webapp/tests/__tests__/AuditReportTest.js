@@ -18,6 +18,9 @@ describe('AuditReport', () => {
         spyOn(Actions, 'loadOptions');
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
         report = ReportFactory.createAuditReport();
+        report.isSafa = function () {
+            return false;
+        }
     });
 
     it('does not display \'Create new revision\' button for new reports', () => {
