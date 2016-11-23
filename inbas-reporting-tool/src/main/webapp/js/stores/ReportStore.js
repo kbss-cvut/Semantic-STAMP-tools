@@ -1,21 +1,21 @@
 'use strict';
 
-var Reflux = require('reflux');
+const Reflux = require('reflux');
 
-var Actions = require('../actions/Actions');
-var Ajax = require('../utils/Ajax');
-var Constants = require('../constants/Constants');
-var JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
-var ReportType = require('../model/ReportType');
-var Utils = require('../utils/Utils');
-var Vocabulary = require('../constants/Vocabulary');
+const Actions = require('../actions/Actions');
+let Ajax = require('../utils/Ajax');
+const Constants = require('../constants/Constants');
+const JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
+const ReportType = require('../model/ReportType');
+const Utils = require('../utils/Utils');
+const Vocabulary = require('../constants/Vocabulary');
 
-var BASE_URL = 'rest/reports';
-var BASE_URL_WITH_SLASH = 'rest/reports/';
-var ECCAIRS_REPORT_URL = 'rest/eccairs/latest/';
+const BASE_URL = 'rest/reports';
+const BASE_URL_WITH_SLASH = 'rest/reports/';
+const ECCAIRS_REPORT_URL = 'rest/eccairs/latest/';
 
 // When reports are being loaded, do not send the request again
-var reportsLoading = false;
+let reportsLoading = false;
 
 function attachMethodsToReport(report) {
     report.isEccairsReport = function () {
@@ -23,7 +23,7 @@ function attachMethodsToReport(report) {
     }.bind(report);
 }
 
-var ReportStore = Reflux.createStore({
+const ReportStore = Reflux.createStore({
     listenables: [Actions],
 
     _reports: null,
@@ -89,7 +89,7 @@ var ReportStore = Reflux.createStore({
         JsonReferenceResolver.encodeReferences(report);
         Ajax.post(BASE_URL, report).end(function (data, resp) {
             if (onSuccess) {
-                var key = Utils.extractKeyFromLocationHeader(resp);
+                const key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);
             }
             this.onLoadAllReports();
@@ -99,7 +99,7 @@ var ReportStore = Reflux.createStore({
     onImportE5Report: function (file, onSuccess, onError) {
         Ajax.post(BASE_URL_WITH_SLASH + 'importE5').attach(file).end(function (data, resp) {
             if (onSuccess) {
-                var key = Utils.extractKeyFromLocationHeader(resp);
+                const key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);
             }
         }.bind(this), onError);
@@ -113,7 +113,7 @@ var ReportStore = Reflux.createStore({
     onSubmitReport: function (report, onSuccess, onError) {
         Ajax.post(BASE_URL_WITH_SLASH + 'chain/' + report.fileNumber + '/revisions').end(function (data, resp) {
             if (onSuccess) {
-                var key = Utils.extractKeyFromLocationHeader(resp);
+                let key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);
             }
         }, onError);
@@ -147,10 +147,9 @@ var ReportStore = Reflux.createStore({
     },
 
     _addSafetyIssueBase: function (issue, newBase) {
-        var report = ReportType.getReport(issue),
-            result, message;
-        result = report.addBase(newBase.event, newBase.report);
-        message = result ? 'safetyissue.base-add-success' : 'safetyissue.base-add-duplicate';
+        const report = ReportType.getReport(issue),
+            result = report.addBase(newBase.event, newBase.report),
+            message = result ? 'safetyissue.base-add-success' : 'safetyissue.base-add-duplicate';
         this._resetPendingLoad();
         this.trigger({
             action: Actions.addSafetyIssueBase,
@@ -160,21 +159,20 @@ var ReportStore = Reflux.createStore({
     },
 
     onLoadEccairsReport: function (forReport) {
-        let key = forReport.key;
-        Ajax.get(ECCAIRS_REPORT_URL + key).end((data) => {
-            this._resetPendingLoad();
-            JsonReferenceResolver.resolveReferences(data);
-            attachMethodsToReport(data);
-            this.trigger({
-                action: Actions.loadEccairsReport,
-                report: data
-            });
-        }, () => {
+        Ajax.get(ECCAIRS_REPORT_URL + forReport.key).end((data) => {
             this._resetPendingLoad();
             this.trigger({
                 action: Actions.loadEccairsReport,
-                report: null
-            });
+                key: data
+            })
+        }, (data, resp) => {
+            this._resetPendingLoad();
+            if (resp.status === 404) {
+                this.trigger({
+                    action: Actions.loadEccairsReport,
+                    key: null
+                });
+            }
         });
     },
 

@@ -1,6 +1,7 @@
 'use strict';
 
 var React = require('react');
+const Reflux = require('reflux');
 var Button = require('react-bootstrap').Button;
 var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 var DropdownButton = require('react-bootstrap').DropdownButton;
@@ -13,12 +14,14 @@ var Actions = require('../../../actions/Actions');
 var ArmsAttributes = require('../arms/ArmsAttributes').default;
 var Attachments = require('../attachment/Attachments').default;
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
+const Constants = require('../../../constants/Constants');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var Department = require('./Department').default;
 var EccairsReportButton = require('./EccairsReportButton').default;
 var Factors = require('../../factor/Factors');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var MessageMixin = require('../../mixin/MessageMixin');
+const MessageStore = require('../../../stores/MessageStore');
 var PhaseTransition = require('../../misc/PhaseTransition').default;
 var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 var ReportProvenance = require('../ReportProvenance').default;
@@ -29,7 +32,7 @@ var WizardGenerator = require('../../wizard/generator/WizardGenerator');
 var WizardWindow = require('../../wizard/WizardWindow');
 
 var OccurrenceReport = React.createClass({
-    mixins: [MessageMixin, I18nMixin, ReportDetailMixin],
+    mixins: [MessageMixin, I18nMixin, ReportDetailMixin, Reflux.listenTo(MessageStore, '_onMessage')],
 
     propTypes: {
         handlers: React.PropTypes.object,
@@ -52,12 +55,18 @@ var OccurrenceReport = React.createClass({
         this.cleanupMessages();
     },
 
+    _onMessage: function (msg) {
+        if (msg.source === Actions.loadEccairsReport) {
+            this.showMessage(this.i18n(msg.message), msg.type);
+        }
+    },
+
     onChanges: function (changes) {
         this.props.handlers.onChange(changes);
     },
 
     onSave: function () {
-        var report = this.props.report,
+        let report = this.props.report,
             factors = this.refs.factors.getWrappedInstance();
         this.onLoading();
         report.factorGraph = factors.getFactorGraph();
@@ -75,7 +84,7 @@ var OccurrenceReport = React.createClass({
 
     _reportSummary: function () {
         this.setState({loadingWizard: true});
-        var report = assign({}, this.props.report);
+        let report = assign({}, this.props.report);
         report.factorGraph = this.refs.factors.getWrappedInstance().getFactorGraph();
         WizardGenerator.generateSummaryWizard(report, this.i18n('report.summary'), this.openSummaryWizard);
     },
@@ -98,11 +107,12 @@ var OccurrenceReport = React.createClass({
     },
 
     render: function () {
-        var report = this.props.report;
+        let report = this.props.report;
 
         return <div>
             <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
                           onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
+            {this.renderMessage()}
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <ButtonToolbar className='float-right'>
@@ -158,7 +168,7 @@ var OccurrenceReport = React.createClass({
     },
 
     renderHeader: function () {
-        var fileNo = null;
+        let fileNo = null;
         if (this.props.report.fileNumber) {
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
@@ -174,7 +184,7 @@ var OccurrenceReport = React.createClass({
         if (this.props.readOnly) {
             return this.renderReadOnlyButtons();
         }
-        var loading = this.state.submitting,
+        let loading = this.state.submitting,
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
@@ -192,7 +202,7 @@ var OccurrenceReport = React.createClass({
     },
 
     getSaveButtonTitle: function () {
-        var titleProp = 'detail.save-tooltip';
+        let titleProp = 'detail.save-tooltip';
         if (this.state.submitting) {
             titleProp = 'detail.saving';
         } else if (!ReportValidator.isValid(this.props.report)) {

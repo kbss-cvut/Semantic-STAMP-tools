@@ -11,8 +11,8 @@ var DeleteReportDialog = require('../report/DeleteReportDialog').default;
 var ReportDetailMixin = {
 
     onChange: function (e) {
-        var attributeName = e.target.name;
-        var change = {};
+        let attributeName = e.target.name,
+            change = {};
         change[attributeName] = e.target.value;
         this.props.handlers.onChange(change);
     },

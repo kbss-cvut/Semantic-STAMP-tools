@@ -263,6 +263,7 @@ module.exports = {
         'report.attachments.table.reference': 'Reference',
         'report.eccairs.button.label': 'ECCAIRS report',
         'report.eccairs.button.tooltip': 'View latest ECCAIRS report for this report',
+        'report.eccairs.error-msg': 'Unable to find the latest ECCAIRS report for this report.',
 
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
