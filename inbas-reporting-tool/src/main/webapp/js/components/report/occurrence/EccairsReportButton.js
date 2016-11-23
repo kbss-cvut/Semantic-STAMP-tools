@@ -44,7 +44,7 @@ class EccairsReportButton extends React.Component {
         if (data.key) {
             Routing.transitionTo(Routes.editReport, {params: {reportKey: data.key}});
         } else {
-            Actions.publishMessage('report.eccairs.error-msg', Constants.MESSAGE_TYPE.WARNING, Actions.loadEccairsReport);
+            Actions.publishMessage('report.eccairs.error-msg', Constants.MESSAGE_TYPE.ERROR, Actions.loadEccairsReport);
         }
     };
 
@@ -54,8 +54,7 @@ class EccairsReportButton extends React.Component {
         if (!report.isEccairsReport()) {
             return false;
         }
-        return <Button ref={c => this.button = c} className='detail-top-button' bsSize='small' bsStyle='primary'
-                       onClick={this._onClick}
+        return <Button className='detail-top-button' bsSize='small' bsStyle='primary' onClick={this._onClick}
                        disabled={loading} title={this.i18n('report.eccairs.button.tooltip')}>
             {this.i18n(loading ? 'please-wait' : 'report.eccairs.button.label')}
         </Button>;

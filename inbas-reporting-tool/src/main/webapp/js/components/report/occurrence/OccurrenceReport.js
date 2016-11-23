@@ -31,7 +31,7 @@ var SafetyIssueSelector = require('../safetyissue/SafetyIssueSelector').default;
 var WizardGenerator = require('../../wizard/generator/WizardGenerator');
 var WizardWindow = require('../../wizard/WizardWindow');
 
-var OccurrenceReport = React.createClass({
+const OccurrenceReport = React.createClass({
     mixins: [MessageMixin, I18nMixin, ReportDetailMixin, Reflux.listenTo(MessageStore, '_onMessage')],
 
     propTypes: {
@@ -112,7 +112,6 @@ var OccurrenceReport = React.createClass({
         return <div>
             <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
                           onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
-            {this.renderMessage()}
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <ButtonToolbar className='float-right'>

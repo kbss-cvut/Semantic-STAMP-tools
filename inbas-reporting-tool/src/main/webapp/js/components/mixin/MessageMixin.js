@@ -69,7 +69,7 @@ const MessageMixin = {
     },
 
     renderMessage: function () {
-        return this.state.message ? <div className='form-group'>
+        return this.state.message ? <div className='message-container'>
             <Alert bsStyle={this.state.message.type} onDismiss={this.dismissMessage}>
                 <p>{this.state.message.text}</p>
             </Alert>
