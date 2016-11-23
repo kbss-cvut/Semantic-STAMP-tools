@@ -28,6 +28,8 @@ public abstract class AbstractReportDto implements LogicalDocument {
 
     private Integer revision;
 
+    private Boolean readOnly;
+
     private String summary;
 
     private Set<Resource> references;
@@ -106,6 +108,14 @@ public abstract class AbstractReportDto implements LogicalDocument {
 
     public void setRevision(Integer revision) {
         this.revision = revision;
+    }
+
+    public Boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(Boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
     public Set<Resource> getReferences() {

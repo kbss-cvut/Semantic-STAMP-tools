@@ -21,6 +21,9 @@ function attachMethodsToReport(report) {
     report.isEccairsReport = function () {
         return this.types.indexOf(Vocabulary.ECCAIRS_REPORT) !== -1;
     }.bind(report);
+    report.isSafaReport = function () {
+        return this.types.indexOf(Vocabulary.SAFA_REPORT) !== -1;
+    }.bind(report);
 }
 
 const ReportStore = Reflux.createStore({

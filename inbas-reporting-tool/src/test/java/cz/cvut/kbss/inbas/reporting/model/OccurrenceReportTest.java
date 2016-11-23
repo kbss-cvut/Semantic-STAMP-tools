@@ -25,6 +25,7 @@ public class OccurrenceReportTest {
     @Test
     public void copyConstructorCopiesRelevantAttributes() {
         final OccurrenceReport original = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        original.setReadOnly(true);
         final OccurrenceReport copy = new OccurrenceReport(original);
 
         assertNull(copy.getUri());
@@ -40,6 +41,7 @@ public class OccurrenceReportTest {
         assertEquals(original.getSummary(), copy.getSummary());
         assertEquals(original.getSeverityAssessment(), copy.getSeverityAssessment());
         assertEquals(original.getResponsibleDepartments(), copy.getResponsibleDepartments());
+        assertEquals(original.isReadOnly(), copy.isReadOnly());
     }
 
     @Test

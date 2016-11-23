@@ -40,6 +40,9 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
     @OWLDataProperty(iri = Vocabulary.s_p_has_revision)
     protected Integer revision;
 
+    @OWLDataProperty(iri = Vocabulary.s_c_read_only)
+    protected Boolean readOnly;
+
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     protected String summary;
 
@@ -57,6 +60,7 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
     protected AbstractReport(AbstractReport other) {
         Objects.requireNonNull(other);
         this.fileNumber = other.fileNumber;
+        this.readOnly = other.readOnly;
         this.summary = other.summary;
         this.types = new HashSet<>(other.types);
         if (other.references != null) {
@@ -127,6 +131,14 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
 
     public void setRevision(Integer revision) {
         this.revision = revision;
+    }
+
+    public Boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(Boolean readOnly) {
+        this.readOnly = readOnly;
     }
 
     public String getSummary() {
