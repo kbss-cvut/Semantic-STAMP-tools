@@ -14,7 +14,6 @@ var Actions = require('../../../actions/Actions');
 var ArmsAttributes = require('../arms/ArmsAttributes').default;
 var Attachments = require('../attachment/Attachments').default;
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
-const Constants = require('../../../constants/Constants');
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var Department = require('./Department').default;
 var EccairsReportButton = require('./EccairsReportButton').default;

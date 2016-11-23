@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-var assign = require('object-assign');
 
 var Actions = require('../../../actions/Actions');
 var ReportDetail = require('./AuditReport');
@@ -9,7 +8,6 @@ var ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMix
 var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
 var RouterStore = require('../../../stores/RouterStore');
-var Vocabulary = require('../../../constants/Vocabulary');
 
 var AuditReportController = React.createClass({
     propTypes: {
