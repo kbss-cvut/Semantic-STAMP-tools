@@ -2,7 +2,7 @@
 
 describe('AuditReport', () => {
 
-    var React = require('react'),
+    let React = require('react'),
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
@@ -18,14 +18,14 @@ describe('AuditReport', () => {
         spyOn(Actions, 'loadOptions');
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
         report = ReportFactory.createAuditReport();
-        report.isSafa = function () {
+        report.isSafaReport = function () {
             return false;
         }
     });
 
     it('does not display \'Create new revision\' button for new reports', () => {
         report.isNew = true;
-        var component = Environment.render(<AuditReport report={report} handlers={handlers}/>);
+        const component = Environment.render(<AuditReport report={report} handlers={handlers}/>);
         expect(Environment.getComponentByTagAndText(component, 'button', messages['detail.submit'])).toBeNull();
     });
 });

@@ -79,7 +79,10 @@ module.exports = {
                 endDate: Math.floor((Date.now() / (60 * 1000)) * 60 * 1000)
             },
             isNew: true,
-            javaClass: Constants.AUDIT_REPORT_JAVA_CLASS
+            javaClass: Constants.AUDIT_REPORT_JAVA_CLASS,
+            isSafaReport: function () {
+                return false;
+            }
         };
     },
 
