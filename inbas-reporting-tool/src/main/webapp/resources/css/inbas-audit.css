@@ -623,11 +623,16 @@ button.reset-filters {
 }
 
 .tacr-logo {
+    height: 42px;
+    width: 42px;
+    margin: 3px 5px 0 0;
+}
+
+.tacr-logo::before {
     display: inline-block;
     content: url('../images/logo_TACR_zakl.png');
     font-size: 0;
     line-height: 0;
-    margin: 3px 5px 0 0;
     height: 42px;
     width: 42px;
 }
