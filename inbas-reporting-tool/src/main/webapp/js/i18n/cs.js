@@ -266,6 +266,8 @@ module.exports = {
         'report.eccairs.button.label': 'ECCAIRS hlášení',
         'report.eccairs.button.tooltip': 'Zobrazit nejnovější ECCAIRS hlášení pro toto hlášení',
         'report.eccairs.error-msg': 'Nepodařilo se najít nejnovější ECCAIRS hlášení pro toto hlášení.',
+        'report.eccairs.create-new-revision.label': 'Nová revize z ECCAIRS',
+        'report.eccairs.create-new-revision.tooltip': 'Vytvořit novou revizi tohoto hlášení podle nejnovější verze v ECCAIRS',
 
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',

@@ -2,7 +2,7 @@
 
 describe('PhaseTransition', () => {
 
-    var React = require('react'),
+    const React = require('react'),
         ReactDOM = require('react-dom'),
         TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
@@ -10,8 +10,8 @@ describe('PhaseTransition', () => {
         OptionsStore = require('../../js/stores/OptionsStore'),
         Vocabulary = require('../../js/constants/Vocabulary'),
 
-        PhaseTransition = require('../../js/components/misc/PhaseTransition').default,
-        onLoading, onSuccess, onError,
+        PhaseTransition = require('../../js/components/misc/PhaseTransition').default;
+    let onLoading, onSuccess, onError,
         phases, report;
 
     beforeEach(() => {
@@ -58,7 +58,7 @@ describe('PhaseTransition', () => {
 
     it('shows button for phase transition', () => {
         spyOn(OptionsStore, 'getOptions').and.returnValue(phases);
-        var transitionLabel = phases[0][Vocabulary.TRANSITION_LABEL][0]['@value'],
+        const transitionLabel = phases[0][Vocabulary.TRANSITION_LABEL][0]['@value'],
             component = Environment.render(<PhaseTransition report={report} onLoading={onLoading} onSuccess={onSuccess}
                                                             onError={onError}/>),
 
@@ -69,18 +69,17 @@ describe('PhaseTransition', () => {
 
     it('shows button for phase transition when phases are loaded asynchronously', () => {
         spyOn(OptionsStore, 'getOptions').and.returnValue([]);
-        var transitionLabel = phases[0][Vocabulary.TRANSITION_LABEL][0]['@value'],
+        const transitionLabel = phases[0][Vocabulary.TRANSITION_LABEL][0]['@value'],
             component = Environment.render(<PhaseTransition report={report} onLoading={onLoading} onSuccess={onSuccess}
                                                             onError={onError}/>),
 
-            buttons = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').Button),
-            button;
+            buttons = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').Button);
         expect(buttons.length).toEqual(0);
         expect(Actions.loadOptions).toHaveBeenCalledWith('reportingPhase');
 
         component._onPhasesLoaded('reportingPhase', phases);
 
-        button = TestUtils.findRenderedComponentWithType(component, require('react-bootstrap').Button);
+        const button = TestUtils.findRenderedComponentWithType(component, require('react-bootstrap').Button);
         expect(button).toBeDefined();
         expect(ReactDOM.findDOMNode(button).textContent).toEqual(transitionLabel);
     });
@@ -89,8 +88,9 @@ describe('PhaseTransition', () => {
         // The last phase
         report.phase = phases[phases.length - 1]['@id'];
         spyOn(OptionsStore, 'getOptions').and.returnValue(phases);
-        var component = Environment.render(<PhaseTransition report={report} onLoading={onLoading} onSuccess={onSuccess}
-                                                            onError={onError}/>),
+        const component = Environment.render(<PhaseTransition report={report} onLoading={onLoading}
+                                                              onSuccess={onSuccess}
+                                                              onError={onError}/>),
 
             buttons = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').Button);
         expect(buttons.length).toEqual(0);
@@ -103,8 +103,9 @@ describe('PhaseTransition', () => {
             expect(rep).toEqual(report);
             callback();
         });
-        var component = Environment.render(<PhaseTransition report={report} onLoading={onLoading} onSuccess={onSuccess}
-                                                            onError={onError}/>),
+        const component = Environment.render(<PhaseTransition report={report} onLoading={onLoading}
+                                                              onSuccess={onSuccess}
+                                                              onError={onError}/>),
 
             button = TestUtils.findRenderedComponentWithType(component, require('react-bootstrap').Button);
         TestUtils.Simulate.click(ReactDOM.findDOMNode(button));

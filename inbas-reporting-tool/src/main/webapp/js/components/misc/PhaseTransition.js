@@ -1,7 +1,7 @@
 'use strict';
 
 import React from "react";
-import {Button} from "react-bootstrap";
+import {Button, MenuItem} from "react-bootstrap";
 import JsonLdUtils from "jsonld-utils";
 import Actions from "../../actions/Actions";
 import injectIntl from "../../utils/injectIntl";
@@ -13,7 +13,12 @@ class PhaseTransition extends React.Component {
         report: React.PropTypes.object.isRequired,
         onLoading: React.PropTypes.func.isRequired,
         onSuccess: React.PropTypes.func.isRequired,
-        onError: React.PropTypes.func.isRequired
+        onError: React.PropTypes.func.isRequired,
+        menuItem: React.PropTypes.bool
+    };
+
+    static defaultProps = {
+        menuItem: false
     };
 
     constructor(props) {
@@ -48,17 +53,22 @@ class PhaseTransition extends React.Component {
     };
 
     _determinePhase() {
-        var reportPhase = this.props.report.phase;
+        const reportPhase = this.props.report.phase;
         return this.state.phases.find((item) => {
             return item['@id'] === reportPhase;
         });
     }
 
     render() {
-        var phase = this._determinePhase();
+        const phase = this._determinePhase();
         if (phase && phase[Vocabulary.TRANSITION_LABEL]) {
-            return <Button bsStyle='primary' bsSize='small'
-                           onClick={this._onPhaseTransition}>{JsonLdUtils.getLocalized(phase[Vocabulary.TRANSITION_LABEL], this.props.intl)}</Button>
+            if (!this.props.menuItem) {
+                return <Button bsStyle='primary' bsSize='small'
+                               onClick={this._onPhaseTransition}>{JsonLdUtils.getLocalized(phase[Vocabulary.TRANSITION_LABEL], this.props.intl)}</Button>;
+            } else {
+                return <MenuItem
+                    onClick={this._onPhaseTransition}>{JsonLdUtils.getLocalized(phase[Vocabulary.TRANSITION_LABEL], this.props.intl)}</MenuItem>;
+            }
         } else {
             return null;
         }

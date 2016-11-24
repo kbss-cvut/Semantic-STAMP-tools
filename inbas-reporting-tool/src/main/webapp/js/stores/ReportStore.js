@@ -116,7 +116,7 @@ const ReportStore = Reflux.createStore({
     onSubmitReport: function (report, onSuccess, onError) {
         Ajax.post(BASE_URL_WITH_SLASH + 'chain/' + report.fileNumber + '/revisions').end(function (data, resp) {
             if (onSuccess) {
-                let key = Utils.extractKeyFromLocationHeader(resp);
+                const key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);
             }
         }, onError);
@@ -177,6 +177,15 @@ const ReportStore = Reflux.createStore({
                 });
             }
         });
+    },
+
+    onNewRevisionFromLatestEccairs: function(report, onSuccess, onError) {
+        Ajax.post(ECCAIRS_REPORT_URL + report.key).end(function (data, resp) {
+            if (onSuccess) {
+                const key = Utils.extractKeyFromLocationHeader(resp);
+                onSuccess(key);
+            }
+        }, onError);
     },
 
     getReports: function () {

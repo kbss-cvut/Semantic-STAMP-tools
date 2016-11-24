@@ -264,6 +264,8 @@ module.exports = {
         'report.eccairs.button.label': 'ECCAIRS report',
         'report.eccairs.button.tooltip': 'View latest ECCAIRS report for this report',
         'report.eccairs.error-msg': 'Unable to find the latest ECCAIRS report for this report.',
+        'report.eccairs.create-new-revision.label': 'New revision from ECCAIRS',
+        'report.eccairs.create-new-revision.tooltip': 'Create new revision of this report from the latest ECCAIRS report',
 
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
