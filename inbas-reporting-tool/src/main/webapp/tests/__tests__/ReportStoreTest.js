@@ -17,6 +17,7 @@ describe('Report store', function () {
         Ajax.__set__('request', reqMock);
         Ajax.__set__('Logger', Environment.mockLogger());
         ReportStore.__set__('Ajax', Ajax);
+        ReportStore.__set__('reportsLoading', false);
         jasmine.getGlobal().top = {};
     });
 
@@ -133,7 +134,7 @@ describe('Report store', function () {
         expect(reqMock.end.calls.count()).toEqual(1);
     });
 
-    it('adds isEccairsReport function to loaded report', () => {
+    it('adds isSafaReport and isEccairsReport functions to loaded report', () => {
         const report = Generator.generateOccurrenceReport();
         delete report.isEccairsReport;
         mockResponse(null, report);
@@ -143,62 +144,25 @@ describe('Report store', function () {
         expect(triggerArg.action).toEqual(Actions.loadReport);
         const loadedReport = triggerArg.report;
         expect(typeof loadedReport.isEccairsReport).toEqual('function');
-    });
-
-    describe(' - added isEccairsReport method', () => {
-
-        it('returns true for ECCAIRS report', () => {
-            const report = Generator.generateOccurrenceReport();
-            delete report.isEccairsReport;
-            report.types = [Vocabulary.ECCAIRS_REPORT];
-            mockResponse(null, report);
-            spyOn(ReportStore, 'trigger').and.callThrough();
-            ReportStore.onLoadReport(report.key);
-            expect(report.isEccairsReport()).toBeTruthy();
-        });
-
-        it('returns false for non-ECCAIRS report', () => {
-            const report = Generator.generateOccurrenceReport();
-            delete report.isEccairsReport;
-            report.types = [];
-            mockResponse(null, report);
-            spyOn(ReportStore, 'trigger').and.callThrough();
-            ReportStore.onLoadReport(report.key);
-            expect(report.isEccairsReport()).toBeFalsy();
-        });
-    });
-
-    it('adds isSafaReport function to loaded report', () => {
-        const report = Generator.generateAuditReport();
-        mockResponse(null, report);
-        spyOn(ReportStore, 'trigger').and.callThrough();
-        ReportStore.onLoadReport(report.key);
-        const triggerArg = ReportStore.trigger.calls.argsFor(0)[0];
-        expect(triggerArg.action).toEqual(Actions.loadReport);
-        const loadedReport = triggerArg.report;
         expect(typeof loadedReport.isSafaReport).toEqual('function');
     });
 
-    describe(' - added isSafaReport method', () => {
-
-        it('returns true for SAFA audit report', () => {
-            const report = Generator.generateAuditReport();
-            delete report.isSafaReport;
-            report.types = [Vocabulary.SAFA_REPORT];
-            mockResponse(null, report);
-            spyOn(ReportStore, 'trigger').and.callThrough();
-            ReportStore.onLoadReport(report.key);
-            expect(report.isSafaReport()).toBeTruthy();
+    it('adds isSafaReport and isEccairsReport functions to all loaded reports', () => {
+        const reports = Generator.generateReports();
+        reports.forEach(r => {
+            delete r.isSafaReport;
+            delete r.isEccairsReport;
         });
-
-        it('returns false for non-SAFA report', () => {
-            const report = Generator.generateAuditReport();
-            delete report.isSafaReport;
-            report.types = [];
-            mockResponse(null, report);
-            spyOn(ReportStore, 'trigger').and.callThrough();
-            ReportStore.onLoadReport(report.key);
-            expect(report.isSafaReport()).toBeFalsy();
-        });
+        mockResponse(null, reports);
+        spyOn(ReportStore, 'trigger').and.callThrough();
+        ReportStore.onLoadAllReports();
+        const triggerArg = ReportStore.trigger.calls.argsFor(0)[0];
+        expect(ReportStore.trigger).toHaveBeenCalled();
+        expect(triggerArg.action).toEqual(Actions.loadAllReports);
+        const triggeredReports = triggerArg.reports;
+        for (let i = 0, len = triggeredReports.length; i < len; i++) {
+            expect(triggeredReports[i].isSafaReport).toBeDefined();
+            expect(triggeredReports[i].isEccairsReport).toBeDefined();
+        }
     });
 });

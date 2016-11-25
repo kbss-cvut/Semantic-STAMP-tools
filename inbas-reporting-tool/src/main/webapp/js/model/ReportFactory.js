@@ -1,9 +1,9 @@
 'use strict';
 
-var Constants = require('../constants/Constants');
-var Vocabulary = require('../constants/Vocabulary');
-var ReportType = require('./ReportType');
-var Utils = require('../utils/Utils');
+const Constants = require('../constants/Constants');
+const Vocabulary = require('../constants/Vocabulary');
+const ReportType = require('./ReportType');
+const Utils = require('../utils/Utils');
 
 module.exports = {
 
@@ -25,7 +25,7 @@ module.exports = {
     },
 
     createOccurrenceReport: function () {
-        return {
+        const report = {
             occurrence: {
                 javaClass: Constants.OCCURRENCE_JAVA_CLASS,
                 referenceId: Utils.randomInt(),
@@ -36,15 +36,14 @@ module.exports = {
                 eventTypes: []
             },
             isNew: true,
-            javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS,
-            isEccairsReport: function () {
-                return false;
-            }
+            javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS
         };
+        this.addMethodsToReportInstance(report);
+        return report;
     },
 
     createSafetyIssueReport: function (options) {
-        var report = {
+        let report = {
             safetyIssue: {
                 javaClass: Constants.SAFETY_ISSUE_JAVA_CLASS,
                 referenceId: Utils.randomInt(),
@@ -56,6 +55,7 @@ module.exports = {
             javaClass: Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS
         };
         report = this._enhanceSafetyIssueWithOptions(report, options);
+        this.addMethodsToReportInstance(report);
         return report;
     },
 
@@ -70,8 +70,8 @@ module.exports = {
         return report;
     },
 
-    createAuditReport: function (options) {
-        return {
+    createAuditReport: function () {
+        const report = {
             audit: {
                 name: '',
                 // Round to whole minutes. Start date a minute before end date
@@ -79,16 +79,24 @@ module.exports = {
                 endDate: Math.floor((Date.now() / (60 * 1000)) * 60 * 1000)
             },
             isNew: true,
-            javaClass: Constants.AUDIT_REPORT_JAVA_CLASS,
-            isSafaReport: function () {
-                return false;
-            }
+            javaClass: Constants.AUDIT_REPORT_JAVA_CLASS
         };
+        this.addMethodsToReportInstance(report);
+        return report;
     },
 
     createFactor: function () {
         return {
             javaClass: Constants.EVENT_JAVA_CLASS
         }
+    },
+
+    addMethodsToReportInstance: function (report = {}) {
+        report.isEccairsReport = function () {
+            return this.types && this.types.indexOf(Vocabulary.ECCAIRS_REPORT) !== -1;
+        }.bind(report);
+        report.isSafaReport = function () {
+            return this.types && this.types.indexOf(Vocabulary.SAFA_REPORT) !== -1;
+        }.bind(report);
     }
 };

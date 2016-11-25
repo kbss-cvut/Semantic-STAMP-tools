@@ -3,13 +3,13 @@
 const React = require('react');
 const assign = require('object-assign');
 const JsonLdUtils = require('jsonld-utils').default;
+const ArmsUtils = require('../utils/ArmsUtils').default;
 const CollapsibleText = require('../components/CollapsibleText');
 const Constants = require('../constants/Constants');
-const Vocabulary = require('../constants/Vocabulary');
-const ArmsUtils = require('../utils/ArmsUtils').default;
 const I18nStore = require('../stores/I18nStore');
 const SafetyIssueBase = require('./SafetyIssueBase').default;
 const Utils = require('../utils/Utils');
+const Vocabulary = require('../constants/Vocabulary');
 
 class OccurrenceReport {
     constructor(data) {
@@ -76,6 +76,16 @@ class OccurrenceReport {
     }
 }
 
+class EccairsOccurrenceReport extends OccurrenceReport {
+    constructor(data) {
+        super(data);
+    }
+
+    getLabels() {
+        return super.getLabels().concat('report.eccairs.label');
+    }
+}
+
 class SafetyIssueReport {
     constructor(data) {
         assign(this, data);
@@ -105,7 +115,7 @@ class SafetyIssueReport {
      */
     getStatusInfo(options, intl) {
         if (this.sira) {
-            for (var i = 0, len = options.length; i < len; i++) {
+            for (let i = 0, len = options.length; i < len; i++) {
                 if (this.sira === options[i]['@id']) {
                     return JsonLdUtils.getLocalized(options[i][Vocabulary.RDFS_LABEL], intl);
                 }
@@ -114,8 +124,12 @@ class SafetyIssueReport {
         return '';
     }
 
-    getLabel() {
+    getPrimaryLabel() {
         return 'safetyissuereport.label';
+    }
+
+    getLabels() {
+        return ['safetyissuereport.label'];
     }
 
     toString() {
@@ -161,10 +175,10 @@ class SafetyIssueReport {
             };
             this.factorGraph.nodes.push(this.safetyIssue);
         }
-        var referenceMap = {};
+        const referenceMap = {};
         referenceMap[source.factorGraph.nodes[0].referenceId] = this.safetyIssue;   //This is the occurrence
-        var node, nodeClone;
-        for (var i = 1, len = source.factorGraph.nodes.length; i < len; i++) {
+        let node, nodeClone;
+        for (let i = 1, len = source.factorGraph.nodes.length; i < len; i++) {
             node = source.factorGraph.nodes[i];
             nodeClone = {
                 referenceId: Utils.randomInt(),
@@ -176,8 +190,8 @@ class SafetyIssueReport {
             referenceMap[node.referenceId] = nodeClone;
             this.factorGraph.nodes.push(nodeClone);
         }
-        var edge;
-        for (i = 0, len = source.factorGraph.edges.length; i < len; i++) {
+        let edge;
+        for (let i = 0, len = source.factorGraph.edges.length; i < len; i++) {
             edge = source.factorGraph.edges[i];
             this.factorGraph.edges.push({
                 linkType: edge.linkType,
@@ -195,8 +209,8 @@ class SafetyIssueReport {
             };
             this.factorGraph.nodes.push(this.safetyIssue);
         }
-        var node;
-        for (var i = 0, len = finding.factors.length; i < len; i++) {
+        let node;
+        for (let i = 0, len = finding.factors.length; i < len; i++) {
             node = {
                 eventTypes: [finding.factors[i]],
                 types: [finding.factors[i]],
@@ -245,8 +259,12 @@ class AuditReport {
         return '';
     }
 
-    getLabel() {
+    getPrimaryLabel() {
         return 'auditreport.label';
+    }
+
+    getLabels() {
+        return ['auditreport.label'];
     }
 
     toString() {
@@ -262,6 +280,16 @@ class AuditReport {
     }
 }
 
+class SafaAuditReport extends AuditReport {
+    constructor(data) {
+        super(data);
+    }
+
+    getLabels() {
+        return super.getLabels().concat('report.safa.label');
+    }
+}
+
 const REPORT_TYPES = {};
 
 REPORT_TYPES[Vocabulary.OCCURRENCE_REPORT] = OccurrenceReport;
@@ -274,7 +302,7 @@ REPORT_TYPES[Vocabulary.AUDIT_REPORT] = AuditReport;
 REPORT_TYPES[Constants.AUDIT_REPORT_JAVA_CLASS] = AuditReport;
 REPORT_TYPES[Constants.AUDIT_REPORT_LIST_ITEM_JAVA_CLASS] = AuditReport;
 
-var ReportType = {
+const ReportType = {
 
     getDetailController: function (report) {
         return this._getReportClass(report).getDetailController();
@@ -293,6 +321,12 @@ var ReportType = {
     },
 
     _getReportClass: function (data) {
+        if (data.isSafaReport && data.isSafaReport()) {
+            return SafaAuditReport;
+        }
+        if (data.isEccairsReport && data.isEccairsReport()) {
+            return EccairsOccurrenceReport;
+        }
         if (data.types) {
             for (let i = 0, len = data.types.length; i < len; i++) {
                 if (REPORT_TYPES[data.types[i]]) {

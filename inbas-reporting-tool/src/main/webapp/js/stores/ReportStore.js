@@ -7,6 +7,7 @@ let Ajax = require('../utils/Ajax');
 const Constants = require('../constants/Constants');
 const JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
 const ReportType = require('../model/ReportType');
+const ReportFactory = require('../model/ReportFactory');
 const Utils = require('../utils/Utils');
 const Vocabulary = require('../constants/Vocabulary');
 
@@ -16,15 +17,6 @@ const ECCAIRS_REPORT_URL = 'rest/eccairs/latest/';
 
 // When reports are being loaded, do not send the request again
 let reportsLoading = false;
-
-function attachMethodsToReport(report) {
-    report.isEccairsReport = function () {
-        return this.types.indexOf(Vocabulary.ECCAIRS_REPORT) !== -1;
-    }.bind(report);
-    report.isSafaReport = function () {
-        return this.types.indexOf(Vocabulary.SAFA_REPORT) !== -1;
-    }.bind(report);
-}
 
 const ReportStore = Reflux.createStore({
     listenables: [Actions],
@@ -43,6 +35,9 @@ const ReportStore = Reflux.createStore({
         reportsLoading = true;
         Ajax.get(BASE_URL).end(function (data) {
             reportsLoading = false;
+            for (let i = 0, len = data.length; i < len; i++) {
+                ReportFactory.addMethodsToReportInstance(data[i]);
+            }
             this._reports = data;
             this.trigger({
                 action: Actions.loadAllReports,
@@ -65,7 +60,7 @@ const ReportStore = Reflux.createStore({
         Ajax.get(BASE_URL_WITH_SLASH + key).end(function (data) {
             this._resetPendingLoad();
             JsonReferenceResolver.resolveReferences(data);
-            attachMethodsToReport(data);
+            ReportFactory.addMethodsToReportInstance(data);
             this.trigger({
                 action: Actions.loadReport,
                 report: data
@@ -179,7 +174,7 @@ const ReportStore = Reflux.createStore({
         });
     },
 
-    onNewRevisionFromLatestEccairs: function(report, onSuccess, onError) {
+    onNewRevisionFromLatestEccairs: function (report, onSuccess, onError) {
         Ajax.post(ECCAIRS_REPORT_URL + report.key).end(function (data, resp) {
             if (onSuccess) {
                 const key = Utils.extractKeyFromLocationHeader(resp);

@@ -2,7 +2,7 @@
 
 describe('ReportType', function () {
 
-    var ReportType = require('../../js/model/ReportType'),
+    const ReportType = require('../../js/model/ReportType'),
         Constants = require('../../js/constants/Constants'),
         Generator = require('../environment/Generator').default,
         ReportFactory = require('../../js/model/ReportFactory'),
@@ -10,31 +10,51 @@ describe('ReportType', function () {
         Vocabulary = require('../../js/constants/Vocabulary');
 
     it('returns default detail controller for new report when getDetailController is called', function () {
-        var report = ReportFactory.createOccurrenceReport(),
+        const report = ReportFactory.createOccurrenceReport(),
 
             controller = ReportType.getDetailController(report);
         expect(controller).toEqual(OccurrenceReportController);
     });
 
+    it('returns SAFA audit report instance for SAFA audit report', () => {
+        const report = Generator.generateAuditReport();
+        report.isSafaReport = () => {
+            return true;
+        };
+
+        const result = ReportType.getReport(report);
+        expect(result.getLabels().indexOf('report.safa.label')).not.toEqual(-1);
+    });
+
+    it('returns ECCAIRS report instance for ECCAIRS occurrence report', () => {
+        const report = Generator.generateOccurrenceReport();
+        report.isEccairsReport = () => {
+            return true;
+        };
+
+        const result = ReportType.getReport(report);
+        expect(result.getLabels().indexOf('report.eccairs.label')).not.toEqual(-1);
+    });
+
     describe('- safety issue report - addBase()', () => {
 
         it('adds factor graph to a new instance', () => {
-            var basedOnReport = generateSafetyIssueBase(),
+            const basedOnReport = generateSafetyIssueBase(),
                 newBase = basedOnReport.occurrence,
-                originalGraph = basedOnReport.factorGraph,
-                i, len, edge;
+                originalGraph = basedOnReport.factorGraph;
+            let edge;
 
-            var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
+            let report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
             report = ReportType.getReport(report);
             report.addBase(newBase, basedOnReport);
             expect(report.factorGraph).not.toBeNull();
             expect(report.factorGraph.nodes.length).toEqual(originalGraph.nodes.length);
-            for (i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
+            for (let i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
                 expect(report.factorGraph.nodes[i].uri).not.toBeDefined();
             }
             expect(report.safetyIssue.basedOn[0].types.indexOf(Vocabulary.OCCURRENCE)).not.toEqual(-1);
             expect(report.factorGraph.edges.length).toEqual(originalGraph.edges.length);
-            for (i = 0, len = report.factorGraph.edges.length; i < len; i++) {
+            for (let i = 0, len = report.factorGraph.edges.length; i < len; i++) {
                 edge = report.factorGraph.edges[i];
                 expect(report.factorGraph.nodes.indexOf(edge.from)).not.toEqual(-1);
                 expect(report.factorGraph.nodes.indexOf(edge.to)).not.toEqual(-1);
@@ -42,7 +62,7 @@ describe('ReportType', function () {
         });
 
         function generateSafetyIssueBase() {
-            var basedOn = Generator.generateOccurrenceReport();
+            const basedOn = Generator.generateOccurrenceReport();
             basedOn.occurrence.referenceId = Generator.getRandomInt();
             basedOn.factorGraph = {
                 nodes: [basedOn.occurrence.referenceId]
@@ -53,17 +73,16 @@ describe('ReportType', function () {
         }
 
         it('copies event types correctly when adding factor graph to new safety issue', () => {
-            var basedOnReport = generateSafetyIssueBase(),
+            const basedOnReport = generateSafetyIssueBase(),
                 newBase = basedOnReport.occurrence,
-                originalGraph = basedOnReport.factorGraph,
-                i, len, edge;
+                originalGraph = basedOnReport.factorGraph;
 
-            var report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
+            let report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
             report = ReportType.getReport(report);
             report.addBase(newBase, basedOnReport);
             expect(report.factorGraph).not.toBeNull();
             expect(report.factorGraph.nodes.length).toEqual(originalGraph.nodes.length);
-            for (i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
+            for (let i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
                 expect(report.factorGraph.nodes[i].uri).not.toBeDefined();
                 if (i > 0) {
                     expect(report.factorGraph.nodes[i].eventTypes).toEqual(basedOnReport.factorGraph.nodes[i].eventTypes);
@@ -72,14 +91,13 @@ describe('ReportType', function () {
         });
 
         it('adds another report as base', () => {
-            var basedOnReport = generateSafetyIssueBase(),
+            const basedOnReport = generateSafetyIssueBase(),
                 basedOn = basedOnReport.occurrence,
                 newBaseReport = generateSafetyIssueBase(),
                 newBase = newBaseReport.occurrence,
                 originalFactorGraph = basedOnReport.factorGraph,
-                newBaseFactorGraph = newBaseReport.factorGraph,
-                report, result,
-                i, len, edge;
+                newBaseFactorGraph = newBaseReport.factorGraph;
+            let report, result, edge;
 
             report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {
                 basedOn: {
@@ -94,27 +112,26 @@ describe('ReportType', function () {
             // The occurrence will be counted twice, but we need only one, which is transformed to safety issue (the
             // graph's root)
             expect(report.factorGraph.nodes.length).toEqual(originalFactorGraph.nodes.length + newBaseFactorGraph.nodes.length - 1);
-            for (i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
+            for (let i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
                 expect(report.factorGraph.nodes[i].uri).not.toBeDefined();
             }
             expect(report.factorGraph.edges.length).toEqual(originalFactorGraph.edges.length + newBaseFactorGraph.edges.length);
-            for (i = 0, len = report.factorGraph.edges.length; i < len; i++) {
+            for (let i = 0, len = report.factorGraph.edges.length; i < len; i++) {
                 edge = report.factorGraph.edges[i];
                 expect(report.factorGraph.nodes.indexOf(edge.from)).not.toEqual(-1);
                 expect(report.factorGraph.nodes.indexOf(edge.to)).not.toEqual(-1);
             }
-            for (i = 0, len = report.safetyIssue.basedOn.length; i < len; i++) {
+            for (let i = 0, len = report.safetyIssue.basedOn.length; i < len; i++) {
                 expect(report.safetyIssue.basedOn[i].types.indexOf(Vocabulary.OCCURRENCE)).not.toEqual(-1);
             }
         });
 
         it('does not add base if it already exists in safety issue', () => {
-            var basedOnReport = generateSafetyIssueBase(),
+            const basedOnReport = generateSafetyIssueBase(),
                 basedOn = basedOnReport.occurrence,
-                originalFactorGraph = basedOnReport.factorGraph,
-                report, result;
+                originalFactorGraph = basedOnReport.factorGraph;
 
-            report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {
+            let report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {
                 basedOn: {
                     event: basedOn,
                     report: basedOnReport
@@ -126,7 +143,7 @@ describe('ReportType', function () {
             expect(report.factorGraph.nodes.length).toEqual(originalFactorGraph.nodes.length);
             expect(report.factorGraph.edges.length).toEqual(originalFactorGraph.edges.length);
             expect(report.safetyIssue.basedOn.length).toEqual(1);
-            result = report.addBase(basedOn);
+            const result = report.addBase(basedOn);
             expect(result).toBeFalsy();
             expect(report.factorGraph.nodes.length).toEqual(originalFactorGraph.nodes.length);
             expect(report.factorGraph.edges.length).toEqual(originalFactorGraph.edges.length);
@@ -134,15 +151,15 @@ describe('ReportType', function () {
         });
 
         it('adds audit finding as base to a new instance', () => {
-            var auditReport = Generator.generateAuditReport(),
-                finding = auditReport.audit.findings[Generator.getRandomInt(auditReport.audit.findings.length)],
-                report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
+            const auditReport = Generator.generateAuditReport(),
+                finding = auditReport.audit.findings[Generator.getRandomInt(auditReport.audit.findings.length)];
+            let report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
             report = ReportType.getReport(report);
             report.addBase(finding, auditReport);
 
             expect(report.factorGraph).not.toBeDefined();
             expect(report.safetyIssue.basedOn.length).toEqual(1);
-            var base = report.safetyIssue.basedOn[0];
+            const base = report.safetyIssue.basedOn[0];
             expect(base.uri).toEqual(finding.uri);
             expect(base.javaClass).toEqual(Constants.AUDIT_FINDING_SAFETY_ISSUE_BASE_CLASS);
             expect(base.reportKey).toEqual(auditReport.key);
@@ -151,20 +168,19 @@ describe('ReportType', function () {
         });
 
         it('adds audit finding as base to existing issue with some base', () => {
-            var basedOnReport = generateSafetyIssueBase(),
-                basedOn = basedOnReport.occurrence,
-                report, result;
+            const basedOnReport = generateSafetyIssueBase(),
+                basedOn = basedOnReport.occurrence;
 
-            report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {
+            let report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT, {
                 basedOn: {
                     event: basedOn,
                     report: basedOnReport
                 }
             });
-            var auditReport = Generator.generateAuditReport(),
+            const auditReport = Generator.generateAuditReport(),
                 finding = auditReport.audit.findings[Generator.getRandomInt(auditReport.audit.findings.length)];
             report = ReportType.getReport(report);
-            result = report.addBase(finding, auditReport);
+            const result = report.addBase(finding, auditReport);
 
             expect(result).toBeTruthy();
             expect(report.safetyIssue.basedOn.length).toEqual(2);
@@ -172,11 +188,11 @@ describe('ReportType', function () {
         });
 
         it('adds finding factors to factor graph of new instance', () => {
-            var auditReport = Generator.generateAuditReport(),
-                finding = auditReport.audit.findings[Generator.getRandomInt(auditReport.audit.findings.length)],
-                report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT), i, len;
+            const auditReport = Generator.generateAuditReport(),
+                finding = auditReport.audit.findings[Generator.getRandomInt(auditReport.audit.findings.length)];
+            let report = ReportFactory.createReport(Vocabulary.SAFETY_ISSUE_REPORT);
             finding.factors = [];
-            for (i = 0, len = Generator.getRandomPositiveInt(2, 5); i < len; i++) {
+            for (let i = 0, len = Generator.getRandomPositiveInt(2, 5); i < len; i++) {
                 finding.factors.push(Generator.getRandomUri());
             }
             report = ReportType.getReport(report);
@@ -186,7 +202,7 @@ describe('ReportType', function () {
             expect(report.factorGraph).not.toBeNull();
             expect(report.factorGraph.nodes.length).toEqual(finding.factors.length + 1);    // factors + root
             expect(report.factorGraph.edges.length).toEqual(finding.factors.length);
-            for (i = 0, len = finding.factors.length; i < len; i++) {
+            for (let i = 0, len = finding.factors.length; i < len; i++) {
                 expect(report.factorGraph.nodes[i + 1].eventTypes).toEqual([finding.factors[i]]);
                 expect(report.factorGraph.nodes[i + 1].types.indexOf(finding.factors[i])).not.toEqual(-1);
                 expect(report.factorGraph.nodes[i + 1].javaClass).toEqual(Constants.EVENT_JAVA_CLASS);

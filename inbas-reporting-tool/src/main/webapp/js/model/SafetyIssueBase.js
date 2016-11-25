@@ -35,7 +35,7 @@ class OccurrenceBase {
     }
 
     renderMoreInfo(options) {
-        var type = ObjectTypeResolver.resolveType(this, options.category);
+        const type = ObjectTypeResolver.resolveType(this, options.category);
         return type ? JsonLdUtils.getJsonAttValue(type, Vocabulary.RDFS_LABEL) : '';
     }
 }
@@ -66,7 +66,7 @@ class AuditFindingBase {
     }
 
     renderMoreInfo(options) {
-        var type = ObjectTypeResolver.resolveType(this, options.findingType),
+        const type = ObjectTypeResolver.resolveType(this, options.findingType),
             label = type ? JsonLdUtils.getJsonAttValue(type, Vocabulary.RDFS_LABEL) + ',' : '';
         return <div>
             <span className='issue-base-more-info'>{label}</span>
@@ -80,7 +80,7 @@ class AuditFindingBase {
 export default class SafetyIssueBase {
 
     static create(event, report) {
-        var base;
+        let base;
         if (report) {
             if (report.javaClass && report.javaClass === Constants.OCCURRENCE_REPORT_JAVA_CLASS) {
                 base = new OccurrenceBase();

@@ -47,18 +47,18 @@ class BasedOn extends React.Component {
     }
 
     render() {
-        var basedOn = this.props.report.safetyIssue.basedOn;
+        const basedOn = this.props.report.safetyIssue.basedOn;
         if (!basedOn || basedOn.length === 0) {
             return <Panel header={<h5>{this.i18n('safetyissue.based-on')}</h5>} bsStyle='info'>
                 <div className='italics'>{this.i18n('safety-issue.base.no-bases')}</div>
             </Panel>;
         }
-        var rows = [],
+        const rows = [],
             options = {
                 category: this.state.category,
                 findingType: this.state.findingType
             };
-        for (var i = 0, len = basedOn.length; i < len; i++) {
+        for (let i = 0, len = basedOn.length; i < len; i++) {
             rows.push(<BasedOnRow key={'based_on-' + basedOn[i].uri} base={basedOn[i]} onRemove={this.props.onRemove}
                                   options={options}/>);
         }
@@ -80,8 +80,8 @@ class BasedOn extends React.Component {
     }
 }
 
-var BasedOnRow = (props) => {
-    var i18n = props.i18n,
+let BasedOnRow = (props) => {
+    const i18n = props.i18n,
         base = SafetyIssueBase.create(props.base);
     return <tr>
         <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + base.reportKey}

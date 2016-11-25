@@ -190,6 +190,9 @@ export default class Generator {
                 endTime: Date.now(),
                 eventTypes: [Generator.randomCategory().id]
             },
+            isSafaReport: function () {
+                return false;
+            },
             isEccairsReport: function () {
                 return false;
             }
@@ -207,6 +210,12 @@ export default class Generator {
             safetyIssue: {
                 javaClass: Constants.SAFETY_ISSUE_JAVA_CLASS,
                 name: 'TestSafetyIssue'
+            },
+            isSafaReport: function () {
+                return false;
+            },
+            isEccairsReport: function () {
+                return false;
             }
         };
     }
@@ -267,6 +276,12 @@ export default class Generator {
             }
             report.occurrenceCategories = [Generator.randomCategory().id];
             delete report.occurrence;
+            report.isSafaReport = function () {
+                return false;
+            };
+            report.isEccairsReport = function () {
+                return false;
+            };
             reports.push(report);
         }
         return reports;
@@ -321,6 +336,9 @@ export default class Generator {
             },
             types: [Vocabulary.AUDIT_REPORT],
             isSafaReport: function () {
+                return false;
+            },
+            isEccairsReport: function () {
                 return false;
             }
         };
