@@ -139,7 +139,6 @@ public class EccairsService {
         if ( reportingEntity != null && reportingEntityFileNumber != null ) {
             LOG.info("Report matched to report: repEntity={} : repFileNumber={}", reportingEntity, reportingEntityFileNumber);
 
-            final String reportE5F = getCurrentEccairsReportByInitialFileNumberAndReportingEntity(reportingEntity, reportingEntityFileNumber);
             URI reportUri = findAndLoadLatestEccairsReport(reportingEntity, reportingEntityFileNumber);
             if(reportUri != null){
                 return occurrenceReportDao.find(reportUri);
