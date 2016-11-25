@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -151,6 +152,23 @@ public class ReportController extends BaseController {
             final HttpHeaders headers = RestUtils
                     .createLocationHeaderFromContextPath("/reports/{key}", result.getKey());
             return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        } catch (IOException e) {
+            throw new BadRequestException("Unable to read the uploaded file.", e);
+        }
+    }
+
+    /**
+     * Receives uploaded SAFA Excel spreadsheet (contains description of SAFA audits) and passes it to the SAFA Excel
+     * processing code.
+     *
+     * @param file The uploaded Excel spreadsheet
+     */
+    @RequestMapping(value = "/importSafa", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void importSafaExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            final InputStream stream = file.getInputStream();
+            // TODO
         } catch (IOException e) {
             throw new BadRequestException("Unable to read the uploaded file.", e);
         }

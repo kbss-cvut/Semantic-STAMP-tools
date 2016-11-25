@@ -96,12 +96,20 @@ const ReportStore = Reflux.createStore({
     },
 
     onImportE5Report: function (file, onSuccess, onError) {
-        Ajax.post(BASE_URL_WITH_SLASH + 'importE5').attach(file).end(function (data, resp) {
+        Ajax.post(BASE_URL_WITH_SLASH + 'importE5').attach(file).end((data, resp) => {
             if (onSuccess) {
                 const key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);
             }
-        }.bind(this), onError);
+        }, onError);
+    },
+
+    onImportSafaExcel: function (file, onSuccess, onError) {
+        Ajax.post(BASE_URL_WITH_SLASH + 'importSafa').attach(file).end(() => {
+            if (onSuccess) {
+                onSuccess();
+            }
+        }, onError);
     },
 
     onUpdateReport: function (report, onSuccess, onError) {

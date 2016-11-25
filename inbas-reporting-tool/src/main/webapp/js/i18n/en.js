@@ -87,6 +87,7 @@ module.exports = {
         'dashboard.recent-table-last-edited': 'Last modified',
         'dashboard.recent.no-reports': 'There are no reports, yet.',
         'dashboard.import.import-e5': 'Import E5X/E5F report',
+        'dashboard.import.import-safa': 'Import SAFA Excel',
 
         'dashboard.unprocessed': 'You have {count} unprocessed report(s).',
 

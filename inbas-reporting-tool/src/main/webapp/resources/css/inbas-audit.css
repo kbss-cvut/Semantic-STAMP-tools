@@ -496,6 +496,7 @@ button.reset-filters {
     min-height: 5em;
     width: 100%;
     max-width: 12em;
+    max-height: 12em;
     padding: 10px 16px;
     font-size: 18px;
     line-height: 1.3;
