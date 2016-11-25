@@ -7,9 +7,13 @@ import cz.cvut.kbss.eccairs.webapi.EwaIWebServer;
 import cz.cvut.kbss.eccairs.webapi.EwaResult;
 import cz.cvut.kbss.eccairs.webapi.EwaWebServer;
 import cz.cvut.kbss.eccairs.webapi.ResultReturnCode;
+import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
+import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
+import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
+import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -44,7 +48,12 @@ public class EccairsService {
     protected ReportImporter importer;
     
     @Autowired
-    protected OccurrenceReportDao occurrenceReportDao;
+    private OccurrenceReportService occurrenceReportService;
+
+    @Autowired
+    private FormGenService formGenService;
+//    @Autowired
+//    protected OccurrenceReportDao occurrenceReportDao;
     
     private EwaIWebServer service;
 
@@ -118,8 +127,22 @@ public class EccairsService {
         String s = getSingleStringValue(model,query,"o");
         return s == null ? defaultValue : s;
     }
+    
+    /**
+     * 
+     * @param key
+     * @return the latest occurrence report from the eccairs report repository matchin the report with key
+     */
+    public OccurrenceReport getEccairsLatestByKey(String key){
+        final OccurrenceReport report = occurrenceReportService.findByKey(key);
+        final RawJson s = formGenService.generateForm(report, Collections.emptyMap());
+        OccurrenceReport op = getEccairsLatestByJson(s.toString());
+        if(op == null)
+            throw new NotFoundException(String.format("Latest eccairs report for report with key %s not found!", key));
+        return op;
+    }
 
-    public OccurrenceReport getEccairsLatest(String rdfJsonLd) {
+    public OccurrenceReport getEccairsLatestByJson(String rdfJsonLd) {
         LOG.info("Report Model (String length): {}", rdfJsonLd.length());
 
         Model model = ModelFactory.createDefaultModel();
@@ -141,7 +164,7 @@ public class EccairsService {
 
             URI reportUri = findAndLoadLatestEccairsReport(reportingEntity, reportingEntityFileNumber);
             if(reportUri != null){
-                return occurrenceReportDao.find(reportUri);
+                return occurrenceReportService.find(reportUri);
             }
         }
 
