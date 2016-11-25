@@ -11,7 +11,7 @@ class ImportReport extends React.Component {
     static propTypes = {
         show: React.PropTypes.bool,
         onClose: React.PropTypes.func.isRequired,
-        import: React.PropTypes.func.isRequired
+        importHandlers: React.PropTypes.object.isRequired
     };
 
     static defaultProps = {
@@ -27,9 +27,14 @@ class ImportReport extends React.Component {
         }
     }
 
-    _onImport = (files) => {
+    _onImportE5 = (files) => {
         this.setState({uploading: true});
-        this.props.import(files[0], this.onImportSuccess, this.onImportError);
+        this.props.importHandlers.importE5(files[0], this.onImportSuccess, this.onImportError);
+    };
+
+    _onImportSafa = (files) => {
+        this.setState({uploading: true});
+        this.props.importHandlers.importSafa(files[0], this.onImportSuccess, this.onImportError);
     };
 
     onImportSuccess = () => {
@@ -54,10 +59,17 @@ class ImportReport extends React.Component {
                 <Grid fluid={true}>
                     {this._renderProgress()}
                     <Row>
-                        <Col xs={12} className='dashboard-sector'>
-                            <Dropzone onDrop={this._onImport} multiple={false} className='dropzone'
+                        <Col xs={6} className='dashboard-sector'>
+                            <Dropzone onDrop={this._onImportE5} multiple={false} className='dropzone'
                                       activeClassName='dropzone-active' title={this.i18n('dropzone-tooltip')}>
                                 <h4>{this.i18n('dashboard.import.import-e5')}</h4>
+                                <div className='message'>{this.i18n('dropzone.title')}</div>
+                            </Dropzone>
+                        </Col>
+                        <Col xs={6} className='dashboard-sector'>
+                            <Dropzone onDrop={this._onImportSafa} multiple={false} className='dropzone'
+                                      activeClassName='dropzone-active' title={this.i18n('dropzone-tooltip')}>
+                                <h4>{this.i18n('dashboard.import.import-safa')}</h4>
                                 <div className='message'>{this.i18n('dropzone.title')}</div>
                             </Dropzone>
                         </Col>

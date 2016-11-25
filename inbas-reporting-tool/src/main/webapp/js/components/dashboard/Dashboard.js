@@ -18,7 +18,7 @@ var Dashboard = React.createClass({
 
     propTypes: {
         createEmptyReport: React.PropTypes.func.isRequired,
-        importE5Report: React.PropTypes.func.isRequired,
+        importHandlers: React.PropTypes.object.isRequired,
         showAllReports: React.PropTypes.func.isRequired,
         openReport: React.PropTypes.func.isRequired,
         userFirstName: React.PropTypes.string,
@@ -46,7 +46,8 @@ var Dashboard = React.createClass({
 
     render: function () {
         return <div style={{margin: '0 -15px 0 -15px'}}>
-            <ImportReport import={this.props.importE5Report} onClose={this.cancelImport} show={this.state.showImport}/>
+            <ImportReport importHandlers={this.props.importHandlers} onClose={this.cancelImport}
+                          show={this.state.showImport}/>
             <div className='col-xs-8'>
                 {this._renderDashboard()}
                 <DashboardStatistics/>

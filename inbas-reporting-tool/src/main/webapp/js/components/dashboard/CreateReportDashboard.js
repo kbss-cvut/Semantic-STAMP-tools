@@ -8,7 +8,7 @@ import I18nWrapper from "../../i18n/I18nWrapper";
 import Vocabulary from "../../constants/Vocabulary";
 
 const CreateReportDashboard = (props) => {
-    var i18n = props.i18n;
+    const i18n = props.i18n;
     return <Grid fluid={true}>
         <Row>
             <Col xs={3} className='dashboard-sector left'>

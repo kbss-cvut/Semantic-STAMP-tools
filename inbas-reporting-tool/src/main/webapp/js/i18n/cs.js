@@ -88,6 +88,7 @@ module.exports = {
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
         'dashboard.recent.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
         'dashboard.import.import-e5': 'Importovat hlášení ve formátu E5X/E5F',
+        'dashboard.import.import-safa': 'Importovat SAFA Excel',
 
         'dashboard.unprocessed': 'Máte {count} nezpracovaných hlášení.',
 
