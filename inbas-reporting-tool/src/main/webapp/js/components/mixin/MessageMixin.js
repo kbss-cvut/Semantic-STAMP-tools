@@ -1,10 +1,11 @@
 'use strict';
 
-var React = require('react');
-var Alert = require('react-bootstrap').Alert;
+const React = require('react');
+const Alert = require('react-bootstrap').Alert;
 
+const Constants = require('../../constants/Constants');
 
-var MessageMixin = {
+const MessageMixin = {
     getInitialState: function () {
         return {
             message: null
@@ -48,8 +49,27 @@ var MessageMixin = {
         this._showMessage('warning', text);
     },
 
+    showMessage: function (text, msgType) {
+        switch (msgType) {
+            case Constants.MESSAGE_TYPE.INFO:
+                this.showInfoMessage(text);
+                break;
+            case Constants.MESSAGE_TYPE.ERROR:
+                this.showErrorMessage(text);
+                break;
+            case Constants.MESSAGE_TYPE.SUCCESS:
+                this.showSuccessMessage(text);
+                break;
+            case Constants.MESSAGE_TYPE.WARNING:
+                this.showWarnMessage(text);
+                break;
+            default:
+                break;
+        }
+    },
+
     renderMessage: function () {
-        return this.state.message ? <div className='form-group'>
+        return this.state.message ? <div className='message-container'>
             <Alert bsStyle={this.state.message.type} onDismiss={this.dismissMessage}>
                 <p>{this.state.message.text}</p>
             </Alert>

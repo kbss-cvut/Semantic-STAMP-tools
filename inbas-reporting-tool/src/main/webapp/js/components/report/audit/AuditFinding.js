@@ -71,28 +71,28 @@ class AuditFinding extends React.Component {
     }
 
     _resolveFindingType() {
-        var type = Utils.resolveType(this.state.finding.types, this.state.findingType);
+        const type = Utils.resolveType(this.state.finding.types, this.state.findingType);
         return type ? type.name : '';
     }
 
     _onTypeSelected = (option) => {
-        var types = this.state.finding.types ? this.state.finding.types.slice() : [],
+        const types = this.state.finding.types ? this.state.finding.types.slice() : [],
             origType = Utils.resolveType(types, this.state.findingType);
         if (origType) {
             types.splice(types.indexOf(origType.id), 1);
         }
         types.push(option.id);
-        var finding = assign({}, this.state.finding, {types: types});
+        const finding = assign({}, this.state.finding, {types: types});
         this.setState({finding: finding});
     };
 
     _onLevelSelected = (e) => {
-        var change = {level: Number(e.target.value)};
+        const change = {level: Number(e.target.value)};
         this._mergeChange(change);
     };
 
     _mergeChange = (change) => {
-        var finding = assign({}, this.state.finding, change);
+        const finding = assign({}, this.state.finding, change);
         this.setState({finding: finding});
     };
 
@@ -113,11 +113,11 @@ class AuditFinding extends React.Component {
     };
 
     render() {
-        var finding = this.state.finding;
+        const finding = this.state.finding;
         if (!finding) {
             return null;
         }
-        var findingType = this._resolveFindingType();
+        const findingType = this._resolveFindingType();
         return <Modal show={this.props.show} bsSize='large' animation={true} dialogClassName='large-modal'
                       onHide={this.props.onClose}>
             <Modal.Header closeButton>
@@ -169,9 +169,9 @@ class AuditFinding extends React.Component {
     }
 
     _renderLevels() {
-        var finding = this.state.finding,
+        const finding = this.state.finding,
             levels = [];
-        for (var i = 1; i <= Constants.FINDING_LEVEL_MAX; i++) {
+        for (let i = 1; i <= Constants.FINDING_LEVEL_MAX; i++) {
             levels.push(<div className='col-xs-2' key={'level_' + i}>
                 <div className='row'>
                     <div className='col-xs-8'>
@@ -189,12 +189,12 @@ class AuditFinding extends React.Component {
     }
 
     _renderSafaAttributes() {
-        return this.props.report.isSafa() ? <SafaAuditFindingAttributes finding={this.state.finding}/> : null;
+        return this.props.report.isSafaReport() ? <SafaAuditFindingAttributes finding={this.state.finding}/> : null;
     }
 
     _renderCorrectiveMeasures() {
         let finding = this.state.finding;
-        return this.props.report.isSafa() ? null : <div className='row'>
+        return this.props.report.isSafaReport() ? null : <div className='row'>
             <div className='col-xs-12'>
                 <FindingMeasures audit={this.props.audit} finding={finding}
                                  correctiveMeasures={finding.correctiveMeasures} onChange={this._mergeChange}/>

@@ -1,20 +1,20 @@
 'use strict';
 
-var React = require('react');
-var assign = require('object-assign');
+const React = require('react');
+const assign = require('object-assign');
 
-var Actions = require('../../actions/Actions');
-var RevisionInfo = require('../report/RevisionInfo');
-var Routes = require('../../utils/Routes');
-var Routing = require('../../utils/Routing');
+const Actions = require('../../actions/Actions');
+const RevisionInfo = require('../report/RevisionInfo');
+const Routes = require('../../utils/Routes');
+const Routing = require('../../utils/Routing');
 
 /**
  * Aggregates some of the methods that are common to all report detail controllers.
  */
-var ReportDetailControllerMixin = {
+const ReportDetailControllerMixin = {
 
     onChange: function (changes) {
-        var report = assign(this.props.report, changes);
+        const report = assign(this.props.report, changes);
         this.setState({report: report}); // Force update
     },
 
@@ -23,7 +23,7 @@ var ReportDetailControllerMixin = {
     },
 
     isLatestRevision: function () {
-        var revisions = this.props.revisions;
+        const revisions = this.props.revisions;
         if (!revisions || revisions.length === 0) {
             return true;
         }

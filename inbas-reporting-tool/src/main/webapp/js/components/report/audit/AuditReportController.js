@@ -1,7 +1,6 @@
 'use strict';
 
 var React = require('react');
-var assign = require('object-assign');
 
 var Actions = require('../../../actions/Actions');
 var ReportDetail = require('./AuditReport');
@@ -9,7 +8,6 @@ var ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMix
 var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
 var RouterStore = require('../../../stores/RouterStore');
-var Vocabulary = require('../../../constants/Vocabulary');
 
 var AuditReportController = React.createClass({
     propTypes: {
@@ -20,28 +18,6 @@ var AuditReportController = React.createClass({
     mixins: [
         ReportDetailControllerMixin
     ],
-
-    getInitialState: function () {
-        return {
-            report: this._initReport(this.props.report)
-        };
-    },
-
-    _initReport: function (report) {
-        let copy = assign({}, report);
-        copy.isSafa = function () {
-            return this.types.indexOf(Vocabulary.SAFA_REPORT) !== -1;
-        };
-        return copy;
-    },
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.report !== this.props.report) {
-            this.setState({
-                report: this._initReport(nextProps.report)
-            });
-        }
-    },
 
     onSuccess: function (key) {
         if (this.props.report.isNew) {
@@ -61,7 +37,7 @@ var AuditReportController = React.createClass({
     },
 
     onCancel: function () {
-        var handlers = RouterStore.getViewHandlers(this.props.report.isNew ? Routes.createReport.name : Routes.editReport.name);
+        const handlers = RouterStore.getViewHandlers(this.props.report.isNew ? Routes.createReport.name : Routes.editReport.name);
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
         } else {
@@ -72,7 +48,7 @@ var AuditReportController = React.createClass({
     _resolveReadOnlyProps: function () {
         let roProps = {};
         roProps.readOnly = !this.isLatestRevision();
-        if (this.state.report.isSafa()) {
+        if (this.props.report.isSafaReport()) {
             roProps.readOnly = true;
             roProps.readOnlyMessage = 'audit.safa.readonly.message';
         }
@@ -81,13 +57,13 @@ var AuditReportController = React.createClass({
 
 
     render: function () {
-        var handlers = {
+        const handlers = {
             onChange: this.onChange,
             onSuccess: this.onSuccess,
             onCancel: this.onCancel,
             onRemove: this.onRemove
         };
-        return <ReportDetail report={this.state.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+        return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
                              {...this._resolveReadOnlyProps()}/>;
     }
 });

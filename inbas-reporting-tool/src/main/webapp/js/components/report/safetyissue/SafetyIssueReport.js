@@ -50,21 +50,13 @@ var SafetyIssueReport = React.createClass({
     },
 
     onMessage: function (msg) {
-        if (msg.source !== Actions.addSafetyIssueBase) {
-            return;
-        }
-        switch (msg.type) {
-            case Constants.MESSAGE_TYPE.SUCCESS:
-                this.showSuccessMessage(this.i18n(msg.message));
-                break;
-            case Constants.MESSAGE_TYPE.WARNING:
-                this.showWarnMessage(this.i18n(msg.message));
-                break;
+        if (msg.source === Actions.addSafetyIssueBase) {
+            this.showMessage(this.i18n(msg.message), msg.type);
         }
     },
 
     onNameChange: function (e) {
-        var issue = assign({}, this.props.report.safetyIssue);
+        const issue = assign({}, this.props.report.safetyIssue);
         issue.name = e.target.value;
         this.onChanges({safetyIssue: issue});
     },

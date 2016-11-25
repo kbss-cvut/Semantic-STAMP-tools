@@ -1,15 +1,15 @@
 'use strict';
 
-var React = require('react');
-var assign = require('object-assign');
-var JsonLdUtils = require('jsonld-utils').default;
-var ArmsUtils = require('../utils/ArmsUtils').default;
-var CollapsibleText = require('../components/CollapsibleText');
-var Constants = require('../constants/Constants');
-var I18nStore = require('../stores/I18nStore');
-var SafetyIssueBase = require('./SafetyIssueBase').default;
-var Utils = require('../utils/Utils');
-var Vocabulary = require('../constants/Vocabulary');
+const React = require('react');
+const assign = require('object-assign');
+const JsonLdUtils = require('jsonld-utils').default;
+const ArmsUtils = require('../utils/ArmsUtils').default;
+const CollapsibleText = require('../components/CollapsibleText');
+const Constants = require('../constants/Constants');
+const I18nStore = require('../stores/I18nStore');
+const SafetyIssueBase = require('./SafetyIssueBase').default;
+const Utils = require('../utils/Utils');
+const Vocabulary = require('../constants/Vocabulary');
 
 class OccurrenceReport {
     constructor(data) {
@@ -25,12 +25,24 @@ class OccurrenceReport {
         if (!this.phase) {
             return '';
         }
-        for (var i = 0, len = phaseMapping.length; i < len; i++) {
+        for (let i = 0, len = phaseMapping.length; i < len; i++) {
             if (phaseMapping[i]['@id'] === this.phase) {
                 return JsonLdUtils.getLocalized(phaseMapping[i][Vocabulary.RDFS_LABEL], intl);
             }
         }
         return this.phase;
+    }
+
+    getPrimaryLabel() {
+        return 'occurrencereport.label';
+    }
+
+    /**
+     * Returns all the labels this report type supports.
+     * @return {[string]}
+     */
+    getLabels() {
+        return ['occurrencereport.label'];
     }
 
     /**
@@ -51,10 +63,6 @@ class OccurrenceReport {
         return this.armsIndex ? I18nStore.i18n('arms.index.tooltip') + this.armsIndex : '';
     }
 
-    getLabel() {
-        return 'occurrencereport.label';
-    }
-
     toString() {
         return 'occurrencereport.title';
     }
@@ -65,6 +73,16 @@ class OccurrenceReport {
 
     renderMoreInfo() {
         return <CollapsibleText text={this.summary}/>;
+    }
+}
+
+class EccairsOccurrenceReport extends OccurrenceReport {
+    constructor(data) {
+        super(data);
+    }
+
+    getLabels() {
+        return super.getLabels().concat('report.eccairs.label');
     }
 }
 
@@ -97,7 +115,7 @@ class SafetyIssueReport {
      */
     getStatusInfo(options, intl) {
         if (this.sira) {
-            for (var i = 0, len = options.length; i < len; i++) {
+            for (let i = 0, len = options.length; i < len; i++) {
                 if (this.sira === options[i]['@id']) {
                     return JsonLdUtils.getLocalized(options[i][Vocabulary.RDFS_LABEL], intl);
                 }
@@ -106,8 +124,12 @@ class SafetyIssueReport {
         return '';
     }
 
-    getLabel() {
+    getPrimaryLabel() {
         return 'safetyissuereport.label';
+    }
+
+    getLabels() {
+        return ['safetyissuereport.label'];
     }
 
     toString() {
@@ -153,10 +175,10 @@ class SafetyIssueReport {
             };
             this.factorGraph.nodes.push(this.safetyIssue);
         }
-        var referenceMap = {};
+        const referenceMap = {};
         referenceMap[source.factorGraph.nodes[0].referenceId] = this.safetyIssue;   //This is the occurrence
-        var node, nodeClone;
-        for (var i = 1, len = source.factorGraph.nodes.length; i < len; i++) {
+        let node, nodeClone;
+        for (let i = 1, len = source.factorGraph.nodes.length; i < len; i++) {
             node = source.factorGraph.nodes[i];
             nodeClone = {
                 referenceId: Utils.randomInt(),
@@ -168,8 +190,8 @@ class SafetyIssueReport {
             referenceMap[node.referenceId] = nodeClone;
             this.factorGraph.nodes.push(nodeClone);
         }
-        var edge;
-        for (i = 0, len = source.factorGraph.edges.length; i < len; i++) {
+        let edge;
+        for (let i = 0, len = source.factorGraph.edges.length; i < len; i++) {
             edge = source.factorGraph.edges[i];
             this.factorGraph.edges.push({
                 linkType: edge.linkType,
@@ -187,8 +209,8 @@ class SafetyIssueReport {
             };
             this.factorGraph.nodes.push(this.safetyIssue);
         }
-        var node;
-        for (var i = 0, len = finding.factors.length; i < len; i++) {
+        let node;
+        for (let i = 0, len = finding.factors.length; i < len; i++) {
             node = {
                 eventTypes: [finding.factors[i]],
                 types: [finding.factors[i]],
@@ -237,8 +259,12 @@ class AuditReport {
         return '';
     }
 
-    getLabel() {
+    getPrimaryLabel() {
         return 'auditreport.label';
+    }
+
+    getLabels() {
+        return ['auditreport.label'];
     }
 
     toString() {
@@ -254,7 +280,17 @@ class AuditReport {
     }
 }
 
-var REPORT_TYPES = {};
+class SafaAuditReport extends AuditReport {
+    constructor(data) {
+        super(data);
+    }
+
+    getLabels() {
+        return super.getLabels().concat('report.safa.label');
+    }
+}
+
+const REPORT_TYPES = {};
 
 REPORT_TYPES[Vocabulary.OCCURRENCE_REPORT] = OccurrenceReport;
 REPORT_TYPES[Constants.OCCURRENCE_REPORT_JAVA_CLASS] = OccurrenceReport;
@@ -266,18 +302,18 @@ REPORT_TYPES[Vocabulary.AUDIT_REPORT] = AuditReport;
 REPORT_TYPES[Constants.AUDIT_REPORT_JAVA_CLASS] = AuditReport;
 REPORT_TYPES[Constants.AUDIT_REPORT_LIST_ITEM_JAVA_CLASS] = AuditReport;
 
-var ReportType = {
+const ReportType = {
 
     getDetailController: function (report) {
         return this._getReportClass(report).getDetailController();
     },
 
     getTypeLabel: function (type) {
-        return REPORT_TYPES[type] ? new REPORT_TYPES[type]().getLabel() : null;
+        return REPORT_TYPES[type] ? new REPORT_TYPES[type]().getPrimaryLabel() : null;
     },
 
     getReport: function (data, suppressError) {
-        var cls = this._getReportClass(data);
+        const cls = this._getReportClass(data);
         if (!suppressError && !cls) {
             throw 'Unsupported report type ' + data;
         }
@@ -285,8 +321,14 @@ var ReportType = {
     },
 
     _getReportClass: function (data) {
+        if (data.isSafaReport && data.isSafaReport()) {
+            return SafaAuditReport;
+        }
+        if (data.isEccairsReport && data.isEccairsReport()) {
+            return EccairsOccurrenceReport;
+        }
         if (data.types) {
-            for (var i = 0, len = data.types.length; i < len; i++) {
+            for (let i = 0, len = data.types.length; i < len; i++) {
                 if (REPORT_TYPES[data.types[i]]) {
                     return REPORT_TYPES[data.types[i]];
                 }

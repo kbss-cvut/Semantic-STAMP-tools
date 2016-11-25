@@ -3,7 +3,7 @@
 import Constants from "../../js/constants/Constants";
 import Vocabulary from "../../js/constants/Vocabulary";
 
-var CATEGORIES = [
+const CATEGORIES = [
     {
         "id": "http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1",
         "description": "1 - AMAN: Abrupt maneuvre",
@@ -65,7 +65,7 @@ var CATEGORIES = [
         "name": "15 - RE: Runway excursion"
     }];
 
-var FACTOR_TYPES = [
+const FACTOR_TYPES = [
     'http://onto.fel.cvut.cz/ontologies/aviation-safety/causes',
     'http://onto.fel.cvut.cz/ontologies/aviation-safety/contributes_to',
     'http://onto.fel.cvut.cz/ontologies/aviation-safety/mitigates'
@@ -75,7 +75,7 @@ var FACTOR_TYPES = [
  * JSON-LD example, framed.
  * @type {*[]}
  */
-var JSON_LD = [
+const JSON_LD = [
     {
         "@id": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-430/v-1",
         "@type": "http://onto.fel.cvut.cz/ontologies/eccairs/occurrence-category",
@@ -109,9 +109,9 @@ export default class Generator {
     static _uriBase = 'http://onto.fel.cvut.cz/ontologies/inbas';
 
     static generateFactorGraphNodes() {
-        var nodes = [],
-            referenceIdCounter = Date.now();
-        for (var i = 0, len = Generator.getRandomPositiveInt(5, 10); i < len; i++) {
+        const nodes = [];
+        let referenceIdCounter = Date.now();
+        for (let i = 0, len = Generator.getRandomPositiveInt(5, 10); i < len; i++) {
             nodes.push({
                 uri: "http://onto.fel.cvut.cz/ontologies/ufo/Event-" + i,
                 startTime: Date.now() - 60000,
@@ -124,18 +124,18 @@ export default class Generator {
     }
 
     static generatePartOfLinksForNodes(root, nodes) {
-        var parents = [root],
+        let parents = [root],
             links = [], index = 1,
             childCount;
         while (index < nodes.length - 1) {
-            var newParents = [];
-            for (var j = 0, len = parents.length; j < len; j++) {
+            let newParents = [];
+            for (let j = 0, len = parents.length; j < len; j++) {
                 if (nodes.length - 1 < index) {
                     break;
                 }
                 childCount = Generator.getRandomPositiveInt(1, nodes.length - index);
-                var parent = parents[j];
-                for (var i = index; i < index + childCount; i++) {
+                const parent = parents[j];
+                for (let i = index; i < index + childCount; i++) {
                     links.push({from: parent, to: nodes[i], linkType: Vocabulary.HAS_PART});
                     newParents.push(nodes[i]);
                 }
@@ -151,10 +151,11 @@ export default class Generator {
      * @param nodes Nodes in the factor graph
      */
     static generateFactorLinksForNodes(nodes) {
-        var cnt = Generator.getRandomPositiveInt(nodes.length / 2, nodes.length * 2),
-            links = [], lnk;
-        for (var i = 0; i < cnt; i++) {
-            var fromInd = Generator.getRandomInt(nodes.length),
+        const cnt = Generator.getRandomPositiveInt(nodes.length / 2, nodes.length * 2),
+            links = [];
+        let lnk;
+        for (let i = 0; i < cnt; i++) {
+            let fromInd = Generator.getRandomInt(nodes.length),
                 toInd = Generator.getRandomInt(nodes.length);
             lnk = {
                 from: nodes[fromInd],
@@ -189,7 +190,10 @@ export default class Generator {
                 endTime: Date.now(),
                 eventTypes: [Generator.randomCategory().id]
             },
-            isEccairsReport: function() {
+            isSafaReport: function () {
+                return false;
+            },
+            isEccairsReport: function () {
                 return false;
             }
         };
@@ -206,6 +210,12 @@ export default class Generator {
             safetyIssue: {
                 javaClass: Constants.SAFETY_ISSUE_JAVA_CLASS,
                 name: 'TestSafetyIssue'
+            },
+            isSafaReport: function () {
+                return false;
+            },
+            isEccairsReport: function () {
+                return false;
             }
         };
     }
@@ -224,7 +234,7 @@ export default class Generator {
      * @return {number}
      */
     static getRandomInt(max) {
-        var min = 0,
+        let min = 0,
             bound = max ? max : Number.MAX_SAFE_INTEGER;
         return Math.floor(Math.random() * (bound - min)) + min;
     }
@@ -236,7 +246,7 @@ export default class Generator {
      * @return {number}
      */
     static getRandomPositiveInt(min, max) {
-        var bound = max ? max : Number.MAX_SAFE_INTEGER;
+        let bound = max ? max : Number.MAX_SAFE_INTEGER;
         if (min === null || min === undefined) {
             min = 1;
         }
@@ -251,10 +261,10 @@ export default class Generator {
      * Generates a random number of reports.
      */
     static generateReports() {
-        var count = this.getRandomPositiveInt(5, 100),
-            reports = [],
-            report;
-        for (var i = 0; i < count; i++) {
+        const count = this.getRandomPositiveInt(5, 100),
+            reports = [];
+        let report;
+        for (let i = 0; i < count; i++) {
             report = {};
             report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
             report.identification = 'GeneratedReport ' + i;
@@ -266,6 +276,12 @@ export default class Generator {
             }
             report.occurrenceCategories = [Generator.randomCategory().id];
             delete report.occurrence;
+            report.isSafaReport = function () {
+                return false;
+            };
+            report.isEccairsReport = function () {
+                return false;
+            };
             reports.push(report);
         }
         return reports;
@@ -288,8 +304,8 @@ export default class Generator {
      * @return {Array} Generated measures
      */
     static generateCorrectiveMeasures() {
-        var measures = [];
-        for (var i = 0; i < Generator.getRandomPositiveInt(2, 10); i++) {
+        const measures = [];
+        for (let i = 0; i < Generator.getRandomPositiveInt(2, 10); i++) {
             measures.push({
                 uri: Generator.getRandomUri(),
                 description: 'Corrective measure ' + i,
@@ -304,7 +320,7 @@ export default class Generator {
      * Generates audit report with audit findings.
      */
     static generateAuditReport() {
-        var report = {
+        const report = {
             key: Generator.getRandomInt().toString(),
             revision: 1,
             javaClass: Constants.AUDIT_REPORT_JAVA_CLASS,
@@ -318,9 +334,15 @@ export default class Generator {
                 },
                 findings: []
             },
-            types: [Vocabulary.AUDIT_REPORT]
+            types: [Vocabulary.AUDIT_REPORT],
+            isSafaReport: function () {
+                return false;
+            },
+            isEccairsReport: function () {
+                return false;
+            }
         };
-        for (var i = 0, count = Generator.getRandomPositiveInt(5, 10); i < count; i++) {
+        for (let i = 0, count = Generator.getRandomPositiveInt(5, 10); i < count; i++) {
             report.audit.findings.push({
                 uri: Generator.getRandomUri(),
                 description: 'Finding description ' + i,
@@ -336,7 +358,7 @@ export default class Generator {
      * @return {*} The shuffled array (it is the same instance as the parameter)
      */
     static shuffleArray(arr) {
-        var currentIndex = arr.length,
+        let currentIndex = arr.length,
             tmp, randomIndex;
         while (currentIndex !== 0) {
             randomIndex = Math.floor(Math.random() * currentIndex);
@@ -350,7 +372,7 @@ export default class Generator {
     }
 
     static generateAttachments() {
-        let attachments = [];
+        const attachments = [];
         for (let i = 0, cnt = Generator.getRandomPositiveInt(5, 10); i < cnt; i++) {
             attachments.push({
                 uri: Generator.getRandomUri(),

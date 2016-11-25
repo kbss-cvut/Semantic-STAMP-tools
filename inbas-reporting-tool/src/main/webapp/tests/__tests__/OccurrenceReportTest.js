@@ -2,7 +2,7 @@
 
 describe('OccurrenceReport', function () {
 
-    var React = require('react'),
+    const React = require('react'),
         TestUtils = require('react-addons-test-utils'),
         rewire = require('rewire'),
         Environment = require('../environment/Environment'),
@@ -10,8 +10,8 @@ describe('OccurrenceReport', function () {
         Actions = require('../../js/actions/Actions'),
         ReportFactory = require('../../js/model/ReportFactory'),
         OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),
-        messages = require('../../js/i18n/en').messages,
-        handlers,
+        messages = require('../../js/i18n/en').messages;
+    let handlers,
         report;
 
     beforeEach(function () {
@@ -23,7 +23,7 @@ describe('OccurrenceReport', function () {
     });
 
     it('Gets factor graph on submit', () => {
-        var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             saveEvent = {
                 preventDefault: function () {
                 }
@@ -36,7 +36,7 @@ describe('OccurrenceReport', function () {
     it('calls createReport when new report is saved', () => {
         report.isNew = true;
         spyOn(Actions, 'createReport');
-        var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             saveEvent = {
                 preventDefault: function () {
                 }
@@ -48,7 +48,7 @@ describe('OccurrenceReport', function () {
     });
 
     it('calls updateReport when an existing report is saved', () => {
-        var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             saveEvent = {
                 preventDefault: function () {
                 }
@@ -61,19 +61,19 @@ describe('OccurrenceReport', function () {
 
     it('does not display report file number when it is not defined (e.g. for new reports.)', () => {
         report = ReportFactory.createOccurrenceReport();
-        var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
         expect(Environment.getComponentByTagAndContainedText(component, 'h3', messages['fileNo'])).toBeNull();
     });
 
     it('does not display \'Create new revision\' button for new reports', () => {
         report = ReportFactory.createOccurrenceReport();
-        var component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
-        expect(Environment.getComponentByTagAndText(component, 'button', messages['detail.submit'])).toBeNull();
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
+        expect(Environment.getComponentByTagAndText(component, 'a', messages['detail.submit'])).toBeNull();
     });
 
     it('does not render the ECCAIRS report button for regular occurrence reports', () => {
         report = ReportFactory.createOccurrenceReport();
-        let component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             topRightButtons = TestUtils.scryRenderedDOMComponentsWithClass(component, 'detail-top-button');
         expect(topRightButtons.length).toEqual(1);
     });
@@ -83,8 +83,40 @@ describe('OccurrenceReport', function () {
         report.isEccairsReport = function () {
             return true;
         };
-        let component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             topRightButtons = TestUtils.scryRenderedDOMComponentsWithClass(component, 'detail-top-button');
         expect(topRightButtons.length).toEqual(2);
+    });
+
+    it('does not render the create new revision from the latest ECCAIRS report action item when report was not imported from ECCAIRS', () => {
+        report = ReportFactory.createOccurrenceReport();
+        report.isEccairsReport = function () {
+            return false;
+        };
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            menuItems = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').MenuItem),
+            revFromEccairs = menuItems.find(item => item.props.onClick === component._onNewRevisionForEccairs);
+        expect(revFromEccairs).not.toBeDefined();
+    });
+
+    it('renders the create new revision from the latest ECCAIRS report action item when report was imported from ECCAIRS', () => {
+        report = ReportFactory.createOccurrenceReport();
+        report.isEccairsReport = function () {
+            return true;
+        };
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            menuItems = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').MenuItem),
+            revFromEccairs = menuItems.find(item => item.props.onClick === component._onNewRevisionForEccairs);
+        expect(revFromEccairs).toBeDefined();
+    });
+
+    it('renders info about report being ECCAIRS in the panel header', () => {
+        report = ReportFactory.createOccurrenceReport();
+        report.isEccairsReport = function () {
+            return true;
+        };
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            header = TestUtils.findRenderedDOMComponentWithTag(component, 'h2');
+        expect(header.textContent.indexOf(messages['report.eccairs.label'])).not.toEqual(-1);
     });
 });

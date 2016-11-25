@@ -1,35 +1,37 @@
 'use strict';
 
-var React = require('react');
-var Button = require('react-bootstrap').Button;
-var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
-var DropdownButton = require('react-bootstrap').DropdownButton;
-var MenuItem = require('react-bootstrap').MenuItem;
-var Panel = require('react-bootstrap').Panel;
-var assign = require('object-assign');
-var injectIntl = require('../../../utils/injectIntl');
+const React = require('react');
+const Reflux = require('reflux');
+const Button = require('react-bootstrap').Button;
+const ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+const DropdownButton = require('react-bootstrap').DropdownButton;
+const MenuItem = require('react-bootstrap').MenuItem;
+const Panel = require('react-bootstrap').Panel;
+const assign = require('object-assign');
+const injectIntl = require('../../../utils/injectIntl');
 
-var Actions = require('../../../actions/Actions');
-var ArmsAttributes = require('../arms/ArmsAttributes').default;
-var Attachments = require('../attachment/Attachments').default;
-var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
-var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
-var Department = require('./Department').default;
-var EccairsReportButton = require('./EccairsReportButton').default;
-var Factors = require('../../factor/Factors');
-var I18nMixin = require('../../../i18n/I18nMixin');
-var MessageMixin = require('../../mixin/MessageMixin');
-var PhaseTransition = require('../../misc/PhaseTransition').default;
-var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
-var ReportProvenance = require('../ReportProvenance').default;
-var ReportSummary = require('../ReportSummary').default;
-var ReportValidator = require('../../../validation/ReportValidator');
-var SafetyIssueSelector = require('../safetyissue/SafetyIssueSelector').default;
-var WizardGenerator = require('../../wizard/generator/WizardGenerator');
-var WizardWindow = require('../../wizard/WizardWindow');
+const Actions = require('../../../actions/Actions');
+const ArmsAttributes = require('../arms/ArmsAttributes').default;
+const Attachments = require('../attachment/Attachments').default;
+const BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
+const CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
+const Department = require('./Department').default;
+const EccairsReportButton = require('./EccairsReportButton').default;
+let Factors = require('../../factor/Factors');
+const I18nMixin = require('../../../i18n/I18nMixin');
+const MessageMixin = require('../../mixin/MessageMixin');
+const MessageStore = require('../../../stores/MessageStore');
+const PhaseTransition = require('../../misc/PhaseTransition').default;
+const ReportDetailMixin = require('../../mixin/ReportDetailMixin');
+const ReportProvenance = require('../ReportProvenance').default;
+const ReportSummary = require('../ReportSummary').default;
+const ReportValidator = require('../../../validation/ReportValidator');
+const SafetyIssueSelector = require('../safetyissue/SafetyIssueSelector').default;
+const WizardGenerator = require('../../wizard/generator/WizardGenerator');
+const WizardWindow = require('../../wizard/WizardWindow');
 
-var OccurrenceReport = React.createClass({
-    mixins: [MessageMixin, I18nMixin, ReportDetailMixin],
+const OccurrenceReport = React.createClass({
+    mixins: [MessageMixin, I18nMixin, ReportDetailMixin, Reflux.listenTo(MessageStore, '_onMessage')],
 
     propTypes: {
         handlers: React.PropTypes.object,
@@ -52,12 +54,18 @@ var OccurrenceReport = React.createClass({
         this.cleanupMessages();
     },
 
+    _onMessage: function (msg) {
+        if (msg.source === Actions.loadEccairsReport) {
+            this.showMessage(this.i18n(msg.message), msg.type);
+        }
+    },
+
     onChanges: function (changes) {
         this.props.handlers.onChange(changes);
     },
 
     onSave: function () {
-        var report = this.props.report,
+        let report = this.props.report,
             factors = this.refs.factors.getWrappedInstance();
         this.onLoading();
         report.factorGraph = factors.getFactorGraph();
@@ -75,7 +83,7 @@ var OccurrenceReport = React.createClass({
 
     _reportSummary: function () {
         this.setState({loadingWizard: true});
-        var report = assign({}, this.props.report);
+        let report = assign({}, this.props.report);
         report.factorGraph = this.refs.factors.getWrappedInstance().getFactorGraph();
         WizardGenerator.generateSummaryWizard(report, this.i18n('report.summary'), this.openSummaryWizard);
     },
@@ -97,8 +105,13 @@ var OccurrenceReport = React.createClass({
         this.setState({showSafetyIssueSelector: true});
     },
 
+    _onNewRevisionForEccairs: function () {
+        this.onLoading();
+        Actions.newRevisionFromLatestEccairs(this.props.report, this.onSubmitSuccess, this.onSubmitError);
+    },
+
     render: function () {
-        var report = this.props.report;
+        const report = this.props.report;
 
         return <div>
             <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
@@ -158,13 +171,17 @@ var OccurrenceReport = React.createClass({
     },
 
     renderHeader: function () {
-        var fileNo = null;
+        let fileNo = null;
         if (this.props.report.fileNumber) {
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
         }
+        let label = this.i18n('occurrencereport.title');
+        if (this.props.report.isEccairsReport()) {
+            label += ' (' + this.i18n('report.eccairs.label') + ')';
+        }
         return <div>
-            <h2 className='panel-title pull-left'>{this.i18n('occurrencereport.title')}</h2>
+            <h2 className='panel-title pull-left'>{label}</h2>
             {fileNo}
             <div style={{clear: 'both'}}/>
         </div>;
@@ -174,7 +191,7 @@ var OccurrenceReport = React.createClass({
         if (this.props.readOnly) {
             return this.renderReadOnlyButtons();
         }
-        var loading = this.state.submitting,
+        let loading = this.state.submitting,
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
@@ -183,16 +200,13 @@ var OccurrenceReport = React.createClass({
                     onClick={this.onSave}>{saveLabel}</Button>
             <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-            {this.renderSubmitButton()}
-            <PhaseTransition report={this.props.report} onLoading={this.onLoading}
-                             onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
-            {this._renderCreateSafetyIssueButton()}
+            {this._renderDropdown()}
             {this.renderDeleteButton()}
         </ButtonToolbar>;
     },
 
     getSaveButtonTitle: function () {
-        var titleProp = 'detail.save-tooltip';
+        let titleProp = 'detail.save-tooltip';
         if (this.state.submitting) {
             titleProp = 'detail.saving';
         } else if (!ReportValidator.isValid(this.props.report)) {
@@ -201,25 +215,50 @@ var OccurrenceReport = React.createClass({
         return this.i18n(titleProp);
     },
 
-    renderSubmitButton: function () {
-        return this.props.report.isNew ? null :
-            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')} onClick={this.onSubmit}>
-                {this.i18n('detail.submit')}
-            </Button>;
+    _renderDropdown: function () {
+        const items = [];
+        items.push(<PhaseTransition key='phase-transition' report={this.props.report} onLoading={this.onLoading}
+                                    menuItem={true} onSuccess={this.onPhaseTransitionSuccess}
+                                    onError={this.onPhaseTransitionError}/>);
+        items.push(this._renderNewRevision());
+        Array.prototype.push.apply(items, this._renderCreateSafetyIssue());
+        Array.prototype.push.apply(items, this._renderEccairsOverwrite());
+        return <DropdownButton id='occurrence-report-actions' bsStyle='primary' bsSize='small'
+                               title={this.i18n('table-actions')} dropup pullRight>
+            {items}
+        </DropdownButton>;
     },
 
-    _renderCreateSafetyIssueButton: function () {
-        if (this.props.report.isNew) {
-            return null;
+    _renderNewRevision: function () {
+        return this.props.report.isNew ? null :
+            <MenuItem key='submit' title={this.i18n('detail.submit-tooltip')} onClick={this.onSubmit}>
+                {this.i18n('detail.submit')}
+            </MenuItem>;
+    },
+
+    _renderCreateSafetyIssue: function () {
+        const items = [];
+        if (!this.props.report.isNew) {
+            items.push(<MenuItem key='si-divider' divider/>);
+            items.push(<MenuItem key='si-header' header>{this.i18n('safetyissuereport.label')}</MenuItem>);
+            items.push(<MenuItem key='si-create' onClick={this.props.handlers.onCreateSafetyIssue}
+                                 title={this.i18n('occurrencereport.create-safety-issue-tooltip')}>{this.i18n('occurrencereport.create-safety-issue')}</MenuItem>);
+            items.push(<MenuItem key='si-add' onClick={this._onOpenSafetyIssueSelector}
+                                 title={this.i18n('occurrencereport.add-as-safety-issue-base-tooltip')}>{this.i18n('occurrencereport.add-as-safety-issue-base')}</MenuItem>);
         }
-        return <DropdownButton id='safetyIssueSelector' bsStyle='primary' bsSize='small'
-                               title={this.i18n('safetyissuereport.label')}
-                               pullRight={true}>
-            <MenuItem onClick={this.props.handlers.onCreateSafetyIssue}
-                      title={this.i18n('occurrencereport.create-safety-issue-tooltip')}>{this.i18n('occurrencereport.create-safety-issue')}</MenuItem>
-            <MenuItem onClick={this._onOpenSafetyIssueSelector}
-                      title={this.i18n('occurrencereport.add-as-safety-issue-base-tooltip')}>{this.i18n('occurrencereport.add-as-safety-issue-base')}</MenuItem>
-        </DropdownButton>;
+        return items;
+    },
+
+    _renderEccairsOverwrite: function () {
+        const items = [];
+        if (this.props.report.isEccairsReport()) {
+            items.push(<MenuItem key='eccairs-divider' divider/>);
+            items.push(<MenuItem key='eccairs-new-revision'
+                                 title={this.i18n('report.eccairs.create-new-revision.tooltip')}
+                                 onClick={this._onNewRevisionForEccairs}>{this.i18n('report.eccairs.create-new-revision.label')}
+            </MenuItem>);
+        }
+        return items;
     },
 
     _renderSafetyIssueSelector: function () {
