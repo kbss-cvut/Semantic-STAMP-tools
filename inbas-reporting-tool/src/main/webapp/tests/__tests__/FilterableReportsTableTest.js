@@ -20,7 +20,8 @@ describe('Filterable reports table', function () {
         spyOn(ReportType, 'getReport').and.callFake((data) => {
             var obj = assign({}, data);
             obj.renderMoreInfo = () => '';
-            obj.getLabel = () => 'Label';
+            obj.getPrimaryLabel = () => 'Label';
+            obj.getLabels = () => 'Label';
             obj.getPhase = () => '';
             obj.getStatusCssClass = () => '';
             obj.getStatusInfo = () => '';

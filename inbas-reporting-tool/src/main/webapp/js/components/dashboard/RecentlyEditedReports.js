@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -63,24 +59,23 @@ var RecentlyEditedReports = React.createClass({
         }
         var recentReports = this.renderRecentReports(this.filterRecentReports());
         if (recentReports.length > 0) {
-            return (<Table striped bordered condensed hover>
+            return <Table striped bordered condensed hover>
                 <thead>
                 <tr>
                     <th className='col-xs-5'>{this.i18n('headline')}</th>
-                    <th className='col-xs-3' className='content-center' title={this.i18n('reports.table-date.tooltip')}>
+                    <th className='col-xs-3 content-center' title={this.i18n('reports.table-date.tooltip')}>
                         {this.i18n('reports.table-date')}
                     </th>
-                    <th className='col-xs-3'
-                        className='content-center'>{this.i18n('dashboard.recent-table-last-edited')}</th>
-                    <th className='col-xs-1' className='content-center'>{this.i18n('reports.table-type')}</th>
+                    <th className='col-xs-3 content-center'>{this.i18n('dashboard.recent-table-last-edited')}</th>
+                    <th className='col-xs-1 content-center'>{this.i18n('reports.table-type')}</th>
                 </tr>
                 </thead>
                 <tbody>
                 {recentReports}
                 </tbody>
-            </Table>);
+            </Table>;
         } else {
-            return (<div>{this.i18n('dashboard.recent.no-reports')}</div>);
+            return <div>{this.i18n('dashboard.recent.no-reports')}</div>;
         }
     },
 
@@ -102,25 +97,23 @@ var ReportRow = injectIntl(React.createClass({
     },
 
     render: function () {
-        var report = ReportType.getReport(this.props.report),
+        const report = ReportType.getReport(this.props.report),
             vAlign = {verticalAlign: 'middle'},
             dateEdited = report.lastModified ? report.lastModified : report.dateCreated;
-        return (
-            <tr>
-                <td style={vAlign}>
-                    <a href='javascript:void(0);' onClick={this.onOpenClick}
-                       title={this.i18n('reports.open-tooltip')}><CollapsibleText
-                        text={report.identification}
-                        maxLength={20}/></a>
-                </td>
-                <td style={vAlign}
-                    className='content-center'>{report.date ? Utils.formatDate(new Date(report.date)) : ''}</td>
-                <td style={vAlign} className='content-center'>{Utils.formatDate(new Date(dateEdited))}</td>
-                <td style={vAlign} className='content-center'>
-                    <Label title={this.i18n(report.toString())}>{this.i18n(report.getLabel())}</Label>
-                </td>
-            </tr>
-        );
+        return <tr>
+            <td style={vAlign}>
+                <a href='javascript:void(0);' onClick={this.onOpenClick}
+                   title={this.i18n('reports.open-tooltip')}><CollapsibleText
+                    text={report.identification}
+                    maxLength={20}/></a>
+            </td>
+            <td style={vAlign}
+                className='content-center'>{report.date ? Utils.formatDate(new Date(report.date)) : ''}</td>
+            <td style={vAlign} className='content-center'>{Utils.formatDate(new Date(dateEdited))}</td>
+            <td style={vAlign} className='content-center'>
+                <Label title={this.i18n(report.toString())}>{this.i18n(report.getPrimaryLabel())}</Label>
+            </td>
+        </tr>;
     }
 }));
 

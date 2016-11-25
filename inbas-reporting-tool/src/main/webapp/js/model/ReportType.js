@@ -1,15 +1,15 @@
 'use strict';
 
-var React = require('react');
-var assign = require('object-assign');
-var JsonLdUtils = require('jsonld-utils').default;
-var ArmsUtils = require('../utils/ArmsUtils').default;
-var CollapsibleText = require('../components/CollapsibleText');
-var Constants = require('../constants/Constants');
-var I18nStore = require('../stores/I18nStore');
-var SafetyIssueBase = require('./SafetyIssueBase').default;
-var Utils = require('../utils/Utils');
-var Vocabulary = require('../constants/Vocabulary');
+const React = require('react');
+const assign = require('object-assign');
+const JsonLdUtils = require('jsonld-utils').default;
+const CollapsibleText = require('../components/CollapsibleText');
+const Constants = require('../constants/Constants');
+const Vocabulary = require('../constants/Vocabulary');
+const ArmsUtils = require('../utils/ArmsUtils').default;
+const I18nStore = require('../stores/I18nStore');
+const SafetyIssueBase = require('./SafetyIssueBase').default;
+const Utils = require('../utils/Utils');
 
 class OccurrenceReport {
     constructor(data) {
@@ -25,12 +25,24 @@ class OccurrenceReport {
         if (!this.phase) {
             return '';
         }
-        for (var i = 0, len = phaseMapping.length; i < len; i++) {
+        for (let i = 0, len = phaseMapping.length; i < len; i++) {
             if (phaseMapping[i]['@id'] === this.phase) {
                 return JsonLdUtils.getLocalized(phaseMapping[i][Vocabulary.RDFS_LABEL], intl);
             }
         }
         return this.phase;
+    }
+
+    getPrimaryLabel() {
+        return 'occurrencereport.label';
+    }
+
+    /**
+     * Returns all the labels this report type supports.
+     * @return {[string]}
+     */
+    getLabels() {
+        return ['occurrencereport.label'];
     }
 
     /**
@@ -49,10 +61,6 @@ class OccurrenceReport {
      */
     getStatusInfo() {
         return this.armsIndex ? I18nStore.i18n('arms.index.tooltip') + this.armsIndex : '';
-    }
-
-    getLabel() {
-        return 'occurrencereport.label';
     }
 
     toString() {
@@ -254,7 +262,7 @@ class AuditReport {
     }
 }
 
-var REPORT_TYPES = {};
+const REPORT_TYPES = {};
 
 REPORT_TYPES[Vocabulary.OCCURRENCE_REPORT] = OccurrenceReport;
 REPORT_TYPES[Constants.OCCURRENCE_REPORT_JAVA_CLASS] = OccurrenceReport;
@@ -273,11 +281,11 @@ var ReportType = {
     },
 
     getTypeLabel: function (type) {
-        return REPORT_TYPES[type] ? new REPORT_TYPES[type]().getLabel() : null;
+        return REPORT_TYPES[type] ? new REPORT_TYPES[type]().getPrimaryLabel() : null;
     },
 
     getReport: function (data, suppressError) {
-        var cls = this._getReportClass(data);
+        const cls = this._getReportClass(data);
         if (!suppressError && !cls) {
             throw 'Unsupported report type ' + data;
         }
@@ -286,7 +294,7 @@ var ReportType = {
 
     _getReportClass: function (data) {
         if (data.types) {
-            for (var i = 0, len = data.types.length; i < len; i++) {
+            for (let i = 0, len = data.types.length; i < len; i++) {
                 if (REPORT_TYPES[data.types[i]]) {
                     return REPORT_TYPES[data.types[i]];
                 }

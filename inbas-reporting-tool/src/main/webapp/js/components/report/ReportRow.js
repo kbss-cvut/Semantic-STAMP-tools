@@ -1,63 +1,67 @@
 'use strict';
 
-var React = require('react');
-var Button = require('react-bootstrap').Button;
-var Label = require('react-bootstrap').Label;
-var Reflux = require('reflux');
-var classNames = require('classnames');
+import React from "react";
+import {Button, Label} from "react-bootstrap";
+import classNames from "classnames";
+import DeleteReportDialog from "./DeleteReportDialog";
+import I18nWrapper from "../../i18n/I18nWrapper";
+import injectIntl from "../../utils/injectIntl";
+import OptionsStore from "../../stores/OptionsStore";
+import ReportType from "../../model/ReportType";
+import Routes from "../../utils/Routes";
+import Utils from "../../utils/Utils";
 
-var injectIntl = require('../../utils/injectIntl');
-
-var Utils = require('../../utils/Utils.js');
-var OptionsStore = require('../../stores/OptionsStore');
-var ReportType = require('../../model/ReportType');
-var Routes = require('../../utils/Routes');
-var DeleteReportDialog = require('./DeleteReportDialog').default;
-var I18nMixin = require('../../i18n/I18nMixin');
-
-var ReportRow = React.createClass({
-    mixins: [I18nMixin, Reflux.listenTo(OptionsStore, '_onOptionsLoaded')],
-
-    propTypes: {
+class ReportRow extends React.Component {
+    static propTypes = {
         actions: React.PropTypes.object.isRequired,
         report: React.PropTypes.object.isRequired
-    },
+    };
 
-    getInitialState: function () {
-        return {
+    constructor(props) {
+        super(props);
+        this.i18n = props.i18n;
+        this.state = {
             modalOpen: false
         };
-    },
+    }
 
-    _onOptionsLoaded(type) {
+    componentDidMount() {
+        this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
+    }
+
+    _onOptionsLoaded = (type) => {
         if (type === 'reportingPhase' || type === 'sira') {
             this.forceUpdate();
         }
-    },
+    };
 
-    onDoubleClick: function (e) {
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    onDoubleClick = (e) => {
         e.preventDefault();
         this.onEditClick();
-    },
+    };
 
-    onEditClick: function () {
+    onEditClick = () => {
         this.props.actions.onEdit(this.props.report);
-    },
+    };
 
-    onDeleteClick: function () {
+    onDeleteClick = () => {
         this.setState({modalOpen: true});
-    },
+    };
 
-    onCloseModal: function () {
+    onCloseModal = () => {
         this.setState({modalOpen: false});
-    },
+    };
 
-    removeReport: function () {
+    removeReport = () => {
         this.props.actions.onRemove(this.props.report);
-    },
+    };
 
 
-    render: function () {
+    render() {
         var report = ReportType.getReport(this.props.report),
             statusClasses = classNames(['report-row', 'content-center'], report.getStatusCssClass());
 
@@ -69,7 +73,7 @@ var ReportRow = React.createClass({
             <td className='report-row'>{report.renderMoreInfo()}</td>
             <td className={statusClasses}
                 title={report.getStatusInfo(OptionsStore.getOptions('sira'), this.props.intl)}>
-                <Label title={this.i18n(report.toString())}>{this.i18n(report.getLabel())}</Label>
+                {this._renderReportTypes(report)}
             </td>
             <td className='report-row content-center'>
                 {report.getPhase(OptionsStore.getOptions('reportingPhase'), this.props.intl)}
@@ -84,11 +88,21 @@ var ReportRow = React.createClass({
                                     onSubmit={this.removeReport}/>
             </td>
         </tr>;
-    },
+    }
 
-    _renderDate: function (report) {
+    _renderDate(report) {
         return report.date !== null && report.date !== undefined ? Utils.formatDate(new Date(report.date)) : '';
     }
-});
 
-module.exports = injectIntl(ReportRow);
+    _renderReportTypes(report) {
+        const items = [],
+            labels = report.getLabels();
+        for (let i = 0, len = labels.length; i < len; i++) {
+            items.push(<Label className={i > 0 ? 'report-type-label' : ''} key={labels[i]}
+                              title={this.i18n(report.toString())}>{this.i18n(labels[i])}</Label>);
+        }
+        return items;
+    }
+}
+
+export default injectIntl(I18nWrapper(ReportRow));
