@@ -109,4 +109,14 @@ describe('OccurrenceReport', function () {
             revFromEccairs = menuItems.find(item => item.props.onClick === component._onNewRevisionForEccairs);
         expect(revFromEccairs).toBeDefined();
     });
+
+    it('renders info about report being ECCAIRS in the panel header', () => {
+        report = ReportFactory.createOccurrenceReport();
+        report.isEccairsReport = function () {
+            return true;
+        };
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            header = TestUtils.findRenderedDOMComponentWithTag(component, 'h2');
+        expect(header.textContent.indexOf(messages['report.eccairs.label'])).not.toEqual(-1);
+    });
 });

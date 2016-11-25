@@ -176,8 +176,12 @@ const OccurrenceReport = React.createClass({
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
         }
+        let label = this.i18n('occurrencereport.title');
+        if (this.props.report.isEccairsReport()) {
+            label += ' (' + this.i18n('report.eccairs.label') + ')';
+        }
         return <div>
-            <h2 className='panel-title pull-left'>{this.i18n('occurrencereport.title')}</h2>
+            <h2 className='panel-title pull-left'>{label}</h2>
             {fileNo}
             <div style={{clear: 'both'}}/>
         </div>;

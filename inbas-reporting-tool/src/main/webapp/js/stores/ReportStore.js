@@ -9,7 +9,6 @@ const JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
 const ReportType = require('../model/ReportType');
 const ReportFactory = require('../model/ReportFactory');
 const Utils = require('../utils/Utils');
-const Vocabulary = require('../constants/Vocabulary');
 
 const BASE_URL = 'rest/reports';
 const BASE_URL_WITH_SLASH = 'rest/reports/';

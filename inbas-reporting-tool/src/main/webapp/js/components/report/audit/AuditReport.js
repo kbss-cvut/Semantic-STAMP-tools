@@ -42,7 +42,7 @@ var AuditReport = React.createClass({
     },
 
     onSave: function () {
-        var report = this.props.report;
+        const report = this.props.report;
         this.onLoading();
         if (report.isNew) {
             Actions.createReport(report, this.onSaveSuccess, this.onSaveError);
@@ -57,7 +57,7 @@ var AuditReport = React.createClass({
     },
 
     render: function () {
-        var report = this.props.report;
+        const report = this.props.report;
 
         return <div>
             <Panel header={this._renderHeader()} bsStyle='primary'>
@@ -89,13 +89,17 @@ var AuditReport = React.createClass({
     },
 
     _renderHeader: function () {
-        var fileNo = null;
+        let fileNo = null;
         if (this.props.report.fileNumber) {
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
         }
+        let label = this.i18n('auditreport.title');
+        if (this.props.report.isSafaReport()) {
+            label += ' (' + this.i18n('report.safa.label') + ')';
+        }
         return <div>
-            <h2 className='panel-title pull-left'>{this.i18n('auditreport.title')}</h2>
+            <h2 className='panel-title pull-left'>{label}</h2>
             {fileNo}
             <div style={{clear: 'both'}}/>
         </div>;
@@ -105,7 +109,7 @@ var AuditReport = React.createClass({
         if (this.props.readOnly) {
             return this.renderReadOnlyButtons(this.props.readOnlyMessage);
         }
-        var loading = this.state.submitting,
+        const loading = this.state.submitting,
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
@@ -120,7 +124,7 @@ var AuditReport = React.createClass({
     },
 
     _getSaveButtonTitle: function () {
-        var titleProp = 'detail.save-tooltip';
+        let titleProp = 'detail.save-tooltip';
         if (this.state.submitting) {
             titleProp = 'detail.saving';
         } else if (!ReportValidator.isValid(this.props.report)) {
