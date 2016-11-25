@@ -7,7 +7,7 @@ var Glyphicon = require('react-bootstrap').Glyphicon;
 var injectIntl = require('../../utils/injectIntl');
 
 var Constants = require('../../constants/Constants');
-var ReportRow = require('./ReportRow');
+var ReportRow = require('./ReportRow').default;
 var I18nMixin = require('../../i18n/I18nMixin');
 var PagingMixin = require('../mixin/PagingMixin');
 

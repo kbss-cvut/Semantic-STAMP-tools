@@ -1,6 +1,6 @@
 'use strict';
 
-describe('ReportsFilter', function () {
+describe('Filterable reports table', function () {
 
     var React = require('react'),
         assign = require('object-assign'),
@@ -20,7 +20,8 @@ describe('ReportsFilter', function () {
         spyOn(ReportType, 'getReport').and.callFake((data) => {
             var obj = assign({}, data);
             obj.renderMoreInfo = () => '';
-            obj.getLabel = () => 'Label';
+            obj.getPrimaryLabel = () => 'Label';
+            obj.getLabels = () => 'Label';
             obj.getPhase = () => '';
             return obj;
         });
