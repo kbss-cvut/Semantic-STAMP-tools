@@ -152,10 +152,13 @@ public class EccairsService {
     
     
     public URI findAndLoadLatestEccairsReport(String reportingEntity, String reportingEntityFileNumber){
+        LOG.debug("Find and load latest ECCAIRS report: repEntity={} : repFileNumber={}", reportingEntity, reportingEntityFileNumber);
         final String reportE5F = getCurrentEccairsReportByInitialFileNumberAndReportingEntity(reportingEntity, reportingEntityFileNumber);
-        if(reportE5F != null && reportE5F.isEmpty()){
+        if(reportE5F != null && !reportE5F.isEmpty()){
+            LOG.trace("- E5F length={}", reportE5F.length());
             List<URI> reports = importer.importE5FXmlFromString(reportE5F);
             if(reports != null && !reports.isEmpty())
+                LOG.trace("- BINGO - we have {} ECCAIRS reports, returning the first one ! ", reports.size());
                 return reports.get(0);
         }
         return null;
