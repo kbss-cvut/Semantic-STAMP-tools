@@ -23,5 +23,6 @@ public interface ReportImporter {
     List<URI> process(Model m) throws Exception;
 
     List<URI> process(Message m);
-
+    
+    List<URI> importE5FXmlFromString(String reportStr);
 }

@@ -9,7 +9,7 @@ import cz.cvut.kbss.eccairs.webapi.EwaWebServer;
 import cz.cvut.kbss.eccairs.webapi.ResultReturnCode;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
-import cz.cvut.kbss.inbas.reporting.service.data.mail.EccairsReportImporter;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -41,7 +41,7 @@ public class EccairsService {
     protected Environment env;
     
     @Autowired
-    protected EccairsReportImporter importer;
+    protected ReportImporter importer;
     
     @Autowired
     protected OccurrenceReportDao occurrenceReportDao;
@@ -140,15 +140,25 @@ public class EccairsService {
             LOG.info("Report matched to report: repEntity={} : repFileNumber={}", reportingEntity, reportingEntityFileNumber);
 
             final String reportE5F = getCurrentEccairsReportByInitialFileNumberAndReportingEntity(reportingEntity, reportingEntityFileNumber);
-            List<URI> reports = importer.importE5FXmlFromString(reportE5F);
-            if(reports != null && !reports.isEmpty()){
-                URI reportUri = reports.get(0);
+            URI reportUri = findAndLoadLatestEccairsReport(reportingEntity, reportingEntityFileNumber);
+            if(reportUri != null){
                 return occurrenceReportDao.find(reportUri);
             }
         }
 
         // TODO
 
+        return null;
+    }
+    
+    
+    public URI findAndLoadLatestEccairsReport(String reportingEntity, String reportingEntityFileNumber){
+        final String reportE5F = getCurrentEccairsReportByInitialFileNumberAndReportingEntity(reportingEntity, reportingEntityFileNumber);
+        if(reportE5F != null && reportE5F.isEmpty()){
+            List<URI> reports = importer.importE5FXmlFromString(reportE5F);
+            if(reports != null && !reports.isEmpty())
+                return reports.get(0);
+        }
         return null;
     }
 
@@ -171,7 +181,7 @@ public class EccairsService {
             LOG.info("- found {} occurrence keys instead of 1, skipping", occurrenceE5Fs.size());
         }
 
-        return occurrenceE5Fs.get(0);
+        return occurrenceE5Fs.stream().findFirst().orElse(null);
     }
 
     /**
