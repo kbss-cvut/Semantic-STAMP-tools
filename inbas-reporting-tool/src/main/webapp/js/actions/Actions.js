@@ -7,7 +7,7 @@ var Actions = Reflux.createActions([
 
     'loadAllReports', 'deleteReportChain', 'createReport', 'updateReport', 'submitReport', 'importE5Report',
     'phaseTransition',
-    'loadRevisions', 'loadReport',
+    'loadRevisions', 'loadReport', 'loadEccairsReport',
 
     'calculateArmsIndex', 'calculateSira',
 

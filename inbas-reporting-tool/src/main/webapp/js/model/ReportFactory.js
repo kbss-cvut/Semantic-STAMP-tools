@@ -36,7 +36,10 @@ module.exports = {
                 eventTypes: []
             },
             isNew: true,
-            javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS
+            javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS,
+            isEccairsReport: function () {
+                return false;
+            }
         };
     },
 

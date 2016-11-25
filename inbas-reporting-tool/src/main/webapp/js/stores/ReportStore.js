@@ -8,14 +8,22 @@ var Constants = require('../constants/Constants');
 var JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
 var ReportType = require('../model/ReportType');
 var Utils = require('../utils/Utils');
+var Vocabulary = require('../constants/Vocabulary');
 
 var BASE_URL = 'rest/reports';
 var BASE_URL_WITH_SLASH = 'rest/reports/';
+var ECCAIRS_REPORT_URL = 'rest/eccairs/latest/';
 
 var BASE_ECCAIRS_URL_WITH_SLASH = 'rest/eccairs/';
 
 // When reports are being loaded, do not send the request again
 var reportsLoading = false;
+
+function attachMethodsToReport(report) {
+    report.isEccairsReport = function () {
+        return this.types.indexOf(Vocabulary.ECCAIRS_REPORT) !== -1;
+    }.bind(report);
+}
 
 var ReportStore = Reflux.createStore({
     listenables: [Actions],
@@ -56,6 +64,7 @@ var ReportStore = Reflux.createStore({
         Ajax.get(BASE_URL_WITH_SLASH + key).end(function (data) {
             this._resetPendingLoad();
             JsonReferenceResolver.resolveReferences(data);
+            attachMethodsToReport(data);
             this.trigger({
                 action: Actions.loadReport,
                 report: data
@@ -159,6 +168,25 @@ var ReportStore = Reflux.createStore({
             report: report
         });
         Actions.publishMessage(message, result ? Constants.MESSAGE_TYPE.SUCCESS : Constants.MESSAGE_TYPE.WARNING, Actions.addSafetyIssueBase);
+    },
+
+    onLoadEccairsReport: function (forReport) {
+        let key = forReport.key;
+        Ajax.get(ECCAIRS_REPORT_URL + key).end((data) => {
+            this._resetPendingLoad();
+            JsonReferenceResolver.resolveReferences(data);
+            attachMethodsToReport(data);
+            this.trigger({
+                action: Actions.loadEccairsReport,
+                report: data
+            });
+        }, () => {
+            this._resetPendingLoad();
+            this.trigger({
+                action: Actions.loadEccairsReport,
+                report: null
+            });
+        });
     },
 
     getReports: function () {

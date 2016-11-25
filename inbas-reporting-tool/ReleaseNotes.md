@@ -5,6 +5,7 @@
 - SAFA audit reports are read-only (Feature #224).
 - SAFA audit findings contain status and status change date (Feature #227).
 - Audit optional contains info about auditor (Feature #221).
+- Added safety issue statistics.
 
 ### 0.7.17 - November 15, 2016
 - Attach references to additional resources to reports (Feature #184).

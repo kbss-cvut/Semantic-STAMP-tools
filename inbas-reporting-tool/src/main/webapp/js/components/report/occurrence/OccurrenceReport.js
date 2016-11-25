@@ -15,6 +15,7 @@ var Attachments = require('../attachment/Attachments').default;
 var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
 var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 var Department = require('./Department').default;
+var EccairsReportButton = require('./EccairsReportButton').default;
 var Factors = require('../../factor/Factors');
 var I18nMixin = require('../../../i18n/I18nMixin');
 var MessageMixin = require('../../mixin/MessageMixin');
@@ -105,7 +106,9 @@ var OccurrenceReport = React.createClass({
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <ButtonToolbar className='float-right'>
-                    <Button bsStyle='primary' onClick={this._reportSummary} disabled={this.state.loadingWizard}>
+                    <EccairsReportButton report={report}/>
+                    <Button bsStyle='primary' bsSize='small' className='detail-top-button' onClick={this._reportSummary}
+                            disabled={this.state.loadingWizard}>
                         {this.i18n(this.state.loadingWizard ? 'please-wait' : 'summary')}
                     </Button>
                 </ButtonToolbar>

@@ -188,6 +188,9 @@ export default class Generator {
                 startTime: Date.now() - 10000,
                 endTime: Date.now(),
                 eventTypes: [Generator.randomCategory().id]
+            },
+            isEccairsReport: function() {
+                return false;
             }
         };
     }

@@ -36,7 +36,8 @@ module.exports = {
     STATISTICS: {
         general: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_General.wcdf/generatedContent',
         eventTypes: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_Event_Types.wcdf/generatedContent',
-        audit: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_Audit.wcdf/generatedContent'
+        audit: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_Audit.wcdf/generatedContent',
+        safetyIssue: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AReport_Safety_Issues.wcdf/generatedContent'
     },
     DASHBOARD_STATISTICS_URL: 'https://www.inbas.cz/pentaho/api/repos/%3Apublic%3AUCL%3AMain_Dashboard.wcdf/generatedContent',
 

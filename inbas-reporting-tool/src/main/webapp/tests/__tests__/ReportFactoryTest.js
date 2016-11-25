@@ -17,6 +17,12 @@ describe('Report factory', () => {
         expect(report.javaClass).toEqual(Constants.OCCURRENCE_REPORT_JAVA_CLASS);
     });
 
+    it('creates occurrence report with isEccairsReport method returning false', () => {
+        let report = ReportFactory.createReport(Vocabulary.OCCURRENCE_REPORT);
+        expect(report.isEccairsReport).toBeDefined();
+        expect(report.isEccairsReport()).toBeFalsy();
+    });
+
     it('creates safety issue report report for safety issue report Java class.', () => {
         var report = ReportFactory.createReport(Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS);
         expect(report.javaClass).toEqual(Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS);
