@@ -9,7 +9,6 @@ import cz.cvut.kbss.eccairs.webapi.EwaWebServer;
 import cz.cvut.kbss.eccairs.webapi.ResultReturnCode;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
@@ -162,6 +161,7 @@ public class EccairsService {
         if ( reportingEntity != null && reportingEntityFileNumber != null ) {
             LOG.info("Report matched to report: repEntity={} : repFileNumber={}", reportingEntity, reportingEntityFileNumber);
 
+            // TODO Return report key instead of the whole report
             URI reportUri = findAndLoadLatestEccairsReport(reportingEntity, reportingEntityFileNumber);
             if(reportUri != null){
                 return occurrenceReportService.find(reportUri);

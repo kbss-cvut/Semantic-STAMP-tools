@@ -1,9 +1,13 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
+import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -14,7 +18,11 @@ public class EccairsController extends BaseController {
     private EccairsService eccairsService;
 
     @RequestMapping(value = "/latest/{key}", method = RequestMethod.GET)
-    public OccurrenceReport getEccairsLatest(@PathVariable("key") String key) {
-        return eccairsService.getEccairsLatestByKey(key);
+    public String getEccairsLatest(@PathVariable("key") String key) {
+        final OccurrenceReport report = eccairsService.getEccairsLatestByKey(key);
+        if (report == null) {
+            throw new NotFoundException("Unable to find ECCAIRS report for report with key " + key + ".");
+        }
+        return report.getKey();
     }
 }
