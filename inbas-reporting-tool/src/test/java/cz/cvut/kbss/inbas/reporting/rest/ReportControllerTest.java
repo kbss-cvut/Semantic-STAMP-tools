@@ -23,6 +23,7 @@ import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.inbas.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.rest.handler.ErrorInfo;
+import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import cz.cvut.kbss.jopa.exceptions.RollbackException;
@@ -55,6 +56,9 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Autowired
     private ReportBusinessService reportServiceMock;
+
+    @Autowired
+    private OccurrenceReportService occurrenceReportService;
 
     @Autowired
     private DtoMapper mapper;
@@ -410,5 +414,18 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                                         .andExpect(status().isInternalServerError()).andReturn();
         final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
         assertEquals(errorMsg, errorInfo.getMessage());
+    }
+
+    @Test
+    public void createNewRevisionFromEccairsReturnsLocationOfTheNewRevision() throws Exception {
+        final OccurrenceReport newRevision = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        newRevision.setKey(IdentificationUtils.generateKey());
+        final Long fileNo = IdentificationUtils.generateFileNumber();
+        newRevision.setFileNumber(fileNo);
+        when(occurrenceReportService.createNewRevisionFromEccairs(fileNo)).thenReturn(newRevision);
+
+        final MvcResult result = mockMvc.perform(post(REPORTS_PATH + "chain/" + fileNo + "/revisions/eccairs"))
+                                        .andExpect(status().isCreated()).andReturn();
+        verifyLocationEquals(REPORTS_PATH + newRevision.getKey(), result);
     }
 }

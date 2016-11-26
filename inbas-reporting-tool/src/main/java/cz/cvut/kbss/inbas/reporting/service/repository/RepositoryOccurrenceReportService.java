@@ -9,6 +9,7 @@ import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.inbas.reporting.service.validation.OccurrenceReportValidator;
 import cz.cvut.kbss.inbas.reporting.service.visitor.EventTypeSynchronizer;
@@ -38,6 +39,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
 
     @Autowired
     private EventTypeSynchronizer eventTypeSynchronizer;
+
+    @Autowired
+    private EccairsService eccairsService;
 
     @Override
     protected OwlKeySupportingDao<OccurrenceReport> getPrimaryDao() {
@@ -132,5 +136,26 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     public void removeReportChain(Long fileNumber) {
         Objects.requireNonNull(fileNumber);
         reportDao.removeReportChain(fileNumber);
+    }
+
+    @Override
+    public OccurrenceReport createNewRevisionFromEccairs(Long fileNumber) {
+        Objects.requireNonNull(fileNumber);
+        final OccurrenceReport latestRegular = findLatestRevision(fileNumber);
+        if (latestRegular == null) {
+            throw NotFoundException.create("Report chain", fileNumber);
+        }
+        final OccurrenceReport eccairsLatest = eccairsService.getEccairsLatestByKey(latestRegular.getKey());
+        if (eccairsLatest == null) {
+            throw new NotFoundException("ECCAIRS report for report with key " + latestRegular.getKey() + " not found.");
+        }
+
+        final OccurrenceReport newRevision = new OccurrenceReport(eccairsLatest);
+        newRevision.setRevision(latestRegular.getRevision() + 1);
+        newRevision.setFileNumber(fileNumber);
+        reportMetadataService.initReportProvenanceMetadata(newRevision);
+        reportDao.persist(newRevision);
+        newRevision.setArmsIndex(armsService.calculateArmsIndex(newRevision));
+        return newRevision;
     }
 }

@@ -6,18 +6,13 @@ import cz.cvut.kbss.inbas.reporting.exception.ValidationException;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.service.PersonService;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.Assert.assertTrue;
 
 public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     @Autowired
     private PersonService personService;
