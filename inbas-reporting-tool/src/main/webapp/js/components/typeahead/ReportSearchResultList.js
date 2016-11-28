@@ -11,7 +11,7 @@ const ResultListItem = (props) => {
         label = typeof props.displayOption === 'function' ? props.displayOption(option) : option[props.displayOption];
 
     return <li className='btn-link item' title={option.description} onClick={props.onClick}>
-        <Label className='item-label'>{I18nStore.i18n(option.getLabel())}</Label>
+        <Label className='item-label'>{I18nStore.i18n(option.getPrimaryLabel())}</Label>
         {label}
     </li>;
 };
