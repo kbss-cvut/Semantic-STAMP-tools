@@ -273,7 +273,7 @@
                         </executions>
                         <configuration>
                             <ignoreMissingFile>false</ignoreMissingFile>
-                            <file>${project.basedir}/profiles/production/index.html</file>
+                            <file>${project.basedir}/profiles/production/src/main/webapp/index.html</file>
                             <outputFile>${project.basedir}/profiles/production/src/main/webapp/index.html</outputFile>
                             <regex>false</regex>
                             <token>$VERSION$</token>
