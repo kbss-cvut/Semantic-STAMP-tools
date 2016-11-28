@@ -60,8 +60,8 @@
   "scripts": {
     "start": "watchify -o js/bundle.js -v -d js/app.js",
     "browserify": "browserify . -g [envify --NODE_ENV 'production'] -t -o js/bundle.js",
-    "build-js": "browserify . -g [envify --NODE_ENV 'production'] -t | uglifyjs -cm > ../../../profiles/production/js/bundle.min.js",
-    "build-css": "cleancss --skip-rebase -d -o ../../../profiles/production/resources/css/inbas-audit.min.css resources/css/inbas-audit.css",
+    "build-js": "browserify . -g [envify --NODE_ENV 'production'] -t | uglifyjs -cm > ../../../profiles/production/src/main/webapp/js/bundle.min.js",
+    "build-css": "cleancss --skip-rebase -d -o ../../../profiles/production/src/main/webapp/resources/css/inbas-audit.min.css resources/css/inbas-audit.css",
     "build": "npm run build-css & npm run build-js",
     "prebuild": "npm install",
     "test": "jasmine JASMINE_CONFIG_PATH=tests/jasmine.json",
