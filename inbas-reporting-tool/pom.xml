@@ -29,6 +29,8 @@
         <junit.version>4.12</junit.version>
         <ch.qos.logback.version>1.1.6</ch.qos.logback.version>
         <org.mapstruct.version>1.0.0.Final</org.mapstruct.version>
+
+        <deployment>DEV</deployment>
     </properties>
 
 
@@ -313,6 +315,25 @@
                         <version>1.5.3</version>
                         <executions>
                             <execution>
+                                <id>java-src-replace</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <ignoreMissingFile>true</ignoreMissingFile>
+                                    <file>
+                                        ${project.basedir}/src/main/java/cz/cvut/kbss/inbas/reporting/service/jmx/AppAdminBean.java
+                                    </file>
+                                    <outputFile>
+                                        ${project.basedir}/src/main/java/cz/cvut/kbss/inbas/reporting/service/jmx/AppAdminBean.java
+                                    </outputFile>
+                                    <regex>false</regex>
+                                    <token>INBASAdminBean</token>
+                                    <value>${deployment}-AdminBean</value>
+                                </configuration>
+                            </execution>
+                            <execution>
                                 <phase>prepare-package</phase>
                                 <goals>
                                     <goal>replace</goal>
@@ -360,30 +381,35 @@
             <id>fd</id>
             <properties>
                 <profile-deployment.name>fd</profile-deployment.name>
+                <deployment>FD</deployment>
             </properties>
         </profile>
         <profile>
             <id>ucl</id>
             <properties>
                 <profile-deployment.name>ucl</profile-deployment.name>
+                <deployment>UCL</deployment>
             </properties>
         </profile>
         <profile>
             <id>lkpr</id>
             <properties>
                 <profile-deployment.name>lkpr</profile-deployment.name>
+                <deployment>LKPR</deployment>
             </properties>
         </profile>
         <profile>
             <id>csat</id>
             <properties>
                 <profile-deployment.name>csat</profile-deployment.name>
+                <deployment>CSAT</deployment>
             </properties>
         </profile>
         <profile>
             <id>rlp</id>
             <properties>
                 <profile-deployment.name>rlp</profile-deployment.name>
+                <deployment>RLP</deployment>
             </properties>
         </profile>
 
@@ -401,6 +427,7 @@
             <id>eccairs-uzpln</id>
             <properties>
                 <profile-eccairs.name>eccairs-uzpln</profile-eccairs.name>
+                <deployment>RLP</deployment>
             </properties>
         </profile>
     </profiles>
