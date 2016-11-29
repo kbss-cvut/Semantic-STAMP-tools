@@ -257,7 +257,7 @@ module.exports = {
         if (!options || options.length === 0 || !types || types.length === 0) {
             return null;
         }
-        for (var i = 0, len = options.length; i < len; i++) {
+        for (let i = 0, len = options.length; i < len; i++) {
             if (types.indexOf(options[i].id) !== -1) {
                 return options[i];
             }
@@ -274,13 +274,13 @@ module.exports = {
      *     Defaults to Vocabulary.GREATER_THAN
      */
     neighbourSort: function (data, gtProperty = Vocabulary.GREATER_THAN) {
-        var swapped;
+        let swapped;
         do {
             swapped = false;
-            for (var i = 0, len = data.length; i < len; i++) {
-                for (var j = i; j < len; j++) {
+            for (let i = 0, len = data.length; i < len; i++) {
+                for (let j = i; j < len; j++) {
                     if (data[i][gtProperty] && data[i][gtProperty]['@id'] === data[j]['@id']) {
-                        var tmp = data[i];
+                        const tmp = data[i];
                         data[i] = data[j];
                         data[j] = tmp;
                         swapped = true;

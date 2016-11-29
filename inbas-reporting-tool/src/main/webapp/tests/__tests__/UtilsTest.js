@@ -4,6 +4,7 @@ describe('Utility functions -', function () {
 
     const Utils = require('../../js/utils/Utils'),
         Constants = require('../../js/constants/Constants'),
+        Generator = require('../environment/Generator').default,
         Vocabulary = require('../../js/constants/Vocabulary');
 
     describe('formatDate', () => {
@@ -229,7 +230,7 @@ describe('Utility functions -', function () {
 
     describe('resolveType', () => {
         it('returns null when there are no options', () => {
-            var options = null,
+            let options = null,
                 types = [Generator.randomCategory().id];
             expect(Utils.resolveType(types, options)).toBeNull();
             options = [];
@@ -237,7 +238,7 @@ describe('Utility functions -', function () {
         });
 
         it('returns null when there are no types', () => {
-            var options = Generator.getCategories(),
+            let options = Generator.getCategories(),
                 types = null;
             expect(Utils.resolveType(types, options)).toBeNull();
             types = [];
@@ -245,23 +246,22 @@ describe('Utility functions -', function () {
         });
 
         it('returns first option whose id is in types', () => {
-            var options = Generator.getCategories(),
+            const options = Generator.getCategories(),
                 option = Generator.randomCategory(),
                 types = [option.id];
             expect(Utils.resolveType(types, options)).toEqual(option);
         });
 
         it('returns null if none of the options matches types', () => {
-            var options = Generator.getCategories(),
-                option = Generator.randomCategory(),
+            const options = Generator.getCategories(),
                 types = [Generator.getRandomUri()];
             expect(Utils.resolveType(types, options)).toBeNull();
-        })
+        });
     });
 
     describe('neighbourSort', () => {
 
-        var data = [{
+        const data = [{
             "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept"
         }, {
             "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor",
@@ -286,21 +286,21 @@ describe('Utility functions -', function () {
         }];
 
         it('sorts JSON-LD data based on the is_higher_than property', () => {
-            var options = Generator.shuffleArray(data.slice());
+            const options = Generator.shuffleArray(data.slice());
             Utils.neighbourSort(options);
-            for (var i = 0, len = data.length; i < len; i++) {
+            for (let i = 0, len = data.length; i < len; i++) {
                 expect(options[i]['@id']).toEqual(data[i]['@id']);
             }
         });
 
         it('JSON-LD array without order specification is left as is', () => {
-            var original = Generator.shuffleArray(data.slice()),
+            const original = Generator.shuffleArray(data.slice()),
                 options = original.slice();
-            for (var i = 0, len = options.length; i < len; i++) {
+            for (let i = 0, len = options.length; i < len; i++) {
                 delete options[i][Vocabulary.GREATER_THAN];
             }
             Utils.neighbourSort(options);
-            for (i = 0, len = data.length; i < len; i++) {
+            for (let i = 0, len = data.length; i < len; i++) {
                 expect(options[i]['@id']).toEqual(original[i]['@id']);
             }
         });
