@@ -69,7 +69,7 @@ class ReportRow extends React.Component {
             <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + report.key}
                                           title={this.i18n('reports.open-tooltip')}>{report.identification}</a>
             </td>
-            <td className='report-row content-center'>{this._renderDate(report)}</td>
+            <td className='report-row content-center'>{Utils.formatDate(report.date)}</td>
             <td className='report-row'>{report.renderMoreInfo()}</td>
             <td className={statusClasses}
                 title={report.getStatusInfo(OptionsStore.getOptions('sira'), this.props.intl)}>
@@ -88,10 +88,6 @@ class ReportRow extends React.Component {
                                     onSubmit={this.removeReport}/>
             </td>
         </tr>;
-    }
-
-    _renderDate(report) {
-        return report.date !== null && report.date !== undefined ? Utils.formatDate(new Date(report.date)) : '';
     }
 
     _renderReportTypes(report) {
