@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.environment.config;
 
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.EmailSourceService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.repository.RepositoryOccurrenceReportService;
@@ -49,5 +50,11 @@ public class TestServiceConfig {
     @Primary
     public ReportImporter reportImporter() {
         return mock(ReportImporter.class);
+    }
+
+    @Bean
+    @Primary
+    public EccairsService eccairsService() {
+        return mock(EccairsService.class);
     }
 }

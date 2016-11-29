@@ -2,7 +2,7 @@
  * Czech localization.
  */
 
-var Constants = require('../constants/Constants');
+const Constants = require('../constants/Constants');
 
 module.exports = {
     'locale': 'cs',
@@ -269,6 +269,8 @@ module.exports = {
         'report.eccairs.error-msg': 'Nepodařilo se najít nejnovější ECCAIRS hlášení pro toto hlášení.',
         'report.eccairs.create-new-revision.label': 'Nová revize z ECCAIRS',
         'report.eccairs.create-new-revision.tooltip': 'Vytvořit novou revizi tohoto hlášení podle nejnovější verze v ECCAIRS',
+        'report.eccairs.create-new-revision.success': 'Nová revize hlášení podle nejnovější verze v ECCAIRS úspěšně vytvořena.',
+        'report.eccairs.create-new-revision.error': 'Nepodařilo se vytvořit novou revizi hlášení podle nejnovější verze v ECCAIRS. Odpověď serveru: ',
         'report.eccairs.label': 'ECCAIRS',
         'report.safa.label': 'SAFA',
 

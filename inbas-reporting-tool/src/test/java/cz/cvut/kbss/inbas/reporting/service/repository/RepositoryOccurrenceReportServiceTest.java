@@ -9,6 +9,7 @@ import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.junit.Before;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner {
 
@@ -28,6 +30,9 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Autowired
     private RepositoryOccurrenceReportService occurrenceReportService;
+
+    @Autowired
+    private EccairsService eccairsServiceMock;
 
     private Person author;
 
@@ -291,5 +296,47 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         final OccurrenceReport result = occurrenceReportService.find(report.getUri());
         assertNull(result.getAuthor().getPassword());
         assertNull(result.getLastModifiedBy().getPassword());
+    }
+
+    @Test
+    public void createNewRevisionFromEccairsCopiesAllAttributesFromEcccairsReportAndSetsCorrectFileNumber() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportService.persist(report);
+
+        // This report will simulate an Eccairs report
+        final OccurrenceReport eccairsReport = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportService.persist(report);
+        when(eccairsServiceMock.getEccairsLatestByKey(report.getKey())).thenReturn(eccairsReport);
+
+        final OccurrenceReport result = occurrenceReportService.createNewRevisionFromEccairs(report.getFileNumber());
+        assertNotNull(result);
+        assertEquals(report.getFileNumber(), result.getFileNumber());
+        assertEquals(report.getRevision() + 1, result.getRevision().intValue());
+        assertEquals(eccairsReport.getOccurrence().getName(), result.getOccurrence().getName());
+        assertEquals(result.getUri(), occurrenceReportService.findLatestRevision(report.getFileNumber()).getUri());
+    }
+
+    @Test
+    public void createNewRevisionFromEccairsThrowsNotFoundWhenEccairsReportDoesNotExist() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportService.persist(report);
+
+        when(eccairsServiceMock.getEccairsLatestByKey(report.getKey())).thenReturn(null);
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("ECCAIRS report for report with key " + report.getKey() + " not found.");
+
+        occurrenceReportService.createNewRevisionFromEccairs(report.getFileNumber());
+    }
+
+    @Test
+    public void createNewRevisionFromEccairsThrowsNotFoundWhenReportChainDoesNotExist() {
+        final Long unknownFileNo = System.currentTimeMillis();
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("Report chain identified by " + unknownFileNo + " not found.");
+
+        occurrenceReportService.createNewRevisionFromEccairs(unknownFileNo);
     }
 }

@@ -6,9 +6,7 @@ import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -36,9 +34,6 @@ public class SearchServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private Environment environment;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     private MockRestServiceServer mockServer;
 

@@ -17,9 +17,7 @@ import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
@@ -40,9 +38,6 @@ public class RepositoryAuditReportServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private EntityManagerFactory emf;
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     private Person author;
 

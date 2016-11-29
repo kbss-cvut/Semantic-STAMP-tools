@@ -4,9 +4,11 @@ import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportList;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
+import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
+import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,6 +30,9 @@ public class ReportController extends BaseController {
     @Autowired
     @Qualifier("cachingReportBusinessService")
     private ReportBusinessService reportService;
+
+    @Autowired
+    private OccurrenceReportService occurrenceReportService;
 
     @Autowired
     private DtoMapper dtoMapper;
@@ -92,7 +97,8 @@ public class ReportController extends BaseController {
         reportService.removeReportChain(fileNumber);
     }
 
-    @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
         final LogicalDocument report = reportService.findLatestRevision(fileNumber);
         if (report == null) {
@@ -101,7 +107,8 @@ public class ReportController extends BaseController {
         return dtoMapper.reportToReportDto(report);
     }
 
-    @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReportRevisionInfo> getReportChainRevisions(@PathVariable("fileNumber") Long fileNumber) {
         final List<ReportRevisionInfo> revisions = reportService.getReportChainRevisions(fileNumber);
         if (revisions.isEmpty()) {
@@ -111,8 +118,7 @@ public class ReportController extends BaseController {
     }
 
     /**
-     * Creates new revision in the report chain (of the same type as the latest revision) or starts investigation (from
-     * latest preliminary report).
+     * Creates new revision in the report chain (of the same type as the latest revision).
      *
      * @param fileNumber Report chain identifier
      * @return Response with location header pointing to the new report
@@ -126,7 +132,24 @@ public class ReportController extends BaseController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    /**
+     * Creates new revision in the report chain (of the same type as the latest revision) using data from the latest
+     * corresponding ECCAIRS report.
+     *
+     * @param fileNumber Report chain identifier
+     * @return Response with location header pointing to the new report
+     */
+    @RequestMapping(value = "/chain/{fileNumber}/revisions/eccairs", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Void> createNewRevisionFromEccairs(@PathVariable("fileNumber") Long fileNumber) {
+        final OccurrenceReport newRevision = occurrenceReportService.createNewRevisionFromEccairs(fileNumber);
+        final HttpHeaders headers = RestUtils
+                .createLocationHeaderFromContextPath("/reports/{key}", newRevision.getKey());
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument getRevision(@PathVariable("fileNumber") Long fileNumber,
                                        @PathVariable("revision") Integer revision) {
         final LogicalDocument report = reportService.findRevision(fileNumber, revision);

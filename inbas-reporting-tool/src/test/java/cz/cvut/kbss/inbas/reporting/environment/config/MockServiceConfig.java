@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.service.*;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.RemoteDataLoader;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
@@ -114,5 +115,10 @@ public class MockServiceConfig {
     @Bean
     public OccurrenceReportService occurrenceReportService() {
         return mock(OccurrenceReportService.class);
+    }
+
+    @Bean
+    public EccairsService eccairsService() {
+        return mock(EccairsService.class);
     }
 }
