@@ -7,23 +7,14 @@ package cz.cvut.kbss.inbas.reporting.data.audit.safa;
 
 import cz.cvut.kbss.inbas.reporting.data.audit.xls.AbstractExcelAuditImporter;
 import cz.cvut.kbss.inbas.reporting.data.audit.xls.Vocabulary;
-import cz.cvut.kbss.inbas.reporting.caa.imp.audit.old.AuditDataExtraction;
-import cz.cvut.kbss.inbas.reporting.config.PersistenceConfig;
-import cz.cvut.kbss.inbas.reporting.config.ServiceConfig;
 import cz.cvut.kbss.inbas.reporting.model.Organization;
-import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.audit.Audit;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.OrganizationDao;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.PersonDao;
 import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.repository.ReportMetadataService;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -31,7 +22,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
@@ -42,8 +32,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  *
@@ -51,7 +39,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  */
 public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
     
-    private static final Logger LOG = LoggerFactory.getLogger(AuditDataExtraction.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImportSafaReportsFromExcel.class);
             
     public static String safaAuditReportType = "http://onto.fel.cvut.cz/ontologies/safa/audit-report";
     public static String auditPrefix = safaAuditReportType + "-";
@@ -251,7 +239,7 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
             }
 
             // narrative
-            String nar = getStringValue(r, AuditDataExtraction.AuditColumns.narrative).trim();
+            String nar = "";//getStringValue(r, AuditColumns.narrative).trim();
             if(!nar.isEmpty())
                 ar.setSummary(nar);
         }catch(Exception ex){
@@ -277,13 +265,13 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
     }
     
     protected String getAuditReportUri(Row r, Enum e){
+        String encoding = "UTF-8";
         try {
             String fileName = getStringValue(r, e);
-            return String.format("%s%s", auditPrefix, URLEncoder.encode(fileName, "UTF-8"));
+            return String.format("%s%s", auditPrefix, URLEncoder.encode(fileName, encoding));
         } catch (UnsupportedEncodingException ex) {
-            java.util.logging.Logger.getLogger(AuditDataExtraction.class.getName()).log(Level.SEVERE, null, ex);
+            throw new RuntimeException(String.format("The encoding %s used to encode the url is not supported.", encoding), ex);
         }
-        return null;
     }
     
     protected void processAuditFindingRows(Row r){

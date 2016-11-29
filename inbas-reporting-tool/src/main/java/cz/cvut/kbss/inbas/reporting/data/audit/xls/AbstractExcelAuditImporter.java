@@ -5,14 +5,10 @@
  */
 package cz.cvut.kbss.inbas.reporting.data.audit.xls;
 
-import cz.cvut.kbss.inbas.reporting.caa.imp.audit.old.AuditDataExtraction;
+import cz.cvut.kbss.inbas.reporting.exp.caa.imp.audit.old.AuditDataExtraction;
 import cz.cvut.kbss.inbas.reporting.model.Organization;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.OrganizationDao;
-import cz.cvut.kbss.inbas.reporting.util.Constants;
-import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
