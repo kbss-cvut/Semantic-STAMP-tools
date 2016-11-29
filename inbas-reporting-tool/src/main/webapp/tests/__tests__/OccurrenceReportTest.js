@@ -119,4 +119,13 @@ describe('OccurrenceReport', function () {
             header = TestUtils.findRenderedDOMComponentWithTag(component, 'h2');
         expect(header.textContent.indexOf(messages['report.eccairs.label'])).not.toEqual(-1);
     });
+
+    it('loading disables all bottom action buttons', () => {
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
+        component.onLoading();
+        const toolbars = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').ButtonToolbar),
+            toolbar = toolbars[toolbars.length - 1],
+            buttons = TestUtils.scryRenderedDOMComponentsWithTag(toolbar, 'button');
+        buttons.forEach(b => expect(b.disabled).toBeTruthy());
+    });
 });

@@ -34,9 +34,9 @@ const OccurrenceReport = React.createClass({
     mixins: [MessageMixin, I18nMixin, ReportDetailMixin, Reflux.listenTo(MessageStore, '_onMessage')],
 
     propTypes: {
-        handlers: React.PropTypes.object,
-        report: React.PropTypes.object,
-        loading: React.PropTypes.bool
+        handlers: React.PropTypes.object.isRequired,
+        report: React.PropTypes.object.isRequired,
+        readOnly: React.PropTypes.bool
     },
 
     getInitialState: function () {
@@ -105,9 +105,20 @@ const OccurrenceReport = React.createClass({
         this.setState({showSafetyIssueSelector: true});
     },
 
-    _onNewRevisionForEccairs: function () {
-        this.onLoading();
-        Actions.newRevisionFromLatestEccairs(this.props.report, this.onSubmitSuccess, this.onSubmitError);
+    _onNewRevisionFromEccairs: function () {
+        this.onLoading(Actions.newRevisionFromLatestEccairs);
+        Actions.newRevisionFromLatestEccairs(this.props.report, this._onNewRevisionFromEccairsSuccess, this._onNewRevisionFromEccairsError);
+    },
+
+    _onNewRevisionFromEccairsSuccess: function (key) {
+        this.onLoadingEnd();
+        this.showSuccessMessage(this.i18n('report.eccairs.create-new-revision.success'));
+        this.props.handlers.onSuccess(key);
+    },
+
+    _onNewRevisionFromEccairsError: function (error) {
+        this.onLoadingEnd();
+        this.showErrorMessage(this.i18n('report.eccairs.create-new-revision.error') + error.message);
     },
 
     render: function () {
@@ -191,18 +202,22 @@ const OccurrenceReport = React.createClass({
         if (this.props.readOnly) {
             return this.renderReadOnlyButtons();
         }
-        let loading = this.state.submitting,
-            saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
-            saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
+        let loading = this.state.submitting !== false,
+            saveDisabled = !ReportValidator.isValid(this.props.report) || loading;
 
         return <ButtonToolbar className='float-right detail-button-toolbar'>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
-                    onClick={this.onSave}>{saveLabel}</Button>
-            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                    onClick={this.onSave}>{this._getSaveButtonLabel()}</Button>
+            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')} disabled={loading}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this._renderDropdown()}
             {this.renderDeleteButton()}
         </ButtonToolbar>;
+    },
+
+    _getSaveButtonLabel: function () {
+        return this.i18n(this.state.submitting === Actions.newRevisionFromLatestEccairs ? 'please-wait' :
+            this.state.submitting ? 'detail.saving' : 'save');
     },
 
     getSaveButtonTitle: function () {
@@ -224,7 +239,8 @@ const OccurrenceReport = React.createClass({
         Array.prototype.push.apply(items, this._renderCreateSafetyIssue());
         Array.prototype.push.apply(items, this._renderEccairsOverwrite());
         return <DropdownButton id='occurrence-report-actions' bsStyle='primary' bsSize='small'
-                               title={this.i18n('table-actions')} dropup pullRight>
+                               disabled={this.state.submitting !== false} title={this.i18n('table-actions')} dropup
+                               pullRight>
             {items}
         </DropdownButton>;
     },
@@ -255,7 +271,7 @@ const OccurrenceReport = React.createClass({
             items.push(<MenuItem key='eccairs-divider' divider/>);
             items.push(<MenuItem key='eccairs-new-revision'
                                  title={this.i18n('report.eccairs.create-new-revision.tooltip')}
-                                 onClick={this._onNewRevisionForEccairs}>{this.i18n('report.eccairs.create-new-revision.label')}
+                                 onClick={this._onNewRevisionFromEccairs}>{this.i18n('report.eccairs.create-new-revision.label')}
             </MenuItem>);
         }
         return items;

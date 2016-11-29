@@ -2,7 +2,7 @@
  * English localization.
  */
 
-var Constants = require('../constants/Constants');
+const Constants = require('../constants/Constants');
 
 module.exports = {
     'locale': 'en',
@@ -267,6 +267,8 @@ module.exports = {
         'report.eccairs.error-msg': 'Unable to find the latest ECCAIRS report for this report.',
         'report.eccairs.create-new-revision.label': 'New revision from ECCAIRS',
         'report.eccairs.create-new-revision.tooltip': 'Create new revision of this report from the latest ECCAIRS report',
+        'report.eccairs.create-new-revision.success': 'New report revision from latest ECCAIRS report successfully created',
+        'report.eccairs.create-new-revision.error': 'Unable to create new revision from latest ECCAIRS. Server responded with message: ',
         'report.eccairs.label': 'ECCAIRS',
         'report.safa.label': 'SAFA',
 
