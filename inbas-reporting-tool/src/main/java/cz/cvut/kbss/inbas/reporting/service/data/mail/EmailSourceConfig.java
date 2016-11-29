@@ -1,6 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
+import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.datatools.mail.CompoundProcessor;
+import cz.cvut.kbss.datatools.mail.MessageProcessor;
 import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
 import cz.cvut.kbss.datatools.mail.imap.idle.IDLEMailMessageReader;
 import cz.cvut.kbss.datatools.mail.model.Message;
@@ -18,6 +20,7 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 import static cz.cvut.kbss.datatools.mail.model.javaapi.MailConfigParameters.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  *
@@ -47,8 +50,8 @@ public class EmailSourceConfig {
     @Autowired
     protected ReportImporter reportImporter;
 
-    @Autowired
-    protected ReportImporter importer1;
+//    @Autowired
+//    protected ReportImporter importer1;
 
     protected IDLEMailMessageReader idleImapReader;
 
@@ -62,7 +65,7 @@ public class EmailSourceConfig {
         
         idleImapReader = new IDLEMailMessageReader() {
 
-            protected ReportImporter importer = importer1;
+//            protected ReportImporter importer = importer1;
 
             @Override
             protected boolean isProcessed(String id) {
@@ -81,13 +84,9 @@ public class EmailSourceConfig {
             }
         };
         
-        CompoundProcessor processor = new CompoundProcessor();
-        processor.registerMessageProcessor(new E5XMLLocator());
-//        processor.registerMessageProcessor(new CSAEmailProcessor());
-//        processor.registerMessageProcessor(new TISEmailProcessor());
-//        processor.registerMessageProcessor(new UZPLNEmailProcessor());
-//        processor.registerMessageProcessor(new UZPLNParaEmailProcessor());
-        idleImapReader.setProcessor(processor);
+        // This is not used in the idleImapReader
+//        CompoundProcessor processor = new CompoundProcessor();
+//        idleImapReader.setProcessor(processor);
         Properties cfg = new Properties();
         Stream.of(MAIL_PASSWORD,
                 MAIL_PROTOCOL,

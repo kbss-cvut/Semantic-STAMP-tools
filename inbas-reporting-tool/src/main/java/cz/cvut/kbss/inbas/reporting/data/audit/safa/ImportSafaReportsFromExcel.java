@@ -122,68 +122,6 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
 ////        loadMapFromJson(locs,"code", "text",inspectionLocationMap);
 //    }
     
-    public static void main(String[] args) throws Exception{
-        ApplicationContext app = new AnnotationConfigApplicationContext(PersistenceConfig.class, ServiceConfig.class);
-        OrganizationDao od = app.getBean(OrganizationDao.class);
-        AuditReportDao ard = app.getBean(AuditReportDao.class);
-        AuditDao ad = app.getBean(AuditDao.class);
-        PersonDao pd = app.getBean(PersonDao.class);
-        ReportMetadataService rms = app.getBean(ReportMetadataService.class);
-        
-        ImportSafaReportsFromExcel safaImporter = new ImportSafaReportsFromExcel();
-
-        safaImporter.setAuditReportDao(ard);
-        safaImporter.setReportMetadataService(rms);
-        
-        InputStream is = new FileInputStream("c:\\Users\\user\\Documents\\skola\\projects\\tacr-beta-2015\\sisel\\audits\\safa\\CZ OPR RAMP data-SI_STARTTIME.xlsx");
-//        System.out.println(IOUtils.toString(is));
-        
-//        safaImporter.loadTaxonomies();
-        safaImporter.process(is);
-
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("Printing all imported reports");
-
-        
-
-        // persist data
-        Person importer = safaImporter.getImporter();
-        if (!pd.exists(importer.getUri())) {
-            pd.persist(importer);
-        }
-
-        safaImporter.persistOrganizations(od);
-        safaImporter.getReports().values().forEach(r -> {
-            try {
-                safaImporter.persistOrUpdateRepor(r);
-            } catch (Exception ex) {
-                LOG.trace(String.format("Could not persist report %s.", r.getAudit().getName()), ex);
-            }
-        });
-    }
-
-    public void persistOrUpdateRepor(AuditReport r) {
-        Objects.requireNonNull(r);
-        AuditReport old = auditReportDao.find(r.getUri());
-        if(old == null){
-            persistReport(r, auditReportDao);
-        }else{
-            if(!auditReportComparator.equals(old, r)){
-                auditReportDao.remove(old);
-                persistReport(r, auditReportDao);
-            }
-        }
-    }
-    
-    public void persistReport(AuditReport r){
-        reportMetadataService.initMetadataForPersist(r);
-        auditReportDao.persist(r);
-    }
-    
-    
-    
     public static enum AuditColumns{
         naa_code, // audit tab 
         naa_state_name, // audit tab
@@ -237,7 +175,6 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
     }
 
     public ImportSafaReportsFromExcel() {
-        super("xls-safa-audit-data-importer-0001");
         addTable("audit", 0, AuditColumns.report_identifier, this::processAuditRows);
         addTable("findings", 1, AuditFindingColumns.report_identifier, this::processAuditFindingRows);
     }
@@ -261,6 +198,7 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
         IdentificationUtils.generateIdentificationFields(ar);
         
         ar.getTypes().add(safaAuditReportType);
+        ar.getTypes().add(cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_c_read_only);
         ar.setAuthor(importer);
         ar.setDateCreated(batchDate);
         

@@ -2,10 +2,12 @@ package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
 import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.datatools.mail.CompoundProcessor;
+import cz.cvut.kbss.datatools.mail.MessageProcessor;
 import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
 import cz.cvut.kbss.datatools.mail.model.Message;
 import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
 import cz.cvut.kbss.eccairs.report.e5xml.e5f.E5FXMLParser;
+import cz.cvut.kbss.eccairs.report.e5xml.e5f.E5FXMLParserEccairs;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
 import cz.cvut.kbss.eccairs.report.model.dao.EccairsReportDao;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
@@ -35,10 +37,12 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
@@ -46,9 +50,6 @@ import org.apache.commons.io.IOUtils;
 public class EccairsReportImporter implements ReportImporter, ApplicationEventPublisherAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(EccairsReportImporter.class);
-
-    private static final String IMPORTER_USERNAME = "e5xml-data-importer-0001";
-    private static final String IMPORTER_URI = "http://onto.fel.cvut.cz/ointologies/tools/e5xml-data-importer-0001";
 
     @Autowired
     @Qualifier("eccairsPU")
@@ -59,9 +60,9 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
 
     @Autowired
     protected EmailDao emailDao;
-
+    
     @Autowired
-    private PersonService personService;
+    private SafaImportService safaImportService;
 
     protected MappingEccairsData2Aso mapping;
     
@@ -71,33 +72,35 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     @PostConstruct
     protected void init() {
         mapping = new MappingEccairsData2Aso(eaf);
-        processor.registerMessageProcessor(new E5XMLLocator());
-
-        createImporterUser();
+        processor.registerMessageProcessor(new E5XMLLocator(){
+            @Override
+            public Object processMessage(Message m) {
+                String id = m.getId();
+                Stream<NamedStream> s = (Stream<NamedStream>) super.processMessage(m);
+                return s.flatMap(x -> {
+                    try {
+                        return processDelegate(x).stream();
+                    } catch (Exception e) {
+                        LOG.info(String.format("Something went wrong while importing an attachment of the email with id : %s", id), e);
+                    }
+                    return Stream.of();
+                }).filter(x -> x != null);
+            }
+            
+        });
+        // TODO recognize safa emails, subject = "RAMP data on Czech operators", attachment to download is of name "CZ OPR RAMP data% SI_STARTTIME%.xlsx"
+        processor.registerMessageProcessor(safaImportService.getSafaAuditReportImporterProcessor());
 //        processor.registerMessageProcessor(new CSAEmailProcessor());
 //        processor.registerMessageProcessor(new TISEmailProcessor());
 //        processor.registerMessageProcessor(new UZPLNEmailProcessor());
 //        processor.registerMessageProcessor(new UZPLNParaEmailProcessor());
     }
 
-    private void createImporterUser() {
-        if (personService.findByUsername(IMPORTER_USERNAME) == null) {
-            final Person importer = new Person();
-            importer.setUri(URI.create(IMPORTER_URI));
-            importer.setUsername(IMPORTER_USERNAME);
-            importer.setFirstName("importer");
-            importer.setLastName("0001");
-            importer.setPassword("Importer0001");
-            personService.persist(importer);
-        }
-    }
 
     @Override
     public List<URI> processDelegate(Object o) throws Exception {
         if (o instanceof NamedStream) {
             return process((NamedStream) o);
-        } else if (o instanceof Model) {
-            return process((Model) o);
         }
         return Collections.emptyList();
     }
@@ -159,10 +162,13 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
         }
     }
 
+    
+    
     @Override
     public List<URI> process(Model m) throws Exception {
-        LOG.trace("Processing Model");
-        return Collections.emptyList();
+        throw new UnsupportedOperationException("Importing a jena model is not supported yet.");
+//        LOG.trace("Processing Model");
+//        return Collections.emptyList();
     }
 
     @Override
@@ -177,7 +183,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
      */
     public List<URI> importE5FXmlFromString(String reportStr){ 
         try {
-            E5FXMLParser e5fXmlParser = new E5FXMLParser(eaf);
+            E5FXMLParser e5fXmlParser = new E5FXMLParserEccairs(eaf);
             e5fXmlParser.parseDocument(new NamedStream("imported-from-eccairs", IOUtils.toInputStream(reportStr, Charset.forName("UTF-8"))));
             EccairsReport r = e5fXmlParser.getReport();
             return parsePersistAndMap(Stream.of(r));
@@ -197,15 +203,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
             if (!(o instanceof Stream)) {
                 o = Stream.of(o);
             }
-            Stream<?> s = (Stream) o;
-            Set<URI> imported = s.flatMap(x -> {
-                try {
-                    return this.processDelegate(x).stream();
-                } catch (Exception e) {
-                    LOG.info(String.format("Something went wrong while importing an attachment of the email with id : %s", id), e);
-                }
-                return Stream.of();
-            }).filter(x -> x != null).collect(Collectors.toSet());
+            Stream<URI> s = (Stream<URI>) o;
+            Set<URI> imported = s.collect(Collectors.toSet());
             
             if (!imported.isEmpty()) {// TODO: implememnt in EMailService and enclose in transaction.
                 EMail email = emailDao.findByMailId(id);

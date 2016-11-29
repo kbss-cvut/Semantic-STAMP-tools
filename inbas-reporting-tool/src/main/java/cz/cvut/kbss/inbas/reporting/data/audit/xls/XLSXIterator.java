@@ -32,7 +32,13 @@ public abstract class XLSXIterator {
     protected Table currentTable;
     
     protected List<Table> tables = new ArrayList<>();
+  
     
+    /**
+     * Parses the is stream and reads the reports in it as AuditReports
+     * @param is a stream of the safa xlsx containing numerous safa reports
+     * @throws IOException 
+     */
     public void process(final InputStream is) throws IOException {
         // init
         myWorkBook = new XSSFWorkbook(is);
