@@ -310,7 +310,7 @@
                             <failOnMissingWebXml>false</failOnMissingWebXml>
                             <webResources>
                                 <resource>
-                                    <directory>profiles/production</directory>
+                                    <directory>profiles/production/src/main/webapp</directory>
                                 </resource>
                             </webResources>
                             <packagingExcludes>
