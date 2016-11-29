@@ -1,5 +1,11 @@
 # SISEL Release Notes
 
+### 0.8.0 - November 29, 2016
+- Import of reports from ECCAIRS (Feature #189).
+- Create new revision from latest ECCAIRS version of a report (Feature #233).
+- Distinguish ECCAIRS and SAFA reports in the UI (Feature #235).
+- Profile specific JMX bean names (Feature #232).
+
 ### 0.7.18 - November 21, 2016
 - Fixed missing sorting icons in reports table (Bug #226).
 - SAFA audit reports are read-only (Feature #224).
