@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
+import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportList;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
@@ -10,6 +11,7 @@ import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.SafaImportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +38,9 @@ public class ReportController extends BaseController {
 
     @Autowired
     private DtoMapper dtoMapper;
+    
+    @Autowired
+    private SafaImportService safaImportService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ReportList getAllReports() {
@@ -191,7 +196,8 @@ public class ReportController extends BaseController {
     public void importSafaExcel(@RequestParam("file") MultipartFile file) {
         try {
             final InputStream stream = file.getInputStream();
-            // TODO
+            final NamedStream namedStream = new NamedStream(file.getName(), stream);
+            safaImportService.importReportsFromExcel(namedStream);
         } catch (IOException e) {
             throw new BadRequestException("Unable to read the uploaded file.", e);
         }
