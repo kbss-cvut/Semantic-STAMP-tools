@@ -6,10 +6,13 @@ import cz.cvut.kbss.inbas.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.RemoteDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.SafaImportService;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
 import cz.cvut.kbss.inbas.reporting.service.repository.GenericEntityService;
 import cz.cvut.kbss.inbas.reporting.service.search.SearchService;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockingDetails;
 
 @Configuration
 public class MockServiceConfig {
@@ -120,5 +124,27 @@ public class MockServiceConfig {
     @Bean
     public EccairsService eccairsService() {
         return mock(EccairsService.class);
+    }
+
+    @Bean
+    public SafaImportService safaImportService() {
+        return mock(SafaImportService.class);
+    }
+
+    @Bean
+    public MockBeanFactory mockBeanFactory() {
+        return new MockBeanFactory();
+    }
+
+    /**
+     * This class prevents Spring from injecting dependencies into mocks.
+     * <p>
+     * It is handy for mocking beans which do not have a separate interface.
+     */
+    private static class MockBeanFactory extends InstantiationAwareBeanPostProcessorAdapter {
+        @Override
+        public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+            return !mockingDetails(bean).isMock();
+        }
     }
 }

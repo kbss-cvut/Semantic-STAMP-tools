@@ -5,6 +5,7 @@ import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.EmailSourceService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.SafaImportService;
 import cz.cvut.kbss.inbas.reporting.service.repository.RepositoryOccurrenceReportService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -56,5 +57,11 @@ public class TestServiceConfig {
     @Primary
     public EccairsService eccairsService() {
         return mock(EccairsService.class);
+    }
+
+    @Bean
+    @Primary
+    public SafaImportService safaImportService() {
+        return mock(SafaImportService.class);
     }
 }

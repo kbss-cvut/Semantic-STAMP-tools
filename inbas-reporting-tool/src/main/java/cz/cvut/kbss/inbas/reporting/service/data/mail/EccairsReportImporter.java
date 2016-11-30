@@ -2,7 +2,6 @@ package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
 import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.datatools.mail.CompoundProcessor;
-import cz.cvut.kbss.datatools.mail.MessageProcessor;
 import cz.cvut.kbss.datatools.mail.caa.e5xml.E5XMLLocator;
 import cz.cvut.kbss.datatools.mail.model.Message;
 import cz.cvut.kbss.eccairs.report.e5xml.E5XMLLoader;
@@ -11,17 +10,15 @@ import cz.cvut.kbss.eccairs.report.e5xml.e5f.E5FXMLParserEccairs;
 import cz.cvut.kbss.eccairs.report.model.EccairsReport;
 import cz.cvut.kbss.eccairs.report.model.dao.EccairsReportDao;
 import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
-import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.com.EMail;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.EmailDao;
-import cz.cvut.kbss.inbas.reporting.service.PersonService;
 import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
 import cz.cvut.kbss.jopa.exceptions.OWLPersistenceException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.ucl.MappingEccairsData2Aso;
-import java.io.IOException;
+import org.apache.commons.io.IOUtils;
 import org.apache.jena.rdf.model.Model;
 import org.jooq.lambda.Unchecked;
 import org.slf4j.Logger;
@@ -32,17 +29,15 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
