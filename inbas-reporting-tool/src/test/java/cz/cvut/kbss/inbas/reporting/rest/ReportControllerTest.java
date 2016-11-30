@@ -1,6 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
@@ -25,6 +26,7 @@ import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.inbas.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.ReportBusinessService;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.SafaImportService;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import cz.cvut.kbss.jopa.exceptions.RollbackException;
 import org.junit.Before;
@@ -61,6 +63,9 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     private OccurrenceReportService occurrenceReportService;
 
     @Autowired
+    private SafaImportService safaImportServiceMock;
+
+    @Autowired
     private DtoMapper mapper;
 
     private Person author;
@@ -68,7 +73,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        Mockito.reset(reportServiceMock);
+        Mockito.reset(reportServiceMock, safaImportServiceMock);
         this.author = Generator.getPerson();
         Environment.setCurrentUser(author);
     }
@@ -182,7 +187,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void testGetReportChainRevisions() throws Exception {
         final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
-        Collections.sort(chain, new ReportRevisionComparator<>());  // sort by revision descending
+        chain.sort(new ReportRevisionComparator<>());  // sort by revision descending
         final Long fileNumber = chain.get(0).getFileNumber();
         final List<ReportRevisionInfo> revisions = new ArrayList<>(chain.size());
         for (int i = 0; i < chain.size(); i++) {
@@ -275,7 +280,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     public void createNewRevisionReturnsLocationOfNewRevision() throws Exception {
         final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         final Long fileNumber = chain.get(0).getFileNumber();
-        Collections.sort(chain, new ReportRevisionComparator<>());  // Sort descending
+        chain.sort(new ReportRevisionComparator<>());  // Sort descending
         final OccurrenceReport newRevision = new OccurrenceReport();
         newRevision.setFileNumber(fileNumber);
         newRevision.setKey(IdentificationUtils.generateKey());
@@ -427,5 +432,17 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final MvcResult result = mockMvc.perform(post(REPORTS_PATH + "chain/" + fileNo + "/revisions/eccairs"))
                                         .andExpect(status().isCreated()).andReturn();
         verifyLocationEquals(REPORTS_PATH + newRevision.getKey(), result);
+    }
+
+    @Test
+    public void importSafaExcelPassesInputStreamToSafaService() throws Exception {
+        final MockMultipartFile file = getMockMultipartFile();
+        mockMvc.perform(fileUpload(REPORTS_PATH + "importSafa").file(file)).andExpect(status().isCreated()).andReturn();
+        verify(safaImportServiceMock).importReportsFromExcel(any(NamedStream.class));
+    }
+
+    @Test
+    public void importSafaExcelThrowsBadRequestWhenFileCannotBeRead() throws Exception {
+        mockMvc.perform(fileUpload(REPORTS_PATH + "importSafa")).andExpect(status().isBadRequest()).andReturn();
     }
 }
