@@ -54,7 +54,7 @@ public class ReportImportingConfig {
     }
     
     
-    @Bean
+    @Bean(name = "importer")
     public Person getImporter(){
         Person importer = personService.findByUsername(IMPORTER_USERNAME);
         if (importer == null) {

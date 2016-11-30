@@ -17,10 +17,12 @@ import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OrganizationDao;
+import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
 import cz.cvut.kbss.inbas.reporting.service.repository.ReportMetadataService;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -29,14 +31,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-@Service
-public class SafaImportService {
+public class SafaImportService implements ApplicationEventPublisherAware{
+    
+    // needs testing TODO: check if email provenance is provided
     
     private static final Logger LOG = LoggerFactory.getLogger(SafaImportService.class);
     
@@ -53,6 +58,8 @@ public class SafaImportService {
     @Autowired
     private ReportMetadataService reportMetadataService;
     
+    private ApplicationEventPublisher eventPublisher;
+    
     private MessageProcessor safaAttachmentExtractor = new MessageProcessor() {
             @Override
             public boolean accepts(Message m) {
@@ -66,7 +73,9 @@ public class SafaImportService {
         };
     
     
-    
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
+    }
     
     /**
      * Use this method to import and persist safa audit reports from a NamedStream 
@@ -78,7 +87,12 @@ public class SafaImportService {
             ImportSafaReportsFromExcel safaImporter = new ImportSafaReportsFromExcel();
             safaImporter.setImporter(importer);
             safaImporter.process(ns.getContent());
-            return persistImportedReports(safaImporter);
+            List<URI> importedOrChangedReports = persistImportedReports(safaImporter);
+            if(!importedOrChangedReports.isEmpty()){
+                LOG.info("Safa audit report have been imported or changed {}", Arrays.toString(importedOrChangedReports.toArray()));
+                eventPublisher.publishEvent(new InvalidateCacheEvent(this));
+            }
+            return importedOrChangedReports;
         } catch (IOException ex) {
             String message = String.format("Failed parsing named stream %s", ns.getName());
             LOG.error(message, ex);

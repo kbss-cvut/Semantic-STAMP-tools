@@ -174,6 +174,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         this.eventPublisher = applicationEventPublisher;
+        this.safaImportService.setApplicationEventPublisher(applicationEventPublisher);
     }
     
     /**
