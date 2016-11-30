@@ -6,10 +6,10 @@ Safety occurrence reporting tool for the INBAS project.
 
 The following software needs to be installed on the system for development:
 
-- JDK 8
-- NodeJS v4 or later (can be installed using apt, in which case you need to install npm as well). To upgrade from older versions, see e.g. [https://davidwalsh.name/upgrade-nodejs](https://davidwalsh.name/upgrade-nodejs)
-- Maven
-- Apache Tomcat (or any other application server)
+- JDK 8 (preferably Oracle)
+- NodeJS v6 or later (can be installed using apt, in which case you need to install npm as well). To upgrade from older versions, see e.g. [https://davidwalsh.name/upgrade-nodejs](https://davidwalsh.name/upgrade-nodejs)
+- Maven 3.x
+- Apache Tomcat 8.x (or any other application server supporting Servlets 3.1)
 
 To start developing, first go to `app/root/src/main/webapp` and run `npm install`. This will download the necessary Node dependencies
 (they are used by the UI written in ReactJS). You can check that everything is working by running `npm test`.
