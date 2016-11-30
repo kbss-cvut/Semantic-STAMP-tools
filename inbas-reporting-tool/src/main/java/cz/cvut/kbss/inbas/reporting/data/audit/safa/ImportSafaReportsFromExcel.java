@@ -53,9 +53,6 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
     protected Map<String, String> aircraftMap;
     
     protected AuditReportComparator auditReportComparator = new AuditReportComparator();
-
-//    protected Map<String, Organization> authorityMap;
-//    protected Map<String, Organization> operatorMap;
     
     @Autowired
     private ReportMetadataService reportMetadataService;
@@ -63,8 +60,6 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
     @Autowired
     private AuditReportDao auditReportDao;
     
-    
-
     public void setReportMetadataService(ReportMetadataService reportMetadataService) {
         this.reportMetadataService = reportMetadataService;
     }
@@ -72,43 +67,6 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
     public void setAuditReportDao(AuditReportDao auditReportDao) {
         this.auditReportDao = auditReportDao;
     }
-    
-    
-//    protected void loadOrganizationMapFromJson(String file, String id, String name)throws Exception{
-//        JSONObject json = (JSONObject)JSONValue.parse(new FileReader(file));
-//        JSONArray array = (JSONArray)json.get("items");
-//        for(int i = 0; i < array.size(); i++){
-//            JSONObject obj = (JSONObject)array.get(i);
-//            Organization org = new Organization(obj.getAsString(name));
-//            organizationsMap.put(obj.getAsString(id), org);
-//        }
-//    }
-//    protected void loadMapFromJson(String file, String id, String name, Map<String,String> map)throws Exception{
-//        // TODO use the json library from EccairsQueryUtils
-////        String jsonString = IOUtils.toString(new FileReader(file));
-//        
-//        JSONObject json = (JSONObject)JSONValue.parse(new FileReader(file));
-//        JSONArray array = (JSONArray)json.get("items");
-//        for(int i = 0; i < array.size(); i++){
-//            JSONObject obj = (JSONObject)array.get(i);
-//            map.put(obj.getAsString(id), "http://onto.fel.cvut.cz/ontologies/safa/location/" + obj.getAsString(id));
-//        }
-//    }
-    
-//    public static class
-    
-//    protected void loadTaxonomies() throws Exception{
-//        String orgs1 = "c:\\Users\\user\\Documents\\skola\\projects\\tacr-beta-2015\\sisel\\audits\\safa\\safa-auditor-organizations.json";
-//        String orgs2 = "c:\\Users\\user\\Documents\\skola\\projects\\tacr-beta-2015\\sisel\\audits\\safa\\safa-operators.json";
-//        String locs = "c:\\Users\\user\\Documents\\skola\\projects\\tacr-beta-2015\\sisel\\audits\\safa\\safa-inspection-places-15-11-2016.json";
-//        
-////        loadMapFromJson(orgs1,"text", "full_description");
-////        loadMapFromJson(orgs2,"code", "name");
-////        loadOrganizationMapFromJson(orgs1,"text", "full_description");
-////        loadOrganizationMapFromJson(orgs2,"code", "name");
-//        // 
-////        loadMapFromJson(locs,"code", "text",inspectionLocationMap);
-//    }
     
     public static enum AuditColumns{
         naa_code, // audit tab 
@@ -167,18 +125,7 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
         addTable("findings", 1, AuditFindingColumns.report_identifier, this::processAuditFindingRows);
     }
 
-    private void initOrganizations(){
-        // TODO safa vocabulary including
-        // - predefined finding types 
-        // - predefined finding types
-    }
-    
-    private void initMappingsToASOAndEccairs(){
-        // init maps that contain the mapping between safa codes to eccairs and ASO uris
-    }
-    
     protected void processAuditRows(Row r){
-        if(reports.size() > 0 )return;
         String auditName = getStringValue(r, AuditColumns.report_identifier);
         String auditReportUri = getAuditReportUri(r, AuditColumns.report_identifier);   
         URI reportUri = URI.create(auditReportUri);
