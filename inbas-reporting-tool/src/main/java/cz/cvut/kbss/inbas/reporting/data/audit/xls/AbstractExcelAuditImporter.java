@@ -5,14 +5,9 @@
  */
 package cz.cvut.kbss.inbas.reporting.data.audit.xls;
 
-import cz.cvut.kbss.inbas.reporting.exp.caa.imp.audit.old.AuditDataExtraction;
 import cz.cvut.kbss.inbas.reporting.model.Organization;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,21 +54,4 @@ public class AbstractExcelAuditImporter extends XLSXIterator{
     public void setImporter(Person importer) {
         this.importer = importer;
     }
-    
-    @Deprecated
-    public static Map<String,List<String>> loadLocationMappings(String mappingLocation){
-        InputStream is = AuditDataExtraction.class.getResourceAsStream(mappingLocation);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        Map<String, List<String>> ret = new HashMap<>();
-        br.lines().filter(l -> !l.startsWith("?")).forEach(l -> {
-            String[] cs = l.split("\t");
-            if(cs != null && cs.length == 2){
-                ret.put(cs[0], Arrays.asList(cs[1].split(";")));
-            }else{
-                // skip, do nothing
-            }
-        });
-        return ret;
-    }
-    
 }
