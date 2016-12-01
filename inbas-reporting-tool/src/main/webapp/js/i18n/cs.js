@@ -117,6 +117,7 @@ module.exports = {
         'reports.filter.reset': 'Zrušit filtry',
         'reports.paging.item-count': 'Zobrazuji {showing} z {total} položek.',
         'reports.create-report': 'Nové hlášení',
+        'reports.type.filter': 'Typ hlášení:',
 
         'filters.label': 'Filtry',
 

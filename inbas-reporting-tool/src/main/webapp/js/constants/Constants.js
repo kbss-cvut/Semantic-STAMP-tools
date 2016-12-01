@@ -124,5 +124,10 @@ module.exports = {
         type: 'select',
         options: 'reportingPhase',
         label: 'reports.phase'
+    }, {
+        path: 'types',
+        type: 'select',
+        options: 'reportType',
+        label: 'reports.type.filter'
     }]
 };

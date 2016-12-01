@@ -116,6 +116,7 @@ module.exports = {
         'reports.filter.reset': 'Reset filters',
         'reports.paging.item-count': 'Showing {showing} of {total} items.',
         'reports.create-report': 'Create report',
+        'reports.type.filter': 'Report type:',
 
         'filters.label': 'Filters',
 
