@@ -1,20 +1,23 @@
 'use strict';
 
-var Reflux = require('reflux');
-var jsonld = require('jsonld');
+const Reflux = require('reflux');
+const jsonld = require('jsonld');
 
-var Actions = require('../actions/Actions');
-var Constants = require('../constants/Constants');
-var Ajax = require('../utils/Ajax');
-var Logger = require('../utils/Logger');
-var Utils = require('../utils/Utils');
+const Actions = require('../actions/Actions');
+const Constants = require('../constants/Constants');
+const Ajax = require('../utils/Ajax');
+const Logger = require('../utils/Logger');
+const Utils = require('../utils/Utils');
 
 const URL = 'rest/options';
-var options = {};
+const STATISTICS_URL = URL + '/statistics/config';
+const options = {};
+let statisticsConfig = null;
 
-var OptionsStore = Reflux.createStore({
+const OptionsStore = Reflux.createStore({
     init: function () {
         this.listenTo(Actions.loadOptions, this.onLoadOptions);
+        this.listenTo(Actions.loadStatisticsConfig, this.onLoadStatisticsConfig);
     },
 
     onLoadOptions: function (type, params) {
@@ -34,7 +37,7 @@ var OptionsStore = Reflux.createStore({
             this.trigger(type, options[type]);
             return;
         }
-        var url = URL + '?type=' + type;
+        let url = URL + '?type=' + type;
         url = Utils.addParametersToUrl(url, params);
         Ajax.get(url).end(function (data) {
             if (data.length > 0) {
@@ -52,8 +55,31 @@ var OptionsStore = Reflux.createStore({
         }.bind(this));
     },
 
+    onLoadStatisticsConfig: function () {
+        if (statisticsConfig) {
+            this.trigger({
+                action: Actions.loadStatisticsConfig,
+                config: statisticsConfig
+            });
+            return;
+        }
+        Ajax.get(STATISTICS_URL).end(data => {
+            if (data.configuration) {
+                statisticsConfig = data.configuration;
+            }
+            this.trigger({
+                action: Actions.loadStatisticsConfig,
+                config: statisticsConfig
+            });
+        });
+    },
+
     getOptions: function (type) {
         return options[type] ? options[type] : [];
+    },
+
+    getStatisticsConfiguration: function() {
+        return statisticsConfig ? statisticsConfig : {};
     }
 });
 
