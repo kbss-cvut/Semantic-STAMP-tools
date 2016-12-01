@@ -30,6 +30,8 @@ skupin, které mají samostatné konfigurační soubory.
 
 Všechna tato nastavení se nachází v souboru `src/main/resources/config.properties`.
 
+Pokud při instalaci postupujete dle instalačního manuálu, není třeba tuto konfiguraci měnit, neboť je přednastavena pro hodnoty z manuálu.
+
 ##### Konfigurace analytického modulu
 
 * Nastavení statistik pro hlavní stránku aplikace - atribut `statistics.dashboard`,
@@ -40,9 +42,44 @@ Všechna tato nastavení se nachází v souboru `src/main/resources/config.prope
 
 Tato nastavení se nachází v souboru `src/main/resources/statistics.properties`.
 
-Byl-li pro instalaci a spuštění ostatních služeb použit návod dodávaný spolu s aplikací, není třeba konfiguraci RT
-měnit, neboť je přednastavena pro hodnoty z návodu.
+Pokud při instalaci postupujete dle instalačního manuálu, není třeba tuto konfiguraci měnit, neboť je přednastavena pro hodnoty z manuálu.
 
+##### Nastavení připojení na systém ECCAIRS
+
+Systém SISEL získává ze systému ECCAIRS aktuální záznamy o událostech.
+ 
+Pro správnou práci systému je třeba provést nakonfigurovat stávající instalaci systému ECCAIRS i systém SISEL.
+
+###### Konfigurace systému ECCAIRS
+
+ECCAIRS server poskutuje službu ECCAIRS Web API, kterou využívá systém SISEL pro komunikaci se systémem ECCAIRS. Tuto službu je nutné aktivovat v instalaci systému ECCAIRS dle instalační dokumentace systému ECCAIRS.
+
+Po úspěšné aktivaci služby ECCAIRS Web API je tato služba dostupná na veřejné adrese "https://SERVER-NAME/eccairs5/webAPI.svc/basic-https", kde `SERVER-NAME`
+označuje veřejnou adresu serveru na které je služba vystavena.
+
+Pomocí aplikace ECCAIRS Browser se připojte k repozitáři, který chcete využít pro synchronizaci se systémem SISEL. 
+__//TODO SISEL//__
+
+###### Konfigurace systému SISEL
+
+Nastavení připojení na systém ECCAIRS se nachází v souboru `src/main/resources/eccairs-config.properties`.
+
+Toto nastavení zahrnuje:
+* `eccairs.repository.id` - Identifikátor ECCAIRS repozitáře na vzdáleném serveru
+* `eccairs.repository.language` - Jazyk ECCAIRS repozitáře
+* `eccairs.repository.library` - Knihovna ECCAIRS dotazů, ze které budou využívány dotazy do systému ECCAIRS uvedené níže
+* `eccairs.repository.query.getAllOccurrences` - Identifikátor dotazu v knihovně určené atributem `eccairs.repository.library`, který umožňuje získat z ECCAIRS serveru záznamy o všech událostech
+* `eccairs.repository.query.getOccurrencesAfterCreatedDate` - Identifikátor dotazu v knihovně určené atributem `eccairs.repository.library`, který umožňuje získat z ECCAIRS serveru záznamy o událostech, které byly vytvořeny po zadaném datu.
+* `eccairs.repository.query.getOccurrencesAfterModifiedDate` - Identifikátor dotazu v knihovně určené atributem `eccairs.repository.library`, který umožňuje získat z ECCAIRS serveru záznamy o událostech, které byly modifikovány po zadaném datu.
+* `eccairs.repository.query.getOccurrenceByInitialFileNumberAndReportingEntity` - Identifikátor dotazu v knihovně určené atributem `eccairs.repository.library`, který umožňuje získat z ECCAIRS serveru záznam o události na základě identifikace této události u tvůrce záznamu, tedy na základě hodnoty atributu `file number` a `reporting entity`.
+* `eccairs.repository.username` - uživatelské jméno pro přihlášení do systému ECCAIRS
+* `eccairs.repository.password` - heslo pro přihlášení do systému ECCAIRS
+
+##### Nastavení připojení na emailový server
+
+Nastavení připojení na emailový server se nachází v souboru `src/main/resources/ib-caa-email-config.properties`.
+
+__//TODO Bogdan - prosím i přejmenuj konfigurák na email-config.properties__ 
 __//TODO Ještě eccairs a email konfigurace__
 
 #### Sestavení
