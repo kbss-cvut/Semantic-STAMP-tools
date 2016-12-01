@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.options;
 
+import cz.cvut.kbss.inbas.reporting.dto.StatisticsConfiguration;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 
 import java.util.Map;
@@ -17,4 +18,11 @@ public interface OptionsService {
      * @throws IllegalArgumentException When the specified option type is not supported
      */
     Object getOptions(String type, Map<String, String> parameters);
+
+    /**
+     * Gets configuration of the statistics UI module.
+     *
+     * @return Configuration object
+     */
+    StatisticsConfiguration getStatisticsConfiguration();
 }

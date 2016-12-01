@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
+import cz.cvut.kbss.inbas.reporting.dto.StatisticsConfiguration;
 import cz.cvut.kbss.inbas.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
@@ -37,5 +38,10 @@ public class OptionsController extends BaseController {
         } catch (IllegalArgumentException e) {
             throw new BadRequestException(e.getMessage());
         }
+    }
+
+    @RequestMapping(value = "/statistics/config", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public StatisticsConfiguration getStatisticsConfiguration() {
+        return optionsService.getStatisticsConfiguration();
     }
 }

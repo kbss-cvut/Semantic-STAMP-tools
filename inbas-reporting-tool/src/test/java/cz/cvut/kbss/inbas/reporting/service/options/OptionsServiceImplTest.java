@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.service.options;
 
+import cz.cvut.kbss.inbas.reporting.dto.StatisticsConfiguration;
 import cz.cvut.kbss.inbas.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
@@ -147,5 +148,19 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         final Object res = optionsService.getOptions(type, params);
         assertTrue(res instanceof RawJson);
         assertEquals(new RawJson(DATA), res);
+    }
+
+    @Test
+    public void getStatisticsConfigurationReturnsObjectWithConfigurationForStatistics() {
+        final StatisticsConfiguration config = optionsService.getStatisticsConfiguration();
+        assertNotNull(config);
+        final String[] configs = new String[]{ConfigParam.STATISTICS_DASHBOARD.toString(),
+                ConfigParam.STATISTICS_GENERAL.toString(),
+                ConfigParam.STATISTICS_EVENT_TYPE.toString(),
+                ConfigParam.STATISTICS_AUDIT.toString(),
+                ConfigParam.STATISTICS_SAFETY_ISSUE.toString()};
+        for (String s : configs) {
+            assertEquals(environment.getProperty(s), config.getConfiguration().get(s));
+        }
     }
 }
