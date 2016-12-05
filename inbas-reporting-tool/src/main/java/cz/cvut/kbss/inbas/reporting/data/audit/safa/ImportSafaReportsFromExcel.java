@@ -15,6 +15,13 @@ import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.inbas.reporting.service.repository.ReportMetadataService;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -23,14 +30,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+
 //import org.json.JSONArray;
 //import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -237,13 +239,8 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
                 description = "";
             finding.setDescription(description);
             String category = getStringValue(r, AuditFindingColumns.category_code);
-
-            // Issue with category code G (general remark)
-            if(StringUtils.isNumeric(category)){
-                int l = Integer.parseInt(category);
-                if(l >0 && l <4){
-                    finding.setLevel(l);
-                }
+            if (!category.isEmpty()) {
+                finding.setLevel(category);
             }
 
             // finding type

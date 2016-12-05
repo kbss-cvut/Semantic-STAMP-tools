@@ -135,11 +135,7 @@ class AuditFinding extends React.Component {
                                    customListComponent={TypeaheadResultList}/>
                     </div>
                 </div>
-                <div className='row'>
-                    <div className='form-group'>
-                        {this._renderLevels()}
-                    </div>
-                </div>
+                {this._renderLevels()}
                 {this._renderSafaAttributes()}
                 <div className='row'>
                     <div className='col-xs-12'>
@@ -169,6 +165,9 @@ class AuditFinding extends React.Component {
     }
 
     _renderLevels() {
+        if (this.props.report.isSafaReport()) {
+            return null;
+        }
         const finding = this.state.finding,
             levels = [];
         for (let i = 1; i <= Constants.FINDING_LEVEL_MAX; i++) {
@@ -185,7 +184,11 @@ class AuditFinding extends React.Component {
                 </div>
             </div>);
         }
-        return levels;
+        return <div className='row'>
+            <div className='form-group'>
+                {levels}
+            </div>
+        </div>;
     }
 
     _renderSafaAttributes() {

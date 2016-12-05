@@ -9,7 +9,7 @@ public class AuditFindingBase extends SafetyIssueBase {
 
     private String description;
 
-    private Integer level;
+    private String level;
 
     public AuditFindingBase() {
     }
@@ -30,11 +30,11 @@ public class AuditFindingBase extends SafetyIssueBase {
         this.description = description;
     }
 
-    public Integer getLevel() {
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(Integer level) {
+    public void setLevel(String level) {
         this.level = level;
     }
 

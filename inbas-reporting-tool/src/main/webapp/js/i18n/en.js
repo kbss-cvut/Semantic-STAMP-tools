@@ -183,6 +183,7 @@ module.exports = {
         'audit.finding.type.label': 'Finding type',
         'audit.finding.type.placeholder': 'Select finding type',
         'audit.finding.type.edit-tooltip': 'Click to edit finding type',
+        'audit.finding.level.label': 'Finding level',
         'audit.finding.level': 'Finding level {level}',
         'audit.finding.level-1.help': 'A level 1 finding shall be issued by the competent authority when any significant noncompliance '
         + 'is detected with the applicable requirements of Regulation (EC) No 216/2008 and '

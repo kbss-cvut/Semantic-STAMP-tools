@@ -43,6 +43,11 @@ class SafaAuditFindingAttributes extends React.Component {
         return <div>
             <div className='row'>
                 <div className='col-xs-4'>
+                    <Input value={finding.level} label={this.i18n('audit.finding.level.label')} readOnly/>
+                </div>
+            </div>
+            <div className='row'>
+                <div className='col-xs-4'>
                     {this._renderStatus()}
                     <div className='notice-small form-group'>
                         {formattedDate &&
