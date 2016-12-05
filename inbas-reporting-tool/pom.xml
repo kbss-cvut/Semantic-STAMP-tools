@@ -361,6 +361,13 @@
                 <deployment>RLP</deployment>
             </properties>
         </profile>
+        <profile>
+            <id>dsa</id>
+            <properties>
+                <profile.name>dsa</profile.name>
+                <deployment>DSA</deployment>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
