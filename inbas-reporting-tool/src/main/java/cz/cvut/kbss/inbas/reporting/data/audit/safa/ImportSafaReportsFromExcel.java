@@ -51,20 +51,6 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
     
     protected AuditReportComparator auditReportComparator = new AuditReportComparator();
     
-    @Autowired
-    private ReportMetadataService reportMetadataService;
-    
-    @Autowired
-    private AuditReportDao auditReportDao;
-    
-    public void setReportMetadataService(ReportMetadataService reportMetadataService) {
-        this.reportMetadataService = reportMetadataService;
-    }
-
-    public void setAuditReportDao(AuditReportDao auditReportDao) {
-        this.auditReportDao = auditReportDao;
-    }
-    
     public static enum AuditColumns{
         naa_code, // audit tab 
         naa_state_name, // audit tab
