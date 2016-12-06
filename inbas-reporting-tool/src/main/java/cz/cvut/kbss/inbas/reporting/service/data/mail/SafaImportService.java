@@ -18,7 +18,8 @@ import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OrganizationDao;
 import cz.cvut.kbss.inbas.reporting.service.event.InvalidateCacheEvent;
-import cz.cvut.kbss.inbas.reporting.service.repository.ReportMetadataService;
+import cz.cvut.kbss.inbas.reporting.util.Constants;
+import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -33,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.stereotype.Service;
 
 /**
  *
@@ -54,9 +54,6 @@ public class SafaImportService implements ApplicationEventPublisherAware{
     @Autowired
     @Qualifier("importer")
     private Person importer; 
-    
-    @Autowired
-    private ReportMetadataService reportMetadataService;
     
     private ApplicationEventPublisher eventPublisher;
     
@@ -184,7 +181,8 @@ public class SafaImportService implements ApplicationEventPublisherAware{
     }
     
     private void persistReport(AuditReport r){
-        reportMetadataService.initMetadataForPersist(r);
+        r.setFileNumber(IdentificationUtils.generateFileNumber());
+        r.setRevision(Constants.INITIAL_REVISION);
         auditReportDao.persist(r);
     }
 }
