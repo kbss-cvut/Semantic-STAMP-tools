@@ -143,7 +143,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void testGetReportChainRevisions() throws Exception {
         final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
-        Collections.sort(chain, new ReportRevisionComparator<>());  // sort by revision descending
+        chain.sort(new ReportRevisionComparator<>());  // sort by revision descending
         final Long fileNumber = chain.get(0).getFileNumber();
         final List<ReportRevisionInfo> revisions = new ArrayList<>(chain.size());
         for (int i = 0; i < chain.size(); i++) {
@@ -236,7 +236,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     public void createNewRevisionReturnsLocationOfNewRevision() throws Exception {
         final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         final Long fileNumber = chain.get(0).getFileNumber();
-        Collections.sort(chain, new ReportRevisionComparator<>());  // Sort descending
+        chain.sort(new ReportRevisionComparator<>());  // Sort descending
         final OccurrenceReport newRevision = new OccurrenceReport();
         newRevision.setFileNumber(fileNumber);
         newRevision.setKey(IdentificationUtils.generateKey());

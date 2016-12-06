@@ -2,13 +2,14 @@
 
 describe('Report store', function () {
 
-    var rewire = require('rewire'),
+    const rewire = require('rewire'),
         Environment = require('../environment/Environment'),
         Actions = require('../../js/actions/Actions'),
         Ajax = rewire('../../js/utils/Ajax'),
+        Generator = require('../environment/Generator').default,
         ReportStore = rewire('../../js/stores/ReportStore'),
-        reqMockMethods = ['get', 'put', 'post', 'del', 'send', 'accept', 'set', 'end'],
-        reqMock;
+        reqMockMethods = ['get', 'put', 'post', 'del', 'send', 'accept', 'set', 'end'];
+    let reqMock;
 
     beforeEach(function () {
         reqMock = Environment.mockRequestMethods(reqMockMethods);
@@ -16,10 +17,11 @@ describe('Report store', function () {
         Ajax.__set__('Logger', Environment.mockLogger());
         ReportStore.__set__('Ajax', Ajax);
         jasmine.getGlobal().top = {};
+        ReportStore.__set__('reportsLoading', false);
     });
 
     it('triggers with data and action identification when reports are loaded', function () {
-        var reports = [
+        const reports = [
             {id: 'reportOne'},
             {id: 'reportTwo'}
         ];
@@ -40,7 +42,7 @@ describe('Report store', function () {
     it('triggers with empty reports when an ajax error occurs', function () {
         spyOn(ReportStore, 'trigger').and.callThrough();
         reqMock.end.and.callFake(function (handler) {
-            var err = {
+            const err = {
                 status: 400,
                 response: {
                     text: '{"message": "Error message." }',
@@ -60,7 +62,7 @@ describe('Report store', function () {
     });
 
     it('triggers with data and action when report is loaded', function () {
-        var report = {id: 'reportOne'};
+        const report = {id: 'reportOne'};
         spyOn(ReportStore, 'trigger').and.callThrough();
         reqMock.end.and.callFake(function (handler) {
             handler(null, {
@@ -78,7 +80,7 @@ describe('Report store', function () {
     it('triggers with null report when ajax error occurs', function () {
         spyOn(ReportStore, 'trigger').and.callThrough();
         reqMock.end.and.callFake(function (handler) {
-            var err = {
+            const err = {
                 status: 404,
                 response: {
                     text: '{"message": "Report not found." }',
@@ -98,7 +100,7 @@ describe('Report store', function () {
     });
 
     it('does not start new request when loadAllReports is triggered and reports are already being loaded', () => {
-        var reports = [
+        const reports = [
             {id: 'reportOne'},
             {id: 'reportTwo'}
         ];
@@ -114,5 +116,20 @@ describe('Report store', function () {
         ReportStore.onLoadAllReports();
 
         expect(reqMock.end.calls.count()).toEqual(1);
+    });
+
+    it('passes report keys as query params when they are specified', () => {
+        const keys = [];
+        for (let i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
+            keys.push(Generator.getRandomInt().toString());
+        }
+        spyOn(Ajax, 'get').and.callThrough();
+        ReportStore.onLoadAllReports(keys);
+
+        expect(Ajax.get).toHaveBeenCalled();
+        const url = Ajax.get.calls.argsFor(0)[0];
+        keys.forEach(key => {
+            expect(url.indexOf('key=' + key)).not.toEqual(-1);
+        });
     });
 });

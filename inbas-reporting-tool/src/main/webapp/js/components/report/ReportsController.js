@@ -91,21 +91,25 @@ export default class ReportsController extends React.Component {
     }
 
     componentDidMount() {
-        ReportStore.listen(this._onReportsLoaded);
+        this.unsubscribe = ReportStore.listen(this._onReportsLoaded);
         const reportKeys = this.props.location.query['reportKey'];
         if (!reportKeys) {
             Actions.loadAllReports();
         } else {
-            // TODO Load only reports with the specified keys
+            Actions.loadAllReports(reportKeys);
         }
         Actions.loadOptions('reportingPhase');
     }
 
-    onReportsLoaded = (data) => {
+    _onReportsLoaded = (data) => {
         if (data.action === Actions.loadAllReports) {
             this.setState({reports: data.reports});
         }
     };
+
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
 
     onEdit = (report) => {
         Routing.transitionTo(Routes.editReport, {

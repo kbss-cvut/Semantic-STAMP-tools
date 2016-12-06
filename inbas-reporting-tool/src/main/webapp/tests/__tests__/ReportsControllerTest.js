@@ -189,6 +189,22 @@ describe('ReportsController', () => {
         });
     });
 
+    it('loads all reports when no report keys are specified', () => {
+        Environment.render(<ReportsController location={location}/>);
+        expect(Actions.loadAllReports).toHaveBeenCalledWith();
+    });
+
+    it('loads reports by keys when report keys are specified in location', () => {
+        const keys = [];
+        for (let i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
+            keys.push(Generator.getRandomInt().toString());
+        }
+        location.query['reportKey'] = keys;
+
+        Environment.render(<ReportsController location={location}/>);
+        expect(Actions.loadAllReports).toHaveBeenCalledWith(keys);
+    });
+
     function setEqualIdentifications() {
         let ind,
             identification = 'AAAA';

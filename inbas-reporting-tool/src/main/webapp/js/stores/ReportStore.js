@@ -1,19 +1,19 @@
 'use strict';
 
-var Reflux = require('reflux');
+const Reflux = require('reflux');
 
-var Actions = require('../actions/Actions');
-var Ajax = require('../utils/Ajax');
-var JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
-var Utils = require('../utils/Utils');
+const Actions = require('../actions/Actions');
+let Ajax = require('../utils/Ajax');
+const JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
+const Utils = require('../utils/Utils');
 
-var BASE_URL = 'rest/reports';
-var BASE_URL_WITH_SLASH = 'rest/reports/';
+const BASE_URL = 'rest/reports';
+const BASE_URL_WITH_SLASH = 'rest/reports/';
 
 // When reports are being loaded, do not send the request again
-var reportsLoading = false;
+let reportsLoading = false;
 
-var ReportStore = Reflux.createStore({
+const ReportStore = Reflux.createStore({
     listenables: [Actions],
 
     _reports: null,
@@ -23,12 +23,16 @@ var ReportStore = Reflux.createStore({
         this._pendingLoad = null;
     },
 
-    onLoadAllReports: function () {
+    onLoadAllReports: function (keys = []) {
         if (reportsLoading) {
             return;
         }
         reportsLoading = true;
-        Ajax.get(BASE_URL).end(function (data) {
+        let url = BASE_URL;
+        for (let i = 0, len = keys.length; i < len; i++) {
+            url += (i === 0 ? '?' : '&') + 'key=' + keys[i];
+        }
+        Ajax.get(url).end(function (data) {
             reportsLoading = false;
             this._reports = data;
             this.trigger({
@@ -78,7 +82,7 @@ var ReportStore = Reflux.createStore({
         JsonReferenceResolver.encodeReferences(report);
         Ajax.post(BASE_URL, report).end(function (data, resp) {
             if (onSuccess) {
-                var key = Utils.extractKeyFromLocationHeader(resp);
+                const key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);
             }
             this.onLoadAllReports();
@@ -93,7 +97,7 @@ var ReportStore = Reflux.createStore({
     onSubmitReport: function (report, onSuccess, onError) {
         Ajax.post(BASE_URL_WITH_SLASH + 'chain/' + report.fileNumber + '/revisions').end(function (data, resp) {
             if (onSuccess) {
-                var key = Utils.extractKeyFromLocationHeader(resp);
+                const key = Utils.extractKeyFromLocationHeader(resp);
                 onSuccess(key);
             }
         }, onError);
