@@ -5,13 +5,14 @@
  */
 package cz.cvut.kbss.inbas.reporting.data.audit.safa;
 
-import cz.cvut.kbss.inbas.reporting.model.Organization;
 import cz.cvut.kbss.inbas.reporting.model.audit.Audit;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
+import cz.cvut.kbss.inbas.reporting.model.util.HasUri;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
@@ -27,15 +28,18 @@ import org.apache.commons.collections.SetUtils;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 public class AuditReportComparator {
+    
     public boolean equals(AuditReport r1, AuditReport r2){
         // use fields : "uri", "dateCreated", "types", "summary"
         // exclude fields
-        return  equalsNull(r1, r2) &&
-                r1.getUri() == r2.getUri() &&
-                r1.getSummary() == r2.getSummary() &&
-                r1.getDateCreated() == r2.getDateCreated() &&
-                r1.getTypes().equals(r2.getTypes()) &&
-                equals(r1.getAudit(), r2.getAudit()) 
+        return  (r1 == r2) || (
+                    allNotNull(r1, r2) &&
+                    Objects.equals(r1.getUri(), r2.getUri()) &&
+                    Objects.equals(r1.getSummary(), r2.getSummary()) &&
+                    r1.getTypes().equals(r2.getTypes()) &&
+                    equals(r1.getAudit(), r2.getAudit()) 
+                )
+//                r1.getDateCreated() == r2.getDateCreated() &&
 //                r1.getAuthor() == r2.getAuthor() &&
 //                r1.getRevision() == r2.getRevision() &&
 //                r1.getReferences() == r2.getReferences() &&
@@ -48,30 +52,36 @@ public class AuditReportComparator {
     }
     
     public boolean equals(Audit a1, Audit a2){
-        return equalsNull(a1, a2) &&
-                a1.getName() == a2.getName() &&
-                a1.getLocation() == a2.getLocation() &&
-                a1.getStartDate() == a2.getStartDate() &&
-                a1.getEndDate() == a2.getEndDate() &&
-                equals(a1.getAuditee(), a2.getAuditee()) &&
-                equals(a1.getAuditor(), a2.getAuditor()) &&
-                a1.getTypes().equals(a2.getTypes()) &&
-                equals(a1.getFindings(), a2.getFindings())
+        return a1 == a2 ||
+                (
+                    allNotNull(a1, a2) &&
+                    Objects.equals(a1.getName(), a2.getName()) &&
+                    Objects.equals(a1.getLocation(), a2.getLocation()) &&
+                    Objects.equals(a1.getStartDate(), a2.getStartDate()) &&
+                    Objects.equals(a1.getEndDate(), a2.getEndDate()) &&
+                    a1.getTypes().equals(a2.getTypes()) &&
+                    equals(a1.getAuditee(), a2.getAuditee()) &&
+                    equals(a1.getAuditor(), a2.getAuditor()) &&
+                    equals(a1.getFindings(), a2.getFindings())
+                )
 //                a1.getQuestion() == a2.getQuestion() &&
 //                a1.getUri() == a2.getUri() &&
                 ;
     }
     
-    public <T> boolean  equalsNull(T t1, T t2){
+    public boolean equals(HasUri hu1, HasUri hu2){
+        return hu1 == hu2 || (
+                    allNotNull(hu1, hu2) &&
+                    Objects.equals(hu1.getUri(), hu2.getUri())
+                );
+    }
+    
+    public <T> boolean  allNotNull(T t1, T t2){
         return t1 != null && t2 != null;
     }
     
-    public boolean equals(Organization o1, Organization o2){
-        return equalsNull(o1, o2) && o1.getUri() == o2.getUri();
-    }
-    
 //    public boolean equals(AuditFinding af1, AuditFinding af2){
-//        return equalsNull(af1, af2) &&
+//        return allNotNull(af1, af2) &&
 //                af1.getDescription() == af2.getDescription() &&
 //                af1.getLevel() == af2.getLevel() &&
 //                af1.getStatusLastModified() == af2.getStatusLastModified() &&
@@ -88,15 +98,16 @@ public class AuditReportComparator {
     }
     
     public Set<Integer> auditFindingHash(Set<AuditFinding> afs){
-        return afs.stream().map(this::auditFindingHash).collect(Collectors.toSet());
+        return Optional.ofNullable(afs).map(
+                x -> x.stream().map(this::auditFindingHash).collect(Collectors.toSet())
+        ).orElse(Collections.EMPTY_SET);
     }
     
     public int auditFindingHash(AuditFinding af){
 //        af.getCorrectiveMeasures()
         String auditFindingString = 
                 toString(af.getStatusLastModified()) + 
-                Optional.of(af.getLevel()).map(l -> l.toString()).orElse("") +
-                toString(af.getStatusLastModified()) +
+                Optional.ofNullable(af.getLevel()).map(l -> l.toString()).orElse("") +
                 Objects.toString(af.getDescription(), "") +
                 toString(af.getTypes(), x -> x) +
                 toString(af.getFactors(), x -> x.toString()) + 
@@ -106,15 +117,15 @@ public class AuditReportComparator {
     }
     
     public String toString(Date date){
-        return Optional.of(date).map(d -> d.getTime() + "").orElse("");
+        return Optional.ofNullable(date).map(d -> d.getTime() + "").orElse("");
     }
     
     public String toString(URI uri){
-        return Optional.of(uri).map(URI::toString).orElse("");
+        return Optional.ofNullable(uri).map(URI::toString).orElse("");
     }
     
     public <T> String toString(Set<T> uris, Function<T,String> f ){
-        return Optional.of(uris).map(
+        return Optional.ofNullable(uris).map(
                 d -> (String)SetUtils.orderedSet(uris).stream().map(f).collect(Collectors.joining(","))
         ).orElse("");
     }
