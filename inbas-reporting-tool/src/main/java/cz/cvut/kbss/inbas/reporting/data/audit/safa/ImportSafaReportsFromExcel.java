@@ -26,8 +26,6 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-//import org.json.JSONArray;
-//import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,6 +127,7 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
         String auditReportUri = getAuditReportUri(r, AuditColumns.report_identifier);   
         URI reportUri = URI.create(auditReportUri);
         AuditReport ar = new AuditReport();
+        ar.setUri(reportUri);
         IdentificationUtils.generateIdentificationFields(ar);
         
         ar.getTypes().add(safaAuditReportType);
@@ -162,13 +161,15 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
             String o = getStringValue(r, AuditColumns.naa_state_name);
             String oc = getStringValue(r, AuditColumns.naa_code);
             Organization org = new Organization(o + "(" + oc + ")");
+            org.generateUri();
             organizationsMap.put(oc,org);
             a.setAuditor(org);
 
             // audetee
             o = getStringValue(r, AuditColumns.operator_name);
             oc = getStringValue(r, AuditColumns.operator_code);
-            org = new Organization(o);
+            org = new Organization(o + "(" + oc + ")");
+            org.generateUri();
             organizationsMap.put(oc,org);
             a.setAuditee(org);
 
@@ -191,32 +192,6 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
         }catch(Exception ex){
             LOG.info(String.format("could not process audit report at, row #%d.", r.getRowNum()), ex);
             reports.remove(auditReportUri);
-        }
-    }
-    
-    protected String getLocation(String locationId){
-//        return inspectionLocationMap.get(loc);inspectionLocationMap.get(locationId-);
-        return "http://onto.fel.cvut.cz/ontologies/safa/location/" + locationId;
-    }
-    
-    protected Date getDate(Row row, Enum column){
-        Cell c = getCell(row, column);
-        try{
-            Date d = c.getDateCellValue();
-            return d;
-        } catch (Exception ex){
-            LOG.info(String.format("could not parse date in column %s on row #%d.", column.name(), row.getRowNum()), ex);
-            throw ex;
-        }
-    }
-    
-    protected String getAuditReportUri(Row r, Enum e){
-        String encoding = "UTF-8";
-        try {
-            String fileName = getStringValue(r, e);
-            return String.format("%s%s", auditPrefix, URLEncoder.encode(fileName, encoding));
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(String.format("The encoding %s used to encode the url is not supported.", encoding), ex);
         }
     }
     
@@ -258,11 +233,40 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
             String findingStatus = getStringValue(r, AuditFindingColumns.finding_status);
             URI fsu = URI.create(Vocabulary.base + findingStatus.toLowerCase());
             finding.setStatus(fsu);
+            
+            Date statusChangeDate = getDate(r, AuditFindingColumns.status_change_date);
+            finding.setStatusLastModified(statusChangeDate);
 
             // ??? status chage date
         }catch(Exception ex){
             LOG.info(String.format("could not process finding, row #%d.", r.getRowNum()), ex);
             reports.remove(reportUri);
+        }
+    }
+    
+    protected String getLocation(String locationId){
+//        return inspectionLocationMap.get(loc);inspectionLocationMap.get(locationId-);
+        return "http://onto.fel.cvut.cz/ontologies/safa/location/" + locationId;
+    }
+    
+    protected Date getDate(Row row, Enum column){
+        Cell c = getCell(row, column);
+        try{
+            Date d = c.getDateCellValue();
+            return d;
+        } catch (Exception ex){
+            LOG.info(String.format("could not parse date in column %s on row #%d.", column.name(), row.getRowNum()), ex);
+            throw ex;
+        }
+    }
+    
+    protected String getAuditReportUri(Row r, Enum e){
+        String encoding = "UTF-8";
+        try {
+            String fileName = getStringValue(r, e);
+            return String.format("%s%s", auditPrefix, URLEncoder.encode(fileName, encoding));
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(String.format("The encoding %s used to encode the url is not supported.", encoding), ex);
         }
     }
     
