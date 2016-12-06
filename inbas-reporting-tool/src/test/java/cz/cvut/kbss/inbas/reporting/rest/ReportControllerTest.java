@@ -34,6 +34,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -72,6 +74,28 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                 });
         assertNotNull(res);
         assertTrue(res.isEmpty());
+    }
+
+    @Test
+    public void getAllReportsPassesReportKeysToServiceWhenTheyAreSpecifiedInRequest() throws Exception {
+        final List<String> keys = IntStream.range(0, Generator.randomInt(5, 10))
+                                           .mapToObj(i -> IdentificationUtils.generateKey())
+                                           .collect(Collectors.toList());
+        final List<ReportDto> reports = keys.stream().map(k -> {
+            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
+            r.setUri(Generator.generateUri());
+            r.setKey(k);
+            return r.toReportDto();
+        }).collect(Collectors.toList());
+        when(reportServiceMock.findAll(keys)).thenReturn(reports);
+
+        final MvcResult result = mockMvc.perform(get("/reports").param("key", keys.toArray(new String[keys.size()])))
+                                        .andExpect(status().isOk()).andReturn();
+        final List<ReportDto> res = readValue(result, new TypeReference<List<ReportDto>>() {
+        });
+        assertNotNull(res);
+        assertTrue(Environment.areEqual(reports, res));
+        verify(reportServiceMock).findAll(keys);
     }
 
     @Test
