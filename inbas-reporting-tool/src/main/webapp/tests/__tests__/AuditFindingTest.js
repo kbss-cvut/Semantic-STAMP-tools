@@ -116,4 +116,30 @@ describe('AuditFinding', () => {
             measures = TestUtils.scryRenderedComponentsWithType(component._modalBody, FindingMeasures);
         expect(measures.length).toEqual(0);
     });
+
+    it('does not show finding level options if audit is SAFA audit', () => {
+        report.isSafaReport = function () {
+            return true;
+        };
+        finding.uri = Generator.getRandomUri();
+
+        const component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
+                                                           report={report} show={true}/>);
+        let levelOptions = TestUtils.scryRenderedDOMComponentsWithTag(component._modalBody, 'input');
+        levelOptions = levelOptions.filter(item => item.type === 'radio' && item.name === 'level');
+        expect(levelOptions.length).toEqual(0);
+    });
+
+    it('shows finding level as read-only value for SAFA audit', () => {
+        report.isSafaReport = function () {
+            return true;
+        };
+        finding.uri = Generator.getRandomUri();
+        finding.level = 'G';
+        const component = Environment.render(<AuditFinding onSave={onSave} onClose={onClose} finding={finding}
+                                                           report={report} show={true}/>),
+            inputs = TestUtils.scryRenderedComponentsWithType(component._modalBody, require('../../js/components/Input').default);
+        const level = inputs.find(i => i.props.value === finding.level);
+        expect(level).toBeDefined();
+    });
 });

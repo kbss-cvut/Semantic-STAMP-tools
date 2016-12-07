@@ -16,7 +16,7 @@ var Actions = Reflux.createActions([
     'loadOptions',
 
     'setTransitionPayload',
-    
+
     'rememberComponentState', 'resetComponentState',
 
     'loadFormOptions',
@@ -27,7 +27,9 @@ var Actions = Reflux.createActions([
 
     'addSafetyIssueBase',
 
-    'fullTextSearch'
+    'fullTextSearch',
+
+    'loadStatisticsConfig'
 ]);
 
 module.exports = Actions;

@@ -107,7 +107,7 @@ public class AuditReportComparator {
 //        af.getCorrectiveMeasures()
         String auditFindingString = 
                 toString(af.getStatusLastModified()) + 
-                Optional.ofNullable(af.getLevel()).map(l -> l.toString()).orElse("") +
+                Optional.ofNullable(af.getLevel()).orElse("") +
                 Objects.toString(af.getDescription(), "") +
                 toString(af.getTypes(), x -> x) +
                 toString(af.getFactors(), x -> x.toString()) + 

@@ -1,5 +1,8 @@
 # SISEL Release Notes
 
+### 0.8.1 - December 5, 2016
+- Display audit finding level of SAFA audit reports (Feature #245).
+
 ### 0.8.0 - November 29, 2016
 - Import of reports from ECCAIRS (Feature #189).
 - Create new revision from latest ECCAIRS version of a report (Feature #233).

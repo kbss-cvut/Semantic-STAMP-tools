@@ -80,7 +80,7 @@ public class AuditReportDao extends BaseReportDao<AuditReport> {
 
     @Override
     protected void remove(AuditReport entity, EntityManager em) {
-        auditDao.remove(entity.getAudit(), em);
         super.remove(entity, em);
+        auditDao.remove(entity.getAudit(), em);
     }
 }

@@ -62,7 +62,7 @@ public class AuditReportGenerator {
         final AuditFinding finding = new AuditFinding();
         finding.setDescription("Finding" + Generator.randomInt());
         finding.getTypes().add(Generator.generateEventType().toString());
-        finding.setLevel(Generator.randomInt(3));
+        finding.setLevel(Integer.toString(Generator.randomInt(3)));
         return finding;
     }
 }

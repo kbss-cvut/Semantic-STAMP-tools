@@ -28,7 +28,7 @@ public class AuditFindingTest {
         for (int i = 0; i < Generator.randomInt(1, 5); i++) {
             original.getFactors().add(Generator.generateEventType());
         }
-        original.setLevel(1);
+        original.setLevel("1");
         original.setStatus(Generator.generateUri());
         original.setStatusLastModified(new Date());
 

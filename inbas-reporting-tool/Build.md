@@ -13,20 +13,73 @@ Pro sestavení produkčního archivu reportovacího nástroje (dále jen RT) je 
 * NodeJS v6.x (Ke stažení na [https://nodejs.org/en/](https://nodejs.org/en/)),
 * npm (Je součástí NodeJS distribuce).
 
+Při sestavení je též nutný přístup k internetu.
+
 
 #### Konfigurace
 
-Před sestavením archivu lze měnit nastavení, které bude RT používat při běhu.
-Toto nastavení zahrnuje:
+Před sestavením archivu lze měnit nastavení, které bude RT používat při běhu. Toto nastavení je rozděleno do několika
+skupin, které mají samostatné konfigurační soubory.
+
+##### Hlavní konfigurace RT
+
 * Adresu hlavního úložiště, do kterého aplikace ukládá data - atribut `repositoryUrl`,
 * Adresu úložiště, ve kterém se nachází taxonomie a slovníky používané RT - atribut `eventTypesRepository`,
 * Adresu úložiště, které používá RT a generátor formulářů pro předávání dat, na jejichž základě se formuláře generují - atribut `formGenRepositoryUrl`,
 * URL adresu webové služby generátoru formulářů - atribut `formGenServiceUrl`.
 
 Všechna tato nastavení se nachází v souboru `src/main/resources/config.properties`.
-Byl-li pro instalaci a spuštění ostatních služeb použit návod dodávaný spolu s aplikací, není třeba konfiguraci RT
-měnit, neboť je přednastavena pro hodnoty z návodu.
 
+Pokud při instalaci postupujete dle instalačního manuálu, není třeba tuto konfiguraci měnit, neboť je přednastavena pro hodnoty z manuálu.
+
+##### Konfigurace analytického modulu
+
+* Nastavení statistik pro hlavní stránku aplikace - atribut `statistics.dashboard`,
+* Nastavení obecné statistiky - atribut `statistics.general`,
+* Nastavení statistik dle typů událostí - atribut `statistics.eventType`,
+* Nastavení statistik auditů - atribut `statistics.audit`,
+* Nastavení statistik safety issues - atribut `statistics.safetyIssue`.
+
+Tato nastavení se nachází v souboru `src/main/resources/statistics.properties`.
+
+Pokud při instalaci postupujete dle instalačního manuálu, není třeba tuto konfiguraci měnit, neboť je přednastavena pro hodnoty z manuálu.
+
+##### Nastavení připojení na systém ECCAIRS
+
+Systém SISEL získává ze systému ECCAIRS aktuální záznamy o událostech.
+ 
+Pro správnou práci systému je třeba provést nakonfigurovat stávající instalaci systému ECCAIRS i systém SISEL.
+
+###### Konfigurace systému ECCAIRS
+
+ECCAIRS server poskutuje službu ECCAIRS Web API, kterou využívá systém SISEL pro komunikaci se systémem ECCAIRS. Tuto službu je nutné aktivovat v instalaci systému ECCAIRS dle instalační dokumentace systému ECCAIRS.
+
+Po úspěšné aktivaci služby ECCAIRS Web API je tato služba dostupná na veřejné adrese "https://SERVER-NAME/eccairs5/webAPI.svc/basic-https", kde `SERVER-NAME`
+označuje veřejnou adresu serveru na které je služba vystavena.
+
+Pomocí aplikace ECCAIRS Browser se připojte k repozitáři, který chcete využít pro synchronizaci se systémem SISEL. 
+__//TODO SISEL//__
+
+###### Konfigurace systému SISEL
+
+Nastavení připojení na systém ECCAIRS se nachází v souboru `src/main/resources/eccairs-config.properties`.
+
+Toto nastavení zahrnuje:
+* `eccairs.repository.id` - Identifikátor ECCAIRS repozitáře na vzdáleném serveru
+* `eccairs.repository.language` - Jazyk ECCAIRS repozitáře
+* `eccairs.repository.library` - Knihovna ECCAIRS dotazů, ze které budou využívány dotazy do systému ECCAIRS uvedené níže
+* `eccairs.repository.query.getAllOccurrences` - Identifikátor dotazu v knihovně určené atributem `eccairs.repository.library`, který umožňuje získat z ECCAIRS serveru záznamy o všech událostech
+* `eccairs.repository.query.getOccurrencesAfterCreatedDate` - Identifikátor dotazu v knihovně určené atributem `eccairs.repository.library`, který umožňuje získat z ECCAIRS serveru záznamy o událostech, které byly vytvořeny po zadaném datu.
+* `eccairs.repository.query.getOccurrencesAfterModifiedDate` - Identifikátor dotazu v knihovně určené atributem `eccairs.repository.library`, který umožňuje získat z ECCAIRS serveru záznamy o událostech, které byly modifikovány po zadaném datu.
+* `eccairs.repository.query.getOccurrenceByInitialFileNumberAndReportingEntity` - Identifikátor dotazu v knihovně určené atributem `eccairs.repository.library`, který umožňuje získat z ECCAIRS serveru záznam o události na základě identifikace této události u tvůrce záznamu, tedy na základě hodnoty atributu `file number` a `reporting entity`.
+* `eccairs.repository.username` - uživatelské jméno pro přihlášení do systému ECCAIRS
+* `eccairs.repository.password` - heslo pro přihlášení do systému ECCAIRS
+
+##### Nastavení připojení na emailový server
+
+Nastavení připojení na emailový server se nachází v souboru `src/main/resources/ib-caa-email-config.properties`.
+
+__//TODO Bogdan - prosím i přejmenuj konfigurák na email-config.properties__ 
 __//TODO Ještě eccairs a email konfigurace__
 
 #### Sestavení
@@ -35,8 +88,8 @@ Po případných úpravách konfigurace lze přistoupit k sestavení produkční
 
 1. Je třeba nastavit cestu do hlavní složky RT.
 2. Spustit sestavení příkazem `mvn clean package -p production`.
-    1. Tento krok může trvat až několik minut.
+    1. Tento krok může trvat několik minut.
 4. Výsledný archiv nese název `sisel.war` a nachází se ve složce `target`.
 
-Archiv `sisel.war` lze nakopírovat do aplikačního serveru, který pak bude poskytovat
-aplikace na adrese `http://adresa.serveru/sisel`, kde `http://adresa.serveru/` je adresa na které je aplikační server dostupný.
+Archiv `sisel.war` lze nakopírovat do aplikačního serveru, kde bude pak aplikace dostupná na adrese `http://adresa.serveru/sisel`, 
+kde `http://adresa.serveru/` je adresa, na které je aplikační server dostupný.

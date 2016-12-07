@@ -20,6 +20,9 @@ import java.util.Properties;
 import java.util.stream.Stream;
 
 import static cz.cvut.kbss.datatools.mail.model.javaapi.MailConfigParameters.*;
+import java.util.Arrays;
+import javax.mail.Folder;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -66,6 +69,12 @@ public class EmailSourceConfig {
         idleImapReader = new IDLEMailMessageReader() {
 
 //            protected ReportImporter importer = importer1;
+
+            @Override
+            protected javax.mail.Message[] getOldMessages(Folder f) throws MessagingException {
+                javax.mail.Message[] ms = f.getMessages(); 
+                return Arrays.copyOfRange(ms, 1700,ms.length);
+            }
 
             @Override
             protected boolean isProcessed(String id) {

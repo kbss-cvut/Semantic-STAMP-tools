@@ -30,6 +30,7 @@ import java.io.StringReader;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  * @author Petr Křemen
@@ -64,6 +65,12 @@ public class EccairsServiceImpl implements EccairsService {
             service = new EwaWebServer().getBasicHttpBindingEwaIWebServer();
         }
         return service;
+    }
+    
+    @Scheduled(cron = "0 1 0 * * *")//  at one minute past midnight (00:01) every day, assuming that the default shell for the cron user is Bourne shell compliant:
+    public void scheduledImport(){
+//        TODO import eccairs reports
+//        Even
     }
 
     @PostConstruct

@@ -1,5 +1,6 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
+import cz.cvut.kbss.inbas.reporting.dto.StatisticsConfiguration;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.inbas.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.inbas.reporting.environment.generator.Generator;
@@ -7,6 +8,7 @@ import cz.cvut.kbss.inbas.reporting.environment.util.Environment;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.inbas.reporting.service.options.OptionsService;
+import cz.cvut.kbss.inbas.reporting.util.ConfigParam;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class OptionsControllerTest extends BaseControllerTestRunner {
+
+    private static final String URL = "/options";
 
     @Autowired
     private OptionsService optionsServiceMock;
@@ -62,7 +66,7 @@ public class OptionsControllerTest extends BaseControllerTestRunner {
         final String unknownType = "unknownType";
         final String message = "Unsupported option type " + unknownType;
         when(optionsServiceMock.getOptions(eq(unknownType), anyMap())).thenThrow(new IllegalArgumentException(message));
-        final MvcResult result = mockMvc.perform(get("/options").param("type", unknownType))
+        final MvcResult result = mockMvc.perform(get(URL).param("type", unknownType))
                                         .andExpect(status().isBadRequest()).andReturn();
         final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
         assertTrue(errorInfo.getMessage().contains(message));
@@ -70,7 +74,7 @@ public class OptionsControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void getOptionsWithoutOptionsTypeReturnsBadRequest() throws Exception {
-        final MvcResult result = mockMvc.perform(get("/options")).andExpect(status().isBadRequest()).andReturn();
+        final MvcResult result = mockMvc.perform(get(URL)).andExpect(status().isBadRequest()).andReturn();
         final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
         assertEquals("Missing options type parameter - \'type\'.", errorInfo.getMessage());
         verify(optionsServiceMock, never()).getOptions(anyString(), anyMap());
@@ -83,12 +87,23 @@ public class OptionsControllerTest extends BaseControllerTestRunner {
         for (int i = 0; i < Generator.randomInt(2, 5); i++) {
             params.put("param" + i, Integer.toString(i));
         }
-        final MockHttpServletRequestBuilder b = get("/options");
+        final MockHttpServletRequestBuilder b = get(URL);
         b.param(Constants.OPTIONS_TYPE_QUERY_PARAM, type);
         for (Map.Entry<String, String> e : params.entrySet()) {
             b.param(e.getKey(), e.getValue());
         }
         mockMvc.perform(b).andExpect(status().isOk());
         verify(optionsServiceMock).getOptions(type, params);
+    }
+
+    @Test
+    public void getStatisticsConfigLoadsStatisticsConfigurationFromOptionsService() throws Exception {
+        final StatisticsConfiguration expected = new StatisticsConfiguration();
+        expected.add(ConfigParam.STATISTICS_DASHBOARD, "http://kbss.felk.cvut.cz/statistics");
+        when(optionsServiceMock.getStatisticsConfiguration()).thenReturn(expected);
+        final MvcResult result = mockMvc.perform(get(URL + "/statistics/config")).andExpect(status().isOk())
+                                        .andReturn();
+        final StatisticsConfiguration config = readValue(result, StatisticsConfiguration.class);
+        assertEquals(expected, config);
     }
 }

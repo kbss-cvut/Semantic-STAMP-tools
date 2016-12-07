@@ -20,7 +20,7 @@ public class AuditFinding extends AbstractEntity {
     private String description;
 
     @OWLDataProperty(iri = Vocabulary.s_p_has_severity_assessment)
-    private Integer level;
+    private String level;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_factor)
     private Set<URI> factors;
@@ -64,11 +64,11 @@ public class AuditFinding extends AbstractEntity {
         this.description = description;
     }
 
-    public Integer getLevel() {
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(Integer level) {
+    public void setLevel(String level) {
         this.level = level;
     }
 

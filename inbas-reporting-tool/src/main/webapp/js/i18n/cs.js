@@ -117,6 +117,7 @@ module.exports = {
         'reports.filter.reset': 'Zrušit filtry',
         'reports.paging.item-count': 'Zobrazuji {showing} z {total} položek.',
         'reports.create-report': 'Nové hlášení',
+        'reports.type.filter': 'Typ hlášení:',
 
         'filters.label': 'Filtry',
 
@@ -184,6 +185,7 @@ module.exports = {
         'audit.finding.type.label': 'Typ zjištění',
         'audit.finding.type.placeholder': 'Vyberte typ zjištění',
         'audit.finding.type.edit-tooltip': 'Klikněte zde pro editaci typu zjištění',
+        'audit.finding.level.label': 'Úroveň nálezu',
         'audit.finding.level': 'Nález úrovně {level}',
         'audit.finding.level-1.help': 'A level 1 finding shall be issued by the competent authority when any significant noncompliance '
         + 'is detected with the applicable requirements of Regulation (EC) No 216/2008 and '

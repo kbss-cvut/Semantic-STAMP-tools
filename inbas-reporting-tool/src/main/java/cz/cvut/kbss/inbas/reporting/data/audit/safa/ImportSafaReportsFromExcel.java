@@ -200,11 +200,8 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
             String category = getStringValue(r, AuditFindingColumns.category_code);
 
             // Issue with category code G (general remark)
-            if(StringUtils.isNumeric(category)){
-                int l = Integer.parseInt(category);
-                if(l >0 && l <4){
-                    finding.setLevel(l);
-                }
+            if(!category.isEmpty()){
+                finding.setLevel(category);
             }
 
             // finding type
