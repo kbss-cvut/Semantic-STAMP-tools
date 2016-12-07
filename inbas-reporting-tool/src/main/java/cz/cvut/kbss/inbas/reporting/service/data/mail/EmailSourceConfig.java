@@ -70,13 +70,6 @@ public class EmailSourceConfig {
 
 //            protected ReportImporter importer = importer1;
 
-            @Override
-            protected javax.mail.Message[] getOldMessages(Folder f) throws MessagingException {
-                javax.mail.Message[] ms = f.getMessages(); 
-                return Arrays.copyOfRange(ms, 1700,ms.length);
-            }
-
-            @Override
             protected boolean isProcessed(String id) {
                 return emailDao.findByMailId(id) != null;
             }

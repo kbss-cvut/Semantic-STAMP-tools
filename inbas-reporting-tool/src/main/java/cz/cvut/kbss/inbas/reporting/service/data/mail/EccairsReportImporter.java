@@ -67,22 +67,22 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     @PostConstruct
     protected void init() {
         mapping = new MappingEccairsData2Aso(eaf);
-//        processor.registerMessageProcessor(new E5XMLLocator(){
-//            @Override
-//            public Object processMessage(Message m) {
-//                String id = m.getId();
-//                Stream<NamedStream> s = (Stream<NamedStream>) super.processMessage(m);
-//                return s.flatMap(x -> {
-//                    try {
-//                        return processDelegate(x).stream();
-//                    } catch (Exception e) {
-//                        LOG.info(String.format("Something went wrong while importing an attachment of the email with id : %s", id), e);
-//                    }
-//                    return Stream.of();
-//                }).filter(x -> x != null);
-//            }
-//            
-//        });
+        processor.registerMessageProcessor(new E5XMLLocator(){
+            @Override
+            public Object processMessage(Message m) {
+                String id = m.getId();
+                Stream<NamedStream> s = (Stream<NamedStream>) super.processMessage(m);
+                return s.flatMap(x -> {
+                    try {
+                        return processDelegate(x).stream();
+                    } catch (Exception e) {
+                        LOG.info(String.format("Something went wrong while importing an attachment of the email with id : %s", id), e);
+                    }
+                    return Stream.of();
+                }).filter(x -> x != null);
+            }
+            
+        });
         // TODO recognize safa emails, subject = "RAMP data on Czech operators", attachment to download is of name "CZ OPR RAMP data% SI_STARTTIME%.xlsx"
         processor.registerMessageProcessor(safaImportService.getSafaAuditReportImporterProcessor());
 //        processor.registerMessageProcessor(new CSAEmailProcessor());
