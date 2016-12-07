@@ -107,7 +107,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         assertEquals(firstRevision.getRevision() + 1, newRevision.getRevision().intValue());
         assertEquals(firstRevision.getFileNumber(), newRevision.getFileNumber());
         assertEquals(author, newRevision.getAuthor());
-        assertNotEquals(firstRevision.getDateCreated(), newRevision.getDateCreated());
+        assertNotSame(firstRevision.getDateCreated(), newRevision.getDateCreated());
         final OccurrenceReport newRevisionPersisted = occurrenceReportService.find(newRevision.getUri());
         assertNotNull(newRevisionPersisted);
     }
