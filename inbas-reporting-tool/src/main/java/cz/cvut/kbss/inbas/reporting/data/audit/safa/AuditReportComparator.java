@@ -111,7 +111,8 @@ public class AuditReportComparator {
                 Objects.toString(af.getDescription(), "") +
                 toString(af.getTypes(), x -> x) +
                 toString(af.getFactors(), x -> x.toString()) + 
-                toString(af.getStatus());
+                toString(af.getStatus()) +
+                af.getStatusLastModified().getTime();
         
         return auditFindingString.hashCode();
     }
