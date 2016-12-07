@@ -21,5 +21,5 @@ module.exports = Reflux.createActions([
 
     'publishMessage',
 
-    'fullTextSearch'
+    'fullTextSearch', 'loadReportsForSearch'
 ]);
