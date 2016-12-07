@@ -11,9 +11,7 @@ import cz.cvut.kbss.inbas.reporting.model.Organization;
 import cz.cvut.kbss.inbas.reporting.model.audit.Audit;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditFinding;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
-import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.inbas.reporting.rest.util.RestUtils;
-import cz.cvut.kbss.inbas.reporting.service.repository.ReportMetadataService;
 import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -28,7 +26,6 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -45,6 +42,7 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
     public static String predefinedFindingTypePrefix = safaAuditFindingType + "/pdf-";
     public static String findingCategoryGeneralRemak = "http://onto.fel.cvut.cz/ontologies/safa/finding/category/general-remark";
     public static String aircraftPrefix = "http://onto.fel.cvut.cz/ontologies/safa/audit-aircraft-";
+    public static String uclRampInspectionAuditType = "http://onto.fel.cvut.cz/ontologies/aviation/cz/caa/cat/audit/checklist/ramp-inspection";
     
     protected Map<String, String> inspectionLocationMap = new HashMap<>();
     protected Map<String, String> aircraftMap;
@@ -170,7 +168,9 @@ public class ImportSafaReportsFromExcel extends AbstractExcelAuditImporter{
                     }
                 });
             }
-
+            // add checklist type which will be shown in RT audit form
+            a.getTypes().add(uclRampInspectionAuditType);
+            
             // narrative
             String nar = "";//getStringValue(r, AuditColumns.narrative).trim();
             if(!nar.isEmpty())
