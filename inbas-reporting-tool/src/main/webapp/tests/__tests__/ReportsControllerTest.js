@@ -101,7 +101,7 @@ describe('ReportsController', () => {
         controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         let renderedReports = reportsComponent.props.reports;
         Generator.shuffleArray(reports);
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
 
@@ -143,13 +143,13 @@ describe('ReportsController', () => {
     });
 
     it('passes initial filter setting to the filter component', () => {
-        var filter = {
+        const filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
-        }, controller;
+        };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
-        controller = Environment.render(<ReportsController/>);
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
-        var filterableTable = TestUtils.findRenderedComponentWithType(controller, require('../../js/components/report/FilterableReportsTable'));
+        const controller = Environment.render(<ReportsController location={location}/>);
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        const filterableTable = TestUtils.findRenderedComponentWithType(controller, require('../../js/components/report/FilterableReportsTable'));
         expect(filterableTable.props.filter[Constants.FILTERS[1].path]).toEqual(filter.phase);
     });
 

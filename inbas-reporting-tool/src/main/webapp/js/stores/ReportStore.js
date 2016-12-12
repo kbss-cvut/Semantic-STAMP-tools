@@ -14,8 +14,6 @@ const BASE_URL = 'rest/reports';
 const BASE_URL_WITH_SLASH = 'rest/reports/';
 const ECCAIRS_REPORT_URL = 'rest/eccairs/latest/';
 
-var BASE_ECCAIRS_URL_WITH_SLASH = 'rest/eccairs/';
-
 // When reports are being loaded, do not send the request again
 let reportsLoading = false;
 // Was the last report load filtered by report keys
@@ -192,7 +190,7 @@ const ReportStore = Reflux.createStore({
     },
 
     onFindLatestEccairsVersion: function (report, onSuccess, onError) {
-        Ajax.get(BASE_ECCAIRS_URL_WITH_SLASH + 'latest/' + report.key, report).end(function () {
+        Ajax.get(ECCAIRS_REPORT_URL + report.key, report).end(function () {
             if (onSuccess) {
                 onSuccess();
             }

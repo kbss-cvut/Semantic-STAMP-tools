@@ -119,7 +119,7 @@ export default class ReportsController extends React.Component {
         });
     };
 
-    onEccairsMatch: function (report) {
+    onEccairsMatch(report) {
         Actions.findLatestEccairsVersion(report);
     }
 
@@ -163,14 +163,15 @@ export default class ReportsController extends React.Component {
     }
 
 
-    render () {
+    render() {
         const actions = {
-                onEccairsMatch: this.onEccairsMatch,onEdit: this.onEdit,
-                onRemove: this.onRemove,
-                onFilterChange: this.onFilterChange,
-                onSort: this.onSort
-            };
-           let reports = this.state.reports;
+            onEccairsMatch: this.onEccairsMatch,
+            onEdit: this.onEdit,
+            onRemove: this.onRemove,
+            onFilterChange: this.onFilterChange,
+            onSort: this.onSort
+        };
+        let reports = this.state.reports;
         if (reports) {
             reports = reports.slice(0); // Shallow copy, so that sorting does not influence the original list
             reports = this._sortReports(this._filterReports(reports));

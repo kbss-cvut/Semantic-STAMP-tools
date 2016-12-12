@@ -6,8 +6,8 @@ import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.model.util.DocumentDateAndRevisionComparator;
 
-import java.util.Collection;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 
 /**

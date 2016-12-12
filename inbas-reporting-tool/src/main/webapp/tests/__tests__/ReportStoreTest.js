@@ -231,9 +231,8 @@ describe('Report store', function () {
         mockResponse(null, reports);
         spyOn(ReportStore, 'trigger').and.callThrough();
         ReportStore.onLoadAllReports();
-        const triggerArg = ReportStore.trigger.calls.argsFor(0)[0];
-        expect(ReportStore.trigger).toHaveBeenCalled();
-        expect(triggerArg.action).toEqual(Actions.loadAllReports);
+        const triggerArg = ReportStore.trigger.calls.argsFor(1)[0];
+        expect(triggerArg).toBeDefined();
         const triggeredReports = triggerArg.reports;
         for (let i = 0, len = triggeredReports.length; i < len; i++) {
             expect(triggeredReports[i].isSafaReport).toBeDefined();
