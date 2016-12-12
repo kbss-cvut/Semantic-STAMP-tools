@@ -70,7 +70,22 @@ public class MainReportService implements ReportBusinessService {
         final List<LogicalDocument> reports = new ArrayList<>();
         services.values().forEach(service -> reports.addAll(service.findAll()));
         final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
-        Collections.sort(result, new DocumentDateAndRevisionComparator());
+        result.sort(new DocumentDateAndRevisionComparator());
+        return result;
+    }
+
+    @Override
+    public List<ReportDto> findAll(Collection<String> keys) {
+        Objects.requireNonNull(keys);
+        final List<LogicalDocument> reports = new ArrayList<>(keys.size());
+        for (String key : keys) {
+            final LogicalDocument report = findByKey(key);
+            if (report != null) {
+                reports.add(report);
+            }
+        }
+        final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
+        result.sort(new DocumentDateAndRevisionComparator());
         return result;
     }
 

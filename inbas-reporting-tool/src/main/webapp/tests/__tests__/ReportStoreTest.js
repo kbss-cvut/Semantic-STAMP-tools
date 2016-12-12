@@ -10,22 +10,23 @@ describe('Report store', function () {
         ReportStore = rewire('../../js/stores/ReportStore'),
         reqMockMethods = ['get', 'put', 'post', 'del', 'send', 'accept', 'set', 'end'],
         Vocabulary = require('../../js/constants/Vocabulary');
-    let reqMock;
+    let reqMock, reports;
 
     beforeEach(function () {
         reqMock = Environment.mockRequestMethods(reqMockMethods);
         Ajax.__set__('request', reqMock);
         Ajax.__set__('Logger', Environment.mockLogger());
         ReportStore.__set__('Ajax', Ajax);
-        ReportStore.__set__('reportsLoading', false);
         jasmine.getGlobal().top = {};
+        ReportStore.__set__('reportsLoading', false);
+        ReportStore._reports = null;
+        reports = Generator.generateReports();
+        if (reports.length > 5) {
+            reports = reports.slice(0, 5);
+        }
     });
 
     it('triggers with data and action identification when reports are loaded', function () {
-        const reports = [
-            {id: 'reportOne'},
-            {id: 'reportTwo'}
-        ];
         spyOn(ReportStore, 'trigger').and.callThrough();
         mockResponse(null, reports);
         ReportStore.onLoadAllReports();
@@ -95,10 +96,6 @@ describe('Report store', function () {
     });
 
     it('does not start new request when loadAllReports is triggered and reports are already being loaded', () => {
-        const reports = [
-            {id: 'reportOne'},
-            {id: 'reportTwo'}
-        ];
         reqMock.end.and.callFake(function (handler) {
             setTimeout(() => {
                 handler(null, {
@@ -111,6 +108,84 @@ describe('Report store', function () {
         ReportStore.onLoadAllReports();
 
         expect(reqMock.end.calls.count()).toEqual(1);
+    });
+
+    it('passes report keys as query params when they are specified', () => {
+        const keys = [];
+        for (let i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
+            keys.push(Generator.getRandomInt().toString());
+        }
+        spyOn(Ajax, 'get').and.callThrough();
+        ReportStore.onLoadAllReports(keys);
+
+        expect(Ajax.get).toHaveBeenCalled();
+        const url = Ajax.get.calls.argsFor(0)[0];
+        keys.forEach(key => {
+            expect(url.indexOf('key=' + key)).not.toEqual(-1);
+        });
+    });
+
+    it('sets search reports to the loaded reports when keys were not specified', () => {
+        mockResponse(null, reports);
+        spyOn(ReportStore, 'trigger');
+        ReportStore.onLoadAllReports();
+        expect(ReportStore._reports).toEqual(reports);
+        expect(ReportStore._searchReports).toEqual(ReportStore._reports);
+        expect(ReportStore.trigger).toHaveBeenCalledWith({action: Actions.loadReportsForSearch, reports: reports});
+    });
+
+    describe('load reports for search', () => {
+
+        it('reuses all reports when they are already loaded and were not filtered', () => {
+            ReportStore._reports = reports;
+            spyOn(ReportStore, 'trigger');
+            spyOn(Ajax, 'get').and.callThrough();
+            ReportStore.onLoadReportsForSearch();
+            expect(ReportStore._searchReports).toEqual(ReportStore._reports);
+            expect(ReportStore.trigger).toHaveBeenCalledWith({action: Actions.loadReportsForSearch, reports: reports});
+            expect(Ajax.get).not.toHaveBeenCalled();
+        });
+
+        it('loads reports from server when the already loaded all reports were filtered', () => {
+            ReportStore._reports = [{reportKey: '123'}];
+            ReportStore.__set__('lastLoadWithKeys', true);
+            mockResponse(null, reports);
+            spyOn(ReportStore, 'trigger');
+            spyOn(Ajax, 'get').and.callThrough();
+            ReportStore.onLoadReportsForSearch();
+            expect(Ajax.get).toHaveBeenCalled();
+            expect(ReportStore.trigger).toHaveBeenCalledWith({action: Actions.loadReportsForSearch, reports: reports});
+        });
+
+        it('loads reports from server when there are no already loaded reports', () => {
+            ReportStore.__set__('lastLoadWithKeys', false);
+            mockResponse(null, reports);
+            spyOn(ReportStore, 'trigger');
+            spyOn(Ajax, 'get').and.callThrough();
+            ReportStore.onLoadReportsForSearch();
+            expect(Ajax.get).toHaveBeenCalled();
+            expect(ReportStore.trigger).toHaveBeenCalledWith({action: Actions.loadReportsForSearch, reports: reports});
+        });
+
+        it('loads reports from server when the reports being loaded are filtered', () => {
+            ReportStore.__set__('lastLoadWithKeys', true);
+            ReportStore.__set__('reportsLoading', true);
+            mockResponse(null, reports);
+            spyOn(ReportStore, 'trigger');
+            spyOn(Ajax, 'get').and.callThrough();
+            ReportStore.onLoadReportsForSearch();
+            expect(Ajax.get).toHaveBeenCalled();
+            expect(ReportStore.trigger).toHaveBeenCalledWith({action: Actions.loadReportsForSearch, reports: reports});
+        });
+
+        it('waits for all reports to be loaded when they are not filtered', () => {
+            ReportStore.__set__('lastLoadWithKeys', false);
+            ReportStore.__set__('reportsLoading', true);
+            spyOn(ReportStore, 'trigger');
+            spyOn(Ajax, 'get').and.callThrough();
+            ReportStore.onLoadReportsForSearch();
+            expect(Ajax.get).not.toHaveBeenCalled();
+        });
     });
 
     it('loads safety issue and adds base to it when addSafetyIssueBase is triggered', () => {

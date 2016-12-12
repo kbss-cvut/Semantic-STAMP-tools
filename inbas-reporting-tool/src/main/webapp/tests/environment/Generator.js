@@ -234,7 +234,7 @@ export default class Generator {
      * @return {number}
      */
     static getRandomInt(max) {
-        let min = 0,
+        const min = 0,
             bound = max ? max : Number.MAX_SAFE_INTEGER;
         return Math.floor(Math.random() * (bound - min)) + min;
     }
@@ -246,7 +246,7 @@ export default class Generator {
      * @return {number}
      */
     static getRandomPositiveInt(min, max) {
-        let bound = max ? max : Number.MAX_SAFE_INTEGER;
+        const bound = max ? max : Number.MAX_SAFE_INTEGER;
         if (min === null || min === undefined) {
             min = 1;
         }

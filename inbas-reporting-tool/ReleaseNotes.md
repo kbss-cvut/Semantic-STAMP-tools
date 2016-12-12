@@ -12,6 +12,10 @@
 - Distinguish ECCAIRS and SAFA reports in the UI (Feature #235).
 - Profile specific JMX bean names (Feature #232).
 
+### 0.7.19 - December 6, 2016
+- Implemented external report filtering - opening application using
+URI with report keys as query parameters shows a list of matching reports (Feature #236).
+
 ### 0.7.18 - November 21, 2016
 - Fixed missing sorting icons in reports table (Bug #226).
 - SAFA audit reports are read-only (Feature #224).

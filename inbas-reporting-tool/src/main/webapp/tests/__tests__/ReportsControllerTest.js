@@ -2,7 +2,7 @@
 
 describe('ReportsController', () => {
 
-    var React = require('react'),
+    const React = require('react'),
         TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
@@ -13,15 +13,19 @@ describe('ReportsController', () => {
         RouterStore = require('../../js/stores/RouterStore'),
         Routing = require('../../js/utils/Routing'),
         Routes = require('../../js/utils/Routes'),
-        ReportsController = require('../../js/components/report/ReportsController'),
-        Reports = require('../../js/components/report/Reports'),
-        reports;
+        ReportsController = require('../../js/components/report/ReportsController').default,
+        Reports = require('../../js/components/report/Reports');
+    let reports, location;
 
     beforeEach(() => {
         jasmine.addMatchers(Environment.customMatchers);
         spyOn(Actions, 'loadAllReports');
         spyOn(Actions, 'loadOptions');
         reports = Generator.generateReports();
+        location = {            // Simulating location supplied normally by React Router
+            pathname: '',
+            query: {}
+        };
         ComponentStateStore.onResetComponentState(ReportsController.displayName);
     });
 
@@ -30,25 +34,25 @@ describe('ReportsController', () => {
     });
 
     it('initializes report sort with default values', () => {
-        var controller = Environment.render(<ReportsController />);
+        const controller = Environment.render(<ReportsController location={location}/>);
         expect(controller.state.sort).toBeDefined();
         expect(controller.state.sort.identification).toEqual(Constants.SORTING.NO);
         expect(controller.state.sort.date).toEqual(Constants.SORTING.NO);
     });
 
     it('shows only reports of the corresponding type when type filter is triggered', () => {
-        var controller = Environment.render(<ReportsController />),
-            reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
-            renderedReports, filter, i, len,
+        const controller = Environment.render(<ReportsController location={location}/>),
+            reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
+        let renderedReports, filter,
             phase = 'http://onto.fel.cvut.cz/ontologies/inbas-test/first',
             phaseCnt = 0;
-        for (i = 0, len = reports.length; i < len; i++) {
+        for (let i = 0, len = reports.length; i < len; i++) {
             if (Generator.getRandomBoolean()) {
                 reports[i].phase = phase;
                 phaseCnt++;
             }
         }
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports).toEqual(reports);
 
@@ -56,18 +60,17 @@ describe('ReportsController', () => {
         controller.onFilterChange(filter);
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports.length).toEqual(phaseCnt);
-        for (i = 0, len = renderedReports.length; i < len; i++) {
+        for (let i = 0, len = renderedReports.length; i < len; i++) {
             expect(renderedReports[i].phase).toEqual(phase);
         }
     });
 
     it('sorts reports descending, ascending by identification', () => {
-        var controller = Environment.render(<ReportsController />),
-            reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
-            renderedReports;
+        const controller = Environment.render(<ReportsController location={location}/>),
+            reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
         Generator.shuffleArray(reports);
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
-        renderedReports = reportsComponent.props.reports;
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        let renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
 
         controller.onSort('identification');    // Descending
@@ -80,9 +83,9 @@ describe('ReportsController', () => {
     });
 
     function verifyOrder(component, orderAtt, comparisonFn, not) {
-        var renderedReports = component.props.reports;
+        const renderedReports = component.props.reports;
         expect(renderedReports.length).toEqual(reports.length);
-        for (var i = 1, len = renderedReports.length; i < len; i++) {
+        for (let i = 1, len = renderedReports.length; i < len; i++) {
             if (not) {
                 expect(renderedReports[i][orderAtt]).not[comparisonFn](renderedReports[i - 1][orderAtt]);
             } else {
@@ -92,9 +95,11 @@ describe('ReportsController', () => {
     }
 
     it('sorts reports descending, ascending by date', () => {
-        var controller = Environment.render(<ReportsController />),
-            reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
-            renderedReports;
+        const controller = Environment.render(<ReportsController location={location}/>),
+            reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
+        Generator.shuffleArray(reports);
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        let renderedReports = reportsComponent.props.reports;
         Generator.shuffleArray(reports);
         controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         renderedReports = reportsComponent.props.reports;
@@ -110,13 +115,13 @@ describe('ReportsController', () => {
     });
 
     it('sorts reports descending, ascending by identification and date', () => {
-        var controller = Environment.render(<ReportsController />),
-            reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
-            renderedReports;
+        const controller = Environment.render(<ReportsController location={location}/>),
+            reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
+        Generator.shuffleArray(reports);
         Generator.shuffleArray(reports);
         setEqualIdentifications();
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
-        renderedReports = reportsComponent.props.reports;
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        let renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
         // Descending
         controller.onSort('date');
@@ -129,11 +134,11 @@ describe('ReportsController', () => {
     });
 
     it('uses filter passed in in transition payload', () => {
-        var filter = {
+        const filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
-        }, controller;
+        };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
-        controller = Environment.render(<ReportsController/>);
+        const controller = Environment.render(<ReportsController location={location}/>);
         expect(controller.state.filter).toEqual(filter);
     });
 
@@ -149,37 +154,37 @@ describe('ReportsController', () => {
     });
 
     it('clears transition payload after it has read it', () => {
-        var filter = {
+        const filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
         };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
-        spyOn(RouterStore, 'setTransitionPayload');
-        Environment.render(<ReportsController/>);
-        expect(RouterStore.setTransitionPayload).toHaveBeenCalledWith(Routes.reports.name);
+        spyOn(RouterStore, 'clearTransitionPayload');
+        Environment.render(<ReportsController location={location}/>);
+        expect(RouterStore.clearTransitionPayload).toHaveBeenCalledWith(Routes.reports.name);
     });
 
     it('loads filter and sort state from ComponentStateStore', () => {
-        var filter = {
+        const filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
         }, sort = {
             identification: Constants.SORTING.DESC,
             date: Constants.SORTING.ASC
         };
         spyOn(ComponentStateStore, 'getComponentState').and.returnValue({filter: filter, sort: sort});
-        var controller = Environment.render(<ReportsController/>);
+        const controller = Environment.render(<ReportsController location={location}/>);
         expect(ComponentStateStore.getComponentState).toHaveBeenCalledWith(ReportsController.displayName);
         expect(controller.state.filter).toEqual(filter);
         expect(controller.state.sort).toEqual(sort);
     });
 
     it('saves component filtering and sorting when filter changes', () => {
-        var filter = {
+        const filter = {
                 phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
-            }, sort,
-            controller = Environment.render(<ReportsController/>);
+            },
+            controller = Environment.render(<ReportsController location={location}/>);
         Environment.bindActionsToStoreMethods('rememberComponentState', ComponentStateStore);
         spyOn(ComponentStateStore, 'onRememberComponentState').and.callThrough();
-        sort = controller.state.sort;
+        const sort = controller.state.sort;
 
         controller.onFilterChange(filter);
         expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.displayName, {
@@ -189,8 +194,8 @@ describe('ReportsController', () => {
     });
 
     it('saves component filtering and sorting when sort is called', () => {
-        var sort, filter,
-            controller = Environment.render(<ReportsController/>);
+        let sort, filter,
+            controller = Environment.render(<ReportsController location={location}/>);
         Environment.bindActionsToStoreMethods('rememberComponentState', ComponentStateStore);
         spyOn(ComponentStateStore, 'onRememberComponentState').and.callThrough();
         controller.onSort('identification');
@@ -204,19 +209,35 @@ describe('ReportsController', () => {
         });
     });
 
+    it('loads all reports when no report keys are specified', () => {
+        Environment.render(<ReportsController location={location}/>);
+        expect(Actions.loadAllReports).toHaveBeenCalledWith();
+    });
+
+    it('loads reports by keys when report keys are specified in location', () => {
+        const keys = [];
+        for (let i = 0, cnt = Generator.getRandomPositiveInt(1, 5); i < cnt; i++) {
+            keys.push(Generator.getRandomInt().toString());
+        }
+        location.query['reportKey'] = keys;
+
+        Environment.render(<ReportsController location={location}/>);
+        expect(Actions.loadAllReports).toHaveBeenCalledWith(keys);
+    });
+
     function setEqualIdentifications() {
-        var ind,
+        let ind,
             identification = 'AAAA';
-        for (var i = 0, cnt = Generator.getRandomPositiveInt(1, reports.length); i < cnt; i++) {
+        for (let i = 0, cnt = Generator.getRandomPositiveInt(1, reports.length); i < cnt; i++) {
             ind = Generator.getRandomInt(reports.length);
             reports[ind].identification = identification;
         }
     }
 
     function verifyCombinedOrder(component, descending) {
-        var renderedReports = component.props.reports;
+        const renderedReports = component.props.reports;
         expect(renderedReports.length).toEqual(reports.length);
-        for (var i = 1, len = renderedReports.length; i < len; i++) {
+        for (let i = 1, len = renderedReports.length; i < len; i++) {
             if (descending) {
                 expect(renderedReports[i].identification).not.toBeLexGreaterThan(renderedReports[i - 1].identification);
             } else {
