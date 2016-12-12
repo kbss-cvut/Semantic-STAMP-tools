@@ -1,8 +1,8 @@
 'use strict';
 
-var Reflux = require('reflux');
+const Reflux = require('reflux');
 
-var Actions = Reflux.createActions([
+module.exports = Reflux.createActions([
     'loadUser',
 
     'loadAllReports', 'deleteReportChain', 'createReport', 'updateReport', 'submitReport',
@@ -12,7 +12,7 @@ var Actions = Reflux.createActions([
     'loadOptions',
 
     'setTransitionPayload',
-    
+
     'rememberComponentState', 'resetComponentState',
 
     'loadFormOptions',
@@ -21,7 +21,5 @@ var Actions = Reflux.createActions([
 
     'publishMessage',
 
-    'fullTextSearch'
+    'fullTextSearch', 'loadReportsForSearch'
 ]);
-
-module.exports = Actions;

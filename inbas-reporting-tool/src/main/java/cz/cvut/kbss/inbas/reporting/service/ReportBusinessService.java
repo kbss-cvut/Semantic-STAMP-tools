@@ -4,7 +4,9 @@ import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
+import cz.cvut.kbss.inbas.reporting.model.util.DocumentDateAndRevisionComparator;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -20,10 +22,24 @@ public interface ReportBusinessService {
 
     /**
      * Gets all reports.
+     * <p>
+     * The reports are sorted using the {@link DocumentDateAndRevisionComparator}.
      *
      * @return All reports in the system
      */
     List<ReportDto> findAll();
+
+    /**
+     * Gets reports with the specified keys.
+     * <p>
+     * If no matching report is found for any of the keys, it is simply skipped, no exception is thrown.
+     * <p>
+     * The reports are sorted using the {@link DocumentDateAndRevisionComparator}.
+     *
+     * @param keys Array of report identifiers
+     * @return List of matching reports
+     */
+    List<ReportDto> findAll(Collection<String> keys);
 
     /**
      * Creates new report.
