@@ -27,7 +27,7 @@ class NavSearch extends React.Component {
 
     componentDidMount() {
         if (this.state.options.length === 0) {
-            Actions.loadAllReports();
+            Actions.loadReportsForSearch();
         }
         this.unsubscribe = ReportStore.listen(this._onReportsLoaded);
     }
@@ -37,7 +37,7 @@ class NavSearch extends React.Component {
     }
 
     _onReportsLoaded = (data) => {
-        if (data.action !== Actions.loadAllReports) {
+        if (data.action !== Actions.loadReportsForSearch) {
             return;
         }
         this.setState({options: NavSearch._processReports(data.reports)});

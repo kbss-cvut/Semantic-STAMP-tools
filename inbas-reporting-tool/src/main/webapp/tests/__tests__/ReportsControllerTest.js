@@ -47,7 +47,7 @@ describe('ReportsController', () => {
                 phaseCnt++;
             }
         }
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         renderedReports = reportsComponent.props.reports;
         expect(renderedReports).toEqual(reports);
 
@@ -64,7 +64,7 @@ describe('ReportsController', () => {
         const controller = Environment.render(<ReportsController location={location}/>),
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
         Generator.shuffleArray(reports);
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         let renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
 
@@ -93,7 +93,7 @@ describe('ReportsController', () => {
         const controller = Environment.render(<ReportsController location={location}/>),
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
         Generator.shuffleArray(reports);
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         let renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
 
@@ -111,7 +111,7 @@ describe('ReportsController', () => {
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
         Generator.shuffleArray(reports);
         setEqualIdentifications();
-        controller.onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         let renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
         // Descending
