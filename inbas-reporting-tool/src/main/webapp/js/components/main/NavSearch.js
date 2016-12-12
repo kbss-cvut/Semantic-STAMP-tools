@@ -20,7 +20,7 @@ class NavSearch extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            options: NavSearch._processReports(ReportStore.getReports()),
+            options: NavSearch._processReports(ReportStore.getReportsForSearch()),
             fullTextDisabled: true
         }
     }

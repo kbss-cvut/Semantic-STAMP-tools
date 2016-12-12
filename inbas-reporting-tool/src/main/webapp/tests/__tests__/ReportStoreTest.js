@@ -18,6 +18,7 @@ describe('Report store', function () {
         ReportStore.__set__('Ajax', Ajax);
         jasmine.getGlobal().top = {};
         ReportStore.__set__('reportsLoading', false);
+        ReportStore._reports = null;
         reports = Generator.generateReports();
         if (reports.length > 5) {
             reports = reports.slice(0, 5);
@@ -147,6 +148,16 @@ describe('Report store', function () {
         it('loads reports from server when the already loaded all reports were filtered', () => {
             ReportStore._reports = [{reportKey: '123'}];
             ReportStore.__set__('lastLoadWithKeys', true);
+            mockResponse(null, reports);
+            spyOn(ReportStore, 'trigger');
+            spyOn(Ajax, 'get').and.callThrough();
+            ReportStore.onLoadReportsForSearch();
+            expect(Ajax.get).toHaveBeenCalled();
+            expect(ReportStore.trigger).toHaveBeenCalledWith({action: Actions.loadReportsForSearch, reports: reports});
+        });
+
+        it('loads reports from server when there are no already loaded reports', () => {
+            ReportStore.__set__('lastLoadWithKeys', false);
             mockResponse(null, reports);
             spyOn(ReportStore, 'trigger');
             spyOn(Ajax, 'get').and.callThrough();
