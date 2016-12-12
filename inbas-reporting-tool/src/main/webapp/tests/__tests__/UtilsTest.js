@@ -79,31 +79,53 @@ describe('Utility functions tests', function () {
         });
     });
 
-    it('Extracts path from unparametrized location', function () {
-        jasmine.getGlobal().window = {
-            location: {
-                hash: '#/reports?_k=3123123'
-            }
-        };
-        expect(Utils.getPathFromLocation()).toEqual('reports');
-    });
+    describe('getPathFromLocation', () => {
+        it('Extracts path from unparametrized location', function () {
+            jasmine.getGlobal().window = {
+                location: {
+                    hash: '#/reports?_k=3123123'
+                }
+            };
+            expect(Utils.getPathFromLocation()).toEqual('reports');
+        });
 
-    it('Extracts path from unparametrized location without slash after hashtag', function () {
-        jasmine.getGlobal().window = {
-            location: {
-                hash: '#login?_k=3123123'
-            }
-        };
-        expect(Utils.getPathFromLocation()).toEqual('login');
-    });
+        it('Extracts path from unparametrized location without slash after hashtag', function () {
+            jasmine.getGlobal().window = {
+                location: {
+                    hash: '#login?_k=3123123'
+                }
+            };
+            expect(Utils.getPathFromLocation()).toEqual('login');
+        });
 
-    it('Extracts path from parametrized location', function () {
-        jasmine.getGlobal().window = {
-            location: {
-                hash: '#/reports/1234567890?_k=3123123'
-            }
-        };
-        expect(Utils.getPathFromLocation()).toEqual('reports/1234567890');
+        it('Extracts path from parametrized location', function () {
+            jasmine.getGlobal().window = {
+                location: {
+                    hash: '#/reports/1234567890?_k=3123123'
+                }
+            };
+            expect(Utils.getPathFromLocation()).toEqual('reports/1234567890');
+        });
+
+        it('extracts path with multiple query parameters', () => {
+            const pathWithParams = 'reports?reportKey=188150757125638902&reportKey=356947264427292247&reportKey=356885591191417919';
+            jasmine.getGlobal().window = {
+                location: {
+                    hash: '#/' + pathWithParams
+                }
+            };
+            expect(Utils.getPathFromLocation()).toEqual(pathWithParams);
+        });
+
+        it('extracts path with multiple query parameters from location with history tag', () => {
+            const pathWithParams = 'reports?reportKey=188150757125638902&reportKey=356947264427292247&reportKey=356885591191417919';
+            jasmine.getGlobal().window = {
+                location: {
+                    hash: '#/' + pathWithParams + '&_k=3123123'
+                }
+            };
+            expect(Utils.getPathFromLocation()).toEqual(pathWithParams);
+        });
     });
 
     describe('addParametersToUrl', () => {

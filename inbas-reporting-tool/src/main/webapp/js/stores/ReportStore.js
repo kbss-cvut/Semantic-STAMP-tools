@@ -69,7 +69,7 @@ const ReportStore = Reflux.createStore({
                 this._actuallyLoadReportsForSearch();
             }
         } else {
-            if (!lastLoadWithKeys) {
+            if (this._reports && !lastLoadWithKeys) {
                 this._searchReports = this._reports;
                 this.trigger({
                     action: Actions.loadReportsForSearch,
@@ -166,6 +166,10 @@ const ReportStore = Reflux.createStore({
 
     getReports: function () {
         return this._reports;
+    },
+
+    getReportsForSearch: function () {
+        return this._searchReports;
     }
 });
 
