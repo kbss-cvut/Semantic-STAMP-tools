@@ -1,7 +1,7 @@
 package cz.cvut.kbss.inbas.reporting.rest;
 
 import cz.cvut.kbss.inbas.reporting.dto.ReportRevisionInfo;
-import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.inbas.reporting.dto.reportlist.ReportList;
 import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.LogicalDocument;
 import cz.cvut.kbss.inbas.reporting.rest.dto.mapper.DtoMapper;
@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -23,6 +24,8 @@ import java.util.List;
 @RequestMapping("/reports")
 public class ReportController extends BaseController {
 
+    private static final String REPORT_KEY_PARAM = "key";
+
     @Autowired
     @Qualifier("cachingReportBusinessService")
     private ReportBusinessService reportService;
@@ -31,8 +34,12 @@ public class ReportController extends BaseController {
     private DtoMapper dtoMapper;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Collection<ReportDto> getAllReports() {
-        return reportService.findAll();
+    public ReportList getAllReports(@RequestParam MultiValueMap<String, String> params) {
+        if (params.containsKey(REPORT_KEY_PARAM)) {
+            final Collection<String> keys = params.get(REPORT_KEY_PARAM);
+            return new ReportList(reportService.findAll(keys));
+        }
+        return new ReportList(reportService.findAll());
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
