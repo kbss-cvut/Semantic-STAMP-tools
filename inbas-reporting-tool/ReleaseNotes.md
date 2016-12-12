@@ -1,5 +1,8 @@
 # SISEL Release Notes
 
+### 0.9.0 - December 12, 2016
+- Support for SAFA (Feature #188).
+
 ### 0.8.1 - December 5, 2016
 - Display audit finding level of SAFA audit reports (Feature #245).
 
