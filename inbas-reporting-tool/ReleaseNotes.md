@@ -1,8 +1,5 @@
 # INBAS Reporting Tool Release Notes
 
-### 0.7.20 - December 12, 2016
-- External report filtering - resolved its interaction with report search (Feature #236).
-
 ### 0.7.19 - December 6, 2016
 - Implemented external report filtering - opening application using
 URI with report keys as query parameters shows a list of matching reports (Feature #236).
