@@ -54,10 +54,12 @@ public class TestPersistenceFactory {
 
     @PreDestroy
     private void close() {
-        emf.close();
+        if (emf.isOpen()) {
+            emf.close();
+        }
     }
 
-    static Map<String, String> getDefaultProperties() {
+    private static Map<String, String> getDefaultProperties() {
         final Map<String, String> properties = new HashMap<>();
         properties.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, Constants.PU_LANGUAGE);
         properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.reporting.model");
