@@ -3,6 +3,7 @@ package cz.cvut.kbss.inbas.reporting.service.data.eccairs;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import cz.cvut.kbss.datatools.documentation.Vocabulary;
+import cz.cvut.kbss.eccairs.report.model.EccairsReport;
 import cz.cvut.kbss.eccairs.webapi.EwaIWebServer;
 import cz.cvut.kbss.eccairs.webapi.EwaResult;
 import cz.cvut.kbss.eccairs.webapi.EwaWebServer;
@@ -67,11 +68,6 @@ public class EccairsServiceImpl implements EccairsService {
         return service;
     }
     
-//    @Scheduled(cron = "0 1 0 * * *")//  at one minute past midnight (00:01) every day, assuming that the default shell for the cron user is Bourne shell compliant:
-//    public void scheduledImport(){
-////        TODO import eccairs reports
-////        Even
-//    }
 
     @PostConstruct
     protected void init() {
@@ -183,10 +179,11 @@ public class EccairsServiceImpl implements EccairsService {
         final String reportE5F = getCurrentEccairsReportByInitialFileNumberAndReportingEntity(reportingEntity, reportingEntityFileNumber);
         if(reportE5F != null && !reportE5F.isEmpty()){
             LOG.trace("- E5F length={}", reportE5F.length());
-            List<URI> reports = importer.importE5FXmlFromString(reportE5F);
-            if(reports != null && !reports.isEmpty())
+            List<EccairsReport> reports = importer.importE5FXmlFromString(reportE5F);
+            if(reports != null && !reports.isEmpty()){
                 LOG.trace("- BINGO - we have {} ECCAIRS reports, returning the first one ! ", reports.size());
-                return reports.get(0);
+                return URI.create(reports.get(0).getUri());
+            }
         }
         return null;
     }
@@ -230,7 +227,7 @@ public class EccairsServiceImpl implements EccairsService {
         return occurrenceE5Fs;
     }
 
-    private List<String> getOccurrencesByAttributeValueQuery(final String userToken, final String queryName, final Map<String,String> attributeValueMap) {
+    private List<String> getOccurrencesKeysByAttributeValueQuery(final String userToken, final String queryName, final Map<String,String> attributeValueMap) {
         final String pLibrary = env.getProperty("eccairs.repository.library");
 
         EwaResult result = getService().getQueryObject(userToken, pLibrary, queryName,0);
@@ -259,14 +256,19 @@ public class EccairsServiceImpl implements EccairsService {
         document = JsonPath.parse(result.getData().getValue());
         final List<String> occurrenceKeys = document.read("$.Rows[*][0]");
         LOG.info("- found occurrences with keys = {}", occurrenceKeys);
-
+        
         result = getService().releaseQueryResult(userToken,operationID);
         if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
             LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
             return Collections.emptyList();
         }
         LOG.info("- query operation {} released with result {}", operationID, result.getReturnCode().value());
-
+        return occurrenceKeys;
+    }
+    
+    private List<String> getOccurrencesByAttributeValueQuery(final String userToken, final String queryName, final Map<String,String> attributeValueMap) {
+        List<String> occurrenceKeys = getOccurrencesKeysByAttributeValueQuery(userToken, queryName, attributeValueMap);
+        
         List<String> fullOccurrences = getFullOccurrencesForReferences(userToken,occurrenceKeys);
         LOG.info("- # of occurrences found = {}", fullOccurrences.size());
 
@@ -275,23 +277,25 @@ public class EccairsServiceImpl implements EccairsService {
 
     private List<String> getFullOccurrencesForReferences(final String userToken, final List<String> occurrenceKeys ) {
         List<String> fullOccurrences = new ArrayList<>();
-
         for( final String occurrenceKey : occurrenceKeys) {
-            EwaResult result = getService().getOccurrenceDataByKey(userToken, occurrenceKey);
-            if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
-                LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
-                fullOccurrences.clear();
-                break;
-            }
-            String occurrenceE5F = result.getData().getValue();
-            LOG.debug("- found occurrence data = {}", occurrenceE5F);
+            String occurrenceE5F = getFullOccurrenceForReference(userToken, occurrenceKey);
             fullOccurrences.add(occurrenceE5F);
         }
         return fullOccurrences;
     }
+    
+    private String getFullOccurrenceForReference(final String userToken, final String occurrenceKey ){
+        EwaResult result = getService().getOccurrenceDataByKey(userToken, occurrenceKey);
+        if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
+            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+        }
+        String occurrenceE5F = result.getData().getValue();
+        LOG.debug("- found occurrence data = {}", occurrenceE5F);
+        return occurrenceE5F;
+    }
 
     @Override
-    public String getOccurrencesAfterCreationDate(final Calendar minimumCreationDate) {
+    public List<String> getOccurrencesAfterCreationDate(final Calendar minimumCreationDate) {
         String userToken = login();
 
         final String pQuery = env.getProperty("eccairs.repository.query.getOccurrencesAfterCreatedDate");
@@ -303,11 +307,11 @@ public class EccairsServiceImpl implements EccairsService {
             put("434",format.format(minimumCreationDate.getTime()));
         }});
 
-        return occurrenceE5Fs.size() != 1 ? null : occurrenceE5Fs.get(0);
+        return occurrenceE5Fs;
     }
 
     @Override
-    public String getOccurrencesAfterModifiedDate(final Calendar minimumModifiedDate) {
+    public List<String> getOccurrencesAfterModifiedDate(final Calendar minimumModifiedDate) {
         String userToken = login();
 //        The date when the report was last modified. This date is formatted using the standard format 'YYYY/MM/DD HH:MM:SS' e.g. '2001/01/26 09:11:27'. (en)
         final String pQuery = env.getProperty("eccairs.repository.query.getOccurrencesAfterModifiedDate");
@@ -319,6 +323,45 @@ public class EccairsServiceImpl implements EccairsService {
             put("435", format.format(minimumModifiedDate.getTime()));
         }});
 
-        return occurrenceE5Fs.size() != 1 ? null : occurrenceE5Fs.get(0);
+        return occurrenceE5Fs;
+    }
+    
+    public EccairsRepositoryChange getLatestChanges(final Calendar date){
+        EccairsRepositoryChange change = new EccairsRepositoryChange(date);
+        String userToken = login();
+        
+        // load modified reports after date
+        String pQuery = env.getProperty("eccairs.repository.query.getOccurrencesAfterModifiedDate");
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        format.setTimeZone(date.getTimeZone());
+
+        List<String> occurrenceKeys = getOccurrencesKeysByAttributeValueQuery(userToken,pQuery, new HashMap<String,String>() {{
+            put("435", format.format(date.getTime()));
+        }});
+        Map<String, String> changed = change.getChangedReports();
+        for(String key : occurrenceKeys){
+            String occE5f = getFullOccurrenceForReference(userToken, key);
+            changed.put(key, occE5f);
+        }
+        
+        // load occurrence reports created after date
+        pQuery = env.getProperty("eccairs.repository.query.getOccurrencesAfterCreatedDate");
+
+        occurrenceKeys = getOccurrencesKeysByAttributeValueQuery(userToken,pQuery, new HashMap<String,String>() {{
+            put("434",format.format(date.getTime()));
+        }});
+        
+        // remove reports that are changed 
+        Map<String, String> created = change.getNewReports();
+        for(String key : occurrenceKeys){
+            String occE5f = changed.remove(key);
+            if(occE5f != null){
+                occE5f = getFullOccurrenceForReference(userToken, key);
+            }
+            created.put(key, occE5f);
+        }
+        logout(userToken);
+        return change;
     }
 }
