@@ -18,16 +18,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
 @RequestMapping("/reports")
 public class ReportController extends BaseController {
+
+    private static final String REPORT_KEY_PARAM = "key";
 
     @Autowired
     @Qualifier("cachingReportBusinessService")
@@ -38,12 +42,16 @@ public class ReportController extends BaseController {
 
     @Autowired
     private DtoMapper dtoMapper;
-    
+
     @Autowired
     private SafaImportService safaImportService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ReportList getAllReports() {
+    public ReportList getAllReports(@RequestParam MultiValueMap<String, String> params) {
+        if (params.containsKey(REPORT_KEY_PARAM)) {
+            final Collection<String> keys = params.get(REPORT_KEY_PARAM);
+            return new ReportList(reportService.findAll(keys));
+        }
         return new ReportList(reportService.findAll());
     }
 

@@ -18,11 +18,13 @@ import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.inbas.reporting.model.safetyissue.SafetyIssueReport;
+import cz.cvut.kbss.inbas.reporting.model.util.HasOwlKey;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.SafetyIssueReportDao;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
+import cz.cvut.kbss.inbas.reporting.util.IdentificationUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -227,7 +229,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
         final Long fileNumber = chain.get(0).getFileNumber();
         // Sort descending by revision number
-        Collections.sort(chain, (a, b) -> b.getRevision().compareTo(a.getRevision()));
+        chain.sort((a, b) -> b.getRevision().compareTo(a.getRevision()));
 
         final List<ReportRevisionInfo> revisions = reportService.getReportChainRevisions(fileNumber);
         assertEquals(chain.size(), revisions.size());
@@ -294,7 +296,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
             final List<OccurrenceReport> chain = persistOccurrenceReportChain();
             latestRevisions.add(chain.get(chain.size() - 1));
         }
-        Collections.sort(latestRevisions, (a, b) -> b.getDateCreated().compareTo(a.getDateCreated()));
+        latestRevisions.sort((a, b) -> b.getDateCreated().compareTo(a.getDateCreated()));
         return latestRevisions;
     }
 
@@ -377,5 +379,39 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
             list.add(chain.get(chain.size() - 1));
         }
         return list;
+    }
+
+    @Test
+    public void findAllWithKeysReturnsListOfMatchingReports() {
+        final List<LogicalDocument> reports = generateReportsForFindAllFilter();
+        final List<String> keys = reports.stream().map(HasOwlKey::getKey).collect(Collectors.toList());
+
+        final List<ReportDto> result = reportService.findAll(keys);
+        assertNotNull(result);
+        assertTrue(Environment.areEqual(reports, result));
+    }
+
+    private List<LogicalDocument> generateReportsForFindAllFilter() {
+        final List<LogicalDocument> list = new ArrayList<>();
+        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
+            final List<OccurrenceReport> chain = persistOccurrenceReportChain();
+            list.add(chain.get(Generator.randomIndex(chain)));
+        }
+        return list;
+    }
+
+    @Test
+    public void findAllWithKeysSkipsKeysForWhichNoReportExists() {
+        final List<LogicalDocument> reports = generateReportsForFindAllFilter();
+        final List<String> keys = reports.stream().map(HasOwlKey::getKey).collect(Collectors.toList());
+        final int unknownKeyCount = Generator.randomInt(5, 10);
+        for (int i = 0; i < unknownKeyCount; i++) {
+            keys.add(IdentificationUtils.generateKey());
+        }
+
+        final List<ReportDto> result = reportService.findAll(keys);
+        assertNotNull(result);
+        assertEquals(keys.size() - unknownKeyCount, result.size());
+        assertTrue(Environment.areEqual(reports, result));
     }
 }

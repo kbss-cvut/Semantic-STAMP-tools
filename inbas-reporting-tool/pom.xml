@@ -13,7 +13,7 @@
 
     <name>INBAS Reporting Tool</name>
     <artifactId>inbas-reporting-tool</artifactId>
-    <version>0.8.1</version>
+    <version>0.9.0</version>
     <packaging>war</packaging>
 
     <properties>
@@ -176,6 +176,13 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-jdk8</artifactId>
             <version>${org.mapstruct.version}</version>
+        </dependency>
+        <!-- Workaround for IntelliJ IDEA - it fails to compile the project because it cannot find the MappingProcessor -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org.mapstruct.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Test dependencies -->
@@ -430,6 +437,13 @@
                 <deployment>RLP</deployment>
             </properties>
         </profile>
+        <profile>
+            <id>dsa</id>
+            <properties>
+                <profile.name>dsa</profile.name>
+                <deployment>DSA</deployment>
+            </properties>
+        </profile>
     </profiles>
 
     <build>
@@ -437,7 +451,20 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.5.1</version>
+                <configuration>
+                    <annotationProcessors>
+                        <!-- MapStruct processor generates implementation of the DtoMapper -->
+                        <annotationProcessor>org.mapstruct.ap.MappingProcessor</annotationProcessor>
+                    </annotationProcessors>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -527,40 +554,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.bsc.maven</groupId>
-                <artifactId>maven-processor-plugin</artifactId>
-                <version>2.2.4</version>
-                <configuration>
-                    <additionalSourceDirectories>
-                        <additionalSourceDirectory>
-                            ${project.basedir}/src/main/generated-sources
-                        </additionalSourceDirectory>
-                    </additionalSourceDirectories>
-                    <defaultOutputDirectory>
-                        ${project.basedir}/src/main/generated-sources
-                    </defaultOutputDirectory>
-                    <processors>
-                        <processor>org.mapstruct.ap.MappingProcessor</processor>
-                    </processors>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>process</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.mapstruct</groupId>
-                        <artifactId>mapstruct-processor</artifactId>
-                        <version>${org.mapstruct.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
             <!-- Code coverage plugin -->
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -599,18 +592,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>3.0.0</version>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${basedir}/src/main/generated-sources</directory>
-                            <followSymlinks>false</followSymlinks>
-                        </fileset>
-                    </filesets>
-                </configuration>
             </plugin>
         </plugins>
     </build>

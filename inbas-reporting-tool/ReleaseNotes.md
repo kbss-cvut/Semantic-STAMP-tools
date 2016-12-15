@@ -1,5 +1,8 @@
 # SISEL Release Notes
 
+### 0.9.0 - December 12, 2016
+- Support for SAFA (Feature #188).
+
 ### 0.8.1 - December 5, 2016
 - Display audit finding level of SAFA audit reports (Feature #245).
 
@@ -8,6 +11,10 @@
 - Create new revision from latest ECCAIRS version of a report (Feature #233).
 - Distinguish ECCAIRS and SAFA reports in the UI (Feature #235).
 - Profile specific JMX bean names (Feature #232).
+
+### 0.7.19 - December 6, 2016
+- Implemented external report filtering - opening application using
+URI with report keys as query parameters shows a list of matching reports (Feature #236).
 
 ### 0.7.18 - November 21, 2016
 - Fixed missing sorting icons in reports table (Bug #226).
