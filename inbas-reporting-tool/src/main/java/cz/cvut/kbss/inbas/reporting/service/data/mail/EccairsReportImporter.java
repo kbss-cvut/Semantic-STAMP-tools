@@ -108,12 +108,12 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
         if (rs == null) {
             return Collections.emptyList();
         }
-        List<URI> ret = parsePersistAndMap(rs);
+        List<URI> ret = parsePersistAndMap(rs).stream().map(r -> URI.create(r.getUri())).collect(Collectors.toList());
         ns.close();
         return ret;
     }
     
-    private List<URI> parsePersistAndMap(Stream<EccairsReport> rs){
+    private List<EccairsReport> parsePersistAndMap(Stream<EccairsReport> rs){
         return rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
                     String sUri = r.createRandomUri();
                     URI context = URI.create(sUri);
@@ -132,7 +132,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                     map2OccurrenceReport(r, em);
                     eventPublisher.publishEvent(new InvalidateCacheEvent(this));
 //                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
-                    return context;
+                    return r;
                 }
 
         )).filter(Objects::nonNull).collect(Collectors.toList());
@@ -177,7 +177,8 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
      * @param reportStr string of the contents of an e5f/xml file (the unziped xml file).
      * @return
      */
-    public List<URI> importE5FXmlFromString(String reportStr){ 
+    @Override
+    public List<EccairsReport> importE5FXmlFromString(String reportStr){ 
         try {
             E5FXMLParser e5fXmlParser = new E5FXMLParserEccairs(eaf);
             e5fXmlParser.parseDocument(new NamedStream("imported-from-eccairs", IOUtils.toInputStream(reportStr, Charset.forName("UTF-8"))));

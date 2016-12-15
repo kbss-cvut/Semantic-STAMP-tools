@@ -2,6 +2,7 @@ package cz.cvut.kbss.inbas.reporting.service.data.mail;
 
 import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.datatools.mail.model.Message;
+import cz.cvut.kbss.eccairs.report.model.EccairsReport;
 import org.apache.jena.rdf.model.Model;
 
 import java.net.URI;
@@ -24,5 +25,5 @@ public interface ReportImporter {
 
     List<URI> process(Message m);
     
-    List<URI> importE5FXmlFromString(String reportStr);
+    List<EccairsReport> importE5FXmlFromString(String reportStr);
 }
