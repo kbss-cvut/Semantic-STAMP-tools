@@ -27,7 +27,7 @@ class AttachmentTable extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.attachments.length > this.props.attachments.length) {
+        if (nextProps.attachments && nextProps.attachments.length > this.props.attachments.length) {
             this._onEditCancel();
         }
     }

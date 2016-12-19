@@ -1,9 +1,8 @@
 package cz.cvut.kbss.inbas.reporting.config;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -26,6 +25,9 @@ import java.util.List;
 @EnableWebMvc
 @Import({RestConfig.class, SecurityConfig.class})
 public class WebAppConfig extends WebMvcConfigurerAdapter {
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -55,9 +57,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         converter.setObjectMapper(objectMapper);
         converters.add(converter);
         final StringHttpMessageConverter stringConverter = new StringHttpMessageConverter(Charset.forName(
