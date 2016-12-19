@@ -38,7 +38,8 @@ Pokud při instalaci postupujete dle instalačního manuálu, není třeba tuto 
 * Nastavení obecné statistiky - atribut `statistics.general`,
 * Nastavení statistik dle typů událostí - atribut `statistics.eventType`,
 * Nastavení statistik auditů - atribut `statistics.audit`,
-* Nastavení statistik safety issues - atribut `statistics.safetyIssue`.
+* Nastavení statistik safety issues - atribut `statistics.safetyIssue`,
+* Nastavení přehledu statistik pro Safety Action Group (SAG) - atribut `statistics.sag`.
 
 Tato nastavení se nachází v souboru `src/main/resources/statistics.properties`.
 
