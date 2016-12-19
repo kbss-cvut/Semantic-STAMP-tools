@@ -59,7 +59,7 @@ public class TestPersistenceFactory {
         }
     }
 
-    private static Map<String, String> getDefaultProperties() {
+    static Map<String, String> getDefaultProperties() {
         final Map<String, String> properties = new HashMap<>();
         properties.put(OntoDriverProperties.ONTOLOGY_LANGUAGE, Constants.PU_LANGUAGE);
         properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.inbas.reporting.model");

@@ -14,6 +14,7 @@ import org.springframework.core.env.Environment;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,5 +70,9 @@ public class PersistenceFactory {
         map.put(SCAN_PACKAGE, "cz.cvut.kbss.inbas.reporting.model");
         map.put(JPA_PERSISTENCE_PROVIDER, JOPAPersistenceProvider.class.getName());
         return map;
+    }
+
+    static Map<String, String> getDefaultParams() {
+        return Collections.unmodifiableMap(DEFAULT_PARAMS);
     }
 }
