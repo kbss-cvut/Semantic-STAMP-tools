@@ -39,7 +39,8 @@ public class OptionsServiceImpl implements OptionsService {
             ConfigParam.STATISTICS_GENERAL,
             ConfigParam.STATISTICS_EVENT_TYPE,
             ConfigParam.STATISTICS_AUDIT,
-            ConfigParam.STATISTICS_SAFETY_ISSUE
+            ConfigParam.STATISTICS_SAFETY_ISSUE,
+            ConfigParam.STATISTICS_SAG
     };
 
     @Autowired

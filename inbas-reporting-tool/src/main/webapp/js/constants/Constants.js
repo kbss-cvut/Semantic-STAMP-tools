@@ -37,7 +37,8 @@ module.exports = {
         general: 'statistics.general',
         eventTypes: 'statistics.eventType',
         audit: 'statistics.audit',
-        safetyIssue: 'statistics.safetyIssue'
+        safetyIssue: 'statistics.safetyIssue',
+        sag: 'statistics.sag'
     },
 
     STATISTICS_DASHBOARD: 'statistics.dashboard',
