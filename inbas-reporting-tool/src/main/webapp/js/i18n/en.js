@@ -357,6 +357,7 @@ module.exports = {
         'statistics.type.eventTypes': 'Event types',
         'statistics.type.audit': 'Audit',
         'statistics.type.safetyIssue': 'Safety issue',
+        'statistics.type.sag': 'SAG',
 
         'search.loading': 'Searching...',
         'search.title': 'Search results',

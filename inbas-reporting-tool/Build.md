@@ -38,7 +38,8 @@ Pokud při instalaci postupujete dle instalačního manuálu, není třeba tuto 
 * Nastavení obecné statistiky - atribut `statistics.general`,
 * Nastavení statistik dle typů událostí - atribut `statistics.eventType`,
 * Nastavení statistik auditů - atribut `statistics.audit`,
-* Nastavení statistik safety issues - atribut `statistics.safetyIssue`.
+* Nastavení statistik safety issues - atribut `statistics.safetyIssue`,
+* Nastavení přehledu statistik pro Safety Action Group (SAG) - atribut `statistics.sag`.
 
 Tato nastavení se nachází v souboru `src/main/resources/statistics.properties`.
 
@@ -58,7 +59,6 @@ Po úspěšné aktivaci služby ECCAIRS Web API je tato služba dostupná na ve�
 označuje veřejnou adresu serveru na které je služba vystavena.
 
 Pomocí aplikace ECCAIRS Browser se připojte k repozitáři, který chcete využít pro synchronizaci se systémem SISEL. 
-__//TODO SISEL//__
 
 ###### Konfigurace systému SISEL
 
@@ -77,10 +77,27 @@ Toto nastavení zahrnuje:
 
 ##### Nastavení připojení na emailový server
 
-Nastavení připojení na emailový server se nachází v souboru `src/main/resources/ib-caa-email-config.properties`.
+Nastavení připojení na emailový server se nachází v souboru `src/main/resources/ib-caa-email-config.properties`. Používá se k připojení a monitorování emailové schránky.
 
-__//TODO Bogdan - prosím i přejmenuj konfigurák na email-config.properties__ 
-__//TODO Ještě eccairs a email konfigurace__
+Příklad obsahu konfiguračního souboru odpovídá standardním vlastnostem IMAP připojení. Příkladem je :
+
+* `mail.store.protocol=imaps`
+* `mail.imap.socketFactory.class=javax.net.ssl.SSLSocketFactory`
+* `mail.imap.socketFactory.fallback`
+* `mail.imap.socketFactory.port`
+* `mail.user`
+* `mail.password`
+* `mail.server`
+* `mail.folder`
+
+##### Nastavení konfigurace pro transformaci ECCAIRS záznamů (E5X a E5F)
+
+Pro nastavení konfigurace Konfigurace URL k serveru se nachází v souboru: 'src/main/resources/eccairs-tools-config.properties'. Tento soubor obsahuje konfigurace, určené pro vývojáře systému, nikoliv pro běžnou obsluhu.
+* `server` -  URL serveru, na kterém se nachází RDF repozitáře s ECCAIRS schematem
+* `factory` - jméno Java třídy pro načítání ECCAIRS schematu
+* `repoIdTemplate` - šablona pro verzované ID repozitáře s ECCAIRS schematem
+* `eccairsContextTemplate` - šablona pro verzované ID grafu s ECCAIRS schematem
+
 
 #### Sestavení
 

@@ -59,7 +59,9 @@ public class PersistenceFactory {
 
     @PreDestroy
     private void close() {
-        emf.close();
+        if (emf.isOpen()) {
+            emf.close();
+        }
     }
 
     private static Map<String, String> initParams() {

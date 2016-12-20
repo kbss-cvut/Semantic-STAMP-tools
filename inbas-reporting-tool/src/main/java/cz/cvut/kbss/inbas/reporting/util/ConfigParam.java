@@ -16,7 +16,8 @@ public enum ConfigParam {
     STATISTICS_GENERAL("statistics.general"),
     STATISTICS_EVENT_TYPE("statistics.eventType"),
     STATISTICS_AUDIT("statistics.audit"),
-    STATISTICS_SAFETY_ISSUE("statistics.safetyIssue");
+    STATISTICS_SAFETY_ISSUE("statistics.safetyIssue"),
+    STATISTICS_SAG("statistics.sag");
 
     private final String name;
 

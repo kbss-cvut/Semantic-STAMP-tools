@@ -54,7 +54,9 @@ public class TestPersistenceFactory {
 
     @PreDestroy
     private void close() {
-        emf.close();
+        if (emf.isOpen()) {
+            emf.close();
+        }
     }
 
     static Map<String, String> getDefaultProperties() {

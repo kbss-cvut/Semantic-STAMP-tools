@@ -1,5 +1,8 @@
 # SISEL Release Notes
 
+### 0.9.1 - December 19, 2016
+- SAG statistics.
+
 ### 0.9.0 - December 12, 2016
 - Support for SAFA (Feature #188).
 
