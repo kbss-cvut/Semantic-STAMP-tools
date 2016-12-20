@@ -351,7 +351,7 @@ public class EccairsServiceImpl implements EccairsService {
         
         // load modified reports after date
         List<String> occurrenceKeys = getOccurrenceKeysAfterModifiedDate(userToken, date);
-        occurrenceKeys = occurrenceKeys.subList(0, 100);// DEBUG
+//        occurrenceKeys = occurrenceKeys.subList(0, 100);// DEBUG
         if(eccairsOccurrenceKey != null){
             occurrenceKeys.retainAll(eccairsOccurrenceKey);
         }
@@ -365,7 +365,7 @@ public class EccairsServiceImpl implements EccairsService {
         
         // load occurrence reports created after date
         occurrenceKeys = getOccurrenceKeysAfterCreationDate(userToken, date);
-        occurrenceKeys = occurrenceKeys.subList(0, 100);// DEBUG
+//        occurrenceKeys = occurrenceKeys.subList(0, 100);// DEBUG
         // remove reports that are changed 
         if(eccairsOccurrenceKey != null){
             occurrenceKeys.retainAll(eccairsOccurrenceKey);
