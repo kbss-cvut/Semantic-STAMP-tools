@@ -1,12 +1,12 @@
 package cz.cvut.kbss.inbas.reporting.service.data.eccairs;
 
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.change.EccairsRepositoryChange;
 
 import java.net.URI;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public interface EccairsService {
 
@@ -68,46 +68,10 @@ public interface EccairsService {
      * the updated report is taken but it is still classified as a create one.
      * 
      * @param date
+     * @param eccairsOccurrenceKeys if not null only chages for reports with these keyes are returned
      * @return 
      */
-    public EccairsRepositoryChange getLatestChanges(final Calendar date);
+    public EccairsRepositoryChange getLatestChanges(final Calendar date, Set<String> eccairsOccurrenceKeys);
     
-    /**
-     * This class represent the changes made in the repository from a specific date.
-     * 
-     */
-    public static class EccairsRepositoryChange {
 
-        private Calendar date;
-        private Map<String, String> newReports = new HashMap<>();
-        private Map<String, String> changedReports = new HashMap<>();
-
-        public EccairsRepositoryChange(Calendar date) {
-            this.date = date;
-        }
-
-        public Calendar getDate() {
-            return date;
-        }
-
-        public void setDate(Calendar date) {
-            this.date = date;
-        }
-
-        public Map<String, String> getNewReports() {
-            return newReports;
-        }
-
-        public void setNewReports(Map<String, String> newReports) {
-            this.newReports = newReports;
-        }
-
-        public Map<String, String> getChangedReports() {
-            return changedReports;
-        }
-
-        public void setChangedReports(Map<String, String> changedReports) {
-            this.changedReports = changedReports;
-        }
-    }
 }
