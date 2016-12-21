@@ -101,6 +101,7 @@ describe('OccurrenceReport', function () {
 
     it('renders the create new revision from the latest ECCAIRS report action item when report was imported from ECCAIRS', () => {
         report = ReportFactory.createOccurrenceReport();
+        delete report.isNew;
         report.isEccairsReport = function () {
             return true;
         };
@@ -127,5 +128,12 @@ describe('OccurrenceReport', function () {
             toolbar = toolbars[toolbars.length - 1],
             buttons = TestUtils.scryRenderedDOMComponentsWithTag(toolbar, 'button');
         buttons.forEach(b => expect(b.disabled).toBeTruthy());
+    });
+
+    it('does not render Actions button for new report', () => {
+        report = ReportFactory.createOccurrenceReport();
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            actionsButton = Environment.getComponentByTagAndContainedText(component, 'button', messages['table-actions']);
+        expect(actionsButton).toBeNull();
     });
 });
