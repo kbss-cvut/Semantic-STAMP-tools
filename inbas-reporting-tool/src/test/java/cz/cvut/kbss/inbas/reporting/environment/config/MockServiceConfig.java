@@ -4,6 +4,7 @@ import cz.cvut.kbss.inbas.reporting.service.*;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.inbas.reporting.service.data.RemoteDataLoader;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsReportSynchronizationService;
 import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.SafaImportService;
@@ -129,6 +130,11 @@ public class MockServiceConfig {
     @Bean
     public SafaImportService safaImportService() {
         return mock(SafaImportService.class);
+    }
+
+    @Bean
+    public EccairsReportSynchronizationService eccairsReportSynchronizationService() {
+        return mock(EccairsReportSynchronizationService.class);
     }
 
     @Bean

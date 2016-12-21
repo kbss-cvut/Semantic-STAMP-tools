@@ -2,16 +2,9 @@ package cz.cvut.kbss.inbas.reporting.config;
 
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsServiceImpl;
-import cz.cvut.kbss.inbas.reporting.service.data.mail.EccairsReportImporter;
-import cz.cvut.kbss.inbas.reporting.service.data.mail.EmailSourceService;
-import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
-import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImportingConfig;
-import cz.cvut.kbss.inbas.reporting.service.data.mail.SafaImportService;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsReportSynchronizationService;
+import cz.cvut.kbss.inbas.reporting.service.data.mail.*;
+import org.springframework.context.annotation.*;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,5 +45,10 @@ public class ServiceConfig {
     @Bean
     public SafaImportService safaImportService() {
         return new SafaImportService();
+    }
+
+    @Bean
+    public EccairsReportSynchronizationService eccairsReportSynchronizationService() {
+        return new EccairsReportSynchronizationService();
     }
 }
