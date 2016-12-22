@@ -9,6 +9,7 @@ import cz.cvut.kbss.inbas.reporting.model.Occurrence;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.Person;
 import cz.cvut.kbss.inbas.reporting.service.BaseServiceTestRunner;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsReportSynchronizationService;
 import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.inbas.reporting.util.Constants;
@@ -21,6 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner {
@@ -33,6 +35,9 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Autowired
     private EccairsService eccairsServiceMock;
+
+    @Autowired
+    private EccairsReportSynchronizationService eccairsSyncServiceMock;
 
     private Person author;
 
@@ -304,17 +309,15 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         report.setAuthor(author);
         occurrenceReportService.persist(report);
 
-        // This report will simulate an Eccairs report
-        final OccurrenceReport eccairsReport = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         occurrenceReportService.persist(report);
-        when(eccairsServiceMock.getEccairsLatestByKey(report.getKey())).thenReturn(eccairsReport);
+        when(eccairsSyncServiceMock.getNewEccairsRevision(any(OccurrenceReport.class))).thenReturn(report.getUri().toString());
 
         final OccurrenceReport result = occurrenceReportService.createNewRevisionFromEccairs(report.getFileNumber());
         assertNotNull(result);
         assertEquals(report.getFileNumber(), result.getFileNumber());
         assertEquals(report.getRevision() + 1, result.getRevision().intValue());
-        assertEquals(eccairsReport.getOccurrence().getName(), result.getOccurrence().getName());
+        assertEquals(report.getOccurrence().getName(), result.getOccurrence().getName());
         assertEquals(result.getUri(), occurrenceReportService.findLatestRevision(report.getFileNumber()).getUri());
     }
 

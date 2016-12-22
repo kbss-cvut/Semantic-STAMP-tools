@@ -20,29 +20,20 @@ import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.Descriptor;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+
+import java.net.URI;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-@Service
 public class EccairsReportSynchronizationService {
     private static final Logger LOG = LoggerFactory.getLogger(EccairsReportSynchronizationService.class);
     @Autowired
