@@ -12,7 +12,7 @@ import cz.cvut.kbss.inbas.reporting.exception.NotFoundException;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
-import cz.cvut.kbss.inbas.reporting.service.data.eccairs.change.EccairsReportChage;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.change.EccairsReportChange;
 import cz.cvut.kbss.inbas.reporting.service.data.eccairs.change.EccairsRepositoryChange;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.formgen.FormGenService;
@@ -92,7 +92,7 @@ public class EccairsServiceImpl implements EccairsService {
         );
 
         if (ResultReturnCode.ERROR.equals(login.getReturnCode())) {
-            LOG.info("ECCAIRS Service Login Failed: {}",login.getErrorDetails().getValue());
+            LOG.warn("ECCAIRS Service Login Failed: {}",login.getErrorDetails().getValue());
         } else {
             LOG.info("ECCAIRS Service Login Successful.");
         }
@@ -104,7 +104,7 @@ public class EccairsServiceImpl implements EccairsService {
         final EwaResult result = service.logout(userToken);
 
         if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
-            LOG.info("ECCAIRS Service Logout Failed: {}",result.getErrorDetails().getValue());
+            LOG.warn("ECCAIRS Service Logout Failed: {}",result.getErrorDetails().getValue());
         } else {
             LOG.info("ECCAIRS Service Logout Successful.");
         }
@@ -144,21 +144,21 @@ public class EccairsServiceImpl implements EccairsService {
 
     @Override
     public OccurrenceReport getEccairsLatestByJson(String rdfJsonLd) {
-        LOG.info("Report Model (String length): {}", rdfJsonLd.length());
+        LOG.trace("Report Model (String length): {}", rdfJsonLd.length());
 
         Model model = ModelFactory.createDefaultModel();
         model.read(new StringReader(rdfJsonLd),"","JSON-LD");
 
         // used for report identification, 4006 = RLP
         String reportingEntity = getSingleEccairsAttributeValue(model, "447", "4006");
-        LOG.info("Reporting Entity: {}", reportingEntity);
+        LOG.trace("Reporting Entity: {}", reportingEntity);
 
         String reportingEntityFileNumber = getSingleEccairsAttributeValue(model, "438",null);
-        LOG.info("File number: {}", reportingEntityFileNumber);
+        LOG.trace("File number: {}", reportingEntityFileNumber);
 
         // used for version check
         String reportLastModified = getSingleEccairsAttributeValue(model, "435", null);
-        LOG.info("Report last modified: {}", reportLastModified);
+        LOG.trace("Report last modified: {}", reportLastModified);
 
         if ( reportingEntity != null && reportingEntityFileNumber != null ) {
             LOG.info("Report matched to report: repEntity={} : repFileNumber={}", reportingEntity, reportingEntityFileNumber);
@@ -203,7 +203,7 @@ public class EccairsServiceImpl implements EccairsService {
         }});
 
         if ( occurrenceE5Fs.size() != 1 ) {
-            LOG.info("- found {} occurrence keys instead of 1, skipping", occurrenceE5Fs.size());
+            LOG.warn("- found {} occurrence keys instead of 1, skipping", occurrenceE5Fs.size());
         }
 
         return occurrenceE5Fs.stream().findFirst().orElse(null);
@@ -216,9 +216,9 @@ public class EccairsServiceImpl implements EccairsService {
         final String pLibrary = env.getProperty("eccairs.repository.library");
         final String pQueryGetAllOccurrences = env.getProperty("eccairs.repository.query.getAllOccurrences");
 
-        LOG.info("- executing query {}", pQueryGetAllOccurrences);
+        LOG.trace("- executing query {}", pQueryGetAllOccurrences);
         String result = getService().executeQueryAsTable(userToken, pLibrary, pQueryGetAllOccurrences,0).getData().getValue();
-        LOG.info("- found occurrences (string length={})", result.length());
+        LOG.trace("- found occurrences (string length={})", result.length());
 
         List<String> occurrenceKeys = EccairsQueryUtils.xpathTextContent(result,"/NewDataSet/ALL/KEY/text()");
 
@@ -234,37 +234,37 @@ public class EccairsServiceImpl implements EccairsService {
 
         EwaResult result = getService().getQueryObject(userToken, pLibrary, queryName,0);
         if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
-            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+            LOG.warn("- ERROR: {}", result.getErrorDetails().getValue());
             return Collections.emptyList();
         }
         final EccairsQueryUtils q = new EccairsQueryUtils();
         String queryString = q.setAttributeValuesForQueryObjectJSON(result.getData().getValue(), attributeValueMap);
-        LOG.info("- executing query {}", queryString);
+        LOG.trace("- executing query {}", queryString);
 
         result = getService().executeQueryObject(userToken, queryString, 0, 10000000, 10000000);
         if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
-            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+            LOG.warn("- ERROR: {}", result.getErrorDetails().getValue());
             return Collections.emptyList();
         }
         DocumentContext document = JsonPath.parse(result.getData().getValue());
         final String operationID = document.read("$.OperationID");
-        LOG.info("- executing query with OperationID = {}", operationID);
+        LOG.trace("- executing query with OperationID = {}", operationID);
 
         result = getService().getQueryResult(userToken,operationID,0,"");// the returned result is an error
         if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
-            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+            LOG.warn("- ERROR: {}", result.getErrorDetails().getValue());
             return Collections.emptyList();
         }
         document = JsonPath.parse(result.getData().getValue());
         final List<String> occurrenceKeys = document.read("$.Rows[*][0]");
-        LOG.info("- found occurrences with keys = {}", occurrenceKeys);
+        LOG.trace("- found occurrences with keys = {}", occurrenceKeys);
         
         result = getService().releaseQueryResult(userToken,operationID);
         if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
-            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+            LOG.warn("- ERROR: {}", result.getErrorDetails().getValue());
             return Collections.emptyList();
         }
-        LOG.info("- query operation {} released with result {}", operationID, result.getReturnCode().value());
+        LOG.trace("- query operation {} released with result {}", operationID, result.getReturnCode().value());
         return occurrenceKeys;
     }
     
@@ -273,7 +273,6 @@ public class EccairsServiceImpl implements EccairsService {
         List<String> occurrenceKeys = getOccurrencesKeysByAttributeValueQuery(userToken, queryName, attributeValueMap);
         
         List<String> fullOccurrences = getFullOccurrencesForReferences(userToken,occurrenceKeys);
-        LOG.info("- # of occurrences found = {}", fullOccurrences.size());
 
         return fullOccurrences;
     }
@@ -284,6 +283,7 @@ public class EccairsServiceImpl implements EccairsService {
             String occurrenceE5F = getFullOccurrenceForReference(userToken, occurrenceKey);
             fullOccurrences.add(occurrenceE5F);
         }
+        LOG.trace("- # of occurrences found = {}", fullOccurrences.size());
         return fullOccurrences;
     }
     
@@ -291,10 +291,10 @@ public class EccairsServiceImpl implements EccairsService {
         LOG.trace("getFullOccurrenceForReference");
         EwaResult result = getService().getOccurrenceDataByKey(userToken, occurrenceKey);
         if (ResultReturnCode.ERROR.equals(result.getReturnCode())) {
-            LOG.info("- ERROR: {}", result.getErrorDetails().getValue());
+            LOG.warn("- ERROR: {}", result.getErrorDetails().getValue());
         }
         String occurrenceE5F = result.getData().getValue();
-        LOG.debug("- found occurrence data = {}", occurrenceE5F);
+        LOG.debug("- found occurrence data = {}", occurrenceE5F.length());
         return occurrenceE5F;
     }
 
@@ -358,7 +358,7 @@ public class EccairsServiceImpl implements EccairsService {
         
         for(String key : occurrenceKeys){
             String occE5f = getFullOccurrenceForReference(userToken, key);
-            EccairsReportChage erc = new EccairsReportChage(key, occE5f);
+            EccairsReportChange erc = new EccairsReportChange(key, occE5f);
             erc.setEdited(true);
             change.addChangedReport(erc);
         }
@@ -371,10 +371,10 @@ public class EccairsServiceImpl implements EccairsService {
             occurrenceKeys.retainAll(eccairsOccurrenceKey);
         }
         for(String key : occurrenceKeys){
-            EccairsReportChage erc = change.getReportForEccairsKey(key);
+            EccairsReportChange erc = change.getReportForEccairsKey(key);
             if(erc == null){
                 String occE5f = getFullOccurrenceForReference(userToken, key);
-                erc = new EccairsReportChage(key, occE5f);
+                erc = new EccairsReportChange(key, occE5f);
                 erc.setCreated(true);
                 change.addChangedReport(erc);
             }else{

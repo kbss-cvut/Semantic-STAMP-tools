@@ -12,7 +12,7 @@ import cz.cvut.kbss.eccairs.schema.dao.SingeltonEccairsAccessFactory;
 import cz.cvut.kbss.inbas.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.inbas.reporting.model.repo.ImportEvent;
 import cz.cvut.kbss.inbas.reporting.model.repo.RemoteReportRepository;
-import cz.cvut.kbss.inbas.reporting.service.data.eccairs.change.EccairsReportChage;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.change.EccairsReportChange;
 import cz.cvut.kbss.inbas.reporting.service.data.eccairs.change.EccairsRepositoryChange;
 import cz.cvut.kbss.inbas.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.inbas.reporting.service.repository.RemoteReportRepositoryService;
@@ -28,15 +28,14 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 /**
@@ -65,35 +64,46 @@ public class EccairsReportSynchronizationService {
     private EccairsReportDao eccairsReportDao;
     
     
-    public OccurrenceReport getNewEccairsRevision(OccurrenceReport or){
+    /**
+     * Finds, imports and returns the latest eccairsRevision of the given report
+     * @param or
+     * @return 
+     */
+    public String getNewEccairsRevision(OccurrenceReport or){
         Objects.requireNonNull(or);
         or.getUri();
         EntityManager em = eccairsEmf.createEntityManager();
         eccairsReportDao = new EccairsReportDao(em);
         EccairsReport e = em.find(EccairsReport.class, or.getUri().toString());
-        OccurrenceReport newer = null;
+        String latestRevisionURI = null;
         if(e != null){
             Calendar lastUpdate = getLastUpdateTime();
             EccairsRepositoryChange change = eccairsService.getLatestChanges(lastUpdate, Collections.singleton(e.getEccairsKey()));
             if(!change.isEmpty()){ // found a report in eccairs no need
-                LOG.trace("importing from eccairs. found change for report with eccairs key {}", e.getEccairsKey());
+                LOG.trace("importing from eccairs. found change for report with eccairs key {} and uri <{}>", e.getEccairsKey(), e.getUri());
                 if(change.size() != 1){
                     LOG.error("found multiple changed or created reports eccairs report key {}", e.getEccairsKey());
                 }
-                importReportsFromChange(change);
+                EccairsReportChange ch = change.getChanges().values().iterator().next();
+                Set<EccairsReport> importedReports = importReportsFromChange(change);
+                if(!importedReports.isEmpty()){
+                    EccairsReport r = importedReports.iterator().next();
+                    latestRevisionURI = r.getUri();
+                }else{
+                    LOG.warn("the report with eccairs Key {} found in the eccairs server was not imported properly.", ch.getKey());
+                }
             }else{ // try to find previously loaded change
-                rrrService.getLatestEccairsVersionOf(or.getUri());
+                latestRevisionURI = rrrService.getLatestEccairsVersionOf(or.getUri());
             }
         }else{
             // currently non eccairs reports are not matched to eccairs repository. 
             // Matched reports are e5f and e5x reports imported from emails and e5f reports imported directly from Eccairs Repository
         }
         em.close();
-        return null;
+        return latestRevisionURI;
     }
     
-    //    @Scheduled(cron = "0 1 0 * * *")//  at one minute past midnight (00:01) every day, assuming that the default shell for the cron user is Bourne shell compliant:
-    @PostConstruct
+    @Scheduled(cron = "0 1 0 * * *")//  at one minute past midnight (00:01) every day, assuming that the default shell for the cron user is Bourne shell compliant:
     public void scheduledSynchronizeWithEccairsSystem(){
         LOG.info("importing data from eccairs server.");
         Calendar lastUpdate = getLastUpdateTime();
@@ -107,12 +117,12 @@ public class EccairsReportSynchronizationService {
         EntityManager eccairsEm = eccairsEmf.createEntityManager();
         eccairsReportDao = new EccairsReportDao(eccairsEm);
         
-        for(EccairsReportChage c: change.getChanges().values()){
-            if(c.isCreated()){
-                allImported.addAll(importNewRport(c.getReportStr()));
-            }else if(c.isEdited()){
-                allImported.addAll(importChangedReport(c.getReportStr()));
-            }
+        for(EccairsReportChange c: change.getChanges().values()){
+//            if(c.isCreated()){
+                allImported.addAll(importReportFromEccairsServer(c.getReportStr()));
+//            }else if(c.isEdited()){
+//                allImported.addAll(importChangedReport(c.getReportStr()));
+//            }
         }
         
         logImportEvent(allImported, change.getCheckDate().getTime());
@@ -145,12 +155,12 @@ public class EccairsReportSynchronizationService {
     protected List<EccairsReport> importNewReports(List<String> reports){
         List<EccairsReport> allNewReports = new ArrayList<>();
         for(String report : reports){
-            allNewReports.addAll(importNewRport(report));
+            allNewReports.addAll(importReportFromEccairsServer(report));
         }
         return allNewReports;
     }
     
-    protected List<EccairsReport> importNewRport(String report){
+    protected List<EccairsReport> importReportFromEccairsServer(String report){
         List<EccairsReport> imported = importAndMatchNewReportToExisting(report);
         return imported != null ? imported : Collections.EMPTY_LIST;
     }
@@ -160,7 +170,7 @@ public class EccairsReportSynchronizationService {
         for(EccairsReport r : importedReports){
             r.getTypes().add(Vocabulary.s_c_report_from_eccairs);
             String ruri = r.getUri();
-            List<EccairsReport> matchedReports = matchReportToExisting(r);
+            List<EccairsReport> matchedReports = matchToExistingReports(r);
             if(matchedReports != null && !matchedReports.isEmpty()){
                 r.getTypes().add(cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_c_read_only);
             }
@@ -170,7 +180,13 @@ public class EccairsReportSynchronizationService {
         return importedReports;
     }
     
-    protected List<EccairsReport> matchReportToExisting(final EccairsReport r){
+    /**
+     * Find reports for the same occurrence. Found reports are set as revisions
+     * of the original argument report.
+     * @param r
+     * @return 
+     */
+    protected List<EccairsReport> matchToExistingReports(final EccairsReport r){
         Objects.requireNonNull(r);
         // match 
         List<EccairsReport> matchingReports = new ArrayList<>();
@@ -178,7 +194,7 @@ public class EccairsReportSynchronizationService {
             matchingReports.addAll(eccairsReportDao.findByEccairsKey(r.getEccairsKey()));
         }
         if(r.getTypes().contains(Vocabulary.s_c_report_from_eccairs)){
-            matchingReports.addAll(eccairsReportDao.findMatchingEccairReportByReportingEntityAndEntityFileNumber(r));
+            matchingReports.addAll(eccairsReportDao.findByReportingEntityAndEntityFileNumber(r));
         }
         if(!matchingReports.isEmpty()){
             r.setRevisionsOf(matchingReports.stream().filter(er -> !er.getUri().equals(r.getUri())).map(er -> URI.create(er.getUri())).collect(Collectors.toSet()));
@@ -187,52 +203,11 @@ public class EccairsReportSynchronizationService {
     }
     
     
-    protected List<EccairsReport> importChangedReports(List<String> reports){
-        List<EccairsReport> allChangedReports = new ArrayList<>();
-        for(String report : reports){
-            List<EccairsReport> changed = importChangedReport(report);
-            if(changed != null){
-                allChangedReports.addAll(changed);
-            }
-        }
-        return allChangedReports;
-    }
-    
-    protected List<EccairsReport> importChangedReport(String reportStr){
-        List<EccairsReport> changedReports = reportImporter.importE5FXmlFromString(reportStr);
-        for(EccairsReport r : changedReports){
-            r.getTypes().add(Vocabulary.s_c_report_from_eccairs);
-            String key = r.getEccairsKey();
-            if(key != null && !key.isEmpty()){
-                EccairsReport latestImported = getLatestImportedByKey(key);
-                if(latestImported == null){
-                    matchReportToExisting(r);
-                }else{
-                    r.setRevisionsOf(latestImported.getRevisionsOf());
-                }
-            }
-            Descriptor d = new EntityDescriptor(URI.create(r.getUri()));
-            eccairsReportDao.update(r, d);
-        }
-        return changedReports != null ? changedReports : Collections.EMPTY_LIST;
-    }
-    
-    
-    protected EccairsReport getLatestImportedByKey(String key){
-        String query = "SELECT ?reprot {\n"
-                    + String.format("?event <%s> ?report.\n",cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_target)
-                    + String.format("?event <%s> ?date.\n", cz.cvut.kbss.inbas.reporting.model.Vocabulary.s_p_has_start_time)
-                    + String.format("?report <%s> \"%s\"@en.",cz.cvut.kbss.eccairs.Vocabulary.hasId, key)
-                    + "}ORDER BY ?date\n"
-                    + "LIMIT 1";
-        return eccairsReportDao.findByQuery(query);
-    }
-    
     public List<EccairsReport> findImportedEccairsReportByReportingEntityAndEntityFileNumber(String reportingEntity, String reportingEntityFileNumber){
         EntityManager em = eccairsEmf.createEntityManager();
         EccairsReportDao eccairsReportDao = new EccairsReportDao(em);
         em.getTransaction().begin();
-        List<EccairsReport> rs = eccairsReportDao.findEccairReportByReportingEntityAndEntityFileNumber(reportingEntity, reportingEntity);
+        List<EccairsReport> rs = eccairsReportDao.findByReportingEntityAndEntityFileNumber(reportingEntity, reportingEntity);
         em.getTransaction().commit();
         return rs;
     }
