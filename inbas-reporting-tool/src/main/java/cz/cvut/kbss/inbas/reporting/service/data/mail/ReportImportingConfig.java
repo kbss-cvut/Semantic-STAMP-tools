@@ -44,7 +44,7 @@ public class ReportImportingConfig {
 
     protected void constructEccairsAccessFactory() {
         EccairsAccessConfiguration eac = new EccairsAccessConfiguration(
-                PropertyUtils.loadProperties("/eccairs-tools-config.properties"));
+                PropertyUtils.loadProperties("/eccairs-e5xml-parser.properties"));
         eaf = new SingeltonEccairsAccessFactory(eac);
     }
 

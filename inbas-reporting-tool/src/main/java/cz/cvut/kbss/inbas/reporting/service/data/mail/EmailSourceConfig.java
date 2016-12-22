@@ -30,7 +30,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 @Configuration
-@PropertySource("classpath:ib-caa-email-config.properties")
+@PropertySource("classpath:email-config.properties")
 public class EmailSourceConfig {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(EmailSourceConfig.class);
 
@@ -70,6 +70,7 @@ public class EmailSourceConfig {
 
 //            protected ReportImporter importer = importer1;
 
+            @Override
             protected boolean isProcessed(String id) {
                 return emailDao.findByMailId(id) != null;
             }
