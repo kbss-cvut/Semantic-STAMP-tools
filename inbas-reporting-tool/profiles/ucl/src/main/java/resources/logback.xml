@@ -43,7 +43,7 @@
         <appender-ref ref="EMAILS_FILE"/>
     </logger>
 
-    <logger name="cz.cvut.kbss.inbas.reporting.service.data.mail" level="DEBUG" additivity="false">
+    <logger name="cz.cvut.kbss.reporting.service.data.mail" level="DEBUG" additivity="false">
         <appender-ref ref="EMAILS_FILE"/>
     </logger>
 

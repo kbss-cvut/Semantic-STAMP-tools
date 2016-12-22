@@ -330,10 +330,10 @@
                                 <configuration>
                                     <ignoreMissingFile>true</ignoreMissingFile>
                                     <file>
-                                        ${project.basedir}/src/main/java/cz/cvut/kbss/inbas/reporting/service/jmx/AppAdminBean.java
+                                        ${project.basedir}/src/main/java/cz/cvut/kbss/reporting/service/jmx/AppAdminBean.java
                                     </file>
                                     <outputFile>
-                                        ${project.basedir}/src/main/java/cz/cvut/kbss/inbas/reporting/service/jmx/AppAdminBean.java
+                                        ${project.basedir}/src/main/java/cz/cvut/kbss/reporting/service/jmx/AppAdminBean.java
                                     </outputFile>
                                     <regex>false</regex>
                                     <token>INBASAdminBean</token>
@@ -536,7 +536,7 @@
                 <artifactId>jopa-maven-plugin</artifactId>
                 <version>${cz.cvut.kbss.jopa.version}</version>
                 <configuration>
-                    <package>cz.cvut.kbss.inbas.reporting.model</package>
+                    <package>cz.cvut.kbss.reporting.model</package>
                     <output-directory>${project.basedir}/src/main/generated-sources</output-directory>
                     <ontology-iri>http://onto.fel.cvut.cz/ontologies/reporting-tool/model</ontology-iri>
                     <mapping-file>${project.basedir}/src/main/resources/mapping</mapping-file>
