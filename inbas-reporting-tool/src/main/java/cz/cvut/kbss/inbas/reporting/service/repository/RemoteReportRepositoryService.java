@@ -5,17 +5,12 @@
  */
 package cz.cvut.kbss.inbas.reporting.service.repository;
 
-import cz.cvut.kbss.eccairs.report.model.EccairsReport;
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.inbas.reporting.model.repo.ImportEvent;
 import cz.cvut.kbss.inbas.reporting.model.repo.RemoteReportRepository;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.GenericDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.ImportEventDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.RemoteReportRepositoryDao;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

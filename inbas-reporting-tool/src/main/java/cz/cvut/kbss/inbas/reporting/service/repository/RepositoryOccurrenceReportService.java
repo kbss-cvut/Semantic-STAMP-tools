@@ -9,10 +9,12 @@ import cz.cvut.kbss.inbas.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.inbas.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.inbas.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.inbas.reporting.service.arms.ArmsService;
+import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsReportSynchronizationService;
 import cz.cvut.kbss.inbas.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.inbas.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.inbas.reporting.service.validation.OccurrenceReportValidator;
 import cz.cvut.kbss.inbas.reporting.service.visitor.EventTypeSynchronizer;
+import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +44,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
 
     @Autowired
     private EccairsService eccairsService;
+    
+    @Autowired
+    private EccairsReportSynchronizationService eccairsReportSynchronizationService;
 
     @Override
     protected OwlKeySupportingDao<OccurrenceReport> getPrimaryDao() {
@@ -145,7 +150,12 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         if (latestRegular == null) {
             throw NotFoundException.create("Report chain", fileNumber);
         }
-        final OccurrenceReport eccairsLatest = eccairsService.getEccairsLatestByKey(latestRegular.getKey());
+        String reportUri = eccairsReportSynchronizationService.getNewEccairsRevision(latestRegular);
+        if(reportUri == null){
+            throw new NotFoundException("ECCAIRS report for report with key " + latestRegular.getKey() + " not found.");
+        }
+        final OccurrenceReport eccairsLatest = find(URI.create(reportUri));
+        // TODO : remove the read only type from the eccairs reprots
         if (eccairsLatest == null) {
             throw new NotFoundException("ECCAIRS report for report with key " + latestRegular.getKey() + " not found.");
         }

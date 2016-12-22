@@ -231,6 +231,9 @@ const OccurrenceReport = React.createClass({
     },
 
     _renderDropdown: function () {
+        if (this.props.report.isNew) {
+            return null;
+        }
         const items = [];
         items.push(<PhaseTransition key='phase-transition' report={this.props.report} onLoading={this.onLoading}
                                     menuItem={true} onSuccess={this.onPhaseTransitionSuccess}
