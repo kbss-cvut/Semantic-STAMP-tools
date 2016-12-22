@@ -20,7 +20,7 @@ import javax.annotation.PostConstruct;
  */
 @Configuration
 @Import(EmailSourceConfig.class)
-@PropertySource("classpath:ib-caa-email-config.properties")
+@PropertySource("classpath:email-config.properties")
 public class ReportImportingConfig {
 
     private static final String IMPORTER_USERNAME = "e5xml-data-importer-0001";
