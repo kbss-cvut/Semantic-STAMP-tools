@@ -1,5 +1,8 @@
 # SISEL Release Notes
 
+### 0.10.0 - December 22, 2016
+- Support for automatic synchronization with ECCAIRS.
+
 ### 0.9.1 - December 19, 2016
 - SAG statistics.
 
