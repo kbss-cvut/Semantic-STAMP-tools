@@ -9,14 +9,14 @@ package cz.cvut.kbss.inbas.reporting.service.data.eccairs.change;
  *
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-public class EccairsReportChage {
+public class EccairsReportChange {
     protected boolean created = false;
     protected boolean edited = false;
     
     protected String key;
     protected String reportStr;
 
-    public EccairsReportChage(String key, String reportStr) {
+    public EccairsReportChange(String key, String reportStr) {
         this.key = key;
         this.reportStr = reportStr;
     }

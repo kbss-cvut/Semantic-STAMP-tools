@@ -19,7 +19,7 @@ import java.util.Set;
 public class EccairsRepositoryChange {
 
     private Calendar checkDate;
-    private final Map<String, EccairsReportChage> changes = new HashMap<>();
+    private final Map<String, EccairsReportChange> changes = new HashMap<>();
 
     public EccairsRepositoryChange(Calendar date) {
         this.checkDate = date;
@@ -37,7 +37,7 @@ public class EccairsRepositoryChange {
         this.checkDate = checkDate;
     }
 
-    public void addChangedReport(EccairsReportChage change) {
+    public void addChangedReport(EccairsReportChange change) {
         Objects.requireNonNull(change);
         Objects.requireNonNull(change.getKey());
         Objects.requireNonNull(change.getReportStr());
@@ -51,7 +51,7 @@ public class EccairsRepositoryChange {
         return changes.isEmpty();
     }
 
-    public EccairsReportChage getReportForEccairsKey(String key) {
+    public EccairsReportChange getReportForEccairsKey(String key) {
         return changes.get(key);
     }
 
@@ -59,7 +59,7 @@ public class EccairsRepositoryChange {
         return changes.size();
     }
 
-    public Map<String, EccairsReportChage> getChanges() {
+    public Map<String, EccairsReportChange> getChanges() {
         return changes;
     }
 }
