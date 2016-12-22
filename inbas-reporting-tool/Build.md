@@ -77,7 +77,7 @@ Toto nastavení zahrnuje:
 
 ##### Nastavení připojení na emailový server
 
-Nastavení připojení na emailový server se nachází v souboru `src/main/resources/ib-caa-email-config.properties`. Používá se k připojení a monitorování emailové schránky.
+Nastavení připojení na emailový server se nachází v souboru `src/main/resources/email-config.properties`. Používá se k připojení a monitorování emailové schránky.
 
 Příklad obsahu konfiguračního souboru odpovídá standardním vlastnostem IMAP připojení. Příkladem je :
 
@@ -92,7 +92,7 @@ Příklad obsahu konfiguračního souboru odpovídá standardním vlastnostem IM
 
 ##### Nastavení konfigurace pro transformaci ECCAIRS záznamů (E5X a E5F)
 
-Pro nastavení konfigurace Konfigurace URL k serveru se nachází v souboru: 'src/main/resources/eccairs-tools-config.properties'. Tento soubor obsahuje konfigurace, určené pro vývojáře systému, nikoliv pro běžnou obsluhu.
+Pro nastavení konfigurace Konfigurace URL k serveru se nachází v souboru: 'src/main/resources/eccairs-e5xml-parser.properties'. Tento soubor obsahuje konfigurace, určené pro vývojáře systému, nikoliv pro běžnou obsluhu.
 * `server` -  URL serveru, na kterém se nachází RDF repozitáře s ECCAIRS schematem
 * `factory` - jméno Java třídy pro načítání ECCAIRS schematu
 * `repoIdTemplate` - šablona pro verzované ID repozitáře s ECCAIRS schematem
