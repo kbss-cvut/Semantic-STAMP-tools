@@ -44,7 +44,7 @@ public class TestEccairsReportImportPersistenceFactory {
     @PostConstruct
     private void init() {
         final Map<String, String> properties = TestPersistenceFactory.getDefaultProperties();
-        properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.ucl.eccairs.report.model");
+        properties.put(JOPAPersistenceProperties.SCAN_PACKAGE, "cz.cvut.kbss.eccairs.report.model");
         properties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(URL_PROPERTY));
         properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, environment.getProperty(DRIVER_PROPERTY));
         if (environment.getProperty(USERNAME_PROPERTY) != null) {
