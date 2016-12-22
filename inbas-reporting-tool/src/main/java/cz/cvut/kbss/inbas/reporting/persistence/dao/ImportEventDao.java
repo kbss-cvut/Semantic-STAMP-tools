@@ -36,7 +36,7 @@ public class ImportEventDao extends BaseDao<ImportEvent>{
                     + "?im ?hasDate ?d. ?im ?hasTarget ?r.\n"
                     + "?r a ?reportType. ?r (?revisions)+ ?uri.\n"
                     + "FILTER NOT EXISTS{ ?r1 ?revisions ?r. FILTER (?r1 != ?r)}\n"
-                    + "}ORDER BY DSEC(?d)\n LIMIT 1");
+                    + "}ORDER BY DESC(?d)\n LIMIT 1");
             q.setParameter("hasDate", URI.create(Vocabulary.s_p_has_start_time));
             q.setParameter("hasTarget", URI.create(Vocabulary.s_p_has_target));
             q.setParameter("reportType", URI.create(cz.cvut.kbss.eccairs.Vocabulary.s_c_report_from_eccairs));
