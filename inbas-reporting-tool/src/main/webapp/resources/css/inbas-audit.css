@@ -618,3 +618,10 @@ button.in-input-line {
     margin-bottom: 0;
     vertical-align: middle;
 }
+
+.breakable {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+    hyphens: auto;
+}
