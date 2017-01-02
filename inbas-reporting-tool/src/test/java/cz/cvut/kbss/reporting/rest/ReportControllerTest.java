@@ -1,7 +1,6 @@
 package cz.cvut.kbss.reporting.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.exceptions.RollbackException;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
@@ -16,6 +15,7 @@ import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;

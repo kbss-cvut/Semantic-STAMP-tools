@@ -5,9 +5,9 @@
  */
 package cz.cvut.kbss.reporting.model.qam;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.kbss.reporting.model.AbstractEntity;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 
 import java.io.Serializable;
 import java.net.URI;

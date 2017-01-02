@@ -1,7 +1,7 @@
 package cz.cvut.kbss.reporting.model.util;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.Occurrence;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

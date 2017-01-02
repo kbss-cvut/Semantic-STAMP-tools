@@ -1,8 +1,8 @@
 package cz.cvut.kbss.reporting.environment.generator;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.Organization;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.qam.Answer;
 import cz.cvut.kbss.reporting.model.qam.Question;
 

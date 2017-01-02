@@ -1,7 +1,6 @@
 package cz.cvut.kbss.reporting.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.config.RestConfig;
@@ -9,6 +8,7 @@ import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.reporting.environment.config.TestSecurityConfig;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.rest.dto.model.PortalUser;
 import cz.cvut.kbss.reporting.security.portal.PortalEndpoint;
 import cz.cvut.kbss.reporting.security.portal.PortalEndpointType;

@@ -1,6 +1,5 @@
 package cz.cvut.kbss.reporting.rest.dto;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.dto.event.EventDto;
 import cz.cvut.kbss.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.reporting.dto.event.FactorGraphEdge;
@@ -10,6 +9,7 @@ import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Factor;
 import cz.cvut.kbss.reporting.model.Occurrence;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.util.HasUri;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;

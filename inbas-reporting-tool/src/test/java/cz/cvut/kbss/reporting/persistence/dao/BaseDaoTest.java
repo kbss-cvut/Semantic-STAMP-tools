@@ -1,10 +1,10 @@
 package cz.cvut.kbss.reporting.persistence.dao;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
 import org.junit.Test;

@@ -1,9 +1,9 @@
 package cz.cvut.kbss.reporting.service.validation;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Rule;
 import org.junit.Test;

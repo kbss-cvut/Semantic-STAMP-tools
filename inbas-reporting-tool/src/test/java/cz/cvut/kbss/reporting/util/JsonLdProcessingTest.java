@@ -1,8 +1,8 @@
 package cz.cvut.kbss.reporting.util;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.exception.JsonProcessingException;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import org.junit.Rule;
 import org.junit.Test;

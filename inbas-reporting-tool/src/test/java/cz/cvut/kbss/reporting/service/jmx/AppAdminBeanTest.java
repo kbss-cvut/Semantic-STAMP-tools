@@ -1,8 +1,8 @@
 package cz.cvut.kbss.reporting.service.jmx;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.cache.ReportCache;
 import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;

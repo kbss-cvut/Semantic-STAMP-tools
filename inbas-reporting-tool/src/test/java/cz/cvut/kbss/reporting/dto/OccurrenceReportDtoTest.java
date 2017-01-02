@@ -1,8 +1,8 @@
 package cz.cvut.kbss.reporting.dto;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapperImpl;
 import org.junit.Assert;

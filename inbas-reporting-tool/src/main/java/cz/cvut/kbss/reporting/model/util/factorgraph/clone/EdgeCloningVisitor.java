@@ -1,8 +1,8 @@
 package cz.cvut.kbss.reporting.model.util.factorgraph.clone;
 
-import cz.cvut.kbss.inbas.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Factor;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphEdgeVisitor;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
 
