@@ -272,7 +272,7 @@ module.exports = {
         'report.eccairs.create-new-revision.success': 'New report revision from latest ECCAIRS report successfully created',
         'report.eccairs.create-new-revision.error': 'Unable to create new revision from latest ECCAIRS. Server responded with message: ',
         'report.eccairs.label': 'ECCAIRS',
-        'report.safa.label': 'SAFA',
+        'report.safa.label': 'RAMP',
 
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',
