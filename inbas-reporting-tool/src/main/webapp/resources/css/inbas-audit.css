@@ -613,3 +613,8 @@ button.in-input-line {
 .report-type-label {
     margin-left: 0.5em;
 }
+
+.inline .form-group {
+    margin-bottom: 0;
+    vertical-align: middle;
+}
