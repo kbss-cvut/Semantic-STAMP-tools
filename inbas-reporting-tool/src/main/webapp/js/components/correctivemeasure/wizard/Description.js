@@ -37,11 +37,17 @@ class Description extends React.Component {
         this.setState({description: value});
     };
 
+    onKeyUp = (e) => {
+        if (e.keyCode === 13 && e.ctrlKey && this.state.description.trim().length !== 0) {
+            this.props.finish();
+        }
+    };
+
     render() {
         return <div>
             <Input type='textarea' rows='8' label={this.i18n('description') + '*'} ref={c => this.descriptionInput = c}
                    placeholder={this.i18n('report.corrective.description-placeholder')}
-                   value={this.state.description} onChange={this.onChange}
+                   value={this.state.description} onChange={this.onChange} onKeyUp={this.onKeyUp}
                    title={this.i18n('report.corrective.description-tooltip')}/>
         </div>;
     }
