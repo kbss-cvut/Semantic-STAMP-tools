@@ -65,11 +65,12 @@ body {
 }
 
 .wizard-step {
-    min-height: 650px;
+    min-height: 70vh;
 }
 
+/* Height of the wizard-step minus the button toolbar height */
 .wizard-step-content {
-    min-height: 600px;
+    min-height: calc(70vh - 30px);
 }
 
 .centered {
