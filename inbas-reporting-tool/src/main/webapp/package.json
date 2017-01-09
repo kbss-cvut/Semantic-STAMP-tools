@@ -17,7 +17,7 @@
     "classnames": "~2.2.3",
     "react-bootstrap-typeahead": "https://dev.inbas.cz/dist/react-bootstrap-typeahead-0.0.10.tgz",
     "jsonld-utils": "https://kbss.felk.cvut.cz/dist/jsonld-utils-0.0.6.tgz",
-    "semforms": "https://kbss.felk.cvut.cz/dist/semforms-0.0.9.tgz",
+    "semforms": "https://kbss.felk.cvut.cz/dist/semforms-0.1.0.tgz",
     "remarkable": "~1.6.2",
     "js-cookie": "~2.1.0",
     "halogen": "https://kbss.felk.cvut.cz/dist/halogen-0.2.1.tgz",
