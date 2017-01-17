@@ -1,30 +1,28 @@
 'use strict';
 
-var React = require('react');
-var Jumbotron = require('react-bootstrap').Jumbotron;
-var Grid = require('react-bootstrap').Grid;
-var Col = require('react-bootstrap').Col;
-var Row = require('react-bootstrap').Row;
+import React from "react";
+import {Col, Grid, Jumbotron, Row} from "react-bootstrap";
+import {FormattedMessage} from "react-intl";
+import I18nWrapper from "../../i18n/I18nWrapper";
+import injectIntl from "../../utils/injectIntl";
+import Tile from "./DashboardTile";
+import RecentlyEdited from "./RecentlyEditedReports";
 
-var injectIntl = require('../../utils/injectIntl');
-var FormattedMessage = require('react-intl').FormattedMessage;
+class Dashboard extends React.Component {
 
-var Tile = require('./DashboardTile').default;
-var RecentlyEdited = require('./RecentlyEditedReports');
-var I18nMixin = require('../../i18n/I18nMixin');
-
-var Dashboard = React.createClass({
-    mixins: [I18nMixin],
-
-    propTypes: {
+    static propTypes = {
         createEmptyReport: React.PropTypes.func.isRequired,
         showAllReports: React.PropTypes.func.isRequired,
         openReport: React.PropTypes.func.isRequired,
         userFirstName: React.PropTypes.string
-    },
+    };
 
+    constructor(props) {
+        super(props);
+        this.i18n = props.i18n;
+    }
 
-    render: function () {
+    render() {
         return <div className='row'>
             <div className='col-xs-8'>
                 <Jumbotron>
@@ -38,19 +36,19 @@ var Dashboard = React.createClass({
                 </div>
             </div>
         </div>;
-    },
+    }
 
-    renderTitle: function () {
+    renderTitle() {
         return <h3><FormattedMessage id='dashboard.welcome'
                                      values={{name: <span className='bold'>{this.props.userFirstName}</span>}}/>
         </h3>;
-    },
+    }
 
-    renderDashboardContent: function () {
+    renderDashboardContent() {
         return this._renderMainDashboard();
-    },
+    }
 
-    _renderMainDashboard: function () {
+    _renderMainDashboard() {
         return <Grid fluid={true}>
             <Row>
                 <Col xs={6} className='dashboard-sector'>
@@ -63,6 +61,6 @@ var Dashboard = React.createClass({
             </Row>
         </Grid>;
     }
-});
+}
 
-module.exports = injectIntl(Dashboard);
+export default injectIntl(I18nWrapper(Dashboard));
