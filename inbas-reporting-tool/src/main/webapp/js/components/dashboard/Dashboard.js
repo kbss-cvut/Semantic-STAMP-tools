@@ -24,13 +24,13 @@ class Dashboard extends React.Component {
 
     render() {
         return <div className='row'>
-            <div className='col-xs-8'>
+            <div className='dashboard-left'>
                 <Jumbotron>
                     {this.renderTitle()}
                     {this.renderDashboardContent()}
                 </Jumbotron>
             </div>
-            <div className='col-xs-4'>
+            <div className='dashboard-right'>
                 <div>
                     <RecentlyEdited reports={this.props.reports} onOpenReport={this.props.openReport}/>
                 </div>
