@@ -1,18 +1,18 @@
 'use strict';
 
-var Configuration = require('semforms').Configuration;
-var WizardGenerator = require('semforms').WizardGenerator;
+const Configuration = require('semforms').Configuration;
+const WizardGenerator = require('semforms').WizardGenerator;
 
-var Ajax = require('../../../utils/Ajax');
-var Actions = require('../../../actions/Actions');
-var FormGenStore = require('../../../stores/FormGenStore');
-var I18nStore = require('../../../stores/I18nStore');
-var JsonReferenceResolver = require('../../../utils/JsonReferenceResolver').default;
-var Logger = require('../../../utils/Logger');
-var Input = require('../../Input').default;
-var TypeaheadResultList = require('../../typeahead/TypeaheadResultList');
-var Utils = require('../../../utils/Utils');
-var WizardStore = require('../../../stores/WizardStore');
+const Ajax = require('../../../utils/Ajax');
+const Actions = require('../../../actions/Actions');
+const FormGenStore = require('../../../stores/FormGenStore');
+const I18nStore = require('../../../stores/I18nStore');
+const JsonReferenceResolver = require('../../../utils/JsonReferenceResolver').default;
+const Logger = require('../../../utils/Logger');
+const Input = require('../../Input').default;
+const TypeaheadResultList = require('../../typeahead/TypeaheadResultList');
+const Utils = require('../../../utils/Utils');
+const WizardStore = require('../../../stores/WizardStore');
 
 const EVENT_PARAM = 'event';
 const EVENT_TYPE_PARAM = 'eventType';
@@ -37,7 +37,7 @@ module.exports = {
     },
 
     generateWizard: function (report, event, wizardTitle, renderCallback) {
-        var url = this._initUrlWithParameters(event);
+        const url = this._initUrlWithParameters(event);
         JsonReferenceResolver.encodeReferences(report);
         Ajax.post(url, report).end((data) => {
             Configuration.actions = Actions;
@@ -54,8 +54,10 @@ module.exports = {
     },
 
     _initUrlWithParameters: function (event) {
-        var params = {};
-        params[EVENT_TYPE_PARAM] = encodeURIComponent(event.eventType);
+        const params = {};
+        if (event.eventTypes) {
+            params[EVENT_TYPE_PARAM] = encodeURIComponent(event.eventTypes[0]);
+        }
         params[EVENT_PARAM] = event.referenceId;
         return Utils.addParametersToUrl(FORM_GEN_URL, params);
     }

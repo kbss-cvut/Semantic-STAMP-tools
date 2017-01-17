@@ -6,13 +6,13 @@ import Ajax from "../../js/utils/Ajax";
 import Environment from "../environment/Environment";
 import Generator from "../environment/Generator";
 
-var InbasWizardGenerator = rewire("../../js/components/wizard/generator/WizardGenerator");
+const InbasWizardGenerator = rewire("../../js/components/wizard/generator/WizardGenerator");
 
 const WIZARD_TITLE = 'Test wizard';
 
 describe('WizardGenerator', () => {
 
-    var report, event,
+    let report, event,
         renderCallback;
 
     beforeEach(() => {
@@ -21,13 +21,13 @@ describe('WizardGenerator', () => {
         report = Generator.generateOccurrenceReport();
         event = {
             referenceId: 117,
-            eventType: Generator.getRandomUri(),
+            eventTypes: [Generator.getRandomUri()],
             question: {
                 uri: Generator.getRandomUri()
             }
         };
         renderCallback = jasmine.createSpy('renderCallback');
-        var logger = Environment.mockLogger();
+        const logger = Environment.mockLogger();
         InbasWizardGenerator.__set__('Logger', logger);
     });
 
@@ -37,11 +37,11 @@ describe('WizardGenerator', () => {
             InbasWizardGenerator.generateWizard(report, event, WIZARD_TITLE, renderCallback);
 
             expect(Ajax.post).toHaveBeenCalled();
-            var args = Ajax.post.calls.argsFor(0);
+            const args = Ajax.post.calls.argsFor(0);
             expect(args[1]).toEqual(report);
-            var url = args[0];
+            const url = args[0];
             expect(url.indexOf('event=' + event.referenceId)).not.toEqual(-1);
-            expect(url.indexOf('eventType=' + encodeURIComponent(event.eventType))).not.toEqual(-1);
+            expect(url.indexOf('eventType=' + encodeURIComponent(event.eventTypes[0]))).not.toEqual(-1);
         });
 
         it('renders default wizard when REST error occurs', () => {
@@ -60,9 +60,9 @@ describe('WizardGenerator', () => {
             InbasWizardGenerator.generateSummaryWizard(report, WIZARD_TITLE, renderCallback);
 
             expect(Ajax.post).toHaveBeenCalled();
-            var args = Ajax.post.calls.argsFor(0);
+            const args = Ajax.post.calls.argsFor(0);
             expect(args[1]).toEqual(report);
-            var url = args[0];
+            const url = args[0];
             expect(url.indexOf('=')).toEqual(-1);   // No params expected
         });
 
