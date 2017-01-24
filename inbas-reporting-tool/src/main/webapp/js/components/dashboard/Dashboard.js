@@ -1,50 +1,49 @@
 'use strict';
 
-var React = require('react');
-var Well = require('react-bootstrap').Well;
+import React from "react";
+import {Well} from "react-bootstrap";
+import {FormattedMessage} from "react-intl";
+import CreateReportDashboard from "./CreateReportDashboard";
+import DashboardStatistics from "../statistics/DashboardStatistics";
+import I18nWrapper from "../../i18n/I18nWrapper";
+import ImportReport from "./ImportReport";
+import injectIntl from "../../utils/injectIntl";
+import RecentlyEdited from "./RecentlyEditedReports";
+import UnprocessedReports from "./UnprocessedReports";
 
-var injectIntl = require('../../utils/injectIntl');
-var FormattedMessage = require('react-intl').FormattedMessage;
+class Dashboard extends React.Component {
 
-var CreateReportDashboard = require('./CreateReportDashboard').default;
-var DashboardStatistics = require('../statistics/DashboardStatistics').default;
-var ImportReport = require('./ImportReport').default;
-var RecentlyEdited = require('./RecentlyEditedReports');
-var UnprocessedReports = require('./UnprocessedReports').default;
-var I18nMixin = require('../../i18n/I18nMixin');
-
-var Dashboard = React.createClass({
-    mixins: [I18nMixin],
-
-    propTypes: {
+    static propTypes = {
         createEmptyReport: React.PropTypes.func.isRequired,
         importHandlers: React.PropTypes.object.isRequired,
         showAllReports: React.PropTypes.func.isRequired,
         openReport: React.PropTypes.func.isRequired,
         userFirstName: React.PropTypes.string,
         statistics: React.PropTypes.func
-    },
+    };
 
-    getInitialState: function () {
-        return {
+    constructor(props) {
+        super(props);
+        this.i18n = props.i18n;
+        this.state = {
             showImport: false
-        }
-    },
+        };
+    }
 
-    onUserLoaded: function (user) {
+    onUserLoaded = (user) => {
         this.setState({firstName: user.firstName});
-    },
+    };
 
-    importReport: function () {
+    importReport() {
         this.setState({showImport: true});
-    },
+    }
 
-    cancelImport: function () {
+    cancelImport = () => {
         this.setState({showImport: false});
-    },
+    };
 
 
-    render: function () {
+    render() {
         return <div style={{margin: '0 -15px 0 -15px'}}>
             <ImportReport importHandlers={this.props.importHandlers} onClose={this.cancelImport}
                           show={this.state.showImport}/>
@@ -61,9 +60,9 @@ var Dashboard = React.createClass({
                 </div>
             </div>
         </div>;
-    },
+    }
 
-    _renderDashboard: function () {
+    _renderDashboard() {
         return <Well>
             <h3 className='dashboard-welcome'>
                 <FormattedMessage id='dashboard.welcome'
@@ -72,6 +71,6 @@ var Dashboard = React.createClass({
             <CreateReportDashboard createReport={this.props.createEmptyReport} importReport={this.importReport}/>
         </Well>;
     }
-});
+}
 
-module.exports = injectIntl(Dashboard);
+export default injectIntl(I18nWrapper(Dashboard));
