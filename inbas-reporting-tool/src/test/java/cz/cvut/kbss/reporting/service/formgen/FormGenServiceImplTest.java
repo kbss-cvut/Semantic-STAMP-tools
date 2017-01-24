@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.service.formgen;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import cz.cvut.kbss.reporting.environment.config.DataDaoPersistenceConfig;
 import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.reporting.environment.config.TestServiceConfig;
@@ -10,7 +11,6 @@ import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
-import cz.cvut.kbss.reporting.persistence.sesame.DataDaoPersistenceConfig;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;

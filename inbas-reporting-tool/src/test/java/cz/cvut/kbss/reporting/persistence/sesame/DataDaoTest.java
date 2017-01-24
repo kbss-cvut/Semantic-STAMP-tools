@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.persistence.sesame;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
+import cz.cvut.kbss.reporting.environment.config.DataDaoPersistenceConfig;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.model.Organization;
 import info.aduna.iteration.Iterations;

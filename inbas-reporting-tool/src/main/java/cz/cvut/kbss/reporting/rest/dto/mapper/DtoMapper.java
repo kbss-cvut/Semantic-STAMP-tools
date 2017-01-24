@@ -29,7 +29,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.function.Function;
 
-@Mapper(componentModel = "spring", uses = {ReferenceMapper.class})
+@Mapper(componentModel = "spring")
 public abstract class DtoMapper {
 
     private final SplittableRandom random = new SplittableRandom();
