@@ -18,6 +18,10 @@
 - Distinguish ECCAIRS and SAFA reports in the UI (Feature #235).
 - Profile specific JMX bean names (Feature #232).
 
+### 0.7.20 - January 23, 2017
+- Made static resources cacheable (Feature #287).
+- Spring library upgrade.
+
 ### 0.7.19 - December 6, 2016
 - Implemented external report filtering - opening application using
 URI with report keys as query parameters shows a list of matching reports (Feature #236).

@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 @ControllerAdvice
 public class RestExceptionHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RestExceptionHandler.class);
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorInfo> resourceNotFound(HttpServletRequest request, NotFoundException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.NOT_FOUND);
@@ -61,6 +63,12 @@ public class RestExceptionHandler {
     @ExceptionHandler(PersistenceException.class)
     public ResponseEntity<ErrorInfo> persistenceException(HttpServletRequest request, PersistenceException e) {
         return new ResponseEntity<>(errorInfo(request, e.getCause()), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(OWLPersistenceException.class)
+    public ResponseEntity<ErrorInfo> jopaException(HttpServletRequest request, PersistenceException e) {
+        LOG.error("Persistence exception caught.", e);
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ReportImportingException.class)

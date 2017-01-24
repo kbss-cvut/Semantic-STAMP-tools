@@ -65,11 +65,12 @@ body {
 }
 
 .wizard-step {
-    min-height: 650px;
+    min-height: 70vh;
 }
 
+/* Height of the wizard-step minus the button toolbar height */
 .wizard-step-content {
-    min-height: 600px;
+    min-height: calc(70vh - 30px);
 }
 
 .centered {
@@ -258,6 +259,44 @@ td.actions button {
     left: 0;
     right: 0;
     overflow: hidden;
+}
+
+@media(min-width: 1265px) {
+    .dashboard-left {
+        width: 66.66666667%;
+    }
+
+    .dashboard-right {
+        width: 33.33333333%;
+    }
+
+    .dashboard-left,
+    .dashboard-right {
+        float: left;
+        position: relative;
+        min-height: 1px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+@media(max-width: 1264px) {
+    .dashboard-left {
+        width: 50%;
+    }
+
+    .dashboard-right {
+        width: 50%;
+    }
+
+    .dashboard-left,
+    .dashboard-right {
+        float: left;
+        position: relative;
+        min-height: 1px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
 }
 
 .factors-gantt {
@@ -767,4 +806,16 @@ button.in-input-line {
 
 .report-type-label {
     margin-left: 0.5em;
+}
+
+.inline .form-group {
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.breakable {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+    hyphens: auto;
 }

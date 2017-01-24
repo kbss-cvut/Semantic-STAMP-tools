@@ -48,11 +48,11 @@ var Dashboard = React.createClass({
         return <div style={{margin: '0 -15px 0 -15px'}}>
             <ImportReport importHandlers={this.props.importHandlers} onClose={this.cancelImport}
                           show={this.state.showImport}/>
-            <div className='col-xs-8'>
+            <div className='dashboard-left'>
                 {this._renderDashboard()}
                 <DashboardStatistics/>
             </div>
-            <div className='col-xs-4'>
+            <div className='dashboard-right'>
                 <div>
                     <RecentlyEdited reports={this.props.reports} onOpenReport={this.props.openReport}/>
                 </div>

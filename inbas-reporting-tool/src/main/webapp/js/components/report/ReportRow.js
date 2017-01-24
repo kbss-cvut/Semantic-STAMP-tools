@@ -67,7 +67,7 @@ class ReportRow extends React.Component {
 
         return <tr onDoubleClick={this.onDoubleClick}>
             <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + report.key}
-                                          title={this.i18n('reports.open-tooltip')}>{report.identification}</a>
+                                          title={this.i18n('reports.open-tooltip')} className='breakable'>{report.identification}</a>
             </td>
             <td className='report-row content-center'>{Utils.formatDate(report.date)}</td>
             <td className='report-row'>{report.renderMoreInfo()}</td>
