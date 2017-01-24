@@ -40,6 +40,9 @@ class SmallScreenFactors extends React.Component {
     }
 
     render() {
+        if (!this.props.report.factorGraph) {
+            return null;
+        }
         return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
             <Table striped bordered condensed hover>
                 <thead>

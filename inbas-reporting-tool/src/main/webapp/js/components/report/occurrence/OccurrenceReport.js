@@ -5,6 +5,7 @@ const Button = require('react-bootstrap').Button;
 const ButtonToolbar = require('react-bootstrap').ButtonToolbar;
 const Panel = require('react-bootstrap').Panel;
 const assign = require('object-assign');
+const device = require('device.js');
 const injectIntl = require('../../../utils/injectIntl');
 
 const Actions = require('../../../actions/Actions');
@@ -148,9 +149,10 @@ const OccurrenceReport = React.createClass({
     },
 
     _renderFactors: function () {
-        const smallScreen = true;
-        return smallScreen ? <SmallScreenFactors report={this.props.report} onChange={this.onChanges}/> :
-            <Factors ref='factors' report={report} rootAttribute='occurrence' onChange={this.onChanges}/>;
+        const dev = device();
+        return dev.tablet() || dev.mobile() ?
+            <SmallScreenFactors report={this.props.report} onChange={this.onChanges}/> :
+            <Factors ref='factors' report={this.props.report} rootAttribute='occurrence' onChange={this.onChanges}/>;
     },
 
     renderButtons: function () {
