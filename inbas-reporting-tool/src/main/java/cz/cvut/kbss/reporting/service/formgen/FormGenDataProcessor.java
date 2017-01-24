@@ -18,13 +18,11 @@ import java.util.Objects;
  *
  * @param <T>
  */
-class FormGenDataProcessor<T> {
+abstract class FormGenDataProcessor<T> {
 
-    private final FormGenDao<T> dao;
     Map<String, String> params;
 
-    FormGenDataProcessor(FormGenDao<T> dao) {
-        this.dao = dao;
+    FormGenDataProcessor() {
     }
 
     /**
@@ -37,7 +35,7 @@ class FormGenDataProcessor<T> {
         Objects.requireNonNull(data);
         Objects.requireNonNull(params);
 
-        final Map<String, URI> contexts = dao.persist(data);
+        final Map<String, URI> contexts = getPrimaryDao().persist(data);
         this.params = new HashMap<>(params);
         contexts.entrySet().forEach(e -> this.params.put(e.getKey(), e.getValue().toString()));
     }
@@ -50,4 +48,6 @@ class FormGenDataProcessor<T> {
     Map<String, String> getParams() {
         return Collections.unmodifiableMap(params);
     }
+
+    abstract FormGenDao<T> getPrimaryDao();
 }

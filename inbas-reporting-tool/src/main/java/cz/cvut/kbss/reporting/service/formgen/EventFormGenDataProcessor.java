@@ -8,25 +8,44 @@ import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.persistence.dao.formgen.FormGenDao;
+import cz.cvut.kbss.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
+import cz.cvut.kbss.reporting.service.security.SecurityUtils;
+import cz.cvut.kbss.reporting.util.Constants;
+import cz.cvut.kbss.reporting.util.IdentificationUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.util.Map;
 
-class EventFormGenDataProcessor extends FormGenDataProcessor<OccurrenceReport> {
+@Component
+public class EventFormGenDataProcessor extends FormGenDataProcessor<OccurrenceReport> {
 
     /**
      * Event URI parameter for the form generator.
      */
     static final String EVENT_PARAM = "event";
 
-    EventFormGenDataProcessor(FormGenDao<OccurrenceReport> dao) {
-        super(dao);
+    private final OccurrenceReportFormGenDao dao;
+
+    private final SecurityUtils securityUtils;
+
+    @Autowired
+    public EventFormGenDataProcessor(OccurrenceReportFormGenDao dao, SecurityUtils securityUtils) {
+        this.dao = dao;
+        this.securityUtils = securityUtils;
+    }
+
+    @Override
+    FormGenDao<OccurrenceReport> getPrimaryDao() {
+        return dao;
     }
 
     @Override
     public void process(OccurrenceReport data, Map<String, String> params) {
         final Integer referenceId = getReferenceId(params);
+        prepareReportForPersist(data);
         super.process(data, params);
         if (referenceId == null) {
             return;
@@ -53,6 +72,21 @@ class EventFormGenDataProcessor extends FormGenDataProcessor<OccurrenceReport> {
             throw new IllegalArgumentException("Event reference id " + params.get(EVENT_PARAM) + " is not valid.");
         }
         return referenceId;
+    }
+
+    private void prepareReportForPersist(OccurrenceReport report) {
+        if (report.getAuthor() == null) {
+            report.setAuthor(securityUtils.getCurrentUser());
+        }
+        if (report.getCorrectiveMeasures() != null) {
+            report.getCorrectiveMeasures().clear();
+        }
+        if (report.getRevision() == null) {
+            report.setRevision(Constants.INITIAL_REVISION);
+        }
+        if (report.getFileNumber() == null) {
+            report.setFileNumber(IdentificationUtils.generateFileNumber());
+        }
     }
 
     private static final class SearchByReferenceVisitor implements FactorGraphNodeVisitor {

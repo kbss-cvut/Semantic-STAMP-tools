@@ -29,15 +29,8 @@ public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
 
     @Override
     void prePersist(OccurrenceReport instance, EntityManager em, Descriptor descriptor) {
-        // We need to set some default values (if necessary), so that the instance passes IC validation
         if (instance.getKey() == null || instance.getKey().isEmpty()) {
             instance.setKey(IdentificationUtils.generateKey());
-        }
-        if (instance.getRevision() == null) {
-            instance.setRevision(0);
-        }
-        if (instance.getFileNumber() == null) {
-            instance.setFileNumber(System.currentTimeMillis());
         }
         if (instance.getOccurrence().getKey() == null || instance.getOccurrence().getKey().isEmpty()) {
             instance.getOccurrence().setKey(IdentificationUtils.generateKey());
@@ -49,9 +42,6 @@ public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
         }
         persistEventsIfNecessary(instance.getOccurrence(), em, descriptor);
         em.persist(instance.getOccurrence(), descriptor);
-        if (instance.getCorrectiveMeasures() != null) {
-            instance.getCorrectiveMeasures().clear();
-        }
         super.prePersist(instance, em, descriptor);
     }
 

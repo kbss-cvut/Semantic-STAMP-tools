@@ -9,7 +9,6 @@ import cz.cvut.kbss.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.qam.Answer;
 import cz.cvut.kbss.reporting.model.qam.Question;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
@@ -73,8 +72,6 @@ public class OccurrenceReportFormGenDaoTest {
             connection = repository.getConnection();
             assertFalse(connection.getContextIDs().hasNext());
             final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
-            report.setFileNumber(null);
-            report.setRevision(null);
             report.getAuthor().generateUri();
             final Map<String, URI> ctx = dao.persist(report);
             assertTrue(connection.getContextIDs().hasNext());
@@ -105,24 +102,6 @@ public class OccurrenceReportFormGenDaoTest {
         reportDao.persist(report);
         final Map<String, URI> contexts = dao.persist(report);
         assertFalse(contexts.isEmpty());
-    }
-
-    @Test
-    public void persistRemovesCorrectiveMeasuresFromReport() throws Exception {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
-        report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
-        report.getAuthor().generateUri();
-        assertFalse(report.getCorrectiveMeasures().isEmpty());
-        dao.persist(report);
-        assertTrue(report.getCorrectiveMeasures().isEmpty());
-        final EntityManager em = emf.createEntityManager();
-        try {
-            assertFalse(
-                    em.createNativeQuery("ASK { ?x a ?measure . }", Boolean.class).setParameter("measure", URI.create(
-                            Vocabulary.s_c_corrective_measure_request)).getSingleResult());
-        } finally {
-            em.close();
-        }
     }
 
     @Test

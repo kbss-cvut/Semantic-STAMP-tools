@@ -1,7 +1,6 @@
 package cz.cvut.kbss.reporting.service.formgen;
 
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.data.DataLoader;
@@ -28,7 +27,7 @@ public class FormGenServiceImpl implements FormGenService {
     static final String REPOSITORY_URL_PARAM = "repositoryUrl";
 
     @Autowired
-    private OccurrenceReportFormGenDao occurrenceReportFormGenDao;
+    private FormGenDataProcessor<OccurrenceReport> eventFormGenDataProcessor;
 
     @Autowired
     @Qualifier("remoteDataLoader")
@@ -41,7 +40,7 @@ public class FormGenServiceImpl implements FormGenService {
 
     @PostConstruct
     private void registerProcessors() {
-        dataProcessors.put(OccurrenceReport.class, new EventFormGenDataProcessor(occurrenceReportFormGenDao));
+        dataProcessors.put(OccurrenceReport.class, eventFormGenDataProcessor);
     }
 
     @Override
