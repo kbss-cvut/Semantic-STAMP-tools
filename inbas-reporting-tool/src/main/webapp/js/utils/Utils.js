@@ -16,7 +16,7 @@ const URL_CONTAINS_QUERY = /^.+\?.+=.+$/;
 
 module.exports = {
     /**
-     * Formats the specified date into DD-MM-YY HH:mm
+     * Formats the specified date into DD-MM-YY HH:mm:ss
      * @param date The date to format
      */
     formatDate: function (date = null) {
@@ -31,8 +31,9 @@ module.exports = {
             year = (date.getFullYear() % 100).toString(),
             h = date.getHours(),
             hour = h < 10 ? '0' + h : h.toString(),
-            minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes().toString();
-        return (day + '-' + month + '-' + year + ' ' + hour + ':' + minute);
+            minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes().toString(),
+            second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds().toString();
+        return (day + '-' + month + '-' + year + ' ' + hour + ':' + minute + ':' + second);
     },
 
     /**

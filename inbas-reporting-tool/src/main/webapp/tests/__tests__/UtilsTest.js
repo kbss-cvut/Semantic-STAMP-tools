@@ -23,7 +23,7 @@ describe('Utility functions tests', function () {
         it('formats date when it is time in millis', () => {
             const date = Date.now(),
                 result = Utils.formatDate(date);
-            expect(result).toMatch(/[0-9]{2}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}/);
+            expect(result).toMatch(/[0-9]{2}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}/);
         });
 
         it('returns empty string for undefined argument', () => {

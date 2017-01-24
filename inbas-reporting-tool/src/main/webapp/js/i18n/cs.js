@@ -203,6 +203,8 @@ module.exports = {
         'factors.detail.delete.title': 'Smazat faktor?',
         'factors.detail.delete.text': 'Určitě chcete smazat tento faktor?',
         'factors.detail.wizard-loading': 'Připravuji formulář...',
+        'factors.smallscreen.start': 'Počátek',
+        'factors.smallscreen.end': 'Konec',
 
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',

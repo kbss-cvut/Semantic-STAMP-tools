@@ -200,6 +200,8 @@ module.exports = {
         'factors.detail.delete.title': 'Delete factor?',
         'factors.detail.delete.text': 'Are you sure you want to remove this factor?',
         'factors.detail.wizard-loading': 'Generating form...',
+        'factors.smallscreen.start': 'Start',
+        'factors.smallscreen.end': 'End',
 
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',
