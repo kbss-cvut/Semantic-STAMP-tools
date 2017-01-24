@@ -1,5 +1,10 @@
 # SISEL Release Notes
 
+### 0.10.1 - January 24, 2016
+- Fixed bug in form generator data saving (Bug #306).
+- Made static resources cacheable (Feature #287).
+- Spring library upgrade.
+
 ### 0.10.0 - December 22, 2016
 - Support for automatic synchronization with ECCAIRS.
 
