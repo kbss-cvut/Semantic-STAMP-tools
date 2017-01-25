@@ -2,9 +2,12 @@
 
 import React from "react";
 import {Button, Panel, Table} from "react-bootstrap";
+import assign from "object-assign";
 import JsonLdUtils from "jsonld-utils";
 import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
+import DeleteFactorDialog from "../DeleteFactorDialog";
+import FactorEditRow from "./FactorEditRow";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import ObjectTypeResolver from "../../../utils/ObjectTypeResolver";
@@ -22,6 +25,15 @@ class SmallScreenFactors extends React.Component {
     constructor(props) {
         super(props);
         this.i18n = props.i18n;
+        this.state = {
+            showDeleteDialog: false,
+            editRow: false,
+            currentFactor: null,
+            factorGraph: {
+                nodes: props.report.factorGraph ? props.report.factorGraph.nodes.slice() : [],
+                links: props.report.factorGraph ? props.report.factorGraph.links : []
+            }
+        };
     }
 
     componentDidMount() {
@@ -39,11 +51,35 @@ class SmallScreenFactors extends React.Component {
         this.unsubscribe();
     }
 
+    _onDeleteClick = (factor) => {
+        this.setState({showDeleteDialog: true, currentFactor: factor});
+    };
+
+    _onDeleteCancel = () => {
+        this.setState({showDeleteDialog: false, currentFactor: null});
+    };
+
+    _onDeleteSubmit = () => {
+        const newFactorGraph = assign({}, this.state.factorGraph);
+        newFactorGraph.nodes.splice(newFactorGraph.nodes.indexOf(this.state.currentFactor), 1);
+        this.setState({factorGraph: newFactorGraph, currentFactor: null, showDeleteDialog: false});
+    };
+
+    _onEditClick = (factor) => {
+        this.setState({editRow: true, currentFactor: factor});
+    };
+
+    _onEditCancel = () => {
+        this.setState({editRow: false, currentFactor: null});
+    };
+
     render() {
         if (!this.props.report.factorGraph) {
             return null;
         }
         return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
+            <DeleteFactorDialog onSubmit={this._onDeleteSubmit} onCancel={this._onDeleteCancel}
+                                show={this.state.showDeleteDialog}/>
             <Table striped bordered condensed hover>
                 <thead>
                 <tr>
@@ -61,16 +97,24 @@ class SmallScreenFactors extends React.Component {
     }
 
     _renderFactors() {
-        const factorGraph = this.props.report.factorGraph,
+        const factorGraph = this.state.factorGraph,
             rows = [],
-            eventTypes = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE);
+            eventTypes = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE),
+            handlers = {
+                onDelete: this._onDeleteClick,
+                onEdit: this._onEditClick,
+                onEditCancel: this._onEditCancel
+            };
         let node;
-        for (let i = 0, len = factorGraph.nodes.length; i < len; i++) {
+        // Skip node 0 - the occurrence
+        for (let i = 1, len = factorGraph.nodes.length; i < len; i++) {
             node = factorGraph.nodes[i];
-            if (node === this.props.report.occurrence) {
-                continue;
+            if (this.state.editRow && node === this.state.currentFactor) {
+                rows.push(<FactorEditRow key={node.uri ? node.uri : 'node_' + i} factor={node} handlers={handlers}/>);
+            } else {
+                rows.push(<FactorRow key={node.uri ? node.uri : 'node_' + i} node={node} eventTypes={eventTypes}
+                                     handlers={handlers}/>);
             }
-            rows.push(<FactorRow key={node.uri ? node.uri : 'node_' + i} node={node} eventTypes={eventTypes}/>);
         }
         return rows;
     }
@@ -86,15 +130,18 @@ let FactorRow = (props) => {
         <td className='report-row content-center'>{Utils.formatDate(node.endTime)}</td>
         <td className='report-row actions'>
             <Button bsStyle='primary' bsSize='small'>{props.i18n('factors.detail.details')}</Button>
-            <Button bsStyle='primary' bsSize='small'>{props.i18n('table-edit')}</Button>
-            <Button bsStyle='warning' bsSize='small'>{props.i18n('delete')}</Button>
+            <Button bsStyle='primary' bsSize='small'
+                    onClick={(e) => props.handlers.onEdit(node)}>{props.i18n('table-edit')}</Button>
+            <Button bsStyle='warning' bsSize='small'
+                    onClick={(e) => props.handlers.onDelete(node)}>{props.i18n('delete')}</Button>
         </td>
     </tr>;
 };
 
 FactorRow.propTypes = {
     node: React.PropTypes.object.isRequired,
-    eventTypes: React.PropTypes.array.isRequired
+    eventTypes: React.PropTypes.array.isRequired,
+    handlers: React.PropTypes.object.isRequired
 };
 
 FactorRow = injectIntl(I18nWrapper(FactorRow));

@@ -21,6 +21,7 @@ var FormattedMessage = require('react-intl').FormattedMessage;
 var JsonLdUtils = require('jsonld-utils').default;
 
 var Constants = require('../../constants/Constants');
+var DeleteFactorDialog = require('./DeleteFactorDialog').default;
 var EventTypeTypeahead = require('../typeahead/EventTypeTypeahead');
 var Mask = require('../Mask').default;
 var Utils = require('../../utils/Utils');
@@ -208,7 +209,7 @@ var FactorDetail = React.createClass({
 
                 <Modal.Body ref={comp => this._modalContent = comp}>
                     {this._renderMask()}
-                    {this.renderDeleteDialog()}
+                    <DeleteFactorDialog onSubmit={this.onDeleteFactor} onCancel={this.onCancelDelete} show={this.state.showDeleteDialog}/>
                     <div className='row'>
                         {eventTypeBadge}
                         <div className={eventTypeClassNames}>
@@ -329,22 +330,6 @@ var FactorDetail = React.createClass({
             <Button bsStyle='primary' bsSize='small' onClick={this.onOpenDetails}
                     disabled={!this.state.eventType}>{this.i18n('factors.detail.details')}</Button>
         </div>;
-    },
-
-    renderDeleteDialog: function () {
-        return <Modal show={this.state.showDeleteDialog} onHide={this.onCancelDelete}>
-            <Modal.Header>
-                <Modal.Title>{this.i18n('factors.detail.delete.title')}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                {this.i18n('factors.detail.delete.text')}
-            </Modal.Body>
-            <Modal.Footer>
-                <Button bsSize='small' bsStyle='warning'
-                        onClick={this.onDeleteFactor}>{this.i18n('delete')}</Button>
-                <Button bsSize='small' onClick={this.onCancelDelete}>{this.i18n('cancel')}</Button>
-            </Modal.Footer>
-        </Modal>;
     }
 });
 
