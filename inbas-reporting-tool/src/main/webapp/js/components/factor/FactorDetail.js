@@ -63,7 +63,7 @@ var FactorDetail = React.createClass({
         var factor = this.props.factor;
         return {
             showDeleteDialog: false,
-            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventType, OptionsStore.getOptions('eventType'))),
+            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE))),
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement,
@@ -209,7 +209,8 @@ var FactorDetail = React.createClass({
 
                 <Modal.Body ref={comp => this._modalContent = comp}>
                     {this._renderMask()}
-                    <DeleteFactorDialog onSubmit={this.onDeleteFactor} onCancel={this.onCancelDelete} show={this.state.showDeleteDialog}/>
+                    <DeleteFactorDialog onSubmit={this.onDeleteFactor} onCancel={this.onCancelDelete}
+                                        show={this.state.showDeleteDialog}/>
                     <div className='row'>
                         {eventTypeBadge}
                         <div className={eventTypeClassNames}>
@@ -278,9 +279,9 @@ var FactorDetail = React.createClass({
         }
         styleInfo = FactorStyleInfo.getStyleInfo(type.type);
         return styleInfo.value ? <div className='col-xs-1'>
-            <Label bsStyle={styleInfo.bsStyle} title={styleInfo.title}
-                   className='event-type-label'>{styleInfo.value}</Label>
-        </div> : null;
+                <Label bsStyle={styleInfo.bsStyle} title={styleInfo.title}
+                       className='event-type-label'>{styleInfo.value}</Label>
+            </div> : null;
     },
 
     _renderEventTypeLink: function () {
@@ -319,7 +320,7 @@ var FactorDetail = React.createClass({
 
     renderDeleteButton: function () {
         return this.props.factor.isNew ? null : (
-            <Button bsSize='small' bsStyle='warning' onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>);
+                <Button bsSize='small' bsStyle='warning' onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>);
     },
 
     renderWizardButton: function () {

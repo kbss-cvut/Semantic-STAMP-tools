@@ -2,6 +2,7 @@
 
 import React from "react";
 import TestUtils from "react-addons-test-utils";
+import assign from "object-assign";
 import Actions from "../../js/actions/Actions";
 import Environment from "../environment/Environment";
 import Generator from "../environment/Generator";
@@ -59,5 +60,19 @@ describe('SmallScreenFactors', () => {
         const editableAfter = TestUtils.scryRenderedComponentsWithType(component,
             require('../../js/components/factor/smallscreen/FactorEditRow').default.wrappedComponent);
         expect(editableAfter.length).toEqual(1);
+    });
+
+    it('replaces edited factor with its updated version on edit finish', () => {
+        const toEdit = report.factorGraph.nodes[Generator.getRandomPositiveInt(1, report.factorGraph.nodes.length)],
+            update = assign({}, toEdit),
+            component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}/>);
+        component._onEditClick(toEdit);
+        update.eventType = Generator.randomCategory().id;
+        component._onEditFinish(update);
+        const factorGraph = component.state.factorGraph;
+        expect(factorGraph.nodes.indexOf(toEdit)).toEqual(-1);
+        expect(factorGraph.nodes.indexOf(update)).not.toEqual(-1);
+        expect(component.state.currentFactor).toBeNull();
+        expect(component.state.editRow).toBeFalsy();
     });
 });

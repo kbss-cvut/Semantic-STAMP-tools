@@ -73,6 +73,12 @@ class SmallScreenFactors extends React.Component {
         this.setState({editRow: false, currentFactor: null});
     };
 
+    _onEditFinish = (factor) => {
+        const newFactorGraph = assign({}, this.state.factorGraph);
+        newFactorGraph.nodes.splice(newFactorGraph.nodes.indexOf(this.state.currentFactor), 1, factor);
+        this.setState({factorGraph: newFactorGraph, currentFactor: null, editRow: false});
+    };
+
     render() {
         if (!this.props.report.factorGraph) {
             return null;
@@ -103,7 +109,8 @@ class SmallScreenFactors extends React.Component {
             handlers = {
                 onDelete: this._onDeleteClick,
                 onEdit: this._onEditClick,
-                onEditCancel: this._onEditCancel
+                onEditCancel: this._onEditCancel,
+                onSave: this._onEditFinish
             };
         let node;
         // Skip node 0 - the occurrence
