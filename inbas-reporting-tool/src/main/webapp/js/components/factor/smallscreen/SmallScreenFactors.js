@@ -4,17 +4,21 @@ import React from "react";
 import {Button, Glyphicon, Panel, Table} from "react-bootstrap";
 import assign from "object-assign";
 import JsonLdUtils from "jsonld-utils";
+import {QuestionAnswerProcessor} from "semforms";
 import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
 import DeleteFactorDialog from "../DeleteFactorDialog";
 import FactorEditRow from "./FactorEditRow";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
+import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 import ObjectTypeResolver from "../../../utils/ObjectTypeResolver";
 import OptionsStore from "../../../stores/OptionsStore";
 import ReportFactory from "../../../model/ReportFactory";
 import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
+import WizardGenerator from "../../wizard/generator/WizardGenerator";
+import WizardWindow from "../../wizard/WizardWindow";
 
 class SmallScreenFactors extends React.Component {
 
@@ -38,7 +42,9 @@ class SmallScreenFactors extends React.Component {
             factorGraph: {
                 nodes: report.factorGraph ? report.factorGraph.nodes.slice() : [],
                 edges: report.factorGraph ? report.factorGraph.edges : []
-            }
+            },
+            wizardOpen: false,
+            wizardProperties: null
         };
     }
 
@@ -86,10 +92,16 @@ class SmallScreenFactors extends React.Component {
     };
 
     _onEditFinish = (factor) => {
+        const update = this._updateFactor(factor);
+        update.editRow = false;
+        this.setState(update);
+    };
+
+    _updateFactor(factor) {
         const newFactorGraph = assign({}, this.state.factorGraph);
         newFactorGraph.nodes.splice(newFactorGraph.nodes.indexOf(this.state.currentFactor), 1, factor);
-        this.setState({factorGraph: newFactorGraph, currentFactor: null, editRow: false});
-    };
+        return {factorGraph: newFactorGraph, currentFactor: null};
+    }
 
     _onAdd = () => {
         const rootNode = this.props.report[this.props.rootAttribute],
@@ -113,6 +125,36 @@ class SmallScreenFactors extends React.Component {
         return this.state.factorGraph;
     }
 
+    _onOpenDetails = (factor, label) => {
+        const report = assign({}, this.props.report);
+        report.factorGraph = this.state.factorGraph;
+        this.props.loadingOn();
+        this.setState({currentFactor: factor});
+        WizardGenerator.generateWizard(report, factor, label, this._openDetailsWizard);
+    };
+
+    _openDetailsWizard = (wizardProperties) => {
+        this.props.loadingOff();
+        wizardProperties.onFinish = this._onUpdateFactorDetails;
+        this.setState({
+            wizardOpen: true,
+            wizardProperties: wizardProperties
+        });
+    };
+
+    _onCloseDetails = () => {
+        this.setState({wizardOpen: false});
+    };
+
+    _onUpdateFactorDetails = (data, closeCallback) => {
+        const factor = assign({}, this.state.currentFactor);
+
+        factor.question = QuestionAnswerProcessor.buildQuestionAnswerModel(data.data, data.stepData);
+        const update = this._updateFactor(factor);
+        this.setState({update});
+        closeCallback();
+    };
+
     render() {
         if (!this.props.report.factorGraph) {
             return null;
@@ -121,6 +163,8 @@ class SmallScreenFactors extends React.Component {
         return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
             <DeleteFactorDialog onSubmit={this._onDeleteSubmit} onCancel={this._onDeleteCancel}
                                 show={this.state.showDeleteDialog}/>
+            <WizardWindow {...this.state.wizardProperties} show={this.state.wizardOpen} onHide={this._onCloseDetails}
+                          enableForwardSkip={true}/>
             {table}
             <div className={table ? 'float-right' : ''}>
                 <Button bsStyle='primary' bsSize='small' onClick={this._onAdd}
@@ -156,7 +200,8 @@ class SmallScreenFactors extends React.Component {
                 onDelete: this._onDeleteClick,
                 onEdit: this._onEditClick,
                 onEditCancel: this._onEditCancel,
-                onSave: this._onEditFinish
+                onSave: this._onEditFinish,
+                onDetails: this._onOpenDetails
             };
         let node;
         // Skip node 0 - the root node
@@ -182,7 +227,8 @@ let FactorRow = (props) => {
         <td className='report-row content-center'>{Utils.formatDate(node.startTime)}</td>
         <td className='report-row content-center'>{Utils.formatDate(node.endTime)}</td>
         <td className='report-row actions'>
-            <Button bsStyle='primary' bsSize='small'>{props.i18n('factors.detail.details')}</Button>
+            <Button bsStyle='primary' bsSize='small'
+                    onClick={(e) => props.handlers.onDetails(node, text)}>{props.i18n('factors.detail.details')}</Button>
             <Button bsStyle='primary' bsSize='small'
                     onClick={(e) => props.handlers.onEdit(node)}>{props.i18n('table-edit')}</Button>
             <Button bsStyle='warning' bsSize='small'
@@ -199,4 +245,4 @@ FactorRow.propTypes = {
 
 FactorRow = injectIntl(I18nWrapper(FactorRow));
 
-export default injectIntl(I18nWrapper(SmallScreenFactors), {withRef: true});
+export default injectIntl(I18nWrapper(LoadingWrapper(SmallScreenFactors)), {withRef: true});

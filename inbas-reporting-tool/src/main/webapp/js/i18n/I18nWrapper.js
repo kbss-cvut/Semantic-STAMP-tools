@@ -17,7 +17,9 @@ const I18nWrapper = (Component) => class extends React.Component {
     };
 
     getWrappedComponent() {
-        return this._wrappedComponent;
+        // Enable composition of multiple HOCs.
+        return this._wrappedComponent && this._wrappedComponent.getWrappedComponent ?
+            this._wrappedComponent.getWrappedComponent() : this._wrappedComponent;
     }
 
     render() {
