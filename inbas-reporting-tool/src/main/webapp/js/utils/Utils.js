@@ -135,6 +135,21 @@ module.exports = {
     },
 
     /**
+     * Generates new reference id, which is unique among the reference ids of the specified nodes.
+     * @param nodes Existing nodes with reference ids to avoid
+     * @return {number} The newly generated reference id
+     */
+    generateNewReferenceId: function (nodes) {
+        let refId = 0;
+        for (let i = 0, len = nodes.length; i < len; i++) {
+            if (nodes[i].referenceId && refId < nodes[i].referenceId) {
+                refId = nodes[i].referenceId;
+            }
+        }
+        return refId + 1;
+    },
+
+    /**
      * Maps the specified id to a name based on a matching item.
      *
      * This function assumes that the items have been processed by {@link #jsonLdToTypeaheadOption), so the id should

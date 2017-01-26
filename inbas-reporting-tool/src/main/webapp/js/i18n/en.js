@@ -202,6 +202,7 @@ module.exports = {
         'factors.detail.wizard-loading': 'Generating form...',
         'factors.smallscreen.start': 'Start',
         'factors.smallscreen.end': 'End',
+        'factors.smallscreen.add-tooltip': 'Add event',
 
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',

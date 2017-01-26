@@ -52,10 +52,9 @@ const OccurrenceReport = React.createClass({
     },
 
     onSave: function () {
-        const report = this.props.report,
-            factors = this.refs.factors.getWrappedInstance();
+        const report = this.props.report;
         this.onLoading();
-        report.factorGraph = factors.getFactorGraph();
+        report.factorGraph = this.factors.getFactorGraph();
         if (report.isNew) {
             Actions.createReport(report, this.onSaveSuccess, this.onSaveError);
         } else {
@@ -151,8 +150,11 @@ const OccurrenceReport = React.createClass({
     _renderFactors: function () {
         const dev = device();
         return dev.tablet() || dev.mobile() ?
-            <SmallScreenFactors report={this.props.report} onChange={this.onChanges}/> :
-            <Factors ref='factors' report={this.props.report} rootAttribute='occurrence' onChange={this.onChanges}/>;
+            <SmallScreenFactors ref={(c) => this.factors = c ? c.getWrappedInstance().getWrappedComponent() : c}
+                                report={this.props.report} rootAttribute='occurrence' onChange={this.onChanges}/> :
+            <Factors ref={(c) => this.factors = c ? c.getWrappedInstance() : c} report={this.props.report}
+                     rootAttribute='occurrence'
+                     onChange={this.onChanges}/>;
     },
 
     renderButtons: function () {

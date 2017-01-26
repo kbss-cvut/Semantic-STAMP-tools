@@ -1,7 +1,7 @@
 'use strict';
 
 import React from "react";
-import {Button, Panel, Table} from "react-bootstrap";
+import {Button, Glyphicon, Panel, Table} from "react-bootstrap";
 import assign from "object-assign";
 import JsonLdUtils from "jsonld-utils";
 import Actions from "../../../actions/Actions";
@@ -12,6 +12,7 @@ import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import ObjectTypeResolver from "../../../utils/ObjectTypeResolver";
 import OptionsStore from "../../../stores/OptionsStore";
+import ReportFactory from "../../../model/ReportFactory";
 import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 
@@ -19,19 +20,24 @@ class SmallScreenFactors extends React.Component {
 
     static propTypes = {
         report: React.PropTypes.object.isRequired,
-        onChange: React.PropTypes.func.isRequired
+        onChange: React.PropTypes.func.isRequired,
+        rootAttribute: React.PropTypes.string.isRequired
     };
 
     constructor(props) {
         super(props);
         this.i18n = props.i18n;
-        this.state = {
+        this.state = SmallScreenFactors._getInitialState(props.report);
+    }
+
+    static _getInitialState(report) {
+        return {
             showDeleteDialog: false,
             editRow: false,
             currentFactor: null,
             factorGraph: {
-                nodes: props.report.factorGraph ? props.report.factorGraph.nodes.slice() : [],
-                links: props.report.factorGraph ? props.report.factorGraph.links : []
+                nodes: report.factorGraph ? report.factorGraph.nodes.slice() : [],
+                edges: report.factorGraph ? report.factorGraph.edges : []
             }
         };
     }
@@ -49,6 +55,12 @@ class SmallScreenFactors extends React.Component {
 
     componentWillUnmount() {
         this.unsubscribe();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.report !== prevProps.report) {
+            this.setState(SmallScreenFactors._getInitialState(this.props.report));
+        }
     }
 
     _onDeleteClick = (factor) => {
@@ -79,14 +91,49 @@ class SmallScreenFactors extends React.Component {
         this.setState({factorGraph: newFactorGraph, currentFactor: null, editRow: false});
     };
 
+    _onAdd = () => {
+        const rootNode = this.props.report[this.props.rootAttribute],
+            newFactor = ReportFactory.createFactor(rootNode),
+            newFactorGraph = {
+                nodes: this.state.factorGraph.nodes.slice(),
+                edges: this.state.factorGraph.edges.slice()
+            };
+        newFactor.referenceId = Utils.generateNewReferenceId(newFactorGraph.nodes);
+        newFactorGraph.nodes.push(newFactor);
+        const newLink = {
+            from: rootNode,
+            to: newFactor,
+            linkType: Vocabulary.HAS_PART
+        };
+        newFactorGraph.edges.push(newLink);
+        this.setState({factorGraph: newFactorGraph, currentFactor: newFactor, editRow: true});
+    };
+
+    getFactorGraph() {
+        return this.state.factorGraph;
+    }
+
     render() {
         if (!this.props.report.factorGraph) {
             return null;
         }
+        const table = this._renderTable();
         return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
             <DeleteFactorDialog onSubmit={this._onDeleteSubmit} onCancel={this._onDeleteCancel}
                                 show={this.state.showDeleteDialog}/>
-            <Table striped bordered condensed hover>
+            {table}
+            <div className={table ? 'float-right' : ''}>
+                <Button bsStyle='primary' bsSize='small' onClick={this._onAdd}
+                        title={this.props.i18n('factors.smallscreen.add-tooltip')}>
+                    <Glyphicon glyph='plus' className='add-glyph'/>
+                    {this.props.i18n('add')}
+                </Button>
+            </div>
+        </Panel>;
+    }
+
+    _renderTable() {
+        return this.state.factorGraph.nodes.length <= 1 ? null : <Table striped bordered condensed hover>
                 <thead>
                 <tr>
                     <th className='content-center col-xs-4'>{this.i18n('report.eventtype.table-type')}</th>
@@ -98,8 +145,7 @@ class SmallScreenFactors extends React.Component {
                 <tbody>
                 {this._renderFactors()}
                 </tbody>
-            </Table>
-        </Panel>;
+            </Table>;
     }
 
     _renderFactors() {
@@ -113,7 +159,7 @@ class SmallScreenFactors extends React.Component {
                 onSave: this._onEditFinish
             };
         let node;
-        // Skip node 0 - the occurrence
+        // Skip node 0 - the root node
         for (let i = 1, len = factorGraph.nodes.length; i < len; i++) {
             node = factorGraph.nodes[i];
             if (this.state.editRow && node === this.state.currentFactor) {
@@ -153,4 +199,4 @@ FactorRow.propTypes = {
 
 FactorRow = injectIntl(I18nWrapper(FactorRow));
 
-export default injectIntl(I18nWrapper(SmallScreenFactors));
+export default injectIntl(I18nWrapper(SmallScreenFactors), {withRef: true});

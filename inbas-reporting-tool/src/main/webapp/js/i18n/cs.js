@@ -205,6 +205,7 @@ module.exports = {
         'factors.detail.wizard-loading': 'Připravuji formulář...',
         'factors.smallscreen.start': 'Počátek',
         'factors.smallscreen.end': 'Konec',
+        'factors.smallscreen.add-tooltip': 'Přidat událost',
 
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',
