@@ -82,6 +82,37 @@ describe('SmallScreenFactors', () => {
         expect(component.state.editRow).toBeFalsy();
     });
 
+    it('replaces the edited factor also in factor graph edges on edit finish', () => {
+        const toEdit = report.factorGraph.nodes[Generator.getRandomPositiveInt(1, report.factorGraph.nodes.length)],
+            update = assign({}, toEdit);
+        report.factorGraph.edges.push({
+            from: report.factorGraph.nodes[0],
+            to: toEdit,
+            linkType: Vocabulary.HAS_PART
+        }, {
+            from: toEdit,
+            to: report.factorGraph.nodes[2],
+            linkType: Vocabulary.HAS_PART
+        });
+        const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
+                                                                 rootAttribute='occurrence'/>);
+        component._onEditClick(toEdit);
+        update.eventType = Generator.randomCategory().id;
+        component._onEditFinish(update);
+        const factorGraph = component.state.factorGraph;
+        expect(factorGraph.nodes.indexOf(toEdit)).toEqual(-1);
+        expect(factorGraph.nodes.indexOf(update)).not.toEqual(-1);
+        expect(component.state.currentFactor).toBeNull();
+        expect(component.state.editRow).toBeFalsy();
+        for (let i = 0, len = report.factorGraph.edges.length; i < len; i++) {
+            if (report.factorGraph.edges[i].from === toEdit) {
+                expect(factorGraph.edges[i].from).toEqual(update);
+            } else if (report.factorGraph.edges[i].to === toEdit) {
+                expect(factorGraph.edges[i].to).toEqual(update);
+            }
+        }
+    });
+
     it('creates new factor and sets it as currently edited one when add is clicked', () => {
         const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
                                                                  rootAttribute='occurrence'/>),
@@ -122,4 +153,55 @@ describe('SmallScreenFactors', () => {
         expect(component.state.factorGraph.nodes.indexOf(toEdit)).not.toEqual(-1);
         expect(component.state.factorGraph.nodes.indexOf(update)).toEqual(-1);
     });
+
+    it('updates start time of ancestors when the updated event start time exceeds the parent\'s start time', () => {
+        const toEdit = report.factorGraph.nodes[report.factorGraph.nodes.length - 1],
+            parent = report.factorGraph.nodes[1],
+            root = report.factorGraph.nodes[0],
+            update = assign({}, toEdit);
+        report.factorGraph.edges.push({
+            from: root,
+            to: parent,
+            linkType: Vocabulary.HAS_PART
+        }, {
+            from: parent,
+            to: toEdit,
+            linkType: Vocabulary.HAS_PART
+        });
+        const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
+                                                                 rootAttribute='occurrence'/>);
+        component._onEditClick(toEdit);
+        update.startTime = root.startTime - 100000;
+        component._onEditFinish(update);
+        const newNodes = component.state.factorGraph.nodes;
+        expect(newNodes[0].startTime).toEqual(update.startTime);
+        expect(newNodes[1].startTime).toEqual(update.startTime);
+    });
+
+    it('updates end time of ancestors when the updated event end time exceeds the parent\'s end time', () => {
+        const toEdit = report.factorGraph.nodes[report.factorGraph.nodes.length - 1],
+            parent = report.factorGraph.nodes[1],
+            root = report.factorGraph.nodes[0],
+            update = assign({}, toEdit);
+        report.factorGraph.edges.push({
+            from: root,
+            to: parent,
+            linkType: Vocabulary.HAS_PART
+        }, {
+            from: parent,
+            to: toEdit,
+            linkType: Vocabulary.HAS_PART
+        });
+        const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
+                                                                 rootAttribute='occurrence'/>);
+        component._onEditClick(toEdit);
+        update.endTime = root.endTime + 100000;
+        component._onEditFinish(update);
+        const newNodes = component.state.factorGraph.nodes;
+        expect(newNodes[0].endTime).toEqual(update.endTime);
+        expect(newNodes[1].endTime).toEqual(update.endTime);
+    });
+
+    // TODO When the root element (occurrence) is updated, it should be replaced also in the report
+    // TODO If the user shrinks parent of some subevent, it should be shrunk too
 });

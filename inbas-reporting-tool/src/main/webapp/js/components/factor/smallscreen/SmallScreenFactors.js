@@ -3,18 +3,17 @@
 import React from "react";
 import {Button, Glyphicon, Panel, Table} from "react-bootstrap";
 import assign from "object-assign";
-import JsonLdUtils from "jsonld-utils";
 import {QuestionAnswerProcessor} from "semforms";
 import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
 import DeleteFactorDialog from "../DeleteFactorDialog";
 import EventValidator from "../../../validation/EventValidator";
 import FactorEditRow from "./FactorEditRow";
+import FactorRow from "./FactorRow";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 import MessageWrapper from "../../misc/hoc/MessageWrapper";
-import ObjectTypeResolver from "../../../utils/ObjectTypeResolver";
 import OptionsStore from "../../../stores/OptionsStore";
 import ReportFactory from "../../../model/ReportFactory";
 import Utils from "../../../utils/Utils";
@@ -99,16 +98,48 @@ class SmallScreenFactors extends React.Component {
             this.props.showWarnMessage(this.props.formatMessage(validation.message));
             return;
         }
+
         const update = this._updateFactor(factor);
         update.editRow = false;
         this.setState(update);
     };
 
     _updateFactor(factor) {
-        const newFactorGraph = assign({}, this.state.factorGraph);
-        newFactorGraph.nodes.splice(newFactorGraph.nodes.indexOf(this.state.currentFactor), 1, factor);
+        const newFactorGraph = assign({}, this.state.factorGraph),
+            oldFactor = this.state.currentFactor;
+        newFactorGraph.nodes.splice(newFactorGraph.nodes.indexOf(oldFactor), 1, factor);
+        SmallScreenFactors._replaceEdgeNode(oldFactor, factor, newFactorGraph);
+        SmallScreenFactors._updateParentTimespan(factor, newFactorGraph);
         return {factorGraph: newFactorGraph, currentFactor: null};
     }
+
+    static _replaceEdgeNode(oldNode, newNode, factorGraph) {
+        for (let i = 0, len = factorGraph.edges.length; i < len; i++) {
+            if (factorGraph.edges[i].from === oldNode) {
+                factorGraph.edges[i].from = newNode;
+            } else if (factorGraph.edges[i].to === oldNode) {
+                factorGraph.edges[i].to = newNode;
+            }
+        }
+    }
+
+    static _updateParentTimespan(factor, factorGraph) {
+        const edges = factorGraph.edges,
+            nodes = factorGraph.nodes;
+        for (let i = 0, len = edges.length; i < len; i++) {
+            if (edges[i].linkType === Vocabulary.HAS_PART && edges[i].to === factor) {
+                if (edges[i].from.startTime > factor.startTime || edges[i].from.endTime < factor.endTime) {
+                    const newNode = assign({}, edges[i].from);
+                    newNode.startTime = factor.startTime < newNode.startTime ? factor.startTime : newNode.startTime;
+                    newNode.endTime = factor.endTime > newNode.endTime ? factor.endTime : newNode.endTime;
+                    nodes.splice(nodes.indexOf(edges[i].from), 1, newNode);
+                    SmallScreenFactors._replaceEdgeNode(edges[i].from, newNode, factorGraph);
+                    SmallScreenFactors._updateParentTimespan(newNode, factorGraph);
+                    return;
+                }
+            }
+        }
+    };
 
     _onAdd = () => {
         const rootNode = this.props.report[this.props.rootAttribute],
@@ -224,32 +255,5 @@ class SmallScreenFactors extends React.Component {
         return rows;
     }
 }
-
-let FactorRow = (props) => {
-    const node = props.node,
-        eventType = ObjectTypeResolver.resolveType(node.eventType, props.eventTypes),
-        text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
-    return <tr>
-        <td className='report-row'>{text}</td>
-        <td className='report-row content-center'>{Utils.formatDate(node.startTime)}</td>
-        <td className='report-row content-center'>{Utils.formatDate(node.endTime)}</td>
-        <td className='report-row actions'>
-            <Button bsStyle='primary' bsSize='small'
-                    onClick={(e) => props.handlers.onDetails(node, text)}>{props.i18n('factors.detail.details')}</Button>
-            <Button bsStyle='primary' bsSize='small'
-                    onClick={(e) => props.handlers.onEdit(node)}>{props.i18n('table-edit')}</Button>
-            <Button bsStyle='warning' bsSize='small'
-                    onClick={(e) => props.handlers.onDelete(node)}>{props.i18n('delete')}</Button>
-        </td>
-    </tr>;
-};
-
-FactorRow.propTypes = {
-    node: React.PropTypes.object.isRequired,
-    eventTypes: React.PropTypes.array.isRequired,
-    handlers: React.PropTypes.object.isRequired
-};
-
-FactorRow = injectIntl(I18nWrapper(FactorRow));
 
 export default injectIntl(I18nWrapper(MessageWrapper(LoadingWrapper(SmallScreenFactors))), {withRef: true});
