@@ -94,8 +94,7 @@ describe('SmallScreenFactors', () => {
 
     it('sets reference id on the newly added factor', () => {
         const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
-                                                                 rootAttribute='occurrence'/>),
-            nodes = component.state.factorGraph.nodes.slice();
+                                                                 rootAttribute='occurrence'/>);
         component._onAdd();
         expect(component.state.factorGraph.nodes[component.state.factorGraph.nodes.length - 1].referenceId).toBeDefined();
     });
@@ -110,5 +109,17 @@ describe('SmallScreenFactors', () => {
         expect(newEdge.from).toEqual(report.occurrence);
         expect(newEdge.to).toEqual(component.state.factorGraph.nodes[component.state.factorGraph.nodes.length - 1]);
         expect(newEdge.linkType).toEqual(Vocabulary.HAS_PART);
+    });
+
+    it('prevents setting end time before start time', () => {
+        const toEdit = report.factorGraph.nodes[Generator.getRandomPositiveInt(1, report.factorGraph.nodes.length)],
+            update = assign({}, toEdit),
+            component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
+                                                               rootAttribute='occurrence'/>);
+        component._onEditClick(toEdit);
+        update.endTime = update.startTime - 1000;
+        component._onEditFinish(update);
+        expect(component.state.factorGraph.nodes.indexOf(toEdit)).not.toEqual(-1);
+        expect(component.state.factorGraph.nodes.indexOf(update)).toEqual(-1);
     });
 });

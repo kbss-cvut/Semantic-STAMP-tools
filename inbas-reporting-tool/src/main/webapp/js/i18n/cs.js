@@ -227,6 +227,8 @@ module.exports = {
         'search.loading': 'Probíhá hledání...',
         'search.title': 'Výsledky hledání',
         'search.headline': 'Nalezeno {count, plural, one {# výskyt} few {# výskyty} other {# výskytů}} výrazu {expression}.',
-        'search.results.match': 'Výsledek hledání'
+        'search.results.match': 'Výsledek hledání',
+
+        'validation.error.start-after-end': 'Chyba: konec nemůže nastat před počátkem.'
     }
 };

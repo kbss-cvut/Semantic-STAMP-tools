@@ -8,10 +8,12 @@ import {QuestionAnswerProcessor} from "semforms";
 import Actions from "../../../actions/Actions";
 import Constants from "../../../constants/Constants";
 import DeleteFactorDialog from "../DeleteFactorDialog";
+import EventValidator from "../../../validation/EventValidator";
 import FactorEditRow from "./FactorEditRow";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
+import MessageWrapper from "../../misc/hoc/MessageWrapper";
 import ObjectTypeResolver from "../../../utils/ObjectTypeResolver";
 import OptionsStore from "../../../stores/OptionsStore";
 import ReportFactory from "../../../model/ReportFactory";
@@ -92,6 +94,11 @@ class SmallScreenFactors extends React.Component {
     };
 
     _onEditFinish = (factor) => {
+        const validation = EventValidator.validate(factor);
+        if (!validation.valid) {
+            this.props.showWarnMessage(this.props.formatMessage(validation.message));
+            return;
+        }
         const update = this._updateFactor(factor);
         update.editRow = false;
         this.setState(update);
@@ -245,4 +252,4 @@ FactorRow.propTypes = {
 
 FactorRow = injectIntl(I18nWrapper(FactorRow));
 
-export default injectIntl(I18nWrapper(LoadingWrapper(SmallScreenFactors)), {withRef: true});
+export default injectIntl(I18nWrapper(MessageWrapper(LoadingWrapper(SmallScreenFactors))), {withRef: true});

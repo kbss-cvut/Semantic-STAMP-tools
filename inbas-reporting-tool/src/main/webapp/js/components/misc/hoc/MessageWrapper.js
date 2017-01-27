@@ -24,6 +24,12 @@ const MessageWrapper = (Component, options) => class extends React.Component {
         }
     }
 
+    getWrappedComponent() {
+        // Enable composition of multiple HOCs.
+        return this._wrappedComponent && this._wrappedComponent.getWrappedComponent ?
+            this._wrappedComponent.getWrappedComponent() : this._wrappedComponent;
+    }
+
     _dismissMessage = () => {
         this.setState({message: null});
         this.messageTimeout = null;
