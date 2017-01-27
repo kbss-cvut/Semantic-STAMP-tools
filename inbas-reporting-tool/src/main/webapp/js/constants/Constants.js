@@ -29,6 +29,10 @@ module.exports = {
         WARNING: 'warning',
         ERROR: 'danger'
     },
+    /**
+     * Duration for which a message is by default displayed by the messaging UI.
+     */
+    MESSAGE_DURATION: 5000,
 
     /**
      * Sorting glyph icons
