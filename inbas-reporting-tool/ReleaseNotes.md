@@ -1,5 +1,9 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.8.0 - January 28, 2017
+- Touch-enabled component replacing gantt-based factor graph editor (Feature #305).
+- Improved UI responsiveness, allowing better support for touch and small screen devices (Feature #276).
+
 ### 0.7.20 - January 23, 2017
 - Made static resources cacheable (Feature #287).
 - Spring library upgrade.

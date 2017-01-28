@@ -8,7 +8,7 @@ The following software needs to be installed on the system for development:
 
 - JDK 8
 - NodeJS v6 or later (can be installed using apt, in which case you need to install npm as well). To upgrade from older versions, see e.g. [https://davidwalsh.name/upgrade-nodejs](https://davidwalsh.name/upgrade-nodejs)
-- Maven
+- Apache Maven 3.x
 - Apache Tomcat 8 (or any other application server)
 
 To start developing, first go to `app/root/src/main/webapp` and run `npm install`. This will download the necessary Node dependencies
@@ -30,10 +30,11 @@ Use the "dev" Maven profile.
 
 ## Storage Setup
 
-The application uses a Sesame native storage as its database. The storage requires a folder somewhere on the file system. Path to that
-folder is set up in `config.properties` in the application's resource. The relevant property is called _repositoryUrl_. Path to the
-repository has to have the following pattern: `/some/path/repositories/repository-id`, where _repository-id_ is id of the repository.
-Using a remote repository is of course also possible.
+The application uses a RDF4J (formerly known as Sesame) server as its database. The storage requires a RDF4J server deployed 
+in some Java web application server. URL to that repository is set up in `config.properties` in the application's resource. 
+The relevant property is called _repositoryUrl_. Path to the repository has to have the following 
+pattern: `http://domain:port/rdf4j-server/repositories/repository-id`, where _repository-id_ is id of the repository.
+Using a native/in-memory repository is of course also possible.
 
 Other than the repository url, the config file also specifies URL of the Liferay portal (if present), which is used for user authentication.
 If the portal is not accessible, the application will use its own use management.
