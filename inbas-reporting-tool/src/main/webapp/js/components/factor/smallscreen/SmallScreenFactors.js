@@ -32,16 +32,16 @@ class SmallScreenFactors extends React.Component {
     constructor(props) {
         super(props);
         this.i18n = props.i18n;
-        this.state = SmallScreenFactors._getInitialState(props.report);
+        this.state = this._getInitialState(props.report);
     }
 
-    static _getInitialState(report) {
+    _getInitialState(report) {
         return {
             showDeleteDialog: false,
             editRow: false,
             currentFactor: null,
             factorGraph: {
-                nodes: report.factorGraph ? report.factorGraph.nodes.slice() : [],
+                nodes: report.factorGraph ? report.factorGraph.nodes.slice() : [report[this.props.rootAttribute]],
                 edges: report.factorGraph ? report.factorGraph.edges : []
             },
             wizardOpen: false,
@@ -66,7 +66,7 @@ class SmallScreenFactors extends React.Component {
 
     componentDidUpdate(prevProps) {
         if (this.props.report !== prevProps.report) {
-            this.setState(SmallScreenFactors._getInitialState(this.props.report));
+            this.setState(this._getInitialState(this.props.report));
         }
     }
 
@@ -89,6 +89,9 @@ class SmallScreenFactors extends React.Component {
     };
 
     _onEditCancel = () => {
+        if (this.state.currentFactor.isNew) {
+            this._onDeleteSubmit();
+        }
         this.setState({editRow: false, currentFactor: null});
     };
 
@@ -98,6 +101,7 @@ class SmallScreenFactors extends React.Component {
             this.props.showWarnMessage(this.props.formatMessage(validation.message));
             return;
         }
+        delete factor.isNew;
 
         const update = this._updateFactor(factor);
         update.editRow = false;
@@ -110,6 +114,12 @@ class SmallScreenFactors extends React.Component {
         newFactorGraph.nodes.splice(newFactorGraph.nodes.indexOf(oldFactor), 1, factor);
         SmallScreenFactors._replaceEdgeNode(oldFactor, factor, newFactorGraph);
         SmallScreenFactors._updateParentTimespan(factor, newFactorGraph);
+        SmallScreenFactors._updateChildrenTimespan(factor, newFactorGraph);
+        if (newFactorGraph.nodes[0] !== this.props.report[this.props.rootAttribute]) {
+            const change = {};
+            change[this.props.rootAttribute] = newFactorGraph.nodes[0]; // The first node is always the root
+            this.props.onChange(change);
+        }
         return {factorGraph: newFactorGraph, currentFactor: null};
     }
 
@@ -141,6 +151,23 @@ class SmallScreenFactors extends React.Component {
         }
     };
 
+    static _updateChildrenTimespan(factor, factorGraph) {
+        const edges = factorGraph.edges,
+            nodes = factorGraph.nodes;
+        for (let i = 0, len = edges.length; i < len; i++) {
+            if (edges[i].linkType === Vocabulary.HAS_PART && edges[i].from === factor) {
+                if (edges[i].to.startTime < factor.startTime || edges[i].to.endTime > factor.endTime) {
+                    const newNode = assign({}, edges[i].to);
+                    newNode.startTime = factor.startTime > newNode.startTime ? factor.startTime : newNode.startTime;
+                    newNode.endTime = factor.endTime < newNode.endTime ? factor.endTime : newNode.endTime;
+                    nodes.splice(nodes.indexOf(edges[i].to), 1, newNode);
+                    SmallScreenFactors._replaceEdgeNode(edges[i].to, newNode, factorGraph);
+                    SmallScreenFactors._updateChildrenTimespan(newNode, factorGraph);
+                }
+            }
+        }
+    }
+
     _onAdd = () => {
         const rootNode = this.props.report[this.props.rootAttribute],
             newFactor = ReportFactory.createFactor(rootNode),
@@ -149,6 +176,7 @@ class SmallScreenFactors extends React.Component {
                 edges: this.state.factorGraph.edges.slice()
             };
         newFactor.referenceId = Utils.generateNewReferenceId(newFactorGraph.nodes);
+        newFactor.isNew = true;
         newFactorGraph.nodes.push(newFactor);
         const newLink = {
             from: rootNode,
@@ -194,9 +222,6 @@ class SmallScreenFactors extends React.Component {
     };
 
     render() {
-        if (!this.props.report.factorGraph) {
-            return null;
-        }
         const table = this._renderTable();
         return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
             <DeleteFactorDialog onSubmit={this._onDeleteSubmit} onCancel={this._onDeleteCancel}

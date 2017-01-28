@@ -18,6 +18,8 @@ describe('SmallScreenFactors', () => {
         onChange = jasmine.createSpy('onChange');
         report = Generator.generateOccurrenceReport();
         const nodes = Generator.generateFactorGraphNodes();
+        report.occurrence.startTime = nodes[0].startTime;
+        report.occurrence.endTime = Date.now();
         nodes.unshift(report.occurrence);
         report.factorGraph = {
             nodes: nodes,
@@ -32,14 +34,6 @@ describe('SmallScreenFactors', () => {
                                                                  rootAttribute='occurrence'/>),
             row = Environment.getComponentByTagAndContainedText(component, 'tr', report.occurrence.eventType);
         expect(row).toBeNull();
-    });
-
-    it('renders nothing when report does not contain a factor graph', () => {
-        delete report.factorGraph;
-        const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
-                                                                 rootAttribute='occurrence'/>),
-            panel = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').Panel);
-        expect(panel.length).toEqual(0);
     });
 
     it('removes node from factor graph when delete is clicked and confirmed', () => {
@@ -202,6 +196,86 @@ describe('SmallScreenFactors', () => {
         expect(newNodes[1].endTime).toEqual(update.endTime);
     });
 
-    // TODO When the root element (occurrence) is updated, it should be replaced also in the report
-    // TODO If the user shrinks parent of some subevent, it should be shrunk too
+    it('updates start time of descendants when the updated event start time becomes greater than child event start', () => {
+        const child = report.factorGraph.nodes[report.factorGraph.nodes.length - 1],
+            parent = report.factorGraph.nodes[1],
+            update = assign({}, parent);
+        report.factorGraph.edges.push({
+            from: report.factorGraph.nodes[0],
+            to: parent,
+            linkType: Vocabulary.HAS_PART
+        }, {
+            from: parent,
+            to: child,
+            linkType: Vocabulary.HAS_PART
+        });
+        const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
+                                                                 rootAttribute='occurrence'/>);
+        component._onEditClick(parent);
+        update.startTime = child.startTime + 2000;
+        component._onEditFinish(update);
+        const newNodes = component.state.factorGraph.nodes;
+        expect(newNodes[newNodes.length - 1].startTime).toEqual(update.startTime);
+    });
+
+    it('updates end time of descendants when the updated event end time becomes smaller than child event end', () => {
+        const child = report.factorGraph.nodes[report.factorGraph.nodes.length - 1],
+            ancestor = report.factorGraph.nodes[1],
+            parent = report.factorGraph.nodes[2],
+            update = assign({}, ancestor);
+        report.factorGraph.edges.push({
+            from: report.factorGraph.nodes[0],
+            to: ancestor,
+            linkType: Vocabulary.HAS_PART
+        }, {
+            from: ancestor,
+            to: parent,
+            linkType: Vocabulary.HAS_PART
+        }, {
+            from: parent,
+            to: child,
+            linkType: Vocabulary.HAS_PART
+        });
+        const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
+                                                                 rootAttribute='occurrence'/>);
+        component._onEditClick(ancestor);
+        update.endTime = parent.endTime - 2000;
+        component._onEditFinish(update);
+        const newNodes = component.state.factorGraph.nodes;
+        expect(newNodes[2].endTime).toEqual(update.endTime);
+        expect(newNodes[newNodes.length - 1].endTime).toEqual(update.endTime);
+    });
+
+    it('calls onchange when the root attribute has been updated', () => {
+        const toEdit = report.factorGraph.nodes[report.factorGraph.nodes.length - 1],
+            parent = report.factorGraph.nodes[1],
+            root = report.factorGraph.nodes[0],
+            update = assign({}, toEdit);
+        report.factorGraph.edges.push({
+            from: root,
+            to: parent,
+            linkType: Vocabulary.HAS_PART
+        }, {
+            from: parent,
+            to: toEdit,
+            linkType: Vocabulary.HAS_PART
+        });
+        const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
+                                                                 rootAttribute='occurrence'/>);
+        component._onEditClick(toEdit);
+        update.startTime = root.startTime - 100000;
+        component._onEditFinish(update);    // This causes the root element to be updated as well
+        expect(onChange).toHaveBeenCalled();
+    });
+
+    it('removes event when it was added and editing is cancelled before the event was saved for the first time', () => {
+        const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
+                                                                 rootAttribute='occurrence'/>),
+            nodes = component.state.factorGraph.nodes.slice();
+        component._onAdd();
+        component._onEditCancel();
+        expect(component.state.factorGraph.nodes.length).toEqual(nodes.length);
+        expect(component.state.currentFactor).toBeNull();
+        expect(component.state.editRow).toBeFalsy();
+    });
 });
