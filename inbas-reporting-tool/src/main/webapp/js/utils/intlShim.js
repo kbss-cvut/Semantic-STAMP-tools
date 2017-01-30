@@ -5,7 +5,7 @@ module.exports = function(callback) {
     // so we callback when we're done to represent
     // some kind of "intlReady" event
     if (!window.Intl) {
-        require(['intl/Intl'], function(Intl) {
+        require(['intl'], function(Intl) {
             window.Intl = Intl;
             callback();
         });
