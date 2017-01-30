@@ -9,7 +9,6 @@ const ReactDOM = require('react-dom');
 
 const I18nStore = require('./stores/I18nStore');
 const addLocaleData = require('react-intl').addLocaleData;
-const intlShim = require('./utils/intlShim');
 
 let intlData = null;
 
@@ -33,8 +32,6 @@ function main() {
     ReactDOM.render(<Main intlData={intlData}/>, document.getElementById('content'));
 }
 
-intlShim(() => {
-    selectLocalization();
-    I18nStore.setMessages(intlData.messages);
-    main();
-});
+selectLocalization();
+I18nStore.setMessages(intlData.messages);
+main();
