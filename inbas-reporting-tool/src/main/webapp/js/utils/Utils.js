@@ -117,10 +117,9 @@ module.exports = {
      */
     getPathFromLocation: function () {
         const hash = window.location.hash,
-            // TODO hash.match may return null
-            hashPart = hash.match(/#(?:\/?)/)[0],
+            hashPart = hash.match(/#(?:\/?)/),
             endIndex = hash.search(/(\?|&)_k=/);
-        return hash.substring(hashPart.length, endIndex !== -1 ? endIndex : hash.length);
+        return hash.substring(hashPart ? hashPart[0].length : 0, endIndex !== -1 ? endIndex : hash.length);
     },
 
     /**

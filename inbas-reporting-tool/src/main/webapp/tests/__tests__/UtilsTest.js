@@ -127,6 +127,15 @@ describe('Utility functions tests', function () {
             };
             expect(Utils.getPathFromLocation()).toEqual(pathWithParams);
         });
+
+        it('extracts path from url without hash', () => {
+            jasmine.getGlobal().window = {
+                location: {
+                    hash: ''
+                }
+            };
+            expect(Utils.getPathFromLocation()).toEqual('');
+        });
     });
 
     describe('addParametersToUrl', () => {
