@@ -77,7 +77,7 @@ describe('SmallScreenFactors', () => {
     });
 
     it('replaces the edited factor also in factor graph edges on edit finish', () => {
-        const toEdit = report.factorGraph.nodes[Generator.getRandomPositiveInt(1, report.factorGraph.nodes.length)],
+        const toEdit = report.factorGraph.nodes[Generator.getRandomPositiveInt(2, report.factorGraph.nodes.length)],
             update = assign({}, toEdit);
         report.factorGraph.edges.push({
             from: report.factorGraph.nodes[0],
@@ -85,7 +85,7 @@ describe('SmallScreenFactors', () => {
             linkType: Vocabulary.HAS_PART
         }, {
             from: toEdit,
-            to: report.factorGraph.nodes[2],
+            to: report.factorGraph.nodes[1],
             linkType: Vocabulary.HAS_PART
         });
         const component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
