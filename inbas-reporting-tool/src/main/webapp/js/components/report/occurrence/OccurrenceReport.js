@@ -70,7 +70,7 @@ const OccurrenceReport = React.createClass({
     _reportSummary: function () {
         this.setState({loadingWizard: true});
         const report = assign({}, this.props.report);
-        report.factorGraph = this.refs.factors.getWrappedInstance().getFactorGraph();
+        report.factorGraph = this.factors.getFactorGraph();
         WizardGenerator.generateWizard(report, {}, this.i18n('report.summary'), this.openSummaryWizard);
     },
 
