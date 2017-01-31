@@ -282,10 +282,10 @@
                                 <configuration>
                                     <ignoreMissingFile>true</ignoreMissingFile>
                                     <file>
-                                        ${project.basedir}/src/main/java/cz/cvut/kbss/inbas/reporting/service/jmx/AppAdminBean.java
+                                        ${project.basedir}/src/main/java/cz/cvut/kbss/reporting/service/jmx/AppAdminBean.java
                                     </file>
                                     <outputFile>
-                                        ${project.basedir}/src/main/java/cz/cvut/kbss/inbas/reporting/service/jmx/AppAdminBean.java
+                                        ${project.basedir}/src/main/java/cz/cvut/kbss/reporting/service/jmx/AppAdminBean.java
                                     </outputFile>
                                     <regex>false</regex>
                                     <token>INBASAdminBean</token>
