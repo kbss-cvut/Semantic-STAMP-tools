@@ -328,6 +328,8 @@ module.exports = {
         'factors.detail.delete.title': 'Delete factor?',
         'factors.detail.delete.text': 'Are you sure you want to remove this factor?',
         'factors.detail.wizard-loading': 'Generating form...',
+        'factors.detail.wizard.button.tooltip': 'View and edit details of this factor',
+        'factors.detail.wizard.button-invalid.tooltip': 'Details are not available for factors without type or invalid reports',
 
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',

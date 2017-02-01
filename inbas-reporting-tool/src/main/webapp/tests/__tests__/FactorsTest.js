@@ -8,6 +8,7 @@ describe('Factors component tests', function () {
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         Factors = rewire('../../js/components/factor/Factors'),
+        FactorJsonSerializer = require('../../js/utils/FactorJsonSerializer'),
         FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
@@ -39,6 +40,7 @@ describe('Factors component tests', function () {
                 duration_unit: 'second'
             }
         };
+        spyOn(FactorJsonSerializer, 'getFactorGraph').and.returnValue({nodes: [], edges: []});
     });
 
     it('Determines correct scale on component mount', function () {

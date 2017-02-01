@@ -329,6 +329,8 @@ module.exports = {
         'factors.detail.delete.title': 'Smazat faktor?',
         'factors.detail.delete.text': 'Určitě chcete smazat tento faktor?',
         'factors.detail.wizard-loading': 'Připravuji formulář...',
+        'factors.detail.wizard.button.tooltip': 'Zobrazit či upravit detaily tohoto faktoru',
+        'factors.detail.wizard.button-invalid.tooltip': 'Detaily faktoru nejsou dostupné pro faktory bez typu a pro nevalidní hlášení',
 
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',

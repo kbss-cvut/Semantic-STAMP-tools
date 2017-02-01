@@ -15,7 +15,7 @@ var Select = require('../Select');
 
 var Actions = require('../../actions/Actions');
 var Constants = require('../../constants/Constants');
-var FactorDetail = require('./FactorDetail');
+var FactorDetail = require('./FactorDetail').default;
 var FactorRenderer = require('./FactorRenderer');
 var GanttController = require('./GanttController');
 var FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
@@ -200,12 +200,6 @@ var Factors = React.createClass({
         return FactorJsonSerializer.getFactorGraph(this.props.report);
     },
 
-    getReport: function () {
-        var report = assign({}, this.props.report);
-        report.factorGraph = this.getFactorGraph();
-        return report;
-    },
-
 
     render: function () {
         return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
@@ -249,10 +243,17 @@ var Factors = React.createClass({
         if (!this.state.showFactorDialog) {
             return null;
         }
-        return <FactorDetail show={this.state.showFactorDialog} getReport={this.getReport}
+        const report = this._getReportForDetail();
+        return <FactorDetail show={this.state.showFactorDialog} report={report}
                              factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
                              onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}
                              enableDetails={this.props.enableDetails}/>;
+    },
+
+    _getReportForDetail: function () {
+        const report = assign({}, this.props.report);
+        report.factorGraph = this.getFactorGraph();
+        return report;
     },
 
     renderLinkTypeDialog: function () {
