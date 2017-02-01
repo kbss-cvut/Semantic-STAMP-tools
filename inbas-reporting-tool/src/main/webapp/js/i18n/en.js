@@ -273,6 +273,8 @@ module.exports = {
         'report.eccairs.create-new-revision.error': 'Unable to create new revision from latest ECCAIRS. Server responded with message: ',
         'report.eccairs.label': 'ECCAIRS',
         'report.safa.label': 'RAMP',
+        'report.summary.button.title': 'View report summary',
+        'report.summary.button.title-invalid': 'Cannot display summary for invalid reports',
 
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',

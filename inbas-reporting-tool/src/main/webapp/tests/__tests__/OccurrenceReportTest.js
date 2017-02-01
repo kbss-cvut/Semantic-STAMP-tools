@@ -75,11 +75,12 @@ describe('OccurrenceReport', function () {
         report = ReportFactory.createOccurrenceReport();
         const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             topRightButtons = TestUtils.scryRenderedDOMComponentsWithClass(component, 'detail-top-button');
-        expect(topRightButtons.length).toEqual(1);
+        expect(topRightButtons.length).toEqual(0);
     });
 
     it('renders ECCAIRS report button when displayed report was imported from ECCAIRS', () => {
         report = ReportFactory.createOccurrenceReport();
+        delete report.isNew;
         report.isEccairsReport = function () {
             return true;
         };
@@ -135,5 +136,20 @@ describe('OccurrenceReport', function () {
         const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             actionsButton = Environment.getComponentByTagAndContainedText(component, 'button', messages['table-actions']);
         expect(actionsButton).toBeNull();
+    });
+
+    it('does not display the summary button for new, unsaved report', () => {
+        report = ReportFactory.createOccurrenceReport();
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            result = TestUtils.scryRenderedDOMComponentsWithClass(component, 'detail-top-button');
+        expect(result.length).toEqual(0);
+    });
+
+    it('keeps the summary button disabled when report is missing required attributes', () => {
+        report = ReportFactory.createOccurrenceReport();
+        delete report.isNew;
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            summaryButton = TestUtils.findRenderedDOMComponentWithClass(component, 'detail-top-button');
+        expect(summaryButton.disabled).toBeTruthy();
     });
 });

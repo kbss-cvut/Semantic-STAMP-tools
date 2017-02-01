@@ -275,6 +275,8 @@ module.exports = {
         'report.eccairs.create-new-revision.error': 'Nepodařilo se vytvořit novou revizi hlášení podle nejnovější verze v ECCAIRS. Odpověď serveru: ',
         'report.eccairs.label': 'ECCAIRS',
         'report.safa.label': 'RAMP',
+        'report.summary.button.title': 'Zobrazit přehled hlášení',
+        'report.summary.button.title-invalid': 'Přehled není dostupný pro nevalidní hlášení',
 
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',

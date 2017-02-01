@@ -131,10 +131,7 @@ const OccurrenceReport = React.createClass({
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <ButtonToolbar className='float-right'>
                     <EccairsReportButton report={report}/>
-                    <Button bsStyle='primary' bsSize='small' className='detail-top-button' onClick={this._reportSummary}
-                            disabled={this.state.loadingWizard}>
-                        {this.i18n(this.state.loadingWizard ? 'please-wait' : 'summary')}
-                    </Button>
+                    {this._renderSummaryButton()}
                 </ButtonToolbar>
                 <form>
                     <BasicOccurrenceInfo report={report} revisions={this.props.revisions}
@@ -196,6 +193,17 @@ const OccurrenceReport = React.createClass({
             {fileNo}
             <div style={{clear: 'both'}}/>
         </div>;
+    },
+
+    _renderSummaryButton: function () {
+        const report = this.props.report,
+             valid= ReportValidator.isValid(report);
+        return report.isNew ? null :
+            <Button bsStyle='primary' bsSize='small' className='detail-top-button' onClick={this._reportSummary}
+                    title={this.i18n(valid ? 'report.summary.button.title' : 'report.summary.button.title-invalid')}
+                    disabled={this.state.loadingWizard || !valid}>
+                {this.i18n(this.state.loadingWizard ? 'please-wait' : 'summary')}
+            </Button>;
     },
 
     renderButtons: function () {
