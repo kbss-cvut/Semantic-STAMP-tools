@@ -15,7 +15,7 @@ var FormGroup = require('react-bootstrap').FormGroup;
 var InputGroup = require('react-bootstrap').InputGroup;
 var FormControl = require('react-bootstrap').FormControl;
 // require().default is needed for default-exported components using the ES6 syntax
-var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
+var DateTimePicker = require('react-bootstrap-datetimepicker').default;
 var injectIntl = require('../../utils/injectIntl');
 var FormattedMessage = require('react-intl').FormattedMessage;
 var JsonLdUtils = require('jsonld-utils').default;

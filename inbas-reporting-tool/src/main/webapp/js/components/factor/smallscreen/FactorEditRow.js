@@ -2,7 +2,7 @@
 
 import React from "react";
 import {Button} from "react-bootstrap";
-import DateTimePicker from "kbss-react-bootstrap-datetimepicker";
+import DateTimePicker from "react-bootstrap-datetimepicker";
 import JsonLdUtils from "jsonld-utils";
 import assign from "object-assign";
 import Constants from "../../../constants/Constants";
