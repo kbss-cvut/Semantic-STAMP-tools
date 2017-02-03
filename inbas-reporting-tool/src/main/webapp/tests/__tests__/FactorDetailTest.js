@@ -12,7 +12,7 @@ describe('Factor detail dialog', function () {
         Constants = require('../../js/constants/Constants'),
         FactorDetail = require('../../js/components/factor/FactorDetail'),
         ReportFactory = require('../../js/model/ReportFactory'),
-        DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default,
+        DateTimePicker = require('react-bootstrap-datetimepicker').default,
         callbacks,
         gantt = {
             calculateEndDate: function () {
