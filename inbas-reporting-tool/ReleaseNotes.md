@@ -1,5 +1,9 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.9.0 - February 6, 2017
+- Generated, context-aware, forms support (Feature #328).
+- Show loading mask in the touch-enabled factor component when event types are being loaded (Feature #319).
+
 ### 0.8.0 - January 28, 2017
 - Touch-enabled component replacing gantt-based factor graph editor (Feature #305).
 - Improved UI responsiveness, allowing better support for touch and small screen devices (Feature #276).
