@@ -167,7 +167,7 @@ class FactorDetail extends React.Component {
     };
 
     _mergeStatementState(statement) {
-        statement.eventType = [this.state.eventType.id];
+        statement.eventType = this.state.eventType.id;
         statement.startTime = this.state.startDate;
         statement.endTime = gantt.calculateEndDate(new Date(statement.startTime), this.state.duration, gantt.config.duration_unit).getTime();
         statement.question = this.state.statement.question;
