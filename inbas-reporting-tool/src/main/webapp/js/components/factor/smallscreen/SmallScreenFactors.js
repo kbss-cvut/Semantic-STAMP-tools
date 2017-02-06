@@ -52,10 +52,14 @@ class SmallScreenFactors extends React.Component {
     componentDidMount() {
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
         Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE);
+        if (OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE).length === 0) {
+            this.props.loadingOn();
+        }
     }
 
     _onOptionsLoaded = (type) => {
         if (type === Constants.OPTIONS.EVENT_TYPE) {
+            this.props.loadingOff();
             this.forceUpdate();
         }
     };
@@ -281,4 +285,4 @@ class SmallScreenFactors extends React.Component {
     }
 }
 
-export default injectIntl(I18nWrapper(MessageWrapper(LoadingWrapper(SmallScreenFactors))), {withRef: true});
+export default injectIntl(I18nWrapper(MessageWrapper(LoadingWrapper(SmallScreenFactors, {maskClass: 'mask-container'}))), {withRef: true});
