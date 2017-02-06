@@ -10,7 +10,7 @@ describe('OccurrenceReport', function () {
         Actions = require('../../js/actions/Actions'),
         ReportFactory = require('../../js/model/ReportFactory'),
         OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),
-        messages = require('../../js/i18n/en');
+        messages = require('../../js/i18n/en').messages;
     let handlers,
         report;
 
@@ -65,6 +65,12 @@ describe('OccurrenceReport', function () {
         expect(Environment.getComponentByTagAndContainedText(component, 'h3', messages['fileNo'])).toBeNull();
     });
 
+    it('does not display \'Create new revision\' button for new reports', () => {
+        report = ReportFactory.createOccurrenceReport();
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
+        expect(Environment.getComponentByTagAndText(component, 'a', messages['detail.submit'])).toBeNull();
+    });
+
     it('renders factors with graph when standard desktop system is used to display the app', () => {
         report = ReportFactory.createOccurrenceReport();
         const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
@@ -75,7 +81,7 @@ describe('OccurrenceReport', function () {
 
     it('renders factors in table when touch-based system is used to display the app', () => {
         report = ReportFactory.createOccurrenceReport();
-        const deviceMock = function() {
+        const deviceMock = function () {
             return {
                 tablet: () => true,
                 phone: () => true
@@ -86,5 +92,36 @@ describe('OccurrenceReport', function () {
             factors = TestUtils.findRenderedComponentWithType(component, require('../../js/components/factor/smallscreen/SmallScreenFactors').default.wrappedComponent);
         expect(factors).toBeDefined();
         expect(factors).not.toBeNull();
+    });
+
+    it('loading disables all bottom action buttons', () => {
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>);
+        component.onLoading();
+        const toolbars = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').ButtonToolbar),
+            toolbar = toolbars[toolbars.length - 1],
+            buttons = TestUtils.scryRenderedDOMComponentsWithTag(toolbar, 'button');
+        buttons.forEach(b => expect(b.disabled).toBeTruthy());
+    });
+
+    it('does not render Actions button for new report', () => {
+        report = ReportFactory.createOccurrenceReport();
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            actionsButton = Environment.getComponentByTagAndContainedText(component, 'button', messages['table-actions']);
+        expect(actionsButton).toBeNull();
+    });
+
+    it('does not display the summary button for new, unsaved report', () => {
+        report = ReportFactory.createOccurrenceReport();
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            result = TestUtils.scryRenderedDOMComponentsWithClass(component, 'detail-top-button');
+        expect(result.length).toEqual(0);
+    });
+
+    it('keeps the summary button disabled when report is missing required attributes', () => {
+        report = ReportFactory.createOccurrenceReport();
+        delete report.isNew;
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            summaryButton = TestUtils.findRenderedDOMComponentWithClass(component, 'detail-top-button');
+        expect(summaryButton.disabled).toBeTruthy();
     });
 });

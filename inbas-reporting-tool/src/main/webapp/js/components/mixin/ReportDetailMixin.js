@@ -1,18 +1,18 @@
 'use strict';
 
-var React = require('react');
-var Button = require('react-bootstrap').Button;
-var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
-var DeleteReportDialog = require('../report/DeleteReportDialog').default;
+const React = require('react');
+const Button = require('react-bootstrap').Button;
+const ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+const DeleteReportDialog = require('../report/DeleteReportDialog').default;
 
 /**
  * Aggregates some of the functionality of the report detail view.
  */
-var ReportDetailMixin = {
+const ReportDetailMixin = {
 
     onChange: function (e) {
-        var attributeName = e.target.name;
-        var change = {};
+        const attributeName = e.target.name,
+            change = {};
         change[attributeName] = e.target.value;
         this.props.handlers.onChange(change);
     },
@@ -80,6 +80,7 @@ var ReportDetailMixin = {
     renderDeleteButton: function () {
         return this.props.report.isNew ? null :
             <Button bsStyle='warning' bsSize='small' title={this.i18n('reports.delete-tooltip')}
+                    disabled={this.state.submitting !== false}
                     onClick={this._onDeleteClick}>{this.i18n('delete')}</Button>;
     },
 

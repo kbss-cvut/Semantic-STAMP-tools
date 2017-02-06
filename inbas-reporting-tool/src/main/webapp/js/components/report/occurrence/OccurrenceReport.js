@@ -69,9 +69,9 @@ const OccurrenceReport = React.createClass({
 
     _reportSummary: function () {
         this.setState({loadingWizard: true});
-        const report = assign({}, this.props.report);
-        report.factorGraph = this.factors.getFactorGraph();
-        WizardGenerator.generateWizard(report, {}, this.i18n('report.summary'), this.openSummaryWizard);
+        let report = assign({}, this.props.report);
+        report.factorGraph = this.refs.factors.getWrappedInstance().getFactorGraph();
+        WizardGenerator.generateSummaryWizard(report, this.i18n('report.summary'), this.openSummaryWizard);
     },
 
     openSummaryWizard: function (wizardProperties) {
@@ -96,9 +96,7 @@ const OccurrenceReport = React.createClass({
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <ButtonToolbar className='float-right'>
-                    <Button bsStyle='primary' onClick={this._reportSummary} disabled={this.state.loadingWizard}>
-                        {this.i18n(this.state.loadingWizard ? 'please-wait' : 'summary')}
-                    </Button>
+                    {this._renderSummaryButton()}
                 </ButtonToolbar>
                 <form>
                     <BasicOccurrenceInfo report={report} revisions={this.props.revisions}
@@ -147,6 +145,17 @@ const OccurrenceReport = React.createClass({
         </div>;
     },
 
+    _renderSummaryButton: function () {
+        const report = this.props.report,
+            valid = ReportValidator.isValid(report);
+        return report.isNew ? null :
+            <Button bsStyle='primary' bsSize='small' className='detail-top-button' onClick={this._reportSummary}
+                    title={this.i18n(valid ? 'report.summary.button.title' : 'report.summary.button.title-invalid')}
+                    disabled={this.state.loadingWizard || !valid}>
+                {this.i18n(this.state.loadingWizard ? 'please-wait' : 'summary')}
+            </Button>;
+    },
+
     _renderFactors: function () {
         const dev = device();
         return dev.tablet() || dev.mobile() ?
@@ -161,20 +170,24 @@ const OccurrenceReport = React.createClass({
         if (this.props.readOnly) {
             return this.renderReadOnlyButtons();
         }
-        const loading = this.state.submitting,
-            saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
-            saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
+        let loading = this.state.submitting !== false,
+            saveDisabled = !ReportValidator.isValid(this.props.report) || loading;
 
         return <ButtonToolbar className='float-right detail-button-toolbar'>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
-                    onClick={this.onSave}>{saveLabel}</Button>
-            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                    onClick={this.onSave}>{this._getSaveButtonLabel()}</Button>
+            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')} disabled={loading}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this.renderSubmitButton()}
-            <PhaseTransition report={this.props.report} onLoading={this.onLoading}
+            <PhaseTransition report={this.props.report} onLoading={this.onLoading} disabled={saveDisabled}
                              onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
             {this.renderDeleteButton()}
         </ButtonToolbar>;
+    },
+
+    _getSaveButtonLabel: function () {
+        return this.i18n(this.state.submitting === Actions.newRevisionFromLatestEccairs ? 'please-wait' :
+            this.state.submitting ? 'detail.saving' : 'save');
     },
 
     getSaveButtonTitle: function () {
@@ -189,7 +202,8 @@ const OccurrenceReport = React.createClass({
 
     renderSubmitButton: function () {
         return this.props.report.isNew ? null :
-            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')} onClick={this.onSubmit}>
+            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')} onClick={this.onSubmit}
+                    disabled={this.state.submitting !== false}>
                 {this.i18n('detail.submit')}
             </Button>;
     }
