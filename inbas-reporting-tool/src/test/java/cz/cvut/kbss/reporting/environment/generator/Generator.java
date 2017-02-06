@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.environment.generator;
 
+import cz.cvut.kbss.reporting.model.CorrectiveMeasureRequest;
 import cz.cvut.kbss.reporting.model.Organization;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
@@ -7,10 +8,7 @@ import cz.cvut.kbss.reporting.model.qam.Answer;
 import cz.cvut.kbss.reporting.model.qam.Question;
 
 import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class Generator {
 
@@ -64,6 +62,7 @@ public class Generator {
     public static Organization generateOrganization() {
         final Organization org = new Organization();
         org.setName(UUID.randomUUID().toString());
+        org.generateUri();
         return org;
     }
 
@@ -185,5 +184,18 @@ public class Generator {
             parent.getSubQuestions().add(child);
             generateQuestions(child, depth + 1, maxDepth);
         }
+    }
+
+    public static Set<CorrectiveMeasureRequest> generateCorrectiveMeasureRequests() {
+        final Set<CorrectiveMeasureRequest> set = new HashSet<>();
+        for (int i = 0; i < randomInt(5, 10); i++) {
+            final CorrectiveMeasureRequest cmr = new CorrectiveMeasureRequest();
+            cmr.setDescription(UUID.randomUUID().toString());
+            if (Generator.randomBoolean()) {
+                cmr.setResponsibleOrganizations(Collections.singleton(Generator.generateOrganization()));
+            }
+            set.add(cmr);
+        }
+        return set;
     }
 }

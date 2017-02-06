@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.environment.config;
 import cz.cvut.kbss.reporting.service.*;
 import cz.cvut.kbss.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.reporting.service.data.RemoteDataLoader;
+import cz.cvut.kbss.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.reporting.service.options.OptionsService;
 import cz.cvut.kbss.reporting.service.search.SearchService;
 import org.springframework.context.annotation.Bean;
@@ -80,5 +81,10 @@ public class MockServiceConfig {
     @Bean
     public SearchService searchService() {
         return mock(SearchService.class);
+    }
+
+    @Bean
+    public FormGenService formGenService() {
+        return mock(FormGenService.class);
     }
 }

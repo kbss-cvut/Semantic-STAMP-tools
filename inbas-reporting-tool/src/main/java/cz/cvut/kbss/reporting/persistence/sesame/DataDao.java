@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.persistence.sesame;
 
+import org.openrdf.model.ValueFactory;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
 import org.openrdf.rio.RDFHandler;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
 
 @Component
 public class DataDao {
@@ -19,6 +21,30 @@ public class DataDao {
 
     @Autowired
     private SesamePersistenceProvider sesameRepository;
+
+    /**
+     * Exports repository data from the specified context and passes it to the handler.
+     *
+     * @param contextUri Context from which the data should be exported. Optional
+     * @param handler    Handler for the exported data
+     */
+    public void getRepositoryData(URI contextUri, RDFHandler handler) {
+        try {
+            final RepositoryConnection connection = sesameRepository.getRepository().getConnection();
+            try {
+                final ValueFactory valueFactory = connection.getValueFactory();
+                if (contextUri != null) {
+                    connection.export(handler, valueFactory.createURI(contextUri.toString()));
+                } else {
+                    connection.export(handler);
+                }
+            } finally {
+                connection.close();
+            }
+        } catch (RepositoryException | RDFHandlerException e) {
+            LOG.error("Unable to read data from repository.", e);
+        }
+    }
 
     /**
      * Gets raw content of the repository.
