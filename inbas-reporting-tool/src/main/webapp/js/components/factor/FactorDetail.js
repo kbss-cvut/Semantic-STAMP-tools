@@ -5,7 +5,7 @@ import assign from "object-assign";
 import {QuestionAnswerProcessor} from "semforms";
 import classNames from "classnames";
 import {Button, ControlLabel, Form, FormControl, FormGroup, Glyphicon, InputGroup, Label, Modal} from "react-bootstrap";
-import DateTimePicker from "kbss-react-bootstrap-datetimepicker";
+import DateTimePicker from "react-bootstrap-datetimepicker";
 import {FormattedMessage} from "react-intl";
 import JsonLdUtils from "jsonld-utils";
 import Constants from "../../constants/Constants";
