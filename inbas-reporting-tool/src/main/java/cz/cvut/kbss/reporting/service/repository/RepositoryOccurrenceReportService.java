@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.service.repository;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.DefaultFactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
@@ -11,6 +12,7 @@ import cz.cvut.kbss.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.reporting.service.validation.OccurrenceReportValidator;
+import cz.cvut.kbss.reporting.service.visitor.EventChildIndexer;
 import cz.cvut.kbss.reporting.service.visitor.EventTypeSynchronizer;
 import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
@@ -80,6 +82,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
             if (instance.getLastModifiedBy() != null) {
                 instance.getLastModifiedBy().erasePassword();
             }
+            new DefaultFactorGraphTraverser(new EventChildIndexer(), null).traverse(instance.getOccurrence());
         }
     }
 

@@ -117,29 +117,39 @@ public class OccurrenceReportGenerator {
         return set;
     }
 
-    public static Occurrence generateOccurrenceWithDescendantEvents() {
+    public static Occurrence generateOccurrenceWithDescendantEvents(boolean withUris) {
         final Occurrence occurrence = generateOccurrence();
-        occurrence.setUri(URI.create("http://rootOccurrence"));
+        if (withUris) {
+            occurrence.setUri(URI.create("http://rootOccurrence"));
+        }
         final int maxDepth = Generator.randomInt(5);
         final int childCount = Generator.randomInt(5);
-        generateChildEvents(occurrence, 0, maxDepth, childCount);
+        generateChildEvents(occurrence, 0, maxDepth, childCount, withUris);
         return occurrence;
     }
 
-    private static void generateChildEvents(FactorGraphItem parent, int depth, int maxDepth, int childCount) {
+    private static void generateChildEvents(FactorGraphItem parent, int depth, int maxDepth, int childCount,
+                                            boolean withUris) {
         if (depth >= maxDepth) {
             return;
         }
         parent.setChildren(new LinkedHashSet<>());
         for (int i = 0; i < childCount; i++) {
-            final Event child = new Event();
-            child.setStartTime(new Date());
-            child.setEndTime(new Date());
-            child.setUri(URI.create(Vocabulary.s_c_Event + "-instance" + Generator.randomInt()));
-            child.setEventType(Generator.generateEventType());
+            final Event child = generateEvent();
+            if (withUris) {
+                child.setUri(URI.create(Vocabulary.s_c_Event + "-instance" + Generator.randomInt()));
+            }
             child.setIndex(i);
             parent.getChildren().add(child);
-            generateChildEvents(child, depth + 1, maxDepth, childCount);
+            generateChildEvents(child, depth + 1, maxDepth, childCount, withUris);
         }
+    }
+
+    public static Event generateEvent() {
+        final Event child = new Event();
+        child.setStartTime(new Date());
+        child.setEndTime(new Date());
+        child.setEventType(Generator.generateEventType());
+        return child;
     }
 }

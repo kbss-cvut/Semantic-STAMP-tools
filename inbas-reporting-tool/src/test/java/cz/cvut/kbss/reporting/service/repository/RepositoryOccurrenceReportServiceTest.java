@@ -4,10 +4,10 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
-import cz.cvut.kbss.reporting.model.CorrectiveMeasureRequest;
-import cz.cvut.kbss.reporting.model.Occurrence;
-import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.*;
+import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
+import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.reporting.util.Constants;
@@ -271,5 +271,41 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         final OccurrenceReport result = occurrenceReportService.find(report.getUri());
         assertNull(result.getAuthor().getPassword());
         assertNull(result.getLastModifiedBy().getPassword());
+    }
+
+    @Test
+    public void findSetsNodeIndexesUsingLexicographicOrderingWhenTheyAreMissing() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        report.setOccurrence(OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents(false));
+        report.getOccurrence().setUri(null);
+        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(null, null);
+        traverser.setNodeVisitor(new FactorGraphNodeVisitor() {
+            @Override
+            public void visit(Occurrence occurrence) {
+            }
+
+            @Override
+            public void visit(Event event) {
+                if (Generator.randomBoolean()) {
+                    event.setIndex(null);
+                }
+            }
+        });
+        traverser.traverse(report.getOccurrence());
+        occurrenceReportService.persist(report);
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        traverser.setNodeVisitor(new FactorGraphNodeVisitor() {
+            @Override
+            public void visit(Occurrence occurrence) {
+            }
+
+            @Override
+            public void visit(Event event) {
+                assertNotNull(event.getIndex());
+            }
+        });
+        traverser.traverse(result.getOccurrence());
     }
 }

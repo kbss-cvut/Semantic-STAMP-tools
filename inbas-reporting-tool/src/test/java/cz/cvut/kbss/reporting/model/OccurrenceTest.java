@@ -20,7 +20,7 @@ public class OccurrenceTest {
 
     @Test
     public void copyOfCopiesOccurrenceWithChildren() {
-        final Occurrence original = OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents();
+        final Occurrence original = OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents(true);
         final Occurrence result = Occurrence.copyOf(original);
         assertNotNull(result);
         verifyFactorGraph(original, result);
@@ -96,7 +96,7 @@ public class OccurrenceTest {
     }
 
     private Occurrence generateFactorGraph() {
-        final Occurrence o = OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents();
+        final Occurrence o = OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents(true);
         final Event e1 = event();
         final Factor f1 = new Factor();
         f1.setEvent(e1);

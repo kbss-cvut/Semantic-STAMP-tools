@@ -41,6 +41,8 @@ public class TestFormGenPersistenceFactory {
 
     @PreDestroy
     private void close() {
-        emf.close();
+        if (emf.isOpen()) {
+            emf.close();
+        }
     }
 }
