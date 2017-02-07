@@ -226,6 +226,20 @@ module.exports = {
         'search.headline': 'Search for {expression} found {count, plural, one {# result} other {# results}}.',
         'search.results.match': 'Matching snippet',
 
-        'validation.error.start-after-end': 'Error: end time cannot occur before start time'
+        'validation.error.start-after-end': 'Error: end time cannot occur before start time',
+
+        'editor.rich.h1': 'Heading 1',
+        'editor.rich.h2': 'Heading 2',
+        'editor.rich.h3': 'Heading 3',
+        'editor.rich.h4': 'Heading 4',
+        'editor.rich.h5': 'Heading 5',
+        'editor.rich.h6': 'Heading 6',
+        'editor.rich.body': 'Body',
+        'editor.rich.ul': 'Bullets',
+        'editor.rich.ol': 'Numbering',
+        'editor.rich.blockquote': 'Blockquote',
+        'editor.rich.bold': 'Bold',
+        'editor.rich.italic': 'Italic',
+        'editor.rich.underline': 'Underline'
     }
 };

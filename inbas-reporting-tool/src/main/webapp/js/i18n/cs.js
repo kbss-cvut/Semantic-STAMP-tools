@@ -229,6 +229,20 @@ module.exports = {
         'search.headline': '{count, plural, one {Nalezen # výskyt} few {Nalezeny # výskyty} other {Nalezeno # výskytů}} výrazu {expression}.',
         'search.results.match': 'Výsledek hledání',
 
-        'validation.error.start-after-end': 'Chyba: konec nemůže nastat před počátkem.'
+        'validation.error.start-after-end': 'Chyba: konec nemůže nastat před počátkem.',
+
+        'editor.rich.h1': 'Nadpis 1',
+        'editor.rich.h2': 'Nadpis 2',
+        'editor.rich.h3': 'Nadpis 3',
+        'editor.rich.h4': 'Nadpis 4',
+        'editor.rich.h5': 'Nadpis 5',
+        'editor.rich.h6': 'Nadpis 6',
+        'editor.rich.body': 'Text',
+        'editor.rich.ul': 'Odrážky',
+        'editor.rich.ol': 'Číslovaný seznam',
+        'editor.rich.blockquote': 'Citace',
+        'editor.rich.bold': 'Tučné',
+        'editor.rich.italic': 'Kurzíva',
+        'editor.rich.underline': 'Podtržené'
     }
 };

@@ -706,10 +706,45 @@ button.in-input-line {
     margin: 0 5px 0 0;
 }
 
-.rich-editor {
+.rich-editor-container {
     border: 1px solid #ccc;
-    cursor: text;
-    min-height: 156px;
     padding: 5px 10px;
+    border-radius: 4px;
+    width: 100%;
+    display: block;
+}
+
+.rich-editor {
+    border-top: 1px solid #ddd;
+    cursor: text;
+    height: 200px;
+    max-height: 200px;
+    padding: 5px 0;
     overflow: auto;
+}
+
+.rich-editor-controls {
+    margin-bottom: 5px;
+    user-select: none;
+}
+
+.rich-editor-controls select {
+    margin-right: 16px;
+}
+
+.rich-editor-style-button {
+    color: #999;
+    cursor: pointer;
+    margin-right: 16px;
+    padding: 8px 0;
+    display: inline-block;
+    height: 30px;
+}
+
+.rich-editor-active-button {
+    color: #5890ff;
+}
+
+.rich-editor-hide-placeholder .public-DraftEditorPlaceholder-root {
+    display: none;
 }
