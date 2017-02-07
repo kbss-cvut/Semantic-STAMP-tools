@@ -37,7 +37,8 @@ class RichInput extends React.Component {
         super(props);
         this.i18n = props.i18n;
         const blocks = convertFromHTML(props.value),
-            content = blocks ? ContentState.createFromBlockArray(blocks.contentBlocks, blocks.entityMap) : ContentState.createFromText('');
+            content = blocks ? ContentState.createFromBlockArray(blocks.contentBlocks, blocks.entityMap)
+                : ContentState.createFromText('');
         this.state = {
             editorState: EditorState.createWithContent(content)
         };
