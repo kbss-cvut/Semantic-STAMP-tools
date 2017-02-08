@@ -1,5 +1,8 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.9.1 - February 8, 2017
+- Rich input support for report summary (Feature #118).
+
 ### 0.9.0 - February 6, 2017
 - Generated, context-aware, forms support (Feature #328).
 - Show loading mask in the touch-enabled factor component when event types are being loaded (Feature #319).
