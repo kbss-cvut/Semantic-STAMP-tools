@@ -6,6 +6,7 @@ const JsonLdUtils = require('jsonld-utils').default;
 const CollapsibleText = require('../components/CollapsibleText');
 const Constants = require('../constants/Constants');
 const Vocabulary = require('../constants/Vocabulary');
+const Utils = require('../utils/Utils');
 
 class OccurrenceReport {
     constructor(data) {
@@ -46,7 +47,7 @@ class OccurrenceReport {
     }
 
     renderMoreInfo() {
-        return <CollapsibleText text={this.summary}/>;
+        return <CollapsibleText text={Utils.stripHtmlTags(this.summary)}/>;
     }
 }
 

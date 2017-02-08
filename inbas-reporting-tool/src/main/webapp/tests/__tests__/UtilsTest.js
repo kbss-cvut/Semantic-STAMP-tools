@@ -270,4 +270,20 @@ describe('Utility functions tests', function () {
             expect(existingIds.indexOf(result)).toEqual(-1);
         });
     });
+
+    describe('stripHtmlTags', () => {
+
+        it('removes HTML tags from text', () => {
+            const text = 'Test value using HTML tags.',
+                htmlBased = '<p>Test <b>value</b> using <em>HTML</em> tags.</p>',
+                result = Utils.stripHtmlTags(htmlBased);
+            expect(result).toEqual(text);
+        });
+
+        it('leaves regular text unchanged', () => {
+            const text = 'Test value not using HTML tags.',
+                result = Utils.stripHtmlTags(text);
+            expect(result).toEqual(text);
+        });
+    })
 });

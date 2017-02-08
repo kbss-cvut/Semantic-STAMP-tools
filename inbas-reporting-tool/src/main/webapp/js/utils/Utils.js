@@ -282,5 +282,14 @@ module.exports = {
             hash &= hash;
         }
         return hash;
+    },
+
+    /**
+     * Removes HTML tags from the specified string, leaving only the text content.
+     * @param str The string to strip
+     * @return {string} Text content of the specified code/text
+     */
+    stripHtmlTags: function (str = '') {
+        return str.replace(/<(?:.|\n)*?>/gm, '');
     }
 };
