@@ -107,7 +107,7 @@ class StyleButton extends React.Component {
     };
 
     render() {
-        let className = classNames('rich-editor-style-button', {'rich-editor-active-button': this.props.active});
+        let className = classNames('rich-editor-style-button', this.props.className, {'rich-editor-active-button': this.props.active});
 
         return <span className={className} onMouseDown={this._onToggle}>
               {this.props.label}
@@ -116,15 +116,15 @@ class StyleButton extends React.Component {
 }
 
 const BLOCK_TYPES = [
-    {label: 'editor.rich.h1', style: 'header-one'},
-    {label: 'editor.rich.h2', style: 'header-two'},
-    {label: 'editor.rich.h3', style: 'header-three'},
-    {label: 'editor.rich.h4', style: 'header-four'},
-    {label: 'editor.rich.h5', style: 'header-five'},
-    {label: 'editor.rich.h6', style: 'header-six'},
-    {label: 'editor.rich.blockquote', style: 'blockquote'},
-    {label: 'editor.rich.ul', style: 'unordered-list-item'},
-    {label: 'editor.rich.ol', style: 'ordered-list-item'}
+    {label: 'editor.rich.h1', style: 'header-one', className: 'heading-1'},
+    {label: 'editor.rich.h2', style: 'header-two', className: 'heading-2'},
+    {label: 'editor.rich.h3', style: 'header-three', className: 'heading-3'},
+    {label: 'editor.rich.h4', style: 'header-four', className: 'heading-4'},
+    {label: 'editor.rich.h5', style: 'header-five', className: 'heading-5'},
+    {label: 'editor.rich.h6', style: 'header-six', className: 'heading-6'},
+    {label: 'editor.rich.blockquote', style: 'blockquote', className: 'blockquote'},
+    {label: 'editor.rich.ul', style: 'unordered-list-item', className: 'bullets'},
+    {label: 'editor.rich.ol', style: 'ordered-list-item', className: 'numbering'}
 ];
 
 let BlockStyleControls = (props) => {
@@ -135,7 +135,7 @@ let BlockStyleControls = (props) => {
     return <div className="rich-editor-controls">
         {BLOCK_TYPES.map((type) =>
             <StyleButton key={type.label} active={type.style === blockType} label={props.i18n(type.label)}
-                         onToggle={props.onToggle} style={type.style}/>
+                         onToggle={props.onToggle} style={type.style} className={type.className}/>
         )}
     </div>;
 };
@@ -143,16 +143,17 @@ let BlockStyleControls = (props) => {
 BlockStyleControls = injectIntl(I18nWrapper(BlockStyleControls));
 
 const INLINE_STYLES = [
-    {label: 'editor.rich.bold', style: 'BOLD'},
-    {label: 'editor.rich.italic', style: 'ITALIC'},
-    {label: 'editor.rich.underline', style: 'UNDERLINE'}
+    {label: 'editor.rich.bold', style: 'BOLD', className: 'bold'},
+    {label: 'editor.rich.italic', style: 'ITALIC', className: 'italics'},
+    {label: 'editor.rich.underline', style: 'UNDERLINE', className: 'underline'}
 ];
 
 let InlineStyleControls = (props) => {
     const currentStyle = props.editorState.getCurrentInlineStyle();
     return <div className="rich-editor-controls">
         {INLINE_STYLES.map(type =>
-            <StyleButton key={type.label} active={currentStyle.has(type.style)} label={props.i18n(type.label)}
+            <StyleButton className={type.className} key={type.label} active={currentStyle.has(type.style)}
+                         label={props.i18n(type.label)}
                          onToggle={props.onToggle} style={type.style}/>
         )}
     </div>;

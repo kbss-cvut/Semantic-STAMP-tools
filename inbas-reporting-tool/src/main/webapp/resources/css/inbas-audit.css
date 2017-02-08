@@ -748,3 +748,39 @@ button.in-input-line {
 .rich-editor-hide-placeholder .public-DraftEditorPlaceholder-root {
     display: none;
 }
+
+.rich-editor-controls .heading-1 {
+    font-size: 120%;
+}
+
+.rich-editor-controls .heading-2 {
+    font-size: 115%;
+}
+
+.rich-editor-controls .heading-3 {
+    font-size: 110%;
+}
+
+.rich-editor-controls .heading-4 {
+    font-size: 105%;
+}
+
+.rich-editor-controls .heading-5 {
+    font-size: 103%;
+}
+
+.rich-editor-controls .heading-6 {
+    font-size: 101%;
+}
+
+.rich-editor-controls .blockquote:before {
+    content: "``";
+}
+
+.rich-editor-controls .bullets:before {
+    content: "• ";
+}
+
+.rich-editor-controls .numbering:before {
+    content: "1. ";
+}
