@@ -14,7 +14,7 @@ describe('ReportsController', () => {
         Routing = require('../../js/utils/Routing'),
         Routes = require('../../js/utils/Routes'),
         ReportsController = require('../../js/components/report/ReportsController').default,
-        Reports = require('../../js/components/report/Reports');
+        Reports = require('../../js/components/report/Reports').default;
     let reports, location;
 
     beforeEach(() => {
@@ -152,7 +152,8 @@ describe('ReportsController', () => {
         };
         spyOn(ComponentStateStore, 'getComponentState').and.returnValue({filter: filter, sort: sort});
         const controller = Environment.render(<ReportsController location={location}/>);
-        expect(ComponentStateStore.getComponentState).toHaveBeenCalledWith(ReportsController.displayName);
+        expect(ComponentStateStore.getComponentState).toHaveBeenCalledWith(
+            ReportsController.WrappedComponent.WrappedComponent.displayName);
         expect(controller.state.filter).toEqual(filter);
         expect(controller.state.sort).toEqual(sort);
     });
@@ -167,10 +168,11 @@ describe('ReportsController', () => {
         const sort = controller.state.sort;
 
         controller.onFilterChange(filter);
-        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.displayName, {
-            filter: filter,
-            sort: sort
-        });
+        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(
+            ReportsController.WrappedComponent.WrappedComponent.displayName, {
+                filter: filter,
+                sort: sort
+            });
     });
 
     it('saves component filtering and sorting when sort is called', () => {
@@ -183,10 +185,11 @@ describe('ReportsController', () => {
         sort = controller.state.sort;
         filter = controller.state.filter;
 
-        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.displayName, {
-            filter: filter,
-            sort: sort
-        });
+        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(
+            ReportsController.WrappedComponent.WrappedComponent.displayName, {
+                filter: filter,
+                sort: sort
+            });
     });
 
     it('loads all reports when no report keys are specified', () => {

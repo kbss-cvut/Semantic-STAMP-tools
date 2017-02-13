@@ -15,9 +15,7 @@ module.exports = function (component, props) {
     // Store this only for development purposes
     if (process.env.NODE_ENV !== 'production') {
         props.withRef = true;
-        const comp = injectIntl(component, props);
-        comp.wrappedComponent = comp;
-        return comp;
+        return injectIntl(component, props);
     } else {
         return injectIntl(component, props);
     }

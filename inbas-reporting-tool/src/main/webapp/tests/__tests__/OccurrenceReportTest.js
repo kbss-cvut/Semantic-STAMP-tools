@@ -89,7 +89,7 @@ describe('OccurrenceReport', function () {
         };
         OccurrenceReport.__set__('device', deviceMock);
         const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
-            factors = TestUtils.findRenderedComponentWithType(component, require('../../js/components/factor/smallscreen/SmallScreenFactors').default.wrappedComponent);
+            factors = TestUtils.findRenderedComponentWithType(component, require('../../js/components/factor/smallscreen/SmallScreenFactors').default.WrappedComponent);
         expect(factors).toBeDefined();
         expect(factors).not.toBeNull();
     });

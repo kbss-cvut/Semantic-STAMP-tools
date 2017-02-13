@@ -77,4 +77,10 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorInfo> reportImportingException(HttpServletRequest request, ReportImportingException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(UnsupportedReportTypeException.class)
+    public ResponseEntity<ErrorInfo> unsupportedReportTypeException(HttpServletRequest request,
+                                                                    UnsupportedReportTypeException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.BAD_REQUEST);
+    }
 }

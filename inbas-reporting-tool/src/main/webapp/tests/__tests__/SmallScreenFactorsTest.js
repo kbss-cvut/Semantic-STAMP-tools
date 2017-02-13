@@ -53,11 +53,11 @@ describe('SmallScreenFactors', () => {
             component = Environment.render(<SmallScreenFactors report={report} onChange={onChange}
                                                                rootAttribute='occurrence'/>);
         const editableBefore = TestUtils.scryRenderedComponentsWithType(component,
-            require('../../js/components/factor/smallscreen/FactorEditRow').default.wrappedComponent);
+            require('../../js/components/factor/smallscreen/FactorEditRow').default.WrappedComponent);
         expect(editableBefore.length).toEqual(0);
         component._onEditClick(toEdit);
         const editableAfter = TestUtils.scryRenderedComponentsWithType(component,
-            require('../../js/components/factor/smallscreen/FactorEditRow').default.wrappedComponent);
+            require('../../js/components/factor/smallscreen/FactorEditRow').default.WrappedComponent);
         expect(editableAfter.length).toEqual(1);
     });
 

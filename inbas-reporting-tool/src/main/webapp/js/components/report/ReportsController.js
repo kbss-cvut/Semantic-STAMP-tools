@@ -6,6 +6,10 @@ import Actions from "../../actions/Actions";
 import ComponentStateStore from "../../stores/ComponentStateStore";
 import Constants from "../../constants/Constants";
 import DataFilter from "../../utils/DataFilter";
+import I18nWrapper from "../../i18n/I18nWrapper";
+import injectIntl from "../../utils/injectIntl";
+import MessageStore from "../../stores/MessageStore";
+import MessageWrapper from "../misc/hoc/MessageWrapper";
 import Reports from "./Reports";
 import ReportStore from "../../stores/ReportStore";
 import RouterStore from "../../stores/RouterStore";
@@ -61,10 +65,11 @@ function sortFactory(sortSpec) {
     }
 }
 
-export default class ReportsController extends React.Component {
+class ReportsController extends React.Component {
 
     constructor(props) {
         super(props);
+        this.i18n = props.i18n;
         const storedState = ComponentStateStore.getComponentState(ReportsController.displayName);
         let sort = null;
         if (storedState) {
@@ -92,13 +97,14 @@ export default class ReportsController extends React.Component {
 
     componentDidMount() {
         this.unsubscribe = ReportStore.listen(this._onReportsLoaded);
+        this.unsubscribeMsg = MessageStore.listen(this._onMessage);
         const reportKeys = this.props.location.query['reportKey'];
         if (!reportKeys) {
             Actions.loadAllReports();
         } else {
             Actions.loadAllReports(Array.isArray(reportKeys) ? reportKeys : [reportKeys]);
         }
-        Actions.loadOptions('reportingPhase');
+        Actions.loadOptions(Constants.OPTIONS.REPORTING_PHASE);
     }
 
     _onReportsLoaded = (data) => {
@@ -107,8 +113,15 @@ export default class ReportsController extends React.Component {
         }
     };
 
+    _onMessage = (msg) => {
+        if (msg.source === Actions.loadAllReports) {
+            this.props.showMessage(this.i18n(msg.message), msg.type);
+        }
+    };
+
     componentWillUnmount() {
         this.unsubscribe();
+        this.unsubscribeMsg();
     }
 
     onEdit = (report) => {
@@ -173,4 +186,6 @@ export default class ReportsController extends React.Component {
         return <Reports allReports={this.state.reports} reports={reports} filter={this.state.filter}
                         sort={this.state.sort} actions={actions}/>;
     }
-};
+}
+
+export default injectIntl(I18nWrapper(MessageWrapper(ReportsController)));

@@ -9,7 +9,8 @@ module.exports = {
     OPTIONS: {
         OCCURRENCE_CLASS: 'occurrenceClass',
         OCCURRENCE_CATEGORY: 'occurrenceCategory',
-        EVENT_TYPE: 'eventType'
+        EVENT_TYPE: 'eventType',
+        REPORTING_PHASE: 'reportingPhase'
     },
 
     TIME_SCALES: {

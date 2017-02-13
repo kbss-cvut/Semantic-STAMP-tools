@@ -4,6 +4,7 @@ const Reflux = require('reflux');
 
 const Actions = require('../actions/Actions');
 let Ajax = require('../utils/Ajax');
+const Constants = require('../constants/Constants');
 const JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
 const Utils = require('../utils/Utils');
 
@@ -52,6 +53,7 @@ const ReportStore = Reflux.createStore({
                 action: Actions.loadAllReports,
                 reports: []
             });
+            Actions.publishMessage('reports.unable-to-load', Constants.MESSAGE_TYPE.ERROR, Actions.loadAllReports);
         });
     },
 
