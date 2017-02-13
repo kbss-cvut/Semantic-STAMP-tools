@@ -205,6 +205,14 @@ describe('ReportsController', () => {
         expect(Actions.loadAllReports).toHaveBeenCalledWith(keys);
     });
 
+    it('loads single report when report keys specified in location contain only one key', () => {
+        const key = Generator.getRandomInt().toString();
+        location.query['reportKey'] = key;
+
+        Environment.render(<ReportsController location={location}/>);
+        expect(Actions.loadAllReports).toHaveBeenCalledWith([key]);
+    });
+
     function setEqualIdentifications() {
         let ind,
             identification = 'AAAA';

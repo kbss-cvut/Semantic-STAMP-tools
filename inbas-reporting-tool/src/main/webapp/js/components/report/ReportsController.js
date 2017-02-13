@@ -74,9 +74,9 @@ export default class ReportsController extends React.Component {
             reports: null,
             filter: this._resolveFilter(storedState),
             sort: sort ? sort : {
-                identification: Constants.SORTING.NO,
-                date: Constants.SORTING.NO
-            }
+                    identification: Constants.SORTING.NO,
+                    date: Constants.SORTING.NO
+                }
         };
     }
 
@@ -96,7 +96,7 @@ export default class ReportsController extends React.Component {
         if (!reportKeys) {
             Actions.loadAllReports();
         } else {
-            Actions.loadAllReports(reportKeys);
+            Actions.loadAllReports(Array.isArray(reportKeys) ? reportKeys : [reportKeys]);
         }
         Actions.loadOptions('reportingPhase');
     }
