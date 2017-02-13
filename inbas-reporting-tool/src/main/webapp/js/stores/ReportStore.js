@@ -59,6 +59,7 @@ const ReportStore = Reflux.createStore({
                 action: Actions.loadAllReports,
                 reports: []
             });
+            Actions.publishMessage('reports.unable-to-load', Constants.MESSAGE_TYPE.ERROR, Actions.loadAllReports);
         });
     },
 

@@ -2,7 +2,7 @@
 
 import React from "react";
 import JsonLdUtils from "jsonld-utils";
-import DateTimePicker from "kbss-react-bootstrap-datetimepicker";
+import DateTimePicker from "react-bootstrap-datetimepicker";
 import assign from "object-assign";
 import Typeahead from "react-bootstrap-typeahead";
 import Actions from "../../../actions/Actions";

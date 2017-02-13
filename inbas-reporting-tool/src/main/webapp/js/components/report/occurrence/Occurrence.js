@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react');
-var DateTimePicker = require('kbss-react-bootstrap-datetimepicker').default;
+var DateTimePicker = require('react-bootstrap-datetimepicker').default;
 var assign = require('object-assign');
 
 var injectIntl = require('../../../utils/injectIntl');

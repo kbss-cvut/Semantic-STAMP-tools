@@ -118,6 +118,7 @@ module.exports = {
         'reports.paging.item-count': 'Zobrazuji {showing} z {total} položek.',
         'reports.create-report': 'Nové hlášení',
         'reports.type.filter': 'Typ hlášení:',
+        'reports.unable-to-load': 'Hlášení se nepodařilo načíst. Chybová konzole prohlížeče obsahuje podrobnější informace.',
 
         'filters.label': 'Filtry',
 

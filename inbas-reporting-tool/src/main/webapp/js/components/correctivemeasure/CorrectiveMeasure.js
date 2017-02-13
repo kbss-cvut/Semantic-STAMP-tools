@@ -2,7 +2,7 @@
 
 import React from "react";
 import {Button, Modal} from "react-bootstrap";
-import DateTimePicker from "kbss-react-bootstrap-datetimepicker";
+import DateTimePicker from "react-bootstrap-datetimepicker";
 import assign from "object-assign";
 import Constants from "../../constants/Constants";
 import I18nWrapper from "../../i18n/I18nWrapper";

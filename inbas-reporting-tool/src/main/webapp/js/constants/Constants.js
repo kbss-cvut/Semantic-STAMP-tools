@@ -10,7 +10,8 @@ module.exports = {
         EVENT_TYPE: 'eventType',
         OCCURRENCE_CLASS: 'occurrenceClass',
         OCCURRENCE_CATEGORY: 'occurrenceCategory',
-        AUDIT_FINDING_STATUS: 'auditFindingStatus'
+        AUDIT_FINDING_STATUS: 'auditFindingStatus',
+        REPORTING_PHASE: 'reportingPhase'
     },
 
     TIME_SCALES: {

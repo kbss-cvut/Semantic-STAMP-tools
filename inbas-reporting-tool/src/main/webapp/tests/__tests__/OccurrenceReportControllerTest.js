@@ -122,8 +122,8 @@ describe('Occurrence report controller', function () {
             });
         });
 
-        var detailComponent = TestUtils.findRenderedComponentWithType(component, OccurrenceReport.wrappedComponent);
-        detailComponent.refs.wrappedInstance._onDelete();
+        var detailComponent = TestUtils.findRenderedComponentWithType(component, OccurrenceReport.WrappedComponent);
+        detailComponent._onDelete();
         expect(Actions.deleteReportChain).toHaveBeenCalled();
         var errorMsg = Environment.getComponentByTagAndContainedText(component, 'div', errorMessage);
         expect(errorMessage).not.toBeNull();

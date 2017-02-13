@@ -83,4 +83,10 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorInfo> badRequestException(HttpServletRequest request, BadRequestException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UnsupportedReportTypeException.class)
+    public ResponseEntity<ErrorInfo> unsupportedReportTypeException(HttpServletRequest request,
+                                                                    UnsupportedReportTypeException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.BAD_REQUEST);
+    }
 }

@@ -3,20 +3,19 @@
 describe('Reports', function () {
 
     var React = require('react'),
-        rewire = require('rewire'),
         Environment = require('../environment/Environment'),
 
-        Reports = rewire('../../js/components/report/Reports'),
+        Reports = require('../../js/components/report/Reports').default,
         RouterStore = require('../../js/stores/RouterStore'),
         Routes = require('../../js/utils/Routes'),
+        Routing = require('../../js/utils/Routing'),
         Constants = require('../../js/constants/Constants'),
         en = require('../../js/i18n/en'),
 
-        actions = jasmine.createSpyObj('actions', ['onFilterChange']),
-        Routing = jasmine.createSpyObj('Routing', ['transitionToHome']);
+        actions = jasmine.createSpyObj('actions', ['onFilterChange']);
 
     beforeEach(function () {
-        Reports.__set__('Routing', Routing);
+        spyOn(Routing, 'transitionToHome');
     });
 
     it('shows message informing that there are no matching reports when filter finds no reports.', function () {

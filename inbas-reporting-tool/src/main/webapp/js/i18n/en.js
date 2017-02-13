@@ -117,6 +117,7 @@ module.exports = {
         'reports.paging.item-count': 'Showing {showing} of {total} items.',
         'reports.create-report': 'Create report',
         'reports.type.filter': 'Report type:',
+        'reports.unable-to-load': 'Unable to load reports. Check the browser console for more details.',
 
         'filters.label': 'Filters',
 
