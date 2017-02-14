@@ -133,6 +133,8 @@ module.exports = {
         'occurrence.class-tooltip': 'Occurrence class - this field is required',
         'occurrence.add-category': 'Add occurrence category',
         'occurrence.remove-category-tooltip': 'Remove occurrence category',
+        'occurrence.location': 'Location',
+        'occurrence.location-tooltip': 'Where did the occurrence take place?',
 
         'safety-issue.panel.active-tooltip': 'This safety issue is currently active',
         'safety-issue.panel.inactive-tooltip': 'This safety issue is currently not active',

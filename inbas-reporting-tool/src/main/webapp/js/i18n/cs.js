@@ -135,6 +135,8 @@ module.exports = {
         'occurrence.class-tooltip': 'Třída závažnosti - pole je povinné',
         'occurrence.add-category': 'Přidat další klasifikaci události',
         'occurrence.remove-category-tooltip': 'Odebrat klasifikaci události',
+        'occurrence.location': 'Lokace',
+        'occurrence.location-tooltip': 'Kde k události došlo?',
 
         'safety-issue.panel.active-tooltip': 'Tato safety issue je v současné době aktivní',
         'safety-issue.panel.inactive-tooltip': 'Tato safety issue není v současné době aktivní',

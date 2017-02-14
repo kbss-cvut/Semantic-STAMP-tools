@@ -222,10 +222,6 @@ public abstract class DtoMapper {
         }
         OccurrenceDto dto = new OccurrenceDto();
         dto.setUri(occurrence.getUri());
-        // TODO Do we have to create new collection, what if we just assigned the types to dto?
-//        if (occurrence.getTypes() != null) {
-//            dto.setTypes(new HashSet<>(occurrence.getTypes()));
-//        }
         dto.setTypes(occurrence.getTypes());
         dto.setKey(occurrence.getKey());
         dto.setName(occurrence.getName());
