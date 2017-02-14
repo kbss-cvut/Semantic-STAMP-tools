@@ -32,6 +32,8 @@ module.exports = {
         ERROR: 'danger'
     },
 
+    MESSAGE_DURATION: 5000,
+
     /**
      * URL of the remote BI solution providing statistics for the app
      */
