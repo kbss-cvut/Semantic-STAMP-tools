@@ -12,9 +12,19 @@ import java.util.Date;
 
 public class OccurrenceValidator extends Validator<Occurrence> {
 
+    private AircraftValidator aircraftValidator;
+
+    public OccurrenceValidator(AircraftValidator aircraftValidator) {
+        this.aircraftValidator = aircraftValidator;
+    }
+
     @Override
     public void validateForPersist(Occurrence instance) throws ValidationException {
         validate(instance);
+        if (instance.getAircraft() != null) {
+            aircraftValidator.validateForPersist(instance.getAircraft());
+        }
+        super.validateForPersist(instance);
     }
 
     private void validate(Occurrence occurrence) {
@@ -64,5 +74,9 @@ public class OccurrenceValidator extends Validator<Occurrence> {
     @Override
     public void validateForUpdate(Occurrence toValidate, Occurrence original) throws ValidationException {
         validate(toValidate);
+        if (toValidate.getAircraft() != null) {
+            aircraftValidator.validateForUpdate(toValidate.getAircraft(), original.getAircraft());
+        }
+        super.validateForUpdate(toValidate, original);
     }
 }

@@ -106,6 +106,7 @@ public class OccurrenceReportGenerator {
         occurrence.setName(UUID.randomUUID().toString());
         final URI type = Generator.generateEventType();
         occurrence.setEventTypes(Collections.singleton(type));
+        occurrence.setLocation("LKPR" + Generator.randomInt(30));
         occurrence.getTypes().add(type.toString());
         occurrence.setStartTime(new Date(System.currentTimeMillis() - 100000));
         occurrence.setEndTime(new Date());

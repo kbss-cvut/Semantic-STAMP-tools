@@ -48,6 +48,13 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
             CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Question question;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_participant, cascade = {CascadeType.REMOVE,
+            CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    private Aircraft aircraft;
+
+    @OWLDataProperty(iri = Vocabulary.s_p_has_location)
+    private String location;
+
     @Types
     private Set<String> types;
 
@@ -66,8 +73,12 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
         this.endTime = other.endTime;
         this.eventTypes = other.eventTypes;
         this.types = new HashSet<>(other.types);
+        this.location = other.location;
         if (other.question != null) {
             this.question = new Question(other.question);
+        }
+        if (other.aircraft != null) {
+            this.aircraft = new Aircraft(other.aircraft);
         }
     }
 
@@ -164,6 +175,22 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    public Aircraft getAircraft() {
+        return aircraft;
+    }
+
+    public void setAircraft(Aircraft aircraft) {
+        this.aircraft = aircraft;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Set<String> getTypes() {

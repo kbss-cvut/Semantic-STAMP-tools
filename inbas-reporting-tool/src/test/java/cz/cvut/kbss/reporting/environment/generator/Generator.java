@@ -214,4 +214,11 @@ public class Generator {
         report.setFileNumber((long) Generator.randomInt(Integer.MAX_VALUE));
         report.setRevision(1);
     }
+
+    public static Aircraft generateAircraft() {
+        final Aircraft aircraft = new Aircraft();
+        aircraft.setOperator(generateOrganization());
+        aircraft.setTypes(Collections.singleton(Vocabulary.s_c_Aircraft + "/Boeing-787"));
+        return aircraft;
+    }
 }

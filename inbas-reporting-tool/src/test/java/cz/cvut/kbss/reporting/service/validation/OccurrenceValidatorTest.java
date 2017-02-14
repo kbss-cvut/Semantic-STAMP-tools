@@ -15,7 +15,7 @@ public class OccurrenceValidatorTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private OccurrenceValidator validator = new OccurrenceValidator();
+    private OccurrenceValidator validator = new OccurrenceValidator(new AircraftValidator());
 
     @Test
     public void eventInFactorGraphWithoutStartTimeIsInvalidForPersist() {

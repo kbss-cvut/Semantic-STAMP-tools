@@ -4,10 +4,7 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
-import cz.cvut.kbss.reporting.model.CorrectiveMeasureRequest;
-import cz.cvut.kbss.reporting.model.Occurrence;
-import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.data.eccairs.EccairsReportSynchronizationService;
 import cz.cvut.kbss.reporting.service.data.eccairs.EccairsService;
@@ -311,7 +308,8 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
         report.setAuthor(author);
         occurrenceReportService.persist(report);
-        when(eccairsSyncServiceMock.getNewEccairsRevision(any(OccurrenceReport.class))).thenReturn(report.getUri().toString());
+        when(eccairsSyncServiceMock.getNewEccairsRevision(any(OccurrenceReport.class)))
+                .thenReturn(report.getUri().toString());
 
         final OccurrenceReport result = occurrenceReportService.createNewRevisionFromEccairs(report.getFileNumber());
         assertNotNull(result);
@@ -341,5 +339,26 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         thrown.expectMessage("Report chain identified by " + unknownFileNo + " not found.");
 
         occurrenceReportService.createNewRevisionFromEccairs(unknownFileNo);
+    }
+
+    @Test
+    public void setsAircraftOperatorTypeToOperatorOrganizationBeforePersist() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        final Aircraft aircraft = Generator.generateAircraft();
+        report.getOccurrence().setAircraft(aircraft);
+
+        occurrenceReportService.persist(report);
+        assertTrue(aircraft.getOperator().getTypes().contains(Vocabulary.s_c_operator_organization));
+    }
+
+    @Test
+    public void setsAircraftOperatorTypeToOperatorOrganizationBeforeUpdate() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        occurrenceReportService.persist(report);
+
+        final Aircraft aircraft = Generator.generateAircraft();
+        report.getOccurrence().setAircraft(aircraft);
+        occurrenceReportService.update(report);
+        assertTrue(aircraft.getOperator().getTypes().contains(Vocabulary.s_c_operator_organization));
     }
 }

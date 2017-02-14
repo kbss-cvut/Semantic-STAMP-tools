@@ -5,9 +5,7 @@ import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.TestUtils;
-import cz.cvut.kbss.reporting.model.Event;
-import cz.cvut.kbss.reporting.model.Factor;
-import cz.cvut.kbss.reporting.model.Occurrence;
+import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.model.qam.Answer;
 import cz.cvut.kbss.reporting.model.qam.Question;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
@@ -196,6 +194,41 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
                 assertNull(em.find(Question.class, question.getUri()));
                 question.getAnswers().forEach(a -> assertNull(em.find(Answer.class, a.getUri())));
             });
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void persistPersistsAircraftOperatorWhenItDoesNotExist() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        occurrence.setAircraft(Generator.generateAircraft());
+        dao.persist(occurrence);
+
+        final EntityManager em = emf.createEntityManager();
+        try {
+            final Organization result = em.find(Organization.class, occurrence.getAircraft().getOperator().getUri());
+            assertNotNull(result);
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void updatePersistsAircraftOperatorWhenItDoesNotExist() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        occurrence.setAircraft(Generator.generateAircraft());
+        dao.persist(occurrence);
+
+        final Organization oldOrganization = occurrence.getAircraft().getOperator();
+        final Organization newOrganization = Generator.generateOrganization();
+        occurrence.getAircraft().setOperator(newOrganization);
+        dao.update(occurrence);
+
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNotNull(em.find(Organization.class, oldOrganization.getUri()));
+            assertNotNull(em.find(Organization.class, newOrganization.getUri()));
         } finally {
             em.close();
         }

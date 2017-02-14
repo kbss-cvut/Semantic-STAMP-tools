@@ -65,4 +65,24 @@ public class OccurrenceTest {
         assertNotNull(copy.getQuestion());
         assertNotSame(question, copy.getQuestion());
     }
+
+    @Test
+    public void copyConstructorCopiesLocation() {
+        final Occurrence original = OccurrenceReportGenerator.generateOccurrence();
+        final Occurrence copy = new Occurrence(original);
+        assertEquals(original.getLocation(), copy.getLocation());
+    }
+
+    @Test
+    public void copyConstructorCreatesNewAircraftInstance() {
+        final Occurrence original = OccurrenceReportGenerator.generateOccurrence();
+        final Aircraft aircraft = new Aircraft();
+        aircraft.setOperator(Generator.generateOrganization());
+        aircraft.setTypes(Collections.singleton(Generator.generateUri().toString()));
+        original.setAircraft(aircraft);
+
+        final Occurrence copy = new Occurrence(original);
+        assertNotNull(copy.getAircraft());
+        assertNotSame(aircraft, copy.getAircraft());
+    }
 }

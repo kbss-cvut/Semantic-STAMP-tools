@@ -10,7 +10,6 @@ import cz.cvut.kbss.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.reporting.service.data.eccairs.EccairsReportSynchronizationService;
-import cz.cvut.kbss.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.reporting.service.validation.OccurrenceReportValidator;
 import cz.cvut.kbss.reporting.service.visitor.EventTypeSynchronizer;
@@ -43,9 +42,6 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     private EventTypeSynchronizer eventTypeSynchronizer;
 
     @Autowired
-    private EccairsService eccairsService;
-    
-    @Autowired
     private EccairsReportSynchronizationService eccairsReportSynchronizationService;
 
     @Override
@@ -68,6 +64,13 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
             instance.setPhase(phaseService.getDefaultPhase());
         }
         validator.validateForPersist(instance);
+        ensureAircraftOperatorType(instance);
+    }
+
+    private void ensureAircraftOperatorType(OccurrenceReport instance) {
+        if (instance.getOccurrence().getAircraft() != null) {
+            instance.getOccurrence().getAircraft().addOperatorOrganizationType();
+        }
     }
 
     @Override
@@ -75,6 +78,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         reportMetadataService.initMetadataForUpdate(instance);
         synchronizeEventTypes(instance.getOccurrence());
         validator.validateForUpdate(instance, find(instance.getUri()));
+        ensureAircraftOperatorType(instance);
     }
 
     private void synchronizeEventTypes(Occurrence occurrence) {
@@ -151,7 +155,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
             throw NotFoundException.create("Report chain", fileNumber);
         }
         String reportUri = eccairsReportSynchronizationService.getNewEccairsRevision(latestRegular);
-        if(reportUri == null){
+        if (reportUri == null) {
             throw new NotFoundException("ECCAIRS report for report with key " + latestRegular.getKey() + " not found.");
         }
         final OccurrenceReport eccairsLatest = find(URI.create(reportUri));

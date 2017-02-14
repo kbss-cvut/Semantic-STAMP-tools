@@ -12,8 +12,19 @@ public class ValidatorFactory {
     }
 
     @Bean
-    public OccurrenceReportValidator occurrenceReportValidator(ReportValidator reportValidator) {
-        return new OccurrenceReportValidator(reportValidator);
+    public AircraftValidator aircraftValidator() {
+        return new AircraftValidator();
+    }
+
+    @Bean
+    public OccurrenceValidator occurrenceValidator(AircraftValidator aircraftValidator) {
+        return new OccurrenceValidator(aircraftValidator);
+    }
+
+    @Bean
+    public OccurrenceReportValidator occurrenceReportValidator(ReportValidator reportValidator,
+                                                               OccurrenceValidator occurrenceValidator) {
+        return new OccurrenceReportValidator(reportValidator, occurrenceValidator);
     }
 
     @Bean
