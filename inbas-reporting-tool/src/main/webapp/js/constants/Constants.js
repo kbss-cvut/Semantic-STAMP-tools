@@ -11,7 +11,9 @@ module.exports = {
         OCCURRENCE_CLASS: 'occurrenceClass',
         OCCURRENCE_CATEGORY: 'occurrenceCategory',
         AUDIT_FINDING_STATUS: 'auditFindingStatus',
-        REPORTING_PHASE: 'reportingPhase'
+        REPORTING_PHASE: 'reportingPhase',
+        AIRCRAFT_OPERATOR: 'aircraftOperator',
+        AIRCRAFT_TYPE: 'aircraftType'
     },
 
     TIME_SCALES: {

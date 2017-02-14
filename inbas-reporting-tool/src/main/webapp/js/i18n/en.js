@@ -133,8 +133,12 @@ module.exports = {
         'occurrence.class-tooltip': 'Occurrence class - this field is required',
         'occurrence.add-category': 'Add occurrence category',
         'occurrence.remove-category-tooltip': 'Remove occurrence category',
-        'occurrence.location': 'Location',
+        'occurrence.location': 'Occurrence location',
         'occurrence.location-tooltip': 'Where did the occurrence take place?',
+        'occurrence.aircraft': 'Aircraft',
+        'occurrence.aircraft.presence-tooltip': 'Did an aircraft participate in the occurrence?',
+        'occurrence.aircraft.type': 'Aircraft type',
+        'occurrence.aircraft.operator': 'Operator',
 
         'safety-issue.panel.active-tooltip': 'This safety issue is currently active',
         'safety-issue.panel.inactive-tooltip': 'This safety issue is currently not active',

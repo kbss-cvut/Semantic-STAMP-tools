@@ -261,7 +261,7 @@ td.actions button {
     overflow: hidden;
 }
 
-@media(min-width: 1265px) {
+@media (min-width: 1265px) {
     .dashboard-left {
         width: 66.66666667%;
     }
@@ -280,7 +280,7 @@ td.actions button {
     }
 }
 
-@media(max-width: 1264px) {
+@media (max-width: 1264px) {
     .dashboard-left {
         width: 50%;
     }
@@ -818,4 +818,8 @@ button.in-input-line {
     word-wrap: break-word;
     word-break: break-all;
     hyphens: auto;
+}
+
+.panel-toggle {
+    margin: -2px 0;
 }

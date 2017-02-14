@@ -135,8 +135,12 @@ module.exports = {
         'occurrence.class-tooltip': 'Třída závažnosti - pole je povinné',
         'occurrence.add-category': 'Přidat další klasifikaci události',
         'occurrence.remove-category-tooltip': 'Odebrat klasifikaci události',
-        'occurrence.location': 'Lokace',
+        'occurrence.location': 'Místo události',
         'occurrence.location-tooltip': 'Kde k události došlo?',
+        'occurrence.aircraft': 'Letadlo',
+        'occurrence.aircraft.presence-tooltip': 'Účastnilo se události letadlo?',
+        'occurrence.aircraft.type': 'Typ letadla',
+        'occurrence.aircraft.operator': 'Operátor',
 
         'safety-issue.panel.active-tooltip': 'Tato safety issue je v současné době aktivní',
         'safety-issue.panel.inactive-tooltip': 'Tato safety issue není v současné době aktivní',

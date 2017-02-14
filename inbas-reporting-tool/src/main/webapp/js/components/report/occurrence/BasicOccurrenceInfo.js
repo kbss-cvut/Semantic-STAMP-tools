@@ -1,6 +1,7 @@
 'use strict';
 
 import React from "react";
+import Aircraft from "./Aircraft";
 import OccurrenceClassification from "./OccurrenceClassification";
 import OccurrenceDetail from "./Occurrence";
 
@@ -9,6 +10,8 @@ const BasicOccurrenceInfo = (props) => {
         <OccurrenceDetail report={props.report} onChange={props.onChange}/>
 
         <OccurrenceClassification onChange={props.onChange} report={props.report}/>
+
+        <Aircraft aircraft={props.report.occurrence.aircraft} onChange={props.onChange}/>
     </div>;
 };
 
