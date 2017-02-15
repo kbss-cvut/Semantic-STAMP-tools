@@ -56,6 +56,11 @@ class Aircraft extends React.Component {
 
     _toggleAircraft = () => {
         this.setState({aircraftPresent: !this.state.aircraftPresent});
+        if (this.state.aircraftPresent) {
+            this.props.onChange({aircraft: null});
+            this.aircraftType.resetSelection();
+            this.operator.resetSelection();
+        }
     };
 
     _onAircraftTypeSelected = (opt) => {
@@ -74,7 +79,7 @@ class Aircraft extends React.Component {
     };
 
     _resolveAircraftTypeValue() {
-        if (!this.props.aircraft.types || this.props.aircraft.types.length === 0) {
+        if (!this.props.aircraft || !this.props.aircraft.types || this.props.aircraft.types.length === 0) {
             return null;
         }
         const type = this.props.aircraft.types[0],
@@ -83,14 +88,14 @@ class Aircraft extends React.Component {
     }
 
     render() {
-        const aircraft = this.props.aircraft;
+        const aircraft = this.props.aircraft ? this.props.aircraft : {};
         return <Panel bsStyle='info' header={this._renderHeader()} collapsible expanded={this.state.aircraftPresent}>
             <div className='row'>
                 <div className='col-xs-4'>
                     {this._renderAircraftTypeInput()}
                 </div>
                 <div className='col-xs-4'>
-                    <Typeahead label={this.i18n('occurrence.aircraft.operator')}
+                    <Typeahead ref={c => this.operator = c} label={this.i18n('occurrence.aircraft.operator')}
                                formInputOption='id' placeholder={this.i18n('occurrence.aircraft.operator')}
                                onOptionSelected={this._onOperatorSelected} filterOption='name'
                                value={aircraft.operator ? aircraft.operator.name : null} size='small'
