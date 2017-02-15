@@ -19,11 +19,17 @@ class Aircraft extends React.Component {
         onChange: React.PropTypes.func.isRequired
     };
 
+    static defaultProps = {
+        aircraft: {}
+    };
+
     constructor(props) {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            aircraftPresent: this.props.aircraft !== undefined && this.props.aircraft !== null
+            aircraftPresent: props.aircraft.operator !== undefined || props.aircraft.types !== undefined,
+            aircraftType: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.AIRCRAFT_TYPE)),
+            operator: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.AIRCRAFT_OPERATOR))
         };
     }
 
@@ -34,8 +40,13 @@ class Aircraft extends React.Component {
     }
 
     _onOptionsLoaded = (type) => {
-        if (type === Constants.OPTIONS.AIRCRAFT_OPERATOR || type === Constants.OPTIONS.AIRCRAFT_TYPE) {
-            this.forceUpdate();
+        const update = {};
+        if (type === Constants.OPTIONS.AIRCRAFT_OPERATOR) {
+            update.operator = JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.AIRCRAFT_OPERATOR));
+            this.setState(update);
+        } else if (type === Constants.OPTIONS.AIRCRAFT_TYPE) {
+            update.aircraftType = JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.AIRCRAFT_TYPE));
+            this.setState(update);
         }
     };
 
@@ -62,27 +73,28 @@ class Aircraft extends React.Component {
         this.props.onChange({aircraft: aircraft});
     };
 
+    _resolveAircraftTypeValue() {
+        if (!this.props.aircraft.types || this.props.aircraft.types.length === 0) {
+            return null;
+        }
+        const type = this.props.aircraft.types[0],
+            resolvedType = this.state.aircraftType.find(item => item.id === type);
+        return resolvedType ? resolvedType.name : '';
+    }
+
     render() {
-        const aircraftType = JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.AIRCRAFT_TYPE)),
-            operator = JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.AIRCRAFT_OPERATOR));
+        const aircraft = this.props.aircraft;
         return <Panel bsStyle='info' header={this._renderHeader()} collapsible expanded={this.state.aircraftPresent}>
             <div className='row'>
                 <div className='col-xs-4'>
-                    <Typeahead label={this.i18n('occurrence.aircraft.type')}
-                               formInputOption='id' optionsButton={true}
-                               placeholder={this.i18n('occurrence.aircraft.type')}
-                               onOptionSelected={this._onAircraftTypeSelected} filterOption='name'
-                               value={null} size='small'
-                               displayOption='name' options={aircraftType}
-                               customListComponent={TypeaheadResultList}/>
+                    {this._renderAircraftTypeInput()}
                 </div>
                 <div className='col-xs-4'>
                     <Typeahead label={this.i18n('occurrence.aircraft.operator')}
-                               formInputOption='id'
-                               placeholder={this.i18n('occurrence.aircraft.operator')}
+                               formInputOption='id' placeholder={this.i18n('occurrence.aircraft.operator')}
                                onOptionSelected={this._onOperatorSelected} filterOption='name'
-                               value={null} size='small'
-                               displayOption='name' options={operator}
+                               value={aircraft.operator ? aircraft.operator.name : null} size='small'
+                               displayOption='name' options={this.state.operator}
                                customListComponent={TypeaheadResultList}/>
                 </div>
             </div>
@@ -95,6 +107,19 @@ class Aircraft extends React.Component {
                       label={<h5 className='panel-title'
                                  style={{padding: '2px 0 0 0'}}>{this.i18n('occurrence.aircraft')}</h5>}
                       title={this.i18n('occurrence.aircraft.presence-tooltip')} className='panel-toggle'/>;
+    }
+
+    _renderAircraftTypeInput() {
+        if (this.state.aircraftType.length !== 0) {
+            return <Typeahead ref={c => this.aircraftType = c} label={this.i18n('occurrence.aircraft.type')}
+                              formInputOption='id' placeholder={this.i18n('occurrence.aircraft.type')}
+                              onOptionSelected={this._onAircraftTypeSelected} filterOption='name' size='small'
+                              displayOption='name' options={this.state.aircraftType}
+                              value={this._resolveAircraftTypeValue()} customListComponent={TypeaheadResultList}/>;
+        } else {
+            return <Input label={this.i18n('occurrence.aircraft.type')} placeholder={this.i18n('please-wait')}/>;
+        }
+
     }
 }
 
