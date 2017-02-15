@@ -1,6 +1,11 @@
 # SISEL Release Notes
 
-### 0.10.1 - January 24, 2016
+### 0.10.2 - February 15, 2017
+- Occurrence location, aircraft support (Feature #323).
+- Fixes in external report filtering (Bug #349).
+- Do not allow user to request generated form when report is incomplete/invalid (Feature #310).
+
+### 0.10.1 - January 24, 2017
 - Fixed bug in form generator data saving (Bug #306).
 - Made static resources cacheable (Feature #287).
 - Spring library upgrade.
