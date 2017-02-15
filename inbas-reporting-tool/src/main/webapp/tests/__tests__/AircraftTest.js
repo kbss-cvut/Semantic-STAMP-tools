@@ -6,6 +6,7 @@ import Actions from "../../js/actions/Actions";
 import Environment from "../environment/Environment";
 import Generator from "../environment/Generator";
 import Aircraft from "../../js/components/report/occurrence/Aircraft";
+import OptionsStore from "../../js/stores/OptionsStore";
 
 describe('Aircraft', () => {
 
@@ -24,6 +25,7 @@ describe('Aircraft', () => {
             },
             types: [Generator.randomCategory().id]
         };
+        spyOn(OptionsStore, 'getOptions').and.returnValue(Generator.getCategories());
         const component = Environment.render(<Aircraft onChange={onChange} aircraft={aircraft}/>);
         expect(component.state.aircraftPresent).toBeTruthy();
         const aircraftToggle = TestUtils.findRenderedComponentWithType(component, require('react-bootstrap').Checkbox);
