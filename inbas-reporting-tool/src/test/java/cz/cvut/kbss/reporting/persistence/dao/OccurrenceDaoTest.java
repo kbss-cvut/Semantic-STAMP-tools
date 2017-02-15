@@ -233,4 +233,24 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
             em.close();
         }
     }
+
+    @Test
+    public void updateRemovesAircraftIfItWasRemoved() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        final Aircraft aircraft = Generator.generateAircraft();
+        occurrence.setAircraft(aircraft);
+        dao.persist(occurrence);
+        final EntityManager em = emf.createEntityManager();
+        assertNotNull(dao.find(occurrence.getUri()).getAircraft());
+
+        occurrence.setAircraft(null);
+        dao.update(occurrence);
+
+        assertNull(dao.find(occurrence.getUri()).getAircraft());
+        try {
+            assertNull(em.find(Aircraft.class, aircraft.getUri()));
+        } finally {
+            em.close();
+        }
+    }
 }

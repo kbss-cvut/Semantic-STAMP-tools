@@ -137,6 +137,7 @@ module.exports = {
         'occurrence.location-tooltip': 'Where did the occurrence take place?',
         'occurrence.aircraft': 'Aircraft',
         'occurrence.aircraft.presence-tooltip': 'Did an aircraft participate in the occurrence?',
+        'occurrence.aircraft.presence-tooltip.reset': 'Toggling aircraft presence off will cause the existing values to be reset.',
         'occurrence.aircraft.type': 'Aircraft type',
         'occurrence.aircraft.operator': 'Operator',
 

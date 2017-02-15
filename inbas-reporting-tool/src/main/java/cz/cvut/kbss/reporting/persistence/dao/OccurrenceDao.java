@@ -49,6 +49,10 @@ public class OccurrenceDao extends OwlKeySupportingDao<Occurrence> {
         final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(saver, null);
         traverser.traverse(entity);
         persistOrganizationIfNecessary(entity, em);
+        if (original.getAircraft() != null && entity.getAircraft() == null) {
+            final Aircraft toRemove = original.getAircraft();
+            em.remove(toRemove);
+        }
         em.merge(entity);
     }
 }

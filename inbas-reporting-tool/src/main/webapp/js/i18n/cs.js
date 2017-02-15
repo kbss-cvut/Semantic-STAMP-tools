@@ -139,6 +139,7 @@ module.exports = {
         'occurrence.location-tooltip': 'Kde k události došlo?',
         'occurrence.aircraft': 'Letadlo',
         'occurrence.aircraft.presence-tooltip': 'Účastnilo se události letadlo?',
+        'occurrence.aircraft.presence-tooltip.reset': 'Odebrání letadla z události vymaže data, která byla o něm zadána.',
         'occurrence.aircraft.type': 'Typ letadla',
         'occurrence.aircraft.operator': 'Operátor',
 

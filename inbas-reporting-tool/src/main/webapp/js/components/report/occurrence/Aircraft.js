@@ -107,11 +107,12 @@ class Aircraft extends React.Component {
     }
 
     _renderHeader() {
+        const tooltip = this.state.aircraftPresent ? 'occurrence.aircraft.presence-tooltip.reset' : 'occurrence.aircraft.presence-tooltip';
         return <Input type='checkbox' onChange={this._toggleAircraft} value='aircraftPresent'
                       checked={this.state.aircraftPresent}
                       label={<h5 className='panel-title'
                                  style={{padding: '2px 0 0 0'}}>{this.i18n('occurrence.aircraft')}</h5>}
-                      title={this.i18n('occurrence.aircraft.presence-tooltip')} className='panel-toggle'/>;
+                      title={this.i18n(tooltip)} className='panel-toggle'/>;
     }
 
     _renderAircraftTypeInput() {
