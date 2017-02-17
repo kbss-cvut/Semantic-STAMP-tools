@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -55,6 +56,10 @@ public class RemoteDataLoader implements DataLoader {
             final ResponseEntity<String> result = restTemplate.exchange(urlWithQuery, HttpMethod.GET, entity,
                     String.class);
             return result.getBody();
+        } catch (HttpServerErrorException e) {
+            LOG.error("Error when requesting remote data, url: {}. Response Status: {}\n, Body:",
+                    urlWithQuery.toString(), e.getStatusCode(), e.getResponseBodyAsString());
+            throw new WebServiceIntegrationException("Unable to fetch remote data.", e);
         } catch (Exception e) {
             LOG.error("Error when requesting remote data, url: {}.", urlWithQuery.toString(), e);
             throw new WebServiceIntegrationException("Unable to fetch remote data.", e);
