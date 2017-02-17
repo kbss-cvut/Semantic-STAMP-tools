@@ -114,7 +114,7 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
     }
     
     private List<EccairsReport> parsePersistAndMap(Stream<EccairsReport> rs){
-        return rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
+        List<EccairsReport> successfullyImportedReports = rs.filter(Objects::nonNull).map(Unchecked.function(r -> {
                     String sUri = r.createRandomUri();
                     URI context = URI.create(sUri);
                     EntityManager em = eccairsEmf.createEntityManager();
@@ -125,35 +125,41 @@ public class EccairsReportImporter implements ReportImporter, ApplicationEventPu
                         em.getTransaction().commit();
                     } catch (Exception e) {// rolback the transanction if something fails
                         em.getTransaction().rollback();
-                        LOG.trace(String.format("failed to persisting eccairs report from file %s.", r.getOriginFileName()), e);
+                        LOG.warn(String.format("failed to persisting eccairs report from file %s.", r.getOriginFileName()), e);
                         return null;
                     }
-
-                    map2OccurrenceReport(r, em);
-                    eventPublisher.publishEvent(new InvalidateCacheEvent(this));
+                    try{// ensure that there were no exception during mapping.
+                        map2OccurrenceReport(r, em, eccairsDao); 
+                        return r;
+                    }catch(Exception e){
+                        LOG.trace(String.format("failed to map eccairs report from file %s.", r.getOriginFileName()), e);
+                    }
 //                TODO - LogicalDocument ld = mrs.createNewRevision(Long.MIN_VALUE);
-                    return r;
+                    return null;
                 }
 
         )).filter(Objects::nonNull).collect(Collectors.toList());
+        if(!successfullyImportedReports.isEmpty()) // invalidated Cache only if there is a successfully loaded eamil.
+            eventPublisher.publishEvent(new InvalidateCacheEvent(this));
+        return successfullyImportedReports;
     }
 
-    private void map2OccurrenceReport(EccairsReport r, EntityManager em) {
+    private void map2OccurrenceReport(EccairsReport r, EntityManager em, EccairsReportDao eccairsDao) {
         final String reportUri = r.getUri();
         try {
-            em.getTransaction().begin();
+            em.getTransaction().begin(); 
             mapping.mapReport(r, em, reportUri);
             em.getTransaction().commit();
-        } catch (OWLPersistenceException e) {
+        } catch (OWLPersistenceException e) {// catch exception to handle roleback
             LOG.error(String.format("Mapping eccairs report %s to reporting tool report failed. Reverting changes.",
                     r.getOriginFileName()), e);
             if(em.getTransaction().isActive())
                 em.getTransaction().rollback();
-
+            // TODO - check why this report remains in sesame
             em.getTransaction().begin();
-            final Object toRemove = em.merge(r);
-            em.remove(toRemove);
+            eccairsDao.deleteReport(r);
             em.getTransaction().commit();
+            throw e;// rethrow the exception to let the callers know that something went wrong
         }
     }
 
