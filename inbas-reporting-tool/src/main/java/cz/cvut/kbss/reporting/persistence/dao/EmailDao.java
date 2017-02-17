@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -24,6 +27,8 @@ import java.util.Objects;
 @Repository
 public class EmailDao extends BaseDao<EMail> {
 
+    private static final Logger LOG = LoggerFactory.getLogger(EmailDao.class);
+    
     protected Descriptor d = new EntityDescriptor(URI.create("http://onto.fel.cvut.cz/ontologies/ucl-sisel-context-mails"));
     public EmailDao() {
         super(EMail.class);
@@ -45,6 +50,13 @@ public class EmailDao extends BaseDao<EMail> {
             em.close();
         }
     }
+    
+    public EMail findByX(Function<EntityManager, EMail> findByImpl) {
+        final EntityManager em = entityManager();
+        EMail email = findByImpl.apply(em);
+        em.close();
+        return email;
+    }
 
     protected EMail findByMailId(String mailId, EntityManager em) {
         try {
@@ -56,7 +68,18 @@ public class EmailDao extends BaseDao<EMail> {
             return null;
         }
     }
-
+    
+    public EMail findEmailByReportUri(String reportUri){
+        try {
+            return findByX(em -> em.createNativeQuery("SELECT ?x WHERE { ?x ?hasPart ?report; a ?type.}", type)
+                     .setParameter("hasPart", URI.create(Vocabulary.hasPart))
+                     .setParameter("report", URI.create(reportUri))
+                     .setParameter("type", typeUri).getSingleResult());
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+    
     @Override
     protected void persist(EMail entity, EntityManager em) {
         em.persist(entity, d);
