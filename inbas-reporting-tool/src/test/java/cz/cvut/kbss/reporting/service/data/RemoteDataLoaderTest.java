@@ -20,8 +20,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withBadRequest;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
 public class RemoteDataLoaderTest extends BaseServiceTestRunner {
 
@@ -101,6 +100,12 @@ public class RemoteDataLoaderTest extends BaseServiceTestRunner {
     @Test(expected = WebServiceIntegrationException.class)
     public void loadDataThrowsWebServiceIntegrationExceptionWhenNonSuccessResponseIsReceived() {
         mockServer.expect(requestTo(URL)).andExpect(method(HttpMethod.GET)).andRespond(withBadRequest());
+        dataLoader.loadData(URL, Collections.emptyMap());
+    }
+
+    @Test(expected = WebServiceIntegrationException.class)
+    public void loadDataThrowsWebServiceIntegrationExceptionWhenRemoteServerErrorOccurs() {
+        mockServer.expect(requestTo(URL)).andExpect(method(HttpMethod.GET)).andRespond(withServerError());
         dataLoader.loadData(URL, Collections.emptyMap());
     }
 }
