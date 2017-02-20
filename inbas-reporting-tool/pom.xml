@@ -242,6 +242,9 @@
     <profiles>
         <profile>
             <id>dev</id>
+            <properties>
+                <profile-deployment.type>dev</profile-deployment.type>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -263,6 +266,9 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <profile-deployment.type>production</profile-deployment.type>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -487,6 +493,12 @@
                             <outputDirectory>${basedir}/target/classes</outputDirectory>
                             <resources>
                                 <resource>
+                                    <directory>profiles/${profile-deployment.type}/src/main/resources</directory>
+                                    <includes>
+                                        <includes>**/*</includes>
+                                    </includes>
+                                </resource>
+                                <resource>
                                     <directory>profiles/${profile-deployment.name}/src/main/java/resources</directory>
                                     <includes>
                                         <includes>**/*</includes>
@@ -518,7 +530,9 @@
                             <sourceRoot>${project.basedir}/src/main/generated-sources</sourceRoot>
                             <wsdlOptions>
                                 <wsdlOption>
-                                    <wsdl>${project.basedir}/profiles/${profile-eccairs.name}/src/main/java/resources/webapi/webapi.wsdl</wsdl>
+                                    <wsdl>
+                                        ${project.basedir}/profiles/${profile-eccairs.name}/src/main/java/resources/webapi/webapi.wsdl
+                                    </wsdl>
                                     <wsdlLocation>webapi/webapi.wsdl</wsdlLocation>
                                     <extraargs>
                                         <extraarg>-p</extraarg>

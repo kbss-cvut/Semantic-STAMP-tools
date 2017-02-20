@@ -1,6 +1,8 @@
 package cz.cvut.kbss.reporting.service.data.mail;
 
 import cz.cvut.kbss.datatools.mail.imap.idle.IDLEMailMessageReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -12,23 +14,30 @@ import javax.mail.MessagingException;
  */
 public class EmailSourceService {
 
-    @Autowired
-    protected IDLEMailMessageReader idleImapReader;
+    private static final Logger LOG = LoggerFactory.getLogger(EmailSourceService.class);
 
-    /**
-     * WARNING: DO NOT CALL THIS BY HAND IN SPRING with configuration 
-     * cz.cvut.kbss.inbas.reporting.config.AppConfig. In this settings it is called
-     * automatically. This method mya be called in a script outside.
-     */
+    private static final String THREAD_NAME = "IMAPReaderThread";
+
+    private final IDLEMailMessageReader idleImapReader;
+
+    private Thread imapReaderThread;
+
+    @Autowired
+    public EmailSourceService(IDLEMailMessageReader idleImapReader) {
+        this.idleImapReader = idleImapReader;
+    }
+
     @PostConstruct
     public void start() {
-        // FIXME : do not create a thread by hand find a better solution!!!
-        Thread daemon = new Thread(() -> idleImapReader.waitForEmails());
-        daemon.start();
+        LOG.debug("Starting IMAP reader.");
+        this.imapReaderThread = new Thread(idleImapReader::waitForEmails, THREAD_NAME);
+        imapReaderThread.start();
     }
 
     @PreDestroy
     public void stop() throws MessagingException {
+        LOG.debug("Closing IMAP reader.");
         idleImapReader.close();
+        imapReaderThread.interrupt();
     }
 }
