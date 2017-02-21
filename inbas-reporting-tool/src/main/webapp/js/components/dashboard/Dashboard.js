@@ -34,9 +34,9 @@ class Dashboard extends React.Component {
         this.setState({firstName: user.firstName});
     };
 
-    importReport() {
+    importReport = () => {
         this.setState({showImport: true});
-    }
+    };
 
     cancelImport = () => {
         this.setState({showImport: false});
