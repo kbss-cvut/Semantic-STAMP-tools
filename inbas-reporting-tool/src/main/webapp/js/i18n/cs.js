@@ -141,7 +141,7 @@ module.exports = {
         'occurrence.aircraft.presence-tooltip': 'Účastnilo se události letadlo?',
         'occurrence.aircraft.presence-tooltip.reset': 'Odebrání letadla z události vymaže data, která byla o něm zadána.',
         'occurrence.aircraft.type': 'Typ letadla',
-        'occurrence.aircraft.operator': 'Operátor',
+        'occurrence.aircraft.operator': 'Provozovatel',
 
         'safety-issue.panel.active-tooltip': 'Tato safety issue je v současné době aktivní',
         'safety-issue.panel.inactive-tooltip': 'Tato safety issue není v současné době aktivní',
