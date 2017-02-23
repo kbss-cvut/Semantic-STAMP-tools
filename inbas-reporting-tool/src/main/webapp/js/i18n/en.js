@@ -374,6 +374,8 @@ module.exports = {
         'search.loading': 'Searching...',
         'search.title': 'Search results',
         'search.headline': 'Search for {expression} found {count, plural, one {# result} other {# results}}.',
-        'search.results.match': 'Matching snippet'
+        'search.results.match': 'Matching snippet',
+
+        'validation.error.start-after-end': 'Error: end time cannot occur before start time'
     }
 };

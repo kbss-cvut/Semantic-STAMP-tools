@@ -147,7 +147,7 @@ describe('ReportsController', () => {
         const filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
         };
-        spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
+        RouterStore.getTransitionPayload.and.returnValue({filter: filter});
         const controller = Environment.render(<ReportsController location={location}/>);
         controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         const filterableTable = TestUtils.findRenderedComponentWithType(controller, require('../../js/components/report/FilterableReportsTable'));
@@ -238,6 +238,7 @@ describe('ReportsController', () => {
         const reportsToSort = reports.slice(0, 3);
         reportsToSort[0].date = 0;
         delete reportsToSort[1].date;
+        reportsToSort[2].date = Date.now();
         const controller = Environment.render(<ReportsController location={location}/>);
         controller._onReportsLoaded({action: Actions.loadAllReports, reports: reportsToSort});
         controller.onSort('date');
