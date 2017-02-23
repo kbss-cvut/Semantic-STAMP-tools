@@ -330,7 +330,7 @@ public class EccairsServiceImpl implements EccairsService {
     
     private List<String> getOccurrenceKeysByAfterDateQuery(String userToken, final Calendar dateFrom, String queryName, String dateAttributeId){
         LOG.trace("getOccurrenceKeysByAfterDateQuery");
-        Objects.nonNull(userToken);
+        Objects.requireNonNull(userToken);
         final String pQuery = env.getProperty(queryName);
         final List<String> occurrenceKeys = getOccurrencesKeysByAttributeValueQuery(userToken,pQuery, new HashMap<String,String>() {{
             put(dateAttributeId, formatDate(dateFrom));
