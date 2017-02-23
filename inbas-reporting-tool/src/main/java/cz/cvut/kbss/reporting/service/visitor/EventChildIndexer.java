@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.service.visitor;
 
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
+import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 
 import java.util.ArrayList;
@@ -22,6 +23,11 @@ public class EventChildIndexer implements FactorGraphNodeVisitor {
     }
 
     @Override
+    public void visit(SafetyIssue issue) {
+        // Do nothing
+    }
+
+    @Override
     public void visit(Event event) {
         if (event.getChildren() != null) {
             addIndexesIfNecessary(event.getChildren());
@@ -34,7 +40,7 @@ public class EventChildIndexer implements FactorGraphNodeVisitor {
             return;
         }
         final List<Event> events = new ArrayList<>(children);
-        events.sort(Comparator.comparing(Event::getEventType));
+        events.sort(Comparator.comparingInt(a -> a.getEventTypes().hashCode()));
         for (int i = 0; i < events.size(); i++) {
             events.get(i).setIndex(i);
         }
