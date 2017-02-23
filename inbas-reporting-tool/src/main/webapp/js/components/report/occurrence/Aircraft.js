@@ -10,6 +10,7 @@ import Constants from "../../../constants/Constants";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import Input from "../../Input";
+import ObjectTypeResolver from "../../../utils/ObjectTypeResolver";
 import OptionsStore from "../../../stores/OptionsStore";
 import TypeaheadResultList from "../../typeahead/TypeaheadResultList";
 
@@ -64,8 +65,17 @@ class Aircraft extends React.Component {
     };
 
     _onAircraftTypeSelected = (opt) => {
-        const aircraft = assign({}, this.props.aircraft);
-        aircraft.types = [opt.id];
+        const aircraft = assign({}, this.props.aircraft),
+            origType = ObjectTypeResolver.resolveType(aircraft.types, this.state.aircraftType, 'id');
+        if (origType) {
+            aircraft.types.splice(aircraft.types.indexOf(origType.id), 1, opt.id);
+        } else {
+            if (aircraft.types) {
+                aircraft.types.push(opt.id);
+            } else {
+                aircraft.types = [opt.id];
+            }
+        }
         this.props.onChange({aircraft: aircraft});
     };
 
@@ -82,8 +92,7 @@ class Aircraft extends React.Component {
         if (!this.props.aircraft || !this.props.aircraft.types || this.props.aircraft.types.length === 0) {
             return null;
         }
-        const type = this.props.aircraft.types[0],
-            resolvedType = this.state.aircraftType.find(item => item.id === type);
+        const resolvedType = ObjectTypeResolver.resolveType(this.props.aircraft.types, this.state.aircraftType, 'id');
         return resolvedType ? resolvedType.name : '';
     }
 

@@ -276,7 +276,7 @@ class AuditReport {
     }
 
     renderMoreInfo() {
-        return <CollapsibleText text={Utils.stripHtmlTags(this.summary)}/>;
+        return <CollapsibleText text={this.summary}/>;
     }
 }
 
