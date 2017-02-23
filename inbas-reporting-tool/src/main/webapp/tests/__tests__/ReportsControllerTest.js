@@ -26,6 +26,8 @@ describe('ReportsController', () => {
             pathname: '',
             query: {}
         };
+        spyOn(RouterStore, 'getTransitionPayload').and.returnValue(null);
+        spyOn(ComponentStateStore, 'getComponentState').and.returnValue(null);
         ComponentStateStore.onResetComponentState(ReportsController.displayName);
     });
 
@@ -118,7 +120,6 @@ describe('ReportsController', () => {
         const controller = Environment.render(<ReportsController location={location}/>),
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
         Generator.shuffleArray(reports);
-        Generator.shuffleArray(reports);
         setEqualIdentifications();
         controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         let renderedReports = reportsComponent.props.reports;
@@ -137,7 +138,7 @@ describe('ReportsController', () => {
         const filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
         };
-        spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
+        RouterStore.getTransitionPayload.and.returnValue({filter: filter});
         const controller = Environment.render(<ReportsController location={location}/>);
         expect(controller.state.filter).toEqual(filter);
     });
@@ -157,7 +158,7 @@ describe('ReportsController', () => {
         const filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
         };
-        spyOn(RouterStore, 'getTransitionPayload').and.returnValue({filter: filter});
+        RouterStore.getTransitionPayload.and.returnValue({filter: filter});
         spyOn(RouterStore, 'clearTransitionPayload');
         Environment.render(<ReportsController location={location}/>);
         expect(RouterStore.clearTransitionPayload).toHaveBeenCalledWith(Routes.reports.name);
@@ -170,7 +171,7 @@ describe('ReportsController', () => {
             identification: Constants.SORTING.DESC,
             date: Constants.SORTING.ASC
         };
-        spyOn(ComponentStateStore, 'getComponentState').and.returnValue({filter: filter, sort: sort});
+        ComponentStateStore.getComponentState.and.returnValue({filter: filter, sort: sort});
         const controller = Environment.render(<ReportsController location={location}/>);
         expect(ComponentStateStore.getComponentState).toHaveBeenCalledWith(ReportsController.WrappedComponent.WrappedComponent.displayName);
         expect(controller.state.filter).toEqual(filter);
@@ -231,6 +232,20 @@ describe('ReportsController', () => {
 
         Environment.render(<ReportsController location={location}/>);
         expect(Actions.loadAllReports).toHaveBeenCalledWith([key]);
+    });
+
+    it('sorts reports descending by date correctly when some do not have date and some have date 0', () => {
+        const reportsToSort = reports.slice(0, 3);
+        reportsToSort[0].date = 0;
+        delete reportsToSort[1].date;
+        const controller = Environment.render(<ReportsController location={location}/>);
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reportsToSort});
+        controller.onSort('date');
+        const reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports),
+            reportsToRender = reportsComponent.props.reports;
+        expect(reportsToRender[0]).toEqual(reportsToSort[2]);
+        expect(reportsToRender[1]).toEqual(reportsToSort[0]);
+        expect(reportsToRender[2]).toEqual(reportsToSort[1]);
     });
 
     function setEqualIdentifications() {

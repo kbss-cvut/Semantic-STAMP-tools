@@ -17,7 +17,7 @@ const URL_CONTAINS_QUERY = /^.+\?.+=.+$/;
 
 module.exports = {
     /**
-     * Formats the specified date into DD-MM-YY HH:mm
+     * Formats the specified date into DD-MM-YY HH:mm:ss
      * @param date The date to format
      */
     formatDate: function (date = null) {
@@ -32,8 +32,9 @@ module.exports = {
             year = (date.getFullYear() % 100).toString(),
             h = date.getHours(),
             hour = h < 10 ? '0' + h : h.toString(),
-            minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes().toString();
-        return (day + '-' + month + '-' + year + ' ' + hour + ':' + minute);
+            minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes().toString(),
+            second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds().toString();
+        return (day + '-' + month + '-' + year + ' ' + hour + ':' + minute + ':' + second);
     },
 
     /**
@@ -117,9 +118,9 @@ module.exports = {
      */
     getPathFromLocation: function () {
         const hash = window.location.hash,
-            hashPart = hash.match(/#(?:\/?)/)[0],
+            hashPart = hash.match(/#(?:\/?)/),
             endIndex = hash.search(/(\?|&)_k=/);
-        return hash.substring(hashPart.length, endIndex !== -1 ? endIndex : hash.length);
+        return hash.substring(hashPart ? hashPart[0].length : 0, endIndex !== -1 ? endIndex : hash.length);
     },
 
     /**
@@ -132,6 +133,21 @@ module.exports = {
         const min = 0,
             max = 1073741824;   // Max Java Integer / 2
         return Math.floor(Math.random() * (max - min)) + min;
+    },
+
+    /**
+     * Generates new reference id, which is unique among the reference ids of the specified nodes.
+     * @param nodes Existing nodes with reference ids to avoid
+     * @return {number} The newly generated reference id
+     */
+    generateNewReferenceId: function (nodes) {
+        let refId = 0;
+        for (let i = 0, len = nodes.length; i < len; i++) {
+            if (nodes[i].referenceId && refId < nodes[i].referenceId) {
+                refId = nodes[i].referenceId;
+            }
+        }
+        return refId + 1;
     },
 
     /**
@@ -291,5 +307,14 @@ module.exports = {
             hash &= hash;
         }
         return hash;
+    },
+
+    /**
+     * Removes HTML tags from the specified string, leaving only the text content.
+     * @param str The string to strip
+     * @return {string} Text content of the specified code/text
+     */
+    stripHtmlTags: function (str = '') {
+        return str.replace(/<(?:.|\n)*?>/gm, '');
     }
 };

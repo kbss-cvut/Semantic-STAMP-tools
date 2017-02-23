@@ -52,7 +52,17 @@ function sortFactory(sortSpec) {
             if (typeof(a[prop]) === 'string') {
                 res = a[prop].localeCompare(b[prop]);
             } else {
-                res = a[prop] > b[prop] ? 1 : (a[prop] === b[prop] ? 0 : -1);
+                if (a[prop] === undefined) {
+                    if (b[prop] === undefined) {
+                        res = 0;
+                    } else {
+                        res = -1;
+                    }
+                } else if (b[prop] === undefined) {
+                    res = 1;
+                } else {
+                    res = a[prop] > b[prop] ? 1 : (a[prop] === b[prop] ? 0 : -1);
+                }
             }
             if (sortSpec[i].desc) {
                 res *= -1;
@@ -186,7 +196,7 @@ class ReportsController extends React.Component {
         };
         let reports = this.state.reports;
         if (reports) {
-            reports = reports.slice(0); // Shallow copy, so that sorting does not influence the original list
+            reports = reports.slice(); // Shallow copy, so that sorting does not influence the original list
             reports = this._sortReports(this._filterReports(reports));
         }
         return <Reports allReports={this.state.reports} reports={reports} filter={this.state.filter}

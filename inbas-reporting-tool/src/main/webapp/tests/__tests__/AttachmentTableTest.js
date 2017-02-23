@@ -9,7 +9,7 @@ import Generator from "../environment/Generator";
 
 describe('Attachment table', () => {
 
-    var attachments,
+    let attachments,
         onChange,
         onRemove;
 

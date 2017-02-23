@@ -10,6 +10,7 @@ const I18nStore = require('../stores/I18nStore');
 const SafetyIssueBase = require('./SafetyIssueBase').default;
 const Utils = require('../utils/Utils');
 const Vocabulary = require('../constants/Vocabulary');
+const Utils = require('../utils/Utils');
 
 class OccurrenceReport {
     constructor(data) {
@@ -276,7 +277,7 @@ class AuditReport {
     }
 
     renderMoreInfo() {
-        return <CollapsibleText text={this.summary}/>;
+        return <CollapsibleText text={Utils.stripHtmlTags(this.summary)}/>;
     }
 }
 
