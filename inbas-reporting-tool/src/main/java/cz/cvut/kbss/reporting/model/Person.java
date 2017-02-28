@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_Person)
@@ -32,16 +32,12 @@ public class Person implements HasDerivableUri, Serializable {
     @OWLDataProperty(iri = Vocabulary.s_p_password)
     private String password;
 
-    @Properties
-    private Map<String, Set<String>> properties;
-
     @Types
     private Set<String> types;
 
     public Person() {
-        this.types = new HashSet<>(4);
         // Person is an Agent
-        types.add(Vocabulary.s_c_Agent);
+        addType(Vocabulary.s_c_Agent);
     }
 
     @Override
@@ -106,20 +102,20 @@ public class Person implements HasDerivableUri, Serializable {
         this.password = null;
     }
 
-    public Map<String, Set<String>> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(Map<String, Set<String>> properties) {
-        this.properties = properties;
-    }
-
     public Set<String> getTypes() {
         return types;
     }
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    public void addType(String type) {
+        Objects.requireNonNull(type);
+        if (types == null) {
+            this.types = new HashSet<>(4);
+        }
+        types.add(type);
     }
 
     @Override
@@ -129,7 +125,7 @@ public class Person implements HasDerivableUri, Serializable {
 
     /**
      * Generates URI using {@link Constants#PERSON_BASE_URI} and the person's first and last name.
-     *
+     * <p>
      * If the URI is already set, nothing happens.
      */
     @Override

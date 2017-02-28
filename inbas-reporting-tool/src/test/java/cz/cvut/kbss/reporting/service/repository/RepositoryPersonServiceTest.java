@@ -4,13 +4,14 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.exception.UsernameExistsException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.PersonService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
 
@@ -74,5 +75,16 @@ public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Cannot update person's URI. Person: " + p);
         personService.update(p);
+    }
+
+    @Test
+    public void persistAddsGuestUserTypeToThePersistedInstance() {
+        final Person p = Generator.getPerson();
+        assertFalse(p.getTypes().contains(Vocabulary.s_c_guest));
+        personService.persist(p);
+
+        final Person result = personService.find(p.getUri());
+        assertNotNull(result);
+        assertTrue(result.getTypes().contains(Vocabulary.s_c_guest));
     }
 }

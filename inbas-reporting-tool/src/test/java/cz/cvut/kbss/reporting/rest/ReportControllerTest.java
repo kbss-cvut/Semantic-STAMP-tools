@@ -18,7 +18,6 @@ import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.ReportImportingException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssueReport;
@@ -70,14 +69,11 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Autowired
     private DtoMapper mapper;
 
-    private Person author;
-
     @Before
     public void setUp() throws Exception {
         super.setUp();
         Mockito.reset(reportServiceMock, safaImportServiceMock);
-        this.author = Generator.getPerson();
-        Environment.setCurrentUser(author);
+        Environment.setCurrentUser(user);
     }
 
     @Test
@@ -98,19 +94,19 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         for (int i = 0; i < count; i++) {
             final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
             r.setUri(Generator.generateUri());
-            r.setAuthor(author);
+            r.setAuthor(user);
             dtos.add(r.toReportDto());
         }
         for (int i = 0; i < count; i++) {
             final SafetyIssueReport r = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
             r.setUri(Generator.generateUri());
-            r.setAuthor(author);
+            r.setAuthor(user);
             dtos.add(r.toReportDto());
         }
         for (int i = 0; i < count; i++) {
             final AuditReport r = AuditReportGenerator.generateAuditReport(true);
             r.setUri(Generator.generateUri());
-            r.setAuthor(author);
+            r.setAuthor(user);
             dtos.add(r.toReportDto());
         }
         // Some random shuffling
@@ -210,7 +206,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void testGetReportChainRevisions() throws Exception {
-        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(user);
         chain.sort(new ReportRevisionComparator<>());  // sort by revision descending
         final Long fileNumber = chain.get(0).getFileNumber();
         final List<ReportRevisionInfo> revisions = new ArrayList<>(chain.size());
@@ -244,7 +240,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void testGetOccurrenceReportRevisionByChainIdentifierAndRevisionNumber() throws Exception {
-        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(user);
         chain.forEach(r -> {
             r.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance-" + Generator.randomInt()));
             r.setKey(IdentificationUtils.generateKey());
@@ -302,7 +298,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void createNewRevisionReturnsLocationOfNewRevision() throws Exception {
-        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(user);
         final Long fileNumber = chain.get(0).getFileNumber();
         chain.sort(new ReportRevisionComparator<>());  // Sort descending
         final OccurrenceReport newRevision = new OccurrenceReport();

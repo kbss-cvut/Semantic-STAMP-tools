@@ -42,7 +42,7 @@ public class OptionsControllerTest extends BaseControllerTestRunner {
     public void setUp() throws Exception {
         super.setUp();
         Mockito.reset(optionsServiceMock);
-        Environment.setCurrentUser(Generator.getPerson());
+        Environment.setCurrentUser(user);
     }
 
     @Test

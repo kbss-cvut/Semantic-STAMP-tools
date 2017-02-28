@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.service.repository;
 import cz.cvut.kbss.reporting.exception.UsernameExistsException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.dao.GenericDao;
 import cz.cvut.kbss.reporting.persistence.dao.PersonDao;
 import cz.cvut.kbss.reporting.service.PersonService;
@@ -40,6 +41,7 @@ public class RepositoryPersonService extends BaseRepositoryService<Person> imple
         } catch (IllegalStateException e) {
             throw new ValidationException(e.getMessage());
         }
+        person.addType(Vocabulary.s_c_guest);
         personDao.persist(person);
     }
 
@@ -50,8 +52,6 @@ public class RepositoryPersonService extends BaseRepositoryService<Person> imple
         if (orig == null) {
             throw new IllegalArgumentException("Cannot update person's URI. Person: " + instance);
         }
-        LOG.trace("Original password: " + orig.getPassword());
-        LOG.trace("Updated password: " + instance.getPassword());
         if (!orig.getPassword().equals(instance.getPassword())) {
             instance.encodePassword(passwordEncoder);
         }

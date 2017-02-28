@@ -3,10 +3,8 @@ package cz.cvut.kbss.reporting.rest;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
-import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.rest.dto.model.FormGenData;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;
@@ -47,7 +45,6 @@ public class FormGenControllerTest extends BaseControllerTestRunner {
     public void setUp() throws Exception {
         super.setUp();
         Mockito.reset(formGenService);
-        final Person user = Generator.getPerson();
         Environment.setCurrentUser(user);
     }
 
