@@ -415,4 +415,21 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertEquals(keys.size() - unknownKeyCount, result.size());
         assertTrue(Environment.areEqual(reports, result));
     }
+
+    @Test
+    public void existsVerifiesExistenceOfReportWithSpecifiedKey() {
+        final SafetyIssueReport report = persistSafetyIssueReport();
+        assertTrue(reportService.exists(report.getKey(), report.getClass()));
+    }
+
+    @Test
+    public void existsReturnsFalseForNullKey() {
+        final SafetyIssueReport report = persistSafetyIssueReport();
+        assertFalse(reportService.exists(null, report.getClass()));
+    }
+
+    @Test
+    public void existsReturnsFalseForUnknownReportType() {
+        assertFalse(reportService.exists(IdentificationUtils.generateKey(), LogicalDocument.class));
+    }
 }

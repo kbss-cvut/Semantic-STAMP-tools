@@ -113,6 +113,16 @@ public class MainReportService implements ReportBusinessService {
         return service.findByKey(key);
     }
 
+    @Override
+    public <T extends LogicalDocument> boolean exists(String key, Class<T> type) {
+        if (key == null) {
+            return false;
+        }
+        Objects.requireNonNull(type);
+
+        return services.containsKey(type) && services.get(type).exists(key);
+    }
+
     private <T extends LogicalDocument> BaseReportService<T> resolveService(Set<String> types) {
         for (String type : types) {
             if (entitiesToOwlClasses.containsKey(type)) {

@@ -7,8 +7,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -36,5 +35,13 @@ public class KeySupportingRepositoryServiceTest extends BaseServiceTestRunner {
         final Occurrence result = serviceSpy.findByKey(occurrence.getKey());
         assertNotNull(result);
         verify(serviceSpy).postLoad(any(Occurrence.class));
+    }
+
+    @Test
+    public void existsReturnsTrueForExistingInstanceWithMatchingKey() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        occurrenceService.persist(occurrence);
+
+        assertTrue(occurrenceService.exists(occurrence.getKey()));
     }
 }

@@ -66,6 +66,11 @@ public class CachingReportBusinessService implements ReportBusinessService {
     }
 
     @Override
+    public <T extends LogicalDocument> boolean exists(String key, Class<T> type) {
+        return reportService.exists(key, type);
+    }
+
+    @Override
     public <T extends LogicalDocument> T findLatestRevision(Long fileNumber) {
         return reportService.findLatestRevision(fileNumber);
     }

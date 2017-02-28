@@ -74,6 +74,15 @@ public interface ReportBusinessService {
     <T extends LogicalDocument> T findByKey(String key);
 
     /**
+     * Checks whether a report with the specified key and type exists.
+     *
+     * @param key  Instance key
+     * @param type Report class
+     * @return Info about whether report exists
+     */
+    <T extends LogicalDocument> boolean exists(String key, Class<T> type);
+
+    /**
      * Gets report with latest revision in report chain with the specified file number.
      *
      * @param fileNumber Report chain identifier

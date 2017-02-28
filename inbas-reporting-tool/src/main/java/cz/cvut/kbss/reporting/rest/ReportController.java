@@ -88,7 +88,7 @@ public class ReportController extends BaseController {
             throw new BadRequestException("The passed report's key is different from the specified one.");
         }
         final LogicalDocument report = dtoMapper.reportDtoToReport(reportUpdate);
-        if (reportService.findByKey(key) == null) {
+        if (!reportService.exists(key, report.getClass())) {
             throw NotFoundException.create("Report", key);
         }
         reportService.update(report);
@@ -111,7 +111,7 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
         final LogicalDocument report = reportService.findLatestRevision(fileNumber);
         if (report == null) {
@@ -121,7 +121,7 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReportRevisionInfo> getReportChainRevisions(@PathVariable("fileNumber") Long fileNumber) {
         final List<ReportRevisionInfo> revisions = reportService.getReportChainRevisions(fileNumber);
         if (revisions.isEmpty()) {
@@ -162,7 +162,7 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument getRevision(@PathVariable("fileNumber") Long fileNumber,
                                        @PathVariable("revision") Integer revision) {
         final LogicalDocument report = reportService.findRevision(fileNumber, revision);

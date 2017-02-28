@@ -345,6 +345,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
+        when(reportServiceMock.exists(report.getKey(), report.getClass())).thenReturn(true);
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
         return report;
     }
@@ -366,13 +367,13 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
-        when(reportServiceMock.findByKey(report.getKey())).thenReturn(null);
+        when(reportServiceMock.exists(report.getKey(), report.getClass())).thenReturn(false);
         mockMvc.perform(
                 put(REPORTS_PATH + report.getKey())
                         .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isNotFound());
-        verify(reportServiceMock).findByKey(report.getKey());
+        verify(reportServiceMock).exists(report.getKey(), report.getClass());
         verify(reportServiceMock, never()).update(any(OccurrenceReport.class));
     }
 
