@@ -1,5 +1,9 @@
 # SISEL Release Notes
 
+### 0.10.3 - March 1, 2017
+- User role support (Feature #366).
+- Minor performance improvements.
+
 ### 0.10.2 - February 15, 2017
 - Occurrence location, aircraft support (Feature #323).
 - Fixes in external report filtering (Bug #349).
