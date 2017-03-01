@@ -17,7 +17,9 @@ import cz.cvut.kbss.reporting.environment.util.ReportRevisionComparator;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.ReportImportingException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
+import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.audit.AuditReport;
 import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssueReport;
@@ -29,12 +31,15 @@ import cz.cvut.kbss.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.reporting.service.data.mail.SafaImportService;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -46,6 +51,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -54,6 +60,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class ReportControllerTest extends BaseControllerTestRunner {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private static final String REPORTS_PATH = "/reports/";
 
@@ -73,6 +82,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     public void setUp() throws Exception {
         super.setUp();
         Mockito.reset(reportServiceMock, safaImportServiceMock);
+        user.addType(Vocabulary.s_c_regular_user);
         Environment.setCurrentUser(user);
     }
 
@@ -465,5 +475,22 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void importSafaExcelThrowsBadRequestWhenFileCannotBeRead() throws Exception {
         mockMvc.perform(fileUpload(REPORTS_PATH + "importSafa")).andExpect(status().isBadRequest()).andReturn();
+    }
+
+    @Test
+    public void reportUpdateIsNotAllowedForGuestUser() throws Exception {
+        final Person user = new Person();
+        user.addType(Vocabulary.s_c_guest);
+        Environment.setCurrentUser(user);
+        thrown.expectCause(instanceOf(AccessDeniedException.class));
+        final OccurrenceReport report = prepareReport();
+        try {
+            mockMvc.perform(
+                    put(REPORTS_PATH + report.getKey())
+                            .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+        } finally {
+            verify(reportServiceMock, never()).update(any(LogicalDocument.class));
+        }
     }
 }

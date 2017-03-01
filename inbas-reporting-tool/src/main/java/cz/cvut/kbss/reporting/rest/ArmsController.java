@@ -5,13 +5,15 @@ import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.reporting.service.arms.ArmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
+@PreAuthorize("permitAll()")
 @RestController
 @RequestMapping("/arms")
-public class ArmsController {
+public class ArmsController extends BaseController {
 
     @Autowired
     private ArmsService armsService;

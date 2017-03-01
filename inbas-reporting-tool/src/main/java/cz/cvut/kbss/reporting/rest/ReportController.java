@@ -18,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
+
+import static cz.cvut.kbss.reporting.security.SecurityConstants.ROLE_ADMIN;
+import static cz.cvut.kbss.reporting.security.SecurityConstants.ROLE_USER;
 
 @RestController
 @RequestMapping("/reports")
@@ -55,6 +59,7 @@ public class ReportController extends BaseController {
         return new ReportList(reportService.findAll());
     }
 
+    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createReport(@RequestBody LogicalDocument reportDto) {
@@ -81,6 +86,7 @@ public class ReportController extends BaseController {
         return report;
     }
 
+    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/{key}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateReport(@PathVariable("key") String key, @RequestBody LogicalDocument reportUpdate) {
@@ -97,6 +103,7 @@ public class ReportController extends BaseController {
         }
     }
 
+    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/{key}/phase", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void transitionToNextPhase(@PathVariable("key") String key) {
@@ -104,6 +111,7 @@ public class ReportController extends BaseController {
         reportService.transitionToNextPhase(report);
     }
 
+    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeChain(@PathVariable("fileNumber") Long fileNumber) {
@@ -136,6 +144,7 @@ public class ReportController extends BaseController {
      * @param fileNumber Report chain identifier
      * @return Response with location header pointing to the new report
      */
+    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createNewRevision(@PathVariable("fileNumber") Long fileNumber) {
@@ -152,6 +161,7 @@ public class ReportController extends BaseController {
      * @param fileNumber Report chain identifier
      * @return Response with location header pointing to the new report
      */
+    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/chain/{fileNumber}/revisions/eccairs", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createNewRevisionFromEccairs(@PathVariable("fileNumber") Long fileNumber) {
@@ -180,6 +190,7 @@ public class ReportController extends BaseController {
      * @param file The uploaded file
      * @return Created response with key to the imported report
      */
+    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/importE5", method = RequestMethod.POST)
     public ResponseEntity<Void> importE5Report(@RequestParam("file") MultipartFile file) {
         try {
@@ -199,6 +210,7 @@ public class ReportController extends BaseController {
      *
      * @param file The uploaded Excel spreadsheet
      */
+    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/importSafa", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void importSafaExcel(@RequestParam("file") MultipartFile file) {
