@@ -10,6 +10,8 @@ import cz.cvut.kbss.reporting.environment.config.TestSecurityConfig;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.rest.dto.model.PortalUser;
+import cz.cvut.kbss.reporting.security.model.AuthenticationToken;
+import cz.cvut.kbss.reporting.security.model.UserDetails;
 import cz.cvut.kbss.reporting.security.portal.PortalEndpoint;
 import cz.cvut.kbss.reporting.security.portal.PortalEndpointType;
 import cz.cvut.kbss.reporting.security.portal.PortalUserDetails;
@@ -29,6 +31,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -181,6 +184,7 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         p.setUsername(userData.getEmailAddress());
         p.setPassword(PASSWORD);
         p.encodePassword(encoder);
+        p.addType(Vocabulary.s_c_regular_user);
         personDao.persist(p);
         return p;
     }
@@ -233,5 +237,23 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
     @Test
     public void supportsUsernameAndPasswordAuthentication() {
         assertTrue(provider.supports(UsernamePasswordAuthenticationToken.class));
+    }
+
+    @Test
+    public void successfulLoginUsesTypesFromExistingPerson() throws Exception {
+        final PortalUser userData = getPortalUser();
+        persistUser(userData);
+        mockServer.expect(requestTo(getExpectedUrl())).andExpect(method(HttpMethod.GET))
+                  .andRespond(withSuccess(objectMapper.writeValueAsBytes(userData),
+                          MediaType.APPLICATION_JSON));
+        setCompanyIdInCurrentRequest(COMPANY_ID);
+
+        provider.authenticate(createAuthentication(USERNAME));
+        final AuthenticationToken token = (AuthenticationToken) cz.cvut.kbss.reporting.environment.util.Environment
+                .getCurrentUserPrincipal();
+        assertNotNull(token);
+        final UserDetails details = (UserDetails) token.getDetails();
+        assertTrue(details.getAuthorities()
+                          .contains(new SimpleGrantedAuthority(SecurityConstants.Role.USER.getRoleName())));
     }
 }

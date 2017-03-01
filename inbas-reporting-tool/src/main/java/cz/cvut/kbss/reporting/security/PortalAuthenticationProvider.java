@@ -63,7 +63,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         }
         final String password = authentication.getCredentials().toString();
         final Person authenticatedUser = authenticateAgainstPortal(username, password);
-        saveUser(authenticatedUser);
+        mergeAndSaveUser(authenticatedUser);
         final UserDetails userDetails = new PortalUserDetails(authenticatedUser);
         userDetails.eraseCredentials();
         final AuthenticationToken token = new AuthenticationToken(userDetails.getAuthorities(), userDetails);
@@ -132,12 +132,13 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     /**
      * We store the user because it is associated with occurrence reports.
      */
-    private void saveUser(Person user) {
+    private void mergeAndSaveUser(Person user) {
         final Person existing = personService.findByUsername(user.getUsername());
         if (existing == null) {
             personService.persist(user);
             return;
         }
+        user.getTypes().addAll(existing.getTypes());    // Merge user roles from the ontology into the portal instance
         if (!existing.nameEquals(user) || !passwordEncoder.matches(user.getPassword(), existing.getPassword())) {
             personService.update(user);
         }
