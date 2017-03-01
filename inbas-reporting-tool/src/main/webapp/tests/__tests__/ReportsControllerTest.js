@@ -21,6 +21,7 @@ describe('ReportsController', () => {
         jasmine.addMatchers(Environment.customMatchers);
         spyOn(Actions, 'loadAllReports');
         spyOn(Actions, 'loadOptions');
+        Environment.mockCurrentUser();
         reports = Generator.generateReports();
         location = {            // Simulating location supplied normally by React Router
             pathname: '',
@@ -101,10 +102,9 @@ describe('ReportsController', () => {
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
         Generator.shuffleArray(reports);
         controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
-        let renderedReports = reportsComponent.props.reports;
         Generator.shuffleArray(reports);
         controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
-        renderedReports = reportsComponent.props.reports;
+        let renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
 
         controller.onSort('date');      // Descending

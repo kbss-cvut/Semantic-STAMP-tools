@@ -1,32 +1,35 @@
 'use strict';
 
-var React = require('react');
-var Reflux = require('reflux');
-var Button = require('react-bootstrap').Button;
-var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
-var Panel = require('react-bootstrap').Panel;
-var assign = require('object-assign');
-var classNames = require('classnames');
+const React = require('react');
+const Reflux = require('reflux');
+const Button = require('react-bootstrap').Button;
+const ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+const Panel = require('react-bootstrap').Panel;
+const assign = require('object-assign');
+const classNames = require('classnames');
+const IfAnyGranted = require('react-authorization').IfAnyGranted;
 
-var Actions = require('../../../actions/Actions');
-var Attachments = require('../attachment/Attachments').default;
-var BasedOn = require('./BasedOn').default;
-var Constants = require('../../../constants/Constants');
-var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
-var Factors = require('../../factor/Factors');
-var I18nMixin = require('../../../i18n/I18nMixin');
-var injectIntl = require('../../../utils/injectIntl');
-var Input = require('../../Input').default;
-var MessageMixin = require('../../mixin/MessageMixin');
-var MessageStore = require('../../../stores/MessageStore');
-var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
-var ReportProvenance = require('../ReportProvenance').default;
-var ReportSummary = require('../ReportSummary').default;
-var ReportValidator = require('../../../validation/ReportValidator');
-var Sira = require('./Sira').default;
-var WizardWindow = require('../../wizard/WizardWindow');
+const Actions = require('../../../actions/Actions');
+const Attachments = require('../attachment/Attachments').default;
+const BasedOn = require('./BasedOn').default;
+const Constants = require('../../../constants/Constants');
+const CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
+const Factors = require('../../factor/Factors');
+const I18nMixin = require('../../../i18n/I18nMixin');
+const injectIntl = require('../../../utils/injectIntl');
+const Input = require('../../Input').default;
+const MessageMixin = require('../../mixin/MessageMixin');
+const MessageStore = require('../../../stores/MessageStore');
+const ReportDetailMixin = require('../../mixin/ReportDetailMixin');
+const ReportProvenance = require('../ReportProvenance').default;
+const ReportSummary = require('../ReportSummary').default;
+const ReportValidator = require('../../../validation/ReportValidator');
+const Sira = require('./Sira').default;
+const UserStore = require('../../../stores/UserStore');
+const Vocabulary = require('../../../constants/Vocabulary');
+const WizardWindow = require('../../wizard/WizardWindow');
 
-var SafetyIssueReport = React.createClass({
+const SafetyIssueReport = React.createClass({
     mixins: [MessageMixin, I18nMixin, ReportDetailMixin, Reflux.listenTo(MessageStore, 'onMessage')],
 
     propTypes: {
@@ -66,13 +69,13 @@ var SafetyIssueReport = React.createClass({
     },
 
     _onSafetyIssueStatusChange: function () {
-        var issue = assign({}, this.props.report.safetyIssue);
+        const issue = assign({}, this.props.report.safetyIssue);
         issue.state = this._isIssueActive() ? Constants.SAFETY_ISSUE_STATE.CLOSED : Constants.SAFETY_ISSUE_STATE.OPEN;
         this.onChanges({safetyIssue: issue});
     },
 
     _onBaseRemove: function (base) {
-        var issue = assign({}, this.props.report.safetyIssue),
+        const issue = assign({}, this.props.report.safetyIssue),
             basedOn = issue.basedOn.slice();
         basedOn.splice(basedOn.indexOf(base), 1);
         issue.basedOn = basedOn;
@@ -84,7 +87,7 @@ var SafetyIssueReport = React.createClass({
     },
 
     onSave: function () {
-        var report = this.props.report,
+        const report = this.props.report,
             factors = this.refs.factors.getWrappedInstance();
         this.onLoading();
         report.factorGraph = factors.getFactorGraph();
@@ -102,7 +105,7 @@ var SafetyIssueReport = React.createClass({
 
 
     render: function () {
-        var report = this.props.report;
+        const report = this.props.report;
 
         return <div>
             <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
@@ -162,9 +165,9 @@ var SafetyIssueReport = React.createClass({
     },
 
     renderHeader: function () {
-        var fileNo = null,
-            isActive = this.props.report.safetyIssue.state === Constants.SAFETY_ISSUE_STATE.OPEN,
+        const isActive = this.props.report.safetyIssue.state === Constants.SAFETY_ISSUE_STATE.OPEN,
             titleClass = classNames('panel-title', 'pull-left', {'italics': !isActive});
+        let fileNo = null;
         if (this.props.report.fileNumber) {
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
@@ -183,7 +186,7 @@ var SafetyIssueReport = React.createClass({
         if (this.props.report.isNew) {
             return null;
         }
-        var isActive = this._isIssueActive();
+        const isActive = this._isIssueActive();
         return <ButtonToolbar className='float-right'>
             <Button bsStyle='primary' onClick={this._onSafetyIssueStatusChange}
                     title={this.i18n(isActive ? 'safety-issue.deactivate-tooltip' : 'safety-issue.activate-tooltip')}>
@@ -196,22 +199,26 @@ var SafetyIssueReport = React.createClass({
         if (this.props.readOnly) {
             return this.renderReadOnlyButtons();
         }
-        var loading = this.state.submitting,
+        const loading = this.state.submitting,
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return <ButtonToolbar className='float-right detail-button-toolbar'>
-            <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
-                    onClick={this.onSave}>{saveLabel}</Button>
-            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
-                    onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-            {this.renderSubmitButton()}
-            {this.renderDeleteButton()}
-        </ButtonToolbar>;
+        return <IfAnyGranted expected={[Vocabulary.ROLE_ADMIN, Vocabulary.ROLE_USER]}
+                             actual={UserStore.getCurrentUser().types}
+                             unauthorized={this.renderReadOnlyButtons('authorization.read-only.message')}>
+            <ButtonToolbar className='float-right detail-button-toolbar'>
+                <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
+                        onClick={this.onSave}>{saveLabel}</Button>
+                <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                        onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+                {this.renderSubmitButton()}
+                {this.renderDeleteButton()}
+            </ButtonToolbar>
+        </IfAnyGranted>;
     },
 
     getSaveButtonTitle: function () {
-        var titleProp = 'detail.save-tooltip';
+        let titleProp = 'detail.save-tooltip';
         if (this.state.submitting) {
             titleProp = 'detail.saving';
         } else if (!ReportValidator.isValid(this.props.report)) {

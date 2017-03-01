@@ -17,6 +17,7 @@ describe('Audit report controller', () => {
     beforeEach(() => {
         report = Generator.generateAuditReport();
         spyOn(Actions, 'loadOptions');
+        Environment.mockCurrentUser();
     });
 
     it('renders detail as read only when report is a SAFA report', () => {

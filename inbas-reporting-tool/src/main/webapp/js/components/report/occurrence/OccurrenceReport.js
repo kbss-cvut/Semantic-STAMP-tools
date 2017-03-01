@@ -9,6 +9,7 @@ const MenuItem = require('react-bootstrap').MenuItem;
 const Panel = require('react-bootstrap').Panel;
 const assign = require('object-assign');
 const injectIntl = require('../../../utils/injectIntl');
+const IfAnyGranted = require('react-authorization').IfAnyGranted;
 
 const Actions = require('../../../actions/Actions');
 const ArmsAttributes = require('../arms/ArmsAttributes').default;
@@ -27,6 +28,8 @@ const ReportProvenance = require('../ReportProvenance').default;
 const ReportSummary = require('../ReportSummary').default;
 const ReportValidator = require('../../../validation/ReportValidator');
 const SafetyIssueSelector = require('../safetyissue/SafetyIssueSelector').default;
+const UserStore = require('../../../stores/UserStore');
+const Vocabulary = require('../../../constants/Vocabulary');
 const WizardGenerator = require('../../wizard/generator/WizardGenerator');
 const WizardWindow = require('../../wizard/WizardWindow');
 
@@ -197,7 +200,7 @@ const OccurrenceReport = React.createClass({
 
     _renderSummaryButton: function () {
         const report = this.props.report,
-             valid= ReportValidator.isValid(report);
+            valid = ReportValidator.isValid(report);
         return report.isNew ? null :
             <Button bsStyle='primary' bsSize='small' className='detail-top-button' onClick={this._reportSummary}
                     title={this.i18n(valid ? 'report.summary.button.title' : 'report.summary.button.title-invalid')}
@@ -213,14 +216,18 @@ const OccurrenceReport = React.createClass({
         let loading = this.state.submitting !== false,
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading;
 
-        return <ButtonToolbar className='float-right detail-button-toolbar'>
-            <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
-                    onClick={this.onSave}>{this._getSaveButtonLabel()}</Button>
-            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')} disabled={loading}
-                    onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-            {this._renderDropdown()}
-            {this.renderDeleteButton()}
-        </ButtonToolbar>;
+        return <IfAnyGranted expected={[Vocabulary.ROLE_ADMIN, Vocabulary.ROLE_USER]}
+                             actual={UserStore.getCurrentUser().types}
+                             unauthorized={this.renderReadOnlyButtons('authorization.read-only.message')}>
+            <ButtonToolbar className='float-right detail-button-toolbar'>
+                <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
+                        onClick={this.onSave}>{this._getSaveButtonLabel()}</Button>
+                <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')} disabled={loading}
+                        onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+                {this._renderDropdown()}
+                {this.renderDeleteButton()}
+            </ButtonToolbar>
+        </IfAnyGranted>;
     },
 
     _getSaveButtonLabel: function () {

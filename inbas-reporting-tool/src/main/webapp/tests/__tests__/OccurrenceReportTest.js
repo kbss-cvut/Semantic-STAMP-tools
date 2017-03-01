@@ -9,6 +9,8 @@ describe('OccurrenceReport', function () {
         Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         ReportFactory = require('../../js/model/ReportFactory'),
+        UserStore = require('../../js/stores/UserStore'),
+        Vocabulary = require('../../js/constants/Vocabulary'),
         OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),
         messages = require('../../js/i18n/en').messages;
     let handlers,
@@ -17,6 +19,7 @@ describe('OccurrenceReport', function () {
     beforeEach(function () {
         spyOn(Actions, 'updateReport');
         spyOn(Actions, 'loadOptions');
+        spyOn(UserStore, 'getCurrentUser').and.returnValue(Generator.getUser());
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
         Environment.mockFactors(OccurrenceReport);
         report = Generator.generateOccurrenceReport();
@@ -151,5 +154,25 @@ describe('OccurrenceReport', function () {
         const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             summaryButton = TestUtils.findRenderedDOMComponentWithClass(component, 'detail-top-button');
         expect(summaryButton.disabled).toBeTruthy();
+    });
+
+    it('renders full button toolbar when the current user is regular/admin', () => {
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            buttonToolbars = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').ButtonToolbar),
+            buttons = TestUtils.scryRenderedDOMComponentsWithTag(buttonToolbars[buttonToolbars.length - 1], 'button');
+        expect(buttons.length).toBeGreaterThan(1);
+        expect(buttons[0].textContent).toEqual(messages['save']);
+    });
+
+    it('renders only Cancel button when the current user is only guest', () => {
+        const guest = {
+            types: [Vocabulary.ROLE_GUEST]
+        };
+        UserStore.getCurrentUser.and.returnValue(guest);
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            buttonToolbars = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').ButtonToolbar),
+            buttons = TestUtils.scryRenderedDOMComponentsWithTag(buttonToolbars[buttonToolbars.length - 1], 'button');
+        expect(buttons.length).toEqual(1);
+        expect(buttons[0].textContent).toEqual(messages['cancel']);
     });
 });

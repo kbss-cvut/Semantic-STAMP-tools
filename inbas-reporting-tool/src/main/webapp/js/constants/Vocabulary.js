@@ -19,5 +19,9 @@ module.exports = {
     HAS_PART: 'http://onto.fel.cvut.cz/ontologies/ufo/has_part',
     TRANSITION_LABEL: 'http://onto.fel.cvut.cz/ontologies/documentation/transition_label',
 
-    GREATER_THAN: 'http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than'
+    GREATER_THAN: 'http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than',
+
+    ROLE_ADMIN: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/admin',
+    ROLE_USER: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/regular-user',
+    ROLE_GUEST: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/guest'
 };

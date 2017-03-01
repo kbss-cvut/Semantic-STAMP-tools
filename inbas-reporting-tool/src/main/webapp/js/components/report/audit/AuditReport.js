@@ -1,22 +1,25 @@
 'use strict';
 
-var React = require('react');
-var Button = require('react-bootstrap').Button;
-var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
-var Panel = require('react-bootstrap').Panel;
+const React = require('react');
+const Button = require('react-bootstrap').Button;
+const ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+const Panel = require('react-bootstrap').Panel;
+const IfAnyGranted = require('react-authorization').IfAnyGranted;
 
-var Actions = require('../../../actions/Actions');
-var Attachments = require('../attachment/Attachments').default;
-var Audit = require('./Audit').default;
-var I18nMixin = require('../../../i18n/I18nMixin');
-var injectIntl = require('../../../utils/injectIntl');
-var Input = require('../../Input').default;
-var MessageMixin = require('../../mixin/MessageMixin');
-var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
-var ReportProvenance = require('../ReportProvenance').default;
-var ReportValidator = require('../../../validation/ReportValidator');
+const Actions = require('../../../actions/Actions');
+const Attachments = require('../attachment/Attachments').default;
+const Audit = require('./Audit').default;
+const I18nMixin = require('../../../i18n/I18nMixin');
+const injectIntl = require('../../../utils/injectIntl');
+const Input = require('../../Input').default;
+const MessageMixin = require('../../mixin/MessageMixin');
+const ReportDetailMixin = require('../../mixin/ReportDetailMixin');
+const ReportProvenance = require('../ReportProvenance').default;
+const ReportValidator = require('../../../validation/ReportValidator');
+const UserStore = require('../../../stores/UserStore');
+const Vocabulary = require('../../../constants/Vocabulary');
 
-var AuditReport = React.createClass({
+const AuditReport = React.createClass({
     mixins: [MessageMixin, I18nMixin, ReportDetailMixin],
 
     propTypes: {
@@ -113,14 +116,18 @@ var AuditReport = React.createClass({
             saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
             saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
 
-        return <ButtonToolbar className='float-right detail-button-toolbar'>
-            <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this._getSaveButtonTitle()}
-                    onClick={this.onSave}>{saveLabel}</Button>
-            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
-                    onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
-            {this._renderSubmitButton()}
-            {this.renderDeleteButton()}
-        </ButtonToolbar>;
+        return <IfAnyGranted expected={[Vocabulary.ROLE_ADMIN, Vocabulary.ROLE_USER]}
+                             actual={UserStore.getCurrentUser().types}
+                             unauthorized={this.renderReadOnlyButtons('authorization.read-only.message')}>
+            <ButtonToolbar className='float-right detail-button-toolbar'>
+                <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this._getSaveButtonTitle()}
+                        onClick={this.onSave}>{saveLabel}</Button>
+                <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                        onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
+                {this._renderSubmitButton()}
+                {this.renderDeleteButton()}
+            </ButtonToolbar>
+        </IfAnyGranted>;
     },
 
     _getSaveButtonTitle: function () {

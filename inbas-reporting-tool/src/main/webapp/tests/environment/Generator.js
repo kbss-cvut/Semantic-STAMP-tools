@@ -382,4 +382,17 @@ export default class Generator {
         }
         return attachments;
     }
+
+    /**
+     * Gets a predefined user with admin privileges.
+     * @return {{username: string, firstName: string, lastName: string, types: [*,*,*]}}
+     */
+    static getUser() {
+        return {
+            username: 'keyes@unsc.org',
+            firstName: 'Jacob',
+            lastName: 'Keyes',
+            types: [Vocabulary.ROLE_ADMIN, Vocabulary.ROLE_USER, Vocabulary.ROLE_GUEST]
+        };
+    }
 }

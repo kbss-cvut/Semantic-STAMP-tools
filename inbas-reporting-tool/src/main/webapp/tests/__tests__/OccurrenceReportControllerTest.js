@@ -2,7 +2,7 @@
 
 describe('Occurrence report controller', function () {
 
-    var React = require('react'),
+    const React = require('react'),
         Button = require('react-bootstrap').Button,
         rewire = require('rewire'),
         TestUtils = require('react-addons-test-utils'),
@@ -16,6 +16,7 @@ describe('Occurrence report controller', function () {
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
+        Environment.mockCurrentUser();
         Environment.mockFactors(OccurrenceReport);
         ReportController.__set__('ReportDetail', OccurrenceReport);
     });

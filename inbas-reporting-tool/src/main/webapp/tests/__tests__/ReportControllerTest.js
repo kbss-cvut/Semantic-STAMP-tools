@@ -2,7 +2,7 @@
 
 describe('ReportController', function () {
 
-    var React = require('react'),
+    const React = require('react'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
@@ -14,12 +14,13 @@ describe('ReportController', function () {
 
     beforeEach(function () {
         spyOn(Actions, 'loadOptions');
+        Environment.mockCurrentUser();
         Environment.mockGantt();
     });
 
     it('Loads existing report when report key is passed in path params', function () {
         spyOn(Actions, 'loadReport');
-        var params = {reportKey: 12345},
+        const params = {reportKey: 12345},
             controller = Environment.render(<ReportController params={params}/>),
             state = controller.state;
         expect(Actions.loadReport).toHaveBeenCalledWith(params.reportKey);
@@ -28,7 +29,7 @@ describe('ReportController', function () {
     });
 
     it('Initializes new report when no key is specified', function () {
-        var controller = Environment.render(<ReportController params={{}}/>),
+        const controller = Environment.render(<ReportController params={{}}/>),
             report = controller.state.report;
 
         expect(controller.state.loading).toBeFalsy();
@@ -40,7 +41,7 @@ describe('ReportController', function () {
     });
 
     it('initializes new report when no key is passed in updated props', () => {
-        var TestParent = React.createClass({
+        const TestParent = React.createClass({
             getInitialState: function () {
                 return {
                     params: {
@@ -53,7 +54,7 @@ describe('ReportController', function () {
             }
         });
         spyOn(Actions, 'loadReport');
-        var params = {reportKey: 12345},
+        const params = {reportKey: 12345},
             parent = Environment.render(<TestParent/>),
             baseReport = Generator.generateOccurrenceReport();
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue({
@@ -66,7 +67,7 @@ describe('ReportController', function () {
         parent.setState({
             params: {}
         });
-        var controllerState = parent.sut.state;
+        const controllerState = parent.sut.state;
         expect(controllerState.report.isNew).toBeTruthy();
         expect(controllerState.report.javaClass).toEqual(Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS);
         expect(controllerState.report.safetyIssue).toBeDefined();

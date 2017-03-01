@@ -14,6 +14,7 @@ describe('Report store', function () {
 
     beforeEach(function () {
         reqMock = Environment.mockRequestMethods(reqMockMethods);
+        Environment.mockCurrentUser();
         Ajax.__set__('request', reqMock);
         Ajax.__set__('Logger', Environment.mockLogger());
         ReportStore.__set__('Ajax', Ajax);

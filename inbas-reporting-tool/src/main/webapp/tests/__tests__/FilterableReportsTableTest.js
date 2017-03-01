@@ -32,6 +32,7 @@ describe('Filterable reports table', function () {
             onFilterChange: onFilterChange
         };
         spyOn(Actions, 'loadOptions');
+        Environment.mockCurrentUser();
     });
 
     it('shows a set of existing report types in the filter', function () {

@@ -2,7 +2,7 @@
 
 describe('Reports', function () {
 
-    var React = require('react'),
+    const React = require('react'),
         Environment = require('../environment/Environment'),
 
         Reports = require('../../js/components/report/Reports').default,
@@ -16,10 +16,11 @@ describe('Reports', function () {
 
     beforeEach(function () {
         spyOn(Routing, 'transitionToHome');
+        Environment.mockCurrentUser();
     });
 
     it('shows message informing that there are no matching reports when filter finds no reports.', function () {
-        var result = Environment.render(<Reports allReports={[{key: 1}]} reports={[]} actions={actions}
+        const result = Environment.render(<Reports allReports={[{key: 1}]} reports={[]} actions={actions}
                                                  filter={{'occurrenceCategory.id': 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1'}}/>),
             message = Environment.getComponentByTagAndText(result, 'div', en.messages['reports.filter.no-matching-found']);
 
@@ -27,7 +28,7 @@ describe('Reports', function () {
     });
 
     it('shows message with a link to dashboard when no reports exist.', function () {
-        var result = Environment.render(<Reports allReports={[]} reports={[]} actions={actions}/>),
+        const result = Environment.render(<Reports allReports={[]} reports={[]} actions={actions}/>),
             message = Environment.getComponentByTagAndText(result, 'div', en.messages['reports.no-reports'] + en.messages['reports.no-reports.link']),
             link = Environment.getComponentByTagAndText(result, 'a', en.messages['reports.no-reports.link']);
 

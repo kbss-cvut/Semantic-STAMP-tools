@@ -376,6 +376,8 @@ module.exports = {
         'search.headline': 'Search for {expression} found {count, plural, one {# result} other {# results}}.',
         'search.results.match': 'Matching snippet',
 
-        'validation.error.start-after-end': 'Error: end time cannot occur before start time'
+        'validation.error.start-after-end': 'Error: end time cannot occur before start time',
+
+        'authorization.read-only.message': 'You are not authorized to modify the reports.'
     }
 };
