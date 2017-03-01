@@ -86,7 +86,7 @@ class ReportRow extends React.Component {
                 <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.open-tooltip')}
                         onClick={this.onEditClick}>{this.i18n('open')}</Button>
                 <IfAnyGranted expected={[Vocabulary.ROLE_USER, Vocabulary.ROLE_ADMIN]}
-                              actual={UserStore.getCurrentUser().types}>
+                              actual={UserStore.getCurrentUser().types} element='span'>
                     <Button bsStyle='warning' bsSize='small' title={this.i18n('reports.delete-tooltip')}
                             onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>
                 </IfAnyGranted>
