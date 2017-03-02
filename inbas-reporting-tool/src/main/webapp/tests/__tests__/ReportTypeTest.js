@@ -4,10 +4,15 @@ describe('ReportType', function () {
 
     const ReportType = require('../../js/model/ReportType'),
         Constants = require('../../js/constants/Constants'),
+        Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         ReportFactory = require('../../js/model/ReportFactory'),
         OccurrenceReportController = require('../../js/components/report/occurrence/OccurrenceReportController'),
         Vocabulary = require('../../js/constants/Vocabulary');
+
+    beforeEach(() => {
+        Environment.mockCurrentUser();
+    });
 
     it('returns default detail controller for new report when getDetailController is called', function () {
         const report = ReportFactory.createOccurrenceReport(),
