@@ -69,7 +69,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(OWLPersistenceException.class)
-    public ResponseEntity<ErrorInfo> jopaException(HttpServletRequest request, PersistenceException e) {
+    public ResponseEntity<ErrorInfo> jopaException(HttpServletRequest request, OWLPersistenceException e) {
         LOG.error("Persistence exception caught.", e);
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
     }
