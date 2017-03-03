@@ -9,6 +9,7 @@ import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.Organization;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.qam.Answer;
 import cz.cvut.kbss.reporting.model.qam.Question;
@@ -214,6 +215,21 @@ public class OccurrenceReportFormGenDaoTest {
             }
         } finally {
             connection.close();
+            em.close();
+        }
+    }
+
+    @Test
+    public void persistSavesOrganization() throws Exception {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
+        personDao.persist(report.getAuthor());
+        report.getOccurrence().setAircraft(Generator.generateAircraft());
+
+        dao.persist(report);
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNotNull(em.find(Organization.class, report.getOccurrence().getAircraft().getOperator().getUri()));
+        } finally {
             em.close();
         }
     }
