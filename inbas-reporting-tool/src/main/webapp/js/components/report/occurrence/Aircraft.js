@@ -104,7 +104,7 @@ class Aircraft extends React.Component {
                     {this._renderAircraftTypeInput()}
                 </div>
                 <div className='col-xs-4'>
-                    <Typeahead ref={c => this.operator = c} label={this.i18n('occurrence.aircraft.operator')}
+                    <Typeahead ref={c => this.operator = c} label={this.i18n('occurrence.aircraft.operator') + '*'}
                                formInputOption='id' placeholder={this.i18n('occurrence.aircraft.operator')}
                                onOptionSelected={this._onOperatorSelected} filterOption='name'
                                value={aircraft.operator ? aircraft.operator.name : null} size='small'

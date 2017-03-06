@@ -90,6 +90,11 @@ describe('Report validator', function () {
             report.occurrence.endTime = 1000;
             expect(ReportValidator.isValid(report)).toBeTruthy();
         });
+
+        it('marks report with aircraft without operator as invalid', () => {
+            report.occurrence.aircraft = {};
+            expect(ReportValidator.isValid(report)).toBeFalsy();
+        });
     });
 
     describe('(Safety issue reports)', () => {

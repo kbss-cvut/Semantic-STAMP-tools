@@ -1,7 +1,10 @@
 package cz.cvut.kbss.reporting.service.jmx;
 
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import cz.cvut.kbss.jopa.sessions.Cache;
 import cz.cvut.kbss.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.cache.ReportCache;
@@ -28,6 +31,9 @@ public class AppAdminBeanTest extends BaseServiceTestRunner {
     private ReportCache reportCache;
 
     @Autowired
+    private EntityManagerFactory emf;
+
+    @Autowired
     private AdminListener listener;
 
     @Test
@@ -44,6 +50,15 @@ public class AppAdminBeanTest extends BaseServiceTestRunner {
         assertTrue(reportCache.getAll().isEmpty());
     }
 
+    @Test
+    public void invalidateCacheEvictsPersistenceProviderCache() {
+        final Person p = persistPerson();
+        final Cache cache = emf.getCache();
+        assertTrue(cache.contains(Person.class, p.getUri()));
+        adminBean.invalidateCaches();
+        assertFalse(cache.contains(Person.class, p.getUri()));
+    }
+
     @Component
     public static class AdminListener implements ApplicationListener<InvalidateCacheEvent> {
 
@@ -55,7 +70,9 @@ public class AppAdminBeanTest extends BaseServiceTestRunner {
 
         @Override
         public void onApplicationEvent(InvalidateCacheEvent invalidateCacheEvent) {
-            countDownLatch.countDown();
+            if (countDownLatch != null) {
+                countDownLatch.countDown();
+            }
         }
     }
 }

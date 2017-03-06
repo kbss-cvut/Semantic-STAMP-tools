@@ -18,5 +18,5 @@ CONSTRUCT {
                 }
           }
   }
-  BIND (CONCAT(STR(COALESCE(?countryLabel, "")), ' \u25B8 ' , STR(COALESCE(?operatorLabel, ""))) as ?label)
+  BIND (CONCAT(STR(COALESCE(?operatorLabel, "")), ' (', STR(COALESCE(?countryLabel, "")), ')') as ?label)
 } ORDER BY ?operator

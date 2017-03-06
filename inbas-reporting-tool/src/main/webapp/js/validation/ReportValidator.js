@@ -1,10 +1,10 @@
 'use strict';
 
-var Constants = require('../constants/Constants');
+const Constants = require('../constants/Constants');
 
-var validators = {};
+const validators = {};
 
-var ReportValidator = {
+const ReportValidator = {
 
     /**
      * Checks whether all the required fields are filled.
@@ -52,7 +52,7 @@ var ReportValidator = {
 /**
  * Occurrence report validator.
  */
-var OccurrenceReportValidator = {
+const OccurrenceReportValidator = {
 
     getValidationMessage: function (report) {
         if (!report.occurrence) {
@@ -76,6 +76,9 @@ var OccurrenceReportValidator = {
         if (!this._isOccurrenceStartEndTimeDiffValid(report)) {
             return 'detail.large-time-diff-tooltip';
         }
+        if (report.occurrence.aircraft && !report.occurrence.aircraft.operator) {
+            return 'detail.invalid-tooltip';
+        }
         return null;
     },
 
@@ -94,7 +97,7 @@ var OccurrenceReportValidator = {
 
 validators[Constants.OCCURRENCE_REPORT_JAVA_CLASS] = OccurrenceReportValidator;
 
-var SafetyIssueReportValidator = {
+const SafetyIssueReportValidator = {
     getValidationMessage: function (report) {
         if (!report.safetyIssue) {
             return 'detail.invalid-tooltip';
@@ -112,7 +115,7 @@ var SafetyIssueReportValidator = {
 
 validators[Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS] = SafetyIssueReportValidator;
 
-var AuditReportValidator = {
+const AuditReportValidator = {
     getValidationMessage: function (report) {
         if (!report.audit) {
             return 'detail.invalid-tooltip';
