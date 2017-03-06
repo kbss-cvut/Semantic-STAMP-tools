@@ -11,10 +11,12 @@ CONSTRUCT {
      e-a-3.4.0.2:vl-a-215 e-m:has-child ?country .
           OPTIONAL {
                 ?country e-m:has-child ?operator ;
+                         e-m:has-description ?countryLabel .
                 OPTIONAL {
-                      ?operator e-m:has-description ?label.
-                      ?operator rdfs:label ?description .
+                      ?operator e-m:has-description ?operatorLabel ;
+                                rdfs:label ?description .
                 }
           }
   }
+  BIND (CONCAT(STR(COALESCE(?countryLabel, "")), ' \u25B8 ' , STR(COALESCE(?operatorLabel, ""))) as ?label)
 } ORDER BY ?operator
