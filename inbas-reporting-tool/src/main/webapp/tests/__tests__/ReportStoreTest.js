@@ -4,17 +4,15 @@ describe('Report store', function () {
 
     const rewire = require('rewire'),
         Environment = require('../environment/Environment'),
-        Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         Ajax = rewire('../../js/utils/Ajax'),
+        Generator = require('../environment/Generator').default,
         ReportStore = rewire('../../js/stores/ReportStore'),
-        reqMockMethods = ['get', 'put', 'post', 'del', 'send', 'accept', 'set', 'end'],
-        Vocabulary = require('../../js/constants/Vocabulary');
+        reqMockMethods = ['get', 'put', 'post', 'del', 'send', 'accept', 'set', 'end'];
     let reqMock, reports;
 
     beforeEach(function () {
         reqMock = Environment.mockRequestMethods(reqMockMethods);
-        Environment.mockCurrentUser();
         Ajax.__set__('request', reqMock);
         Ajax.__set__('Logger', Environment.mockLogger());
         ReportStore.__set__('Ajax', Ajax);
@@ -187,57 +185,5 @@ describe('Report store', function () {
             ReportStore.onLoadReportsForSearch();
             expect(Ajax.get).not.toHaveBeenCalled();
         });
-    });
-
-    it('loads safety issue and adds base to it when addSafetyIssueBase is triggered', () => {
-        const baseReport = Generator.generateOccurrenceReport(),
-            base = baseReport.occurrence,
-            issue = Generator.generateSafetyIssueReport();
-        spyOn(ReportStore, 'trigger').and.callThrough();
-        mockResponse(null, issue);
-        ReportStore.onAddSafetyIssueBase(issue.key, {event: base, report: baseReport});
-        expect(reqMock.end).toHaveBeenCalled();
-        expect(issue.safetyIssue.basedOn).toBeDefined();
-        expect(issue.safetyIssue.basedOn[0].uri).toEqual(base.uri);
-        expect(issue.safetyIssue.basedOn[0].reportKey).toEqual(baseReport.key);
-        expect(ReportStore.trigger).toHaveBeenCalled();
-    });
-
-    it('prevents report loading when it is already being loaded', () => {
-        const issue = Generator.generateSafetyIssueReport();
-        ReportStore.onLoadReport(issue.key);
-        ReportStore.onLoadReport(issue.key);
-        expect(reqMock.end.calls.count()).toEqual(1);
-    });
-
-    it('adds isSafaReport and isEccairsReport functions to loaded report', () => {
-        const report = Generator.generateOccurrenceReport();
-        delete report.isEccairsReport;
-        mockResponse(null, report);
-        spyOn(ReportStore, 'trigger').and.callThrough();
-        ReportStore.onLoadReport(report.key);
-        const triggerArg = ReportStore.trigger.calls.argsFor(0)[0];
-        expect(triggerArg.action).toEqual(Actions.loadReport);
-        const loadedReport = triggerArg.report;
-        expect(typeof loadedReport.isEccairsReport).toEqual('function');
-        expect(typeof loadedReport.isSafaReport).toEqual('function');
-    });
-
-    it('adds isSafaReport and isEccairsReport functions to all loaded reports', () => {
-        const reports = Generator.generateReports();
-        reports.forEach(r => {
-            delete r.isSafaReport;
-            delete r.isEccairsReport;
-        });
-        mockResponse(null, reports);
-        spyOn(ReportStore, 'trigger').and.callThrough();
-        ReportStore.onLoadAllReports();
-        const triggerArg = ReportStore.trigger.calls.argsFor(1)[0];
-        expect(triggerArg).toBeDefined();
-        const triggeredReports = triggerArg.reports;
-        for (let i = 0, len = triggeredReports.length; i < len; i++) {
-            expect(triggeredReports[i].isSafaReport).toBeDefined();
-            expect(triggeredReports[i].isEccairsReport).toBeDefined();
-        }
     });
 });

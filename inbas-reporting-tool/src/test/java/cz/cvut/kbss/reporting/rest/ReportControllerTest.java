@@ -1,49 +1,35 @@
 package cz.cvut.kbss.reporting.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.jopa.exceptions.RollbackException;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
-import cz.cvut.kbss.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
-import cz.cvut.kbss.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.environment.util.ReportRevisionComparator;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
-import cz.cvut.kbss.reporting.exception.ReportImportingException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
-import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
-import cz.cvut.kbss.reporting.model.audit.AuditReport;
-import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;
-import cz.cvut.kbss.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
-import cz.cvut.kbss.reporting.service.data.mail.SafaImportService;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +37,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -61,67 +46,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class ReportControllerTest extends BaseControllerTestRunner {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     private static final String REPORTS_PATH = "/reports/";
 
     @Autowired
     private ReportBusinessService reportServiceMock;
 
     @Autowired
-    private OccurrenceReportService occurrenceReportService;
-
-    @Autowired
-    private SafaImportService safaImportServiceMock;
-
-    @Autowired
     private DtoMapper mapper;
+
+    private Person author;
 
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        Mockito.reset(reportServiceMock, safaImportServiceMock);
-        user.addType(Vocabulary.s_c_regular_user);
-        Environment.setCurrentUser(user);
-    }
-
-    @Test
-    public void getAllReturnsDtosForVariousReportTypes() throws Exception {
-        final List<ReportDto> dtos = initReportsForFindAll();
-        when(reportServiceMock.findAll()).thenReturn(dtos);
-        final MvcResult result = mockMvc.perform(get("/reports").accept(MediaType.APPLICATION_JSON_VALUE))
-                                        .andExpect(status().isOk()).andReturn();
-        final List<ReportDto> res = readValue(result, new TypeReference<List<ReportDto>>() {
-        });
-        assertNotNull(res);
-        assertEquals(dtos, res);
-    }
-
-    private List<ReportDto> initReportsForFindAll() {
-        final List<ReportDto> dtos = new ArrayList<>();
-        final int count = Generator.randomInt(2, 5);
-        for (int i = 0; i < count; i++) {
-            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
-            r.setUri(Generator.generateUri());
-            r.setAuthor(user);
-            dtos.add(r.toReportDto());
-        }
-        for (int i = 0; i < count; i++) {
-            final SafetyIssueReport r = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
-            r.setUri(Generator.generateUri());
-            r.setAuthor(user);
-            dtos.add(r.toReportDto());
-        }
-        for (int i = 0; i < count; i++) {
-            final AuditReport r = AuditReportGenerator.generateAuditReport(true);
-            r.setUri(Generator.generateUri());
-            r.setAuthor(user);
-            dtos.add(r.toReportDto());
-        }
-        // Some random shuffling
-        Collections.shuffle(dtos);
-        return dtos;
+        Mockito.reset(reportServiceMock);
+        this.author = Generator.getPerson();
+        Environment.setCurrentUser(author);
     }
 
     @Test
@@ -129,8 +69,9 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         when(reportServiceMock.findAll()).thenReturn(Collections.emptyList());
         final MvcResult result = mockMvc.perform(get("/reports").accept(MediaType.APPLICATION_JSON_VALUE))
                                         .andExpect(status().isOk()).andReturn();
-        final List<ReportDto> res = readValue(result, new TypeReference<List<ReportDto>>() {
-        });
+        final List<ReportDto> res = objectMapper
+                .readValue(result.getResponse().getContentAsByteArray(), new TypeReference<List<ReportDto>>() {
+                });
         assertNotNull(res);
         assertTrue(res.isEmpty());
     }
@@ -193,21 +134,6 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     }
 
     @Test
-    public void testGetReportForAuditReport() throws Exception {
-        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
-        report.getAudit().setUri(Generator.generateUri());
-        report.setKey(IdentificationUtils.generateKey());
-        report.setUri(Generator.generateUri());
-        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
-        final MvcResult result = mockMvc.perform(get(REPORTS_PATH + report.getKey())).andExpect(status().isOk())
-                                        .andReturn();
-        final AuditReport res = readValue(result, AuditReport.class);
-        assertNotNull(res);
-        assertEquals(report.getUri(), res.getUri());
-        assertEquals(report.getKey(), res.getKey());
-    }
-
-    @Test
     public void getLatestRevisionThrowsNotFoundWhenReportChainIsNotFound() throws Exception {
         final Long fileNumber = 12345L;
         when(reportServiceMock.findLatestRevision(fileNumber)).thenReturn(null);
@@ -216,7 +142,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void testGetReportChainRevisions() throws Exception {
-        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(user);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         chain.sort(new ReportRevisionComparator<>());  // sort by revision descending
         final Long fileNumber = chain.get(0).getFileNumber();
         final List<ReportRevisionInfo> revisions = new ArrayList<>(chain.size());
@@ -250,7 +176,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void testGetOccurrenceReportRevisionByChainIdentifierAndRevisionNumber() throws Exception {
-        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(user);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         chain.forEach(r -> {
             r.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance-" + Generator.randomInt()));
             r.setKey(IdentificationUtils.generateKey());
@@ -298,8 +224,8 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Test
     public void createReportReturnsValidationExceptionThrownByServiceAsResponse() throws Exception {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
-        doThrow(new ValidationException("Invalid report.")).when(reportServiceMock)
-                                                           .persist(any(OccurrenceReport.class));
+        Mockito.doThrow(new ValidationException("Invalid report.")).when(reportServiceMock)
+               .persist(any(OccurrenceReport.class));
         mockMvc.perform(post("/reports").content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
                                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isConflict());
@@ -308,7 +234,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void createNewRevisionReturnsLocationOfNewRevision() throws Exception {
-        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(user);
+        final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
         final Long fileNumber = chain.get(0).getFileNumber();
         chain.sort(new ReportRevisionComparator<>());  // Sort descending
         final OccurrenceReport newRevision = new OccurrenceReport();
@@ -351,7 +277,6 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
-        when(reportServiceMock.exists(report.getKey(), report.getClass())).thenReturn(true);
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
         return report;
     }
@@ -373,13 +298,13 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
         report.setKey(IdentificationUtils.generateKey());
-        when(reportServiceMock.exists(report.getKey(), report.getClass())).thenReturn(false);
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(null);
         mockMvc.perform(
                 put(REPORTS_PATH + report.getKey())
                         .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isNotFound());
-        verify(reportServiceMock).exists(report.getKey(), report.getClass());
+        verify(reportServiceMock).findByKey(report.getKey());
         verify(reportServiceMock, never()).update(any(OccurrenceReport.class));
     }
 
@@ -420,77 +345,5 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                                         .andExpect(status().isInternalServerError()).andReturn();
         final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
         assertEquals(message, errorInfo.getMessage());
-    }
-
-    @Test
-    public void importFromE5ReturnsLocationHeaderOnSuccess() throws Exception {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
-        IdentificationUtils.generateIdentificationFields(report);
-        when(reportServiceMock.importReportFromFile(anyString(), any(InputStream.class))).thenReturn(report);
-        final MockMultipartFile file = getMockMultipartFile();
-        final MvcResult result = mockMvc.perform(fileUpload(REPORTS_PATH + "importE5").file(file))
-                                        .andExpect(status().isCreated()).andReturn();
-        verifyLocationEquals(REPORTS_PATH + report.getKey(), result);
-        verify(reportServiceMock).importReportFromFile(eq(file.getOriginalFilename()), any(InputStream.class));
-    }
-
-    private MockMultipartFile getMockMultipartFile() {
-        final String name = "iame5xfile.e5x";
-        final String content = "fjadjfiasjefnasenfas9eu0[1231hhafp8ayh2r23rqhwjkehrqo3987424";
-        return new MockMultipartFile("file", name, null, content.getBytes());
-    }
-
-    @Test
-    public void reportImportingExceptionIsWrappedInJsonObjectWithReadableMessage() throws Exception {
-        final String errorMsg = "Invalid report content.";
-        when(reportServiceMock.importReportFromFile(anyString(), any(InputStream.class)))
-                .thenThrow(new ReportImportingException(errorMsg));
-        final MockMultipartFile file = getMockMultipartFile();
-        final MvcResult result = mockMvc.perform(fileUpload(REPORTS_PATH + "importE5").file(file))
-                                        .andExpect(status().isInternalServerError()).andReturn();
-        final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
-        assertEquals(errorMsg, errorInfo.getMessage());
-    }
-
-    @Test
-    public void createNewRevisionFromEccairsReturnsLocationOfTheNewRevision() throws Exception {
-        final OccurrenceReport newRevision = OccurrenceReportGenerator.generateOccurrenceReport(true);
-        newRevision.setKey(IdentificationUtils.generateKey());
-        final Long fileNo = IdentificationUtils.generateFileNumber();
-        newRevision.setFileNumber(fileNo);
-        when(occurrenceReportService.createNewRevisionFromEccairs(fileNo)).thenReturn(newRevision);
-
-        final MvcResult result = mockMvc.perform(post(REPORTS_PATH + "chain/" + fileNo + "/revisions/eccairs"))
-                                        .andExpect(status().isCreated()).andReturn();
-        verifyLocationEquals(REPORTS_PATH + newRevision.getKey(), result);
-    }
-
-    @Test
-    public void importSafaExcelPassesInputStreamToSafaService() throws Exception {
-        final MockMultipartFile file = getMockMultipartFile();
-        mockMvc.perform(fileUpload(REPORTS_PATH + "importSafa").file(file)).andExpect(status().isCreated()).andReturn();
-        verify(safaImportServiceMock).importReportsFromExcel(any(NamedStream.class));
-    }
-
-    @Test
-    public void importSafaExcelThrowsBadRequestWhenFileCannotBeRead() throws Exception {
-        mockMvc.perform(fileUpload(REPORTS_PATH + "importSafa")).andExpect(status().isBadRequest()).andReturn();
-    }
-
-    @Test
-    public void reportUpdateIsNotAllowedForGuestUser() throws Exception {
-        final Person user = new Person();
-        user.addType(Vocabulary.s_c_guest);
-        Environment.setCurrentUser(user);
-        thrown.expectCause(instanceOf(AccessDeniedException.class));
-        final OccurrenceReport report = prepareReport();
-        try {
-            mockMvc.perform(
-                    put(REPORTS_PATH + report.getKey())
-                            .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
-                            .contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn();
-        } finally {
-            verify(reportServiceMock, never()).update(any(LogicalDocument.class));
-        }
     }
 }

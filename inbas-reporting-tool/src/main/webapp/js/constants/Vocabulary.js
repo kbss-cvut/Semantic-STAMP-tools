@@ -8,20 +8,7 @@ module.exports = {
     RDFS_COMMENT: 'http://www.w3.org/2000/01/rdf-schema#comment',
 
     OCCURRENCE_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/occurrence_report',
-    SAFETY_ISSUE_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/safety_issue_report',
-    AUDIT_REPORT: 'http://onto.fel.cvut.cz/ontologies/documentation/audit_report',
-    SAFA_REPORT: 'http://onto.fel.cvut.cz/ontologies/safa/audit-report',
-    ECCAIRS_REPORT: 'http://onto.fel.cvut.cz/ontologies/eccairs/model/eccairs_report',
-
-    OCCURRENCE: 'http://onto.fel.cvut.cz/ontologies/aviation-safety/Occurrence',
-    AUDIT_FINDING: 'http://onto.fel.cvut.cz/ontologies/audit/audit_finding',
 
     HAS_PART: 'http://onto.fel.cvut.cz/ontologies/ufo/has_part',
-    TRANSITION_LABEL: 'http://onto.fel.cvut.cz/ontologies/documentation/transition_label',
-
-    GREATER_THAN: 'http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than',
-
-    ROLE_ADMIN: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/admin',
-    ROLE_USER: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/regular-user',
-    ROLE_GUEST: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/guest'
+    TRANSITION_LABEL: 'http://onto.fel.cvut.cz/ontologies/documentation/transition_label'
 };

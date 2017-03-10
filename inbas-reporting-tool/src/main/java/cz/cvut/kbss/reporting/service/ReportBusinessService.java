@@ -6,7 +6,6 @@ import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
 
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
@@ -50,15 +49,6 @@ public interface ReportBusinessService {
     <T extends LogicalDocument> void persist(T report);
 
     /**
-     * Imports report from a file.
-     *
-     * @param fileName Name of the file
-     * @param input    Input stream containing content of the imported file
-     * @return The imported report
-     */
-    <T extends LogicalDocument> T importReportFromFile(String fileName, InputStream input);
-
-    /**
      * Updates the specified report.
      *
      * @param report Updated report instance
@@ -72,15 +62,6 @@ public interface ReportBusinessService {
      * @return Matching instance or {@code null}, if none exists
      */
     <T extends LogicalDocument> T findByKey(String key);
-
-    /**
-     * Checks whether a report with the specified key and type exists.
-     *
-     * @param key  Instance key
-     * @param type Report class
-     * @return Info about whether report exists
-     */
-    <T extends LogicalDocument> boolean exists(String key, Class<T> type);
 
     /**
      * Gets report with latest revision in report chain with the specified file number.

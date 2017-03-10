@@ -1,19 +1,11 @@
 package cz.cvut.kbss.reporting.environment.config;
 
 import cz.cvut.kbss.reporting.service.*;
-import cz.cvut.kbss.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.reporting.service.data.RemoteDataLoader;
-import cz.cvut.kbss.reporting.service.data.eccairs.EccairsReportSynchronizationService;
-import cz.cvut.kbss.reporting.service.data.eccairs.EccairsService;
-import cz.cvut.kbss.reporting.service.data.mail.ReportImporter;
-import cz.cvut.kbss.reporting.service.data.mail.SafaImportService;
 import cz.cvut.kbss.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.reporting.service.options.OptionsService;
-import cz.cvut.kbss.reporting.service.repository.GenericEntityService;
 import cz.cvut.kbss.reporting.service.search.SearchService;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
 
 @Configuration
 public class MockServiceConfig {
@@ -35,11 +26,6 @@ public class MockServiceConfig {
     @Bean
     public OrganizationService organizationService() {
         return mock(OrganizationService.class);
-    }
-
-    @Bean
-    public AuditReportService auditReportService() {
-        return mock(AuditReportService.class);
     }
 
     @Bean
@@ -93,64 +79,12 @@ public class MockServiceConfig {
     }
 
     @Bean
-    public ArmsService armsService() {
-        return mock(ArmsService.class);
-    }
-
-    @Bean
-    public FormGenService formGenService() {
-        return mock(FormGenService.class);
-    }
-
-    @Bean
-    public ReportImporter reportImporter() {
-        return mock(ReportImporter.class);
-    }
-
-    @Bean
-    public GenericEntityService genericEntityService() {
-        return mock(GenericEntityService.class);
-    }
-
-    @Bean
     public SearchService searchService() {
         return mock(SearchService.class);
     }
 
     @Bean
-    public OccurrenceReportService occurrenceReportService() {
-        return mock(OccurrenceReportService.class);
-    }
-
-    @Bean
-    public EccairsService eccairsService() {
-        return mock(EccairsService.class);
-    }
-
-    @Bean
-    public SafaImportService safaImportService() {
-        return mock(SafaImportService.class);
-    }
-
-    @Bean
-    public EccairsReportSynchronizationService eccairsReportSynchronizationService() {
-        return mock(EccairsReportSynchronizationService.class);
-    }
-
-    @Bean
-    public MockBeanFactory mockBeanFactory() {
-        return new MockBeanFactory();
-    }
-
-    /**
-     * This class prevents Spring from injecting dependencies into mocks.
-     * <p>
-     * It is handy for mocking beans which do not have a separate interface.
-     */
-    private static class MockBeanFactory extends InstantiationAwareBeanPostProcessorAdapter {
-        @Override
-        public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
-            return !mockingDetails(bean).isMock();
-        }
+    public FormGenService formGenService() {
+        return mock(FormGenService.class);
     }
 }

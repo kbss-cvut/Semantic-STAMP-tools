@@ -1,14 +1,14 @@
 package cz.cvut.kbss.reporting.security.model;
 
 import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.security.SecurityConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
+
+    private static final String DEFAULT_ROLE = "ROLE_USER";
 
     private Person person;
 
@@ -18,7 +18,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
         Objects.requireNonNull(person);
         this.person = person;
         this.authorities = new HashSet<>();
-        resolveRoles();
+        addDefaultRole();
     }
 
     public UserDetails(Person person, Collection<GrantedAuthority> authorities) {
@@ -26,14 +26,12 @@ public class UserDetails implements org.springframework.security.core.userdetail
         Objects.requireNonNull(authorities);
         this.person = person;
         this.authorities = new HashSet<>();
-        resolveRoles();
+        addDefaultRole();
         this.authorities.addAll(authorities);
     }
 
-    private void resolveRoles() {
-        authorities.addAll(person.getTypes().stream().filter(SecurityConstants.Role::exists)
-                                 .map(t -> new SimpleGrantedAuthority(SecurityConstants.Role
-                                         .getRole(t).getRoleName())).collect(Collectors.toSet()));
+    private void addDefaultRole() {
+        authorities.add(new SimpleGrantedAuthority(DEFAULT_ROLE));
     }
 
     public void eraseCredentials() {

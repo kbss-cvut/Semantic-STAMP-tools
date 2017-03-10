@@ -20,7 +20,7 @@ public class EventDto implements HasUri {
 
     private Date endTime;
 
-    private Set<URI> eventTypes;
+    private URI eventType;
 
     private Set<String> types;
 
@@ -55,12 +55,12 @@ public class EventDto implements HasUri {
         this.endTime = endTime;
     }
 
-    public Set<URI> getEventTypes() {
-        return eventTypes;
+    public URI getEventType() {
+        return eventType;
     }
 
-    public void setEventTypes(Set<URI> eventTypes) {
-        this.eventTypes = eventTypes;
+    public void setEventType(URI eventType) {
+        this.eventType = eventType;
     }
 
     public Set<String> getTypes() {

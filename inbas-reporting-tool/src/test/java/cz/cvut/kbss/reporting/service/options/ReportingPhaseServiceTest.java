@@ -14,8 +14,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -84,7 +82,7 @@ public class ReportingPhaseServiceTest extends BaseServiceTestRunner {
     @Test
     public void initializationHandlesSituationWhenNoPhasesAreAvailable() throws Exception {
         final OptionsService optionsServiceMock = mock(OptionsService.class);
-        when(optionsServiceMock.getOptions(eq(ReportingPhaseService.PHASE_OPTION_TYPE), anyMap()))
+        when(optionsServiceMock.getOptions(ReportingPhaseService.PHASE_OPTION_TYPE))
                 .thenThrow(new IllegalArgumentException("Unsupported option."));
         final ReportingPhaseService service = new ReportingPhaseService();
         TestUtils.setFieldValue(ReportingPhaseService.class.getDeclaredField("optionsService"), service,

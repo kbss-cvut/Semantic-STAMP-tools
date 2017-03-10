@@ -155,30 +155,4 @@ describe('FactorRenderer', function () {
 
         expect(FactorRenderer.greatestReferenceId).toEqual(highest);
     });
-
-    it('renders safety issue when there is no factor graph', () => {
-        report.safetyIssue = initSafetyIssue();
-        delete report.factorGraph;
-        FactorRenderer.renderFactors(report);
-        expect(GanttController.addFactor.calls.count()).toEqual(1);
-        expect(GanttController.setRootEventId).toHaveBeenCalled();
-        var arg = GanttController.addFactor.calls.argsFor(0)[0];
-        verifyRoot(arg, 'safetyIssue');
-    });
-
-    function initSafetyIssue() {
-        return {
-            javaClass: Constants.SAFETY_ISSUE_JAVA_CLASS,
-            referenceId: Generator.getRandomInt(),
-            name: ''
-        }
-    }
-
-    it('sets end and start time on safety issue for rendering in gantt', () => {
-        report.safetyIssue = initSafetyIssue();
-        delete report.factorGraph;
-        FactorRenderer.renderFactors(report);
-        expect(report.safetyIssue.startTime).toBeDefined();
-        expect(report.safetyIssue.endTime).toBeDefined();
-    });
 });

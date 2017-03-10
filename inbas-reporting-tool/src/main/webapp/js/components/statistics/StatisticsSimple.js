@@ -13,7 +13,7 @@ import Actions from "../../actions/Actions";
 class StatisticsSimple extends React.Component {
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             rows: [],
             dimensions: [],
@@ -91,17 +91,17 @@ class StatisticsSimple extends React.Component {
         }
 
         this.setState({pieData: pieData});
-    }
+    };
 
 
     reduce = (row, memo) => {
         memo.count = (memo.count || 0) + parseFloat(row.count);
         return memo;
-    }
+    };
 
     _onChartTypeSelect = (e) => {
         this.setState({chartType: e.target.value});
-    }
+    };
 
     render() {
         return ( <div className='centered'>

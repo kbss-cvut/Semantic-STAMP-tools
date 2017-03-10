@@ -1,14 +1,12 @@
 'use strict';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
-const TestUtils = require('react-addons-test-utils');
-const rewire = require('rewire');
+var React = require('react');
+var ReactDOM = require('react-dom');
+var TestUtils = require('react-addons-test-utils');
+var rewire = require('rewire');
 
-const Actions = require('../../js/actions/Actions');
-const Generator = require('./Generator').default;
-const TestApp = require('./TestApp');
-const UserStore = require('../../js/stores/UserStore');
+var Actions = require('../../js/actions/Actions');
+var TestApp = require('./TestApp');
 
 module.exports = {
 
@@ -39,7 +37,7 @@ module.exports = {
      * @return {*|!ReactComponent} The rendered component
      */
     renderIntoTable: function (component) {
-        const type = component.type,
+        var type = component.type,
             result = TestUtils.renderIntoDocument(<TestApp>
                 <table>
                     <tbody>{component}</tbody>
@@ -61,33 +59,20 @@ module.exports = {
      * @param text Component text
      */
     getComponentByText: function (root, component, text) {
-        const components = TestUtils.scryRenderedComponentsWithType(root, component),
-            result = this._getNodesByText(components, text, true);
-        return result.length > 0 ? result[0] : null;
+        var components = TestUtils.scryRenderedComponentsWithType(root, component);
+        return this._getNodeByText(components, text, true);
     },
 
-    /**
-     * Finds all components with the specified text.
-     * @param root Root of the tree where the component is searched for
-     * @param component Component class
-     * @param text Component text
-     */
-    getComponentsByText: function (root, component, text) {
-        const components = TestUtils.scryRenderedComponentsWithType(root, component);
-        return this._getNodesByText(components, text, true);
-    },
-
-    _getNodesByText: function (components, text, strict) {
-        const res = [];
-        for (let i = 0, len = components.length; i < len; i++) {
-            const node = ReactDOM.findDOMNode(components[i]);
+    _getNodeByText: function (components, text, strict) {
+        for (var i = 0, len = components.length; i < len; i++) {
+            var node = ReactDOM.findDOMNode(components[i]);
             if (strict && node.textContent === text) {
-                res.push(node);
+                return node;
             } else if (!strict && node.textContent.indexOf(text) !== -1) {
-                res.push(node);
+                return node;
             }
         }
-        return res;
+        return null;
     },
 
     /**
@@ -99,9 +84,8 @@ module.exports = {
      * @param text Component text
      */
     getComponentByTagAndText: function (root, tag, text) {
-        const components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag),
-            result = this._getNodesByText(components, text, true);
-        return result.length > 0 ? result[0] : null;
+        var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag);
+        return this._getNodeByText(components, text, true);
     },
 
     /**
@@ -113,13 +97,12 @@ module.exports = {
      * @param text Text contained in the component's text content
      */
     getComponentByTagAndContainedText: function (root, tag, text) {
-        const components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag),
-            result = this._getNodesByText(components, text, false);
-        return result.length > 0 ? result[0] : null;
+        var components = TestUtils.scryRenderedDOMComponentsWithTag(root, tag);
+        return this._getNodeByText(components, text, false);
     },
 
     mockFactors: function (investigation) {
-        const Factors = rewire('../../js/components/factor/Factors'),
+        var Factors = rewire('../../js/components/factor/Factors'),
             GanttController = jasmine.createSpyObj('GanttController', ['init', 'setScale', 'expandSubtree', 'updateOccurrenceEvent']),
             FactorRenderer = jasmine.createSpyObj('FactorRenderer', ['renderFactors']),
             FactorJsonSerializer = jasmine.createSpyObj('FactorJsonSerializer', ['getFactorGraph', 'setGanttController']);
@@ -136,8 +119,8 @@ module.exports = {
      * @param reqMockMethods array of methods to mock
      */
     mockRequestMethods: function (reqMockMethods) {
-        const reqMock = jasmine.createSpyObj('request', reqMockMethods);
-        for (let i = 0; i < reqMockMethods.length; i++) {
+        var reqMock = jasmine.createSpyObj('request', reqMockMethods);
+        for (var i = 0; i < reqMockMethods.length; i++) {
             // All mock methods just return the instance to adhere to the builder pattern implemented by request
             reqMock[reqMockMethods[i]].and.callFake(function () {
                 return reqMock;
@@ -159,7 +142,7 @@ module.exports = {
      * Returns the mock for possible further use.
      */
     mockGantt: function () {
-        const gantt = jasmine.createSpyObj('gantt', ['init', 'open', 'addTask', 'addLink', 'getChildren', 'attachEvent', 'clearAll', 'render', 'calculateDuration']);
+        var gantt = jasmine.createSpyObj('gantt', ['init', 'open', 'addTask', 'addLink', 'getChildren', 'attachEvent', 'clearAll', 'render', 'calculateDuration']);
         gantt.config = {
             links: {}
         };
@@ -173,13 +156,6 @@ module.exports = {
     },
 
     /**
-     * Makes UserStore return an instance of user with admin privileges.
-     */
-    mockCurrentUser: function () {
-        spyOn(UserStore, 'getCurrentUser').and.returnValue(Generator.getUser());
-    },
-
-    /**
      * Returns true if the arrays are equal, i.e. they have the same size and contain the same elements.
      */
     arraysEqual: function (a, b) {
@@ -187,7 +163,7 @@ module.exports = {
         if (a == null || b == null) return false;
         if (a.length != b.length) return false;
 
-        for (let i = 0; i < a.length; ++i) {
+        for (var i = 0; i < a.length; ++i) {
             if (a[i] !== b[i]) {
                 return false;
             }
@@ -201,7 +177,7 @@ module.exports = {
      * @param store Store, the corresponding store method is found according to the usual onActionName scheme.
      */
     bindActionsToStoreMethods: function (actionName, store) {
-        const fn = 'on' + actionName.charAt(0).toUpperCase() + actionName.substring(1);
+        var fn = 'on' + actionName.charAt(0).toUpperCase() + actionName.substring(1);
         // For some reason, it didn't suffice (in some cases) to pass the store[fn] as argument to callFake, so that's
         // why the wrapping function is here
         spyOn(Actions, actionName).and.callFake(function () {
@@ -220,7 +196,7 @@ module.exports = {
                     if (expected === undefined) {
                         expected = '';
                     }
-                    const result = {};
+                    var result = {};
                     result.pass = actual.toUpperCase().localeCompare(expected.toUpperCase()) >= 0;
                     if (result.pass) {
                         result.message = 'Expected ' + actual + ' not to be lexicographically greater or equal to ' + expected;
@@ -237,7 +213,7 @@ module.exports = {
                     if (expected === undefined) {
                         expected = '';
                     }
-                    const result = {};
+                    var result = {};
                     result.pass = actual.toUpperCase().localeCompare(expected.toUpperCase()) > 0;
                     if (result.pass) {
                         result.message = 'Expected ' + actual + ' not to be lexicographically greater than ' + expected;

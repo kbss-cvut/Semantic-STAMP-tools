@@ -1,9 +1,11 @@
 package cz.cvut.kbss.reporting.environment.generator;
 
-import cz.cvut.kbss.reporting.model.*;
+import cz.cvut.kbss.reporting.model.CorrectiveMeasureRequest;
+import cz.cvut.kbss.reporting.model.Organization;
+import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.qam.Answer;
 import cz.cvut.kbss.reporting.model.qam.Question;
-import cz.cvut.kbss.reporting.util.IdentificationUtils;
 
 import java.net.URI;
 import java.util.*;
@@ -49,7 +51,6 @@ public class Generator {
         person.setLastName("Halsey");
         person.setUsername(USERNAME);
         person.setPassword(PASSWORD);
-        person.generateUri();
         return person;
     }
 
@@ -190,35 +191,11 @@ public class Generator {
         for (int i = 0; i < randomInt(5, 10); i++) {
             final CorrectiveMeasureRequest cmr = new CorrectiveMeasureRequest();
             cmr.setDescription(UUID.randomUUID().toString());
-            cmr.setDeadline(new Date());
-            cmr.setPhase(generateUri());
-            cmr.setImplemented(randomBoolean());
             if (Generator.randomBoolean()) {
-                cmr.setResponsiblePersons(Collections.singleton(Generator.getPerson()));
-                final CorrectiveMeasureImplementationEvaluation evaluation = new CorrectiveMeasureImplementationEvaluation();
-                evaluation.setDescription("Corrective measure request evaluation " + i);
-                evaluation.setTypes(Collections.singleton(generateUri().toString()));
-                cmr.setEvaluation(evaluation);
-            } else {
                 cmr.setResponsibleOrganizations(Collections.singleton(Generator.generateOrganization()));
             }
             set.add(cmr);
         }
         return set;
-    }
-
-    static void setReportAttributes(AbstractReport report) {
-        report.setAuthor(Generator.getPerson());
-        report.setDateCreated(new Date());
-        report.setKey(IdentificationUtils.generateKey());
-        report.setFileNumber((long) Generator.randomInt(Integer.MAX_VALUE));
-        report.setRevision(1);
-    }
-
-    public static Aircraft generateAircraft() {
-        final Aircraft aircraft = new Aircraft();
-        aircraft.setOperator(generateOrganization());
-        aircraft.setTypes(Collections.singleton(Vocabulary.s_c_Aircraft + "/Boeing-787"));
-        return aircraft;
     }
 }

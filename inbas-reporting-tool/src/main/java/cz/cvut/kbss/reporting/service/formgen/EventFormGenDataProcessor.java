@@ -3,7 +3,6 @@ package cz.cvut.kbss.reporting.service.formgen;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
@@ -103,11 +102,6 @@ public class EventFormGenDataProcessor extends FormGenDataProcessor<OccurrenceRe
             if (referenceId.equals(occurrence.getReferenceId())) {
                 this.uri = occurrence.getUri();
             }
-        }
-
-        @Override
-        public void visit(SafetyIssue issue) {
-            // TODO
         }
 
         @Override

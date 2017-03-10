@@ -9,6 +9,7 @@ import DateTimePicker from "react-bootstrap-datetimepicker";
 import {FormattedMessage} from "react-intl";
 import JsonLdUtils from "jsonld-utils";
 import Constants from "../../constants/Constants";
+import DeleteFactorDialog from "./DeleteFactorDialog";
 import EventTypeTypeahead from "../typeahead/EventTypeTypeahead";
 import ExternalLink from "../misc/ExternalLink";
 import FactorStyleInfo from "../../utils/FactorStyleInfo";
@@ -50,7 +51,7 @@ class FactorDetail extends React.Component {
         const factor = props.factor;
         this.state = {
             showDeleteDialog: false,
-            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventTypes, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE))),
+            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE))),
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement,
@@ -166,7 +167,7 @@ class FactorDetail extends React.Component {
     };
 
     _mergeStatementState(statement) {
-        statement.eventTypes = [this.state.eventType.id];
+        statement.eventType = this.state.eventType.id;
         statement.startTime = this.state.startDate;
         statement.endTime = gantt.calculateEndDate(new Date(statement.startTime), this.state.duration, gantt.config.duration_unit).getTime();
         statement.question = this.state.statement.question;
@@ -191,10 +192,11 @@ class FactorDetail extends React.Component {
                 <Modal.Header closeButton>
                     <Modal.Title>{this.i18n('factors.detail.title')}</Modal.Title>
                 </Modal.Header>
-
+                <DeleteFactorDialog onSubmit={this.onDeleteFactor} onCancel={this.onCancelDelete}
+                                    show={this.state.showDeleteDialog}/>
                 <Modal.Body ref={comp => this._modalContent = comp}>
                     {this._renderMask()}
-                    {this.renderDeleteDialog()}
+
                     <div className='row'>
                         {eventTypeBadge}
                         <div className={eventTypeClassNames}>
@@ -317,22 +319,6 @@ class FactorDetail extends React.Component {
                 {this.i18n('factors.detail.details')}
             </Button>
         </div>;
-    }
-
-    renderDeleteDialog() {
-        return <Modal show={this.state.showDeleteDialog} onHide={this.onCancelDelete}>
-            <Modal.Header>
-                <Modal.Title>{this.i18n('factors.detail.delete.title')}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                {this.i18n('factors.detail.delete.text')}
-            </Modal.Body>
-            <Modal.Footer>
-                <Button bsSize='small' bsStyle='warning'
-                        onClick={this.onDeleteFactor}>{this.i18n('delete')}</Button>
-                <Button bsSize='small' onClick={this.onCancelDelete}>{this.i18n('cancel')}</Button>
-            </Modal.Footer>
-        </Modal>;
     }
 }
 

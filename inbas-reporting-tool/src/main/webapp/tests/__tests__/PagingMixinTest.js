@@ -5,7 +5,6 @@ describe('Paging mixin', function () {
     var PagingMixin = require('../../js/components/mixin/PagingMixin'),
         Actions = require('../../js/actions/Actions'),
         ComponentStateStore = require('../../js/stores/ComponentStateStore'),
-        Environment = require('../environment/Environment'),
         defaultPageSize;
 
     beforeEach(function () {
@@ -13,7 +12,6 @@ describe('Paging mixin', function () {
         PagingMixin.state = PagingMixin.getInitialState();
         defaultPageSize = PagingMixin.props.pageSize;
         spyOn(Actions, 'rememberComponentState');
-        Environment.mockCurrentUser();
     });
 
     it('renders buttons corresponding to page count', function () {

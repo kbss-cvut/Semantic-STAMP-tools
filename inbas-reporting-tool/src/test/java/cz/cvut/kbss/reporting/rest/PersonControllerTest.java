@@ -44,7 +44,7 @@ public class PersonControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void findByUsernameThrowsNotFoundForUnknownUsername() throws Exception {
-        Environment.setCurrentUser(user);
+        Environment.setCurrentUser(Generator.getPerson());
         final String unknownUsername = "unknownUsername";
         when(personService.findByUsername(unknownUsername)).thenReturn(null);
         MvcResult result = mockMvc.perform(get("/persons/" + unknownUsername)).andReturn();
@@ -54,13 +54,15 @@ public class PersonControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void getCurrentUserReturnsTheCurrentlyLoggedInUser() throws Exception {
-        Environment.setCurrentUser(user);
-        when(personService.findByUsername(user.getUsername())).thenReturn(user);
+        final Person p = Generator.getPerson();
+        p.generateUri();
+        Environment.setCurrentUser(p);
+        when(personService.findByUsername(p.getUsername())).thenReturn(p);
         MvcResult result = mockMvc.perform(get("/persons/current").principal(Environment.getCurrentUserPrincipal()))
                                   .andReturn();
         final Person res = objectMapper.readValue(result.getResponse().getContentAsString(), Person.class);
-        assertEquals(user.getUri(), res.getUri());
-        assertTrue(user.nameEquals(res));
+        assertEquals(p.getUri(), res.getUri());
+        assertTrue(p.nameEquals(res));
     }
 
     @Test

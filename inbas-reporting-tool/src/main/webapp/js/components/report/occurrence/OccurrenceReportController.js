@@ -9,7 +9,6 @@ var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
 var RouterStore = require('../../../stores/RouterStore');
 var ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMixin');
-var Vocabulary = require('../../../constants/Vocabulary');
 
 var OccurrenceReportController = React.createClass({
     mixins: [
@@ -19,7 +18,6 @@ var OccurrenceReportController = React.createClass({
     componentDidMount: function () {
         Actions.loadOptions();
         Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
-        Actions.loadOptions('department');
         Actions.loadOptions('factorType');
     },
 
@@ -41,24 +39,12 @@ var OccurrenceReportController = React.createClass({
     },
 
     onCancel: function () {
-        var handlers = RouterStore.getViewHandlers(this.props.report.isNew ? Routes.createReport.name : Routes.editReport.name);
+        var handlers = RouterStore.getViewHandlers(Routes.editReport.name);
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
         } else {
             Routing.transitionTo(Routes.reports);
         }
-    },
-
-    onCreateSafetyIssue: function () {
-        Routing.transitionTo(Routes.createReport, {
-            payload: {
-                reportType: Vocabulary.SAFETY_ISSUE_REPORT,
-                basedOn: {
-                    event: this.props.report.occurrence,
-                    report: this.props.report
-                }
-            }
-        });
     },
 
 
@@ -67,8 +53,7 @@ var OccurrenceReportController = React.createClass({
             onChange: this.onChange,
             onSuccess: this.onSuccess,
             onCancel: this.onCancel,
-            onRemove: this.onRemove,
-            onCreateSafetyIssue: this.onCreateSafetyIssue
+            onRemove: this.onRemove
         };
         return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
                              readOnly={!this.isLatestRevision()}/>;

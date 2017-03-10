@@ -1,6 +1,5 @@
 package cz.cvut.kbss.reporting.dto.reportlist;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.Person;
 
@@ -8,7 +7,6 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "javaClass")
 public abstract class ReportDto implements LogicalDocument {
 
     private URI uri;

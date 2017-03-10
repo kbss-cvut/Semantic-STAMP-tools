@@ -37,7 +37,7 @@ public class OccurrenceControllerTest extends BaseControllerTestRunner {
     public void setUp() throws Exception {
         super.setUp();
         Mockito.reset(occurrenceService);
-        Environment.setCurrentUser(user);
+        Environment.setCurrentUser(Generator.getPerson());
     }
 
     @Test

@@ -116,7 +116,7 @@ export default class Generator {
                 uri: "http://onto.fel.cvut.cz/ontologies/ufo/Event-" + i,
                 startTime: Date.now() - 60000,
                 endTime: Date.now(),
-                eventTypes: [Generator.randomCategory().id],
+                eventType: Generator.randomCategory().id,
                 referenceId: referenceIdCounter++
             });
         }
@@ -134,7 +134,7 @@ export default class Generator {
                     break;
                 }
                 childCount = Generator.getRandomPositiveInt(1, nodes.length - index);
-                const parent = parents[j];
+                let parent = parents[j];
                 for (let i = index; i < index + childCount; i++) {
                     links.push({from: parent, to: nodes[i], linkType: Vocabulary.HAS_PART});
                     newParents.push(nodes[i]);
@@ -153,11 +153,10 @@ export default class Generator {
     static generateFactorLinksForNodes(nodes) {
         const cnt = Generator.getRandomPositiveInt(nodes.length / 2, nodes.length * 2),
             links = [];
-        let lnk;
         for (let i = 0; i < cnt; i++) {
             let fromInd = Generator.getRandomInt(nodes.length),
                 toInd = Generator.getRandomInt(nodes.length);
-            lnk = {
+            let lnk = {
                 from: nodes[fromInd],
                 to: nodes[toInd],
                 linkType: Generator._getRandomFactorType()
@@ -188,34 +187,7 @@ export default class Generator {
                 name: 'TestOccurrence',
                 startTime: Date.now() - 10000,
                 endTime: Date.now(),
-                eventTypes: [Generator.randomCategory().id]
-            },
-            isSafaReport: function () {
-                return false;
-            },
-            isEccairsReport: function () {
-                return false;
-            }
-        };
-    }
-
-    /**
-     * Generates a safety issue report with safety issue, key and revision number.
-     */
-    static generateSafetyIssueReport() {
-        return {
-            key: Generator.getRandomInt().toString(),
-            revision: 1,
-            javaClass: Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS,
-            safetyIssue: {
-                javaClass: Constants.SAFETY_ISSUE_JAVA_CLASS,
-                name: 'TestSafetyIssue'
-            },
-            isSafaReport: function () {
-                return false;
-            },
-            isEccairsReport: function () {
-                return false;
+                eventType: Generator.randomCategory().id
             }
         };
     }
@@ -263,25 +235,13 @@ export default class Generator {
     static generateReports() {
         const count = this.getRandomPositiveInt(5, 100),
             reports = [];
-        let report;
         for (let i = 0; i < count; i++) {
-            report = {};
+            let report = Generator.generateOccurrenceReport();
             report.uri = 'http://www.inbas.cz/reporting-tool/reports#Instance' + i;
-            report.identification = 'GeneratedReport ' + i;
-            if (Generator.getRandomBoolean()) {
-                report.date = Date.now() - 100000 + i * 1000;
-                report.types = [Vocabulary.OCCURRENCE_REPORT];
-            } else {
-                report.types = [Vocabulary.SAFETY_ISSUE_REPORT];
-            }
-            report.occurrenceCategories = [Generator.randomCategory().id];
+            report.identification = report.occurrence.name + i;
+            report.date = report.occurrence.startTime + i * 1000;
+            report.occurrenceCategory = report.occurrence.eventType;
             delete report.occurrence;
-            report.isSafaReport = function () {
-                return false;
-            };
-            report.isEccairsReport = function () {
-                return false;
-            };
             reports.push(report);
         }
         return reports;
@@ -297,59 +257,6 @@ export default class Generator {
 
     static getJsonLdSample() {
         return JSON_LD;
-    }
-
-    /**
-     * Generates a random number (between 2 and 10) of corrective measures.
-     * @return {Array} Generated measures
-     */
-    static generateCorrectiveMeasures() {
-        const measures = [];
-        for (let i = 0; i < Generator.getRandomPositiveInt(2, 10); i++) {
-            measures.push({
-                uri: Generator.getRandomUri(),
-                description: 'Corrective measure ' + i,
-                deadline: Date.now(),
-                implemented: Generator.getRandomBoolean()
-            });
-        }
-        return measures;
-    }
-
-    /**
-     * Generates audit report with audit findings.
-     */
-    static generateAuditReport() {
-        const report = {
-            key: Generator.getRandomInt().toString(),
-            revision: 1,
-            javaClass: Constants.AUDIT_REPORT_JAVA_CLASS,
-            audit: {
-                name: 'TestAudit',
-                startDate: Date.now() - 10000,
-                endDate: Date.now() - 100,
-                auditee: {
-                    uri: Generator.getRandomUri(),
-                    name: 'Random organization'
-                },
-                findings: []
-            },
-            types: [Vocabulary.AUDIT_REPORT],
-            isSafaReport: function () {
-                return false;
-            },
-            isEccairsReport: function () {
-                return false;
-            }
-        };
-        for (let i = 0, count = Generator.getRandomPositiveInt(5, 10); i < count; i++) {
-            report.audit.findings.push({
-                uri: Generator.getRandomUri(),
-                description: 'Finding description ' + i,
-                level: i
-            });
-        }
-        return report;
     }
 
     /**
@@ -372,7 +279,7 @@ export default class Generator {
     }
 
     static generateAttachments() {
-        const attachments = [];
+        let attachments = [];
         for (let i = 0, cnt = Generator.getRandomPositiveInt(5, 10); i < cnt; i++) {
             attachments.push({
                 uri: Generator.getRandomUri(),
@@ -381,18 +288,5 @@ export default class Generator {
             });
         }
         return attachments;
-    }
-
-    /**
-     * Gets a predefined user with admin privileges.
-     * @return {{username: string, firstName: string, lastName: string, types: [*,*,*]}}
-     */
-    static getUser() {
-        return {
-            username: 'keyes@unsc.org',
-            firstName: 'Jacob',
-            lastName: 'Keyes',
-            types: [Vocabulary.ROLE_ADMIN, Vocabulary.ROLE_USER, Vocabulary.ROLE_GUEST]
-        };
     }
 }

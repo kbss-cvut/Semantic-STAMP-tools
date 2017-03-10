@@ -3,15 +3,12 @@ package cz.cvut.kbss.reporting.service.repository;
 import cz.cvut.kbss.reporting.exception.UsernameExistsException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.dao.GenericDao;
 import cz.cvut.kbss.reporting.persistence.dao.PersonDao;
 import cz.cvut.kbss.reporting.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Objects;
 
 @Service
 public class RepositoryPersonService extends BaseRepositoryService<Person> implements PersonService {
@@ -41,16 +38,14 @@ public class RepositoryPersonService extends BaseRepositoryService<Person> imple
         } catch (IllegalStateException e) {
             throw new ValidationException(e.getMessage());
         }
-        person.addType(Vocabulary.s_c_guest);
         personDao.persist(person);
     }
 
     @Override
     public void update(Person instance) {
-        Objects.requireNonNull(instance);
         final Person orig = personDao.find(instance.getUri());
         if (orig == null) {
-            throw new IllegalArgumentException("Cannot update person's URI. Person: " + instance);
+            throw new IllegalArgumentException("Cannot update person URI.");
         }
         if (!orig.getPassword().equals(instance.getPassword())) {
             instance.encodePassword(passwordEncoder);

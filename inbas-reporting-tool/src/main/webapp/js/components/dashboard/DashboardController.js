@@ -1,84 +1,64 @@
 'use strict';
 
-import React from "react";
-import Actions from "../../actions/Actions";
-import Dashboard from "./Dashboard";
-import Routes from "../../utils/Routes";
-import Routing from "../../utils/Routing";
-import UserStore from "../../stores/UserStore";
+var React = require('react');
+var Reflux = require('reflux');
 
-export default class DashboardController extends React.Component {
+var injectIntl = require('../../utils/injectIntl');
 
-    constructor(props) {
-        super(props);
-        this.state = {
+var Actions = require('../../actions/Actions');
+var Routing = require('../../utils/Routing');
+var Routes = require('../../utils/Routes');
+var UserStore = require('../../stores/UserStore');
+var Dashboard = require('./Dashboard').default;
+var I18nMixin = require('../../i18n/I18nMixin');
+
+var DashboardController = React.createClass({
+    mixins: [
+        Reflux.listenTo(UserStore, 'onUserLoaded'),
+        I18nMixin
+    ],
+    getInitialState: function () {
+        return {
             firstName: UserStore.getCurrentUser() ? UserStore.getCurrentUser().firstName : ''
-        };
-    }
+        }
+    },
 
-    componentDidMount() {
+    componentWillMount: function () {
         Actions.loadAllReports();
-        this.unsubscribe = UserStore.listen(this._onUserLoaded);
-    }
+    },
 
-    _onUserLoaded = (user) => {
+    onUserLoaded: function (user) {
         this.setState({firstName: user.firstName});
-    };
+    },
 
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
-    createEmptyReport = (reportType) => {
+    createEmptyReport: function () {
         Routing.transitionTo(Routes.createReport, {
             handlers: {
                 onSuccess: Routes.reports,
                 onCancel: Routes.dashboard
-            },
-            payload: {
-                reportType: reportType
             }
         });
-    };
+    },
 
-    importE5Report = (file, onFinish, onError) => {
-        Actions.importE5Report(file, (key) => {
-            onFinish();
-            Routing.transitionTo(Routes.editReport, {
-                params: {reportKey: key},
-                handlers: {onCancel: Routes.dashboard}
-            });
-        }, onError);
-    };
-
-    importSafaReports = (file, onFinish, onError) => {
-        Actions.importSafaExcel(file, () => {
-            onFinish();
-            this.showReports();
-        }, onError);
-    };
-
-    openReport = (report) => {
+    openReport: function (report) {
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
-            handlers: {onCancel: Routes.reports}
+            handlers: {onCancel: Routes.dashboard}
         });
-    };
+    },
 
-    showReports = () => {
+    showReports: function () {
         Routing.transitionTo(Routes.reports);
-    };
+    },
 
 
-    render() {
-        const importHandlers = {
-            importE5: this.importE5Report,
-            importSafa: this.importSafaReports
-        };
+    render: function () {
         return <div>
             <Dashboard userFirstName={this.state.firstName}
                        showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
-                       importHandlers={importHandlers} openReport={this.openReport}/>
+                       openReport={this.openReport}/>
         </div>;
     }
-}
+});
+
+module.exports = injectIntl(DashboardController);

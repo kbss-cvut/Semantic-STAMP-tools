@@ -15,7 +15,6 @@ var Select = React.createClass({
         title: React.PropTypes.string,
         label: React.PropTypes.string,
         onChange: React.PropTypes.func,
-        inputProps: React.PropTypes.object,
         addDefault: React.PropTypes.bool    // Specifies whether the default '----Select----' option should be added
     },
 
@@ -46,8 +45,8 @@ var Select = React.createClass({
             </option>);
         }
         return <Input ref={c => this.select = c} type='select' name={this.props.name} title={this.props.title}
-                      label={this.props.label} value={this.props.value ? this.props.value : ''}
-                      onChange={this.props.onChange} {...this.props.inputProps}>
+                      label={this.props.label}
+                      value={this.props.value ? this.props.value : ''} onChange={this.props.onChange}>
             {options}
         </Input>;
     }

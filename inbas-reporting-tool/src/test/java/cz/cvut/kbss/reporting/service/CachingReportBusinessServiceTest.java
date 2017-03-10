@@ -10,7 +10,6 @@ import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
-import cz.cvut.kbss.reporting.service.arms.ArmsService;
 import cz.cvut.kbss.reporting.service.cache.ReportCache;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,8 +21,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class CachingReportBusinessServiceTest extends BaseServiceTestRunner {
 
@@ -39,9 +38,6 @@ public class CachingReportBusinessServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private OccurrenceReportService occurrenceReportService;
-
-    @Autowired
-    private ArmsService armsService;
 
     private Person author;
 
@@ -206,22 +202,6 @@ public class CachingReportBusinessServiceTest extends BaseServiceTestRunner {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
         final List<ReportRevisionInfo> revisions = reportService.getReportChainRevisions(chain.get(0).getFileNumber());
         assertEquals(chain.size(), revisions.size());
-    }
-
-    @Test
-    public void createNewRevisionSetsArmsIndexBeforePuttingInstanceIntoCache() {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
-        report.setAccidentOutcome(OccurrenceReportGenerator.ACCIDENT_NEGLIGIBLE);
-        report.setBarrierEffectiveness(OccurrenceReportGenerator.BARRIER_LIMITED);
-        reportService.persist(report);
-        final int armsIndex = 117;
-        when(armsService.calculateArmsIndex(any(OccurrenceReport.class))).thenReturn(armsIndex);
-
-        final OccurrenceReport newRevision = reportService.createNewRevision(report.getFileNumber());
-        assertNotNull(newRevision.getArmsIndex());
-        assertEquals(armsIndex, newRevision.getArmsIndex().intValue());
-        final OccurrenceReportDto dto = (OccurrenceReportDto) reportCache.getAll().get(0);
-        assertEquals(armsIndex, dto.getArmsIndex().intValue());
     }
 
     @Test

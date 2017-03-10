@@ -42,7 +42,6 @@ public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
         }
         persistEventsIfNecessary(instance.getOccurrence(), em, descriptor);
         em.persist(instance.getOccurrence(), descriptor);
-        persistOrganizationIfNecessary(instance.getOccurrence(), em, descriptor);
         super.prePersist(instance, em, descriptor);
     }
 
@@ -74,12 +73,6 @@ public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
         em.persist(event, descriptor);
         if (event.getQuestion() != null) {
             questionSaver.persistIfNecessary(event.getQuestion(), em);
-        }
-    }
-
-    private void persistOrganizationIfNecessary(Occurrence occurrence, EntityManager em, Descriptor descriptor) {
-        if (occurrence.getAircraft() != null && occurrence.getAircraft().getOperator() != null) {
-            em.persist(occurrence.getAircraft().getOperator(), descriptor);
         }
     }
 

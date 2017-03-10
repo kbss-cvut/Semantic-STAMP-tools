@@ -1,38 +1,37 @@
 'use strict';
 
-var React = require('react');
-var Reflux = require('reflux');
-var assign = require('object-assign');
-var Button = require('react-bootstrap').Button;
-var Modal = require('react-bootstrap').Modal;
-var Panel = require('react-bootstrap').Panel;
-var injectIntl = require('../../utils/injectIntl');
-var FormattedMessage = require('react-intl').FormattedMessage;
-var JsonLdUtils = require('jsonld-utils').default;
+const React = require('react');
+const Reflux = require('reflux');
+const assign = require('object-assign');
+const Button = require('react-bootstrap').Button;
+const Modal = require('react-bootstrap').Modal;
+const Panel = require('react-bootstrap').Panel;
+const injectIntl = require('../../utils/injectIntl');
+const FormattedMessage = require('react-intl').FormattedMessage;
+const JsonLdUtils = require('jsonld-utils').default;
 
-var Input = require('../Input').default;
-var Select = require('../Select');
+const Input = require('../Input').default;
+const Select = require('../Select');
 
-var Actions = require('../../actions/Actions');
-var Constants = require('../../constants/Constants');
-var FactorDetail = require('./FactorDetail').default;
-var FactorRenderer = require('./FactorRenderer');
-var GanttController = require('./GanttController');
-var FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
-var I18nMixin = require('../../i18n/I18nMixin');
-var Utils = require('../../utils/Utils');
+const Actions = require('../../actions/Actions');
+const Constants = require('../../constants/Constants');
+const FactorDetail = require('./FactorDetail').default;
+const FactorRenderer = require('./FactorRenderer');
+const GanttController = require('./GanttController');
+const FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
+const I18nMixin = require('../../i18n/I18nMixin');
+const Utils = require('../../utils/Utils');
 
-var OptionsStore = require('../../stores/OptionsStore');
+const OptionsStore = require('../../stores/OptionsStore');
 
-var Factors = React.createClass({
+const Factors = React.createClass({
     mixins: [I18nMixin, Reflux.listenTo(OptionsStore, '_onOptionsLoaded')],
 
     propTypes: {
         report: React.PropTypes.object.isRequired,
         rootAttribute: React.PropTypes.string.isRequired,
         onChange: React.PropTypes.func.isRequired,
-        enableDetails: React.PropTypes.bool,
-        enableScaleChange: React.PropTypes.bool
+        enableDetails: React.PropTypes.bool
     },
 
     ganttController: null,
@@ -40,8 +39,7 @@ var Factors = React.createClass({
 
     getDefaultProps: function () {
         return {
-            enableDetails: true,
-            enableScaleChange: true
+            enableDetails: true
         };
     },
 
@@ -64,7 +62,7 @@ var Factors = React.createClass({
             if (this._reportReloaded()) {
                 this.factorsRendered = false;
                 this.ganttController.clearAll();
-                this.renderFactors(OptionsStore.getOptions('eventType'));
+                this.renderFactors(OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE));
             } else
                 this.ganttController.updateRootEvent(this.props.report[this.props.rootAttribute]);
         }
@@ -75,7 +73,7 @@ var Factors = React.createClass({
     },
 
     componentWillMount: function () {
-        Actions.loadOptions('eventType');
+        Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE);
     },
 
     componentDidMount: function () {
@@ -88,13 +86,13 @@ var Factors = React.createClass({
             onDeleteLink: this.onDeleteLink
         });
         this.ganttController.setScale(this.state.scale);
-        if (OptionsStore.getOptions('eventType').length !== 0) {
-            this.renderFactors(OptionsStore.getOptions('eventType'));
+        if (OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE).length !== 0) {
+            this.renderFactors(OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE));
         }
     },
 
     _onOptionsLoaded: function (type, data) {
-        if (type === 'eventType') {
+        if (type === Constants.OPTIONS.EVENT_TYPE) {
             this.renderFactors(data);
         } else if (type === 'factorType') {
             this.setState({factorTypeOptions: JsonLdUtils.processSelectOptions(data)});
@@ -117,7 +115,7 @@ var Factors = React.createClass({
     },
 
     onLinkTypeSelect: function (e) {
-        var link = this.state.currentLink;
+        const link = this.state.currentLink;
         link.factorType = e.target.value;
         this.ganttController.addLink(link);
         this.onCloseLinkTypeDialog();
@@ -137,7 +135,7 @@ var Factors = React.createClass({
     },
 
     onSaveFactor: function () {
-        var factor = this.state.currentFactor;
+        const factor = this.state.currentFactor;
         if (factor.isNew) {
             delete factor.isNew;
             if (factor.parent) {
@@ -152,7 +150,7 @@ var Factors = React.createClass({
     },
 
     onDeleteFactor: function () {
-        var factor = this.state.currentFactor;
+        const factor = this.state.currentFactor;
         this.ganttController.deleteFactor(factor.id);
         this.onCloseFactorDialog();
     },
@@ -180,13 +178,13 @@ var Factors = React.createClass({
     },
 
     onScaleChange: function (e) {
-        var scale = e.target.value;
+        const scale = e.target.value;
         this.setState({scale: scale});
         this.ganttController.setScale(scale);
     },
 
     onGraphRootUpdate: function (startTime, endTime) {
-        var attName = this.props.rootAttribute,
+        const attName = this.props.rootAttribute,
             root = assign({}, this.props.report[attName]),
             change = {};
         root.startTime = startTime;
@@ -223,18 +221,15 @@ var Factors = React.createClass({
     },
 
     _renderScaleOptions: function () {
-        var items = [],
-            scalesEnabled = this.props.enableScaleChange;
+        const items = [];
         Object.getOwnPropertyNames(Constants.TIME_SCALES).forEach(scaleName => {
-            var scale = Constants.TIME_SCALES[scaleName];
-            if (scalesEnabled || this.state.scale === scale) {
-                items.push(<div className='col-xs-2' key={scale}>
-                    <Input type='radio' label={this.i18n('factors.scale.' + scale)} value={scale}
-                           title={this.formatMessage('factors.scale-tooltip', {unit: this.i18n('factors.scale.' + scale)})}
-                           checked={this.state.scale === scale}
-                           onChange={this.onScaleChange}/>
-                </div>);
-            }
+            const scale = Constants.TIME_SCALES[scaleName];
+            items.push(<div className='col-xs-2' key={scale}>
+                <Input type='radio' label={this.i18n('factors.scale.' + scale)} value={scale}
+                       title={this.formatMessage('factors.scale-tooltip', {unit: this.i18n('factors.scale.' + scale)})}
+                       checked={this.state.scale === scale}
+                       onChange={this.onScaleChange}/>
+            </div>);
         });
         return items;
     },
@@ -271,32 +266,30 @@ var Factors = React.createClass({
     },
 
     renderDeleteLinkDialog: function () {
-        var source = this.state.currentLinkSource ? this.state.currentLinkSource.text : '',
+        const source = this.state.currentLinkSource ? this.state.currentLinkSource.text : '',
             target = this.state.currentLinkTarget ? this.state.currentLinkTarget.text : '';
-        return (
-            <Modal show={this.state.showDeleteLinkDialog} bsSize='small' onHide={this.onCloseDeleteLinkDialog}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{this.i18n('factors.link.delete.title')}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <FormattedMessage id='factors.link.delete.text'
-                                      values={{
-                                          source: <span className='bold'>{source}</span>,
-                                          target: <span className='bold'>{target}</span>
-                                      }}/>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button bsStyle='warning' bsSize='small' onClick={this.deleteLink}>{this.i18n('delete')}</Button>
-                    <Button bsSize='small' onClick={this.onCloseDeleteLinkDialog}>{this.i18n('cancel')}</Button>
-                </Modal.Footer>
-            </Modal>
-        );
+        return <Modal show={this.state.showDeleteLinkDialog} bsSize='small' onHide={this.onCloseDeleteLinkDialog}>
+            <Modal.Header closeButton>
+                <Modal.Title>{this.i18n('factors.link.delete.title')}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <FormattedMessage id='factors.link.delete.text'
+                                  values={{
+                                      source: <span className='bold'>{source}</span>,
+                                      target: <span className='bold'>{target}</span>
+                                  }}/>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button bsStyle='warning' bsSize='small' onClick={this.deleteLink}>{this.i18n('delete')}</Button>
+                <Button bsSize='small' onClick={this.onCloseDeleteLinkDialog}>{this.i18n('cancel')}</Button>
+            </Modal.Footer>
+        </Modal>;
     },
 
     _renderLineColors: function () {
-        var size = 12 / this.state.factorTypeOptions.length;
+        const size = 12 / this.state.factorTypeOptions.length;
         return this.state.factorTypeOptions.map((item) => {
-            var simpleName = Utils.getLastPathFragment(item.value);
+            const simpleName = Utils.getLastPathFragment(item.value);
             return <div className={'col-xs-' + size} key={item.value}>
                 <div className={'gantt-link-' + simpleName}
                      style={{height: '4px', width: '2em', float: 'left', margin: '8px'}}/>

@@ -7,7 +7,6 @@ import cz.cvut.kbss.reporting.service.cache.ReportCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
@@ -47,14 +46,6 @@ public class CachingReportBusinessService implements ReportBusinessService {
     }
 
     @Override
-    public <T extends LogicalDocument> T importReportFromFile(String fileName, InputStream input) {
-        final T report = reportService.importReportFromFile(fileName, input);
-        assert report != null;
-        reportCache.put(report.toReportDto());
-        return report;
-    }
-
-    @Override
     public <T extends LogicalDocument> void update(T report) {
         reportService.update(report);
         reportCache.put(report.toReportDto());
@@ -63,11 +54,6 @@ public class CachingReportBusinessService implements ReportBusinessService {
     @Override
     public <T extends LogicalDocument> T findByKey(String key) {
         return reportService.findByKey(key);
-    }
-
-    @Override
-    public <T extends LogicalDocument> boolean exists(String key, Class<T> type) {
-        return reportService.exists(key, type);
     }
 
     @Override

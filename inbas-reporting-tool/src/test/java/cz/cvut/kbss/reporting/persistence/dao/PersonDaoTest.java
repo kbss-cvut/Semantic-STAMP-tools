@@ -16,7 +16,7 @@ public class PersonDaoTest extends BaseDaoTestRunner {
     @Test
     public void persistGeneratesInstanceUri() {
         final Person p = Generator.getPerson();
-        p.setUri(null);
+        assertNull(p.getUri());
         dao.persist(p);
         assertNotNull(p.getUri());
     }

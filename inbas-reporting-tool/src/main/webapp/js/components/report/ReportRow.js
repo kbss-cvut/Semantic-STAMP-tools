@@ -3,16 +3,13 @@
 import React from "react";
 import {Button, Label} from "react-bootstrap";
 import classNames from "classnames";
-import {IfAnyGranted} from "react-authorization";
 import DeleteReportDialog from "./DeleteReportDialog";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import OptionsStore from "../../stores/OptionsStore";
 import ReportType from "../../model/ReportType";
 import Routes from "../../utils/Routes";
-import UserStore from "../../stores/UserStore";
 import Utils from "../../utils/Utils";
-import Vocabulary from "../../constants/Vocabulary";
 
 class ReportRow extends React.Component {
     static propTypes = {
@@ -29,11 +26,11 @@ class ReportRow extends React.Component {
     }
 
     componentDidMount() {
-        this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
+        this.unsubscribe = OptionsStore.listen(this._onPhasesLoaded);
     }
 
-    _onOptionsLoaded = (type) => {
-        if (type === 'reportingPhase' || type === 'sira') {
+    _onPhasesLoaded = (type) => {
+        if (type === 'reportingPhase') {
             this.forceUpdate();
         }
     };
@@ -66,30 +63,28 @@ class ReportRow extends React.Component {
 
     render() {
         const report = ReportType.getReport(this.props.report),
-            statusClasses = classNames(['report-row', 'content-center'], report.getStatusCssClass());
-
+            stateClasses = ['report-row', 'content-center'], stateTooltip = null;
         return <tr onDoubleClick={this.onDoubleClick}>
-            <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + report.key}
-                                          title={this.i18n('reports.open-tooltip')}
-                                          className='breakable'>{report.identification}</a>
+
+            <td className='report-row'>
+                <a href={'#/' + Routes.reports.path + '/' + report.key} title={this.i18n('reports.open-tooltip')}
+                   className='breakable'>
+                    {report.identification}
+                </a>
             </td>
             <td className='report-row content-center'>{Utils.formatDate(report.date)}</td>
             <td className='report-row'>{report.renderMoreInfo()}</td>
-            <td className={statusClasses}
-                title={report.getStatusInfo(OptionsStore.getOptions('sira'), this.props.intl)}>
+            <td className='report-row content-center'>
                 {this._renderReportTypes(report)}
             </td>
-            <td className='report-row content-center'>
+            <td className={classNames(stateClasses)} title={stateTooltip}>
                 {report.getPhase(OptionsStore.getOptions('reportingPhase'), this.props.intl)}
             </td>
             <td className='report-row actions'>
                 <Button bsStyle='primary' bsSize='small' title={this.i18n('reports.open-tooltip')}
                         onClick={this.onEditClick}>{this.i18n('open')}</Button>
-                <IfAnyGranted expected={[Vocabulary.ROLE_USER, Vocabulary.ROLE_ADMIN]}
-                              actual={UserStore.getCurrentUser().types} element='span'>
-                    <Button bsStyle='warning' bsSize='small' title={this.i18n('reports.delete-tooltip')}
-                            onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>
-                </IfAnyGranted>
+                <Button bsStyle='warning' bsSize='small' title={this.i18n('reports.delete-tooltip')}
+                        onClick={this.onDeleteClick}>{this.i18n('delete')}</Button>
 
                 <DeleteReportDialog show={this.state.modalOpen} onClose={this.onCloseModal}
                                     onSubmit={this.removeReport}/>

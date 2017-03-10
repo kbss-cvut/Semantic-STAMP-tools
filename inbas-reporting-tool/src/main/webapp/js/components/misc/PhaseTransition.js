@@ -1,7 +1,7 @@
 'use strict';
 
 import React from "react";
-import {Button, MenuItem} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import JsonLdUtils from "jsonld-utils";
 import Actions from "../../actions/Actions";
 import injectIntl from "../../utils/injectIntl";
@@ -14,11 +14,11 @@ class PhaseTransition extends React.Component {
         onLoading: React.PropTypes.func.isRequired,
         onSuccess: React.PropTypes.func.isRequired,
         onError: React.PropTypes.func.isRequired,
-        menuItem: React.PropTypes.bool
+        disabled: React.PropTypes.bool
     };
 
     static defaultProps = {
-        menuItem: false
+        disabled: false
     };
 
     constructor(props) {
@@ -62,13 +62,10 @@ class PhaseTransition extends React.Component {
     render() {
         const phase = this._determinePhase();
         if (phase && phase[Vocabulary.TRANSITION_LABEL]) {
-            if (!this.props.menuItem) {
-                return <Button bsStyle='primary' bsSize='small'
-                               onClick={this._onPhaseTransition}>{JsonLdUtils.getLocalized(phase[Vocabulary.TRANSITION_LABEL], this.props.intl)}</Button>;
-            } else {
-                return <MenuItem
-                    onClick={this._onPhaseTransition}>{JsonLdUtils.getLocalized(phase[Vocabulary.TRANSITION_LABEL], this.props.intl)}</MenuItem>;
-            }
+            return <Button bsStyle='primary' bsSize='small' disabled={this.props.disabled}
+                           onClick={this._onPhaseTransition}>
+                {JsonLdUtils.getLocalized(phase[Vocabulary.TRANSITION_LABEL], this.props.intl)}
+            </Button>
         } else {
             return null;
         }

@@ -83,7 +83,7 @@ public final class Constants {
 
     /**
      * Folder containing options files for the application.
-     * <p>
+     *
      * Some options can be stored directly in the application.
      */
     public static final String OPTION_FILES_DIRECTORY = "option";

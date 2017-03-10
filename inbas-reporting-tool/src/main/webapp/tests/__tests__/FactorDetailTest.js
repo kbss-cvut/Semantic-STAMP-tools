@@ -143,7 +143,7 @@ describe('Factor detail dialog', function () {
     it('does not display the details button when owning report is invalid', () => {
         const report = ReportFactory.createOccurrenceReport(),
             eventType = Generator.getJsonLdSample()[0];
-        factor.statement.eventTypes = [eventType['@id']];
+        factor.statement.eventType = [eventType['@id']];
         spyOn(OptionsStore, 'getOptions').and.returnValue(Generator.getJsonLdSample());
         const detail = Environment.render(<FactorDetail scale='second' factor={factor} onSave={callbacks.onSave}
                                                         onClose={callbacks.onClose} onDelete={callbacks.onDelete}

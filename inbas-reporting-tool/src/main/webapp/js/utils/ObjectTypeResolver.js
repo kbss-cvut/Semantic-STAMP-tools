@@ -8,10 +8,9 @@ module.exports = {
      * More precisely it returns an option whose identifier corresponds to the object's type.
      * @param object Object with types field or type URI as string
      * @param options The options to search for type
-     * @param idAttr Attribute identifying the type in the options array. Default id '@id', corresponding to JSON-LD id
      * @return {*} Matching type or null
      */
-    resolveType: function (object, options, idAttr = '@id') {
+    resolveType: function (object, options) {
         if (!object || !options) {
             return null;
         }
@@ -20,7 +19,7 @@ module.exports = {
         for (var i = 0, len = options.length; i < len; i++) {
             var option = options[i];
             for (j = 0; j < tLen; j++) {
-                if (types.indexOf(option[idAttr]) !== -1) {
+                if (types.indexOf(option['@id']) !== -1) {
                     return option;
                 }
             }

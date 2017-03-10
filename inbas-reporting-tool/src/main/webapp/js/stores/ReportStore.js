@@ -6,13 +6,10 @@ const Actions = require('../actions/Actions');
 let Ajax = require('../utils/Ajax');
 const Constants = require('../constants/Constants');
 const JsonReferenceResolver = require('../utils/JsonReferenceResolver').default;
-const ReportType = require('../model/ReportType');
-const ReportFactory = require('../model/ReportFactory');
 const Utils = require('../utils/Utils');
 
 const BASE_URL = 'rest/reports';
 const BASE_URL_WITH_SLASH = 'rest/reports/';
-const ECCAIRS_REPORT_URL = 'rest/eccairs/latest/';
 
 // When reports are being loaded, do not send the request again
 let reportsLoading = false;
@@ -38,9 +35,6 @@ const ReportStore = Reflux.createStore({
         lastLoadWithKeys = keys.length !== 0;
         Ajax.get(this._initLoadUri(keys)).end((data) => {
             reportsLoading = false;
-            for (let i = 0, len = data.length; i < len; i++) {
-                ReportFactory.addMethodsToReportInstance(data[i]);
-            }
             this._reports = data;
             if (!lastLoadWithKeys) {
                 this._searchReports = this._reports;
@@ -112,7 +106,6 @@ const ReportStore = Reflux.createStore({
         Ajax.get(BASE_URL_WITH_SLASH + key).end(function (data) {
             this._resetPendingLoad();
             JsonReferenceResolver.resolveReferences(data);
-            ReportFactory.addMethodsToReportInstance(data);
             this.trigger({
                 action: Actions.loadReport,
                 report: data
@@ -146,23 +139,6 @@ const ReportStore = Reflux.createStore({
         }.bind(this), onError);
     },
 
-    onImportE5Report: function (file, onSuccess, onError) {
-        Ajax.post(BASE_URL_WITH_SLASH + 'importE5').attach(file).end((data, resp) => {
-            if (onSuccess) {
-                const key = Utils.extractKeyFromLocationHeader(resp);
-                onSuccess(key);
-            }
-        }, onError);
-    },
-
-    onImportSafaExcel: function (file, onSuccess, onError) {
-        Ajax.post(BASE_URL_WITH_SLASH + 'importSafa').attach(file).end(() => {
-            if (onSuccess) {
-                onSuccess();
-            }
-        }, onError);
-    },
-
     onUpdateReport: function (report, onSuccess, onError) {
         JsonReferenceResolver.encodeReferences(report);
         Ajax.put(BASE_URL_WITH_SLASH + report.key).send(report).end(onSuccess, onError);
@@ -188,68 +164,6 @@ const ReportStore = Reflux.createStore({
             }
             this.onLoadAllReports();
         }.bind(this), onError);
-    },
-
-    onFindLatestEccairsVersion: function (report, onSuccess, onError) {
-        Ajax.get(ECCAIRS_REPORT_URL + report.key, report).end(function () {
-            if (onSuccess) {
-                onSuccess();
-            }
-            this.onLoadAllReports();
-        }.bind(this), onError);
-    },
-
-    onAddSafetyIssueBase: function (key, newBase) {
-        this._pendingLoad = key;
-        Ajax.get(BASE_URL_WITH_SLASH + key).end(function (data) {
-            JsonReferenceResolver.resolveReferences(data);
-            this._addSafetyIssueBase(data, newBase);
-        }.bind(this), function () {
-            this._resetPendingLoad();
-            this.trigger({
-                action: Actions.addSafetyIssueBase,
-                report: null
-            });
-        }.bind(this));
-    },
-
-    _addSafetyIssueBase: function (issue, newBase) {
-        const report = ReportType.getReport(issue),
-            result = report.addBase(newBase.event, newBase.report),
-            message = result ? 'safetyissue.base-add-success' : 'safetyissue.base-add-duplicate';
-        this._resetPendingLoad();
-        this.trigger({
-            action: Actions.addSafetyIssueBase,
-            report: report
-        });
-        Actions.publishMessage(message, result ? Constants.MESSAGE_TYPE.SUCCESS : Constants.MESSAGE_TYPE.WARNING, Actions.addSafetyIssueBase);
-    },
-
-    onLoadEccairsReport: function (forReport) {
-        Ajax.get(ECCAIRS_REPORT_URL + forReport.key).end((data) => {
-            this._resetPendingLoad();
-            this.trigger({
-                action: Actions.loadEccairsReport,
-                key: data
-            })
-        }, (data, resp) => {
-            this._resetPendingLoad();
-            if (resp.status === 404) {
-                this.trigger({
-                    action: Actions.loadEccairsReport,
-                    key: null
-                });
-            }
-        });
-    },
-
-    onNewRevisionFromLatestEccairs: function (report, onSuccess, onError) {
-        Ajax.post(BASE_URL_WITH_SLASH + 'chain/' + report.fileNumber + '/revisions/eccairs').end((data, resp) => {
-            if (onSuccess) {
-                const key = Utils.extractKeyFromLocationHeader(resp);
-                onSuccess(key);
-            }
-        }, onError);
     },
 
     getReports: function () {

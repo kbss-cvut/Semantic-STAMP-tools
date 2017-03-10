@@ -70,8 +70,8 @@ describe('Filters', () => {
             cat = categories[i];
             for (var j = 0; j < count; j++) {
                 if (categoriesUsed.indexOf(cat) === -1 &&
-                    (cat['@id'] === reports[j].occurrenceCategories || Array.isArray(reports[j].occurrenceCategories) &&
-                    reports[j].occurrenceCategories.indexOf(cat['@id']) !== -1)) {
+                    (cat['@id'] === reports[j].occurrenceCategory || Array.isArray(reports[j].occurrenceCategory) &&
+                    reports[j].occurrenceCategory.indexOf(cat['@id']) !== -1)) {
                     categoriesUsed.push(cat);
                     break;
                 }
@@ -84,7 +84,7 @@ describe('Filters', () => {
         var multipleCats = false;
         for (var i = 0, len = reports.length; i < len; i++) {
             if (!multipleCats || Generator.getRandomBoolean()) {
-                reports[i].occurrenceCategories.push(Generator.randomCategory().id);
+                reports[i].occurrenceCategory = [reports[i].occurrenceCategory, Generator.randomCategory().id];
                 multipleCats = true;
             }
         }
@@ -130,9 +130,9 @@ describe('Filters', () => {
 
     it('sets value of a filter to the value specified in props', () => {
         var categories = getCategoriesAsJsonLd(),
-            value = reports[Generator.getRandomInt(reports.length)].occurrenceCategories[0];
+            value = reports[Generator.getRandomInt(reports.length)].occurrenceCategory;
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
-        var component = Environment.render(<Filters filters={{occurrenceCategories: value}} data={reports}
+        var component = Environment.render(<Filters filters={{occurrenceCategory: value}} data={reports}
                                                     onChange={onChange} onResetFilters={onResetFilters}/>),
 
             select = TestUtils.scryRenderedDOMComponentsWithTag(component, 'select')[0];
@@ -141,7 +141,7 @@ describe('Filters', () => {
 
     it('notifies owner about change in the filter value', () => {
         var categories = getCategoriesAsJsonLd(),
-            value = reports[Generator.getRandomInt(reports.length)].occurrenceCategories[0];
+            value = reports[Generator.getRandomInt(reports.length)].occurrenceCategory;
         spyOn(OptionsStore, 'getOptions').and.returnValue(categories);
         var component = Environment.render(<Filters filters={{}} data={reports}
                                                     onChange={onChange} onResetFilters={onResetFilters}/>),
@@ -149,6 +149,6 @@ describe('Filters', () => {
             select = TestUtils.scryRenderedDOMComponentsWithTag(component, 'select')[0];
         select.value = value;
         TestUtils.Simulate.change(select);
-        expect(onChange).toHaveBeenCalledWith({occurrenceCategories: value});
+        expect(onChange).toHaveBeenCalledWith({occurrenceCategory: value});
     });
 });

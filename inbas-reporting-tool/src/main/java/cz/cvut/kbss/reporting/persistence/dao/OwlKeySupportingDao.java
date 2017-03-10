@@ -53,33 +53,11 @@ public abstract class OwlKeySupportingDao<T extends HasOwlKey> extends BaseDao<T
     protected T findByKey(String key, EntityManager em) {
         try {
             return em.createNativeQuery("SELECT ?x WHERE { ?x ?hasKey ?key ;" +
-                    "a ?type . }", type)
+                    "a ?type }", type)
                      .setParameter("hasKey", URI.create(Vocabulary.s_p_has_key))
                      .setParameter("key", key, Constants.PU_LANGUAGE).setParameter("type", typeUri).getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
-    }
-
-    /**
-     * Checks whether an instance with the specified key and type managed by this DAO exists.
-     *
-     * @param key Instance key
-     * @return {@literal true} if instance exists, {@literal false} otherwise
-     */
-    public boolean exists(String key) {
-        Objects.requireNonNull(key);
-        final EntityManager em = entityManager();
-        try {
-            return exists(key, em);
-        } finally {
-            em.close();
-        }
-    }
-
-    protected boolean exists(String key, EntityManager em) {
-        return em.createNativeQuery("ASK { ?x ?hasKey ?key ; a ?type . }", Boolean.class)
-                 .setParameter("hasKey", URI.create(Vocabulary.s_p_has_key))
-                 .setParameter("key", key, Constants.PU_LANGUAGE).setParameter("type", typeUri).getSingleResult();
     }
 }

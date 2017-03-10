@@ -1,45 +1,34 @@
 'use strict';
 
-const Reflux = require('reflux');
-const jsonld = require('jsonld');
+var Reflux = require('reflux');
+var jsonld = require('jsonld');
 
-const Actions = require('../actions/Actions');
-const Constants = require('../constants/Constants');
-const Ajax = require('../utils/Ajax');
-const Logger = require('../utils/Logger');
-const Utils = require('../utils/Utils');
+var Actions = require('../actions/Actions');
+var Constants = require('../constants/Constants');
+var Ajax = require('../utils/Ajax');
+var Logger = require('../utils/Logger');
 
-const URL = 'rest/options';
-const STATISTICS_URL = URL + '/statistics/config';
-const options = {};
-let statisticsConfig = null;
+var options = {};
 
-const OptionsStore = Reflux.createStore({
+var OptionsStore = Reflux.createStore({
     init: function () {
         this.listenTo(Actions.loadOptions, this.onLoadOptions);
-        this.listenTo(Actions.loadStatisticsConfig, this.onLoadStatisticsConfig);
     },
 
-    onLoadOptions: function (type, params) {
+    onLoadOptions: function (type) {
         if (type) {
-            this._loadOptions(type, params);
+            this._loadOptions(type);
         } else {
             this._loadOptions(Constants.OPTIONS.OCCURRENCE_CLASS);
         }
     },
 
-    _loadOptions: function (type, params) {
-        if (!params) {
-            params = {};
-        }
-        // If there are params, do not reuse the loaded options, they could have been loaded with different params
-        if (options[type] && options[type].length !== 0 && !params) {
+    _loadOptions: function (type) {
+        if (options[type] && options[type].length !== 0) {
             this.trigger(type, options[type]);
             return;
         }
-        let url = URL + '?type=' + type;
-        url = Utils.addParametersToUrl(url, params);
-        Ajax.get(url).end(function (data) {
+        Ajax.get('rest/options?type=' + type).end(function (data) {
             if (data.length > 0) {
                 jsonld.frame(data, {}, null, function (err, framed) {
                     options[type] = framed['@graph'];
@@ -55,31 +44,8 @@ const OptionsStore = Reflux.createStore({
         }.bind(this));
     },
 
-    onLoadStatisticsConfig: function () {
-        if (statisticsConfig) {
-            this.trigger({
-                action: Actions.loadStatisticsConfig,
-                config: statisticsConfig
-            });
-            return;
-        }
-        Ajax.get(STATISTICS_URL).end(data => {
-            if (data.configuration) {
-                statisticsConfig = data.configuration;
-            }
-            this.trigger({
-                action: Actions.loadStatisticsConfig,
-                config: statisticsConfig
-            });
-        });
-    },
-
     getOptions: function (type) {
         return options[type] ? options[type] : [];
-    },
-
-    getStatisticsConfiguration: function() {
-        return statisticsConfig ? statisticsConfig : {};
     }
 });
 

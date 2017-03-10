@@ -1,51 +1,36 @@
 package cz.cvut.kbss.reporting.rest.dto.mapper;
 
 import cz.cvut.kbss.reporting.config.RestConfig;
-import cz.cvut.kbss.reporting.dto.AbstractReportDto;
 import cz.cvut.kbss.reporting.dto.CorrectiveMeasureRequestDto;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
-import cz.cvut.kbss.reporting.dto.SafetyIssueReportDto;
 import cz.cvut.kbss.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.reporting.dto.agent.PersonDto;
-import cz.cvut.kbss.reporting.dto.event.*;
-import cz.cvut.kbss.reporting.dto.safetyissue.AuditFindingBase;
-import cz.cvut.kbss.reporting.dto.safetyissue.OccurrenceBase;
-import cz.cvut.kbss.reporting.dto.safetyissue.SafetyIssueBase;
+import cz.cvut.kbss.reporting.dto.event.EventDto;
+import cz.cvut.kbss.reporting.dto.event.FactorGraphEdge;
+import cz.cvut.kbss.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
-import cz.cvut.kbss.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
-import cz.cvut.kbss.reporting.environment.generator.SafetyIssueReportGenerator;
-import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.model.*;
-import cz.cvut.kbss.reporting.model.audit.AuditFinding;
-import cz.cvut.kbss.reporting.model.audit.AuditReport;
-import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssue;
-import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.reporting.model.util.HasUri;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
-import cz.cvut.kbss.reporting.service.AuditReportService;
-import cz.cvut.kbss.reporting.service.OccurrenceService;
-import cz.cvut.kbss.reporting.service.ReportBusinessService;
-import cz.cvut.kbss.reporting.service.repository.GenericEntityService;
 import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.URI;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {RestConfig.class, MockServiceConfig.class, MockSesamePersistence.class})
@@ -54,23 +39,6 @@ public class DtoMapperTest {
     @Autowired
     private DtoMapper mapper;
 
-    @Autowired
-    private ReportBusinessService reportServiceMock;
-
-    @Autowired
-    private OccurrenceService occurrenceServiceMock;
-
-    @Autowired
-    private AuditReportService auditReportServiceMock;
-
-    @Autowired
-    private GenericEntityService entityServiceMock;
-
-    @Before
-    public void setUp() {
-        Mockito.reset(reportServiceMock, occurrenceServiceMock, auditReportServiceMock, entityServiceMock);
-    }
-
     @Test
     public void correctiveMeasureRequestToDtoCopiesBasicAttributes() {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequestWithResponsibleAgents();
@@ -78,7 +46,6 @@ public class DtoMapperTest {
         assertNotNull(dto);
         assertEquals(req.getUri(), dto.getUri());
         assertEquals(req.getDescription(), dto.getDescription());
-        assertEquals(req.isImplemented(), dto.isImplemented());
     }
 
     @Test
@@ -136,7 +103,6 @@ public class DtoMapperTest {
             organizations.add(org);
         }
         request.setResponsibleOrganizations(organizations);
-        request.setImplemented(Generator.randomBoolean());
         return request;
     }
 
@@ -155,14 +121,14 @@ public class DtoMapperTest {
         assertNotNull(dto.getBasedOn());
         final EventDto eventDto = dto.getBasedOn();
         assertEquals(req.getBasedOnEvent().getUri(), eventDto.getUri());
-        assertEquals(req.getBasedOnEvent().getEventTypes(), eventDto.getEventTypes());
+        assertEquals(req.getBasedOnEvent().getEventType(), eventDto.getEventType());
     }
 
     private CorrectiveMeasureRequest generateCorrectiveMeasureRequestBasedOnEvent() {
         final CorrectiveMeasureRequest req = generateCorrectiveMeasureRequest();
         final Event event = new Event();
         event.setUri(URI.create(Vocabulary.s_c_Event + "#instance"));
-        event.setEventTypes(Collections.singleton(Generator.generateEventType()));
+        event.setEventType(Generator.generateEventType());
         req.setBasedOnEvent(event);
         return req;
     }
@@ -201,14 +167,12 @@ public class DtoMapperTest {
         assertNotNull(req);
         assertEquals(dto.getUri(), req.getUri());
         assertEquals(dto.getDescription(), req.getDescription());
-        assertEquals(dto.isImplemented(), req.isImplemented());
     }
 
     private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDto() {
         final CorrectiveMeasureRequestDto dto = new CorrectiveMeasureRequestDto();
         dto.setUri(URI.create(Vocabulary.s_c_corrective_measure_request + "#req"));
         dto.setDescription("Sample corrective measure.");
-        dto.setImplemented(Generator.randomBoolean());
         return dto;
     }
 
@@ -249,13 +213,13 @@ public class DtoMapperTest {
         assertNotNull(req.getBasedOnEvent());
         assertNull(req.getBasedOnOccurrence());
         assertEquals(dto.getBasedOn().getUri(), req.getBasedOnEvent().getUri());
-        assertEquals(dto.getBasedOn().getEventTypes(), req.getBasedOnEvent().getEventTypes());
+        assertEquals(dto.getBasedOn().getEventType(), req.getBasedOnEvent().getEventType());
     }
 
     private CorrectiveMeasureRequestDto generateCorrectiveMeasureRequestDtoBasedOnEvent() {
         final CorrectiveMeasureRequestDto dto = generateCorrectiveMeasureRequestDto();
         final EventDto eventDto = new EventDto();
-        eventDto.setEventTypes(Collections.singleton(Generator.generateEventType()));
+        eventDto.setEventType(Generator.generateEventType());
         eventDto.setUri(URI.create(Vocabulary.s_c_Event + "#instance"));
         dto.setBasedOn(eventDto);
         return dto;
@@ -280,7 +244,7 @@ public class DtoMapperTest {
         occurrenceDto.setUri(URI.create(Vocabulary.s_c_Occurrence + "#instance"));
         occurrenceDto.setKey(IdentificationUtils.generateKey());
         occurrenceDto.setName("Some occurrence");
-        occurrenceDto.setEventTypes(Collections.singleton(Generator.generateEventType()));
+        occurrenceDto.setEventType(Generator.generateEventType());
         dto.setBasedOn(occurrenceDto);
         return dto;
     }
@@ -293,22 +257,15 @@ public class DtoMapperTest {
     @Test
     public void reportToReportDtoTransformsOccurrenceReportToOccurrenceReportDto() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
-        report.setCorrectiveMeasures(Generator.generateCorrectiveMeasureRequests());
+        report.setCorrectiveMeasures(OccurrenceReportGenerator.generateCorrectiveMeasureRequests());
         final LogicalDocument dto = mapper.reportToReportDto(report);
         assertNotNull(dto);
         assertTrue(dto instanceof OccurrenceReportDto);
         final OccurrenceReportDto orDto = (OccurrenceReportDto) dto;
         assertEquals(report.getCorrectiveMeasures().size(), orDto.getCorrectiveMeasures().size());
-        verifyBasicReportAttributes(report, orDto);
-        assertEquals(report.getAccidentOutcome(), orDto.getAccidentOutcome());
-        assertEquals(report.getBarrierEffectiveness(), orDto.getBarrierEffectiveness());
-        assertEquals(report.getArmsIndex(), orDto.getArmsIndex());
-    }
-
-    private void verifyBasicReportAttributes(AbstractReport report, AbstractReportDto dto) {
-        assertEquals(report.getUri(), dto.getUri());
-        assertEquals(report.getKey(), dto.getKey());
-        assertEquals(report.getFileNumber(), dto.getFileNumber());
+        assertEquals(report.getUri(), orDto.getUri());
+        assertEquals(report.getKey(), orDto.getKey());
+        assertEquals(report.getFileNumber(), orDto.getFileNumber());
     }
 
     @Test
@@ -366,198 +323,5 @@ public class DtoMapperTest {
         assertFalse(mapper.canMap(String.class));
         assertFalse(mapper.canMap(FactorGraphEdge.class));
         assertFalse(mapper.canMap(FactorGraphItem.class));
-    }
-
-    @Test
-    public void reportToReportDtoTransformsSafetyIssueReportToSafetyIssueReportDto() {
-        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
-        final LogicalDocument dto = mapper.reportToReportDto(report);
-        assertTrue(dto instanceof SafetyIssueReportDto);
-        final SafetyIssueReportDto result = (SafetyIssueReportDto) dto;
-        verifyBasicReportAttributes(report, result);
-        assertNotNull(result.getSafetyIssue());
-        assertEquals(report.getSira(), result.getSira());
-        assertEquals(report.getCorrectiveMeasures().size(), result.getCorrectiveMeasures().size());
-    }
-
-    @Test
-    public void reportToReportDtoTransformsSafetyIssueReportWithFactorGraph() {
-        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(true, true);
-        report.setSafetyIssue(SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents());
-        final LogicalDocument dto = mapper.reportToReportDto(report);
-        assertTrue(dto instanceof SafetyIssueReportDto);
-        final SafetyIssueReportDto result = (SafetyIssueReportDto) dto;
-        assertNotNull(result.getFactorGraph());
-        assertFalse(result.getFactorGraph().getNodes().isEmpty());
-        assertFalse(result.getFactorGraph().getEdges().isEmpty());
-    }
-
-    @Test
-    public void safetyIssueToSafetyIssueDtoTransformsBasedOnOccurrences() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
-        final List<OccurrenceReport> occurrenceReports = generateBaseOccurrences();
-        issue.setBasedOnOccurrences(
-                occurrenceReports.stream().map(OccurrenceReport::getOccurrence).collect(Collectors.toSet()));
-        occurrenceReports.forEach(r -> when(occurrenceServiceMock.findByOccurrence(r.getOccurrence())).thenReturn(r));
-
-        final SafetyIssueDto result = mapper.safetyIssueToSafetyIssueDto(issue);
-        assertNotNull(result);
-        assertEquals(occurrenceReports.size(), result.getBasedOn().size());
-        boolean found;
-        for (OccurrenceReport r : occurrenceReports) {
-            found = false;
-            for (SafetyIssueBase b : result.getBasedOn()) {
-                if (r.getOccurrence().getUri().equals(b.getUri())) {
-                    found = true;
-                    assertEquals(r.getKey(), b.getReportKey());
-                    assertTrue(b instanceof OccurrenceBase);
-                    final OccurrenceBase base = (OccurrenceBase) b;
-                    assertEquals(r.getOccurrence().getName(), base.getName());
-                    assertEquals(r.getSeverityAssessment(), base.getSeverity());
-                    assertTrue(base.getTypes().contains(Vocabulary.s_c_Occurrence));
-                }
-            }
-            assertTrue(found);
-        }
-    }
-
-    private List<OccurrenceReport> generateBaseOccurrences() {
-        final List<OccurrenceReport> reports = new ArrayList<>();
-        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
-            final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
-            report.setUri(Generator.generateUri());
-            report.setKey(IdentificationUtils.generateKey());
-            report.getOccurrence().setUri(Generator.generateUri());
-            reports.add(report);
-        }
-        return reports;
-    }
-
-    @Test
-    public void safetyIssueToSafetyIssueDtoTransformsBasedOnFindings() {
-        final SafetyIssue issue = SafetyIssueReportGenerator.generateSafetyIssueWithDescendantEvents();
-        final Map<AuditFinding, AuditReport> bases = generateBaseFindings();
-        issue.setBasedOnFindings(new HashSet<>(bases.keySet()));
-        bases.entrySet()
-             .forEach(e -> when(auditReportServiceMock.findByAuditFinding(e.getKey())).thenReturn(e.getValue()));
-
-        final SafetyIssueDto result = mapper.safetyIssueToSafetyIssueDto(issue);
-        assertNotNull(result);
-        assertEquals(bases.size(), result.getBasedOn().size());
-        boolean found;
-        for (Map.Entry<AuditFinding, AuditReport> e : bases.entrySet()) {
-            found = false;
-            for (SafetyIssueBase b : result.getBasedOn()) {
-                if (e.getKey().getUri().equals(b.getUri())) {
-                    found = true;
-                    assertEquals(e.getValue().getKey(), b.getReportKey());
-                    assertTrue(b instanceof AuditFindingBase);
-                    final AuditFindingBase base = (AuditFindingBase) b;
-                    assertEquals(e.getKey().getDescription(), base.getDescription());
-                    assertEquals(e.getKey().getLevel(), base.getLevel());
-                    assertTrue(base.getTypes().contains(Vocabulary.s_c_audit_finding));
-                }
-            }
-            assertTrue(found);
-        }
-    }
-
-    private Map<AuditFinding, AuditReport> generateBaseFindings() {
-        final Map<AuditFinding, AuditReport> map = new HashMap<>();
-        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
-            final AuditReport report = AuditReportGenerator.generateAuditReport(true);
-            final AuditFinding finding = AuditReportGenerator.generateFinding();
-            finding.setUri(Generator.generateUri());
-            report.getAudit().setFindings(Collections.singleton(finding));
-            report.setUri(Generator.generateUri());
-            report.setKey(IdentificationUtils.generateKey());
-            map.put(finding, report);
-        }
-        return map;
-    }
-
-    @Test
-    public void reportDtoToReportTransformsSafetyIssueReportDtoWithFactorGraphToSafetyIssueReport() throws Exception {
-        final SafetyIssueReportDto dto = SafetyIssueReportGenerator.generateSafetyIssueReportDto();
-        dto.setCorrectiveMeasures(Collections.singleton(generateCorrectiveMeasureRequestDtoWithAgents()));
-        final FactorGraph factorGraph = Environment.loadData("data/safetyIssueWithFactorGraph.json", FactorGraph.class);
-        dto.setFactorGraph(factorGraph);
-        final Optional<EventDto> issueDto = factorGraph.getNodes().stream()
-                                                       .filter(e -> e instanceof SafetyIssueDto).findFirst();
-        assertTrue(issueDto.isPresent());
-        final SafetyIssueDto issue = (SafetyIssueDto) issueDto.get();
-        dto.setSafetyIssue(issue);
-
-        final LogicalDocument report = mapper.reportDtoToReport(dto);
-        assertTrue(report instanceof SafetyIssueReport);
-        final SafetyIssueReport result = (SafetyIssueReport) report;
-        assertEquals(dto.getUri(), result.getUri());
-        assertNotNull(result.getSafetyIssue());
-        assertFalse(result.getSafetyIssue().getChildren().isEmpty());
-    }
-
-    @Test
-    public void safetyIssueDtoToSafetyIssueLoadsCorrectBaseOccurrences() {
-        final SafetyIssueDto dto = new SafetyIssueDto();
-        dto.setName("SafetyIssueTest");
-        final List<Occurrence> occurrences = new ArrayList<>();
-        final Set<SafetyIssueBase> bases = new HashSet<>();
-        for (OccurrenceReport r : generateBaseOccurrences()) {
-            final Occurrence occurrence = r.getOccurrence();
-            occurrences.add(occurrence);
-            bases.add(new OccurrenceBase(occurrence));
-            when(occurrenceServiceMock.find(occurrence.getUri())).thenReturn(occurrence);
-        }
-        dto.setBasedOn(bases);
-
-        final SafetyIssue result = mapper.safetyIssueDtoToSafetyIssue(dto);
-        assertNotNull(result);
-        assertTrue(Environment.areEqual(occurrences, result.getBasedOnOccurrences()));
-    }
-
-    @Test
-    public void safetyIssueDtoToSafetyIssueLoadsCorrectBaseAuditFindings() {
-        final SafetyIssueDto dto = new SafetyIssueDto();
-        dto.setName("SafetyIssueTest");
-        final Set<AuditFinding> findings = generateBaseFindings().keySet();
-        final Set<SafetyIssueBase> bases = new HashSet<>();
-        for (AuditFinding f : findings) {
-            bases.add(new AuditFindingBase(f));
-            when(entityServiceMock.find(AuditFinding.class, f.getUri())).thenReturn(f);
-        }
-        dto.setBasedOn(bases);
-
-        final SafetyIssue result = mapper.safetyIssueDtoToSafetyIssue(dto);
-        assertNotNull(result);
-        assertTrue(Environment.areEqual(findings, result.getBasedOnFindings()));
-    }
-
-    @Test
-    public void reportToReportDtoReturnsTheSameInstanceWithAddedTypeForAuditReport() {
-        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
-        assertFalse(report.getTypes().contains(Vocabulary.s_c_audit_report));
-
-        final LogicalDocument dto = mapper.reportToReportDto(report);
-        assertSame(report, dto);
-        final AuditReport result = (AuditReport) dto;
-        assertTrue(result.getTypes().contains(Vocabulary.s_c_audit_report));
-    }
-
-    @Test
-    public void reportDtoToReportReturnsTheSameInstanceForAuditReport() {
-        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
-
-        final LogicalDocument result = mapper.reportDtoToReport(report);
-        assertSame(report, result);
-    }
-
-    @Test
-    public void reportDtoToReportRemovesAuditReportClassFromAuditReportTypes() {
-        final AuditReport report = AuditReportGenerator.generateAuditReport(true);
-        report.addType(Vocabulary.s_c_audit_report);
-
-        final LogicalDocument result = mapper.reportDtoToReport(report);
-        assertSame(report, result);
-        assertFalse(((AuditReport) result).getTypes().contains(Vocabulary.s_c_audit_report));
     }
 }

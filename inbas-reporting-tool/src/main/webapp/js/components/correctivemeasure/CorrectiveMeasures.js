@@ -2,13 +2,14 @@
 
 import React from "react";
 import {Button, Glyphicon, Panel} from "react-bootstrap";
-import Constants from "../../constants/Constants";
+import assign from "object-assign";
 import injectIntl from "../../utils/injectIntl";
 import I18nWrapper from "../../i18n/I18nWrapper";
-import CorrectiveMeasure from "./CorrectiveMeasure";
 import CorrectiveMeasuresTable from "./CorrectiveMeasuresTable";
+import CorrectiveMeasureWizardSteps from "./wizard/Steps";
+import WizardStore from "../../stores/WizardStore";
+import WizardWindow from "../wizard/WizardWindow";
 
-// TODO Try to unify this class with FindingMeasures
 class CorrectiveMeasures extends React.Component {
     static propTypes = {
         report: React.PropTypes.object.isRequired,
@@ -19,73 +20,86 @@ class CorrectiveMeasures extends React.Component {
         super(props);
         this.state = {
             isWizardOpen: false,
-            currentMeasure: null
+            wizardProperties: null
         }
     }
 
+    openWizard = (statement, onFinish) => {
+        WizardStore.initWizard({statement: statement});
+        this.setState({
+            isWizardOpen: true,
+            wizardProperties: {
+                steps: CorrectiveMeasureWizardSteps,
+                title: this.props.i18n('report.corrective.wizard.title'),
+                onFinish: onFinish
+            }
+        });
+    };
+
     closeWizard = () => {
-        this.setState({isWizardOpen: false, currentMeasure: null});
+        this.setState({isWizardOpen: false});
     };
 
     onAdd = () => {
-        var measure = {
-            isNew: true,
-            description: ''
-        };
-        this.setState({isWizardOpen: true, currentMeasure: measure});
+        this.openWizard({}, this.addCorrectiveMeasure);
     };
 
-    updateCorrectiveMeasure = (measure) => {
-        var measures = this.props.report.correctiveMeasures ? this.props.report.correctiveMeasures.slice() : [];
-        if (measure.isNew) {
-            delete measure.isNew;
-            measures.push(measure);
-        } else {
-            measures.splice(measure.index, 1, measure);
-        }
+    addCorrectiveMeasure = (wizardData, closeCallback) => {
+        const measure = wizardData.data.statement,
+            measures = this.props.report.correctiveMeasures != null ? this.props.report.correctiveMeasures : [];
+        measures.push(measure);
         this.props.onChange({correctiveMeasures: measures});
-        this.closeWizard();
+        closeCallback();
+    };
+
+    updateCorrectiveMeasure = (wizardData, closeCallback) => {
+        const measure = wizardData.data.statement,
+            measures = this.props.report.correctiveMeasures;
+        measures.splice(measure.index, 1, measure);
+
+        delete measure.index;
+        this.props.onChange({correctiveMeasures: measures});
+        closeCallback();
     };
 
     onRemove = (index) => {
-        var measures = this.props.report.correctiveMeasures.slice();
+        const measures = this.props.report.correctiveMeasures;
         measures.splice(index, 1);
         this.props.onChange({correctiveMeasures: measures});
     };
 
     onEdit = (index) => {
-        var measure = this.props.report.correctiveMeasures[index];
-        this.setState({isWizardOpen: true, currentMeasure: measure});
+        const measure = assign({}, this.props.report.correctiveMeasures[index]);
+        measure.index = index;
+        this.openWizard(measure, this.updateCorrectiveMeasure);
     };
 
     render() {
         return <div>
-            <CorrectiveMeasure correctiveMeasure={this.state.currentMeasure}
-                               attributes={[Constants.CORRECTIVE_MEASURE.DESCRIPTION]}
-                               show={this.state.isWizardOpen} onSave={this.updateCorrectiveMeasure}
-                               onClose={this.closeWizard}/>
             {this.renderMeasures()}
+            <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
+                          onHide={this.closeWizard} enableForwardSkip={true}/>
         </div>;
     }
 
     renderMeasures() {
-        var data = this.props.report.correctiveMeasures,
-            component = null;
+        const data = this.props.report.correctiveMeasures;
+        let component = null;
         if (data && data.length !== 0) {
-            var handlers = {
+            const handlers = {
                 onRemove: this.onRemove,
                 onEdit: this.onEdit
             };
             component = <CorrectiveMeasuresTable data={data} handlers={handlers}/>;
         }
-        var buttonCls = component ? 'float-right' : '';
+        const buttonCls = component ? 'float-right' : '';
         return <Panel header={<h5>{this.props.i18n('report.corrective.panel-title')}</h5>} bsStyle='info'
                       key='correctiveMeasures'>
             {component}
             <div className={buttonCls}>
                 <Button bsStyle='primary' bsSize='small' onClick={this.onAdd}
                         title={this.props.i18n('report.corrective.add-tooltip')}>
-                    <Glyphicon glyph='plus' className='add-icon-glyph'/>
+                    <Glyphicon glyph='plus' className='add-glyph'/>
                     {this.props.i18n('add')}
                 </Button>
             </div>

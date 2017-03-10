@@ -54,9 +54,16 @@ public class DataDao {
      * @return Repository content serialized as String
      */
     public String getRepositoryData() {
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        final RDFHandler rdfHandler = new RDFXMLPrettyWriter(bos);
-        getRepositoryData(null, rdfHandler);
-        return new String(bos.toByteArray());
+        try {
+            final RepositoryConnection connection = sesameRepository.getRepository().getConnection();
+            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            final RDFHandler rdfHandler = new RDFXMLPrettyWriter(bos);
+            connection.export(rdfHandler);
+            connection.close();
+            return new String(bos.toByteArray());
+        } catch (RepositoryException | RDFHandlerException e) {
+            LOG.error("Unable to read data from repository.", e);
+            return "";
+        }
     }
 }

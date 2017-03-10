@@ -1,9 +1,7 @@
 package cz.cvut.kbss.reporting.persistence;
 
 import cz.cvut.kbss.reporting.environment.config.TestPersistenceConfig;
-import cz.cvut.kbss.reporting.model.Organization;
 import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.persistence.dao.OrganizationDao;
 import cz.cvut.kbss.reporting.persistence.dao.PersonDao;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +17,10 @@ public abstract class BaseDaoTestRunner {
     @Autowired
     private PersonDao personDao;
 
-    @Autowired
-    private OrganizationDao organizationDao;
-
     protected void persistPerson(Person person) {
         assert person.getUsername() != null;
         if (personDao.findByUsername(person.getUsername()) == null) {
             personDao.persist(person);
-        }
-    }
-
-    protected void persistOrganization(Organization org) {
-        assert org.getName() != null;
-        if (organizationDao.findByName(org.getName()) == null) {
-            organizationDao.persist(org);
         }
     }
 }

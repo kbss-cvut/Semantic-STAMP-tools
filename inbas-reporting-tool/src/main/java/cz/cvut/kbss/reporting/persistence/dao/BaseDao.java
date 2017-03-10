@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.persistence.dao;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.reporting.model.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
 import org.slf4j.Logger;
@@ -181,8 +182,9 @@ public abstract class BaseDao<T> implements GenericDao<T> {
         if (uri == null) {
             return false;
         }
-        return em.createNativeQuery("ASK { ?individual a ?type . }", Boolean.class)
-                 .setParameter("individual", uri).setParameter("type", typeUri).getSingleResult();
+        final String owlClass = type.getDeclaredAnnotation(OWLClass.class).iri();
+        return em.createNativeQuery("ASK { ?individual a ?type . }", Boolean.class).setParameter("individual", uri)
+                 .setParameter("type", URI.create(owlClass)).getSingleResult();
     }
 
     EntityManager entityManager() {

@@ -9,12 +9,10 @@ import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.Organization;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.qam.Answer;
 import cz.cvut.kbss.reporting.model.qam.Question;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
-import cz.cvut.kbss.reporting.persistence.TestEccairsReportImportPersistenceFactory;
 import cz.cvut.kbss.reporting.persistence.TestFormGenPersistenceFactory;
 import cz.cvut.kbss.reporting.persistence.TestPersistenceFactory;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
@@ -43,7 +41,6 @@ import static org.junit.Assert.*;
 @ComponentScan(basePackages = {"cz.cvut.kbss.reporting.persistence.dao"})
 @ContextConfiguration(classes = {TestPersistenceFactory.class,
         TestFormGenPersistenceFactory.class,
-        TestEccairsReportImportPersistenceFactory.class,
         DataDaoPersistenceConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class OccurrenceReportFormGenDaoTest {
@@ -215,21 +212,6 @@ public class OccurrenceReportFormGenDaoTest {
             }
         } finally {
             connection.close();
-            em.close();
-        }
-    }
-
-    @Test
-    public void persistSavesOrganization() throws Exception {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
-        personDao.persist(report.getAuthor());
-        report.getOccurrence().setAircraft(Generator.generateAircraft());
-
-        dao.persist(report);
-        final EntityManager em = emf.createEntityManager();
-        try {
-            assertNotNull(em.find(Organization.class, report.getOccurrence().getAircraft().getOperator().getUri()));
-        } finally {
             em.close();
         }
     }

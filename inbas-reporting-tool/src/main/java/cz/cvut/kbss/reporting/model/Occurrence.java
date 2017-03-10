@@ -35,7 +35,7 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
 
     @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.s_p_has_event_type)
-    private Set<URI> eventTypes;
+    private URI eventType;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Factor> factors;
@@ -47,13 +47,6 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
     @OWLObjectProperty(iri = Vocabulary.s_p_has_related_question, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Question question;
-
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_participant, cascade = {CascadeType.REMOVE,
-            CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
-    private Aircraft aircraft;
-
-    @OWLDataProperty(iri = Vocabulary.s_p_has_location)
-    private String location;
 
     @Types
     private Set<String> types;
@@ -71,14 +64,10 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
         this.name = other.name;
         this.startTime = other.startTime;
         this.endTime = other.endTime;
-        this.eventTypes = other.eventTypes;
+        this.eventType = other.eventType;
         this.types = new HashSet<>(other.types);
-        this.location = other.location;
         if (other.question != null) {
             this.question = new Question(other.question);
-        }
-        if (other.aircraft != null) {
-            this.aircraft = new Aircraft(other.aircraft);
         }
     }
 
@@ -116,8 +105,8 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
         this.endTime = endTime;
     }
 
-    public Set<URI> getEventTypes() {
-        return eventTypes;
+    public URI getEventType() {
+        return eventType;
     }
 
     /**
@@ -125,13 +114,16 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
      * <p>
      * Also adds the event type's URI to this instance's types.
      *
-     * @param eventTypes The type to set
+     * @param eventType The type to set
      * @see Vocabulary#s_p_has_event_type
      */
-    public void setEventTypes(Set<URI> eventTypes) {
-        this.eventTypes = eventTypes;
-        if (eventTypes != null) {
-            eventTypes.forEach(e -> types.add(e.toString()));
+    public void setEventType(URI eventType) {
+        this.eventType = eventType;
+        if (eventType != null) {
+            if (types == null) {
+                this.types = new HashSet<>(4);
+            }
+            types.add(eventType.toString());
         }
     }
 
@@ -177,22 +169,6 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
         this.question = question;
     }
 
-    public Aircraft getAircraft() {
-        return aircraft;
-    }
-
-    public void setAircraft(Aircraft aircraft) {
-        this.aircraft = aircraft;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public Set<String> getTypes() {
         return types;
     }
@@ -220,13 +196,13 @@ public class Occurrence extends AbstractEntity implements HasOwlKey, FactorGraph
     }
 
     @Override
-    public void accept(FactorGraphNodeVisitor visitor) {
-        visitor.visit(this);
+    public String toString() {
+        return "Occurrence{" + name + " <" + uri + ">, types=" + types + '}';
     }
 
     @Override
-    public String toString() {
-        return "Occurrence{" + name + " <" + uri + ">, types=" + types + '}';
+    public void accept(FactorGraphNodeVisitor visitor) {
+        visitor.visit(this);
     }
 
     public static Occurrence copyOf(Occurrence original) {

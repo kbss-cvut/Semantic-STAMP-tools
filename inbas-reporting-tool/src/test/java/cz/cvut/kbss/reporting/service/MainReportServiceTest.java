@@ -1,28 +1,19 @@
 package cz.cvut.kbss.reporting.service;
 
-import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.reporting.environment.generator.AuditReportGenerator;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
-import cz.cvut.kbss.reporting.environment.generator.SafetyIssueReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.environment.util.UnsupportedReport;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
-import cz.cvut.kbss.reporting.exception.ReportImportingException;
 import cz.cvut.kbss.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.audit.AuditReport;
-import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.reporting.model.util.HasOwlKey;
-import cz.cvut.kbss.reporting.persistence.dao.AuditReportDao;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
-import cz.cvut.kbss.reporting.persistence.dao.SafetyIssueReportDao;
-import cz.cvut.kbss.reporting.service.data.mail.ReportImporter;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Assert;
@@ -30,22 +21,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 public class MainReportServiceTest extends BaseServiceTestRunner {
-
-    private static final String IMPORT_FILE_NAME = "16FEDEF0BC91E511B897002655546824-anon.e5x";
 
     // More tests should be added as additional support for additional report types is added
 
@@ -60,21 +43,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
     @Autowired
     private OccurrenceReportService occurrenceReportService;
-
-    @Autowired
-    private SafetyIssueReportDao safetyIssueReportDao;
-
-    @Autowired
-    private SafetyIssueReportService safetyIssueReportService;
-
-    @Autowired
-    private AuditReportDao auditReportDao;
-
-    @Autowired
-    private AuditReportService auditReportService;
-
-    @Autowired
-    private ReportImporter reportImporterMock;
 
     @Autowired
     private ReportingPhaseService phaseService;
@@ -112,44 +80,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         final OccurrenceReport report = persistOccurrenceReport();
 
         final OccurrenceReport result = reportService.findByKey(report.getKey());
-        assertNotNull(result);
-        assertEquals(report.getUri(), result.getUri());
-    }
-
-    @Test
-    public void testFindSafetyIssueReportByKey() {
-        final SafetyIssueReport report = persistSafetyIssueReport();
-
-        final SafetyIssueReport result = reportService.findByKey(report.getKey());
-        assertNotNull(result);
-        Assert.assertEquals(report.getUri(), result.getUri());
-    }
-
-    private SafetyIssueReport persistSafetyIssueReport() {
-        final SafetyIssueReport report = SafetyIssueReportGenerator.generateSafetyIssueReport(false, false);
-        report.setAuthor(author);
-        safetyIssueReportService.persist(report);
-        return report;
-    }
-
-    @Test
-    public void testFindAuditReportByKey() {
-        final AuditReport report = AuditReportGenerator.generateAuditReport(false);
-        report.setAuthor(author);
-        auditReportService.persist(report);
-
-        final AuditReport result = reportService.findByKey(report.getKey());
-        assertNotNull(result);
-        assertEquals(report.getUri(), result.getUri());
-    }
-
-    @Test
-    public void testPersistAuditReport() {
-        final AuditReport report = AuditReportGenerator.generateAuditReport(false);
-        report.setAuthor(author);
-        reportService.persist(report);
-
-        final AuditReport result = auditReportService.find(report.getUri());
         assertNotNull(result);
         assertEquals(report.getUri(), result.getUri());
     }
@@ -194,7 +124,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         final LogicalDocument result = reportService.findLatestRevision(fileNumber);
         assertNotNull(result);
         Assert.assertEquals(latest.getUri(), result.getUri());
-        Assert.assertEquals(latest.getKey(), result.getKey());
+        assertEquals(latest.getKey(), result.getKey());
     }
 
     private List<OccurrenceReport> persistOccurrenceReportChain() {
@@ -280,7 +210,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Test
     public void findAllReturnsLatestRevisionsOfAllReportChains() {
         // Once other report types are added, they should be added into this tests
-        final List<LogicalDocument> latestRevisions = initOccurrenceReportChains();
+        final List<LogicalDocument> latestRevisions = initReportChains();
 
         final List<ReportDto> result = reportService.findAll();
         assertTrue(Environment.areEqual(latestRevisions, result));
@@ -291,7 +221,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
      *
      * @return List of latest revisions of the generated chains, ordered by date created descending
      */
-    private List<LogicalDocument> initOccurrenceReportChains() {
+    private List<LogicalDocument> initReportChains() {
         final List<LogicalDocument> latestRevisions = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final List<OccurrenceReport> chain = persistOccurrenceReportChain();
@@ -313,73 +243,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
         final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
         assertEquals(expected, result.getPhase());
-    }
-
-    @Test
-    public void importReportFromFileImportsE5XReport() throws Exception {
-        final InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/eccairs/" + IMPORT_FILE_NAME);
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
-        report.setAuthor(author);
-        when(reportImporterMock.process(any(NamedStream.class))).thenAnswer((invocation) -> {
-            occurrenceReportDao.persist(report);
-            return Collections.singletonList(report.getUri());
-        });
-        final LogicalDocument res = reportService.importReportFromFile(IMPORT_FILE_NAME, is);
-        assertNotNull(res);
-        assertTrue(res instanceof OccurrenceReport);
-        final OccurrenceReport resultReport = reportService.findByKey(res.getKey());
-        assertEquals(report.getUri(), resultReport.getUri());
-    }
-
-    @Test(expected = ReportImportingException.class)
-    public void importReportThrowsReportImportingExceptionWhenImportFails() throws Exception {
-        final InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/eccairs/" + IMPORT_FILE_NAME);
-        when(reportImporterMock.process(any(NamedStream.class))).thenThrow(new IOException("Unable to load report."));
-        reportService.importReportFromFile(IMPORT_FILE_NAME, is);
-    }
-
-    @Test
-    public void importReportReturnsTheFirstReportWhenMultipleAreExtractedFromArchive() throws Exception {
-        final InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/eccairs/" + IMPORT_FILE_NAME);
-        final List<OccurrenceReport> reports = Arrays.asList(OccurrenceReportGenerator.generateOccurrenceReport(true),
-                OccurrenceReportGenerator.generateOccurrenceReport(true));
-        reports.forEach(r -> r.setAuthor(author));
-        when(reportImporterMock.process(any(NamedStream.class))).thenAnswer((invocation) -> {
-            occurrenceReportDao.persist(reports);
-            return reports.stream().map(OccurrenceReport::getUri).collect(Collectors.toList());
-        });
-        final LogicalDocument res = reportService.importReportFromFile(IMPORT_FILE_NAME, is);
-        assertNotNull(res);
-        assertTrue(res instanceof OccurrenceReport);
-        final OccurrenceReport resultReport = reportService.findByKey(res.getKey());
-        assertEquals(reports.get(0).getUri(), resultReport.getUri());
-    }
-
-    @Test
-    public void findAllLoadsLatestRevisionsOfAllKindsOfReports() {
-        final List<LogicalDocument> latestRevisions = initReportChainsForFindAll();
-        final List<ReportDto> result = reportService.findAll();
-        assertTrue(Environment.areEqual(latestRevisions, result));
-    }
-
-    private List<LogicalDocument> initReportChainsForFindAll() {
-        final List<LogicalDocument> list = new ArrayList<>();
-        for (int i = 0; i < Generator.randomInt(1, 10); i++) {
-            final List<OccurrenceReport> chain = OccurrenceReportGenerator.generateOccurrenceReportChain(author);
-            occurrenceReportDao.persist(chain);
-            list.add(chain.get(chain.size() - 1));
-        }
-        for (int i = 0; i < Generator.randomInt(1, 10); i++) {
-            final List<SafetyIssueReport> chain = SafetyIssueReportGenerator.generateSafetyIssueReportChain(author);
-            safetyIssueReportDao.persist(chain);
-            list.add(chain.get(chain.size() - 1));
-        }
-        for (int i = 0; i < Generator.randomInt(1, 10); i++) {
-            final List<AuditReport> chain = AuditReportGenerator.generateAuditReportChain(author);
-            auditReportDao.persist(chain);
-            list.add(chain.get(chain.size() - 1));
-        }
-        return list;
     }
 
     @Test
@@ -414,22 +277,5 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertNotNull(result);
         assertEquals(keys.size() - unknownKeyCount, result.size());
         assertTrue(Environment.areEqual(reports, result));
-    }
-
-    @Test
-    public void existsVerifiesExistenceOfReportWithSpecifiedKey() {
-        final SafetyIssueReport report = persistSafetyIssueReport();
-        assertTrue(reportService.exists(report.getKey(), report.getClass()));
-    }
-
-    @Test
-    public void existsReturnsFalseForNullKey() {
-        final SafetyIssueReport report = persistSafetyIssueReport();
-        assertFalse(reportService.exists(null, report.getClass()));
-    }
-
-    @Test
-    public void existsReturnsFalseForUnknownReportType() {
-        assertFalse(reportService.exists(IdentificationUtils.generateKey(), LogicalDocument.class));
     }
 }

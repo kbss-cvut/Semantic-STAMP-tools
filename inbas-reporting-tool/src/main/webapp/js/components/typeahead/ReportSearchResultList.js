@@ -59,7 +59,8 @@ class ReportSearchResultList extends React.Component {
     }
 
     _renderFullTextSearchOption() {
-        return <li className='btn-link item fulltext' title={I18nStore.i18n('main.search.fulltext-tooltip')}
+        return <li key='full-text-search' className='btn-link item fulltext'
+                   title={I18nStore.i18n('main.search.fulltext-tooltip')}
                    onClick={(e) => this._onClick(Constants.FULL_TEXT_SEARCH_OPTION, e)}>
             <Label className='item-label'>{I18nStore.i18n('main.search.fulltext.label')}</Label>
             {I18nStore.i18n('main.search.fulltext')}

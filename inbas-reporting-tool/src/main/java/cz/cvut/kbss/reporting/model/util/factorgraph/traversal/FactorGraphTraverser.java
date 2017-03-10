@@ -1,6 +1,7 @@
 package cz.cvut.kbss.reporting.model.util.factorgraph.traversal;
 
 import cz.cvut.kbss.reporting.model.Event;
+import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphEdgeVisitor;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
@@ -34,7 +35,7 @@ public abstract class FactorGraphTraverser {
     }
 
     /**
-     * Traverses factor graph rooted in the specified item.
+     * Traverses factor graph rooted in the specified {@link Occurrence}.
      *
      * @param root Factor graph root
      */

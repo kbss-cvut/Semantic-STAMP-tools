@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-  <Default Extension="E4O" ContentType="application/eccairs5-occurrence" />
-  <Default Extension="index" ContentType="application/eccairs5-index" />
-</Types>

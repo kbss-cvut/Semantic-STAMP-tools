@@ -9,15 +9,7 @@ public enum ConfigParam {
     FORM_GEN_REPOSITORY_URL("formGenRepositoryUrl"),
     FORM_GEN_SERVICE_URL("formGenServiceUrl"),
 
-    INDEX_FILE("indexFile"),    // index.html location, used by Portal authentication
-
-    // Configuration of statistics on Pentaho
-    STATISTICS_DASHBOARD("statistics.dashboard"),
-    STATISTICS_GENERAL("statistics.general"),
-    STATISTICS_EVENT_TYPE("statistics.eventType"),
-    STATISTICS_AUDIT("statistics.audit"),
-    STATISTICS_SAFETY_ISSUE("statistics.safetyIssue"),
-    STATISTICS_SAG("statistics.sag");
+    INDEX_FILE("indexFile");    // index.html location, used by Portal authentication
 
     private final String name;
 

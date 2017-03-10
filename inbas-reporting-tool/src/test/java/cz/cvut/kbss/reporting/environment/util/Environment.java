@@ -18,8 +18,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import static org.junit.Assert.assertNotNull;
-
 public class Environment {
 
     private static Person currentUser;
@@ -78,8 +76,8 @@ public class Environment {
      * @return True if the collections match, false otherwise
      */
     public static boolean areEqual(Collection<? extends HasUri> one, Collection<? extends HasUri> two) {
-        assertNotNull(one);
-        assertNotNull(two);
+        assert one != null;
+        assert two != null;
         if (one.size() != two.size()) {
             return false;
         }

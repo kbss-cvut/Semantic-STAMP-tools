@@ -7,16 +7,13 @@ import java.util.Objects;
 
 public class OccurrenceReportValidator extends Validator<OccurrenceReport> {
 
-    private final OccurrenceValidator occurrenceValidator;
+    private final OccurrenceValidator occurrenceValidator = new OccurrenceValidator();
 
-    public OccurrenceReportValidator(OccurrenceValidator occurrenceValidator) {
-        this.occurrenceValidator = occurrenceValidator;
+    public OccurrenceReportValidator() {
     }
 
-    public OccurrenceReportValidator(Validator<? super OccurrenceReport> next,
-                                     OccurrenceValidator occurrenceValidator) {
+    public OccurrenceReportValidator(Validator<? super OccurrenceReport> next) {
         super(next);
-        this.occurrenceValidator = occurrenceValidator;
     }
 
     @Override

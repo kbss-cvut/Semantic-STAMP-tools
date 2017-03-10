@@ -49,7 +49,9 @@ public class RemoteDataLoader implements DataLoader {
         final HttpHeaders headers = processHeaders(params);
         final URI urlWithQuery = prepareUri(remoteUrl, params);
         final HttpEntity<Object> entity = new HttpEntity<>(null, headers);
-        LOG.trace("Getting remote data using {}", urlWithQuery.toString());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("Getting remote data using {}", urlWithQuery.toString());
+        }
         try {
             final ResponseEntity<String> result = restTemplate.exchange(urlWithQuery, HttpMethod.GET, entity,
                     String.class);

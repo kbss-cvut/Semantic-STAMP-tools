@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.rest;
 
 import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
+import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.service.search.SearchService;
@@ -33,7 +34,7 @@ public class SearchControllerTest extends BaseControllerTestRunner {
     public void setUp() throws Exception {
         super.setUp();
         Mockito.reset(searchService);
-        Environment.setCurrentUser(user);
+        Environment.setCurrentUser(Generator.getPerson());
     }
 
     @Test

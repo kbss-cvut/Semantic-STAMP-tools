@@ -4,7 +4,6 @@ import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.Vocabulary;
-import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 
 import java.net.URI;
@@ -25,11 +24,6 @@ public class FactorGraphSaver implements FactorGraphNodeVisitor {
         if (occurrence.getQuestion() != null) {
             questionSaver.persistIfNecessary(occurrence.getQuestion(), em);
         }
-    }
-
-    @Override
-    public void visit(SafetyIssue issue) {
-        // Do nothing, safety issue is persisted separately
     }
 
     @Override

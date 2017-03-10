@@ -1,35 +1,24 @@
 package cz.cvut.kbss.reporting.rest;
 
-import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportList;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
-import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
-import cz.cvut.kbss.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
-import cz.cvut.kbss.reporting.service.data.mail.SafaImportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
-
-import static cz.cvut.kbss.reporting.security.SecurityConstants.ROLE_ADMIN;
-import static cz.cvut.kbss.reporting.security.SecurityConstants.ROLE_USER;
 
 @RestController
 @RequestMapping("/reports")
@@ -42,13 +31,7 @@ public class ReportController extends BaseController {
     private ReportBusinessService reportService;
 
     @Autowired
-    private OccurrenceReportService occurrenceReportService;
-
-    @Autowired
     private DtoMapper dtoMapper;
-
-    @Autowired
-    private SafaImportService safaImportService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ReportList getAllReports(@RequestParam MultiValueMap<String, String> params) {
@@ -59,7 +42,6 @@ public class ReportController extends BaseController {
         return new ReportList(reportService.findAll());
     }
 
-    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createReport(@RequestBody LogicalDocument reportDto) {
@@ -86,7 +68,6 @@ public class ReportController extends BaseController {
         return report;
     }
 
-    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/{key}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateReport(@PathVariable("key") String key, @RequestBody LogicalDocument reportUpdate) {
@@ -94,7 +75,7 @@ public class ReportController extends BaseController {
             throw new BadRequestException("The passed report's key is different from the specified one.");
         }
         final LogicalDocument report = dtoMapper.reportDtoToReport(reportUpdate);
-        if (!reportService.exists(key, report.getClass())) {
+        if (reportService.findByKey(key) == null) {
             throw NotFoundException.create("Report", key);
         }
         reportService.update(report);
@@ -103,7 +84,6 @@ public class ReportController extends BaseController {
         }
     }
 
-    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/{key}/phase", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void transitionToNextPhase(@PathVariable("key") String key) {
@@ -111,15 +91,13 @@ public class ReportController extends BaseController {
         reportService.transitionToNextPhase(report);
     }
 
-    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeChain(@PathVariable("fileNumber") Long fileNumber) {
         reportService.removeReportChain(fileNumber);
     }
 
-    @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
         final LogicalDocument report = reportService.findLatestRevision(fileNumber);
         if (report == null) {
@@ -128,8 +106,7 @@ public class ReportController extends BaseController {
         return dtoMapper.reportToReportDto(report);
     }
 
-    @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ReportRevisionInfo> getReportChainRevisions(@PathVariable("fileNumber") Long fileNumber) {
         final List<ReportRevisionInfo> revisions = reportService.getReportChainRevisions(fileNumber);
         if (revisions.isEmpty()) {
@@ -139,12 +116,12 @@ public class ReportController extends BaseController {
     }
 
     /**
-     * Creates new revision in the report chain (of the same type as the latest revision).
+     * Creates new revision in the report chain (of the same type as the latest revision) or starts investigation (from
+     * latest preliminary report).
      *
      * @param fileNumber Report chain identifier
      * @return Response with location header pointing to the new report
      */
-    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createNewRevision(@PathVariable("fileNumber") Long fileNumber) {
@@ -154,25 +131,7 @@ public class ReportController extends BaseController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    /**
-     * Creates new revision in the report chain (of the same type as the latest revision) using data from the latest
-     * corresponding ECCAIRS report.
-     *
-     * @param fileNumber Report chain identifier
-     * @return Response with location header pointing to the new report
-     */
-    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
-    @RequestMapping(value = "/chain/{fileNumber}/revisions/eccairs", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> createNewRevisionFromEccairs(@PathVariable("fileNumber") Long fileNumber) {
-        final OccurrenceReport newRevision = occurrenceReportService.createNewRevisionFromEccairs(fileNumber);
-        final HttpHeaders headers = RestUtils
-                .createLocationHeaderFromContextPath("/reports/{key}", newRevision.getKey());
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
-    }
-
-    @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public LogicalDocument getRevision(@PathVariable("fileNumber") Long fileNumber,
                                        @PathVariable("revision") Integer revision) {
         final LogicalDocument report = reportService.findRevision(fileNumber, revision);
@@ -182,44 +141,5 @@ public class ReportController extends BaseController {
                             " or the report chain does not exist.");
         }
         return dtoMapper.reportToReportDto(report);
-    }
-
-    /**
-     * Receives uploaded E5X/E5F file and passes it to our E5X/E5F processing code.
-     *
-     * @param file The uploaded file
-     * @return Created response with key to the imported report
-     */
-    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
-    @RequestMapping(value = "/importE5", method = RequestMethod.POST)
-    public ResponseEntity<Void> importE5Report(@RequestParam("file") MultipartFile file) {
-        try {
-            final LogicalDocument result = reportService
-                    .importReportFromFile(file.getOriginalFilename(), file.getInputStream());
-            final HttpHeaders headers = RestUtils
-                    .createLocationHeaderFromContextPath("/reports/{key}", result.getKey());
-            return new ResponseEntity<>(headers, HttpStatus.CREATED);
-        } catch (IOException e) {
-            throw new BadRequestException("Unable to read the uploaded file.", e);
-        }
-    }
-
-    /**
-     * Receives uploaded SAFA Excel spreadsheet (contains description of SAFA audits) and passes it to the SAFA Excel
-     * processing code.
-     *
-     * @param file The uploaded Excel spreadsheet
-     */
-    @PreAuthorize("hasAnyRole({'" + ROLE_USER + "','" + ROLE_ADMIN + "'})")
-    @RequestMapping(value = "/importSafa", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public void importSafaExcel(@RequestParam("file") MultipartFile file) {
-        try {
-            final InputStream stream = file.getInputStream();
-            final NamedStream namedStream = new NamedStream(file.getName(), stream);
-            safaImportService.importReportsFromExcel(namedStream);
-        } catch (IOException e) {
-            throw new BadRequestException("Unable to read the uploaded file.", e);
-        }
     }
 }

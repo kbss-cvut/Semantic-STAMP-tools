@@ -23,8 +23,6 @@ describe('Filterable reports table', function () {
             obj.getPrimaryLabel = () => 'Label';
             obj.getLabels = () => 'Label';
             obj.getPhase = () => '';
-            obj.getStatusCssClass = () => '';
-            obj.getStatusInfo = () => '';
             return obj;
         });
         onFilterChange = jasmine.createSpy('onFilterChange');
@@ -32,7 +30,6 @@ describe('Filterable reports table', function () {
             onFilterChange: onFilterChange
         };
         spyOn(Actions, 'loadOptions');
-        Environment.mockCurrentUser();
     });
 
     it('shows a set of existing report types in the filter', function () {

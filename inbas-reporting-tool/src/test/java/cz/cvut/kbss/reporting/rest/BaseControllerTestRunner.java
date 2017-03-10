@@ -3,9 +3,6 @@ package cz.cvut.kbss.reporting.rest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.reporting.config.WebAppConfig;
-import cz.cvut.kbss.reporting.environment.generator.Generator;
-import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.Vocabulary;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,20 +25,16 @@ import static org.junit.Assert.assertEquals;
 public abstract class BaseControllerTestRunner {
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    protected WebApplicationContext webApplicationContext;
 
     @Autowired
-    ObjectMapper objectMapper;
+    protected ObjectMapper objectMapper;
 
-    MockMvc mockMvc;
-
-    Person user;
+    protected MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        this.user = Generator.getPerson();
-        user.addType(Vocabulary.s_c_guest);
     }
 
     protected String toJson(Object object) throws Exception {
