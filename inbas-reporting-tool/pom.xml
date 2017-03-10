@@ -201,6 +201,7 @@
                         <version>2.4</version>
                         <configuration>
                             <failOnMissingWebXml>false</failOnMissingWebXml>
+                            <warSourceExcludes>node_modules/**</warSourceExcludes>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -314,6 +315,7 @@
                         <version>2.4</version>
                         <configuration>
                             <warName>inbas-reporting-tool</warName>
+                            <warSourceExcludes>node_modules/**</warSourceExcludes>
                             <failOnMissingWebXml>false</failOnMissingWebXml>
                             <webResources>
                                 <resource>
