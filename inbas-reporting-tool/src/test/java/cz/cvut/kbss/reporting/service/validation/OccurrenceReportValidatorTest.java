@@ -1,7 +1,9 @@
 package cz.cvut.kbss.reporting.service.validation;
 
+import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.exception.ValidationException;
+import cz.cvut.kbss.reporting.model.Aircraft;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
@@ -81,6 +83,37 @@ public class OccurrenceReportValidatorTest {
         report.setKey(IdentificationUtils.generateKey());
         final OccurrenceReport copy = new OccurrenceReport(report);
         copy.setKey(IdentificationUtils.generateKey()); // The key will be different
+        validator.validateForUpdate(copy, report);
+    }
+
+    @Test
+    public void reportWithAircraftWithoutOperatorIsInvalidForPersist() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        final Aircraft aircraft = Generator.generateAircraft();
+        aircraft.setOperator(null);
+        report.getOccurrence().setAircraft(aircraft);
+        thrown.expect(ValidationException.class);
+        thrown.expectMessage("Missing operator of aircraft " + aircraft + ".");
+        validator.validateForPersist(report);
+    }
+
+    @Test
+    public void reportWithAircraftWithoutOperatorIsInvalidForUpdate() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setKey(IdentificationUtils.generateKey());
+        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
+        report.getAuthor().generateUri();
+        final Aircraft aircraft = Generator.generateAircraft();
+        report.getOccurrence().setAircraft(aircraft);
+        final OccurrenceReport copy = new OccurrenceReport(report);
+        copy.setKey(report.getKey());
+        copy.setUri(report.getUri());
+        copy.setAuthor(report.getAuthor());
+        copy.setDateCreated(report.getDateCreated());
+        copy.setRevision(report.getRevision());
+        copy.getOccurrence().getAircraft().setOperator(null);
+        thrown.expect(ValidationException.class);
+        thrown.expectMessage("Missing operator of aircraft " + copy.getOccurrence().getAircraft() + ".");
         validator.validateForUpdate(copy, report);
     }
 }

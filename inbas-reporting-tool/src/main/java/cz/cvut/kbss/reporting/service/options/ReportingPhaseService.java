@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -30,7 +31,7 @@ public class ReportingPhaseService {
     private void loadPhases() {
         final RawJson json;
         try {
-            json = (RawJson) optionsService.getOptions(PHASE_OPTION_TYPE);
+            json = (RawJson) optionsService.getOptions(PHASE_OPTION_TYPE, Collections.emptyMap());
         } catch (IllegalArgumentException e) {
             LOG.warn("Reporting phases are not available (Message: {}).", e.getMessage());
             return;

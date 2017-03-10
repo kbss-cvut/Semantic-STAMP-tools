@@ -4,13 +4,10 @@
 
 'use strict';
 
-const React = require('react');
-const ReactDOM = require('react-dom');
+var I18nStore = require('./stores/I18nStore');
+var addLocaleData = require('react-intl').addLocaleData;
 
-const I18nStore = require('./stores/I18nStore');
-const addLocaleData = require('react-intl').addLocaleData;
-
-let intlData = null;
+var intlData = null;
 
 function selectLocalization() {
     // Load react-intl locales
@@ -19,7 +16,7 @@ function selectLocalization() {
             addLocaleData(ReactIntlLocaleData[lang]);
         });
     }
-    const lang = navigator.language;
+    var lang = navigator.language;
     if (lang && lang === 'cs' || lang === 'cs-CZ' || lang === 'sk' || lang === 'sk-SK') {
         intlData = require('./i18n/cs');
     } else {
@@ -27,11 +24,57 @@ function selectLocalization() {
     }
 }
 
-function main() {
-    const Main = require('./Main').default;
-    ReactDOM.render(<Main intlData={intlData}/>, document.getElementById('content'));
-}
-
 selectLocalization();
 I18nStore.setMessages(intlData.messages);
-main();
+
+// Have the imports here, so that the I18nStore is initialized before any of the components which might need it
+var React = require('react');
+var ReactDOM = require('react-dom');
+var Router = require('react-router').Router;
+var Route = require('react-router').Route;
+var IndexRoute = require('react-router').IndexRoute;
+var IntlProvider = require('react-intl').IntlProvider;
+
+var history = require('./utils/Routing').history;
+var Routes = require('./utils/Routes');
+var Actions = require('./actions/Actions');
+
+var Login = require('./components/login/Login');
+var Register = require('./components/register/Register').default;
+var MainView = require('./components/MainView');
+var DashboardController = require('./components/dashboard/DashboardController').default;
+var ReportsController = require('./components/report/ReportsController').default;
+var StatisticsController = require('./components/statistics/Statistics').default;
+var ReportDetailController = require('./components/report/ReportController');
+var RoutingRules = require('./utils/RoutingRules');
+var SearchResultController = require('./components/search/SearchResultController').default;
+
+function onRouteEnter() {
+    RoutingRules.execute(this.path);
+}
+
+// Wrapping router in a React component to allow Intl to initialize
+var App = React.createClass({
+    render: function () {
+        return <IntlProvider {...intlData}>
+            <Router history={history}>
+                <Route path='/' component={MainView}>
+                    <IndexRoute component={DashboardController}/>
+                    <Route path={Routes.login.path} onEnter={onRouteEnter} component={Login}/>
+                    <Route path={Routes.register.path} onEnter={onRouteEnter} component={Register}/>
+                    <Route path={Routes.dashboard.path} onEnter={onRouteEnter} component={DashboardController}/>
+                    <Route path={Routes.reports.path} onEnter={onRouteEnter} component={ReportsController}/>
+                    <Route path={Routes.statistics.path} onEnter={onRouteEnter} component={StatisticsController}/>
+                    <Route path={Routes.createReport.path} onEnter={onRouteEnter} component={ReportDetailController}/>
+                    <Route path={Routes.editReport.path} onEnter={onRouteEnter} component={ReportDetailController}/>
+                    <Route path={Routes.searchResults.path} onEnter={onRouteEnter} component={SearchResultController}/>
+                </Route>
+            </Router>
+        </IntlProvider>;
+    }
+});
+
+Actions.loadUser();
+
+// Pass intl data to the top-level component
+ReactDOM.render(<App/>, document.getElementById('content'));

@@ -149,6 +149,7 @@ public class BaseDaoTest extends BaseDaoTestRunner {
     @Test(expected = PersistenceException.class)
     public void removeThrowsPersistenceExceptionWhenExceptionIsThrownByPersistenceProvider() {
         final Person person = Generator.getPerson();
+        person.setUri(null);
         personDao.remove(person);
     }
 

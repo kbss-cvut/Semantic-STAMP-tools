@@ -13,7 +13,7 @@
 
     <name>INBAS Reporting Tool</name>
     <artifactId>inbas-reporting-tool</artifactId>
-    <version>0.9.1</version>
+    <version>0.10.3</version>
     <packaging>war</packaging>
 
     <properties>
@@ -22,6 +22,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <cz.cvut.kbss.jopa.version>0.9.3</cz.cvut.kbss.jopa.version>
+        <cz.cvut.kbss.jaxb-jsonld.version>0.0.6</cz.cvut.kbss.jaxb-jsonld.version>
         <org.springframework.version>4.3.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.2.1.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.7.3</com.fasterxml.jackson.version>
@@ -112,6 +113,13 @@
             <version>${com.fasterxml.jackson.version}</version>
         </dependency>
 
+        <!-- JSON search engine -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>2.2.0</version>
+        </dependency>
+
         <!-- Servlet-API -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -130,6 +138,13 @@
             <groupId>cz.cvut.kbss.jopa</groupId>
             <artifactId>ontodriver-sesame</artifactId>
             <version>${cz.cvut.kbss.jopa.version}</version>
+        </dependency>
+
+        <!-- JAXB JSON-LD for Jackson -->
+        <dependency>
+            <groupId>cz.cvut.kbss</groupId>
+            <artifactId>jaxb-jsonld-jackson</artifactId>
+            <version>${cz.cvut.kbss.jaxb-jsonld.version}</version>
         </dependency>
 
         <!-- Sesame Data access -->
@@ -188,11 +203,48 @@
             <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- E5X/F report parsing -->
+        <dependency>
+            <groupId>cz.cvut.inbas.eccairs</groupId>
+            <artifactId>e5xml</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss.datatools</groupId>
+            <artifactId>mail-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cz.cvut.kbss.datatools</groupId>
+            <artifactId>caa-email2rdf</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Prevent NoClassDefFount on org/w3c/dom/ElementTraversal -->
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.4.01</version>
+        </dependency>
     </dependencies>
 
     <profiles>
         <profile>
             <id>dev</id>
+            <properties>
+                <profile-deployment.type>dev</profile-deployment.type>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -201,20 +253,22 @@
                         <version>2.4</version>
                         <configuration>
                             <failOnMissingWebXml>false</failOnMissingWebXml>
+                            <warSourceExcludes>
+                                node_modules/**
+                            </warSourceExcludes>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
-
         <profile>
             <id>production</id>
-            <properties>
-                <profile.name>production</profile.name>
-            </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <properties>
+                <profile-deployment.type>production</profile-deployment.type>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -320,10 +374,13 @@
                                     <directory>profiles/production/src/main/webapp</directory>
                                 </resource>
                             </webResources>
+                            <warSourceExcludes>
+                                node_modules/**
+                            </warSourceExcludes>
                             <packagingExcludes>
                                 **/js/actions/,**/js/components/,**/js/constants/,**/js/stores/,**/js/utils/,**/js/model/,
                                 **/js/validation/, **/js/i18n/,
-                                **/js/app.js,**/js/Main.js,**/js/bundle.js,**/js/.bundle.js,**/css/inbas-audit.css,tests/,node_modules/,
+                                **/js/app.js,**/js/bundle.js,**/js/.bundle.js,**/css/inbas-audit.css,tests/,node_modules/,
                                 package.json,.babelrc,.eslintrc,**/mapping
                             </packagingExcludes>
                         </configuration>
@@ -336,35 +393,53 @@
         <profile>
             <id>fd</id>
             <properties>
-                <profile.name>fd</profile.name>
+                <profile-deployment.name>fd</profile-deployment.name>
                 <deployment>FD</deployment>
             </properties>
         </profile>
         <profile>
             <id>ucl</id>
             <properties>
-                <profile.name>ucl</profile.name>
+                <profile-deployment.name>ucl</profile-deployment.name>
                 <deployment>UCL</deployment>
             </properties>
         </profile>
         <profile>
             <id>lkpr</id>
             <properties>
-                <profile.name>lkpr</profile.name>
+                <profile-deployment.name>lkpr</profile-deployment.name>
                 <deployment>LKPR</deployment>
             </properties>
         </profile>
         <profile>
             <id>csat</id>
             <properties>
-                <profile.name>csat</profile.name>
+                <profile-deployment.name>csat</profile-deployment.name>
                 <deployment>CSAT</deployment>
             </properties>
         </profile>
         <profile>
             <id>rlp</id>
             <properties>
-                <profile.name>rlp</profile.name>
+                <profile-deployment.name>rlp</profile-deployment.name>
+                <deployment>RLP</deployment>
+            </properties>
+        </profile>
+
+        <!-- Profiles for eccairs deployment - CVUT/UZPLN -->
+        <profile>
+            <id>eccairs-cvut</id>
+            <properties>
+                <profile-eccairs.name>eccairs-cvut</profile-eccairs.name>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>eccairs-uzpln</id>
+            <properties>
+                <profile-eccairs.name>eccairs-uzpln</profile-eccairs.name>
                 <deployment>RLP</deployment>
             </properties>
         </profile>
@@ -401,6 +476,73 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.17</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <overwrite>true</overwrite>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>profiles/${profile-deployment.type}/src/main/resources</directory>
+                                    <includes>
+                                        <includes>**/*</includes>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>profiles/${profile-deployment.name}/src/main/java/resources</directory>
+                                    <includes>
+                                        <includes>**/*</includes>
+                                    </includes>
+                                </resource>
+                                <resource>
+                                    <directory>profiles/${profile-eccairs.name}/src/main/java/resources</directory>
+                                    <includes>
+                                        <includes>**/*</includes>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-codegen-plugin</artifactId>
+                <version>3.1.6</version>
+                <executions>
+                    <execution>
+                        <id>wsdl2java</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wsdl2java</goal>
+                        </goals>
+                        <configuration>
+                            <sourceRoot>${project.basedir}/src/main/generated-sources</sourceRoot>
+                            <wsdlOptions>
+                                <wsdlOption>
+                                    <wsdl>
+                                        ${project.basedir}/profiles/${profile-eccairs.name}/src/main/java/resources/webapi/webapi.wsdl
+                                    </wsdl>
+                                    <wsdlLocation>webapi/webapi.wsdl</wsdlLocation>
+                                    <extraargs>
+                                        <extraarg>-p</extraarg>
+                                        <extraarg>cz.cvut.kbss.eccairs.webapi</extraarg>
+                                    </extraargs>
+                                </wsdlOption>
+                            </wsdlOptions>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <!-- Generate entity classes from OWL integrity constraints -->
@@ -443,35 +585,6 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <overwrite>true</overwrite>
-                            <outputDirectory>${basedir}/target/classes</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>profiles/${profile.name}</directory>
-                                    <includes>
-                                        <includes>option/*.json</includes>
-                                        <include>query/*.sparql</include>
-                                        <include>logback.xml</include>
-                                        <include>config.properties</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

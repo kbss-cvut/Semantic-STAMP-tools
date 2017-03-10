@@ -15,6 +15,7 @@ import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class StatisticsService {
@@ -32,14 +33,12 @@ public class StatisticsService {
 
     public RawJson getStatistics() {
         final String repositoryUrl = configReader.getConfig(ConfigParam.REPOSITORY_URL);
-        if (repositoryUrl.isEmpty()) {
-            throw new IllegalStateException("Missing repository URL configuration.");
-        }
+        assert !Objects.equals(repositoryUrl, "");
         String query = localLoader.loadData(Constants.STATISTICS_QUERY_FILE, Collections.emptyMap());
         try {
             query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
             final Map<String, String> params = new HashMap<>();
-            params.put("query", query);
+            params.put(Constants.QUERY_QUERY_PARAM, query);
             params.put(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
             final String data = remoteLoader.loadData(repositoryUrl, params);
             return new RawJson(data);

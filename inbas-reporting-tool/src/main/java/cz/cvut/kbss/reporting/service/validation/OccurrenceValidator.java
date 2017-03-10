@@ -1,15 +1,30 @@
 package cz.cvut.kbss.reporting.service.validation;
 
 import cz.cvut.kbss.reporting.exception.ValidationException;
+import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
+import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssue;
+import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
+import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 
 import java.util.Date;
 
 public class OccurrenceValidator extends Validator<Occurrence> {
 
+    private AircraftValidator aircraftValidator;
+
+    public OccurrenceValidator(AircraftValidator aircraftValidator) {
+        this.aircraftValidator = aircraftValidator;
+    }
+
     @Override
     public void validateForPersist(Occurrence instance) throws ValidationException {
         validate(instance);
+        if (instance.getAircraft() != null) {
+            aircraftValidator.validateForPersist(instance.getAircraft());
+        }
+        super.validateForPersist(instance);
     }
 
     private void validate(Occurrence occurrence) {
@@ -25,10 +40,43 @@ public class OccurrenceValidator extends Validator<Occurrence> {
         if (occurrence.getName() == null || occurrence.getName().isEmpty()) {
             throw new ValidationException("Occurrence name cannot be empty.");
         }
+        validateEvents(occurrence);
+    }
+
+    private void validateEvents(Occurrence occurrence) {
+        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(new FactorGraphNodeVisitor() {
+            @Override
+            public void visit(Occurrence occurrence) {
+                // Do nothing
+            }
+
+            @Override
+            public void visit(SafetyIssue issue) {
+                // Do nothing
+            }
+
+            @Override
+            public void visit(Event event) {
+                if (event.getStartTime() == null) {
+                    throw new ValidationException("Event " + event + " is missing the required start time value.");
+                }
+                if (event.getEndTime() == null) {
+                    throw new ValidationException("Event " + event + " is missing the required end time value.");
+                }
+                if (event.getStartTime().compareTo(event.getEndTime()) > 0) {
+                    throw new ValidationException("Event start cannot be after its end.");
+                }
+            }
+        }, null);
+        traverser.traverse(occurrence);
     }
 
     @Override
     public void validateForUpdate(Occurrence toValidate, Occurrence original) throws ValidationException {
         validate(toValidate);
+        if (toValidate.getAircraft() != null) {
+            aircraftValidator.validateForUpdate(toValidate.getAircraft(), original.getAircraft());
+        }
+        super.validateForUpdate(toValidate, original);
     }
 }

@@ -4,8 +4,10 @@ import cz.cvut.kbss.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
+import cz.cvut.kbss.reporting.environment.util.TestUtils;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +25,7 @@ public class OccurrenceReportTest {
     @Test
     public void copyConstructorCopiesRelevantAttributes() {
         final OccurrenceReport original = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        original.setReadOnly(true);
         final OccurrenceReport copy = new OccurrenceReport(original);
 
         assertNull(copy.getUri());
@@ -37,6 +40,29 @@ public class OccurrenceReportTest {
         assertEquals(original.getOccurrence().getName(), copy.getOccurrence().getName());
         assertEquals(original.getSummary(), copy.getSummary());
         assertEquals(original.getSeverityAssessment(), copy.getSeverityAssessment());
+        assertEquals(original.getResponsibleDepartments(), copy.getResponsibleDepartments());
+        assertEquals(original.isReadOnly(), copy.isReadOnly());
+    }
+
+    @Test
+    public void copyConstructorCreatesCopyOfResponsibleDepartments() {
+        final OccurrenceReport original = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        final Set<URI> departments = new HashSet<>();
+        for (int i = 0; i < Generator.randomInt(10); i++) {
+            departments.add(Generator.generateUri());
+        }
+        original.setResponsibleDepartments(departments);
+        final OccurrenceReport copy = new OccurrenceReport(original);
+        assertEquals(original.getResponsibleDepartments(), copy.getResponsibleDepartments());
+        assertNotSame(original.getResponsibleDepartments(), copy.getResponsibleDepartments());
+    }
+
+    @Test
+    public void copyConstructorLeavesResponsibleDepartmentsNullWhenOriginalHasNone() {
+        final OccurrenceReport original = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        original.setResponsibleDepartments(null);
+        final OccurrenceReport copy = new OccurrenceReport(original);
+        assertNull(copy.getResponsibleDepartments());
     }
 
     @Test
@@ -54,12 +80,7 @@ public class OccurrenceReportTest {
 
         final OccurrenceReport copy = new OccurrenceReport(original);
         assertNotNull(copy.getCorrectiveMeasures());
-        assertEquals(original.getCorrectiveMeasures().size(), copy.getCorrectiveMeasures().size());
-        for (CorrectiveMeasureRequest r : original.getCorrectiveMeasures()) {
-            for (CorrectiveMeasureRequest rr : copy.getCorrectiveMeasures()) {
-                assertNotSame(r, rr);
-            }
-        }
+        TestUtils.verifyCorrectiveMeasures(original.getCorrectiveMeasures(), copy.getCorrectiveMeasures());
     }
 
     @Test
@@ -99,7 +120,7 @@ public class OccurrenceReportTest {
         assertEquals(report.getOccurrence().getStartTime(), result.getDate());
         assertTrue(result.getTypes().containsAll(report.getTypes()));
         assertEquals(report.getSeverityAssessment(), result.getSeverityAssessment());
-        assertEquals(report.getOccurrence().getEventType(), result.getOccurrenceCategory());
+        assertEquals(report.getOccurrence().getEventTypes(), result.getOccurrenceCategories());
         assertEquals(report.getSummary(), result.getSummary());
     }
 
@@ -108,5 +129,13 @@ public class OccurrenceReportTest {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         final ReportDto dto = report.toReportDto();
         assertTrue(dto.getTypes().contains(Vocabulary.s_c_occurrence_report));
+    }
+
+    @Test
+    public void copyConstructorCopiesArmsValues() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        final OccurrenceReport copy = new OccurrenceReport(report);
+        assertEquals(report.getAccidentOutcome(), copy.getAccidentOutcome());
+        assertEquals(report.getBarrierEffectiveness(), copy.getBarrierEffectiveness());
     }
 }

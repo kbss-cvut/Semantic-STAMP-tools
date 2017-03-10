@@ -140,7 +140,7 @@ public class FormGenServiceImplTest {
     public void formGenPassesParametersToRemoteFormGenerator() throws Exception {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
         final Map<String, String> params = Collections
-                .singletonMap("eventType", report.getOccurrence().getEventType().toString());
+                .singletonMap("eventType", report.getOccurrence().getEventTypes().toString());
         setupRemoteFormGenServiceMock(params);
 
         report.getAuthor().generateUri();

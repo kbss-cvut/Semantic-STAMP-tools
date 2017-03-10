@@ -1,12 +1,15 @@
 package cz.cvut.kbss.reporting.dto.reportlist;
 
 import java.net.URI;
+import java.util.Set;
 
 public class OccurrenceReportDto extends ReportDto {
 
     private URI severityAssessment;
 
-    private URI occurrenceCategory;
+    private Set<URI> occurrenceCategories;
+
+    private Integer armsIndex;
 
     private String summary;
 
@@ -18,12 +21,20 @@ public class OccurrenceReportDto extends ReportDto {
         this.severityAssessment = severityAssessment;
     }
 
-    public URI getOccurrenceCategory() {
-        return occurrenceCategory;
+    public Set<URI> getOccurrenceCategories() {
+        return occurrenceCategories;
     }
 
-    public void setOccurrenceCategory(URI occurrenceCategory) {
-        this.occurrenceCategory = occurrenceCategory;
+    public void setOccurrenceCategories(Set<URI> occurrenceCategories) {
+        this.occurrenceCategories = occurrenceCategories;
+    }
+
+    public Integer getArmsIndex() {
+        return armsIndex;
+    }
+
+    public void setArmsIndex(Integer armsIndex) {
+        this.armsIndex = armsIndex;
     }
 
     public String getSummary() {
@@ -48,6 +59,11 @@ public class OccurrenceReportDto extends ReportDto {
     @Override
     public int hashCode() {
         return getUri().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "OccurrenceReportDto{ " + super.toString() + '}';
     }
 
     @Override

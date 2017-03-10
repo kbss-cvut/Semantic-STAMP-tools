@@ -4,13 +4,14 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.exception.UsernameExistsException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.PersonService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
 
@@ -29,7 +30,7 @@ public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
         assertTrue(passwordEncoder.matches(Generator.PASSWORD, result.getPassword()));
     }
 
-    @Test(expected = UsernameExistsException.class)
+    @Test
     public void persistThrowsUsernameExistsForUserWithDuplicateUsername() {
         final Person p = Generator.getPerson();
         personService.persist(p);
@@ -38,13 +39,17 @@ public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
         duplicate.setFirstName("duplicate");
         duplicate.setLastName("duplicated");
         duplicate.setPassword(Generator.PASSWORD);
+        thrown.expect(UsernameExistsException.class);
+        thrown.expectMessage("Username " + p.getUsername() + " already exists.");
         personService.persist(duplicate);
     }
 
-    @Test(expected = ValidationException.class)
+    @Test
     public void persistThrowsValidationExceptionForInstanceWithoutPassword() {
         final Person p = Generator.getPerson();
         p.setPassword("");
+        thrown.expect(ValidationException.class);
+        thrown.expectMessage("Cannot encode an empty password.");
         personService.persist(p);
     }
 
@@ -59,5 +64,27 @@ public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
 
         final Person result = personService.findByUsername(p.getUsername());
         assertTrue(passwordEncoder.matches(newPassword, result.getPassword()));
+    }
+
+    @Test
+    public void updateThrowsIllegalArgumentWhenPersonUriChanges() {
+        final Person p = Generator.getPerson();
+        personService.persist(p);
+
+        p.setUri(Generator.generateUri());
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Cannot update person's URI. Person: " + p);
+        personService.update(p);
+    }
+
+    @Test
+    public void persistAddsGuestUserTypeToThePersistedInstance() {
+        final Person p = Generator.getPerson();
+        assertFalse(p.getTypes().contains(Vocabulary.s_c_guest));
+        personService.persist(p);
+
+        final Person result = personService.find(p.getUri());
+        assertNotNull(result);
+        assertTrue(result.getTypes().contains(Vocabulary.s_c_guest));
     }
 }

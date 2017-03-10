@@ -2,6 +2,7 @@
 
 const React = require('react');
 const Alert = require('react-bootstrap').Alert;
+
 const Constants = require('../../constants/Constants');
 
 const MessageMixin = {
@@ -11,7 +12,7 @@ const MessageMixin = {
         };
     },
 
-    dismissInterval: Constants.MESSAGE_DURATION,
+    dismissInterval: 5000,
 
     dismissMessage: function () {
         this.setState({message: null});
@@ -20,7 +21,7 @@ const MessageMixin = {
 
     showInfoMessage: function (text) {
         this.dismissInterval = 10000;
-        this._showMessage(Constants.MESSAGE_TYPE.INFO, text);
+        this._showMessage('info', text);
     },
 
     _showMessage: function (type, text) {
@@ -35,25 +36,44 @@ const MessageMixin = {
 
     showSuccessMessage: function (text) {
         this.dismissInterval = 10000;
-        this._showMessage(Constants.MESSAGE_TYPE.SUCCESS, text);
+        this._showMessage('success', text);
     },
 
     showErrorMessage: function (text) {
         this.dismissInterval = 10000;
-        this._showMessage(Constants.MESSAGE_TYPE.ERROR, text);
+        this._showMessage('danger', text);
     },
 
     showWarnMessage: function (text) {
         this.dismissInterval = 10000;
-        this._showMessage(Constants.MESSAGE_TYPE.WARNING, text);
+        this._showMessage('warning', text);
+    },
+
+    showMessage: function (text, msgType) {
+        switch (msgType) {
+            case Constants.MESSAGE_TYPE.INFO:
+                this.showInfoMessage(text);
+                break;
+            case Constants.MESSAGE_TYPE.ERROR:
+                this.showErrorMessage(text);
+                break;
+            case Constants.MESSAGE_TYPE.SUCCESS:
+                this.showSuccessMessage(text);
+                break;
+            case Constants.MESSAGE_TYPE.WARNING:
+                this.showWarnMessage(text);
+                break;
+            default:
+                break;
+        }
     },
 
     renderMessage: function () {
         return this.state.message ? <div className='message-container'>
-                <Alert bsStyle={this.state.message.type} onDismiss={this.dismissMessage}>
-                    <p>{this.state.message.text}</p>
-                </Alert>
-            </div> : null;
+            <Alert bsStyle={this.state.message.type} onDismiss={this.dismissMessage}>
+                <p>{this.state.message.text}</p>
+            </Alert>
+        </div> : null;
     },
 
     cleanupMessages: function () {

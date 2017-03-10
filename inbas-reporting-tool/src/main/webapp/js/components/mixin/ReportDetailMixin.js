@@ -17,8 +17,8 @@ const ReportDetailMixin = {
         this.props.handlers.onChange(change);
     },
 
-    onLoading: function () {
-        this.setState({submitting: true});
+    onLoading: function (action = null) {
+        this.setState({submitting: action ? action : true});
     },
 
     onLoadingEnd: function () {

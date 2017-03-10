@@ -1,0 +1,92 @@
+[
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/stop",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Stop"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zastavit"
+      }
+    ],
+    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 100,
+    "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": [
+      {
+        "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve"
+      }
+    ]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Improve"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zlepšit"
+      }
+    ],
+    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 10,
+    "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": [
+      {
+        "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure"
+      }
+    ]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Secure"
+      },
+      {
+        "@language": "cs",
+        "@value": "Zajistit"
+      }
+    ],
+    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 1,
+    "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": [
+      {
+        "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor"
+      }
+    ]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Monitor"
+      },
+      {
+        "@language": "cs",
+        "@value": "Sledovat"
+      }
+    ],
+    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.1,
+    "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": [
+      {
+        "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept"
+      }
+    ]
+  },
+  {
+    "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept",
+    "http://www.w3.org/2000/01/rdf-schema#label": [
+      {
+        "@language": "en",
+        "@value": "Accept"
+      },
+      {
+        "@language": "cs",
+        "@value": "Přijmout"
+      }
+    ],
+    "http://onto.fel.cvut.cz/ontologies/documentation/has_data_value": 0.01
+  }
+]

@@ -24,4 +24,14 @@ abstract class KeySupportingRepositoryService<T extends HasOwlKey> extends BaseR
         postLoad(result);
         return result;
     }
+
+    /**
+     * Checks whether an instance with the specified key exists.
+     *
+     * @param key Instance key
+     * @return {@code true} if an instance exists, {@code false} otherwise
+     */
+    public boolean exists(String key) {
+        return getPrimaryDao().exists(key);
+    }
 }

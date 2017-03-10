@@ -9,6 +9,8 @@ describe('OccurrenceReport', function () {
         Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         ReportFactory = require('../../js/model/ReportFactory'),
+        UserStore = require('../../js/stores/UserStore'),
+        Vocabulary = require('../../js/constants/Vocabulary'),
         OccurrenceReport = rewire('../../js/components/report/occurrence/OccurrenceReport'),
         messages = require('../../js/i18n/en').messages;
     let handlers,
@@ -17,6 +19,7 @@ describe('OccurrenceReport', function () {
     beforeEach(function () {
         spyOn(Actions, 'updateReport');
         spyOn(Actions, 'loadOptions');
+        spyOn(UserStore, 'getCurrentUser').and.returnValue(Generator.getUser());
         handlers = jasmine.createSpyObj('handlers', ['onCancel', 'onSuccess', 'onChange']);
         Environment.mockFactors(OccurrenceReport);
         report = Generator.generateOccurrenceReport();
@@ -71,27 +74,55 @@ describe('OccurrenceReport', function () {
         expect(Environment.getComponentByTagAndText(component, 'a', messages['detail.submit'])).toBeNull();
     });
 
-    it('renders factors with graph when standard desktop system is used to display the app', () => {
+    it('does not render the ECCAIRS report button for regular occurrence reports', () => {
         report = ReportFactory.createOccurrenceReport();
         const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
-            factors = TestUtils.findRenderedDOMComponentWithClass(component, 'factors-gantt');
-        expect(factors).toBeDefined();
-        expect(factors).not.toBeNull();
+            topRightButtons = TestUtils.scryRenderedDOMComponentsWithClass(component, 'detail-top-button');
+        expect(topRightButtons.length).toEqual(0);
     });
 
-    it('renders factors in table when touch-based system is used to display the app', () => {
+    it('renders ECCAIRS report button when displayed report was imported from ECCAIRS', () => {
         report = ReportFactory.createOccurrenceReport();
-        const deviceMock = function () {
-            return {
-                tablet: () => true,
-                phone: () => true
-            }
+        delete report.isNew;
+        report.isEccairsReport = function () {
+            return true;
         };
-        OccurrenceReport.__set__('device', deviceMock);
         const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
-            factors = TestUtils.findRenderedComponentWithType(component, require('../../js/components/factor/smallscreen/SmallScreenFactors').default.WrappedComponent);
-        expect(factors).toBeDefined();
-        expect(factors).not.toBeNull();
+            topRightButtons = TestUtils.scryRenderedDOMComponentsWithClass(component, 'detail-top-button');
+        expect(topRightButtons.length).toEqual(2);
+    });
+
+    it('does not render the create new revision from the latest ECCAIRS report action item when report was not imported from ECCAIRS', () => {
+        report = ReportFactory.createOccurrenceReport();
+        report.isEccairsReport = function () {
+            return false;
+        };
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            menuItems = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').MenuItem),
+            revFromEccairs = menuItems.find(item => item.props.onClick === component._onNewRevisionForEccairs);
+        expect(revFromEccairs).not.toBeDefined();
+    });
+
+    it('renders the create new revision from the latest ECCAIRS report action item when report was imported from ECCAIRS', () => {
+        report = ReportFactory.createOccurrenceReport();
+        delete report.isNew;
+        report.isEccairsReport = function () {
+            return true;
+        };
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            menuItems = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').MenuItem),
+            revFromEccairs = menuItems.find(item => item.props.onClick === component._onNewRevisionForEccairs);
+        expect(revFromEccairs).toBeDefined();
+    });
+
+    it('renders info about report being ECCAIRS in the panel header', () => {
+        report = ReportFactory.createOccurrenceReport();
+        report.isEccairsReport = function () {
+            return true;
+        };
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            header = TestUtils.findRenderedDOMComponentWithTag(component, 'h2');
+        expect(header.textContent.indexOf(messages['report.eccairs.label'])).not.toEqual(-1);
     });
 
     it('loading disables all bottom action buttons', () => {
@@ -123,5 +154,25 @@ describe('OccurrenceReport', function () {
         const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
             summaryButton = TestUtils.findRenderedDOMComponentWithClass(component, 'detail-top-button');
         expect(summaryButton.disabled).toBeTruthy();
+    });
+
+    it('renders full button toolbar when the current user is regular/admin', () => {
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            buttonToolbars = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').ButtonToolbar),
+            buttons = TestUtils.scryRenderedDOMComponentsWithTag(buttonToolbars[buttonToolbars.length - 1], 'button');
+        expect(buttons.length).toBeGreaterThan(1);
+        expect(buttons[0].textContent).toEqual(messages['save']);
+    });
+
+    it('renders only Cancel button when the current user is only guest', () => {
+        const guest = {
+            types: [Vocabulary.ROLE_GUEST]
+        };
+        UserStore.getCurrentUser.and.returnValue(guest);
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            buttonToolbars = TestUtils.scryRenderedComponentsWithType(component, require('react-bootstrap').ButtonToolbar),
+            buttons = TestUtils.scryRenderedDOMComponentsWithTag(buttonToolbars[buttonToolbars.length - 1], 'button');
+        expect(buttons.length).toEqual(1);
+        expect(buttons[0].textContent).toEqual(messages['cancel']);
     });
 });

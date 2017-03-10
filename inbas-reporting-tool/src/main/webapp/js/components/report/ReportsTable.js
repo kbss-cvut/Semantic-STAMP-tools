@@ -35,7 +35,6 @@ var ReportsTable = React.createClass({
             <Table striped bordered condensed hover>
                 {this.renderHeader()}
                 <tbody>
-                {this.props.children}
                 {this.renderReports()}
                 </tbody>
             </Table>

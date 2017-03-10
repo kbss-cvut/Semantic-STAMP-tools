@@ -22,16 +22,14 @@ public class Event extends AbstractEntity implements FactorGraphItem, Serializab
             CascadeType.REMOVE})
     private Set<Event> children;
 
-    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.s_p_has_start_time)
     private Date startTime;
 
-    @ParticipationConstraints(nonEmpty = true)
     @OWLDataProperty(iri = Vocabulary.s_p_has_end_time)
     private Date endTime;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_event_type)
-    private URI eventType;
+    private Set<URI> eventTypes;
 
     @OWLDataProperty(iri = Vocabulary.s_p_child_index)
     private Integer index;
@@ -52,7 +50,7 @@ public class Event extends AbstractEntity implements FactorGraphItem, Serializab
     public Event(Event other) {
         this.startTime = other.startTime;
         this.endTime = other.endTime;
-        this.eventType = other.eventType;
+        this.eventTypes = other.eventTypes;
         this.index = other.index;
         if (other.types != null) {
             this.types = new HashSet<>(other.types);
@@ -96,8 +94,8 @@ public class Event extends AbstractEntity implements FactorGraphItem, Serializab
         children.add(child);
     }
 
-    public URI getEventType() {
-        return eventType;
+    public Set<URI> getEventTypes() {
+        return eventTypes;
     }
 
     /**
@@ -105,16 +103,16 @@ public class Event extends AbstractEntity implements FactorGraphItem, Serializab
      * <p>
      * Also adds the event type's URI to this instance's types.
      *
-     * @param eventType The type to set
+     * @param eventTypes The type to set
      * @see Vocabulary#s_p_has_event_type
      */
-    public void setEventType(URI eventType) {
-        this.eventType = eventType;
-        if (eventType != null) {
+    public void setEventTypes(Set<URI> eventTypes) {
+        this.eventTypes = eventTypes;
+        if (eventTypes != null) {
             if (types == null) {
-                this.types = new HashSet<>(4);
+                this.types = new HashSet<>();
             }
-            types.add(eventType.toString());
+            eventTypes.forEach(e -> types.add(e.toString()));
         }
     }
 

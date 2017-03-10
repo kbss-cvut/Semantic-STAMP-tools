@@ -48,4 +48,13 @@ public class OwlKeySupportingDaoTest extends BaseDaoTestRunner {
     public void findByKeyReturnsNullWhenNoMatchingInstanceExists() {
         assertNull(dao.findByKey("SomeRandomKey"));
     }
+
+    @Test
+    public void existsReturnsTrueForExistingInstanceWithMatchingKey() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        dao.persist(report);
+
+        assertTrue(dao.exists(report.getKey()));
+    }
 }

@@ -21,6 +21,7 @@ describe('ReportsController', () => {
         jasmine.addMatchers(Environment.customMatchers);
         spyOn(Actions, 'loadAllReports');
         spyOn(Actions, 'loadOptions');
+        Environment.mockCurrentUser();
         reports = Generator.generateReports();
         location = {            // Simulating location supplied normally by React Router
             pathname: '',
@@ -28,6 +29,11 @@ describe('ReportsController', () => {
         };
         spyOn(RouterStore, 'getTransitionPayload').and.returnValue(null);
         spyOn(ComponentStateStore, 'getComponentState').and.returnValue(null);
+        ComponentStateStore.onResetComponentState(ReportsController.displayName);
+    });
+
+    afterEach(() => {
+        ComponentStateStore.onResetComponentState(ReportsController.displayName);
     });
 
     it('initializes report sort with default values', () => {
@@ -96,6 +102,8 @@ describe('ReportsController', () => {
             reportsComponent = TestUtils.findRenderedComponentWithType(controller, Reports);
         Generator.shuffleArray(reports);
         controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        Generator.shuffleArray(reports);
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
         let renderedReports = reportsComponent.props.reports;
         expect(Environment.arraysEqual(reports, renderedReports)).toBeTruthy();
 
@@ -135,6 +143,17 @@ describe('ReportsController', () => {
         expect(controller.state.filter).toEqual(filter);
     });
 
+    it('passes initial filter setting to the filter component', () => {
+        const filter = {
+            phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
+        };
+        RouterStore.getTransitionPayload.and.returnValue({filter: filter});
+        const controller = Environment.render(<ReportsController location={location}/>);
+        controller._onReportsLoaded({action: Actions.loadAllReports, reports: reports});
+        const filterableTable = TestUtils.findRenderedComponentWithType(controller, require('../../js/components/report/FilterableReportsTable'));
+        expect(filterableTable.props.filter[Constants.FILTERS[1].path]).toEqual(filter.phase);
+    });
+
     it('clears transition payload after it has read it', () => {
         const filter = {
             phase: 'http://onto.fel.cvut.cz/ontologies/inbas-test/first'
@@ -154,8 +173,7 @@ describe('ReportsController', () => {
         };
         ComponentStateStore.getComponentState.and.returnValue({filter: filter, sort: sort});
         const controller = Environment.render(<ReportsController location={location}/>);
-        expect(ComponentStateStore.getComponentState).toHaveBeenCalledWith(
-            ReportsController.WrappedComponent.WrappedComponent.displayName);
+        expect(ComponentStateStore.getComponentState).toHaveBeenCalledWith(ReportsController.WrappedComponent.WrappedComponent.displayName);
         expect(controller.state.filter).toEqual(filter);
         expect(controller.state.sort).toEqual(sort);
     });
@@ -170,11 +188,10 @@ describe('ReportsController', () => {
         const sort = controller.state.sort;
 
         controller.onFilterChange(filter);
-        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(
-            ReportsController.WrappedComponent.WrappedComponent.displayName, {
-                filter: filter,
-                sort: sort
-            });
+        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.WrappedComponent.WrappedComponent.displayName, {
+            filter: filter,
+            sort: sort
+        });
     });
 
     it('saves component filtering and sorting when sort is called', () => {
@@ -187,11 +204,10 @@ describe('ReportsController', () => {
         sort = controller.state.sort;
         filter = controller.state.filter;
 
-        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(
-            ReportsController.WrappedComponent.WrappedComponent.displayName, {
-                filter: filter,
-                sort: sort
-            });
+        expect(ComponentStateStore.onRememberComponentState).toHaveBeenCalledWith(ReportsController.WrappedComponent.WrappedComponent.displayName, {
+            filter: filter,
+            sort: sort
+        });
     });
 
     it('loads all reports when no report keys are specified', () => {
@@ -222,6 +238,7 @@ describe('ReportsController', () => {
         const reportsToSort = reports.slice(0, 3);
         reportsToSort[0].date = 0;
         delete reportsToSort[1].date;
+        reportsToSort[2].date = Date.now();
         const controller = Environment.render(<ReportsController location={location}/>);
         controller._onReportsLoaded({action: Actions.loadAllReports, reports: reportsToSort});
         controller.onSort('date');

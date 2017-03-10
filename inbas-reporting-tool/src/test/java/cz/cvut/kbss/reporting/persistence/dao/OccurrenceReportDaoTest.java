@@ -80,9 +80,9 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     private void verifyChildren(Set<Event> expected, Set<Event> actual, Set<URI> visited) {
         final List<Event> lExpected = new ArrayList<>(expected);
-        lExpected.sort(Comparator.comparing(AbstractEntity::getUri));
+        Collections.sort(lExpected, (a, b) -> a.getUri().compareTo(b.getUri()));
         final List<Event> lActual = new ArrayList<>(actual);
-        lActual.sort(Comparator.comparing(AbstractEntity::getUri));
+        Collections.sort(lActual, (a, b) -> a.getUri().compareTo(b.getUri()));
         final Iterator<Event> itExp = lExpected.iterator();
         final Iterator<Event> itAct = lActual.iterator();
         while (itExp.hasNext() && itAct.hasNext()) {
@@ -92,9 +92,9 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     private void verifyFactors(Set<Factor> expected, Set<Factor> actual, Set<URI> visited) {
         final List<Factor> lExpected = new ArrayList<>(expected);
-        lExpected.sort(Comparator.comparing(AbstractEntity::getUri));
+        Collections.sort(lExpected, (a, b) -> a.getUri().compareTo(b.getUri()));
         final List<Factor> lActual = new ArrayList<>(actual);
-        lActual.sort(Comparator.comparing(AbstractEntity::getUri));
+        Collections.sort(lActual, (a, b) -> a.getUri().compareTo(b.getUri()));
         final Iterator<Factor> itExp = lExpected.iterator();
         final Iterator<Factor> itAct = lActual.iterator();
         while (itExp.hasNext() && itAct.hasNext()) {
@@ -139,10 +139,9 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
-    public void findByOccurrenceReturnsNullWhenNoMatchingReportIsFound() {
+    public void findByOccurrenceReturnsNullForUnknownOccurrence() {
         final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
-        occurrenceDao.persist(occurrence);
-
+        occurrence.setUri(Generator.generateUri());
         assertNull(occurrenceReportDao.findByOccurrence(occurrence));
     }
 
@@ -257,7 +256,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final Event addedOne = new Event();
         addedOne.setStartTime(report.getOccurrence().getStartTime());
         addedOne.setEndTime(report.getOccurrence().getEndTime());
-        addedOne.setEventType(Generator.generateEventType());
+        addedOne.setEventTypes(Collections.singleton(Generator.generateEventType()));
         final Factor newF = new Factor();
         newF.setEvent(addedOne);
         newF.addType(Generator.randomFactorType());
@@ -265,7 +264,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final Event addedChild = new Event();
         addedChild.setStartTime(report.getOccurrence().getStartTime());
         addedChild.setEndTime(report.getOccurrence().getEndTime());
-        addedChild.setEventType(Generator.generateEventType());
+        addedChild.setEventTypes(Collections.singleton(Generator.generateEventType()));
         report.getOccurrence().getChildren().iterator().next().addChild(addedChild);
 
         occurrenceReportDao.update(report);

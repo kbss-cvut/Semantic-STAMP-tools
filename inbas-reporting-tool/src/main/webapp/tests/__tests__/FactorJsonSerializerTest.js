@@ -140,4 +140,23 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
         expect(factorGraph.edges.length).toEqual(partOfLinks.length + factorLinks.length);
         verifyLinks(partOfLinks.concat(factorLinks), factorGraph.edges);
     });
+
+    it('removes start and end times from safety issue factor graph nodes', () => {
+        report = Generator.generateSafetyIssueReport();
+        report.safetyIssue.referenceId = 117;
+        var nodes = [report.safetyIssue];
+        Array.prototype.push.apply(nodes, Generator.generateFactorGraphNodes());
+        var factorLinks = Generator.generateFactorLinksForNodes(nodes);
+        var partOfLinks = Generator.generatePartOfLinksForNodes(report.safetyIssue, nodes);
+        initGetLinksStub(factorLinks);
+        initGetFactorStub(nodes);
+        initForEachStub(nodes);
+        initGetChildrenStub(nodes, partOfLinks);
+
+        var factorGraph = FactorJsonSerializer.getFactorGraph(report);
+        for (var i = 0, len = factorGraph.nodes.length; i < len; i++) {
+            expect(factorGraph.nodes[i].startTime).not.toBeDefined();
+            expect(factorGraph.nodes[i].endTime).not.toBeDefined();
+        }
+    });
 });

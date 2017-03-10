@@ -1,7 +1,3 @@
-/**
- * @jsx
- */
-
 'use strict';
 
 var React = require('react');
@@ -11,12 +7,20 @@ var DEFAULT_THRESHOLD = 120;
 var CollapsibleText = React.createClass({
 
     propTypes: {
-        text: React.PropTypes.string
+        text: React.PropTypes.string,
+        defaultExpanded: React.PropTypes.bool
+    },
+
+    getDefaultProps: function() {
+        return {
+            defaultExpanded: false,
+            text: ''
+        }
     },
 
     getInitialState: function () {
         return {
-            expanded: this.props.defaultExpanded != null ? this.props.defaultExpanded : false
+            expanded: this.props.defaultExpanded
         };
     },
 

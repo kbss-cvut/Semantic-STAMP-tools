@@ -89,9 +89,9 @@ class ReportsController extends React.Component {
             reports: null,
             filter: this._resolveFilter(storedState),
             sort: sort ? sort : {
-                    identification: Constants.SORTING.NO,
-                    date: Constants.SORTING.NO
-                }
+                identification: Constants.SORTING.NO,
+                date: Constants.SORTING.NO
+            }
         };
     }
 
@@ -115,6 +115,7 @@ class ReportsController extends React.Component {
             Actions.loadAllReports(Array.isArray(reportKeys) ? reportKeys : [reportKeys]);
         }
         Actions.loadOptions(Constants.OPTIONS.REPORTING_PHASE);
+        Actions.loadOptions('sira');
     }
 
     _onReportsLoaded = (data) => {
@@ -140,6 +141,10 @@ class ReportsController extends React.Component {
             handlers: {onCancel: Routes.reports}
         });
     };
+
+    onEccairsMatch(report) {
+        Actions.findLatestEccairsVersion(report);
+    }
 
     onRemove = (report) => {
         Actions.deleteReportChain(report.fileNumber);
@@ -183,6 +188,7 @@ class ReportsController extends React.Component {
 
     render() {
         const actions = {
+            onEccairsMatch: this.onEccairsMatch,
             onEdit: this.onEdit,
             onRemove: this.onRemove,
             onFilterChange: this.onFilterChange,

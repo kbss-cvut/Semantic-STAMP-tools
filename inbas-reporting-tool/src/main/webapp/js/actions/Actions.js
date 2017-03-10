@@ -5,9 +5,13 @@ const Reflux = require('reflux');
 module.exports = Reflux.createActions([
     'loadUser',
 
-    'loadAllReports', 'deleteReportChain', 'createReport', 'updateReport', 'submitReport',
+    'loadAllReports', 'deleteReportChain', 'createReport', 'updateReport', 'submitReport', 'importE5Report', 'importSafaExcel',
     'phaseTransition',
-    'loadRevisions', 'loadReport',
+    'loadRevisions', 'loadReport', 'loadEccairsReport', 'newRevisionFromLatestEccairs',
+
+    'calculateArmsIndex', 'calculateSira',
+
+    'findLatestEccairsVersion',
 
     'loadOptions',
 
@@ -21,5 +25,9 @@ module.exports = Reflux.createActions([
 
     'publishMessage',
 
-    'fullTextSearch', 'loadReportsForSearch'
+    'addSafetyIssueBase',
+
+    'fullTextSearch', 'loadReportsForSearch',
+
+    'loadStatisticsConfig'
 ]);

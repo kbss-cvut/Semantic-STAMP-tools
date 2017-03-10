@@ -33,8 +33,7 @@ public class FormGenPersistenceFactory {
     @PostConstruct
     private void init() {
         final Map<String, String> properties = new HashMap<>(PersistenceFactory.getDefaultParams());
-        properties.put(ONTOLOGY_PHYSICAL_URI_KEY,
-                environment.getProperty(ConfigParam.FORM_GEN_REPOSITORY_URL.toString()));
+        properties.put(ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(ConfigParam.FORM_GEN_REPOSITORY_URL.toString()));
         properties.put(DATA_SOURCE_CLASS, environment.getProperty(ConfigParam.DRIVER.toString()));
         properties.put(CACHE_ENABLED, Boolean.FALSE.toString());
         this.emf = Persistence.createEntityManagerFactory("formGenPU", properties);
@@ -42,8 +41,6 @@ public class FormGenPersistenceFactory {
 
     @PreDestroy
     private void close() {
-        if (emf.isOpen()) {
-            emf.close();
-        }
+        emf.close();
     }
 }

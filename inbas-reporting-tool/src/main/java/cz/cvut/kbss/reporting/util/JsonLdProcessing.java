@@ -1,7 +1,10 @@
 package cz.cvut.kbss.reporting.util;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.cvut.kbss.jsonld.jackson.JsonLdModule;
 import cz.cvut.kbss.reporting.exception.JsonProcessingException;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 
@@ -145,5 +148,25 @@ public class JsonLdProcessing {
             }
         }
         return types;
+    }
+
+    /**
+     * Uses JAXB JSON-LD to extract instances of the specified target type from the specified JSON-LD.
+     *
+     * @param json       JSON-LD to process
+     * @param targetType Target type, must be a annotated with {@link cz.cvut.kbss.jopa.model.annotations.OWLClass}
+     * @return List of instances read from the specified JSON-LD
+     */
+    public static <T> List<T> readFromJsonLd(RawJson json, Class<T> targetType) {
+        Objects.requireNonNull(json);
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.registerModule(new JsonLdModule());
+        final JavaType type = mapper.getTypeFactory().constructCollectionType(List.class, targetType);
+        try {
+            return mapper.readValue(json.getValue(), type);
+        } catch (IOException e) {
+            throw new JsonProcessingException("Unable to read instances of type " + targetType + " from JSON-LD.", e);
+        }
     }
 }

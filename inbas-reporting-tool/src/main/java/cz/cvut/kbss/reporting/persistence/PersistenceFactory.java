@@ -4,6 +4,7 @@ import cz.cvut.kbss.jopa.Persistence;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.jopa.model.JOPAPersistenceProvider;
 import cz.cvut.kbss.ontodriver.config.OntoDriverProperties;
+import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static cz.cvut.kbss.jopa.model.JOPAPersistenceProperties.*;
-import static cz.cvut.kbss.reporting.util.ConfigParam.DRIVER;
-import static cz.cvut.kbss.reporting.util.ConfigParam.REPOSITORY_URL;
 
 /**
  * Sets up persistence and provides {@link EntityManagerFactory} as Spring bean.
@@ -28,6 +27,9 @@ import static cz.cvut.kbss.reporting.util.ConfigParam.REPOSITORY_URL;
 @Configuration
 @PropertySource("classpath:config.properties")
 public class PersistenceFactory {
+
+    private static final String USERNAME_PROPERTY = "username";
+    private static final String PASSWORD_PROPERTY = "password";
 
     private static final Map<String, String> DEFAULT_PARAMS = initParams();
 
@@ -45,8 +47,12 @@ public class PersistenceFactory {
     @PostConstruct
     private void init() {
         final Map<String, String> properties = new HashMap<>(DEFAULT_PARAMS);
-        properties.put(ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(REPOSITORY_URL.toString()));
-        properties.put(DATA_SOURCE_CLASS, environment.getProperty(DRIVER.toString()));
+        properties.put(ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(ConfigParam.REPOSITORY_URL.toString()));
+        properties.put(DATA_SOURCE_CLASS, environment.getProperty(ConfigParam.DRIVER.toString()));
+        if (environment.getProperty(USERNAME_PROPERTY) != null) {
+            properties.put(DATA_SOURCE_USERNAME, environment.getProperty(USERNAME_PROPERTY));
+            properties.put(DATA_SOURCE_PASSWORD, environment.getProperty(PASSWORD_PROPERTY));
+        }
         this.emf = Persistence.createEntityManagerFactory("inbasPU", properties);
     }
 

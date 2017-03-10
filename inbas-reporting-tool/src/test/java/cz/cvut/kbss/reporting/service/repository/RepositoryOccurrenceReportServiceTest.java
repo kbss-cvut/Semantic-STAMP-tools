@@ -5,13 +5,11 @@ import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.*;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
+import cz.cvut.kbss.reporting.service.data.eccairs.EccairsReportSynchronizationService;
+import cz.cvut.kbss.reporting.service.data.eccairs.EccairsService;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.reporting.util.Constants;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner {
 
@@ -29,6 +29,12 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Autowired
     private RepositoryOccurrenceReportService occurrenceReportService;
+
+    @Autowired
+    private EccairsService eccairsServiceMock;
+
+    @Autowired
+    private EccairsReportSynchronizationService eccairsSyncServiceMock;
 
     private Person author;
 
@@ -54,7 +60,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         assertTrue(author.nameEquals(report.getAuthor()));
         assertNotNull(report.getDateCreated());
         assertNotNull(report.getFileNumber());
-        Assert.assertEquals(Constants.INITIAL_REVISION, report.getRevision());
+        assertEquals(Constants.INITIAL_REVISION, report.getRevision());
     }
 
     @Test
@@ -103,7 +109,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         assertEquals(firstRevision.getRevision() + 1, newRevision.getRevision().intValue());
         assertEquals(firstRevision.getFileNumber(), newRevision.getFileNumber());
         assertEquals(author, newRevision.getAuthor());
-        assertNotEquals(firstRevision.getDateCreated(), newRevision.getDateCreated());
+        assertNotSame(firstRevision.getDateCreated(), newRevision.getDateCreated());
         final OccurrenceReport newRevisionPersisted = occurrenceReportService.find(newRevision.getUri());
         assertNotNull(newRevisionPersisted);
     }
@@ -185,6 +191,16 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     }
 
     @Test
+    public void findReturnsOccurrenceWithCalculatedArmsIndex() {
+        final OccurrenceReport report = persistFirstRevision(false);
+        assertNotNull(report.getBarrierEffectiveness());
+        assertNotNull(report.getAccidentOutcome());
+        assertNull(report.getArmsIndex());
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertNotNull(result.getArmsIndex());
+    }
+
+    @Test
     public void transitionToNextPhaseSetsNewPhaseOnReport() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
@@ -227,21 +243,32 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     }
 
     @Test
+    public void removeRemovesReport() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportService.persist(report);
+
+        assertNotNull(occurrenceReportService.find(report.getUri()));
+        occurrenceReportService.remove(report);
+        assertNull(occurrenceReportService.find(report.getUri()));
+    }
+
+    @Test
     public void synchronizesEventTypeAndTypesOnUpdate() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         report.setPhase(phaseService.getInitialPhase());
         occurrenceReportService.persist(report);
 
-        final URI originalType = report.getOccurrence().getEventType();
+        final Set<URI> originalType = report.getOccurrence().getEventTypes();
         final URI newType = Generator.generateEventType();
-        report.getOccurrence().setEventType(newType);
+        report.getOccurrence().setEventTypes(Collections.singleton(newType));
 
         occurrenceReportService.update(report);
 
         final Occurrence occurrence = occurrenceReportService.find(report.getUri()).getOccurrence();
-        assertEquals(newType, occurrence.getEventType());
-        assertFalse(occurrence.getTypes().contains(originalType.toString()));
+        assertEquals(newType, occurrence.getEventTypes().iterator().next());
+        originalType.forEach(t -> assertFalse(occurrence.getTypes().contains(originalType.toString())));
     }
 
     @Test
@@ -274,38 +301,64 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     }
 
     @Test
-    public void findSetsNodeIndexesUsingLexicographicOrderingWhenTheyAreMissing() {
+    public void createNewRevisionFromEccairsCopiesAllAttributesFromEcccairsReportAndSetsCorrectFileNumber() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
-        report.setOccurrence(OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents(false));
-        report.getOccurrence().setUri(null);
-        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(null, null);
-        traverser.setNodeVisitor(new FactorGraphNodeVisitor() {
-            @Override
-            public void visit(Occurrence occurrence) {
-            }
-
-            @Override
-            public void visit(Event event) {
-                if (Generator.randomBoolean()) {
-                    event.setIndex(null);
-                }
-            }
-        });
-        traverser.traverse(report.getOccurrence());
         occurrenceReportService.persist(report);
 
-        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
-        traverser.setNodeVisitor(new FactorGraphNodeVisitor() {
-            @Override
-            public void visit(Occurrence occurrence) {
-            }
+        report.setAuthor(author);
+        occurrenceReportService.persist(report);
+        when(eccairsSyncServiceMock.getNewEccairsRevision(any(OccurrenceReport.class)))
+                .thenReturn(report.getUri().toString());
 
-            @Override
-            public void visit(Event event) {
-                assertNotNull(event.getIndex());
-            }
-        });
-        traverser.traverse(result.getOccurrence());
+        final OccurrenceReport result = occurrenceReportService.createNewRevisionFromEccairs(report.getFileNumber());
+        assertNotNull(result);
+        assertEquals(report.getFileNumber(), result.getFileNumber());
+        assertEquals(report.getRevision() + 1, result.getRevision().intValue());
+        assertEquals(report.getOccurrence().getName(), result.getOccurrence().getName());
+        assertEquals(result.getUri(), occurrenceReportService.findLatestRevision(report.getFileNumber()).getUri());
+    }
+
+    @Test
+    public void createNewRevisionFromEccairsThrowsNotFoundWhenEccairsReportDoesNotExist() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportService.persist(report);
+
+        when(eccairsServiceMock.getEccairsLatestByKey(report.getKey())).thenReturn(null);
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("ECCAIRS report for report with key " + report.getKey() + " not found.");
+
+        occurrenceReportService.createNewRevisionFromEccairs(report.getFileNumber());
+    }
+
+    @Test
+    public void createNewRevisionFromEccairsThrowsNotFoundWhenReportChainDoesNotExist() {
+        final Long unknownFileNo = System.currentTimeMillis();
+        thrown.expect(NotFoundException.class);
+        thrown.expectMessage("Report chain identified by " + unknownFileNo + " not found.");
+
+        occurrenceReportService.createNewRevisionFromEccairs(unknownFileNo);
+    }
+
+    @Test
+    public void setsAircraftOperatorTypeToOperatorOrganizationBeforePersist() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        final Aircraft aircraft = Generator.generateAircraft();
+        report.getOccurrence().setAircraft(aircraft);
+
+        occurrenceReportService.persist(report);
+        assertTrue(aircraft.getOperator().getTypes().contains(Vocabulary.s_c_operator_organization));
+    }
+
+    @Test
+    public void setsAircraftOperatorTypeToOperatorOrganizationBeforeUpdate() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        occurrenceReportService.persist(report);
+
+        final Aircraft aircraft = Generator.generateAircraft();
+        report.getOccurrence().setAircraft(aircraft);
+        occurrenceReportService.update(report);
+        assertTrue(aircraft.getOperator().getTypes().contains(Vocabulary.s_c_operator_organization));
     }
 }

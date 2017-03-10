@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.rest.dto.mapper;
 import cz.cvut.kbss.reporting.dto.event.EventDto;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
+import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssue;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 
 import java.net.URI;
@@ -28,6 +29,14 @@ class DtoNodeVisitor implements FactorGraphNodeVisitor {
             instanceMap.put(occurrence.getUri(), mapper.occurrenceToOccurrenceDto(occurrence));
         }
         generateReferenceId(occurrence.getUri());
+    }
+
+    @Override
+    public void visit(SafetyIssue issue) {
+        if (!instanceMap.containsKey(issue.getUri())) {
+            instanceMap.put(issue.getUri(), mapper.safetyIssueToSafetyIssueDto(issue));
+        }
+        generateReferenceId(issue.getUri());
     }
 
     private void generateReferenceId(URI uri) {

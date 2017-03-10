@@ -31,11 +31,14 @@ var ReportController = React.createClass({
 
     initNewReport: function () {
         var payload = RouterStore.getTransitionPayload(Routes.createReport.name),
-            report = ReportFactory.createOccurrenceReport();
+            report;
         if (payload) {
-            report.initialReports = payload.initialReports;
+            report = ReportFactory.createReport(payload.reportType, payload);
+            if (payload.initialReports) {
+                report.initialReports = payload.initialReports;
+            }
         }
-        return report;
+        return report ? report : ReportFactory.createOccurrenceReport();
     },
 
     componentWillMount: function () {
@@ -56,13 +59,17 @@ var ReportController = React.createClass({
     },
 
     componentWillReceiveProps: function (nextProps) {
-        if (nextProps.params.reportKey && this.state.key !== nextProps.params.reportKey) {
+        if (!nextProps.params.reportKey && this.state.key) {
+            var newState = this.getInitialState();
+            newState.report = this.initNewReport();
+            this.setState(newState);
+        } else if (nextProps.params.reportKey && this.state.key !== nextProps.params.reportKey) {
             this._loadReport(nextProps.params.reportKey);
         }
     },
 
     onReportStoreTrigger: function (data) {
-        if (data.action === Actions.loadReport) {
+        if (data.action === Actions.loadReport || data.action === Actions.addSafetyIssueBase) {
             this._onReportLoaded(data.report);
         } else if (data.action == Actions.loadRevisions) {
             this.setState({revisions: data.revisions});

@@ -1,11 +1,17 @@
 'use strict';
 
-describe('Utility functions tests', function () {
+describe('Utility functions -', function () {
 
     const Utils = require('../../js/utils/Utils'),
         Constants = require('../../js/constants/Constants'),
         Generator = require('../environment/Generator').default,
         Vocabulary = require('../../js/constants/Vocabulary');
+
+    describe('formatDate', () => {
+        it('returns empty string when no date is specified', () => {
+            expect(Utils.formatDate(null)).toEqual('');
+        });
+    });
 
     it('Transforms a constant with known preposition/auxiliary word into text with spaces and correctly capitalized words', function () {
         expect(Utils.constantToString('BARRIER_NOT_EFFECTIVE', true)).toEqual('Barrier not Effective');
@@ -24,7 +30,7 @@ describe('Utility functions tests', function () {
         it('formats date when it is time in millis', () => {
             const date = Date.now(),
                 result = Utils.formatDate(date);
-            expect(result).toMatch(/[0-9]{2}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}/);
+            expect(result).toMatch(/[0-9]{2}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}/);
         });
 
         it('returns empty string for undefined argument', () => {
@@ -126,15 +132,6 @@ describe('Utility functions tests', function () {
                 }
             };
             expect(Utils.getPathFromLocation()).toEqual(pathWithParams);
-        });
-
-        it('extracts path from url without hash', () => {
-            jasmine.getGlobal().window = {
-                location: {
-                    hash: ''
-                }
-            };
-            expect(Utils.getPathFromLocation()).toEqual('');
         });
     });
 
@@ -253,37 +250,81 @@ describe('Utility functions tests', function () {
         });
     });
 
-    describe('generateNewReferenceId', () => {
+    describe('resolveType', () => {
+        it('returns null when there are no options', () => {
+            let options = null,
+                types = [Generator.randomCategory().id];
+            expect(Utils.resolveType(types, options)).toBeNull();
+            options = [];
+            expect(Utils.resolveType(types, options)).toBeNull();
+        });
 
-        it('generates a new reference id unique among the existing reference ids', () => {
-            const existingIds = [];
-            for (let i = 0, len = Generator.getRandomPositiveInt(5, 10); i < len; i++) {
-                existingIds.push(Generator.getRandomInt());
-            }
-            const nodes = existingIds.map(id => {
-                return {referenceId: id};
-            });
-            const result = Utils.generateNewReferenceId(nodes);
-            expect(result).toBeDefined();
-            expect(result).not.toBeNull();
-            expect(typeof result).toBe('number');
-            expect(existingIds.indexOf(result)).toEqual(-1);
+        it('returns null when there are no types', () => {
+            let options = Generator.getCategories(),
+                types = null;
+            expect(Utils.resolveType(types, options)).toBeNull();
+            types = [];
+            expect(Utils.resolveType(types, options)).toBeNull();
+        });
+
+        it('returns first option whose id is in types', () => {
+            const options = Generator.getCategories(),
+                option = Generator.randomCategory(),
+                types = [option.id];
+            expect(Utils.resolveType(types, options)).toEqual(option);
+        });
+
+        it('returns null if none of the options matches types', () => {
+            const options = Generator.getCategories(),
+                types = [Generator.getRandomUri()];
+            expect(Utils.resolveType(types, options)).toBeNull();
         });
     });
 
-    describe('stripHtmlTags', () => {
+    describe('neighbourSort', () => {
 
-        it('removes HTML tags from text', () => {
-            const text = 'Test value using HTML tags.',
-                htmlBased = '<p>Test <b>value</b> using <em>HTML</em> tags.</p>',
-                result = Utils.stripHtmlTags(htmlBased);
-            expect(result).toEqual(text);
+        const data = [{
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept"
+        }, {
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor",
+            "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": {
+                "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/accept"
+            }
+        }, {
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure",
+            "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": {
+                "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/monitor"
+            }
+        }, {
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve",
+            "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": {
+                "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/secure"
+            }
+        }, {
+            "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/stop",
+            "http://onto.fel.cvut.cz/ontologies/documentation/is_higher_than": {
+                "@id": "http://onto.fel.cvut.cz/ontologies/arms/sira/model/improve"
+            }
+        }];
+
+        it('sorts JSON-LD data based on the is_higher_than property', () => {
+            const options = Generator.shuffleArray(data.slice());
+            Utils.neighbourSort(options);
+            for (let i = 0, len = data.length; i < len; i++) {
+                expect(options[i]['@id']).toEqual(data[i]['@id']);
+            }
         });
 
-        it('leaves regular text unchanged', () => {
-            const text = 'Test value not using HTML tags.',
-                result = Utils.stripHtmlTags(text);
-            expect(result).toEqual(text);
+        it('JSON-LD array without order specification is left as is', () => {
+            const original = Generator.shuffleArray(data.slice()),
+                options = original.slice();
+            for (let i = 0, len = options.length; i < len; i++) {
+                delete options[i][Vocabulary.GREATER_THAN];
+            }
+            Utils.neighbourSort(options);
+            for (let i = 0, len = data.length; i < len; i++) {
+                expect(options[i]['@id']).toEqual(original[i]['@id']);
+            }
         });
-    })
+    });
 });

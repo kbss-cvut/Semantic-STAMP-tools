@@ -15,8 +15,11 @@ var FactorJsonSerializer = {
         FactorSerializer.setGanttController(controller);
     },
 
-    getFactorGraph: function () {
+    getFactorGraph: function (report) {
         this._verifyGanttControllerIsSet();
+        if (report.safetyIssue) {
+            return SafetyIssueFactorSerializer.getFactorGraph();
+        }
         return FactorSerializer.getFactorGraph();
     },
 
@@ -97,6 +100,20 @@ var FactorSerializer = {
             });
         }
         return edges;
+    }
+};
+
+var SafetyIssueFactorSerializer = {
+
+    getFactorGraph: function () {
+        var graph = FactorSerializer.getFactorGraph(),
+            node;
+        for (var i = 0, len = graph.nodes.length; i < len; i++) {
+            node = graph.nodes[i];
+            delete node.startTime;
+            delete node.endTime;
+        }
+        return graph;
     }
 };
 

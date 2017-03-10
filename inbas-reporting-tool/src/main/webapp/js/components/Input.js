@@ -7,7 +7,7 @@ import {Checkbox, ControlLabel, FormGroup, FormControl, HelpBlock, Radio} from "
 export default class Input extends React.Component {
     static propTypes = {
         type: React.PropTypes.string,
-        label: React.PropTypes.string,
+        label: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
         value: React.PropTypes.any,
         onChange: React.PropTypes.func,
         help: React.PropTypes.string,

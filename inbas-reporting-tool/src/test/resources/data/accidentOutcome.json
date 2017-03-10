@@ -1,0 +1,50 @@
+[ {
+  "@id" : "http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/catastrophic",
+  "http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than" : [ {
+    "@id" : "http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/major"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#comment" : [ {
+    "@language" : "en",
+    "@value" : "Loss of aircraft or multiple fatalities (3 or more)"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#label" : [ {
+    "@language" : "en",
+    "@value" : "Catastrophic"
+  } ]
+}, {
+  "@id" : "http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/major",
+  "http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than" : [ {
+    "@id" : "http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/minor"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#comment" : [ {
+    "@language" : "en",
+    "@value" : "1 or 2 fatalities, multiple serious injuries, major damage to the aircraft"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#label" : [ {
+    "@language" : "en",
+    "@value" : "Major"
+  } ]
+}, {
+  "@id" : "http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/minor",
+  "http://onto.fel.cvut.cz/ontologies/arms/sira/model/is-higher-than" : [ {
+    "@id" : "http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/negligible"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#comment" : [ {
+    "@language" : "en",
+    "@value" : "Minor injuries, minor damage to the aircraft"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#label" : [ {
+    "@language" : "en",
+    "@value" : "Minor"
+  } ]
+}, {
+  "@id" : "http://onto.fel.cvut.cz/ontologies/arms/sira/accident-outcome/negligible",
+  "http://www.w3.org/2000/01/rdf-schema#comment" : [ {
+    "@language" : "en",
+    "@value" : "No potential damage or injury could occur"
+  } ],
+  "http://www.w3.org/2000/01/rdf-schema#label" : [ {
+    "@language" : "en",
+    "@value" : "Negligible"
+  } ]
+} ]

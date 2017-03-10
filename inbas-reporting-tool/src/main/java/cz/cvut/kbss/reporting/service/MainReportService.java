@@ -1,19 +1,28 @@
 package cz.cvut.kbss.reporting.service;
 
+import cz.cvut.kbss.commons.io.NamedStream;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
+import cz.cvut.kbss.reporting.exception.ReportImportingException;
 import cz.cvut.kbss.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.audit.AuditReport;
+import cz.cvut.kbss.reporting.model.safetyissue.SafetyIssueReport;
 import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
 import cz.cvut.kbss.reporting.model.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.reporting.persistence.dao.ReportDao;
+import cz.cvut.kbss.reporting.service.data.mail.ReportImporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,19 +30,33 @@ import java.util.stream.Collectors;
 @Primary
 public class MainReportService implements ReportBusinessService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MainReportService.class);
+
     @Autowired
     private ReportDao reportDao;
 
     @Autowired
+    private ReportImporter reportImporter;
+
+    @Autowired
     private OccurrenceReportService occurrenceReportService;
+
+    @Autowired
+    private SafetyIssueReportService safetyIssueReportService;
+
+    @Autowired
+    private AuditReportService auditReportService;
 
     private final Map<String, Class<? extends LogicalDocument>> entitiesToOwlClasses = new HashMap<>();
 
-    private final Map<Class<? extends LogicalDocument>, BaseReportService<? extends LogicalDocument>> services = new HashMap<>();
+    private final Map<Class<? extends LogicalDocument>, BaseReportService<? extends LogicalDocument>> services =
+            new HashMap<>();
 
     @PostConstruct
     private void initServiceMap() {
         registerService(OccurrenceReport.class, occurrenceReportService);
+        registerService(SafetyIssueReport.class, safetyIssueReportService);
+        registerService(AuditReport.class, auditReportService);
     }
 
     private void registerService(Class<? extends LogicalDocument> cls,
@@ -88,6 +111,16 @@ public class MainReportService implements ReportBusinessService {
         }
         final BaseReportService<T> service = resolveService(types);
         return service.findByKey(key);
+    }
+
+    @Override
+    public <T extends LogicalDocument> boolean exists(String key, Class<T> type) {
+        if (key == null) {
+            return false;
+        }
+        Objects.requireNonNull(type);
+
+        return services.containsKey(type) && services.get(type).exists(key);
     }
 
     private <T extends LogicalDocument> BaseReportService<T> resolveService(Set<String> types) {
@@ -159,5 +192,23 @@ public class MainReportService implements ReportBusinessService {
     public <T extends LogicalDocument> void transitionToNextPhase(T report) {
         Objects.requireNonNull(report);
         resolveService(report).transitionToNextPhase(report);
+    }
+
+    @Override
+    public <T extends LogicalDocument> T importReportFromFile(String fileName, InputStream input) {
+        try {
+            final List<URI> uris = reportImporter.process(new NamedStream(fileName, input));
+            assert uris.size() > 0;
+            if (uris.size() > 1) {
+                LOG.warn("Multiple reports imported from file {}. Returning the first one.", fileName);
+            }
+            final URI reportUri = uris.get(0);
+            final Set<String> types = reportDao.getReportTypes(reportUri);
+            final BaseReportService<T> service = resolveService(types);
+            return service.find(reportUri);
+        } catch (Exception e) {
+            LOG.error("Unable to import report from file {}.", fileName, e);
+            throw new ReportImportingException("Unable to import report from file " + fileName, e);
+        }
     }
 }

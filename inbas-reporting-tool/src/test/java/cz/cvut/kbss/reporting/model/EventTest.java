@@ -5,20 +5,18 @@ import cz.cvut.kbss.reporting.model.qam.Question;
 import org.junit.Test;
 
 import java.net.URI;
+import java.util.Collections;
 
 import static org.junit.Assert.*;
 
 public class EventTest {
 
-    /**
-     * @see Vocabulary#s_p_has_event_type
-     */
     @Test
     public void setTypeAddsEventTypeUriToInstanceTypesAsWell() {
         final URI et = Generator.generateEventType();
         final Event evt = new Event();
         assertTrue(evt.getTypes() == null || evt.getTypes().isEmpty());
-        evt.setEventType(et);
+        evt.setEventTypes(Collections.singleton(et));
         assertTrue(evt.getTypes().contains(et.toString()));
     }
 
@@ -26,7 +24,7 @@ public class EventTest {
     public void copyConstructorCreatesNewFormInstance() {
         final URI et = Generator.generateEventType();
         final Event evt = new Event();
-        evt.setEventType(et);
+        evt.setEventTypes(Collections.singleton(et));
         final Question q = new Question();
         q.setUri(Generator.generateEventType());
         evt.setQuestion(q);

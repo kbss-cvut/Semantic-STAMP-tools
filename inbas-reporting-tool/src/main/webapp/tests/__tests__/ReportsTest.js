@@ -3,7 +3,6 @@
 describe('Reports', function () {
 
     const React = require('react'),
-        rewire = require('rewire'),
         Environment = require('../environment/Environment'),
 
         Reports = require('../../js/components/report/Reports').default,
@@ -17,11 +16,12 @@ describe('Reports', function () {
 
     beforeEach(function () {
         spyOn(Routing, 'transitionToHome');
+        Environment.mockCurrentUser();
     });
 
     it('shows message informing that there are no matching reports when filter finds no reports.', function () {
         const result = Environment.render(<Reports allReports={[{key: 1}]} reports={[]} actions={actions}
-                                                   filter={{'occurrenceCategory.id': 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1'}}/>),
+                                                 filter={{'occurrenceCategory.id': 'http://onto.fel.cvut.cz/ontologies/eccairs-1.3.0.8/V-24-430-1'}}/>),
             message = Environment.getComponentByTagAndText(result, 'div', en.messages['reports.filter.no-matching-found']);
 
         expect(message).not.toBeNull();

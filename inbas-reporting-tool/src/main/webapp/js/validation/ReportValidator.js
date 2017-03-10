@@ -1,10 +1,10 @@
 'use strict';
 
-var Constants = require('../constants/Constants');
+const Constants = require('../constants/Constants');
 
-var validators = {};
+const validators = {};
 
-var ReportValidator = {
+const ReportValidator = {
 
     /**
      * Checks whether all the required fields are filled.
@@ -52,7 +52,7 @@ var ReportValidator = {
 /**
  * Occurrence report validator.
  */
-var OccurrenceReportValidator = {
+const OccurrenceReportValidator = {
 
     getValidationMessage: function (report) {
         if (!report.occurrence) {
@@ -61,7 +61,7 @@ var OccurrenceReportValidator = {
         if (!report.occurrence.name || report.occurrence.name.length === 0) {
             return 'detail.invalid-tooltip';
         }
-        if (!report.occurrence.startTime) {
+        if (report.occurrence.startTime === undefined || report.occurrence.startTime === null) {
             return 'detail.invalid-tooltip';   // Don't expect this to happen, but just to be sure
         }
         if (!report.severityAssessment) {
@@ -70,17 +70,20 @@ var OccurrenceReportValidator = {
         if (!report.summary || report.summary.length === 0) {
             return 'detail.invalid-tooltip';
         }
-        if (!report.occurrence.eventType) {
+        if (!report.occurrence.eventTypes || report.occurrence.eventTypes.length === 0) {
             return 'detail.invalid-tooltip';
         }
         if (!this._isOccurrenceStartEndTimeDiffValid(report)) {
             return 'detail.large-time-diff-tooltip';
         }
+        if (report.occurrence.aircraft && !report.occurrence.aircraft.operator) {
+            return 'detail.invalid-tooltip';
+        }
         return null;
     },
 
     _isOccurrenceStartEndTimeDiffValid: function (report) {
-        return report.occurrence.endTime - report.occurrence.startTime <= Constants.MAX_OCCURRENCE_START_END_DIFF;
+        return !report.occurrence || report.occurrence.endTime - report.occurrence.startTime <= Constants.MAX_OCCURRENCE_START_END_DIFF;
     },
 
     getRenderError: function (report) {
@@ -93,5 +96,44 @@ var OccurrenceReportValidator = {
 };
 
 validators[Constants.OCCURRENCE_REPORT_JAVA_CLASS] = OccurrenceReportValidator;
+
+const SafetyIssueReportValidator = {
+    getValidationMessage: function (report) {
+        if (!report.safetyIssue) {
+            return 'detail.invalid-tooltip';
+        }
+        if (!report.safetyIssue.name || report.safetyIssue.name.length === 0) {
+            return 'detail.invalid-tooltip';
+        }
+        return null;
+    },
+
+    getRenderError: function (report) {
+        return null;
+    }
+};
+
+validators[Constants.SAFETY_ISSUE_REPORT_JAVA_CLASS] = SafetyIssueReportValidator;
+
+const AuditReportValidator = {
+    getValidationMessage: function (report) {
+        if (!report.audit) {
+            return 'detail.invalid-tooltip';
+        }
+        if (!report.audit.name || report.audit.name.length === 0) {
+            return 'detail.invalid-tooltip';
+        }
+        if (!report.audit.auditee) {
+            return 'detail.invalid-tooltip';
+        }
+        return null;
+    },
+
+    getRenderError: function (report) {
+        return null;
+    }
+};
+
+validators[Constants.AUDIT_REPORT_JAVA_CLASS] = AuditReportValidator;
 
 module.exports = ReportValidator;

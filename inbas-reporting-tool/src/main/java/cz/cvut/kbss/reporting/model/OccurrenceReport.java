@@ -6,25 +6,12 @@ import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 
 import java.io.Serializable;
 import java.net.URI;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @OWLClass(iri = Vocabulary.s_c_occurrence_report)
-public class OccurrenceReport extends AbstractEntity implements LogicalDocument, Serializable {
-
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.s_p_has_key)
-    private String key;
-
-    /**
-     * File number identifies a particular report chain, i.e. revisions of the same report.
-     */
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.s_p_has_file_number)
-    private Long fileNumber;
+public class OccurrenceReport extends AbstractReport implements LogicalDocument, Serializable {
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_reporting_phase)
     private URI phase;
@@ -33,74 +20,44 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
     @OWLObjectProperty(iri = Vocabulary.s_p_documents, fetch = FetchType.EAGER)
     private Occurrence occurrence;
 
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_author, fetch = FetchType.EAGER)
-    private Person author;
-
-    @OWLDataProperty(iri = Vocabulary.s_p_created)
-    private Date dateCreated;
-
-    @OWLDataProperty(iri = Vocabulary.s_p_modified)
-    private Date lastModified;
-
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_last_editor, fetch = FetchType.EAGER)
-    private Person lastModifiedBy;
-
-    @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.s_p_has_revision)
-    private Integer revision;
-
     @OWLObjectProperty(iri = Vocabulary.s_p_has_severity_assessment)
     private URI severityAssessment;
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_responsible_organization)
+    private Set<URI> responsibleDepartments;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_references, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Resource> references;
+    // ARMS Attributes
 
-    @OWLDataProperty(iri = Vocabulary.s_p_description)
-    private String summary;
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_most_probable_accident_outcome)
+    private URI accidentOutcome;
 
-    @Types
-    private Set<String> types;
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_barrier_effectiveness_evaluation)
+    private URI barrierEffectiveness;
+
+    @Transient
+    private Integer armsIndex;
 
     public OccurrenceReport() {
-        this.types = new HashSet<>(4);
-        types.add(Vocabulary.s_c_report);
     }
 
     public OccurrenceReport(OccurrenceReport other) {
-        this();
-        Objects.requireNonNull(other);
-        this.fileNumber = other.fileNumber;
+        super(other);
         this.phase = other.phase;
         this.occurrence = Occurrence.copyOf(other.occurrence);
         this.severityAssessment = other.severityAssessment;
-        this.summary = other.summary;
+        if (other.responsibleDepartments != null) {
+            this.responsibleDepartments = new HashSet<>(other.responsibleDepartments);
+        }
         if (other.correctiveMeasures != null) {
             this.correctiveMeasures = other.correctiveMeasures.stream().map(CorrectiveMeasureRequest::new)
                                                               .collect(Collectors.toSet());
         }
-        if (other.references != null) {
-            this.references = other.references.stream().map(Resource::new).collect(Collectors.toSet());
-        }
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public Long getFileNumber() {
-        return fileNumber;
-    }
-
-    public void setFileNumber(Long fileNumber) {
-        this.fileNumber = fileNumber;
+        this.barrierEffectiveness = other.barrierEffectiveness;
+        this.accidentOutcome = other.accidentOutcome;
+        this.armsIndex = other.armsIndex;
     }
 
     public URI getPhase() {
@@ -119,52 +76,20 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
         this.occurrence = occurrence;
     }
 
-    public Person getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Person author) {
-        this.author = author;
-    }
-
-    public Date getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(Date dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public Date getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
-    }
-
-    public Person getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(Person lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public Integer getRevision() {
-        return revision;
-    }
-
-    public void setRevision(Integer revision) {
-        this.revision = revision;
-    }
-
     public URI getSeverityAssessment() {
         return severityAssessment;
     }
 
     public void setSeverityAssessment(URI severityAssessment) {
         this.severityAssessment = severityAssessment;
+    }
+
+    public Set<URI> getResponsibleDepartments() {
+        return responsibleDepartments;
+    }
+
+    public void setResponsibleDepartments(Set<URI> responsibleDepartments) {
+        this.responsibleDepartments = responsibleDepartments;
     }
 
     public Set<CorrectiveMeasureRequest> getCorrectiveMeasures() {
@@ -175,28 +100,28 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
         this.correctiveMeasures = correctiveMeasures;
     }
 
-    public Set<Resource> getReferences() {
-        return references;
+    public URI getAccidentOutcome() {
+        return accidentOutcome;
     }
 
-    public void setReferences(Set<Resource> references) {
-        this.references = references;
+    public void setAccidentOutcome(URI accidentOutcome) {
+        this.accidentOutcome = accidentOutcome;
     }
 
-    public String getSummary() {
-        return summary;
+    public URI getBarrierEffectiveness() {
+        return barrierEffectiveness;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setBarrierEffectiveness(URI barrierEffectiveness) {
+        this.barrierEffectiveness = barrierEffectiveness;
     }
 
-    public Set<String> getTypes() {
-        return types;
+    public Integer getArmsIndex() {
+        return armsIndex;
     }
 
-    public void setTypes(Set<String> types) {
-        this.types = types;
+    public void setArmsIndex(Integer armsIndex) {
+        this.armsIndex = armsIndex;
     }
 
     @Override
@@ -212,23 +137,16 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
     @Override
     public ReportDto toReportDto() {
         final OccurrenceReportDto res = new OccurrenceReportDto();
-        res.setUri(uri);
-        res.setKey(key);
-        res.setFileNumber(fileNumber);
+        copyAttributes(res);
         res.setPhase(phase);
-        res.setAuthor(author);
-        res.setDateCreated(dateCreated);
-        res.setLastModifiedBy(lastModifiedBy);
-        res.setLastModified(lastModified);
-        res.setRevision(revision);
-        res.setTypes(types != null ? new HashSet<>(types) : new HashSet<>());
         res.getTypes().add(Vocabulary.s_c_occurrence_report);
         assert occurrence != null;
         res.setIdentification(occurrence.getName());
         res.setDate(occurrence.getStartTime());
+        res.setArmsIndex(armsIndex);
         res.setSummary(summary);
         res.setSeverityAssessment(severityAssessment);
-        res.setOccurrenceCategory(occurrence.getEventType());
+        res.setOccurrenceCategories(occurrence.getEventTypes());
         return res;
     }
 }

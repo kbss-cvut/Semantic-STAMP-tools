@@ -1,6 +1,7 @@
 'use strict';
 
 const Constants = require('../constants/Constants');
+const Vocabulary = require('../constants/Vocabulary');
 
 /**
  * Common propositions that should not be capitalized
@@ -244,6 +245,51 @@ module.exports = {
     },
 
     /**
+     * Given a set of type URIs and a collection of options, finds the first option, whose id matches any of the types.
+     * @param types Type URIs
+     * @param options Typeahead options
+     */
+    resolveType: function (types, options) {
+        if (!options || options.length === 0 || !types || types.length === 0) {
+            return null;
+        }
+        for (let i = 0, len = options.length; i < len; i++) {
+            if (types.indexOf(options[i].id) !== -1) {
+                return options[i];
+            }
+        }
+        return null;
+    },
+
+    /**
+     * Sorts the specified JSON-LD data using a neighbour sort.
+     *
+     * This is useful for situations where each item only knows its immediate neighbour in the list.
+     * @param data The data to sort, should be an array
+     * @param gtProperty Property specifying that an item is greater than another item. It is used for comparison.
+     *     Defaults to Vocabulary.GREATER_THAN
+     */
+    neighbourSort: function (data, gtProperty = Vocabulary.GREATER_THAN) {
+        let swapped;
+        do {
+            swapped = false;
+            for (let i = 0, len = data.length; i < len; i++) {
+                for (let j = i; j < len; j++) {
+                    if (data[i][gtProperty] && data[i][gtProperty]['@id'] === data[j]['@id']) {
+                        const tmp = data[i];
+                        data[i] = data[j];
+                        data[j] = tmp;
+                        swapped = true;
+                        break;
+                    }
+                }
+            }
+        } while (swapped);
+
+        return data;
+    },
+
+    /**
      * Calculates hash code of the specified string, similarly to the Java implementation.
      * @param str The string to calculate hash for
      * @return {number} Hash
@@ -261,14 +307,5 @@ module.exports = {
             hash &= hash;
         }
         return hash;
-    },
-
-    /**
-     * Removes HTML tags from the specified string, leaving only the text content.
-     * @param str The string to strip
-     * @return {string} Text content of the specified code/text
-     */
-    stripHtmlTags: function (str = '') {
-        return str.replace(/<(?:.|\n)*?>/gm, '');
     }
 };

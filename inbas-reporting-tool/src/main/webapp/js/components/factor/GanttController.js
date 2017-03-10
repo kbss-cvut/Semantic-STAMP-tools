@@ -1,21 +1,21 @@
 'use strict';
 
-const Constants = require('../../constants/Constants');
-const FactorStyleInfo = require('../../utils/FactorStyleInfo');
-const Factory = require('../../model/ReportFactory');
-const ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
-const OptionsStore = require('../../stores/OptionsStore');
+var Constants = require('../../constants/Constants');
+var FactorStyleInfo = require('../../utils/FactorStyleInfo');
+var Factory = require('../../model/ReportFactory');
+var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
+var OptionsStore = require('../../stores/OptionsStore');
 
-const I18nStore = require('../../stores/I18nStore');
+var I18nStore = require('../../stores/I18nStore');
 
-const DATE_FORMAT = '%d-%m-%y %H:%i';
-const TOOLTIP_DATE_FORMAT = '%d-%m-%y %H:%i:%s';
-const COLUMN_DEFINITIONS = {
+var DATE_FORMAT = '%d-%m-%y %H:%i';
+var TOOLTIP_DATE_FORMAT = '%d-%m-%y %H:%i:%s';
+var COLUMN_DEFINITIONS = {
     'text': {name: 'text', label: I18nStore.i18n('factors.event.label'), width: '*', tree: true},
     'startDate': {name: 'start_date', label: I18nStore.i18n('factors.detail.start'), width: '*', align: 'center'},
     'eventType': {
         name: 'event_type', label: I18nStore.i18n('factors.detail.type'), template: function (task) {
-            const et = task.statement.eventType;
+            var et = task.statement.eventTypes;
             return '<a href="' + et + '" title="' + et + '" target="_blank" class="external-link-gantt"></a>';
         }, align: 'center', width: 44
     },
@@ -38,7 +38,7 @@ function initSecondsScale() {
 /**
  * Deals with management of the gantt component.
  */
-const GanttController = {
+var GanttController = {
 
     rootEventId: null,
     props: {},
@@ -93,8 +93,8 @@ const GanttController = {
     },
 
     configureColumns: function (columns) {
-        const cols = [];
-        for (let i = 0, len = columns.length; i < len; i++) {
+        var cols = [];
+        for (var i = 0, len = columns.length; i < len; i++) {
             cols.push(COLUMN_DEFINITIONS[columns[i]]);
         }
         gantt.config.columns = cols;
@@ -129,18 +129,19 @@ const GanttController = {
             return FactorStyleInfo.getLinkClass(link);
         };
         gantt.templates.task_class = function (start, end, task) {
+            var eventType;
             if (!task.parent) {
                 return 'factor-root-event';
             }
-            let eventType = ObjectTypeResolver.resolveType(task.statement.eventType, OptionsStore.getOptions('eventType'));
+            eventType = ObjectTypeResolver.resolveType(task.statement.eventTypes, OptionsStore.getOptions('eventType'));
             return eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '';
         };
         gantt.templates.tooltip_date_format = function (date) {
-            const formatFunc = gantt.date.date_to_str(TOOLTIP_DATE_FORMAT);
+            var formatFunc = gantt.date.date_to_str(TOOLTIP_DATE_FORMAT);
             return formatFunc(date);
         };
         gantt.templates.tooltip_text = function (start, end, task) {
-            let tooltip = '<b>' + task.text + '</b><br/>';
+            var tooltip = '<b>' + task.text + '</b><br/>';
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
                 '<br/><b>End date:</b> ' + gantt.templates.tooltip_date_format(end);
             return tooltip;
@@ -148,7 +149,7 @@ const GanttController = {
     },
 
     configureGanttHandlers: function () {
-        const me = this;
+        var me = this;
         gantt.attachEvent('onTaskCreated', this.onCreateFactor.bind(me));
         gantt.attachEvent('onTaskDblClick', this.onEditFactor.bind(me));
         gantt.attachEvent('onAfterTaskAdd', this.onFactorAdded.bind(me));
@@ -174,11 +175,12 @@ const GanttController = {
         if (Number(id) === this.rootEventId) {
             return;
         }
-        this.props.onEditFactor(gantt.getTask(id));
+        var factor = gantt.getTask(id);
+        this.props.onEditFactor(factor);
     },
 
     onFactorAdded: function (id, factor) {
-        const updates = [];
+        var updates = [];
         if (id !== this.rootEventId && !factor.parent) {
             factor.parent = this.rootEventId;
         }
@@ -187,7 +189,7 @@ const GanttController = {
     },
 
     onFactorUpdated: function (id) {
-        const updates = [],
+        var updates = [],
             factor = gantt.getTask(id);
         factor.durationUnit = gantt.config.duration_unit;
         this.extendAncestorsIfNecessary(factor, updates);
@@ -197,7 +199,7 @@ const GanttController = {
     },
 
     extendAncestorsIfNecessary: function (factor, updates) {
-        let parent, changed;
+        var parent, changed;
         if (!factor.parent) {
             return;
         }
@@ -223,9 +225,9 @@ const GanttController = {
      * batch later.
      */
     updateDescendantsTimeInterval: function (factor, updates) {
-        let children = gantt.getChildren(factor.id),
+        var children = gantt.getChildren(factor.id),
             child, changed;
-        for (let i = 0, len = children.length; i < len; i++) {
+        for (var i = 0, len = children.length; i < len; i++) {
             child = gantt.getTask(children[i]);
             changed = false;
             if (child.start_date < factor.start_date || child.start_date > factor.end_date) {
@@ -246,15 +248,15 @@ const GanttController = {
 
     ensureNonZeroDuration: function (event) {
         if (gantt.calculateDuration(event.start_date, event.end_date) < 1) {
-            const parentId = event.parent;
+            var parentId = event.parent;
             if (!parentId) {
                 event.end_date = gantt.calculateEndDate(event.start_date, 1, gantt.config.scale_unit);
             }
-            const parent = gantt.getTask(parentId);
+            var parent = gantt.getTask(parentId);
             if (event.start_date === parent.start_date) {
                 event.end_date = gantt.calculateEndDate(event.start_date, 1, gantt.config.scale_unit);
             } else {
-                const start = parent.end_date,
+                var start = parent.end_date,
                     end = gantt.calculateEndDate(start, 1, gantt.config.scale_unit);
                 // Calculate length of one unit
                 // And then move the event so that its end is the same as its parent's
@@ -266,16 +268,16 @@ const GanttController = {
     },
 
     shrinkRootIfNecessary: function (updates) {
-        const root = gantt.getTask(this.rootEventId),
-            children = gantt.getChildren(root.id);
-        let lowestStart, highestEnd, changed, child;
+        var root = gantt.getTask(this.rootEventId),
+            children = gantt.getChildren(root.id),
+            lowestStart, highestEnd, changed, child;
         if (!children || children.length === 0) {
             return;
         }
         child = gantt.getTask(children[0]);
         lowestStart = child.start_date;
         highestEnd = child.end_date;
-        for (let i = 1, len = children.length; i < len; i++) {
+        for (var i = 1, len = children.length; i < len; i++) {
             child = gantt.getTask(children[i]);
             if (child.start_date < lowestStart) {
                 lowestStart = child.start_date;
@@ -293,7 +295,7 @@ const GanttController = {
             changed = true;
         }
         if (changed) {
-            const duration = gantt.calculateDuration(root.start_date, root.end_date);
+            var duration = gantt.calculateDuration(root.start_date, root.end_date);
             root.duration = duration;
             root.end_date = gantt.calculateEndDate(root.start_date, duration, gantt.config.scale_unit);
             updates.push(root.id);
@@ -301,26 +303,26 @@ const GanttController = {
     },
 
     applyUpdates: function (updates, preventUpdatePropagation) {
-        let updateGraphRoot = false;
-        this.applyChangesRunning = true;
-        gantt.batchUpdate(() => {
-            for (let i = 0, len = updates.length; i < len; i++) {
+        var me = this, updateGraphRoot = false;
+        me.applyChangesRunning = true;
+        gantt.batchUpdate(function () {
+            for (var i = 0, len = updates.length; i < len; i++) {
                 gantt.updateTask(updates[i]);
-                if (updates[i] === this.rootEventId) {
+                if (updates[i] === me.rootEventId) {
                     updateGraphRoot = true;
                 }
             }
         });
         if (updateGraphRoot && !preventUpdatePropagation) {
-            const root = gantt.getTask(this.rootEventId);
+            var root = gantt.getTask(this.rootEventId);
             this.props.updateGraphRoot(root.start_date.getTime(), root.end_date.getTime());
         }
         gantt.refreshData();
-        this.applyChangesRunning = false;
+        me.applyChangesRunning = false;
     },
 
     onLinkAdded: function (linkId, link) {
-        const linkTypes = gantt.config.links;
+        var linkTypes = gantt.config.links;
         // Only links from end to start are supported
         if (link.type !== linkTypes.finish_to_start) {
             return false;
@@ -336,7 +338,7 @@ const GanttController = {
     },
 
     onDeleteLink: function (linkId) {
-        const link = gantt.getLink(linkId),
+        var link = gantt.getLink(linkId),
             source = gantt.getTask(link.source),
             target = gantt.getTask(link.target);
         this.props.onDeleteLink(link, source, target);
@@ -346,7 +348,7 @@ const GanttController = {
         if (this.applyChangesRunning) {
             return;
         }
-        const rootEvent = gantt.getTask(this.rootEventId),
+        var rootEvent = gantt.getTask(this.rootEventId),
             updates = [];
         if (rootEvent.text !== graphRoot.name) {
             rootEvent.text = graphRoot.name;
@@ -367,12 +369,12 @@ const GanttController = {
     },
 
     moveFactor: function (factorId, timeDiff, changes) {
-        const factor = gantt.getTask(factorId),
+        var factor = gantt.getTask(factorId),
             children = gantt.getChildren(factor.id);
         factor.start_date = new Date(factor.start_date.getTime() + timeDiff);
         factor.end_date = gantt.calculateEndDate(factor.start_date, factor.duration, gantt.config.scale_unit);
         changes.push(factor.id);
-        for (let i = 0, len = children.length; i < len; i++) {
+        for (var i = 0, len = children.length; i < len; i++) {
             this.moveFactor(children[i], timeDiff, changes);
         }
     },
@@ -410,10 +412,10 @@ const GanttController = {
     },
 
     getChildren: function (factorId) {
-        const childIds = gantt.getChildren(factorId),
-            children = [];
-        for (let i = 0, len = childIds.length; i < len; i++) {
-            const task = gantt.getTask(childIds[i]);
+        var childIds = gantt.getChildren(factorId);
+        var children = [];
+        for (var i = 0, len = childIds.length; i < len; i++) {
+            var task = gantt.getTask(childIds[i]);
             task.statement.startTime = task.start_date.getTime();
             task.statement.endTime = task.end_date.getTime();
             children.push(task);
@@ -427,8 +429,8 @@ const GanttController = {
 
     expandSubtree: function (rootId) {
         gantt.open(rootId);
-        const children = gantt.getChildren(rootId);
-        for (let i = 0, len = children.length; i < len; i++) {
+        var children = gantt.getChildren(rootId);
+        for (var i = 0, len = children.length; i < len; i++) {
             this.expandSubtree(children[i]);
         }
     },

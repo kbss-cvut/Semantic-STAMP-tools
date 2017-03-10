@@ -2,6 +2,7 @@
 
 var JsonLdUtils = require('jsonld-utils').default;
 var GanttController = require('./GanttController');
+var Constants = require('../../constants/Constants');
 var Vocabulary = require('../../constants/Vocabulary');
 var ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
 
@@ -13,6 +14,8 @@ var FactorRenderer = {
         this.greatestReferenceId = Number.MIN_VALUE;
         if (report.occurrence) {
             OccurrenceReportFactorRenderer.renderFactors(report, eventTypes);
+        } else if (report.safetyIssue) {
+            SafetyIssueFactorRenderer.renderFactors(report, eventTypes);
         } else {
             FactorRendererImpl.renderFactors(report.factorGraph, eventTypes);
         }
@@ -28,6 +31,38 @@ var OccurrenceReportFactorRenderer = {
 
     renderFactors: function (report, eventTypes) {
         RootAddingFactorRenderer.renderFactors(report, eventTypes, 'occurrence');
+    }
+};
+
+/**
+ * Renderer for safety issues.
+ *
+ * It needs to add the safety issue to the factor graph
+ */
+var SafetyIssueFactorRenderer = {
+
+    renderFactors: function (report, eventTypes) {
+        this._generateTimesForNodes(report);
+        RootAddingFactorRenderer.renderFactors(report, eventTypes, 'safetyIssue');
+    },
+
+    _generateTimesForNodes: function (report) {
+        GanttController.setScale(Constants.TIME_SCALES.SECOND);
+        var start = Date.now(),
+            end = start + 1000,
+            factorGraph = report.factorGraph;
+        report.safetyIssue.startTime = start;
+        report.safetyIssue.endTime = end;
+        if (factorGraph) {
+            // TODO Set the times so that the layout puts factors of other events before them
+            for (var i = 0, len = factorGraph.nodes.length; i < len; i++) {
+                if (typeof(factorGraph.nodes[i]) === 'object') {
+                    factorGraph.nodes[i].startTime = start;
+                    factorGraph.nodes[i].endTime = end;
+                }
+            }
+        }
+        GanttController.setScale(Constants.TIME_SCALES.RELATIVE);
     }
 };
 
@@ -94,9 +129,9 @@ var FactorRendererImpl = {
             var text = '';
             if (typeof node.name !== 'undefined' && node.name !== null) {
                 text = node.name;
-            } else if (node.eventType) {
-                var eventType = ObjectTypeResolver.resolveType(node.eventType, eventTypes);
-                text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
+            } else if (node.eventTypes) {
+                var eventType = ObjectTypeResolver.resolveType(node.eventTypes, eventTypes);
+                text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventTypes[0];
             }
             GanttController.addFactor({
                 id: node.referenceId,

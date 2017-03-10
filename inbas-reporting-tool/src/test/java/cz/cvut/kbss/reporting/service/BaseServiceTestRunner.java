@@ -6,6 +6,8 @@ import cz.cvut.kbss.reporting.environment.config.TestServiceConfig;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.persistence.dao.PersonDao;
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +19,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = {TestServiceConfig.class, TestPersistenceConfig.class, MockSesamePersistence.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public abstract class BaseServiceTestRunner {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Autowired
     protected PersonDao personDao;

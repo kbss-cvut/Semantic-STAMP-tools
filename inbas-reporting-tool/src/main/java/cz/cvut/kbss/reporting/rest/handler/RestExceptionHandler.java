@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.rest.handler;
 import cz.cvut.kbss.jopa.exceptions.OWLPersistenceException;
 import cz.cvut.kbss.reporting.exception.*;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
+import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -76,6 +77,11 @@ public class RestExceptionHandler {
     @ExceptionHandler(ReportImportingException.class)
     public ResponseEntity<ErrorInfo> reportImportingException(HttpServletRequest request, ReportImportingException e) {
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorInfo> badRequestException(HttpServletRequest request, BadRequestException e) {
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnsupportedReportTypeException.class)

@@ -19,6 +19,14 @@ interface BaseReportService<T extends LogicalDocument> extends BaseService<T> {
     T findByKey(String key);
 
     /**
+     * Finds out whether a report with the specified key exists.
+     *
+     * @param key Instance key
+     * @return Info about report existence
+     */
+    boolean exists(String key);
+
+    /**
      * Gets report with latest revision in report chain with the specified file number.
      *
      * @param fileNumber Report chain identifier

@@ -33,15 +33,10 @@ public class OrganizationDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
-    public void findByNameReturnsNullForUnknownName() {
+    public void findOrganizationByNameReturnsNullForNullName() {
         final Organization organization = new Organization(ORGANIZATION_NAME);
         organizationDao.persist(organization);
 
-        assertNull(organizationDao.findByName("unknownOrganization"));
-    }
-
-    @Test
-    public void findByNameReturnsNullForNullArgument() {
         assertNull(organizationDao.findByName(null));
     }
 }

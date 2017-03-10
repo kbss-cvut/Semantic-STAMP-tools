@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.environment.config;
 
+import cz.cvut.kbss.reporting.persistence.TestEccairsReportImportPersistenceFactory;
 import cz.cvut.kbss.reporting.persistence.TestFormGenPersistenceFactory;
 import cz.cvut.kbss.reporting.persistence.TestPersistenceFactory;
 import cz.cvut.kbss.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
@@ -13,7 +14,8 @@ import static org.mockito.Mockito.spy;
 @Configuration
 @ComponentScan(basePackages = {"cz.cvut.kbss.reporting.persistence.dao"})
 @Import({TestPersistenceFactory.class,
-        TestFormGenPersistenceFactory.class})
+        TestFormGenPersistenceFactory.class,
+        TestEccairsReportImportPersistenceFactory.class})
 public class DataDaoPersistenceConfig {
 
     @Bean

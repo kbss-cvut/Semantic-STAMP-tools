@@ -114,7 +114,6 @@ public class EventFormGenDataProcessorTest {
         final OccurrenceReport report = getOccurrenceReport();
         report.setAuthor(null);
         final Person author = Generator.getPerson();
-        author.generateUri();
         Environment.setCurrentUser(author);
         processor.process(report, Collections.emptyMap());
 

@@ -1,6 +1,8 @@
 package cz.cvut.kbss.reporting.service.options;
 
+import cz.cvut.kbss.reporting.dto.StatisticsConfiguration;
 import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationContextInitializer;
+import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.util.ConfigParam;
@@ -20,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -65,7 +68,7 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         mockServer.expect(requestTo(expectedUrl("query/" + category + ".sparql"))).andExpect(method(HttpMethod.GET))
                   .andRespond(withSuccess(DATA,
                           MediaType.APPLICATION_JSON));
-        final Object res = optionsService.getOptions(category);
+        final Object res = optionsService.getOptions(category, Collections.emptyMap());
         assertTrue(res instanceof RawJson);
         assertEquals(new RawJson(DATA), res);
     }
@@ -86,7 +89,7 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         final String unknownOptionType = "unknownOptionType";
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Unsupported option type " + unknownOptionType);
-        optionsService.getOptions(unknownOptionType);
+        optionsService.getOptions(unknownOptionType, Collections.emptyMap());
     }
 
     @Test
@@ -116,7 +119,7 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         final String type = "reportingPhase";
         final String content = cz.cvut.kbss.reporting.environment.util.Environment
                 .loadData("option/reportingPhase.json", String.class);
-        final RawJson result = (RawJson) optionsService.getOptions(type);
+        final RawJson result = (RawJson) optionsService.getOptions(type, Collections.emptyMap());
         assertNotNull(result);
         assertEquals(content, result.getValue());
     }
@@ -126,6 +129,38 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Missing repository URL configuration.");
         ((MockEnvironment) environment).setProperty(ConfigParam.EVENT_TYPE_REPOSITORY_URL.toString(), "");
-        optionsService.getOptions("eventType");
+        optionsService.getOptions("eventType", Collections.emptyMap());
+    }
+
+    @Test
+    public void getRemoteOptionsUsesParametersToReplaceVariablesInQuery() throws Exception {
+        final String type = "occurrenceClass";
+        final String term = Generator.generateUri().toString();
+        final Map<String, String> params = Collections.singletonMap("term", term);
+        final String query = cz.cvut.kbss.reporting.environment.util.Environment
+                .loadData("query/" + type + ".sparql", String.class);
+        final String url =
+                URL + "?query=" +
+                        URLEncoder.encode(query.replaceAll("\\?term", "<" + term + ">"), Constants.UTF_8_ENCODING);
+        mockServer.expect(requestTo(url)).andExpect(method(HttpMethod.GET))
+                  .andRespond(withSuccess(DATA,
+                          MediaType.APPLICATION_JSON));
+        final Object res = optionsService.getOptions(type, params);
+        assertTrue(res instanceof RawJson);
+        assertEquals(new RawJson(DATA), res);
+    }
+
+    @Test
+    public void getStatisticsConfigurationReturnsObjectWithConfigurationForStatistics() {
+        final StatisticsConfiguration config = optionsService.getStatisticsConfiguration();
+        assertNotNull(config);
+        final String[] configs = new String[]{ConfigParam.STATISTICS_DASHBOARD.toString(),
+                ConfigParam.STATISTICS_GENERAL.toString(),
+                ConfigParam.STATISTICS_EVENT_TYPE.toString(),
+                ConfigParam.STATISTICS_AUDIT.toString(),
+                ConfigParam.STATISTICS_SAFETY_ISSUE.toString()};
+        for (String s : configs) {
+            assertEquals(environment.getProperty(s), config.getConfiguration().get(s));
+        }
     }
 }

@@ -12,23 +12,23 @@ import Select from "../Select";
 import Utils from "../../utils/Utils";
 
 function _processFilters(func) {
-    for (var i = 0, len = Constants.FILTERS.length; i < len; i++) {
+    for (let i = 0, len = Constants.FILTERS.length; i < len; i++) {
         func(Constants.FILTERS[i]);
     }
 }
 
 function _resolveUniqueFilterableValues(data) {
-    var values = {}, item;
+    let values = {}, item;
     _processFilters((filter) => {
         values[filter.path] = [];
     });
-    for (var i = 0, len = data.length; i < len; i++) {
+    for (let i = 0, len = data.length; i < len; i++) {
         item = data[i];
         ((item) => {
             _processFilters((filter) => {
-                var value = Utils.getPropertyValue(item, filter.path);
+                let value = Utils.getPropertyValue(item, filter.path);
                 if (Array.isArray(value)) {
-                    for (var j = 0, lenn = value.length; j < lenn; j++) {
+                    for (let j = 0, lenn = value.length; j < lenn; j++) {
                         if (values[filter.path].indexOf(value[j]) === -1) {
                             values[filter.path].push(value[j]);
                         }
@@ -57,7 +57,7 @@ class Filters extends React.Component {
     }
 
     _generateOptions() {
-        var data = this.props.data,
+        const data = this.props.data,
             values = _resolveUniqueFilterableValues(data),
             newState = {};
 
@@ -66,9 +66,9 @@ class Filters extends React.Component {
             if (!values[filter.path] || filter.type !== 'select') {
                 return;
             }
-            var options = OptionsStore.getOptions(filter.options);
-            for (var i = 0, len = options.length; i < len; i++) {
-                for (var j = 0, lenn = values[filter.path].length; j < lenn; j++) {
+            const options = OptionsStore.getOptions(filter.options);
+            for (let i = 0, len = options.length; i < len; i++) {
+                for (let j = 0, lenn = values[filter.path].length; j < lenn; j++) {
                     if (options[i]['@id'] === values[filter.path][j]) {
                         newState[filter.options].push(JsonLdUtils.jsonLdToSelectOption(options[i], this.props.intl));
                     }
@@ -102,13 +102,13 @@ class Filters extends React.Component {
     }
 
     _onOptionSelected = (e) => {
-        var change = {};
+        const change = {};
         change[e.target.name] = e.target.value;
         this.props.onChange(change);
     };
 
     _onResetFilters = () => {
-        var reset = {};
+        const reset = {};
         Object.getOwnPropertyNames(this.props.filters).forEach(prop => {
             reset[prop] = Constants.FILTER_DEFAULT
         });
@@ -130,7 +130,7 @@ class Filters extends React.Component {
     }
 
     _renderFilters() {
-        var filters = [];
+        const filters = [];
         _processFilters((filter) => {
             if (filter.type === 'select') {
                 if (this.state[filter.options].length === 0) {
