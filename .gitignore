@@ -5,4 +5,5 @@ repositories
 node_modules
 **/bundle.js
 **/generated-sources
+**/java-generated
 **/npm-debug.log
