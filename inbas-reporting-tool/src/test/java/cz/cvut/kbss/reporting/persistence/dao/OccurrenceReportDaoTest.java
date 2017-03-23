@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URI;
 import java.util.*;
 
+import static cz.cvut.kbss.reporting.environment.util.TestUtils.verifyAllInstancesRemoved;
 import static org.junit.Assert.*;
 
 public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
@@ -303,17 +304,30 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
         occurrenceReportDao.remove(report);
         assertFalse(occurrenceReportDao.exists(report.getUri()));
-        final EntityManager em = emf.createEntityManager();
-        try {
-            for (CorrectiveMeasureRequest cmr : report.getCorrectiveMeasures()) {
-                final Boolean res = em.createNativeQuery("ASK WHERE { ?x a ?type . }", Boolean.class)
-                                      .setParameter("x", cmr.getUri())
-                                      .setParameter("type", URI.create(Vocabulary.s_c_corrective_measure_request))
-                                      .getSingleResult();
-                assertFalse(res);
-            }
-        } finally {
-            em.close();
-        }
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_corrective_measure_request);
+    }
+
+    @Test
+    public void removeDeletesCompleteFactorGraph() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
+        report.setAuthor(author);
+        occurrenceReportDao.persist(report);
+
+        occurrenceReportDao.remove(report);
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_Occurrence);
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_Event);
+    }
+
+    @Test
+    public void removeDeletesCompleteQuestionAnswerTree() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
+        report.setAuthor(author);
+        report.getOccurrence().setQuestion(Generator.generateQuestions(2));
+        report.getOccurrence().getChildren().iterator().next().setQuestion(Generator.generateQuestions(3));
+        occurrenceReportDao.persist(report);
+
+        occurrenceReportDao.remove(report);
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_question);
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_answer);
     }
 }

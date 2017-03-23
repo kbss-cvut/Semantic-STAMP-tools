@@ -8,7 +8,7 @@ import cz.cvut.kbss.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Factor;
 import cz.cvut.kbss.reporting.model.Occurrence;
-import cz.cvut.kbss.reporting.model.qam.Answer;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.qam.Question;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
 import org.junit.Test;
@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static cz.cvut.kbss.reporting.environment.util.TestUtils.verifyAllInstancesRemoved;
 import static org.junit.Assert.*;
 
 public class OccurrenceDaoTest extends BaseDaoTestRunner {
@@ -193,14 +194,19 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
         dao.persist(occurrence);
 
         dao.remove(occurrence);
-        final EntityManager em = emf.createEntityManager();
-        try {
-            TestUtils.verifyQuestions(occurrence.getQuestion(), question -> {
-                assertNull(em.find(Question.class, question.getUri()));
-                question.getAnswers().forEach(a -> assertNull(em.find(Answer.class, a.getUri())));
-            });
-        } finally {
-            em.close();
-        }
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_question);
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_answer);
+    }
+
+    @Test
+    public void removeRemovesCompleteFactorGraph() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph()
+                                                               .getOccurrence();
+        dao.persist(occurrence);
+
+        dao.remove(occurrence);
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_Occurrence);
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_factor);
+        verifyAllInstancesRemoved(emf, Vocabulary.s_c_Event);
     }
 }

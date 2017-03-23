@@ -145,7 +145,7 @@ public class Generator {
     /**
      * Generates a tree of questions with answers.
      *
-     * @param maxDepth Maximum depth. Optional parameter. If not set, a random number will be generated
+     * @param maxDepth Maximum depth. Optional parameter. If not set, a random number (less than 10) will be generated
      * @return Root question
      */
     public static Question generateQuestions(Integer maxDepth) {

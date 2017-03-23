@@ -25,7 +25,7 @@ public class Question extends AbstractEntity implements Serializable {
             CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private Set<Question> subQuestions = new HashSet<>();
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_answer, cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_answer, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Answer> answers = new HashSet<>();// entity instance or attribute value
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_question_origin)

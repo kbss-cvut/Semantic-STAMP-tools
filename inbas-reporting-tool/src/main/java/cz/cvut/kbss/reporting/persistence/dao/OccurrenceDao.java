@@ -36,4 +36,15 @@ public class OccurrenceDao extends OwlKeySupportingDao<Occurrence> {
         traverser.traverse(entity);
         em.merge(entity);
     }
+
+    @Override
+    protected void remove(Occurrence entity, EntityManager em) {
+        final Occurrence toRemove = em.merge(entity);
+        // It is necessary to remove only events from the top-level factors, other events will be removed as children
+        // of other events by cascading.
+        if (toRemove.getFactors() != null) {
+            toRemove.getFactors().forEach(f -> em.remove(f.getEvent()));
+        }
+        em.remove(toRemove);
+    }
 }

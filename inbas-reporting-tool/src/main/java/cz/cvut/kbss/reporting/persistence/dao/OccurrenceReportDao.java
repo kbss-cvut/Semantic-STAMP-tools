@@ -14,11 +14,12 @@ import java.net.URI;
 @Repository
 public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> implements GenericDao<OccurrenceReport> {
 
-    @Autowired
-    private OccurrenceDao occurrenceDao;
+    private final OccurrenceDao occurrenceDao;
 
-    public OccurrenceReportDao() {
+    @Autowired
+    public OccurrenceReportDao(OccurrenceDao occurrenceDao) {
         super(OccurrenceReport.class);
+        this.occurrenceDao = occurrenceDao;
     }
 
     @Override
@@ -44,6 +45,12 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
         em.merge(entity);
         new OrphanRemover(em).removeOrphans(original.getCorrectiveMeasures(), entity.getCorrectiveMeasures());
         occurrenceDao.update(entity.getOccurrence(), em);
+    }
+
+    @Override
+    protected void remove(OccurrenceReport entity, EntityManager em) {
+        occurrenceDao.remove(entity.getOccurrence(), em);
+        super.remove(entity, em);
     }
 
     /**
