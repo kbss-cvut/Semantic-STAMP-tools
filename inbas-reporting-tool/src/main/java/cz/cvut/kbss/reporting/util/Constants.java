@@ -108,6 +108,13 @@ public final class Constants {
      */
     public static final String QUERY_QUERY_PARAM = "query";
 
+    /**
+     * Maximum length of a description used by the {@code toString} method.
+     *
+     * Anything longer that this threshold may be trimmed.
+     */
+    public static final int DESCRIPTION_TO_STRING_THRESHOLD = 50;
+
     private Constants() {
         throw new AssertionError();
     }
