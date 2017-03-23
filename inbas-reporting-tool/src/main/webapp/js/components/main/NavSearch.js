@@ -13,7 +13,7 @@ import Routing from "../../utils/Routing";
 import ReportSearchResultList from "../typeahead/ReportSearchResultList";
 import Utils from "../../utils/Utils";
 
-const OPTION_IDENTIFICATION_THRESHOLD = 45;
+const OPTION_IDENTIFICATION_THRESHOLD = 65;
 
 class NavSearch extends React.Component {
     constructor(props) {
@@ -51,7 +51,8 @@ class NavSearch extends React.Component {
         let option;
         for (let i = 0, len = reports.length; i < len; i++) {
             option = ReportType.getReport(reports[i]);
-            option.description = option.identification;
+            option.description = option.date ? '(' + Utils.formatDate(option.date) + ') - ' : '';
+            option.description += option.identification;
             options.push(option);
         }
         return options;
@@ -100,11 +101,8 @@ class NavSearch extends React.Component {
 
     _getOptionLabelFunction() {
         return function (option) {
-            const date = option.date ? Utils.formatDate(new Date(option.date)) : '',
-                label = option.identification.length > OPTION_IDENTIFICATION_THRESHOLD ?
+            return option.identification.length > OPTION_IDENTIFICATION_THRESHOLD ?
                 option.identification.substring(0, OPTION_IDENTIFICATION_THRESHOLD) + '...' : option.identification;
-
-            return label + ' (' + date + ')';
         }.bind(this);
     }
 }

@@ -31,6 +31,9 @@ var Occurrence = React.createClass({
     },
 
     onStartChange: function (value) {
+        if (isNaN(value)) {
+            return;
+        }
         var occurrence = assign({}, this.props.report.occurrence),
             timeDiff = occurrence.startTime - Number(value);
         occurrence.startTime = Number(value);
@@ -63,14 +66,14 @@ var Occurrence = React.createClass({
             <div className='row'>
                 <div className='picker-container form-group form-group-sm col-xs-4'>
                     <label className='control-label'>{this.i18n('occurrence.start-time')}</label>
-                    <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss'
+                    <DateTimePicker inputFormat='DD-MM-YYYY HH:mm:ss'
                                     dateTime={report.occurrence.startTime.toString()}
                                     onChange={this.onStartChange} size='small'
                                     inputProps={{title: this.i18n('occurrence.start-time-tooltip')}}/>
                 </div>
                 <div className='picker-container form-group form-group-sm col-xs-4'>
                     <label className='control-label'>{this.i18n('occurrence.end-time')}</label>
-                    <DateTimePicker inputFormat='DD-MM-YY HH:mm:ss' dateTime={report.occurrence.endTime.toString()}
+                    <DateTimePicker inputFormat='DD-MM-YYYY HH:mm:ss' dateTime={report.occurrence.endTime.toString()}
                                     onChange={this.onEndChange} size='small'
                                     inputProps={{title: this.i18n('occurrence.end-time-tooltip')}}/>
                 </div>

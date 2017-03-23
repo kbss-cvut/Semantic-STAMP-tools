@@ -58,4 +58,11 @@ describe('OccurrenceDetail', function () {
         expect(onChange.calls.argsFor(1)[0].occurrence.endTime).toEqual(secondEnd);
         expect(onChange).toHaveBeenCalledTimes(2);
     });
+
+    it('ignores change to the start date when invalid value is entered', () => {
+        const report = ReportFactory.createOccurrenceReport(),
+            detail = Environment.render(<OccurrenceDetail report={report} onChange={onChange}/>);
+        detail.onStartChange('Invalid date');
+        expect(onChange).not.toHaveBeenCalled();
+    });
 });
