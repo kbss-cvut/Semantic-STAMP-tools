@@ -30,6 +30,9 @@ public class OrphanRemover {
         final Set<T> orphans = originals == null ? Collections.emptySet() :
                                originals.stream().filter(m -> !updateUris.contains(m.getUri()))
                                         .collect(Collectors.toSet());
-        orphans.forEach(em::remove);
+        orphans.forEach(o -> {
+            final T toRemove = em.merge(o);
+            em.remove(toRemove);
+        });
     }
 }

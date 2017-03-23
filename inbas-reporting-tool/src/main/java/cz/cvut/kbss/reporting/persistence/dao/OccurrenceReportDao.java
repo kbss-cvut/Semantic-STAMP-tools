@@ -33,17 +33,11 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
 
     @Override
     protected void update(OccurrenceReport entity, EntityManager em) {
-        if (entity.getUri() != null) {
-            updateWithOrphanRemoval(entity, em);
-        } else {
-            em.merge(entity);
-        }
-    }
-
-    private void updateWithOrphanRemoval(OccurrenceReport entity, EntityManager em) {
         final OccurrenceReport original = em.find(OccurrenceReport.class, entity.getUri());
-        em.merge(entity);
-        new OrphanRemover(em).removeOrphans(original.getCorrectiveMeasures(), entity.getCorrectiveMeasures());
+        assert original != null;
+        em.detach(original);
+        final OccurrenceReport merged = em.merge(entity);
+        new OrphanRemover(em).removeOrphans(original.getCorrectiveMeasures(), merged.getCorrectiveMeasures());
         occurrenceDao.update(entity.getOccurrence(), em);
     }
 

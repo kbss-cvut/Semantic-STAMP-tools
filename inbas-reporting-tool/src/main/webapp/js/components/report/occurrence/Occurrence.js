@@ -1,40 +1,40 @@
 'use strict';
 
-var React = require('react');
-var DateTimePicker = require('react-bootstrap-datetimepicker').default;
-var assign = require('object-assign');
+import React from "react";
+import DateTimePicker from "react-bootstrap-datetimepicker";
+import assign from "object-assign";
 
-var injectIntl = require('../../../utils/injectIntl');
+import Constants from "../../../constants/Constants";
+import I18nWrapper from "../../../i18n/I18nWrapper";
+import injectIntl from "../../../utils/injectIntl";
+import Input from "../../Input";
 
-var Input = require('../../Input').default;
-var Constants = require('../../../constants/Constants');
-var I18nMixin = require('../../../i18n/I18nMixin');
+class Occurrence extends React.Component {
 
-var Occurrence = React.createClass({
-    mixins: [I18nMixin],
-
-    propTypes: {
+    static propTypes = {
         report: React.PropTypes.object.isRequired,
         onChange: React.PropTypes.func.isRequired
-    },
+    };
 
-    getInitialState: function () {
-        return {
+    constructor(props) {
+        super(props);
+        this.i18n = props.i18n;
+        this.state = {
             startTimeChanged: false
-        }
-    },
+        };
+    }
 
-    onChange: function (e) {
-        var occurrence = assign({}, this.props.report.occurrence);
+    onChange = (e) => {
+        const occurrence = assign({}, this.props.report.occurrence);
         occurrence[e.target.name] = e.target.value;
         this.props.onChange({'occurrence': occurrence});
-    },
+    };
 
-    onStartChange: function (value) {
+    onStartChange = (value) => {
         if (isNaN(value)) {
             return;
         }
-        var occurrence = assign({}, this.props.report.occurrence),
+        const occurrence = assign({}, this.props.report.occurrence),
             timeDiff = occurrence.startTime - Number(value);
         occurrence.startTime = Number(value);
         if (this.props.report.isNew && !this.state.startTimeChanged) {
@@ -44,16 +44,16 @@ var Occurrence = React.createClass({
             occurrence.endTime = occurrence.endTime - timeDiff;
         }
         this.props.onChange({'occurrence': occurrence});
-    },
+    };
 
-    onEndChange: function (value) {
-        var occurrence = assign({}, this.props.report.occurrence);
+    onEndChange = (value) => {
+        const occurrence = assign({}, this.props.report.occurrence);
         occurrence.endTime = Number(value);
         this.props.onChange({'occurrence': occurrence});
-    },
+    };
 
-    render: function () {
-        var report = this.props.report;
+    render() {
+        const report = this.props.report;
         return <div>
             <div className='row'>
                 <div className='col-xs-4'>
@@ -80,6 +80,6 @@ var Occurrence = React.createClass({
             </div>
         </div>;
     }
-});
+}
 
-module.exports = injectIntl(Occurrence);
+export default injectIntl(I18nWrapper(Occurrence));

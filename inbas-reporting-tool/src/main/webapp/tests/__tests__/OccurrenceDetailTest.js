@@ -2,27 +2,27 @@
 
 describe('OccurrenceDetail', function () {
 
-    var React = require('react'),
+    const React = require('react'),
         assign = require('object-assign'),
         Environment = require('../environment/Environment'),
         Constants = require('../../js/constants/Constants'),
         ReportFactory = require('../../js/model/ReportFactory'),
-        OccurrenceDetail = require('../../js/components/report/occurrence/Occurrence'),
+        OccurrenceDetail = require('../../js/components/report/occurrence/Occurrence').default;
 
-        onChange;
+    let onChange;
 
     beforeEach(() => {
         onChange = jasmine.createSpy('onChange');
     });
 
     it('sets occurrence end time to the same as start time when start time is edited for the first time in a new report', function () {
-        var report = ReportFactory.createOccurrenceReport(),
+        const report = ReportFactory.createOccurrenceReport(),
             detail = Environment.render(<OccurrenceDetail report={report} onChange={onChange}/>);
 
-        var newStart = report.occurrence.startTime - 100000;
+        const newStart = report.occurrence.startTime - 100000;
         detail.onStartChange(newStart);
         expect(onChange).toHaveBeenCalled();
-        var expected = assign({}, report.occurrence);
+        const expected = assign({}, report.occurrence);
         expected.startTime = newStart;
         expected.endTime = newStart + Constants.MINUTE;
         expect(onChange).toHaveBeenCalledWith({'occurrence': expected});
@@ -45,7 +45,7 @@ describe('OccurrenceDetail', function () {
         onChange.and.callFake(change => {
             assign(report, change)
         });
-        var report = ReportFactory.createOccurrenceReport(),
+        const report = ReportFactory.createOccurrenceReport(),
             detail = Environment.render(<OccurrenceDetail report={report} onChange={onChange}/>),
             firstStart = report.occurrence.startTime - 100000,
             firstEnd = firstStart + Constants.MINUTE;
