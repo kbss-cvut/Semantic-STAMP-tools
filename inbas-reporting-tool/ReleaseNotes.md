@@ -1,5 +1,11 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.9.2 - March 23, 2017
+- Fixed issue with incomplete report removal (Bug #388).
+- Modified search result UI to prevent confusion (Bug #387).
+- Library update (Sesame 2.8.9 to RDF4J 2.2, JOPA to 0.9.5, semforms to 0.1.2).
+- Removed obsolete access to raw repository data.
+
 ### 0.9.1 - February 8, 2017
 - Rich input support for report summary (Feature #118).
 
