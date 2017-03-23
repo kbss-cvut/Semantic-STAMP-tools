@@ -2,7 +2,7 @@ package cz.cvut.kbss.reporting.persistence.sesame;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
-import org.openrdf.repository.Repository;
+import org.eclipse.rdf4j.repository.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class TestSesamePersistenceProvider extends SesamePersistenceProvider {

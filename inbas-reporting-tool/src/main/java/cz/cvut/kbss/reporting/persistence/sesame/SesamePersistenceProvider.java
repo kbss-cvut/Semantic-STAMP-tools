@@ -2,10 +2,10 @@ package cz.cvut.kbss.reporting.persistence.sesame;
 
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.reporting.util.ConfigParam;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.config.RepositoryConfigException;
-import org.openrdf.repository.manager.RepositoryProvider;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.manager.RepositoryProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

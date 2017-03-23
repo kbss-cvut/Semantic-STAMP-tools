@@ -17,14 +17,14 @@ import cz.cvut.kbss.reporting.persistence.TestFormGenPersistenceFactory;
 import cz.cvut.kbss.reporting.persistence.TestPersistenceFactory;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.reporting.persistence.dao.PersonDao;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.ComponentScan;
@@ -187,10 +187,10 @@ public class OccurrenceReportFormGenDaoTest {
         final ValueFactory vf = connection.getValueFactory();
         connection.begin();
         for (int i = 0; i < Generator.randomInt(10); i++) {
-            final org.openrdf.model.URI propertyUri = vf.createURI(Generator.generateUri().toString());
+            final org.eclipse.rdf4j.model.IRI propertyUri = vf.createIRI(Generator.generateUri().toString());
             final Statement stmt = vf
-                    .createStatement(vf.createURI(contextUri.toString()), propertyUri, vf.createLiteral(i));
-            connection.add(stmt, vf.createURI(contextUri.toString()));
+                    .createStatement(vf.createIRI(contextUri.toString()), propertyUri, vf.createLiteral(i));
+            connection.add(stmt, vf.createIRI(contextUri.toString()));
             statements.add(stmt);
         }
         connection.commit();
@@ -200,10 +200,9 @@ public class OccurrenceReportFormGenDaoTest {
     private void verifyStatementPresence(Collection<Statement> statements, URI contextUri) throws Exception {
         final EntityManager em = emf.createEntityManager();
         final Repository repo = em.unwrap(Repository.class);
-        final RepositoryConnection connection = repo.getConnection();
-        try {
+        try (final RepositoryConnection connection = repo.getConnection()) {
             final ValueFactory vf = connection.getValueFactory();
-            final org.openrdf.model.URI context = vf.createURI(contextUri.toString());
+            final org.eclipse.rdf4j.model.IRI context = vf.createIRI(contextUri.toString());
             for (Statement s : statements) {
                 final RepositoryResult rr = connection
                         .getStatements(s.getSubject(), s.getPredicate(), s.getObject(), false, context);
@@ -211,7 +210,6 @@ public class OccurrenceReportFormGenDaoTest {
                 rr.close();
             }
         } finally {
-            connection.close();
             em.close();
         }
     }

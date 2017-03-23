@@ -6,16 +6,16 @@ import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.reporting.environment.config.DataDaoPersistenceConfig;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.model.Organization;
-import info.aduna.iteration.Iterations;
+import org.eclipse.rdf4j.common.iteration.Iterations;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.sail.SailRepository;
+import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openrdf.model.Statement;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.memory.MemoryStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {DataDaoPersistenceConfig.class})
@@ -70,7 +69,7 @@ public class DataDaoTest {
         dataDao.getRepositoryData(context, new StatementCopyingHandler(connection));
         for (Organization org : organizations) {
             final Collection<Statement> res = Iterations.addAll(connection
-                            .getStatements(connection.getValueFactory().createURI(org.getUri().toString()), null, null, false),
+                            .getStatements(connection.getValueFactory().createIRI(org.getUri().toString()), null, null, false),
                     new ArrayList<>());
             assertFalse(res.isEmpty());
         }
@@ -98,15 +97,5 @@ public class DataDaoTest {
     @Test
     public void testExportDataFromDefaultContext() throws Exception {
         testExport(null);
-    }
-
-    @Test
-    public void testExportDataAsRdfXmlFromDefaultContext() throws Exception {
-        final List<Organization> organizations = persistTestData(null);
-        final String result = dataDao.getRepositoryData();
-        for (Organization org : organizations) {
-            assertTrue(result.contains(org.getUri().toString()));
-            assertTrue(result.contains(org.getName()));
-        }
     }
 }

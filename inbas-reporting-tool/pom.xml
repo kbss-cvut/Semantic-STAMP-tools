@@ -21,7 +21,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <cz.cvut.kbss.jopa.version>0.9.3</cz.cvut.kbss.jopa.version>
+        <cz.cvut.kbss.jopa.version>0.9.5</cz.cvut.kbss.jopa.version>
         <org.springframework.version>4.3.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.2.1.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.7.3</com.fasterxml.jackson.version>
@@ -134,9 +134,9 @@
 
         <!-- Sesame Data access -->
         <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-rio-rdfxml</artifactId>
-            <version>2.8.9</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-rio-rdfxml</artifactId>
+            <version>2.2</version>
         </dependency>
 
         <!-- Logging -->

@@ -1,11 +1,11 @@
 package cz.cvut.kbss.reporting.persistence.sesame;
 
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.helpers.RDFHandlerBase;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
 import java.util.Objects;
 
@@ -14,10 +14,10 @@ import java.util.Objects;
  * <p>
  * A target context can be provided, but is optional.
  */
-public class StatementCopyingHandler extends RDFHandlerBase {
+public class StatementCopyingHandler extends AbstractRDFHandler {
 
     private final RepositoryConnection connection;
-    private final URI context;
+    private final IRI context;
 
     public StatementCopyingHandler(RepositoryConnection connection) {
         Objects.requireNonNull(connection);
@@ -29,7 +29,7 @@ public class StatementCopyingHandler extends RDFHandlerBase {
         Objects.requireNonNull(connection);
         Objects.requireNonNull(context);
         this.connection = connection;
-        this.context = connection.getValueFactory().createURI(context.toString());
+        this.context = connection.getValueFactory().createIRI(context.toString());
     }
 
     @Override

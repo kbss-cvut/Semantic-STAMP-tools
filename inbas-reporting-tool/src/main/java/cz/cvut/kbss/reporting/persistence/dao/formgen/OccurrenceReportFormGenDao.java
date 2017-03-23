@@ -9,8 +9,8 @@ import cz.cvut.kbss.reporting.persistence.dao.util.QuestionSaver;
 import cz.cvut.kbss.reporting.persistence.sesame.DataDao;
 import cz.cvut.kbss.reporting.persistence.sesame.StatementCopyingHandler;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -90,15 +90,12 @@ public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
     private URI copyE5Data(URI contextUri, EntityManager em) {
         final URI targetContext = generateContextUri();
         try {
-            final org.openrdf.repository.Repository targetRepository = em
-                    .unwrap(org.openrdf.repository.Repository.class);
-            final RepositoryConnection targetConnection = targetRepository.getConnection();
-            try {
+            final org.eclipse.rdf4j.repository.Repository targetRepository = em
+                    .unwrap(org.eclipse.rdf4j.repository.Repository.class);
+            try (final RepositoryConnection targetConnection = targetRepository.getConnection()) {
                 targetConnection.begin();
                 dataDao.getRepositoryData(contextUri, new StatementCopyingHandler(targetConnection, targetContext));
                 targetConnection.commit();
-            } finally {
-                targetConnection.close();
             }
         } catch (RepositoryException e) {
             LOG.error("Unable to copy E5Data.", e);
