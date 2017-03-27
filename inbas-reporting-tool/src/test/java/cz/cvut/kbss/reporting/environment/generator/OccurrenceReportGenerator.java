@@ -152,4 +152,10 @@ public class OccurrenceReportGenerator {
         child.setEventType(Generator.generateEventType());
         return child;
     }
+
+    public static InitialReport generateInitialReport() {
+        final InitialReport ir = new InitialReport();
+        ir.setDescription("Random description of an initial report. Randomness: " + Generator.randomInt());
+        return ir;
+    }
 }

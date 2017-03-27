@@ -1,5 +1,7 @@
 package cz.cvut.kbss.reporting.service.repository;
 
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
@@ -29,6 +31,9 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Autowired
     private RepositoryOccurrenceReportService occurrenceReportService;
+
+    @Autowired
+    private EntityManagerFactory emf;
 
     private Person author;
 
@@ -307,5 +312,33 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
             }
         });
         traverser.traverse(result.getOccurrence());
+    }
+
+    @Test
+    public void persistPersistsAlsoInitialReport() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        report.setInitialReport(OccurrenceReportGenerator.generateInitialReport());
+
+        occurrenceReportService.persist(report);
+        assertNotNull(report.getInitialReport().getUri());
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNotNull(em.find(InitialReport.class, report.getInitialReport().getUri()));
+        } finally {
+            em.close();
+        }
+        assertNotNull(occurrenceReportService.find(report.getUri()).getInitialReport());
+    }
+
+    @Test
+    public void createNewRevisionReferencesOriginalInitialReport() {
+        final OccurrenceReport firstRevision = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        firstRevision.setInitialReport(OccurrenceReportGenerator.generateInitialReport());
+        occurrenceReportService.persist(firstRevision);
+        for (int i = 0; i < Generator.randomInt(2, 5); i++) {
+            final OccurrenceReport revision = occurrenceReportService.createNewRevision(firstRevision.getFileNumber());
+            assertNotNull(revision.getInitialReport());
+            assertEquals(firstRevision.getInitialReport().getUri(), revision.getInitialReport().getUri());
+        }
     }
 }

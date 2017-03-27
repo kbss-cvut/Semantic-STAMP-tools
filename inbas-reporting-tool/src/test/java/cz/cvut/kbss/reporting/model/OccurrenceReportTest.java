@@ -109,4 +109,12 @@ public class OccurrenceReportTest {
         final ReportDto dto = report.toReportDto();
         assertTrue(dto.getTypes().contains(Vocabulary.s_c_occurrence_report));
     }
+
+    @Test
+    public void copyConstructorCopiesInitialReportReference() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setInitialReport(OccurrenceReportGenerator.generateInitialReport());
+        final OccurrenceReport copy = new OccurrenceReport(report);
+        assertSame(report.getInitialReport(), copy.getInitialReport());
+    }
 }

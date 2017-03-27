@@ -10,7 +10,7 @@ import static cz.cvut.kbss.reporting.util.Constants.DESCRIPTION_TO_STRING_THRESH
 public class InitialReport extends AbstractEntity {
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.s_p_description)
+    @OWLDataProperty(iri = Vocabulary.s_p_description, readOnly = true)
     private String description;
 
     public String getDescription() {
