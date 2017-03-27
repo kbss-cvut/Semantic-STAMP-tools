@@ -4,6 +4,7 @@ import React from "react";
 import {Col, Grid, Jumbotron, Row} from "react-bootstrap";
 import {FormattedMessage} from "react-intl";
 import I18nWrapper from "../../i18n/I18nWrapper";
+import InitialReportImport from "../report/initial/InitialReportImport";
 import injectIntl from "../../utils/injectIntl";
 import Tile from "./DashboardTile";
 import RecentlyEdited from "./RecentlyEditedReports";
@@ -12,6 +13,7 @@ class Dashboard extends React.Component {
 
     static propTypes = {
         createEmptyReport: React.PropTypes.func.isRequired,
+        createFromInitialReport: React.PropTypes.func.isRequired,
         showAllReports: React.PropTypes.func.isRequired,
         openReport: React.PropTypes.func.isRequired,
         userFirstName: React.PropTypes.string
@@ -20,10 +22,28 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.i18n = props.i18n;
+        this.state = {
+            showImport: false
+        };
     }
+
+    _onImport = (report) => {
+        this._closeImportDialog();
+        this.props.createFromInitialReport(report);
+    };
+
+    _openImportDialog = () => {
+        this.setState({showImport: true});
+    };
+
+    _closeImportDialog = () => {
+        this.setState({showImport: false});
+    };
 
     render() {
         return <div className='row'>
+            {this.state.showImport &&
+            <InitialReportImport onImport={this._onImport} onCancel={this._closeImportDialog}/>}
             <div className='dashboard-left'>
                 <Jumbotron>
                     {this.renderTitle()}
@@ -51,10 +71,13 @@ class Dashboard extends React.Component {
     _renderMainDashboard() {
         return <Grid fluid={true}>
             <Row>
-                <Col xs={6} className='dashboard-sector'>
+                <Col xs={4} className='dashboard-sector'>
                     <Tile onClick={this.props.createEmptyReport}>{this.i18n('dashboard.create-tile')}</Tile>
                 </Col>
-                <Col xs={6} className='dashboard-sector'>
+                <Col xs={4} className='dashboard-sector'>
+                    <Tile onClick={this._openImportDialog}>{this.i18n('dashboard.import-initial-tile')}</Tile>
+                </Col>
+                <Col xs={4} className='dashboard-sector'>
                     <Tile
                         onClick={this.props.showAllReports}>{this.i18n('dashboard.view-all-tile')}</Tile>
                 </Col>

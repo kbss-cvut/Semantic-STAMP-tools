@@ -86,6 +86,7 @@ module.exports = {
         'dashboard.recent-table-last-edited': 'Last modified',
         'dashboard.recent.no-reports': 'There are no reports, yet.',
         'dashboard.import.import-e5': 'Import E5X/E5F report',
+        'dashboard.import-initial-tile': 'Import Initial Report',
 
         'dashboard.unprocessed': 'You have {count} unprocessed report(s).',
 
@@ -129,12 +130,10 @@ module.exports = {
         'occurrence.class': 'Occurrence class',
         'occurrence.class-tooltip': 'Occurrence class - this field is required',
 
-        'initial.panel-title': 'Initial reports',
-        'initial.table-report': 'Report',
-        'initial.wizard.add-title': 'Add initial report',
-        'initial.wizard.edit-title': 'Edit initial report',
-        'initial.label': 'Initial report',
-        'initial.tooltip': 'Initial report text - this field is required',
+        'report.initial.import.title': 'Initial report import',
+        'report.initial.import.run': 'Import',
+        'report.initial.import.text.tooltip': 'Enter the initial report text here',
+        'report.initial.text.label': 'Text',
 
         'report.summary': 'Report summary',
         'report.created-by-msg': 'Created {date} by {name}.',
