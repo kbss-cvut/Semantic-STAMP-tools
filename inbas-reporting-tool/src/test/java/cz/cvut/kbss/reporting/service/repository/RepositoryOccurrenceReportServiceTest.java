@@ -341,4 +341,27 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
             assertEquals(firstRevision.getInitialReport().getUri(), revision.getInitialReport().getUri());
         }
     }
+
+    @Test
+    public void removeReportChainDeletesCorrectlyInitialReport() {
+        final OccurrenceReport firstRevision = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        firstRevision.setInitialReport(OccurrenceReportGenerator.generateInitialReport());
+        occurrenceReportService.persist(firstRevision);
+        final URI initialReportUri = firstRevision.getInitialReport().getUri();
+        final List<OccurrenceReport> chain = new ArrayList<>();
+        chain.add(firstRevision);
+        for (int i = 0; i < Generator.randomInt(2, 5); i++) {
+            final OccurrenceReport revision = occurrenceReportService.createNewRevision(firstRevision.getFileNumber());
+            assertEquals(firstRevision.getInitialReport().getUri(), revision.getInitialReport().getUri());
+            chain.add(revision);
+        }
+        occurrenceReportService.removeReportChain(firstRevision.getFileNumber());
+        chain.forEach(r -> assertFalse(occurrenceReportService.exists(r.getUri())));
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNull(em.find(InitialReport.class, initialReportUri));
+        } finally {
+            em.close();
+        }
+    }
 }
