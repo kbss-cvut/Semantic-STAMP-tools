@@ -133,6 +133,7 @@ module.exports = {
         'report.initial.import.title': 'Initial report import',
         'report.initial.import.run': 'Import',
         'report.initial.import.text.tooltip': 'Enter the initial report text here',
+        'report.initial.import.importing-msg': 'Analyzing the initial report',
         'report.initial.text.label': 'Text',
 
         'report.summary': 'Report summary',

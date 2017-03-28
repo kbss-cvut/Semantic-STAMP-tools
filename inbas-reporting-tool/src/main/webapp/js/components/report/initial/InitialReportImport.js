@@ -5,10 +5,12 @@ import {Button, Modal} from "react-bootstrap";
 import Input from "../../Input";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
+import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
+import ReportFactory from "../../../model/ReportFactory";
 
 class InitialReportImport extends React.Component {
     static propTypes = {
-        onImport: React.PropTypes.func.isRequired,
+        onImportFinish: React.PropTypes.func.isRequired,
         onCancel: React.PropTypes.func.isRequired
     };
 
@@ -17,7 +19,7 @@ class InitialReportImport extends React.Component {
         this.i18n = props.i18n;
         this.state = {
             content: ''
-        }
+        };
     }
 
     componentDidMount() {
@@ -29,9 +31,14 @@ class InitialReportImport extends React.Component {
     };
 
     _onImport = () => {
-        this.props.onImport({
+        // This will be replaced by a call to backend, which will execute analysis of the text content
+        this.props.loadingOn(this.i18n('report.initial.import.importing-msg'));
+        const report = ReportFactory.createOccurrenceReport();
+        report.initialReport = {
             description: this.state.content
-        });
+        };
+        this.props.loadingOff();
+        this.props.onImportFinish(report);
     };
 
     render() {
@@ -39,14 +46,14 @@ class InitialReportImport extends React.Component {
             <Modal.Header closeButton>
                 <Modal.Title>{this.i18n('report.initial.import.title')}</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body ref={c => this.modalBody = c}>
                 <Input ref={c => this.input = c} type='textarea' rows={12}
                        label={this.i18n('report.initial.text.label')}
                        title={this.i18n('report.initial.import.text.tooltip')}
                        placeholder={this.i18n('report.initial.import.text.tooltip')}
                        value={this.state.content} onChange={this._onChange}/>
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer ref={c => this.modalFooter = c}>
                 <Button onClick={this._onImport} bsStyle='primary' bsSize='small'
                         disabled={this.state.content.length === 0}>
                     {this.i18n('report.initial.import.run')}
@@ -57,4 +64,4 @@ class InitialReportImport extends React.Component {
     }
 }
 
-export default injectIntl(I18nWrapper(InitialReportImport));
+export default injectIntl(LoadingWrapper(I18nWrapper(InitialReportImport)));

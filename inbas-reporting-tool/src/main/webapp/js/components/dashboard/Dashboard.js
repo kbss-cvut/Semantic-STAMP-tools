@@ -13,7 +13,7 @@ class Dashboard extends React.Component {
 
     static propTypes = {
         createEmptyReport: React.PropTypes.func.isRequired,
-        createFromInitialReport: React.PropTypes.func.isRequired,
+        onImportFinish: React.PropTypes.func.isRequired,
         showAllReports: React.PropTypes.func.isRequired,
         openReport: React.PropTypes.func.isRequired,
         userFirstName: React.PropTypes.string
@@ -29,7 +29,7 @@ class Dashboard extends React.Component {
 
     _onImport = (report) => {
         this._closeImportDialog();
-        this.props.createFromInitialReport(report);
+        this.props.onImportFinish(report);
     };
 
     _openImportDialog = () => {
@@ -43,7 +43,7 @@ class Dashboard extends React.Component {
     render() {
         return <div className='row'>
             {this.state.showImport &&
-            <InitialReportImport onImport={this._onImport} onCancel={this._closeImportDialog}/>}
+            <InitialReportImport onImportFinish={this._onImport} onCancel={this._closeImportDialog}/>}
             <div className='dashboard-left'>
                 <Jumbotron>
                     {this.renderTitle()}

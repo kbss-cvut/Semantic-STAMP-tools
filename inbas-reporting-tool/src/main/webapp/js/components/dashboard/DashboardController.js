@@ -51,8 +51,14 @@ class DashboardController extends React.Component {
         Routing.transitionTo(Routes.reports);
     }
 
-    createFromInitialReport = (report) => {
-        // TODO
+    static onImportFinish = (report) => {
+        Routing.transitionTo(Routes.createReport, {
+            payload: report,
+            handlers: {
+                onSuccess: Routes.reports,
+                onCancel: Routes.dashboard
+            }
+        });
     };
 
 
@@ -61,7 +67,7 @@ class DashboardController extends React.Component {
             <Dashboard userFirstName={this.state.firstName}
                        showAllReports={DashboardController.showReports}
                        createEmptyReport={DashboardController.createEmptyReport}
-                       createFromInitialReport={this.createFromInitialReport}
+                       onImportFinish={DashboardController.onImportFinish}
                        openReport={DashboardController.openReport}/>
         </div>;
     }

@@ -134,6 +134,7 @@ module.exports = {
         'report.initial.import.title': 'Import prvotního hlášení',
         'report.initial.import.run': 'Importovat',
         'report.initial.import.text.tooltip': 'Vložte text prvotního hlášení',
+        'report.initial.import.importing-msg': 'Probíhá analýza hlášení',
         'report.initial.text.label': 'Text',
 
         'report.summary': 'Shrnutí hlášení',
