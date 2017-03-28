@@ -18,6 +18,7 @@ class ReportProvenance extends React.Component {
 
     constructor(props) {
         super(props);
+        this.i18n = props.i18n;
         this.state = {
             phase: this._resolvePhase()
         }
@@ -36,7 +37,7 @@ class ReportProvenance extends React.Component {
     }
 
     _resolvePhase() {
-        var phase = this.props.report.phase;
+        const phase = this.props.report.phase;
         return OptionsStore.getOptions('reportingPhase').find((item) => {
             return item['@id'] === phase;
         });
@@ -49,13 +50,13 @@ class ReportProvenance extends React.Component {
     };
 
     _renderProvenanceInfo() {
-        var report = this.props.report;
+        const report = this.props.report;
         if (report.isNew) {
             return null;
         }
-        var author = report.author ? report.author.firstName + ' ' + report.author.lastName : '',
-            created = Utils.formatDate(new Date(report.dateCreated)),
-            lastEditor, lastModified;
+        const author = report.author ? report.author.firstName + ' ' + report.author.lastName : '',
+            created = Utils.formatDate(new Date(report.dateCreated));
+        let lastEditor, lastModified;
         if (!report.lastModified) {
             return <div className='notice-small'>
                 <FormattedMessage id='report.created-by-msg'
@@ -74,12 +75,11 @@ class ReportProvenance extends React.Component {
     }
 
     _renderPhaseInfo() {
-        var i18n = this.props.i18n,
-            phaseSpec = this.state.phase;
+        const phaseSpec = this.state.phase;
         if (phaseSpec) {
             return <div className='form-group'>
                 <Label
-                    title={i18n('reports.phase')}>{JsonLdUtils.getLocalized(phaseSpec[Vocabulary.RDFS_LABEL], this.props.intl)}</Label>
+                    title={this.i18n('reports.phase')}>{JsonLdUtils.getLocalized(phaseSpec[Vocabulary.RDFS_LABEL], this.props.intl)}</Label>
             </div>;
         } else {
             return null;
@@ -88,11 +88,7 @@ class ReportProvenance extends React.Component {
 
     render() {
         return <div>
-            <div className='row'>
-                <div className='col-xs-4'>
-                    {this.props.revisions}
-                </div>
-            </div>
+            {this.props.children}
             {this._renderPhaseInfo()}
             {this._renderProvenanceInfo()}
         </div>;

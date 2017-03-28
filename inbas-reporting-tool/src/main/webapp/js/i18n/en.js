@@ -135,6 +135,8 @@ module.exports = {
         'report.initial.import.text.tooltip': 'Enter the initial report text here',
         'report.initial.import.importing-msg': 'Analyzing the initial report',
         'report.initial.text.label': 'Text',
+        'report.initial.label': 'Initial report',
+        'report.initial.view.tooltip': 'View initial report',
 
         'report.summary': 'Report summary',
         'report.created-by-msg': 'Created {date} by {name}.',
