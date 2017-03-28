@@ -17,15 +17,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class EventTypeSynchronizer implements FactorGraphNodeVisitor {
 
-    @Autowired
-    private OccurrenceDao occurrenceDao;
+    private final OccurrenceDao occurrenceDao;
+
+    private final EventDao eventDao;
 
     @Autowired
-    private EventDao eventDao;
+    public EventTypeSynchronizer(OccurrenceDao occurrenceDao, EventDao eventDao) {
+        this.occurrenceDao = occurrenceDao;
+        this.eventDao = eventDao;
+    }
 
     @Override
     public void visit(Occurrence occurrence) {
-        occurrence.setEventType(occurrence.getEventType());
+        occurrence.syncEventTypeWithTypes();
         if (occurrence.getUri() != null) {
             final Occurrence original = occurrenceDao.find(occurrence.getUri());
             assert original != null;
@@ -37,7 +41,7 @@ public class EventTypeSynchronizer implements FactorGraphNodeVisitor {
 
     @Override
     public void visit(Event event) {
-        event.setEventType(event.getEventType());
+        event.syncEventTypeWithTypes();
         if (event.getUri() != null) {
             final Event original = eventDao.find(event.getUri());
             assert original != null;
