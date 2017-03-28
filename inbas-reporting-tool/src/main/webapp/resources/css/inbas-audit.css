@@ -379,6 +379,10 @@ td.actions button {
     border-right-color: #00A000;
 }
 
+.gantt_grid_head_add {
+    display: none !important;
+}
+
 /* Overriding bootstrap primary panel border color */
 .panel-primary {
     border-color: #bce8f1;
