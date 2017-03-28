@@ -32,17 +32,18 @@ export default class ReportController extends React.Component {
         return payload ? payload : ReportFactory.createOccurrenceReport();
     }
 
-    componentWillMount() {
-        if (!this._isNew()) {
-            this._loadReport(this.props.params.reportKey);
-        }
-    }
-
     componentDidMount() {
         this.unsubscribe = ReportStore.listen(this.onReportStoreTrigger);
         Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CLASS);
         Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
         Actions.loadOptions(Constants.OPTIONS.FACTOR_TYPE);
+        if (!this._isNew()) {
+            this._loadReport(this.props.params.reportKey);
+        }
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
     }
 
     _loadReport(reportKey) {
