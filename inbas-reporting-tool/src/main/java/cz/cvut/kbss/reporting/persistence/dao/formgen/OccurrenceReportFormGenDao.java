@@ -40,6 +40,7 @@ public class OccurrenceReportFormGenDao extends FormGenDao<OccurrenceReport> {
                 !instance.getLastModifiedBy().getUri().equals(instance.getAuthor().getUri())) {
             em.persist(instance.getLastModifiedBy(), descriptor);
         }
+        instance.setInitialReport(null);
         persistEventsIfNecessary(instance.getOccurrence(), em, descriptor);
         em.persist(instance.getOccurrence(), descriptor);
         super.prePersist(instance, em, descriptor);

@@ -8,6 +8,7 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.TestUtils;
 import cz.cvut.kbss.reporting.model.Event;
+import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.qam.Answer;
@@ -209,6 +210,26 @@ public class OccurrenceReportFormGenDaoTest {
                 assertTrue(rr.hasNext());
                 rr.close();
             }
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void persistIgnoresInitialReport() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
+        personDao.persist(report.getAuthor());
+        final InitialReport initialReport = OccurrenceReportGenerator.generateInitialReport();
+        initialReport.setUri(Generator.generateUri());
+        report.setInitialReport(initialReport);
+        final Map<String, URI> contexts = dao.persist(report);
+        assertFalse(contexts.isEmpty());
+        assertTrue(contexts.containsKey(OccurrenceReportFormGenDao.REPORT_CONTEXT_NAME));
+        assertTrue(contexts.containsKey(OccurrenceReportFormGenDao.REPORT_CONTEXT_NAME));
+
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNull(em.find(InitialReport.class, initialReport.getUri()));
         } finally {
             em.close();
         }
