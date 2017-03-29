@@ -2,7 +2,7 @@
  * Czech localization.
  */
 
-var Constants = require('../constants/Constants');
+const Constants = require('../constants/Constants');
 
 module.exports = {
     'locale': 'cs',
@@ -117,6 +117,7 @@ module.exports = {
         'reports.filter.reset': 'Zrušit filtry',
         'reports.paging.item-count': 'Zobrazuji {showing} z {total} položek.',
         'reports.create-report': 'Nové hlášení',
+        'reports.unable-to-load': 'Hlášení se nepodařilo načíst. Chybová konzole prohlížeče obsahuje podrobnější informace.',
 
         'filters.label': 'Filtry',
 
@@ -203,6 +204,9 @@ module.exports = {
         'factors.detail.delete.title': 'Smazat faktor?',
         'factors.detail.delete.text': 'Určitě chcete smazat tento faktor?',
         'factors.detail.wizard-loading': 'Připravuji formulář...',
+        'factors.smallscreen.start': 'Počátek',
+        'factors.smallscreen.end': 'Konec',
+        'factors.smallscreen.add-tooltip': 'Přidat událost',
 
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',
@@ -223,7 +227,23 @@ module.exports = {
 
         'search.loading': 'Probíhá hledání...',
         'search.title': 'Výsledky hledání',
-        'search.headline': 'Nalezeno {count, plural, one {# výskyt} few {# výskyty} other {# výskytů}} výrazu {expression}.',
-        'search.results.match': 'Výsledek hledání'
+        'search.headline': '{count, plural, one {Nalezen # výskyt} few {Nalezeny # výskyty} other {Nalezeno # výskytů}} výrazu {expression}.',
+        'search.results.match': 'Výsledek hledání',
+
+        'validation.error.start-after-end': 'Chyba: konec nemůže nastat před počátkem.',
+
+        'editor.rich.h1': 'Nadpis 1',
+        'editor.rich.h2': 'Nadpis 2',
+        'editor.rich.h3': 'Nadpis 3',
+        'editor.rich.h4': 'Nadpis 4',
+        'editor.rich.h5': 'Nadpis 5',
+        'editor.rich.h6': 'Nadpis 6',
+        'editor.rich.body': 'Text',
+        'editor.rich.ul': 'Odrážky',
+        'editor.rich.ol': 'Číslovaný seznam',
+        'editor.rich.blockquote': 'Citace',
+        'editor.rich.bold': 'Tučné',
+        'editor.rich.italic': 'Kurzíva',
+        'editor.rich.underline': 'Podtržené'
     }
 };

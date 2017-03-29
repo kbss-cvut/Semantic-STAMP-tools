@@ -2,7 +2,7 @@
  * English localization.
  */
 
-var Constants = require('../constants/Constants');
+const Constants = require('../constants/Constants');
 
 module.exports = {
     'locale': 'en',
@@ -114,6 +114,7 @@ module.exports = {
         'reports.filter.reset': 'Reset filters',
         'reports.paging.item-count': 'Showing {showing} of {total} items.',
         'reports.create-report': 'Create report',
+        'reports.unable-to-load': 'Unable to load reports. Check the browser console for more details.',
 
         'filters.label': 'Filters',
 
@@ -200,6 +201,9 @@ module.exports = {
         'factors.detail.delete.title': 'Delete factor?',
         'factors.detail.delete.text': 'Are you sure you want to remove this factor?',
         'factors.detail.wizard-loading': 'Generating form...',
+        'factors.smallscreen.start': 'Start',
+        'factors.smallscreen.end': 'End',
+        'factors.smallscreen.add-tooltip': 'Add event',
 
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',
@@ -221,6 +225,22 @@ module.exports = {
         'search.loading': 'Searching...',
         'search.title': 'Search results',
         'search.headline': 'Search for {expression} found {count, plural, one {# result} other {# results}}.',
-        'search.results.match': 'Matching snippet'
+        'search.results.match': 'Matching snippet',
+
+        'validation.error.start-after-end': 'Error: end time cannot occur before start time',
+
+        'editor.rich.h1': 'Heading 1',
+        'editor.rich.h2': 'Heading 2',
+        'editor.rich.h3': 'Heading 3',
+        'editor.rich.h4': 'Heading 4',
+        'editor.rich.h5': 'Heading 5',
+        'editor.rich.h6': 'Heading 6',
+        'editor.rich.body': 'Body',
+        'editor.rich.ul': 'Bullets',
+        'editor.rich.ol': 'Numbering',
+        'editor.rich.blockquote': 'Blockquote',
+        'editor.rich.bold': 'Bold',
+        'editor.rich.italic': 'Italic',
+        'editor.rich.underline': 'Underline'
     }
 };

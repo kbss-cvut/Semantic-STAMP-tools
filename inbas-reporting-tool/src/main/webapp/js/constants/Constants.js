@@ -8,7 +8,9 @@ module.exports = {
     HOME_ROUTE: Routes.dashboard,
     OPTIONS: {
         OCCURRENCE_CLASS: 'occurrenceClass',
-        OCCURRENCE_CATEGORY: 'occurrenceCategory'
+        OCCURRENCE_CATEGORY: 'occurrenceCategory',
+        EVENT_TYPE: 'eventType',
+        REPORTING_PHASE: 'reportingPhase'
     },
 
     TIME_SCALES: {
@@ -28,6 +30,10 @@ module.exports = {
         WARNING: 'warning',
         ERROR: 'danger'
     },
+    /**
+     * Duration for which a message is by default displayed by the messaging UI.
+     */
+    MESSAGE_DURATION: 5000,
 
     /**
      * Sorting glyph icons
@@ -65,9 +71,9 @@ module.exports = {
     // Maximum input value length, for which input of type text should be displayed
     INPUT_LENGTH_THRESHOLD: 70,
 
-    OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.OccurrenceDto',
-    EVENT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.event.EventDto',
-    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.inbas.reporting.dto.OccurrenceReportDto',
+    OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.reporting.dto.event.OccurrenceDto',
+    EVENT_JAVA_CLASS: 'cz.cvut.kbss.reporting.dto.event.EventDto',
+    OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.reporting.dto.OccurrenceReportDto',
 
     FULL_TEXT_SEARCH_OPTION: {
         id: 'full-text-search',

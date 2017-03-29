@@ -1,18 +1,20 @@
 'use strict';
 
-var React = require('react');
-var Reflux = require('reflux');
-var assign = require('object-assign');
-
-var Actions = require('../../actions/Actions');
-var ComponentStateStore = require('../../stores/ComponentStateStore');
-var Constants = require('../../constants/Constants');
-var DataFilter = require('../../utils/DataFilter');
-var ReportStore = require('../../stores/ReportStore');
-var Reports = require('./Reports');
-var RouterStore = require('../../stores/RouterStore');
-var Routes = require('../../utils/Routes');
-var Routing = require('../../utils/Routing');
+import React from "react";
+import assign from "object-assign";
+import Actions from "../../actions/Actions";
+import ComponentStateStore from "../../stores/ComponentStateStore";
+import Constants from "../../constants/Constants";
+import DataFilter from "../../utils/DataFilter";
+import I18nWrapper from "../../i18n/I18nWrapper";
+import injectIntl from "../../utils/injectIntl";
+import MessageStore from "../../stores/MessageStore";
+import MessageWrapper from "../misc/hoc/MessageWrapper";
+import Reports from "./Reports";
+import ReportStore from "../../stores/ReportStore";
+import RouterStore from "../../stores/RouterStore";
+import Routes from "../../utils/Routes";
+import Routing from "../../utils/Routing";
 
 function sortStateTransition(current) {
     switch (current) {
@@ -26,7 +28,7 @@ function sortStateTransition(current) {
 }
 
 function getSorter(sort) {
-    var sortSpec = [];
+    const sortSpec = [];
     if (sort.identification !== Constants.SORTING.NO) {
         sortSpec.push({
             prop: 'identification',
@@ -44,13 +46,23 @@ function getSorter(sort) {
 
 function sortFactory(sortSpec) {
     return function (a, b) {
-        var prop, res = 0;
-        for (var i = 0, len = sortSpec.length; i < len; i++) {
+        let prop, res = 0;
+        for (let i = 0, len = sortSpec.length; i < len; i++) {
             prop = sortSpec[i].prop;
             if (typeof(a[prop]) === 'string') {
                 res = a[prop].localeCompare(b[prop]);
             } else {
-                res = a[prop] > b[prop] ? 1 : (a[prop] === b[prop] ? 0 : -1);
+                if (a[prop] === undefined) {
+                    if (b[prop] === undefined) {
+                        res = 0;
+                    } else {
+                        res = -1;
+                    }
+                } else if (b[prop] === undefined) {
+                    res = 1;
+                } else {
+                    res = a[prop] > b[prop] ? 1 : (a[prop] === b[prop] ? 0 : -1);
+                }
             }
             if (sortSpec[i].desc) {
                 res *= -1;
@@ -63,103 +75,127 @@ function sortFactory(sortSpec) {
     }
 }
 
-var ReportsController = React.createClass({
-    mixins: [Reflux.listenTo(ReportStore, 'onReportsLoaded')],
+class ReportsController extends React.Component {
 
-    getInitialState: function () {
-        var payload = RouterStore.getTransitionPayload(Routes.reports.name),
-            sort = null, filter, storedState;
-        RouterStore.setTransitionPayload(Routes.reports.name);  // Clear payload
-        filter = payload ? payload.filter : undefined;
-        if ((storedState = ComponentStateStore.getComponentState(ReportsController.displayName))) {
+    constructor(props) {
+        super(props);
+        this.i18n = props.i18n;
+        const storedState = ComponentStateStore.getComponentState(ReportsController.displayName);
+        let sort = null;
+        if (storedState) {
             sort = storedState.sort;
-            if (!filter) {
-                filter = storedState.filter;
-            }
         }
-        return {
+        this.state = {
             reports: null,
-            filter: filter,
+            filter: this._resolveFilter(storedState),
             sort: sort ? sort : {
-                identification: Constants.SORTING.NO,
-                date: Constants.SORTING.NO
-            }
+                    identification: Constants.SORTING.NO,
+                    date: Constants.SORTING.NO
+                }
         };
-    },
+    }
 
-    componentDidMount: function () {
-        Actions.loadAllReports();
-        Actions.loadOptions('reportingPhase');
-    },
+    _resolveFilter(storedState) {
+        const payload = RouterStore.getTransitionPayload(Routes.reports.name);
+        RouterStore.clearTransitionPayload(Routes.reports.name);
+        let filter = payload ? payload.filter : undefined;
+        if (storedState && !filter) {
+            filter = storedState.filter;
+        }
+        return filter;
+    }
 
-    onReportsLoaded: function (data) {
+    componentDidMount() {
+        this.unsubscribe = ReportStore.listen(this._onReportsLoaded);
+        this.unsubscribeMsg = MessageStore.listen(this._onMessage);
+        const reportKeys = this.props.location.query['reportKey'];
+        if (!reportKeys) {
+            Actions.loadAllReports();
+        } else {
+            Actions.loadAllReports(Array.isArray(reportKeys) ? reportKeys : [reportKeys]);
+        }
+        Actions.loadOptions(Constants.OPTIONS.REPORTING_PHASE);
+    }
+
+    _onReportsLoaded = (data) => {
         if (data.action === Actions.loadAllReports) {
             this.setState({reports: data.reports});
         }
-    },
+    };
 
-    onEdit: function (report) {
+    _onMessage = (msg) => {
+        if (msg.source === Actions.loadAllReports) {
+            this.props.showMessage(this.i18n(msg.message), msg.type);
+        }
+    };
+
+    componentWillUnmount() {
+        this.unsubscribe();
+        this.unsubscribeMsg();
+    }
+
+    onEdit = (report) => {
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
             handlers: {onCancel: Routes.reports}
         });
-    },
+    };
 
-    onRemove: function (report) {
+    onRemove = (report) => {
         Actions.deleteReportChain(report.fileNumber);
-    },
+    };
 
-    onFilterChange: function (filter) {
-        var newFilter = assign({}, this.state.filter, filter);
+    onFilterChange = (filter) => {
+        const newFilter = assign({}, this.state.filter, filter);
         this.setState({filter: newFilter});
         this._rememberFilterAndSort(newFilter, this.state.sort);
-    },
+    };
 
-    _rememberFilterAndSort: function (filter, sort) {
+    _rememberFilterAndSort(filter, sort) {
         Actions.rememberComponentState(ReportsController.displayName, {
             filter: filter,
             sort: sort
         });
-    },
+    }
 
-    onSort: function (column) {
-        var change = {}, newSort;
+    onSort = (column) => {
+        const change = {};
         change[column] = sortStateTransition(this.state.sort[column]);
-        newSort = assign(this.state.sort, change);
+        const newSort = assign(this.state.sort, change);
         this.setState({sort: newSort});
         this._rememberFilterAndSort(this.state.filter, newSort);
-    },
+    };
 
-    _filterReports: function (reports) {
+    _filterReports(reports) {
         return DataFilter.filterData(reports, this.state.filter);
-    },
+    }
 
-    _sortReports: function (reports) {
+    _sortReports(reports) {
         if (reports) {
-            var sort = getSorter(this.state.sort);
+            const sort = getSorter(this.state.sort);
             if (sort) {
                 reports.sort(sort);
             }
         }
         return reports;
-    },
+    }
 
 
-    render: function () {
-        var actions = {
-                onEdit: this.onEdit,
-                onRemove: this.onRemove,
-                onFilterChange: this.onFilterChange,
-                onSort: this.onSort
-            },
-            reports = this.state.reports;
+    render() {
+        const actions = {
+            onEdit: this.onEdit,
+            onRemove: this.onRemove,
+            onFilterChange: this.onFilterChange,
+            onSort: this.onSort
+        };
+        let reports = this.state.reports;
         if (reports) {
-            reports = reports.slice(0); // Shallow copy, so that sorting does not influence the original list
+            reports = reports.slice(); // Shallow copy, so that sorting does not influence the original list
             reports = this._sortReports(this._filterReports(reports));
         }
         return <Reports allReports={this.state.reports} reports={reports} filter={this.state.filter}
                         sort={this.state.sort} actions={actions}/>;
     }
-});
+}
 
-module.exports = ReportsController;
+export default injectIntl(I18nWrapper(MessageWrapper(ReportsController)));

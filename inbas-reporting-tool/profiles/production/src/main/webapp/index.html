@@ -2,15 +2,17 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="resources/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="resources/css/bootstrap-datetimepicker.min.css"/>
-    <link rel="stylesheet" href="resources/css/dhtmlxgantt.css"/>
-    <link rel="stylesheet" href="resources/css/inbas-audit.min.css"/>
-    <link rel="icon" type="image/png" href="resources/images/favicon.png"/>
+    <link rel="stylesheet" href="static/resources/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="static/resources/css/bootstrap-datetimepicker.min.css"/>
+    <link rel="stylesheet" href="static/resources/css/dhtmlxgantt.css"/>
+    <link rel="stylesheet" href="static/resources/css/draftjs.css"/>
+    <link rel="stylesheet" href="static/resources/css/inbas-audit.min.css"/>
+    <link rel="icon" type="image/png" href="static/resources/images/favicon.png"/>
 
-    <script type="text/javascript" src="js/dhtmlxgantt.js"></script>
-    <script type="text/javascript" src="js/dhtmlxgantt_tooltip.js"></script>
-    <script type="text/javascript" src="resources/locale/cs.js"></script>
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Intl.~locale.en,Intl.~locale.cs|gated"></script>
+    <script type="text/javascript" src="static/js/dhtmlxgantt.js"></script>
+    <script type="text/javascript" src="static/js/dhtmlxgantt_tooltip.js"></script>
+    <script type="text/javascript" src="static/resources/locale/cs.js"></script>
     <title>INBAS Reporting Tool</title>
 </head>
 <body>
@@ -21,7 +23,7 @@
     <div class="container-fluid">
         <p class="text-muted" style="float: left">
             &copy; <a href="https://kbss.felk.cvut.cz" target="_blank" title="KBSS at FEL ČVUT">KBSS FEL ČVUT v
-            Praze</a>, 2016
+            Praze</a>, 2017
         </p>
         <p class="text-muted" style="float: right">
             Version: $VERSION$

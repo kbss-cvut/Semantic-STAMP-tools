@@ -1,28 +1,30 @@
 'use strict';
 
-var React = require('react');
-var Button = require('react-bootstrap').Button;
-var ButtonToolbar = require('react-bootstrap').ButtonToolbar;
-var Panel = require('react-bootstrap').Panel;
-var assign = require('object-assign');
-var injectIntl = require('../../../utils/injectIntl');
+const React = require('react');
+const Button = require('react-bootstrap').Button;
+const ButtonToolbar = require('react-bootstrap').ButtonToolbar;
+const Panel = require('react-bootstrap').Panel;
+const assign = require('object-assign');
+const device = require('device.js');
+const injectIntl = require('../../../utils/injectIntl');
 
-var Actions = require('../../../actions/Actions');
-var Attachments = require('../attachment/Attachments').default;
-var BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
-var Factors = require('../../factor/Factors');
-var CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
-var PhaseTransition = require('../../misc/PhaseTransition').default;
-var ReportProvenance = require('../ReportProvenance').default;
-var ReportSummary = require('../ReportSummary').default;
-var MessageMixin = require('../../mixin/MessageMixin');
-var ReportValidator = require('../../../validation/ReportValidator');
-var I18nMixin = require('../../../i18n/I18nMixin');
-var ReportDetailMixin = require('../../mixin/ReportDetailMixin');
-var WizardGenerator = require('../../wizard/generator/WizardGenerator');
-var WizardWindow = require('../../wizard/WizardWindow');
+const Actions = require('../../../actions/Actions');
+const Attachments = require('../attachment/Attachments').default;
+const BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
+const Factors = require('../../factor/Factors');
+const CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
+const PhaseTransition = require('../../misc/PhaseTransition').default;
+const ReportProvenance = require('../ReportProvenance').default;
+const ReportSummary = require('../ReportSummary').default;
+const MessageMixin = require('../../mixin/MessageMixin');
+const ReportValidator = require('../../../validation/ReportValidator');
+const I18nMixin = require('../../../i18n/I18nMixin');
+const ReportDetailMixin = require('../../mixin/ReportDetailMixin');
+const SmallScreenFactors = require('../../factor/smallscreen/SmallScreenFactors').default;
+const WizardGenerator = require('../../wizard/generator/WizardGenerator');
+const WizardWindow = require('../../wizard/WizardWindow');
 
-var OccurrenceReport = React.createClass({
+const OccurrenceReport = React.createClass({
     mixins: [MessageMixin, I18nMixin, ReportDetailMixin],
 
     propTypes: {
@@ -50,10 +52,9 @@ var OccurrenceReport = React.createClass({
     },
 
     onSave: function () {
-        var report = this.props.report,
-            factors = this.refs.factors.getWrappedInstance();
+        const report = this.props.report;
         this.onLoading();
-        report.factorGraph = factors.getFactorGraph();
+        report.factorGraph = this.factors.getFactorGraph();
         if (report.isNew) {
             Actions.createReport(report, this.onSaveSuccess, this.onSaveError);
         } else {
@@ -68,9 +69,9 @@ var OccurrenceReport = React.createClass({
 
     _reportSummary: function () {
         this.setState({loadingWizard: true});
-        var report = assign({}, this.props.report);
-        report.factorGraph = this.refs.factors.getWrappedInstance().getFactorGraph();
-        WizardGenerator.generateWizard(report, {}, this.i18n('report.summary'), this.openSummaryWizard);
+        let report = assign({}, this.props.report);
+        report.factorGraph = this.factors.getFactorGraph();
+        WizardGenerator.generateSummaryWizard(report, this.i18n('report.summary'), this.openSummaryWizard);
     },
 
     openSummaryWizard: function (wizardProperties) {
@@ -87,7 +88,7 @@ var OccurrenceReport = React.createClass({
     },
 
     render: function () {
-        var report = this.props.report;
+        const report = this.props.report;
 
         return <div>
             <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
@@ -95,16 +96,14 @@ var OccurrenceReport = React.createClass({
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <ButtonToolbar className='float-right'>
-                    <Button bsStyle='primary' onClick={this._reportSummary} disabled={this.state.loadingWizard}>
-                        {this.i18n(this.state.loadingWizard ? 'please-wait' : 'summary')}
-                    </Button>
+                    {this._renderSummaryButton()}
                 </ButtonToolbar>
                 <form>
                     <BasicOccurrenceInfo report={report} revisions={this.props.revisions}
                                          onChange={this.props.handlers.onChange}/>
 
                     <div>
-                        <Factors ref='factors' report={report} rootAttribute='occurrence' onChange={this.onChanges}/>
+                        {this._renderFactors()}
                     </div>
 
                     <div className='form-group'>
@@ -113,7 +112,7 @@ var OccurrenceReport = React.createClass({
 
                     <div className='row'>
                         <div className='col-xs-12'>
-                            <ReportSummary report={report} onChange={this.onChange}/>
+                            <ReportSummary report={report} onChange={this.props.handlers.onChange}/>
                         </div>
                     </div>
 
@@ -134,7 +133,7 @@ var OccurrenceReport = React.createClass({
     },
 
     renderHeader: function () {
-        var fileNo = null;
+        let fileNo = null;
         if (this.props.report.fileNumber) {
             fileNo =
                 <h3 className='panel-title pull-right'>{this.i18n('fileNo') + ' ' + this.props.report.fileNumber}</h3>;
@@ -146,28 +145,53 @@ var OccurrenceReport = React.createClass({
         </div>;
     },
 
+    _renderSummaryButton: function () {
+        const report = this.props.report,
+            valid = ReportValidator.isValid(report);
+        return report.isNew ? null :
+            <Button bsStyle='primary' bsSize='small' className='detail-top-button' onClick={this._reportSummary}
+                    title={this.i18n(valid ? 'report.summary.button.title' : 'report.summary.button.title-invalid')}
+                    disabled={this.state.loadingWizard || !valid}>
+                {this.i18n(this.state.loadingWizard ? 'please-wait' : 'summary')}
+            </Button>;
+    },
+
+    _renderFactors: function () {
+        const dev = device();
+        return dev.tablet() || dev.mobile() ?
+            <SmallScreenFactors ref={(c) => this.factors = c ? c.getWrappedInstance().getWrappedComponent() : c}
+                                report={this.props.report} rootAttribute='occurrence' onChange={this.onChanges}/> :
+            <Factors ref={(c) => this.factors = c ? c.getWrappedInstance() : c} report={this.props.report}
+                     rootAttribute='occurrence'
+                     onChange={this.onChanges}/>;
+    },
+
     renderButtons: function () {
         if (this.props.readOnly) {
             return this.renderReadOnlyButtons();
         }
-        var loading = this.state.submitting,
-            saveDisabled = !ReportValidator.isValid(this.props.report) || loading,
-            saveLabel = this.i18n(loading ? 'detail.saving' : 'save');
+        let loading = this.state.submitting !== false,
+            saveDisabled = !ReportValidator.isValid(this.props.report) || loading;
 
         return <ButtonToolbar className='float-right detail-button-toolbar'>
             <Button bsStyle='success' bsSize='small' disabled={saveDisabled} title={this.getSaveButtonTitle()}
-                    onClick={this.onSave}>{saveLabel}</Button>
-            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')}
+                    onClick={this.onSave}>{this._getSaveButtonLabel()}</Button>
+            <Button bsStyle='link' bsSize='small' title={this.i18n('cancel-tooltip')} disabled={loading}
                     onClick={this.props.handlers.onCancel}>{this.i18n('cancel')}</Button>
             {this.renderSubmitButton()}
-            <PhaseTransition report={this.props.report} onLoading={this.onLoading}
+            <PhaseTransition report={this.props.report} onLoading={this.onLoading} disabled={saveDisabled}
                              onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
             {this.renderDeleteButton()}
         </ButtonToolbar>;
     },
 
+    _getSaveButtonLabel: function () {
+        return this.i18n(this.state.submitting === Actions.newRevisionFromLatestEccairs ? 'please-wait' :
+            this.state.submitting ? 'detail.saving' : 'save');
+    },
+
     getSaveButtonTitle: function () {
-        var titleProp = 'detail.save-tooltip';
+        let titleProp = 'detail.save-tooltip';
         if (this.state.submitting) {
             titleProp = 'detail.saving';
         } else if (!ReportValidator.isValid(this.props.report)) {
@@ -178,7 +202,8 @@ var OccurrenceReport = React.createClass({
 
     renderSubmitButton: function () {
         return this.props.report.isNew ? null :
-            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')} onClick={this.onSubmit}>
+            <Button bsStyle='primary' bsSize='small' title={this.i18n('detail.submit-tooltip')} onClick={this.onSubmit}
+                    disabled={this.state.submitting !== false}>
                 {this.i18n('detail.submit')}
             </Button>;
     }

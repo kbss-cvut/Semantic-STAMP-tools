@@ -1,5 +1,30 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.9.2 - March 23, 2017
+- Fixed issue with incomplete report removal (Bug #388).
+- Modified search result UI to prevent confusion (Bug #387).
+- Library update (Sesame 2.8.9 to RDF4J 2.2, JOPA to 0.9.5, semforms to 0.1.2).
+- Removed obsolete access to raw repository data.
+
+### 0.9.1 - February 8, 2017
+- Rich input support for report summary (Feature #118).
+
+### 0.9.0 - February 6, 2017
+- Generated, context-aware, forms support (Feature #328).
+- Show loading mask in the touch-enabled factor component when event types are being loaded (Feature #319).
+
+### 0.8.0 - January 28, 2017
+- Touch-enabled component replacing gantt-based factor graph editor (Feature #305).
+- Improved UI responsiveness, allowing better support for touch and small screen devices (Feature #276).
+
+### 0.7.20 - January 23, 2017
+- Made static resources cacheable (Feature #287).
+- Spring library upgrade.
+
+### 0.7.19 - December 6, 2016
+- Implemented external report filtering - opening application using
+URI with report keys as query parameters shows a list of matching reports (Feature #236).
+
 ### 0.7.18 - November 21, 2016
 - Fixed missing sorting icons in reports table (Bug #226).
 

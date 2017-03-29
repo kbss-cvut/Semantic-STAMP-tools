@@ -13,7 +13,12 @@ class PhaseTransition extends React.Component {
         report: React.PropTypes.object.isRequired,
         onLoading: React.PropTypes.func.isRequired,
         onSuccess: React.PropTypes.func.isRequired,
-        onError: React.PropTypes.func.isRequired
+        onError: React.PropTypes.func.isRequired,
+        disabled: React.PropTypes.bool
+    };
+
+    static defaultProps = {
+        disabled: false
     };
 
     constructor(props) {
@@ -48,17 +53,19 @@ class PhaseTransition extends React.Component {
     };
 
     _determinePhase() {
-        var reportPhase = this.props.report.phase;
+        const reportPhase = this.props.report.phase;
         return this.state.phases.find((item) => {
             return item['@id'] === reportPhase;
         });
     }
 
     render() {
-        var phase = this._determinePhase();
+        const phase = this._determinePhase();
         if (phase && phase[Vocabulary.TRANSITION_LABEL]) {
-            return <Button bsStyle='primary' bsSize='small'
-                           onClick={this._onPhaseTransition}>{JsonLdUtils.getLocalized(phase[Vocabulary.TRANSITION_LABEL], this.props.intl)}</Button>
+            return <Button bsStyle='primary' bsSize='small' disabled={this.props.disabled}
+                           onClick={this._onPhaseTransition}>
+                {JsonLdUtils.getLocalized(phase[Vocabulary.TRANSITION_LABEL], this.props.intl)}
+            </Button>
         } else {
             return null;
         }

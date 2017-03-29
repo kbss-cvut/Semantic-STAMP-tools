@@ -6,7 +6,7 @@ CONSTRUCT {
          rdfs:comment ?comment ;
          sira:is-higher-than ?lowerLevel .
 } WHERE {
-  SERVICE <http://martin.inbas.cz/openrdf-sesame/repositories/arms> {
+  SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/arms> {
     sira:accident-outcome sira:has-level ?level .
     ?level rdfs:label ?label
     OPTIONAL {

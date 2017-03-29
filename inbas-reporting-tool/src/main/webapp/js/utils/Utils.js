@@ -16,7 +16,7 @@ const URL_CONTAINS_QUERY = /^.+\?.+=.+$/;
 
 module.exports = {
     /**
-     * Formats the specified date into DD-MM-YY HH:mm
+     * Formats the specified date into DD-MM-YY HH:mm:ss
      * @param date The date to format
      */
     formatDate: function (date = null) {
@@ -31,8 +31,9 @@ module.exports = {
             year = (date.getFullYear() % 100).toString(),
             h = date.getHours(),
             hour = h < 10 ? '0' + h : h.toString(),
-            minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes().toString();
-        return (day + '-' + month + '-' + year + ' ' + hour + ':' + minute);
+            minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes().toString(),
+            second = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds().toString();
+        return (day + '-' + month + '-' + year + ' ' + hour + ':' + minute + ':' + second);
     },
 
     /**
@@ -116,8 +117,9 @@ module.exports = {
      */
     getPathFromLocation: function () {
         const hash = window.location.hash,
-            result = /#[/]?([a-z/0-9]+)\?/.exec(hash);
-        return result ? result[1] : '';
+            hashPart = hash.match(/#(?:\/?)/),
+            endIndex = hash.search(/(\?|&)_k=/);
+        return hash.substring(hashPart ? hashPart[0].length : 0, endIndex !== -1 ? endIndex : hash.length);
     },
 
     /**
@@ -130,6 +132,21 @@ module.exports = {
         const min = 0,
             max = 1073741824;   // Max Java Integer / 2
         return Math.floor(Math.random() * (max - min)) + min;
+    },
+
+    /**
+     * Generates new reference id, which is unique among the reference ids of the specified nodes.
+     * @param nodes Existing nodes with reference ids to avoid
+     * @return {number} The newly generated reference id
+     */
+    generateNewReferenceId: function (nodes) {
+        let refId = 0;
+        for (let i = 0, len = nodes.length; i < len; i++) {
+            if (nodes[i].referenceId && refId < nodes[i].referenceId) {
+                refId = nodes[i].referenceId;
+            }
+        }
+        return refId + 1;
     },
 
     /**
@@ -162,27 +179,6 @@ module.exports = {
      */
     getLastPathFragment: function (url) {
         return url.substring(url.lastIndexOf('/') + 1);
-    },
-
-    /**
-     * Calculates a simple hash of the specified string, much like usual Java implementations.
-     * @param str The string to compute has for
-     * @return {number}
-     */
-    getStringHash: function (str) {
-        let hash = 0,
-            strlen = str ? str.length : 0,
-            i,
-            c;
-        if (strlen === 0) {
-            return hash;
-        }
-        for (i = 0; i < strlen; i++) {
-            c = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + c;
-            hash = hash & hash; // Convert to 32bit integer
-        }
-        return hash;
     },
 
     /**
@@ -265,5 +261,14 @@ module.exports = {
             hash &= hash;
         }
         return hash;
+    },
+
+    /**
+     * Removes HTML tags from the specified string, leaving only the text content.
+     * @param str The string to strip
+     * @return {string} Text content of the specified code/text
+     */
+    stripHtmlTags: function (str = '') {
+        return str.replace(/<(?:.|\n)*?>/gm, '');
     }
 };

@@ -1,0 +1,50 @@
+package cz.cvut.kbss.reporting.persistence.dao;
+
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.reporting.model.Occurrence;
+import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
+import cz.cvut.kbss.reporting.persistence.dao.util.FactorGraphOrphanRemover;
+import cz.cvut.kbss.reporting.persistence.dao.util.FactorGraphSaver;
+import cz.cvut.kbss.reporting.persistence.dao.util.QuestionSaver;
+import cz.cvut.kbss.reporting.util.IdentificationUtils;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class OccurrenceDao extends OwlKeySupportingDao<Occurrence> {
+
+    public OccurrenceDao() {
+        super(Occurrence.class);
+    }
+
+    @Override
+    protected void persist(Occurrence entity, final EntityManager em) {
+        assert entity != null;
+        entity.setKey(IdentificationUtils.generateKey());
+        final FactorGraphSaver saver = new FactorGraphSaver(em, new QuestionSaver());
+        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(saver, null);
+        traverser.traverse(entity);
+        em.persist(entity);
+    }
+
+    @Override
+    protected void update(Occurrence entity, EntityManager em) {
+        final Occurrence original = em.find(Occurrence.class, entity.getUri());
+        new FactorGraphOrphanRemover(em).removeOrphans(original, entity);
+        final FactorGraphSaver saver = new FactorGraphSaver(em, new QuestionSaver());
+        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(saver, null);
+        traverser.traverse(entity);
+        em.merge(entity);
+    }
+
+    @Override
+    protected void remove(Occurrence entity, EntityManager em) {
+        final Occurrence toRemove = em.merge(entity);
+        // It is necessary to remove only events from the top-level factors, other events will be removed as children
+        // of other events by cascading.
+        if (toRemove.getFactors() != null) {
+            toRemove.getFactors().forEach(f -> em.remove(f.getEvent()));
+        }
+        em.remove(toRemove);
+    }
+}
