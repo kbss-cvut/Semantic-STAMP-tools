@@ -129,10 +129,10 @@ const GanttController = {
             return FactorStyleInfo.getLinkClass(link);
         };
         gantt.templates.task_class = function (start, end, task) {
-            if (!task.parent) {
+            if (task.readonly) {
                 return 'factor-root-event';
             }
-            let eventType = ObjectTypeResolver.resolveType(task.statement.eventType, OptionsStore.getOptions('eventType'));
+            let eventType = ObjectTypeResolver.resolveType(task.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE));
             return eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '';
         };
         gantt.templates.tooltip_date_format = function (date) {
