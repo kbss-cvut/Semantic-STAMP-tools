@@ -37,7 +37,8 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorInfo> mappingException(HttpServletRequest request, HttpMessageNotReadableException e) {
-        return new ResponseEntity<>(errorInfo(request, e.getCause()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorInfo(request, e.getCause() != null ? e.getCause() : e),
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameExistsException.class)
