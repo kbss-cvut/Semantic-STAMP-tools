@@ -313,7 +313,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
                         assertNotNull(event.getIndex());
                     }
                 }, null);
-        traverser.traverse(result.getOccurrence());
+        resultTraverser.traverse(result.getOccurrence());
     }
 
     @Test
