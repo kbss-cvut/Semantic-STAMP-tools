@@ -179,9 +179,6 @@ const GanttController = {
 
     onFactorAdded: function (id, factor) {
         const updates = [];
-        if (id !== this.rootEventId && !factor.parent) {
-            factor.parent = this.rootEventId;
-        }
         this.extendAncestorsIfNecessary(factor, updates);
         this.applyUpdates(updates);
     },

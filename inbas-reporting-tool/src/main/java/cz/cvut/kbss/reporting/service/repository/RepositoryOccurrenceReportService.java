@@ -41,6 +41,8 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     @Autowired
     private EventTypeSynchronizer eventTypeSynchronizer;
 
+    private final EventChildIndexer childIndexer = new EventChildIndexer();
+
     @Override
     protected OwlKeySupportingDao<OccurrenceReport> getPrimaryDao() {
         return reportDao;
@@ -71,7 +73,8 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     }
 
     private void synchronizeEventTypes(Occurrence occurrence) {
-        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(eventTypeSynchronizer, null);
+        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(childIndexer, null);
+        traverser.registerNodeVisitor(eventTypeSynchronizer);
         traverser.traverse(occurrence);
     }
 
@@ -82,7 +85,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
             if (instance.getLastModifiedBy() != null) {
                 instance.getLastModifiedBy().erasePassword();
             }
-            new DefaultFactorGraphTraverser(new EventChildIndexer(), null).traverse(instance.getOccurrence());
+            new DefaultFactorGraphTraverser(childIndexer, null).traverse(instance.getOccurrence());
         }
     }
 

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
@@ -280,7 +281,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         report.setOccurrence(OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents(false));
         report.getOccurrence().setUri(null);
         final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(null, null);
-        traverser.setNodeVisitor(new FactorGraphNodeVisitor() {
+        traverser.registerNodeVisitor(new FactorGraphNodeVisitor() {
             @Override
             public void visit(Occurrence occurrence) {
             }
@@ -296,16 +297,17 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         occurrenceReportService.persist(report);
 
         final OccurrenceReport result = occurrenceReportService.find(report.getUri());
-        traverser.setNodeVisitor(new FactorGraphNodeVisitor() {
-            @Override
-            public void visit(Occurrence occurrence) {
-            }
+        final FactorGraphTraverser resultTraverser = new IdentityBasedFactorGraphTraverser(
+                new FactorGraphNodeVisitor() {
+                    @Override
+                    public void visit(Occurrence occurrence) {
+                    }
 
-            @Override
-            public void visit(Event event) {
-                assertNotNull(event.getIndex());
-            }
-        });
+                    @Override
+                    public void visit(Event event) {
+                        assertNotNull(event.getIndex());
+                    }
+                }, null);
         traverser.traverse(result.getOccurrence());
     }
 
@@ -338,5 +340,48 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         assertNotNull(rFactor.getEvent());
         assertEquals(mitigation.getUri(), rFactor.getEvent().getUri());
         assertEquals(newEventType, rFactor.getEvent().getEventType());
+    }
+
+    /**
+     * Testing Bug #411.
+     */
+    @Test
+    public void eventTypeSynchronizationOnUpdateDoesNotLooseEvents() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        final List<Event> children = IntStream.range(0, 3).mapToObj(i -> {
+            final Event evt = OccurrenceReportGenerator.generateEvent();
+            evt.setReferenceId(Generator.randomInt());
+            evt.setIndex(i);
+            return evt;
+        }).collect(Collectors.toList());
+        final Factor f1 = new Factor();
+        f1.setEvent(children.get(1));
+        f1.addType(Generator.randomFactorType());
+        children.get(0).addFactor(f1);
+        report.getOccurrence().setChildren(new HashSet<>(children));
+        occurrenceReportService.persist(report);
+
+        report.getOccurrence().getChildren().forEach(e -> assertNotNull(e.getUri()));
+        final Event newEvent = OccurrenceReportGenerator.generateEvent();
+        newEvent.setReferenceId(Generator.randomInt());
+        report.getOccurrence().addChild(newEvent);
+        newEvent.setIndex(0);
+        final int expectedSize = report.getOccurrence().getChildren().size();
+        occurrenceReportService.update(report);
+
+        assertNotNull(newEvent.getUri());
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertEquals(expectedSize, result.getOccurrence().getChildren().size());
+        final EntityManager em = emf.createEntityManager();
+        try {
+            final Event eResult = em.find(Event.class, newEvent.getUri());
+            assertNotNull(eResult);
+            assertEquals(newEvent.getEventType(), eResult.getEventType());
+            assertEquals(newEvent.getTypes(), eResult.getTypes());
+            assertEquals(newEvent.getStartTime(), eResult.getStartTime());
+            assertEquals(newEvent.getEndTime(), eResult.getEndTime());
+        } finally {
+            em.close();
+        }
     }
 }
