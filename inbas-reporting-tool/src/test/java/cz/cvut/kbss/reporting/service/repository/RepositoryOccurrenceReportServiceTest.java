@@ -364,4 +364,35 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
             em.close();
         }
     }
+
+    @Test
+    public void updateTraverserCorrectlyToFactors() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        report.getOccurrence().addChild(OccurrenceReportGenerator.generateEvent());
+        final Event eventWithFactor = OccurrenceReportGenerator.generateEvent();
+        report.getOccurrence().addChild(eventWithFactor);
+        final Event mitigation = OccurrenceReportGenerator.generateEvent();
+        final Factor f = new Factor();
+        f.setEvent(mitigation);
+        f.addType(Generator.randomFactorType());
+        eventWithFactor.addFactor(f);
+        occurrenceReportService.persist(report);
+
+        final URI newEventType = Generator.generateEventType();
+        mitigation.setEventType(newEventType);
+        occurrenceReportService.update(report);
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertEquals(2, result.getOccurrence().getChildren().size());
+        final Optional<Event> evtWithFactorResult = result.getOccurrence().getChildren().stream()
+                                                          .filter(e -> e.getUri().equals(eventWithFactor.getUri()))
+                                                          .findFirst();
+        assertTrue(evtWithFactorResult.isPresent());
+        final Set<Factor> factors = evtWithFactorResult.get().getFactors();
+        assertEquals(1, factors.size());
+        final Factor rFactor = factors.iterator().next();
+        assertNotNull(rFactor.getEvent());
+        assertEquals(mitigation.getUri(), rFactor.getEvent().getUri());
+        assertEquals(newEventType, rFactor.getEvent().getEventType());
+    }
 }

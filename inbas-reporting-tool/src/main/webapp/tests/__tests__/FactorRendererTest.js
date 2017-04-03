@@ -2,12 +2,12 @@
 
 describe('FactorRenderer', function () {
 
-    var rewire = require('rewire'),
+    const rewire = require('rewire'),
         FactorRenderer = rewire('../../js/components/factor/FactorRenderer'),
         Constants = require('../../js/constants/Constants'),
         Vocabulary = require('../../js/constants/Vocabulary'),
-        Generator = require('../environment/Generator').default,
-        GanttController,
+        Generator = require('../environment/Generator').default;
+    let GanttController,
         report;
 
     beforeEach(function () {
@@ -48,7 +48,7 @@ describe('FactorRenderer', function () {
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(1);
         expect(GanttController.setRootEventId).toHaveBeenCalled();
-        var arg = GanttController.addFactor.calls.argsFor(0)[0];
+        const arg = GanttController.addFactor.calls.argsFor(0)[0];
         verifyRoot(arg, 'occurrence');
     });
 
@@ -67,7 +67,7 @@ describe('FactorRenderer', function () {
         FactorRenderer.renderFactors(report);
         expect(GanttController.addFactor.calls.count()).toEqual(1);
         expect(GanttController.setRootEventId).toHaveBeenCalled();
-        var arg = GanttController.addFactor.calls.argsFor(0)[0];
+        const arg = GanttController.addFactor.calls.argsFor(0)[0];
         verifyRoot(arg, 'occurrence');
     });
 
@@ -81,9 +81,9 @@ describe('FactorRenderer', function () {
 
     function verifyAddedNodes(rootAttribute) {
         verifyRoot(GanttController.addFactor.calls.argsFor(0)[0], rootAttribute);
-        for (var i = 1, len = report.factorGraph.nodes.length; i < len; i++) {
-            var node = report.factorGraph.nodes[i];
-            var added = GanttController.addFactor.calls.argsFor(i)[0];
+        for (let i = 1, len = report.factorGraph.nodes.length; i < len; i++) {
+            const node = report.factorGraph.nodes[i],
+                added = GanttController.addFactor.calls.argsFor(i)[0];
             expect(added.statement).toEqual(node);
             expect(added.start_date.getTime()).toEqual(node.startTime);
             expect(added.end_date.getTime()).toEqual(node.endTime);
@@ -99,8 +99,8 @@ describe('FactorRenderer', function () {
     });
 
     function verifyPartOfHierarchy() {
-        var edges = report.factorGraph.edges;
-        for (var i = 0, len = edges.length; i < len; i++) {
+        const edges = report.factorGraph.edges;
+        for (let i = 0, len = edges.length; i < len; i++) {
             if (edges[i].linkType !== Vocabulary.HAS_PART) {
                 continue;
             }
@@ -117,13 +117,13 @@ describe('FactorRenderer', function () {
     });
 
     function verifyAddedLinks() {
-        var edges = report.factorGraph.edges,
-            counter = 0;
-        for (var i = 0, len = edges.length; i < len; i++) {
+        const edges = report.factorGraph.edges;
+        let counter = 0;
+        for (let i = 0, len = edges.length; i < len; i++) {
             if (edges[i].linkType === Vocabulary.HAS_PART) {
                 continue;
             }
-            var added = GanttController.addLink.calls.argsFor(counter++)[0];
+            const added = GanttController.addLink.calls.argsFor(counter++)[0];
             expect(added.source).toEqual(edges[i].from.referenceId);
             expect(added.target).toEqual(edges[i].to.referenceId);
         }
@@ -146,13 +146,27 @@ describe('FactorRenderer', function () {
         report.occurrence = initOccurrence();
         Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
         FactorRenderer.renderFactors(report);
-        var highest = 0;
-        for (var i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
+        let highest = 0;
+        for (let i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
             if (highest < report.factorGraph.nodes[i].referenceId) {
                 highest = report.factorGraph.nodes[i].referenceId;
             }
         }
 
         expect(FactorRenderer.greatestReferenceId).toEqual(highest);
+    });
+
+    it('adds occurrence as read-only node, while other factors are editable', () => {
+        report.occurrence = initOccurrence();
+        Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
+        FactorRenderer.renderFactors(report);
+        for (let i = 0, len = report.factorGraph.nodes.length; i < len; i++) {
+            const added = GanttController.addFactor.calls.argsFor(i)[0];
+            if (i === 0) {
+                expect(added.readonly).toBeTruthy();
+            } else {
+                expect(added.readonly).toBeFalsy();
+            }
+        }
     });
 });

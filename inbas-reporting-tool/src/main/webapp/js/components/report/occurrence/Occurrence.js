@@ -47,6 +47,9 @@ class Occurrence extends React.Component {
     };
 
     onEndChange = (value) => {
+        if (isNaN(value)) {
+            return;
+        }
         const occurrence = assign({}, this.props.report.occurrence);
         occurrence.endTime = Number(value);
         this.props.onChange({'occurrence': occurrence});
