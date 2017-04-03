@@ -5,38 +5,35 @@ import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Sets indexes to item children if the indexes are missing.
+ * Sets event children indexes so that they represent a sequence without any gaps.
  */
 public class EventChildIndexer implements FactorGraphNodeVisitor {
 
     @Override
     public void visit(Occurrence occurrence) {
         if (occurrence.getChildren() != null) {
-            addIndexesIfNecessary(occurrence.getChildren());
+            computeIndexes(occurrence.getChildren());
         }
     }
 
     @Override
     public void visit(Event event) {
         if (event.getChildren() != null) {
-            addIndexesIfNecessary(event.getChildren());
+            computeIndexes(event.getChildren());
         }
     }
 
-    private void addIndexesIfNecessary(Set<Event> children) {
-        final boolean indexMissing = children.stream().anyMatch(c -> c.getIndex() == null);
-        if (!indexMissing) {
-            return;
-        }
-        final List<Event> events = new ArrayList<>(children);
-        events.sort(Comparator.comparing(Event::getEventType));
-        for (int i = 0; i < events.size(); i++) {
-            events.get(i).setIndex(i);
+    private void computeIndexes(Set<Event> children) {
+        final List<Event> indexed = new ArrayList<>(children);
+        indexed.sort(null);
+        int index = 0;
+        for (Event evt : indexed) {
+            evt.setIndex(index);
+            index++;
         }
     }
 }

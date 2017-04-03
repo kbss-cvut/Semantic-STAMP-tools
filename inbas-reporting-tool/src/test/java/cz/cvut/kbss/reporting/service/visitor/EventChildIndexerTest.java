@@ -6,11 +6,7 @@ import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import org.junit.Test;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -52,17 +48,19 @@ public class EventChildIndexerTest {
     }
 
     @Test
-    public void doesNothingWhenChildrenHaveIndexesSet() {
+    public void resetsIndexesWhenThereAreGapsInChildrenIndexSequence() {
         final Set<Event> events = generateEvents();
-        final Map<URI, Integer> indexMap = new HashMap<>();
         events.forEach(e -> {
             e.setIndex(Generator.randomInt());
             e.setUri(Generator.generateUri());
-            indexMap.put(e.getUri(), e.getIndex());
         });
         final Occurrence parent = OccurrenceReportGenerator.generateOccurrence();
         parent.setChildren(events);
         indexer.visit(parent);
-        parent.getChildren().forEach(e -> assertEquals(indexMap.get(e.getUri()), e.getIndex()));
+        final List<Event> sorted = new ArrayList<>(parent.getChildren());
+        sorted.sort(Comparator.comparing(Event::getIndex));
+        for (int i = 0; i < sorted.size(); i++) {
+            assertEquals(i, (int) sorted.get(i).getIndex());
+        }
     }
 }

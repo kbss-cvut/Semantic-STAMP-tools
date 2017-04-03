@@ -8,6 +8,8 @@ import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,16 +20,18 @@ public abstract class FactorGraphTraverser {
 
     private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part);
 
-    private FactorGraphNodeVisitor nodeVisitor;
+    private final List<FactorGraphNodeVisitor> nodeVisitors = new ArrayList<>(2);
     private FactorGraphEdgeVisitor factorGraphEdgeVisitor;
 
     FactorGraphTraverser(FactorGraphNodeVisitor nodeVisitor, FactorGraphEdgeVisitor factorGraphEdgeVisitor) {
-        this.nodeVisitor = nodeVisitor;
+        if (nodeVisitor != null) {
+            nodeVisitors.add(nodeVisitor);
+        }
         this.factorGraphEdgeVisitor = factorGraphEdgeVisitor;
     }
 
-    public void setNodeVisitor(FactorGraphNodeVisitor nodeVisitor) {
-        this.nodeVisitor = nodeVisitor;
+    public void registerNodeVisitor(FactorGraphNodeVisitor nodeVisitor) {
+        nodeVisitors.add(nodeVisitor);
     }
 
     public void setFactorGraphEdgeVisitor(FactorGraphEdgeVisitor factorGraphEdgeVisitor) {
@@ -61,8 +65,8 @@ public abstract class FactorGraphTraverser {
         if (isVisited(item)) {
             return;
         }
-        if (nodeVisitor != null) {
-            item.accept(nodeVisitor);
+        if (nodeVisitors != null) {
+            nodeVisitors.forEach(item::accept);
         }
         markAsVisited(item);
         if (item.getChildren() != null) {
