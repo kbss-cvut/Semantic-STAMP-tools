@@ -1,5 +1,7 @@
 package cz.cvut.kbss.reporting.service.repository;
 
+import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
@@ -30,6 +32,9 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
 
     @Autowired
     private RepositoryOccurrenceReportService occurrenceReportService;
+
+    @Autowired
+    private EntityManagerFactory emf;
 
     private Person author;
 
@@ -308,7 +313,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
                         assertNotNull(event.getIndex());
                     }
                 }, null);
-        traverser.traverse(result.getOccurrence());
+        resultTraverser.traverse(result.getOccurrence());
     }
 
     @Test
