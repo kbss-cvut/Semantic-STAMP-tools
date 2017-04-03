@@ -2,11 +2,12 @@
 
 import React from "react";
 import {Button, Modal} from "react-bootstrap";
+import Actions from "../../../actions/Actions";
 import Input from "../../Input";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
-import ReportFactory from "../../../model/ReportFactory";
+import MessageWrapper from "../../misc/hoc/MessageWrapper";
 
 class InitialReportImport extends React.Component {
     static propTypes = {
@@ -33,12 +34,17 @@ class InitialReportImport extends React.Component {
     _onImport = () => {
         // This will be replaced by a call to backend, which will execute analysis of the text content
         this.props.loadingOn(this.i18n('report.initial.import.importing-msg'));
-        const report = ReportFactory.createOccurrenceReport();
-        report.initialReport = {
-            description: this.state.content
-        };
+        Actions.importInitialReport({description: this.state.content}, this._onImportSuccess, this._onImportError);
+    };
+
+    _onImportSuccess = (report) => {
         this.props.loadingOff();
         this.props.onImportFinish(report);
+    };
+
+    _onImportError = (err) => {
+        this.props.loadingOff();
+        this.props.showErrorMessage(err.message);
     };
 
     render() {
@@ -64,4 +70,4 @@ class InitialReportImport extends React.Component {
     }
 }
 
-export default injectIntl(LoadingWrapper(I18nWrapper(InitialReportImport)));
+export default injectIntl(MessageWrapper(LoadingWrapper(I18nWrapper(InitialReportImport))));

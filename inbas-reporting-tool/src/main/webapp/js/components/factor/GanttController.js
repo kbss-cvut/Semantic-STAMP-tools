@@ -348,7 +348,7 @@ const GanttController = {
         }
         const rootEvent = gantt.getTask(this.rootEventId),
             updates = [];
-        if (rootEvent.text !== graphRoot.name) {
+        if (graphRoot.name && rootEvent.text !== graphRoot.name) {
             rootEvent.text = graphRoot.name;
             updates.push(this.rootEventId);
         }
