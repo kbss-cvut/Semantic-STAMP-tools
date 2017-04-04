@@ -2,7 +2,7 @@ package cz.cvut.kbss.reporting.rest.dto.mapper;
 
 import cz.cvut.kbss.reporting.dto.event.EventDto;
 import cz.cvut.kbss.reporting.dto.event.FactorGraphEdge;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphEdgeVisitor;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphEdgeVisitor;
 
 import java.net.URI;
 import java.util.LinkedHashSet;

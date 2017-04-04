@@ -1,8 +1,7 @@
-package cz.cvut.kbss.reporting.service.visitor;
+package cz.cvut.kbss.reporting.factorgraph;
 
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 
 import java.util.ArrayList;
 import java.util.List;

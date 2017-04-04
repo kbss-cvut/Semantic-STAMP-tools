@@ -1,8 +1,8 @@
 package cz.cvut.kbss.reporting.service.visitor;
 
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.reporting.persistence.dao.EventDao;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceDao;
 import org.springframework.beans.factory.annotation.Autowired;

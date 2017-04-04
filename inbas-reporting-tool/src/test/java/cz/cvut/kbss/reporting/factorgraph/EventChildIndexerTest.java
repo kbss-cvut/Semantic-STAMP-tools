@@ -1,4 +1,4 @@
-package cz.cvut.kbss.reporting.service.visitor;
+package cz.cvut.kbss.reporting.factorgraph;
 
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;

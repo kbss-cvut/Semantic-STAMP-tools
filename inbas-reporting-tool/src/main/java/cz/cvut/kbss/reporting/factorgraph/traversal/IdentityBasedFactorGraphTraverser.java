@@ -1,8 +1,8 @@
-package cz.cvut.kbss.reporting.model.util.factorgraph.traversal;
+package cz.cvut.kbss.reporting.factorgraph.traversal;
 
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphEdgeVisitor;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphEdgeVisitor;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
 
 import java.util.IdentityHashMap;
 import java.util.Map;

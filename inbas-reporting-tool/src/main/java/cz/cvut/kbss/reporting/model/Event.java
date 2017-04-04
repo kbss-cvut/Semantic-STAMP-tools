@@ -3,9 +3,10 @@ package cz.cvut.kbss.reporting.model;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.Transient;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @OWLClass(iri = Vocabulary.s_c_Event)
 public class Event extends AbstractEvent implements Serializable, Comparable<Event> {
@@ -73,7 +74,12 @@ public class Event extends AbstractEvent implements Serializable, Comparable<Eve
     @Override
     public int compareTo(Event o) {
         if (index != null && o.index != null) {
-            return index.compareTo(o.index);
+            final int res = index.compareTo(o.index);
+            // Ensure that comparison respects identity
+            if (res == 0 && !Objects.equals(uri, o.uri)) {
+                return hashCode() - o.hashCode();
+            }
+            return res;
         }
         // If either index is missing, do not use it at all. It could break sorted set equals/hashCode contract
         return hashCode() - o.hashCode();

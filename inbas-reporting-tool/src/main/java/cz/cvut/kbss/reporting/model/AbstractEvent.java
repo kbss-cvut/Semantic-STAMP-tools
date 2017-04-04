@@ -1,8 +1,8 @@
 package cz.cvut.kbss.reporting.model;
 
 import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.reporting.model.qam.Question;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
 
 import java.net.URI;
 import java.util.Date;
