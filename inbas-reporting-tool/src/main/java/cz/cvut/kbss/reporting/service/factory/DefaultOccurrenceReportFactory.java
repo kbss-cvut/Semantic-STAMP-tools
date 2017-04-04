@@ -3,12 +3,10 @@ package cz.cvut.kbss.reporting.service.factory;
 import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Objects;
 
-@Service
 public class DefaultOccurrenceReportFactory implements OccurrenceReportFactory {
 
     @Override

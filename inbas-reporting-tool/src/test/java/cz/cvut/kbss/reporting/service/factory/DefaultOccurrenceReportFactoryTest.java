@@ -3,16 +3,13 @@ package cz.cvut.kbss.reporting.service.factory;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.*;
 
-public class DefaultOccurrenceReportFactoryTest extends BaseServiceTestRunner {
+public class DefaultOccurrenceReportFactoryTest {
 
-    @Autowired
-    private OccurrenceReportFactory reportFactory;
+    private DefaultOccurrenceReportFactory reportFactory = new DefaultOccurrenceReportFactory();
 
     @Test
     public void createFromInitialCreatesNewReportFromSpecifiedInitialReport() {
