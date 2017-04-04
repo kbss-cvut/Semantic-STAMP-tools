@@ -5,7 +5,7 @@ import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Vocabulary;
-import cz.cvut.kbss.reporting.persistence.dao.util.OrphanRemover;
+import cz.cvut.kbss.reporting.persistence.util.OrphanRemover;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package cz.cvut.kbss.reporting.model.util.factorgraph;
+package cz.cvut.kbss.reporting.factorgraph;
 
 import java.net.URI;
 

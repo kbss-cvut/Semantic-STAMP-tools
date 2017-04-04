@@ -1,9 +1,9 @@
-package cz.cvut.kbss.reporting.persistence.dao.util;
+package cz.cvut.kbss.reporting.persistence.util;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Factor;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
 
 import java.net.URI;
 import java.util.*;

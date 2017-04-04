@@ -1,4 +1,4 @@
-package cz.cvut.kbss.reporting.model.util.factorgraph;
+package cz.cvut.kbss.reporting.factorgraph;
 
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;

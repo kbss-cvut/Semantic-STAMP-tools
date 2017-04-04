@@ -9,10 +9,10 @@ import cz.cvut.kbss.reporting.dto.event.EventDto;
 import cz.cvut.kbss.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.reporting.dto.event.OccurrenceDto;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.reporting.factorgraph.traversal.DefaultFactorGraphTraverser;
+import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.*;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.DefaultFactorGraphTraverser;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

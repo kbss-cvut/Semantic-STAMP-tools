@@ -1,13 +1,13 @@
 package cz.cvut.kbss.reporting.model;
 
 import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
+import cz.cvut.kbss.reporting.factorgraph.clone.EdgeCloningVisitor;
+import cz.cvut.kbss.reporting.factorgraph.clone.NodeCloningVisitor;
+import cz.cvut.kbss.reporting.factorgraph.traversal.DefaultFactorGraphTraverser;
+import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.util.HasOwlKey;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
-import cz.cvut.kbss.reporting.model.util.factorgraph.clone.EdgeCloningVisitor;
-import cz.cvut.kbss.reporting.model.util.factorgraph.clone.NodeCloningVisitor;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.DefaultFactorGraphTraverser;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
 
 import java.io.Serializable;
 import java.net.URI;

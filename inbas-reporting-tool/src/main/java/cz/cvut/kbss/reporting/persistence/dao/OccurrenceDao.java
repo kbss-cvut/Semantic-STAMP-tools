@@ -1,12 +1,12 @@
 package cz.cvut.kbss.reporting.persistence.dao;
 
 import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.reporting.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.Occurrence;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
-import cz.cvut.kbss.reporting.persistence.dao.util.FactorGraphOrphanRemover;
-import cz.cvut.kbss.reporting.persistence.dao.util.FactorGraphSaver;
-import cz.cvut.kbss.reporting.persistence.dao.util.QuestionSaver;
+import cz.cvut.kbss.reporting.persistence.util.FactorGraphOrphanRemover;
+import cz.cvut.kbss.reporting.persistence.util.FactorGraphSaver;
+import cz.cvut.kbss.reporting.persistence.util.QuestionSaver;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.springframework.stereotype.Repository;
 

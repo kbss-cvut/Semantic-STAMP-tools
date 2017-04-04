@@ -1,7 +1,7 @@
 package cz.cvut.kbss.reporting.environment.generator;
 
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.reporting.model.*;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphItem;
 
 import java.net.URI;
 import java.util.*;

@@ -1,11 +1,11 @@
 package cz.cvut.kbss.reporting.service.formgen;
 
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
+import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.reporting.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.util.factorgraph.FactorGraphNodeVisitor;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.FactorGraphTraverser;
-import cz.cvut.kbss.reporting.model.util.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.persistence.dao.formgen.FormGenDao;
 import cz.cvut.kbss.reporting.persistence.dao.formgen.OccurrenceReportFormGenDao;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
