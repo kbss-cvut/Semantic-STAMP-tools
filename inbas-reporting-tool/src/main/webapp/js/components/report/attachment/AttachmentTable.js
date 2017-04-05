@@ -65,14 +65,13 @@ class AttachmentTable extends React.Component {
         let rows = [],
             attachments = this.props.attachments;
         for (let i = 0, len = attachments.length; i < len; i++) {
+            const key = Utils.stringHashCode(attachments[i].reference + attachments[i].description);
             if (i === this.state.editedRow) {
-                rows.push(<EditableAttachmentRow key={Utils.stringHashCode(attachments[i].reference)}
-                                                 attachment={attachments[i]} onSave={this._onEditFinish}
-                                                 onCancel={this._onEditCancel}/>);
+                rows.push(<EditableAttachmentRow key={key + '_edited'} attachment={attachments[i]}
+                                                 onSave={this._onEditFinish} onCancel={this._onEditCancel}/>);
             } else {
-                rows.push(<AttachmentRow key={Utils.stringHashCode(attachments[i].reference)}
-                                         attachment={attachments[i]}
-                                         onEdit={this._onEdit} onRemove={this.props.onRemove}/>);
+                rows.push(<AttachmentRow key={key} attachment={attachments[i]} onEdit={this._onEdit}
+                                         onRemove={this.props.onRemove}/>);
             }
         }
         return rows;

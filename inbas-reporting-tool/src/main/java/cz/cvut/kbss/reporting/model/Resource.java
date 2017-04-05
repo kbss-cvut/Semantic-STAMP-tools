@@ -44,17 +44,19 @@ public class Resource extends AbstractEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Resource)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Resource resource = (Resource) o;
 
-        return reference != null ? reference.equals(resource.reference) : resource.reference == null;
-
+        return reference.equals(resource.reference) && (description != null ? description.equals(resource.description) :
+                resource.description == null);
     }
 
     @Override
     public int hashCode() {
-        return reference != null ? reference.hashCode() : 0;
+        int result = reference.hashCode();
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        return result;
     }
 
     @Override

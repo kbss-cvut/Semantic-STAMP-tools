@@ -109,4 +109,26 @@ public class OccurrenceReportTest {
         final ReportDto dto = report.toReportDto();
         assertTrue(dto.getTypes().contains(Vocabulary.s_c_occurrence_report));
     }
+
+    @Test
+    public void occurrenceCanContainMultipleResourcesWithTheSameReference() {
+        final OccurrenceReport report = new OccurrenceReport();
+        report.setReferences(new HashSet<>());
+        final String reference = Generator.generateUri().toString();
+        final Resource r1 = new Resource();
+        r1.setReference(reference);
+        report.getReferences().add(r1);
+        final Resource r2 = new Resource();
+        r2.setReference(reference);
+        r2.setDescription("a");
+        report.getReferences().add(r2);
+        final Resource r3 = new Resource();
+        r3.setReference(reference);
+        r3.setDescription("b");
+        report.getReferences().add(r3);
+        assertEquals(3, report.getReferences().size());
+        assertTrue(report.getReferences().contains(r1));
+        assertTrue(report.getReferences().contains(r2));
+        assertTrue(report.getReferences().contains(r3));
+    }
 }
