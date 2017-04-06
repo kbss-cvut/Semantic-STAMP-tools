@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class StatisticsService {
+public class SPARQLService {
 
     @Autowired
     @Qualifier("remoteDataLoader")
@@ -30,12 +30,19 @@ public class StatisticsService {
     @Autowired
     private ConfigReader configReader;
 
-    public RawJson getStatistics() {
+    /**
+     * Executes given named SPARQL query
+     *
+     * @param queryName of the SPARQL query
+     * @return a {@link RawJson} object containing JSON-formatted SPARQL Select result.
+     * @throws IllegalArgumentException When the specified queryName is not known
+     */
+    public RawJson getSPARQLSelectResult(String queryName) {
         final String repositoryUrl = configReader.getConfig(ConfigParam.REPOSITORY_URL);
         if (repositoryUrl.isEmpty()) {
             throw new IllegalStateException("Missing repository URL configuration.");
         }
-        String query = localLoader.loadData(Constants.STATISTICS_QUERY_FILE, Collections.emptyMap());
+        String query = localLoader.loadData("query/"+queryName+".sparql", Collections.emptyMap());
         try {
             query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
             final Map<String, String> params = new HashMap<>();

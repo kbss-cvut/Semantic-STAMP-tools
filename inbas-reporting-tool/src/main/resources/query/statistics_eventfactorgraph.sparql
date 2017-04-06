@@ -8,7 +8,6 @@ PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 SELECT ?event_type ?factor_type (COUNT(*) AS ?count)
 {
   ?et rt:has_event_type ?event_e_t .
-
   OPTIONAL {
     SERVICE er:eccairs-aviation-3.4.0.2 {
       ?event_e_t rdfs:label ?event_type.
@@ -44,4 +43,4 @@ SELECT ?event_type ?factor_type (COUNT(*) AS ?count)
   }
 }
 GROUP BY ?event_type ?factor_type
-ORDER BY desc(?count)
+ORDER BY desc(?count) asc(?event_type)

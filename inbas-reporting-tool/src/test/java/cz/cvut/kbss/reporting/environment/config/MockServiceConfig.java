@@ -69,8 +69,8 @@ public class MockServiceConfig {
     }
 
     @Bean
-    public StatisticsService statisticsService() {
-        return mock(StatisticsService.class);
+    public SPARQLService statisticsService() {
+        return mock(SPARQLService.class);
     }
 
     @Bean

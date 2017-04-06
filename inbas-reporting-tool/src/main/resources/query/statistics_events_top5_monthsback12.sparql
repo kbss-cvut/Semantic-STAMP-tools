@@ -1,0 +1,49 @@
+PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
+PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
+
+PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/> 
+
+SELECT ?event_type ?event_e_t ?year ?month (count(*) as ?count)
+{
+  {
+    SELECT ?event_e_t (count(*) AS ?count) {
+      ?et2 rt:has_event_type ?event_e_t .
+    }
+    GROUP BY ?event_e_t
+    ORDER BY desc(?count)
+    LIMIT 5
+  }
+
+  OPTIONAL {
+    ?event_e_t rdfs:label ?event_type.
+  }
+
+  OPTIONAL {
+    SERVICE er:eccairs-aviation-3.4.0.2 {
+          ?event_e_t rdfs:label ?event_type.
+    }
+   }
+   OPTIONAL {
+    SERVICE er:eccairs-aviation-1.3.0.8 {
+          ?event_e_t rdfs:label ?event_type.
+    }
+   }
+   OPTIONAL {
+    SERVICE er:inbas-model-2016-01-21:22-46-17 {
+          ?event_e_t rdfs:label ?event_type.
+    }
+   }
+  ?et rt:has_event_type ?event_e_t ;
+      aso:has_start_time ?start_time .
+
+  BIND(year(now()) AS ?thisYear)
+  BIND(month(now()) AS ?thisMonth)
+  BIND(year(?start_time) AS ?year)
+  BIND(month(?start_time) AS ?month)
+  FILTER(
+    ((?year + 3 > ?thisYear) && (?month >= ?thisMonth))
+    ||
+    (?year = ?thisYear)
+  )
+} GROUP BY ?year ?month ?event_e_t ?event_type
+ORDER BY ?year ?month

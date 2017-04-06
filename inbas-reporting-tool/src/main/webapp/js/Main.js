@@ -11,7 +11,7 @@ import Register from "./components/register/Register";
 import MainView from "./components/MainView";
 import DashboardController from "./components/dashboard/DashboardController";
 import ReportsController from "./components/report/ReportsController";
-import StatisticsController from "./components/statistics/StatisticsSimple";
+import StatisticsController from "./components/statistics/StatisticsController";
 import ReportDetailController from "./components/report/ReportController";
 import RoutingRules from "./utils/RoutingRules";
 import SearchResultController from "./components/search/SearchResultController";
