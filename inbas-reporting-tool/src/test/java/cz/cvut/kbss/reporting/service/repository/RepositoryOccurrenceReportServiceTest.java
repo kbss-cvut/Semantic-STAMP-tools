@@ -323,6 +323,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         final Event eventWithFactor = OccurrenceReportGenerator.generateEvent();
         report.getOccurrence().addChild(eventWithFactor);
         final Event mitigation = OccurrenceReportGenerator.generateEvent();
+        report.getOccurrence().addChild(mitigation);
         final Factor f = new Factor();
         f.setEvent(mitigation);
         f.addType(Generator.randomFactorType());
@@ -334,7 +335,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         occurrenceReportService.update(report);
 
         final OccurrenceReport result = occurrenceReportService.find(report.getUri());
-        assertEquals(2, result.getOccurrence().getChildren().size());
+        assertEquals(3, result.getOccurrence().getChildren().size());
         final Optional<Event> evtWithFactorResult = result.getOccurrence().getChildren().stream()
                                                           .filter(e -> e.getUri().equals(eventWithFactor.getUri()))
                                                           .findFirst();

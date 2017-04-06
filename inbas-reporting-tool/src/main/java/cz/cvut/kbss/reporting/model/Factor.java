@@ -12,7 +12,7 @@ import java.util.Set;
 public class Factor extends AbstractEntity implements Serializable {
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER)
     private Event event;
 
     @ParticipationConstraints(nonEmpty = true)

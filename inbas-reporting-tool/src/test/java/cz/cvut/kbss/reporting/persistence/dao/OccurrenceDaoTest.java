@@ -15,10 +15,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.cvut.kbss.reporting.environment.util.TestUtils.verifyAllInstancesRemoved;
@@ -208,5 +205,50 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
         verifyAllInstancesRemoved(emf, Vocabulary.s_c_Occurrence);
         verifyAllInstancesRemoved(emf, Vocabulary.s_c_factor);
         verifyAllInstancesRemoved(emf, Vocabulary.s_c_Event);
+    }
+
+
+    @Test
+    public void updateCorrectlyUpdatesEventsThatAreFactorsOfOccurrence() {
+        final Occurrence occurrence = generateOccurrenceWithFactors();
+        dao.persist(occurrence);
+
+        final List<Factor> factors = new ArrayList<>(occurrence.getFactors());
+        final Factor newFactor = new Factor();
+        final Event eventAsFactor = factors.get(0).getEvent();
+        newFactor.setEvent(eventAsFactor);
+        final Event eventWithFactor = factors.get(1).getEvent();
+        factors.get(1).getEvent().addFactor(newFactor);
+        final URI newEventType = Generator.generateEventType();
+        factors.get(1).getEvent().setEventType(newEventType);
+        dao.update(occurrence);
+
+        final Occurrence result = dao.find(occurrence.getUri());
+        assertEquals(2, result.getFactors().size());
+        final Optional<Factor> factorForEvent = result.getFactors().stream()
+                                                      .filter(f -> f.getEvent().getUri()
+                                                                    .equals(eventWithFactor.getUri())).findFirst();
+        assertTrue(factorForEvent.isPresent());
+        final Event eventWithFactorResult = factorForEvent.get().getEvent();
+        assertEquals(newEventType, eventWithFactorResult.getEventType());
+        assertEquals(1, eventWithFactorResult.getFactors().size());
+        final Factor factor = eventWithFactorResult.getFactors().iterator().next();
+        assertEquals(eventAsFactor.getUri(), factor.getEvent().getUri());
+    }
+
+    private Occurrence generateOccurrenceWithFactors() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        final Factor f1 = new Factor();
+        final Event e1 = OccurrenceReportGenerator.generateEvent();
+        f1.setEvent(e1);
+        f1.addType(Generator.randomFactorType());
+        occurrence.addFactor(f1);
+        e1.addChild(OccurrenceReportGenerator.generateEvent());
+        final Factor f2 = new Factor();
+        final Event e2 = OccurrenceReportGenerator.generateEvent();
+        f2.setEvent(e2);
+        f2.addType(Generator.randomFactorType());
+        occurrence.addFactor(f2);
+        return occurrence;
     }
 }

@@ -35,6 +35,14 @@ public class OccurrenceDao extends OwlKeySupportingDao<Occurrence> {
         final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(saver, null);
         traverser.traverse(entity);
         em.merge(entity);
+        mergeOccurrenceFactors(entity, em);
+    }
+
+    private void mergeOccurrenceFactors(Occurrence occurrence, EntityManager em) {
+        // We need to merge only the top-level events, others are merged by cascading as part of the event hierarchy
+        if (occurrence.getFactors() != null) {
+            occurrence.getFactors().forEach(f -> em.merge(f.getEvent()));
+        }
     }
 
     @Override
