@@ -6,7 +6,6 @@ import injectIntl from "../../../utils/injectIntl";
 import StatisticsStore from "../../../stores/StatisticsStore";
 import Actions from "../../../actions/Actions";
 import {BarChart, Bar, Brush, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
-import d3 from 'd3';
 import Utils from "../Utils";
 
 class OccurrenceSeverityTrends extends React.Component {
@@ -40,7 +39,7 @@ class OccurrenceSeverityTrends extends React.Component {
         const rows = Utils.sparql2table(data.queryResults.results.bindings);
         const {maxDate} = Utils.getMonthRangeFromNow(24);
         const {min} = Utils.generateMinMax(rows);
-        const data2 = Utils.generateMonthTimeAxis(rows, min, maxDate).map((item) => {
+        const data2 = Utils.generateMonthTimeAxis( min, maxDate).map((item) => {
             const match = rows.filter((item2) => {
                 return (Utils.getDateInt(item2.year, item2.month)) == item
             });
@@ -63,12 +62,14 @@ class OccurrenceSeverityTrends extends React.Component {
         });
 
         const barLabels = ["Not Determined", "Occurrence Without Safety Effect", "Incident", "Serious Incident", "Accident"];
-        // compute color range
-        const color = d3.scale.linear().domain([1, 6])
-            .interpolate(d3.interpolateHcl)
-            .range(['yellow', 'red']);
+        // import d3 from 'react-d3-library';
+        // const color = d3.scale.linear().domain([1, 6])
+        //     .interpolate(d3.interpolateHcl)
+        //     .range(['yellow', 'red']);
+        const color=['#fff800', '#ffcb00', '#ffa900','#ff7100','#ff0000']
+
         const bars = barLabels.map((label, index) => {
-            return <Bar key={index} dataKey={label} stackId="a" fill={color(index)}/>
+            return <Bar key={index} dataKey={label} stackId="a" fill={color[index]}/>
         });
 
         this.setState(
@@ -83,10 +84,10 @@ class OccurrenceSeverityTrends extends React.Component {
         return <div>
             <BarChart width={600} height={300} data={this.state.data}
                       margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-                <XAxis dataKey="date"/>
+                <XAxis dataKey="date" tickFormatter={Utils.getDateString}/>
                 <YAxis/>
                 <CartesianGrid strokeDasharray="3 3"/>
-                <Tooltip/>
+                <Tooltip labelFormatter={Utils.getDateString}/>
                 <Legend />
                 {this.state.bars}
                 <Brush dataKey='date' height={30} stroke="orange"/>

@@ -82,7 +82,9 @@ class EventFactorChains extends React.Component {
                 reduce={this.reduce}
                 calculations={this.state.calculations}
                 activeDimensions={this.state.dimensions[0]}
-                sortDir='desc'/>
+                sortDir='desc'
+                nPaginateRows={10}
+                compact={true}/>
         </div> );
     }
 }

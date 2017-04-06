@@ -62,7 +62,7 @@ class FrequencyList extends React.Component {
             const vals = this.state.rows.filter((item2) => {
                 return (item2.event_type == et)
             });
-            let data = Utils.generateMonthTimeAxis(vals, minDate, maxDate).map((item) => {
+            let data = Utils.generateMonthTimeAxis( minDate, maxDate).map((item) => {
                 const match = vals.filter((item2) => {
                     return (Number(item2.year) * 100 + Number(item2.month)) == item
                 });
@@ -82,9 +82,9 @@ class FrequencyList extends React.Component {
             topList.push(
                 <tr key={i}>
                     <td><LineChart width={100} height={50} data={data}>
-                        <XAxis dataKey='date' hide={true}/>
+                        <XAxis dataKey='date' hide={true} tickFormatter={Utils.getDateString}/>
                         <Line type='basis' dataKey='count' stroke='#8884d8' strokeWidth={2} dot={false}/>
-                        <Tooltip/>
+                        <Tooltip labelFormatter={Utils.getDateString}/>
                     </LineChart>
                     </td>
                     <td>{totalSum}</td>

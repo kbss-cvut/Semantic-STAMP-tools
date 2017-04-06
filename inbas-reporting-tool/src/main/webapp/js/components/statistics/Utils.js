@@ -67,6 +67,12 @@ module.exports = {
     },
 
     /*
+     * Returns a string representation of a year/month combination - for recharts time axis support
+     */
+    getDateString(yearmonth) {
+        return (Number(yearmonth) % 100) + "/" + (Math.floor(Number(yearmonth) / 100))
+    },
+    /*
      * Returns a range of integer date instants (granularity months) given number of months back by now.
      */
     getMonthRangeFromNow(monthsBack) {
