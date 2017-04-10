@@ -1,8 +1,9 @@
 package cz.cvut.kbss.reporting.model;
 
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
-import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
+import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
+
+import java.util.Set;
 
 import static cz.cvut.kbss.reporting.util.Constants.DESCRIPTION_TO_STRING_THRESHOLD;
 
@@ -13,12 +14,23 @@ public class InitialReport extends AbstractEntity {
     @OWLDataProperty(iri = Vocabulary.s_p_description, readOnly = true)
     private String description;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_text_analysis_result, readOnly = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<ExtractedItem> extractedItems;
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<ExtractedItem> getExtractedItems() {
+        return extractedItems;
+    }
+
+    public void setExtractedItems(Set<ExtractedItem> extractedItems) {
+        this.extractedItems = extractedItems;
     }
 
     @Override
