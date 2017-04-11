@@ -54,7 +54,8 @@ public abstract class FactorGraphTraverser {
                 if (factorGraphEdgeVisitor != null) {
                     // Assuming there is exactly one factor type
                     assert f.getTypes().size() == 1;
-                    factorGraphEdgeVisitor.visit(f.getEvent().getUri(), item.getUri(), f.getTypes().iterator().next());
+                    factorGraphEdgeVisitor
+                            .visit(f.getUri(), f.getEvent().getUri(), item.getUri(), f.getTypes().iterator().next());
                 }
                 traverseImpl(f.getEvent());
             });
@@ -73,7 +74,7 @@ public abstract class FactorGraphTraverser {
             item.setChildren(sortChildren(item.getChildren()));
             item.getChildren().forEach(e -> {
                 if (factorGraphEdgeVisitor != null) {
-                    factorGraphEdgeVisitor.visit(item.getUri(), e.getUri(), HAS_PART_URI);
+                    factorGraphEdgeVisitor.visit(null, item.getUri(), e.getUri(), HAS_PART_URI);
                 }
                 traverseImpl(e);
             });

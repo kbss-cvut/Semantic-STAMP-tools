@@ -11,8 +11,8 @@ public class FactorGraphEdgeTest {
     public void twoEdgesBetweenSameFactorsButOfDifferentKindAreDifferent() {
         final int from = 117;
         final int to = 4529;
-        final FactorGraphEdge eOne = new FactorGraphEdge(from, to, Generator.FACTOR_TYPES[0]);
-        final FactorGraphEdge eTwo = new FactorGraphEdge(from, to, Generator.FACTOR_TYPES[1]);
+        final FactorGraphEdge eOne = new FactorGraphEdge(null, from, to, Generator.FACTOR_TYPES[0]);
+        final FactorGraphEdge eTwo = new FactorGraphEdge(null, from, to, Generator.FACTOR_TYPES[1]);
         assertNotEquals(eOne, eTwo);
         assertNotEquals(eOne.hashCode(), eTwo.hashCode());
     }

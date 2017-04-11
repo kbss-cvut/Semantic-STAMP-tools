@@ -233,6 +233,7 @@ public abstract class DtoMapper {
                 instanceMap.get(source.getReferenceId()).addChild((Event) instanceMap.get(target.getReferenceId()));
             } else {
                 final Factor factor = new Factor();
+                factor.setUri(e.getUri());
                 factor.addType(e.getLinkType());
                 factor.setEvent((Event) instanceMap.get(source.getReferenceId()));
                 instanceMap.get(target.getReferenceId()).addFactor(factor);

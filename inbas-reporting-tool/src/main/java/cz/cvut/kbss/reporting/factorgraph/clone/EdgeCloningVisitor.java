@@ -20,7 +20,7 @@ public class EdgeCloningVisitor implements FactorGraphEdgeVisitor {
     }
 
     @Override
-    public void visit(URI from, URI to, URI type) {
+    public void visit(URI uri, URI from, URI to, URI type) {
         final FactorGraphItem source = instanceMap.get(from);
         assert source != null;
         final FactorGraphItem target = instanceMap.get(to);

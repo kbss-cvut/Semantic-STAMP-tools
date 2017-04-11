@@ -21,8 +21,8 @@ class DtoEdgeVisitor implements FactorGraphEdgeVisitor {
     }
 
     @Override
-    public void visit(URI from, URI to, URI type) {
-        edges.add(new FactorGraphEdge(nodeMap.get(from).getReferenceId(), nodeMap.get(to).getReferenceId(), type));
+    public void visit(URI uri, URI from, URI to, URI type) {
+        edges.add(new FactorGraphEdge(uri, nodeMap.get(from).getReferenceId(), nodeMap.get(to).getReferenceId(), type));
     }
 
     Set<FactorGraphEdge> getEdges() {

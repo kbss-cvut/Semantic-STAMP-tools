@@ -169,4 +169,20 @@ describe('FactorRenderer', function () {
             }
         }
     });
+
+    it('attaches edge URI to the rendered links', () => {
+        report.occurrence = initOccurrence();
+        Array.prototype.push.apply(report.factorGraph.nodes, Generator.generateFactorGraphNodes());
+        report.factorGraph.edges = Generator.generateFactorLinksForNodes(report.factorGraph.nodes);
+        FactorRenderer.renderFactors(report);
+        const edges = report.factorGraph.edges;
+        let counter = 0;
+        for (let i = 0, len = edges.length; i < len; i++) {
+            if (edges[i].linkType === Vocabulary.HAS_PART) {
+                continue;
+            }
+            const added = GanttController.addLink.calls.argsFor(counter++)[0];
+            expect(added.uri).toEqual(edges[i].uri);
+        }
+    });
 });

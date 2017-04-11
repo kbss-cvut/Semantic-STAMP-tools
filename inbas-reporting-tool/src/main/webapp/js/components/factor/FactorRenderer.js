@@ -118,7 +118,8 @@ const FactorRendererImpl = {
             GanttController.addLink({
                 source: links[i].from.referenceId,
                 target: links[i].to.referenceId,
-                factorType: links[i].linkType
+                factorType: links[i].linkType,
+                uri: links[i].uri
             });
         }
     }

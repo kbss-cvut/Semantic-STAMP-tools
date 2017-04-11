@@ -98,7 +98,7 @@ public class EventFactorsSerializationTest {
     }
 
     private void verifyEdge(EventDto start, EventDto end, URI type, FactorGraph graph) {
-        final FactorGraphEdge edge = new FactorGraphEdge(start.getReferenceId(), end.getReferenceId(), type);
+        final FactorGraphEdge edge = new FactorGraphEdge(null, start.getReferenceId(), end.getReferenceId(), type);
         assertTrue(graph.getEdges().contains(edge));
     }
 
@@ -134,6 +134,28 @@ public class EventFactorsSerializationTest {
         final Occurrence occurrence = generateOccurrenceWithLinkChainOnSameLevel();
         final FactorGraph container = dtoMapper.occurrenceToFactorGraph(occurrence);
         verifyStructure(occurrence, container);
+    }
+
+    @Test
+    public void serializationMapsFactorUriToEdgeUri() throws Exception {
+        final Occurrence occurrence = occurrence();
+        final Event e1 = event();
+        final Event e2 = event();
+        occurrence.addChild(e1);
+        occurrence.addChild(e2);
+        final Factor factor = new Factor();
+        factor.setEvent(e2);
+        e1.addFactor(factor);
+        factor.addType(Generator.randomFactorType());
+        factor.setUri(Generator.generateUri());
+
+        final FactorGraph graph = dtoMapper.occurrenceToFactorGraph(occurrence);
+        final Optional<FactorGraphEdge> result = graph.getEdges().stream()
+                                                      .filter(e -> e.getLinkType()
+                                                                    .equals(factor.getTypes().iterator().next()))
+                                                      .findAny();
+        assertTrue(result.isPresent());
+        assertEquals(factor.getUri(), result.get().getUri());
     }
 
     private Occurrence generateOccurrenceWithLinkChainOnSameLevel() {
@@ -401,5 +423,21 @@ public class EventFactorsSerializationTest {
 
     private FactorGraph loadGraph(String fileName) throws Exception {
         return Environment.loadData(fileName, FactorGraph.class);
+    }
+
+    @Test
+    public void deserializationCreatesFactorsWithExistingUri() throws Exception {
+        final FactorGraph graph = loadGraph("data/occurrenceWithFactorsAtSameLevel.json");
+        graph.getEdges().stream().filter(e -> !e.getLinkType().equals(HAS_PART_URI))
+             .forEach(e -> e.setUri(Generator.generateUri()));
+        final Occurrence res = dtoMapper.factorGraphToOccurrence(graph);
+        assertEquals(2, res.getFactors().size());
+        for (Factor f : res.getFactors()) {
+            final Optional<FactorGraphEdge> edge = graph.getEdges().stream().filter(e ->
+                    e.getFrom().equals(f.getEvent().getReferenceId()) && f.getTypes().contains(e.getLinkType()))
+                                                        .findAny();
+            assertTrue(edge.isPresent());
+            assertEquals(edge.get().getUri(), f.getUri());
+        }
     }
 }

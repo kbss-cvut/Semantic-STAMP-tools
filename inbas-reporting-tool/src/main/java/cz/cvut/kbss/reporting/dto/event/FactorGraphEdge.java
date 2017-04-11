@@ -4,6 +4,8 @@ import java.net.URI;
 
 public class FactorGraphEdge {
 
+    private URI uri;
+
     private Integer from;
 
     private Integer to;
@@ -13,10 +15,19 @@ public class FactorGraphEdge {
     public FactorGraphEdge() {
     }
 
-    public FactorGraphEdge(Integer from, Integer to, URI linkType) {
+    public FactorGraphEdge(URI uri, Integer from, Integer to, URI linkType) {
+        this.uri = uri;
         this.from = from;
         this.to = to;
         this.linkType = linkType;
+    }
+
+    public URI getUri() {
+        return uri;
+    }
+
+    public void setUri(URI uri) {
+        this.uri = uri;
     }
 
     public Integer getFrom() {
