@@ -86,6 +86,10 @@ body {
     text-align: center;
 }
 
+.vtop {
+    vertical-align: top;
+}
+
 td.report-row {
     vertical-align: middle !important; /* Use important to override bootstrap */
 }

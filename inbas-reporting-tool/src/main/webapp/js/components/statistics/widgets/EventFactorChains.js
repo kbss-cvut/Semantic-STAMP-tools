@@ -7,6 +7,7 @@ import injectIntl from "../../../utils/injectIntl";
 import StatisticsStore from "../../../stores/StatisticsStore";
 import Actions from "../../../actions/Actions";
 import Utils from "../Utils";
+import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 
 class EventFactorChains extends React.Component {
 
@@ -21,6 +22,7 @@ class EventFactorChains extends React.Component {
     }
 
     componentWillMount() {
+        this.props.loadingOn();
         Actions.loadStatistics("eventfactorgraph");
         this.unsubscribe = StatisticsStore.listen(this._onStatisticsLoaded);
     };
@@ -65,6 +67,7 @@ class EventFactorChains extends React.Component {
                     reportKey: Date.now()
                 }
             );
+            this.props.loadingOff();
         }
     };
 
@@ -89,4 +92,4 @@ class EventFactorChains extends React.Component {
     }
 }
 
-export default injectIntl(I18nWrapper(EventFactorChains));
+export default injectIntl(I18nWrapper(LoadingWrapper(EventFactorChains, {maskClass: 'mask-container'})));

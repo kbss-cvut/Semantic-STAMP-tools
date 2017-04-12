@@ -3,14 +3,15 @@
 import React from "react";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
-import Dashboard, {addWidget} from 'react-dazzle';
-
-import EditBar from './EditBar';
-import Container from './Container';
-import CustomFrame from './CustomFrame';
-
+import Dashboard, {addWidget} from "react-dazzle";
+import EditBar from "./EditBar";
+import Container from "./Container";
+import CustomFrame from "./CustomFrame";
 import EventList from "./widgets/EventList";
 import EventFactorChains from "./widgets/EventFactorChains";
+import EventFactorGraph from "./widgets/EventFactorGraph";
+import EventtypeDashboard from "./widgets/EventtypeDashboard";
+import OccurrenceList from "./widgets/OccurrenceList";
 import OccurrenceSeverityTrends from "./widgets/OccurrenceSeverityTrends";
 
 class StatisticsController extends React.Component {
@@ -19,18 +20,26 @@ class StatisticsController extends React.Component {
         super(props);
         this.state = {
             widgets: {
+                OccurrenceList: {
+                    type: OccurrenceList,
+                    title: 'Top 5 Occurrence Categories',
+                },
                 EventList: {
                     type: EventList,
-                    title: 'Top 5 Event types',
+                    title: 'Top Event types',
                 },
                 EventFactorChains: {
                     type: EventFactorChains,
                     title: 'Event - Factor Chains',
                 },
-                // OccurrenceTrends: {
-                //     type: OccurrenceTrends,
-                //     title: 'Occurrence Trend',
-                // },
+                EventtypeDashboard: {
+                    type: EventtypeDashboard,
+                    title: 'Event Type Dashboard',
+                },
+                EventFactorGraph: {
+                    type: EventFactorGraph,
+                    title: 'Event Type - Factor Type Graph',
+                },
                 OccurrenceSeverityTrends: {
                     type: OccurrenceSeverityTrends,
                     title: 'Occurrence Severity Trend',
@@ -43,8 +52,18 @@ class StatisticsController extends React.Component {
                         widgets: [{key: 'OccurrenceSeverityTrends'}],
                     }, {
                         className: 'col-md-6 col-sm-6 col-xs-6',
-                        widgets: [{key: 'EventList'}],
+                        widgets: [{key: 'OccurrenceList'}],
                     }],
+                },{
+                    columns: [{
+                        className: 'col-md-12 col-sm-12 col-xs-12',
+                        widgets: [{key: 'EventtypeDashboard'}],
+                    }]
+                },{
+                    columns: [{
+                        className: 'col-md-12 col-sm-12 col-xs-12',
+                        widgets: [{key: 'EventFactorGraph'}],
+                    }]
                 },{
                     columns: [{
                         className: 'col-md-12 col-sm-12 col-xs-12',

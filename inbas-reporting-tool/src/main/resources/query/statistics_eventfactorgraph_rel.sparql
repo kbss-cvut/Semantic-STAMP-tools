@@ -27,8 +27,6 @@ SELECT ?event_type ?relation_type ?factor_type (COUNT(*) AS ?count)
     ?et aso:has_factor ?rel .
     ?rel a ?rt .
     ?rel aso:has_factor [rt:has_event_type ?event_f_t] .
-    OPTIONAL { SERVICE er:inbas-model-2016-01-21:22-46-17        { ?rt rdfs:label ?relation_type. } }
-
     FILTER (?rt != <http://onto.fel.cvut.cz/ontologies/aviation-safety/factor>)
     OPTIONAL {
        	SERVICE er:eccairs-aviation-3.4.0.2 {
@@ -43,6 +41,7 @@ SELECT ?event_type ?relation_type ?factor_type (COUNT(*) AS ?count)
     OPTIONAL {
         SERVICE er:inbas-model-2016-01-21:22-46-17 {
        	  ?event_f_t rdfs:label ?factor_type.
+          ?rt rdfs:label ?relation_type .
      	}
     }
   }

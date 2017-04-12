@@ -5,35 +5,43 @@ import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import StatisticsStore from "../../../stores/StatisticsStore";
 import Actions from "../../../actions/Actions";
+import FrequencyListRow from "./FrequencyListRow";
 import Utils from "../Utils";
-import {LineChart, Line, XAxis, Tooltip} from 'recharts';
+import Table from "react-bootstrap/lib/Table";
+import PagingMixin from "../../mixin/PagingMixin";
+import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 
+var FrequencyList = React.createClass({
+    mixins: [PagingMixin],
 
-class FrequencyList extends React.Component {
+    propTypes: {
+        query: React.PropTypes.string.isRequired,
+        // onSelect: React.PropTypes.function.isRequired
+    },
 
-    constructor(props) {
-        super(props);
-        this.state = {
+    getInitialState() {
+        return {
             eventTypes: [],
             rows: []
-        }
-    }
+        };
+    },
 
     componentWillMount() {
-        Actions.loadStatistics("events_top5_monthsback12");
+        this.props.loadingOn();
+        Actions.loadStatistics(this.props.query);
         this.unsubscribe = StatisticsStore.listen(this._onStatisticsLoaded);
-    };
+    },
 
     componentWillUnmount() {
         this.unsubscribe();
-    };
+    },
 
-    _onStatisticsLoaded = (data) => {
+    _onStatisticsLoaded(data) {
         if (data === undefined) {
             return;
         }
 
-        if (data.queryName != "events_top5_monthsback12") {
+        if (data.queryName != this.props.query) {
             return;
         }
 
@@ -41,28 +49,19 @@ class FrequencyList extends React.Component {
             return;
         }
 
-        const rows = Utils.sparql2table(data.queryResults.results.bindings);
-        const eventTypes = Utils.unique(rows.map((item) => {
-            return item.event_type
+        const rowData = Utils.sparql2table(data.queryResults.results.bindings);
+        const eventTypesIris = Utils.unique(rowData.map((item) => {
+            return item.event_type_iri
         }));
 
-        this.setState(
-            {
-                eventTypes: eventTypes,
-                rows: rows
-            }
-        );
-    };
-
-    render() {
-        const topList = [];
         const {minDate, maxDate} = Utils.getMonthRangeFromNow(12);
-        for (let i in this.state.eventTypes) {
-            const et = this.state.eventTypes[i];
-            const vals = this.state.rows.filter((item2) => {
-                return (item2.event_type == et)
+        let rows = [];
+        for (let i in eventTypesIris) {
+            const eventTypeIri = eventTypesIris[i];
+            const vals = rowData.filter((item2) => {
+                return (item2.event_type_iri == eventTypeIri)
             });
-            let data = Utils.generateMonthTimeAxis( minDate, maxDate).map((item) => {
+            let data = Utils.generateMonthTimeAxis(minDate, maxDate).map((item) => {
                 const match = vals.filter((item2) => {
                     return (Number(item2.year) * 100 + Number(item2.month)) == item
                 });
@@ -77,37 +76,52 @@ class FrequencyList extends React.Component {
                 }
             });
 
-            const totalSum = data.reduce((memo, val) => memo + Number(val.count), 0);
+            const sum= data.reduce((memo, val) => memo + Number(val.count), 0);
 
-            topList.push(
-                <tr key={i}>
-                    <td><LineChart width={100} height={50} data={data}>
-                        <XAxis dataKey='date' hide={true} tickFormatter={Utils.getDateString}/>
-                        <Line type='basis' dataKey='count' stroke='#8884d8' strokeWidth={2} dot={false}/>
-                        <Tooltip labelFormatter={Utils.getDateString}/>
-                    </LineChart>
-                    </td>
-                    <td>{totalSum}</td>
-                    <td>{et}</td>
-                </tr>
-            )
+            if ( sum > 0 ) {
+                rows.push({
+                    key: i,
+                    data: data,
+                    totalSum: sum,
+                    eventType: vals[0].event_type,
+                    eventTypeIri: eventTypeIri
+                });
+            }
         }
 
-        return (
-            <table>
-                <thead>
-                <tr>
-                    <th className='col-xs-2'>Annual Trend</th>
-                    <th className='col-xs-1'>Count</th>
-                    <th className='col-xs-8'>Event Type</th>
-                </tr>
-                </thead>
-                <tbody>
-                {topList}
-                </tbody>
-            </table>
-        );
-    }
-}
+        rows = rows.sort((a, b) => {
+            return b.totalSum - a.totalSum
+        });
 
-export default injectIntl(I18nWrapper(FrequencyList));
+        this.setState(
+            {
+                rows: rows
+            }
+        );
+        this.props.loadingOff();
+    },
+
+    render() {
+        const topList = this.state.rows.map((row) => {
+            return ( <FrequencyListRow key={row.key} row={row} onClick={this.props.onSelect}/> );
+        });
+
+        return (
+            <div>
+                <Table striped bordered condensed hover>
+                    <thead>
+                    <tr>
+                        <th className='col-xs-4 content-center'>Event Type</th>
+                        <th className='col-xs-1 content-center'>Annual Count</th>
+                        <th className='col-xs-2 content-center'>Annual Trend</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                     {this.getCurrentPage(topList)}
+                    </tbody>
+                </Table>
+                {this.renderPagination(topList)}
+            </div> );
+    }
+});
+module.exports = injectIntl(I18nWrapper(LoadingWrapper(FrequencyList, {maskClass: 'mask-container'})));

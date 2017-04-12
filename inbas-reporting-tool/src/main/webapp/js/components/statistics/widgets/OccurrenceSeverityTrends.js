@@ -5,8 +5,9 @@ import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import StatisticsStore from "../../../stores/StatisticsStore";
 import Actions from "../../../actions/Actions";
-import {BarChart, Bar, Brush, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {BarChart, Bar, Brush, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from "recharts";
 import Utils from "../Utils";
+import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 
 class OccurrenceSeverityTrends extends React.Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class OccurrenceSeverityTrends extends React.Component {
     };
 
     componentWillMount() {
+        this.props.loadingOn();
         Actions.loadStatistics("occurrenceseveritytrends_grouped");
         this.unsubscribe = StatisticsStore.listen(this._onStatisticsLoaded);
     };
@@ -62,11 +64,7 @@ class OccurrenceSeverityTrends extends React.Component {
         });
 
         const barLabels = ["Not Determined", "Occurrence Without Safety Effect", "Incident", "Serious Incident", "Accident"];
-        // import d3 from 'react-d3-library';
-        // const color = d3.scale.linear().domain([1, 6])
-        //     .interpolate(d3.interpolateHcl)
-        //     .range(['yellow', 'red']);
-        const color=['#fff800', '#ffcb00', '#ffa900','#ff7100','#ff0000']
+        const color=['#fff800', '#ffcb00', '#ffa900','#ff7100','#ff0000'];
 
         const bars = barLabels.map((label, index) => {
             return <Bar key={index} dataKey={label} stackId="a" fill={color[index]}/>
@@ -78,6 +76,7 @@ class OccurrenceSeverityTrends extends React.Component {
                 bars: bars
             }
         );
+        this.props.loadingOff();
     };
 
     render() {
@@ -96,4 +95,4 @@ class OccurrenceSeverityTrends extends React.Component {
     };
 }
 
-export default injectIntl(I18nWrapper(OccurrenceSeverityTrends));
+export default injectIntl(I18nWrapper(LoadingWrapper(OccurrenceSeverityTrends, {maskClass: 'mask-container'})));
