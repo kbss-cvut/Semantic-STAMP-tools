@@ -37,7 +37,7 @@ class EventtypeDashboard extends React.Component {
     }
 
     render() {
-        return <table style={{width: '100%'}}>
+        return <table style={{width: '100%', height:'3000px'}}>
             <tbody>
             <tr>
                 <td className="col-xs-4 vtop">
