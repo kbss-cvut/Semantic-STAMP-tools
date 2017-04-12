@@ -145,7 +145,7 @@ class EventtypeGraph extends React.Component {
         if ( data == null) {
             return <div style={{ textAlign: "center", verticalAlign:"center"}}>No Graph Available. Select an Event Type.</div>;
         } else {
-            return <div>{this.props.title}<br/><Graph graph={data} options={this.state.graphOptions} style={{ width : '100%', height:'800px'}}/></div>;
+            return <div>{this.props.title}<br/><Graph graph={data} options={this.state.graphOptions} style={{ width : '100%', height:'3000px'}}/></div>;
         }
     }
 }
