@@ -1,7 +1,9 @@
 package cz.cvut.kbss.eccairs.webapi;
 
-import cz.cvut.kbss.eccairs.webapi.cvut.*;
-import cz.cvut.kbss.utils.SSLUtilities;
+import cz.cvut.kbss.eccairs.webapi.cvut.EwaIWebServer;
+import cz.cvut.kbss.eccairs.webapi.cvut.EwaResult;
+import cz.cvut.kbss.eccairs.webapi.cvut.EwaWebServer;
+import cz.cvut.kbss.utils.SslUtilities;
 
 /**
  * Created by kremep1 on 17/02/16.
@@ -9,10 +11,15 @@ import cz.cvut.kbss.utils.SSLUtilities;
 public class TestClient {
 
   static {
-    SSLUtilities.trustAllHostnames();
-    SSLUtilities.trustAllHttpsCertificates();
+    SslUtilities.trustAllHostnames();
+    SslUtilities.trustAllHttpsCertificates();
   }
 
+  /**
+   * Prints basic info about the repository. Tries to fetch a few records.
+   *
+   * @param argv No used.
+   */
   public static void main(String[] argv) {
     EwaIWebServer service = new EwaWebServer().getBasicHttpBindingEwaIWebServer();
 
@@ -20,7 +27,7 @@ public class TestClient {
     System.out.println(service.getRepositories().getData().getValue());
 
     // login
-    EwaResult login=service.login("MSSQL REPOSITORY 3.4.0.2 CUSTOM", "webtest", "xxx", "en");
+    EwaResult login = service.login("MSSQL REPOSITORY 3.4.0.2 CUSTOM", "webtest", "xxx", "en");
 
     String token = login.getUserToken().getValue();
     System.out.println(token + " : " + login.getReturnCode());
@@ -31,13 +38,13 @@ public class TestClient {
     EwaResult resultO = service.getOccurrence(token, "000035/2015", 2046);
     System.out.println(resultO.getData().getValue());
 
-    EwaResult resultOD = service.getOccurrenceData(token, "000035/2015", 2046);
-    System.out.println(resultOD.getData().getValue());
-    
+    EwaResult resultOd = service.getOccurrenceData(token, "000035/2015", 2046);
+    System.out.println(resultOd.getData().getValue());
+
     resultO = service.getOccurrence(token, "CZ-07-305", 1046);
     System.out.println(resultO.getData().getValue());
-    
-    resultOD = service.getOccurrenceData(token, "CZ-07-305", 1046);
-    System.out.println(resultOD.getData().getValue());
+
+    resultOd = service.getOccurrenceData(token, "CZ-07-305", 1046);
+    System.out.println(resultOd.getData().getValue());
   }
 }

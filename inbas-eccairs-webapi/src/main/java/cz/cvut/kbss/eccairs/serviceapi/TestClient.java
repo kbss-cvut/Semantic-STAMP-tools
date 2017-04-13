@@ -2,17 +2,26 @@ package cz.cvut.kbss.eccairs.serviceapi;
 
 import cz.cvut.kbss.eccairs.serviceapi.uzpln.ErscISrvConnector;
 import cz.cvut.kbss.eccairs.serviceapi.uzpln.ErssSrvConnector;
-import cz.cvut.kbss.utils.SSLUtilities;
+import cz.cvut.kbss.utils.SslUtilities;
 
-public class TestClient {
+/**
+ * Test client for Eccairs Service.
+ */
+final class TestClient {
 
   static {
-    SSLUtilities.trustAllHostnames();
-    SSLUtilities.trustAllHttpsCertificates();
+    SslUtilities.trustAllHostnames();
+    SslUtilities.trustAllHttpsCertificates();
   }
 
-  public static void main(String[] argv) {
-    ErscISrvConnector service = new ErssSrvConnector().getBasicHttpBindingErscISrvConnector();
+  /**
+   * Main test method.
+   *
+   * @param argv not used
+   */
+  public static void main(final String[] argv) {
+    ErscISrvConnector service =
+        new ErssSrvConnector().getBasicHttpBindingErscISrvConnector();
 
     System.out.println(service.configurationErrorCode());
 
