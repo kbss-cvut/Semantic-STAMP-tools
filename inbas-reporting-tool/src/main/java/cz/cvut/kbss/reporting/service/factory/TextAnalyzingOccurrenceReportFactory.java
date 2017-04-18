@@ -2,37 +2,60 @@ package cz.cvut.kbss.reporting.service.factory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import cz.cvut.kbss.reporting.exception.WebServiceIntegrationException;
+import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
+import cz.cvut.kbss.reporting.service.data.DataLoader;
 import cz.cvut.kbss.reporting.util.ConfigParam;
+import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceReportFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(TextAnalyzingOccurrenceReportFactory.class);
 
+    private static final String IS_EVENT_TYPE_QUERY_FILE = "query/isEventType.sparql";
+
     private final RestTemplate restTemplate;
 
     private final Environment environment;
 
+    private DataLoader localLoader;
+
+    private String isEventTypeQuery;
+
     @Autowired
-    public TextAnalyzingOccurrenceReportFactory(RestTemplate restTemplate, Environment environment) {
+    public TextAnalyzingOccurrenceReportFactory(RestTemplate restTemplate, Environment environment,
+                                                @Qualifier("localDataLoader") DataLoader localLoader) {
         this.restTemplate = restTemplate;
         this.environment = environment;
+        this.localLoader = localLoader;
+    }
+
+    @PostConstruct
+    private void loadQueries() {
+        this.isEventTypeQuery = localLoader.loadData(IS_EVENT_TYPE_QUERY_FILE, Collections.emptyMap());
+        this.localLoader = null;    // Don't need it anymore
     }
 
     /**
@@ -58,7 +81,7 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
             final TextAnalysisResultWrapper result = restTemplate
                     .exchange(serviceUrl, HttpMethod.POST, new HttpEntity<>(taInput), TextAnalysisResultWrapper.class)
                     .getBody();
-            attachTextAnalysisResultsToInitialReport(report.getInitialReport(), result);
+            enhanceReportWithTextAnalysisResults(report, result);
             if (LOG.isTraceEnabled()) {
                 LOG.trace("TextAnalysis result: {}.", result);
             }
@@ -68,11 +91,43 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
         }
     }
 
-    private void attachTextAnalysisResultsToInitialReport(InitialReport report, TextAnalysisResultWrapper result) {
+    private void enhanceReportWithTextAnalysisResults(OccurrenceReport report, TextAnalysisResultWrapper result) {
         final Double confidence = Double.parseDouble(result.confidence);
-        report.setExtractedItems(
-                result.getResults().stream().map(r -> new ExtractedItem(confidence, r.entityLabel, r.entityResource))
-                      .collect(Collectors.toSet()));
+        result.getResults().parallelStream().forEach(r -> {
+            attachTextAnalysisResultsToInitialReport(report.getInitialReport(), r, confidence);
+            addEventForExtractedEventType(report, r);
+        });
+    }
+
+    private void attachTextAnalysisResultsToInitialReport(InitialReport report, TextAnalysisResult result,
+                                                          Double confidence) {
+        report.addExtractedItem(new ExtractedItem(confidence, result.entityLabel, result.entityResource));
+    }
+
+    private void addEventForExtractedEventType(OccurrenceReport report, TextAnalysisResult extractedItem) {
+        if (isExtractedItemEventType(extractedItem.entityResource)) {
+            final Event event = new Event();
+            event.setEventType(extractedItem.entityResource);
+            report.getOccurrence().addChild(event);
+        }
+    }
+
+    private boolean isExtractedItemEventType(URI resource) {
+        final String query = isEventTypeQuery.replaceAll("\\?term", "<" + resource.toString() + ">");
+        String url = environment.getProperty(ConfigParam.EVENT_TYPE_REPOSITORY_URL.toString());
+        final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>(2);
+        headers.add(HttpHeaders.ACCEPT, Constants.TEXT_BOOLEAN_TYPE);
+        final MultiValueMap<String, String> data = new LinkedMultiValueMap<>(2);
+        data.add(Constants.QUERY_QUERY_PARAM, query);
+        final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(data, headers);
+        try {
+            final ResponseEntity<Boolean> result = restTemplate.postForEntity(url, request, Boolean.class);
+            return result.getBody();
+        } catch (RestClientException e) {
+            LOG.error("Unable to resolve whether resource " + resource + " is an event type.", e);
+            throw new WebServiceIntegrationException(
+                    "Unable to resolve whether resource " + resource + " is an event type.", e);
+        }
     }
 
     static class TextAnalysisInput {
@@ -130,6 +185,15 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
     static class TextAnalysisResult {
         private String entityLabel;
         private URI entityResource;
+
+        public TextAnalysisResult() {
+            // Public constructor for JSON (de)serialization
+        }
+
+        TextAnalysisResult(String entityLabel, URI entityResource) {
+            this.entityLabel = entityLabel;
+            this.entityResource = entityResource;
+        }
 
         public String getEntityLabel() {
             return entityLabel;

@@ -3,6 +3,8 @@ package cz.cvut.kbss.reporting.model;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static cz.cvut.kbss.reporting.util.Constants.DESCRIPTION_TO_STRING_THRESHOLD;
@@ -31,6 +33,14 @@ public class InitialReport extends AbstractEntity {
 
     public void setExtractedItems(Set<ExtractedItem> extractedItems) {
         this.extractedItems = extractedItems;
+    }
+
+    public void addExtractedItem(ExtractedItem item) {
+        Objects.requireNonNull(item);
+        if (extractedItems == null) {
+            this.extractedItems = new HashSet<>();
+        }
+        extractedItems.add(item);
     }
 
     @Override
