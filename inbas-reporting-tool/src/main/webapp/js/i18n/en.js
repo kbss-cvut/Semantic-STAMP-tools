@@ -207,6 +207,7 @@ module.exports = {
         'factors.smallscreen.start': 'Start',
         'factors.smallscreen.end': 'End',
         'factors.smallscreen.add-tooltip': 'Add event',
+        'factors.event-suggested': 'Event suggested by initial report text analysis.',
 
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',

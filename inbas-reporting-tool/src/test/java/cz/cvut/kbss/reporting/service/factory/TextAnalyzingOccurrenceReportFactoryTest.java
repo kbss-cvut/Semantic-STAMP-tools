@@ -7,6 +7,7 @@ import cz.cvut.kbss.reporting.exception.WebServiceIntegrationException;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.util.ConfigParam;
@@ -133,7 +134,7 @@ public class TextAnalyzingOccurrenceReportFactoryTest extends BaseServiceTestRun
         mockServer.expect(requestTo(SERVICE_URL)).andExpect(method(HttpMethod.POST)).andExpect(content().string(
                 containsString(TEXT)))
                   .andRespond(withSuccess(objectMapper.writeValueAsString(analysisResult), MediaType.APPLICATION_JSON));
-        mockServer.expect(ExpectedCount.times(items.size()), requestTo(containsString(EVENT_TYPE_REPO_URL)))
+        mockServer.expect(ExpectedCount.manyTimes(), requestTo(containsString(EVENT_TYPE_REPO_URL)))
                   .andRespond(withSuccess("false", MediaType.APPLICATION_JSON));
 
         final OccurrenceReport result = reportFactory.createFromInitialReport(initialReport());
@@ -200,5 +201,22 @@ public class TextAnalyzingOccurrenceReportFactoryTest extends BaseServiceTestRun
         thrown.expectMessage(containsString("event type."));
 
         reportFactory.createFromInitialReport(initialReport());
+    }
+
+    @Test
+    public void addsSuggestedTypeToEventsExtractedByTextAnalysis() throws Exception {
+        final TextAnalyzingOccurrenceReportFactory.TextAnalysisResultWrapper analysisResult = textAnalysisResult();
+        final List<TextAnalyzingOccurrenceReportFactory.TextAnalysisResult> items = new ArrayList<>();
+        final URI eventType = Generator.generateEventType();
+        items.add(new TextAnalyzingOccurrenceReportFactory.TextAnalysisResult("event", eventType));
+        analysisResult.setResults(items);
+        mockServer.expect(requestTo(SERVICE_URL)).andExpect(method(HttpMethod.POST)).andExpect(content().string(
+                containsString(TEXT)))
+                  .andRespond(withSuccess(objectMapper.writeValueAsString(analysisResult), MediaType.APPLICATION_JSON));
+        mockServer.expect(requestTo(containsString(EVENT_TYPE_REPO_URL)))
+                  .andRespond(withSuccess("true", MediaType.APPLICATION_JSON));
+        final OccurrenceReport result = reportFactory.createFromInitialReport(initialReport());
+        result.getOccurrence().getChildren()
+              .forEach(e -> assertTrue(e.getTypes().contains(Vocabulary.s_c_suggested_by_text_analysis)));
     }
 }

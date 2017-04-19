@@ -409,6 +409,10 @@ td.actions button {
     border: 1px solid #398439;
 }
 
+.factor-suggested {
+    font-style: italic;
+}
+
 ul.event-type {
     list-style-type: none;
 }

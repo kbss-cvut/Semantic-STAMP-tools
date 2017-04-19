@@ -5,6 +5,7 @@ import cz.cvut.kbss.reporting.exception.WebServiceIntegrationException;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
 import cz.cvut.kbss.reporting.service.data.DataLoader;
 import cz.cvut.kbss.reporting.util.ConfigParam;
@@ -108,6 +109,7 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
         if (isEventType(extractedItem.entityResource)) {
             final Event event = new Event();
             event.setEventType(extractedItem.entityResource);
+            event.getTypes().add(Vocabulary.s_c_suggested_by_text_analysis);
             event.setStartTime(report.getOccurrence().getStartTime());
             event.setEndTime(report.getOccurrence().getEndTime());
             report.getOccurrence().addChild(event);

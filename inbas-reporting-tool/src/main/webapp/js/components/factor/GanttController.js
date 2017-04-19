@@ -1,10 +1,12 @@
 'use strict';
 
+const classNames = require('classnames');
 const Constants = require('../../constants/Constants');
 const FactorStyleInfo = require('../../utils/FactorStyleInfo');
 const Factory = require('../../model/ReportFactory');
 const ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
 const OptionsStore = require('../../stores/OptionsStore');
+const Vocabulary = require('../../constants/Vocabulary');
 
 const I18nStore = require('../../stores/I18nStore');
 
@@ -132,8 +134,10 @@ const GanttController = {
             if (task.readonly) {
                 return 'factor-root-event';
             }
-            let eventType = ObjectTypeResolver.resolveType(task.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE));
-            return eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '';
+            let eventType = ObjectTypeResolver.resolveType(task.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE)),
+                eventTypeCls = eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '',
+                typeSuggested = task.statement.types.indexOf(Vocabulary.SUGGESTED) !== -1;
+            return classNames(eventTypeCls, {'factor-suggested': typeSuggested});
         };
         gantt.templates.tooltip_date_format = function (date) {
             const formatFunc = gantt.date.date_to_str(TOOLTIP_DATE_FORMAT);
@@ -143,6 +147,9 @@ const GanttController = {
             let tooltip = '<b>' + task.text + '</b><br/>';
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
                 '<br/><b>End date:</b> ' + gantt.templates.tooltip_date_format(end);
+            if (task.statement.types.indexOf(Vocabulary.SUGGESTED) !== -1) {
+                tooltip += '<br/><i>' + I18nStore.i18n('factors.event-suggested') + '</i>';
+            }
             return tooltip;
         };
     },

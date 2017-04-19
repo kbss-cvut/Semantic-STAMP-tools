@@ -207,6 +207,7 @@ module.exports = {
         'factors.smallscreen.start': 'Počátek',
         'factors.smallscreen.end': 'Konec',
         'factors.smallscreen.add-tooltip': 'Přidat událost',
+        'factors.event-suggested': 'Faktor navržen na základě analýzy prvotního hlášení.',
 
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',
