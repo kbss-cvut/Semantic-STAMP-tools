@@ -8,6 +8,7 @@ describe('Report store', function () {
         Ajax = rewire('../../js/utils/Ajax'),
         Generator = require('../environment/Generator').default,
         ReportStore = rewire('../../js/stores/ReportStore'),
+        Vocabulary = require('../../js/constants/Vocabulary'),
         reqMockMethods = ['get', 'put', 'post', 'del', 'send', 'accept', 'set', 'type', 'end'];
     let reqMock, reports;
 
@@ -144,6 +145,33 @@ describe('Report store', function () {
         expect(onSuccess).toHaveBeenCalled();
         const newReport = onSuccess.calls.argsFor(0)[0];
         expect(newReport.isNew).toBeTruthy();
+    });
+
+    it('resolves JSON references of imported initial report', () => {
+        const report = {
+            initialReport: {
+                description: 'Blabla'
+            },
+            occurrence: {
+                referenceId: 1
+            },
+            factorGraph: {
+                nodes: [1, {
+                    referenceId: 2
+                }],
+                edges: [{
+                    from: 1,
+                    to: 2,
+                    linkType: Vocabulary.HAS_PART
+                }]
+            }
+        }, onSuccess = jasmine.createSpy('onSuccess');
+        mockResponse(null, report);
+        ReportStore.onImportInitialReport(report, onSuccess);
+        expect(onSuccess).toHaveBeenCalled();
+        const newReport = onSuccess.calls.argsFor(0)[0];
+        expect(newReport.factorGraph.edges[0].from).toEqual(newReport.occurrence);
+        expect(newReport.factorGraph.edges[0].to).toEqual(newReport.factorGraph.nodes[1]);
     });
 
     describe('load reports for search', () => {

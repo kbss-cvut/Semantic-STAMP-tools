@@ -105,14 +105,16 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
     }
 
     private void addEventForExtractedEventType(OccurrenceReport report, TextAnalysisResult extractedItem) {
-        if (isExtractedItemEventType(extractedItem.entityResource)) {
+        if (isEventType(extractedItem.entityResource)) {
             final Event event = new Event();
             event.setEventType(extractedItem.entityResource);
+            event.setStartTime(report.getOccurrence().getStartTime());
+            event.setEndTime(report.getOccurrence().getEndTime());
             report.getOccurrence().addChild(event);
         }
     }
 
-    private boolean isExtractedItemEventType(URI resource) {
+    private boolean isEventType(URI resource) {
         final String query = isEventTypeQuery.replaceAll("\\?term", "<" + resource.toString() + ">");
         String url = environment.getProperty(ConfigParam.EVENT_TYPE_REPOSITORY_URL.toString());
         final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>(2);
@@ -121,8 +123,10 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
         data.add(Constants.QUERY_QUERY_PARAM, query);
         final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(data, headers);
         try {
-            final ResponseEntity<Boolean> result = restTemplate.postForEntity(url, request, Boolean.class);
-            return result.getBody();
+            // No Boolean message converter exists and there is no point in creating one for this one use, so we
+            // are using string
+            final ResponseEntity<String> result = restTemplate.postForEntity(url, request, String.class);
+            return result.getBody().equals(Boolean.TRUE.toString());
         } catch (RestClientException e) {
             LOG.error("Unable to resolve whether resource " + resource + " is an event type.", e);
             throw new WebServiceIntegrationException(

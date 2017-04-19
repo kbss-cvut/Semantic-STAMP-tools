@@ -177,6 +177,7 @@ const ReportStore = Reflux.createStore({
     onImportInitialReport: function (initialReport, onSuccess, onError) {
         Ajax.post(BASE_URL_WITH_SLASH + 'initial', initialReport).end((data) => {
             data.isNew = true;
+            JsonReferenceResolver.resolveReferences(data);
             if (onSuccess) {
                 onSuccess(data);
             }
