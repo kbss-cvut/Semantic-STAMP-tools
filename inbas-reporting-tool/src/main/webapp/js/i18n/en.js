@@ -137,6 +137,7 @@ module.exports = {
         'report.initial.text.label': 'Text',
         'report.initial.label': 'Initial report',
         'report.initial.view.tooltip': 'View initial report',
+        'report.initial.analysis-results.label': 'Report analysis results',
 
         'report.summary': 'Report summary',
         'report.created-by-msg': 'Created {date} by {name}.',

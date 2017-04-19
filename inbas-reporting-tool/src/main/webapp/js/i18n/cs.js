@@ -138,6 +138,7 @@ module.exports = {
         'report.initial.text.label': 'Text',
         'report.initial.label': 'Prvotní hlášení',
         'report.initial.view.tooltip': 'Zobrazit prvotní hlášení',
+        'report.initial.analysis-results.label': 'Výsledky analýzy hlášení',
 
         'report.summary': 'Shrnutí hlášení',
         'report.created-by-msg': 'Vytvořil(a) {name} {date}.',
