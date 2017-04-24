@@ -1,5 +1,12 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.10.0 - April 24, 2017
+- Added support for initial reports (Feature #379, Task #383, Task #381).
+- Added support for initial report import (Task #382).
+- Integrated initial report import with text analysis service (Feature #419, Task #385, Task #386).
+- Implementation creation of events for event types extracted by text analysis (Feature #418).
+- Implementation of nicer statistics (Feature #420).
+
 ### 0.9.2 - March 23, 2017
 - Fixed issue with incomplete report removal (Bug #388).
 - Modified search result UI to prevent confusion (Bug #387).
