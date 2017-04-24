@@ -2,7 +2,6 @@ package cz.cvut.kbss.reporting.rest.dto.mapper;
 
 import cz.cvut.kbss.reporting.dto.event.EventDto;
 import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
-import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.reporting.model.AbstractEntity;
 import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;

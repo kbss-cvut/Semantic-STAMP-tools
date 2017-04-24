@@ -151,6 +151,7 @@ public class EventFactorsSerializationTest {
         factor.addType(Generator.randomFactorType());
         factor.setUri(Generator.generateUri());
 
+        dtoMapper.occurrenceToOccurrenceDto(occurrence);
         final FactorGraph graph = dtoMapper.occurrenceToFactorGraph(occurrence);
         final Optional<FactorGraphEdge> result = graph.getEdges().stream()
                                                       .filter(e -> e.getLinkType()
