@@ -10,6 +10,7 @@ import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.*;
+import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.reporting.util.Constants;
@@ -317,6 +318,57 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     }
 
     @Test
+    public void persistPersistsAlsoInitialReport() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        report.setInitialReport(OccurrenceReportGenerator.generateInitialReport());
+
+        occurrenceReportService.persist(report);
+        assertNotNull(report.getInitialReport().getUri());
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNotNull(em.find(InitialReport.class, report.getInitialReport().getUri()));
+        } finally {
+            em.close();
+        }
+        assertNotNull(occurrenceReportService.find(report.getUri()).getInitialReport());
+    }
+
+    @Test
+    public void createNewRevisionReferencesOriginalInitialReport() {
+        final OccurrenceReport firstRevision = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        firstRevision.setInitialReport(OccurrenceReportGenerator.generateInitialReport());
+        occurrenceReportService.persist(firstRevision);
+        for (int i = 0; i < Generator.randomInt(2, 5); i++) {
+            final OccurrenceReport revision = occurrenceReportService.createNewRevision(firstRevision.getFileNumber());
+            assertNotNull(revision.getInitialReport());
+            assertEquals(firstRevision.getInitialReport().getUri(), revision.getInitialReport().getUri());
+        }
+    }
+
+    @Test
+    public void removeReportChainDeletesCorrectlyInitialReport() {
+        final OccurrenceReport firstRevision = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        firstRevision.setInitialReport(OccurrenceReportGenerator.generateInitialReport());
+        occurrenceReportService.persist(firstRevision);
+        final URI initialReportUri = firstRevision.getInitialReport().getUri();
+        final List<OccurrenceReport> chain = new ArrayList<>();
+        chain.add(firstRevision);
+        for (int i = 0; i < Generator.randomInt(2, 5); i++) {
+            final OccurrenceReport revision = occurrenceReportService.createNewRevision(firstRevision.getFileNumber());
+            assertEquals(firstRevision.getInitialReport().getUri(), revision.getInitialReport().getUri());
+            chain.add(revision);
+        }
+        occurrenceReportService.removeReportChain(firstRevision.getFileNumber());
+        chain.forEach(r -> assertFalse(occurrenceReportService.exists(r.getUri())));
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNull(em.find(InitialReport.class, initialReportUri));
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
     public void updateTraverserCorrectlyToFactors() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         report.getOccurrence().addChild(OccurrenceReportGenerator.generateEvent());
@@ -386,6 +438,35 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
             assertEquals(newEvent.getTypes(), eResult.getTypes());
             assertEquals(newEvent.getStartTime(), eResult.getStartTime());
             assertEquals(newEvent.getEndTime(), eResult.getEndTime());
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void persistPersistsAlsoInitialReportWithItemsExtractedByTextAnalysis() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        final InitialReport initialReport = OccurrenceReportGenerator.generateInitialReport();
+        report.setInitialReport(initialReport);
+        initialReport.setExtractedItems(IntStream.range(5, 10).mapToObj(
+                i -> new ExtractedItem(0.5, "EventType" + i, Generator.generateEventType())).collect(
+                Collectors.toSet()));
+        occurrenceReportService.persist(report);
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertNotNull(initialReport);
+        assertEquals(initialReport.getExtractedItems().size(), result.getInitialReport().getExtractedItems().size());
+
+        final EntityManager em = emf.createEntityManager();
+        try {
+            initialReport.getExtractedItems().forEach(item -> {
+                assertNotNull(item.getUri());
+                final ExtractedItem itemResult = em.find(ExtractedItem.class, item.getUri());
+                assertNotNull(itemResult);
+                assertEquals(item.getConfidence(), itemResult.getConfidence(), 0.001);
+                assertEquals(item.getLabel(), itemResult.getLabel());
+                assertEquals(item.getResource(), itemResult.getResource());
+            });
         } finally {
             em.close();
         }

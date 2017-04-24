@@ -2,12 +2,13 @@
 
 describe('ReportController', function () {
 
-    var React = require('react'),
+    const React = require('react'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         RouterStore = require('../../js/stores/RouterStore'),
-        ReportController = require('../../js/components/report/ReportController'),
+        ReportController = require('../../js/components/report/ReportController').default,
+        ReportFactory = require('../../js/model/ReportFactory'),
         Routes = require('../../js/utils/Routes'),
         Constants = require('../../js/constants/Constants');
 
@@ -16,9 +17,9 @@ describe('ReportController', function () {
         Environment.mockGantt();
     });
 
-    it('Loads existing report when report key is passed in path params', function () {
+    it('loads existing report when report key is passed in path params', function () {
         spyOn(Actions, 'loadReport');
-        var params = {reportKey: 12345},
+        const params = {reportKey: 12345},
             controller = Environment.render(<ReportController params={params}/>),
             state = controller.state;
         expect(Actions.loadReport).toHaveBeenCalledWith(params.reportKey);
@@ -26,8 +27,8 @@ describe('ReportController', function () {
         expect(state.report).toBeNull();
     });
 
-    it('Initializes new report when no key is specified', function () {
-        var controller = Environment.render(<ReportController params={{}}/>),
+    it('initializes new report when no key is specified', function () {
+        const controller = Environment.render(<ReportController params={{}}/>),
             report = controller.state.report;
 
         expect(controller.state.loading).toBeFalsy();
@@ -36,5 +37,17 @@ describe('ReportController', function () {
         expect(report.occurrence).toBeDefined();
         expect(report.occurrence.startTime).toBeDefined();
         expect(report.occurrence.endTime).toBeDefined();
+    });
+
+    it('uses report passed as transition payload', () => {
+        const report = ReportFactory.createOccurrenceReport();
+        report.initialReport = {
+            description: 'Blablabla'
+        };
+        RouterStore.setTransitionPayload(Routes.createReport.name, report);
+        const controller = Environment.render(<ReportController params={{}}/>);
+
+        expect(controller.state.loading).toBeFalsy();
+        expect(controller.state.report).toEqual(report);
     });
 });

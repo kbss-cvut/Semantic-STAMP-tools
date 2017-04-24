@@ -161,6 +161,7 @@ class FactorDetail extends React.Component {
         factor.statement = this.state.statement ? this.state.statement : {};
         factor.text = this.state.eventType.name;
         this._mergeStatementState(factor.statement);
+        this._removeSuggestedType(factor.statement);
         factor.start_date = new Date(factor.statement.startTime);
         factor.end_date = new Date(factor.statement.endTime);
         this.props.onSave();
@@ -171,6 +172,13 @@ class FactorDetail extends React.Component {
         statement.startTime = this.state.startDate;
         statement.endTime = gantt.calculateEndDate(new Date(statement.startTime), this.state.duration, gantt.config.duration_unit).getTime();
         statement.question = this.state.statement.question;
+    };
+
+    _removeSuggestedType(statement) {
+        const index = statement.types ? statement.types.indexOf(Vocabulary.SUGGESTED) : -1;
+        if (index !== -1) {
+            statement.types.splice(index, 1);
+        }
     };
 
 

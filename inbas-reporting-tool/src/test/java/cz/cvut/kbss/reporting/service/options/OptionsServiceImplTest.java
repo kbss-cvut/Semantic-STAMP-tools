@@ -68,6 +68,7 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         final Object res = optionsService.getOptions(category);
         assertTrue(res instanceof RawJson);
         assertEquals(new RawJson(DATA), res);
+        mockServer.verify();
     }
 
     private String expectedUrl(String fileName) throws Exception {

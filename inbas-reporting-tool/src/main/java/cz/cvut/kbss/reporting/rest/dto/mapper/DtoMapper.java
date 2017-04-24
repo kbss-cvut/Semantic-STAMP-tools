@@ -12,6 +12,9 @@ import cz.cvut.kbss.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.reporting.factorgraph.traversal.DefaultFactorGraphTraverser;
 import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
+import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.reporting.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -187,19 +190,25 @@ public abstract class DtoMapper {
         if (occurrence == null) {
             return null;
         }
-        if (eventDtoRegistry == null) {
-            reset();
-        }
+        assert eventDtoRegistry != null;
+        assert eventDtoRegistry.containsKey(occurrence.getUri());
         final DtoNodeVisitor nodeVisitor = new DtoNodeVisitor(this, random, eventDtoRegistry);
-        final FactorGraphTraverser traverser = new DefaultFactorGraphTraverser(nodeVisitor, null);
+        final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(nodeVisitor, null);
         traverser.traverse(occurrence);
         final DtoEdgeVisitor edgeVisitor = new DtoEdgeVisitor(nodeVisitor.getInstanceMap());
         traverser.setFactorGraphEdgeVisitor(edgeVisitor);
         traverser.traverse(occurrence);
         final FactorGraph graph = new FactorGraph();
         graph.setNodes(new ArrayList<>(nodeVisitor.getInstanceMap().values()));
+        clearTemporaryUris(nodeVisitor.getTemporaryUris(), graph);
         graph.setEdges(edgeVisitor.getEdges());
+        reset();
         return graph;
+    }
+
+    private void clearTemporaryUris(Set<URI> tempUris, FactorGraph factorGraph) {
+        factorGraph.getNodes().stream().filter(node -> tempUris.contains(node.getUri()))
+                   .forEach(node -> node.setUri(null));
     }
 
     public Occurrence factorGraphToOccurrence(FactorGraph graph) {

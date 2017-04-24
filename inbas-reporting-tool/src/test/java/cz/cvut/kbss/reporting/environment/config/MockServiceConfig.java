@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.environment.config;
 import cz.cvut.kbss.reporting.service.*;
 import cz.cvut.kbss.reporting.service.data.FileDataLoader;
 import cz.cvut.kbss.reporting.service.data.RemoteDataLoader;
+import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
 import cz.cvut.kbss.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.reporting.service.options.OptionsService;
 import cz.cvut.kbss.reporting.service.search.SearchService;
@@ -86,5 +87,10 @@ public class MockServiceConfig {
     @Bean
     public FormGenService formGenService() {
         return mock(FormGenService.class);
+    }
+
+    @Bean
+    public OccurrenceReportFactory occurrenceReportFactory() {
+        return mock(OccurrenceReportFactory.class);
     }
 }

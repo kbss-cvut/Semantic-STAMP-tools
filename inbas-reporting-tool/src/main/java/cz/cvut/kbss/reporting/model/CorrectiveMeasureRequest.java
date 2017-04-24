@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import static cz.cvut.kbss.reporting.util.Constants.DESCRIPTION_TO_STRING_THRESHOLD;
+
 /**
  * The responsiblePerson/Organization and basedOnEvent/Occurrence fields are here because of the lack of support for
  * inheritance in JOPA. This should be handled on DTO level, where these fields should be replaced with ones using
@@ -17,8 +19,6 @@ import java.util.Set;
  */
 @OWLClass(iri = Vocabulary.s_c_corrective_measure_request)
 public class CorrectiveMeasureRequest extends AbstractEntity implements Serializable {
-
-    static final int TO_STRING_MAX = 50;
 
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String description;
@@ -104,7 +104,8 @@ public class CorrectiveMeasureRequest extends AbstractEntity implements Serializ
         // First 50 characters of the description
         if (description != null) {
             return "CorrectiveMeasureRequest{" +
-                    (description.length() > TO_STRING_MAX ? description.substring(0, TO_STRING_MAX) + "..." :
+                    (description.length() > DESCRIPTION_TO_STRING_THRESHOLD ?
+                     description.substring(0, DESCRIPTION_TO_STRING_THRESHOLD) + "..." :
                      description) + '}';
         }
         return "CorrectiveMeasureRequest{" + uri + "}";

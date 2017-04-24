@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+import static cz.cvut.kbss.reporting.util.Constants.DESCRIPTION_TO_STRING_THRESHOLD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -67,8 +68,8 @@ public class CorrectiveMeasureRequestTest {
                         " ut aliquip ex ea commodo consequat.");
         final String result = request.toString();
         assertTrue(result.length() <=
-                CorrectiveMeasureRequest.TO_STRING_MAX + CorrectiveMeasureRequest.class.getSimpleName().length() + 5);
-        assertTrue(result.contains(request.getDescription().substring(0, CorrectiveMeasureRequest.TO_STRING_MAX)));
+                DESCRIPTION_TO_STRING_THRESHOLD + CorrectiveMeasureRequest.class.getSimpleName().length() + 5);
+        assertTrue(result.contains(request.getDescription().substring(0, DESCRIPTION_TO_STRING_THRESHOLD)));
     }
 
     @Test

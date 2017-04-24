@@ -42,6 +42,7 @@ public class EventFactorsSerializationTest {
     @Test
     public void testSerializationOfOccurrenceWithSubEvents() throws Exception {
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
+        dtoMapper.occurrenceToOccurrenceDto(occurrence);
         final FactorGraph container = dtoMapper.occurrenceToFactorGraph(occurrence);
         verifyStructure(occurrence, container);
     }
@@ -132,6 +133,7 @@ public class EventFactorsSerializationTest {
     @Test
     public void testSerializationOfLinksBetweenOccurrenceAndEventsAtSameLevel() throws Exception {
         final Occurrence occurrence = generateOccurrenceWithLinkChainOnSameLevel();
+        dtoMapper.occurrenceToOccurrenceDto(occurrence);
         final FactorGraph container = dtoMapper.occurrenceToFactorGraph(occurrence);
         verifyStructure(occurrence, container);
     }
@@ -186,6 +188,7 @@ public class EventFactorsSerializationTest {
     public void testSerializationOfOccurrenceWithSubEventsConnectedByFactors() throws Exception {
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
         addFactorsToStructure(occurrence.getChildren());
+        dtoMapper.occurrenceToOccurrenceDto(occurrence);
         final FactorGraph graph = dtoMapper.occurrenceToFactorGraph(occurrence);
 
         verifyStructure(occurrence, graph);
@@ -216,6 +219,7 @@ public class EventFactorsSerializationTest {
     public void testSerializationOfOccurrenceWithFactorsConnectingEventsFromDifferentSubtrees() {
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
         addCrossSubtreeFactors(occurrence.getChildren());
+        dtoMapper.occurrenceToOccurrenceDto(occurrence);
         final FactorGraph graph = dtoMapper.occurrenceToFactorGraph(occurrence);
         verifyStructure(occurrence, graph);
     }
@@ -244,6 +248,7 @@ public class EventFactorsSerializationTest {
     public void serializationOfEventSiblingsOrdersThemByIndex() {
         final Occurrence occurrence = prepareOccurrenceWithChildren(true);
 
+        dtoMapper.occurrenceToOccurrenceDto(occurrence);
         final FactorGraph result = dtoMapper.occurrenceToFactorGraph(occurrence);
         Integer previousIndex = -1;
         for (EventDto node : result.getNodes()) {
@@ -275,6 +280,7 @@ public class EventFactorsSerializationTest {
     public void serializationOfEventsWithNullIndexIsLossLess() {
         final Occurrence occurrence = prepareOccurrenceWithChildren(false);
         final int expectedSize = 1 + occurrence.getChildren().size();
+        dtoMapper.occurrenceToOccurrenceDto(occurrence);
         final FactorGraph result = dtoMapper.occurrenceToFactorGraph(occurrence);
         assertEquals(expectedSize, result.getNodes().size());
     }

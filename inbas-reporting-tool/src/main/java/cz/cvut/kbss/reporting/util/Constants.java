@@ -38,6 +38,11 @@ public final class Constants {
     public static final String APPLICATION_JSON_LD_TYPE = "application/ld+json";
 
     /**
+     * text/boolean MIME type. Useful for ASK queries.
+     */
+    public static final String TEXT_BOOLEAN_TYPE = "text/boolean";
+
+    /**
      * Prefix for basic authentication for the Authorization HTTP header.
      */
     public static final String BASIC_AUTHORIZATION_PREFIX = "Basic ";
@@ -83,7 +88,7 @@ public final class Constants {
 
     /**
      * Folder containing options files for the application.
-     *
+     * <p>
      * Some options can be stored directly in the application.
      */
     public static final String OPTION_FILES_DIRECTORY = "option";
@@ -102,6 +107,13 @@ public final class Constants {
      * Name of the URL parameter specifying query sent to remote repository.
      */
     public static final String QUERY_QUERY_PARAM = "query";
+
+    /**
+     * Maximum length of a description used by the {@code toString} method.
+     * <p>
+     * Anything longer that this threshold may be trimmed.
+     */
+    public static final int DESCRIPTION_TO_STRING_THRESHOLD = 50;
 
     private Constants() {
         throw new AssertionError();

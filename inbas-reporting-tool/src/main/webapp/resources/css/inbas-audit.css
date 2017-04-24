@@ -413,6 +413,10 @@ td.actions button {
     border: 1px solid #398439;
 }
 
+.factor-suggested {
+    font-style: italic;
+}
+
 ul.event-type {
     list-style-type: none;
 }
@@ -791,4 +795,22 @@ button.in-input-line {
 
 .rich-editor-controls .numbering:before {
     content: "1. ";
+}
+
+.text-analysis-result {
+    display: inline-table;
+    margin: 0.2em 0.1em;
+    text-decoration: none;
+}
+
+.text-analysis-result:hover {
+    text-decoration: none;
+}
+
+.text-analysis-result:active {
+    text-decoration: none;
+}
+
+.text-analysis-result:first-child {
+    margin-left: 0;
 }

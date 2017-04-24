@@ -49,16 +49,22 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     private OccurrenceReport persistReport() {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
-        report.setAuthor(author);
+        final OccurrenceReport report = report(false);
         occurrenceReportDao.persist(report);
+        return report;
+    }
+
+    private OccurrenceReport report(boolean withFactorGraph) {
+        final OccurrenceReport report =
+                withFactorGraph ? OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph() :
+                OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
         return report;
     }
 
     @Test
     public void persistReportWithFactorGraphCascadesPersistToAppropriateEventInstances() {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
-        report.setAuthor(author);
+        final OccurrenceReport report = report(true);
         occurrenceReportDao.persist(report);
 
         final OccurrenceReport res = occurrenceReportDao.find(report.getUri());
@@ -129,8 +135,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void findByOccurrenceGetsReportsWithMatchingOccurrence() {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
-        report.setAuthor(author);
+        final OccurrenceReport report = report(false);
         occurrenceReportDao.persist(report);
         final Occurrence occurrence = report.getOccurrence();
 
@@ -174,8 +179,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     }
 
     private OccurrenceReport prepareReportWithMeasureRequests() {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
-        report.setAuthor(author);
+        final OccurrenceReport report = report(false);
         final Organization org = new Organization(ORGANIZATION_NAME);
         report.setCorrectiveMeasures(new HashSet<>());
         organizationDao.persist(org);   // The organization must exist
@@ -251,8 +255,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void updateReportByAddingItemsIntoFactorGraph() {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
-        report.setAuthor(author);
+        final OccurrenceReport report = report(true);
         occurrenceReportDao.persist(report);
 
         final Event addedOne = new Event();
@@ -277,8 +280,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     @Test
     public void updateReportByRemovingItemsFromFactorGraph() {
-        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
-        report.setAuthor(author);
+        final OccurrenceReport report = report(true);
         occurrenceReportDao.persist(report);
 
         final Iterator<Event> evtRemove = report.getOccurrence().getChildren().iterator().next().getChildren()

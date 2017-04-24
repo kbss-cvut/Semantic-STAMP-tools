@@ -131,4 +131,12 @@ public class OccurrenceReportTest {
         assertTrue(report.getReferences().contains(r2));
         assertTrue(report.getReferences().contains(r3));
     }
+
+    @Test
+    public void copyConstructorCopiesInitialReportReference() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setInitialReport(OccurrenceReportGenerator.generateInitialReport());
+        final OccurrenceReport copy = new OccurrenceReport(report);
+        assertSame(report.getInitialReport(), copy.getInitialReport());
+    }
 }

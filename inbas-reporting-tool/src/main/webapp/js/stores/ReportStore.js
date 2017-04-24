@@ -172,6 +172,16 @@ const ReportStore = Reflux.createStore({
 
     getReportsForSearch: function () {
         return this._searchReports;
+    },
+
+    onImportInitialReport: function (initialReport, onSuccess, onError) {
+        Ajax.post(BASE_URL_WITH_SLASH + 'initial', initialReport).end((data) => {
+            data.isNew = true;
+            JsonReferenceResolver.resolveReferences(data);
+            if (onSuccess) {
+                onSuccess(data);
+            }
+        }, onError);
     }
 });
 
