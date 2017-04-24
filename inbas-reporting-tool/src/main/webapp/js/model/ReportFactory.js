@@ -21,7 +21,8 @@ module.exports = {
 
     createFactor: function (parent = null) {
         const factor = {
-            javaClass: Constants.EVENT_JAVA_CLASS
+            javaClass: Constants.EVENT_JAVA_CLASS,
+            types: []
         };
         if (parent) {
             factor.startTime = parent.startTime;
