@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,9 +28,11 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@PropertySource("classpath:text-analysis.properties")
 @Service
 public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceReportFactory {
 
@@ -44,6 +47,7 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
     private DataLoader localLoader;
 
     private String isEventTypeQuery;
+    private final List<String> vocabularies;
 
     @Autowired
     public TextAnalyzingOccurrenceReportFactory(RestTemplate restTemplate, Environment environment,
@@ -51,6 +55,8 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
         this.restTemplate = restTemplate;
         this.environment = environment;
         this.localLoader = localLoader;
+        final String vocabs = environment.getProperty(ConfigParam.TEXT_ANALYSIS_VOCABULARIES.toString(), "");
+        this.vocabularies = Arrays.asList(vocabs.split(","));
     }
 
     @PostConstruct
@@ -74,6 +80,7 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
 
     private void analyze(OccurrenceReport report) {
         final TextAnalysisInput taInput = new TextAnalysisInput(report.getInitialReport().getDescription());
+        taInput.setVocabulary(vocabularies);
         final String serviceUrl = environment.getProperty(ConfigParam.TEXT_ANALYSIS_SERVICE_URL.toString(), "");
         if (serviceUrl.isEmpty()) {
             return;

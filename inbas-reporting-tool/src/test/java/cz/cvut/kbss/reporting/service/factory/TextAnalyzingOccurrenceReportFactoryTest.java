@@ -11,6 +11,8 @@ import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.util.ConfigParam;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,10 +28,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -218,5 +217,42 @@ public class TextAnalyzingOccurrenceReportFactoryTest extends BaseServiceTestRun
         final OccurrenceReport result = reportFactory.createFromInitialReport(initialReport());
         result.getOccurrence().getChildren()
               .forEach(e -> assertTrue(e.getTypes().contains(Vocabulary.s_c_suggested_by_text_analysis)));
+    }
+
+    @Test
+    public void passesVocabulariesToTextAnalysisService() throws Exception {
+        final InitialReport initialReport = initialReport();
+        final String vocabs = environment.getProperty("text-analysis.vocabularies");
+        final VocabularyMatcher matcher = new VocabularyMatcher(Arrays.asList(vocabs.split(",")));
+        mockServer.expect(requestTo(SERVICE_URL)).andExpect(method(HttpMethod.POST))
+                  .andExpect(content().string(matcher)).andRespond(
+                withSuccess(objectMapper.writeValueAsString(textAnalysisResult()), MediaType.APPLICATION_JSON));
+        final OccurrenceReport result = reportFactory.createFromInitialReport(initialReport);
+        assertNotNull(result);
+        mockServer.verify();
+    }
+
+    private static final class VocabularyMatcher extends BaseMatcher<String> {
+
+        private final List<String> vocabularies;
+
+        private VocabularyMatcher(List<String> vocabularies) {
+            this.vocabularies = vocabularies;
+        }
+
+        @Override
+        public boolean matches(Object item) {
+            if (!(item instanceof String)) {
+                return false;
+            }
+            final String strItem = (String) item;
+            final Optional<String> notFound = vocabularies.stream().filter(v -> !strItem.contains(v)).findAny();
+            return !notFound.isPresent();
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("should contain all vocabularies ").appendValue(vocabularies);
+        }
     }
 }
