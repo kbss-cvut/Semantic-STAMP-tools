@@ -6,15 +6,42 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 #PREFIX er: <http://localhost:48080/rdf4j-server/repositories/>
 
-SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count)
+SELECT ?event_type ?event_type_iri ?year ?month (count(*) AS ?count)
 {
- {
+  {
     SELECT ?event_type_iri (count(*) AS ?count) {
-      [a aso:Occurrence] rt:has_event_type ?event_type_iri .
+      [a aso:Occurrence]
+        rt:has_event_type ?event_type_iri ;
+        aso:has_start_time ?start_time .
+
+      {
+        SELECT (count(*) AS ?min) {
+          [a aso:Occurrence]
+            rt:has_event_type ?event_type_iri ;
+            aso:has_start_time ?start_time .
+
+          BIND(year(now()) AS ?thisYear)
+          BIND(month(now()) AS ?thisMonth)
+          BIND(year(?start_time) AS ?year)
+          BIND(month(?start_time) AS ?month)
+
+          FILTER (((?year + 1 = ?thisYear) && (?month >= ?thisMonth)) || (?year = ?thisYear))
+        }
+        GROUP BY ?event_type_iri
+        ORDER BY desc(?min)
+        OFFSET 4
+        LIMIT 1
+      }
+      BIND(year(now()) AS ?thisYear)
+      BIND(month(now()) AS ?thisMonth)
+      BIND(year(?start_time) AS ?year)
+      BIND(month(?start_time) AS ?month)
+
+      FILTER (((?year + 1 = ?thisYear) && (?month >= ?thisMonth)) || (?year = ?thisYear))
     }
-    GROUP BY ?event_type_iri
+    GROUP BY ?event_type_iri ?min
+    HAVING (?count >= ?min)
     ORDER BY desc(?count)
-    LIMIT 5
   }
 
   [a aso:Occurrence] rt:has_event_type ?event_type_iri ;
@@ -25,11 +52,7 @@ SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count)
   BIND(year(?start_time) AS ?year)
   BIND(month(?start_time) AS ?month)
 
-#  FILTER(
-#    ((?year + 3 > ?thisYear) && (?month >= ?thisMonth))
-#    ||
-#    (?year = ?thisYear)
-#  )
+  FILTER (((?year + 1 = ?thisYear) && (?month >= ?thisMonth)) || (?year = ?thisYear))
 
   OPTIONAL {
     SERVICE er:eccairs-aviation-3.4.0.2 {

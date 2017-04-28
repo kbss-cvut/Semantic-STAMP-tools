@@ -25,7 +25,22 @@ class EventtypeGraph extends React.Component {
                 },
                 configure: {
                     enabled: true,
-                    filter: ["edges","layout", "interaction", "manipulation", "selection", "renderer", "physics"]
+                    filter: (option,path) => {
+                        if ( path.indexOf('layout') !== -1 ) {
+                            if (
+                                (path.length == 1)
+                                || (option == 'levelSeparation')
+                                || (option == 'treeSpacing')
+                                || (option == 'direction')
+                            ) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                        return false;
+                    },//, "edges","interaction", "manipulation", "selection", "renderer", "physics"]
+                    showButton: false
                 },
 
                 interaction: {
@@ -58,6 +73,8 @@ class EventtypeGraph extends React.Component {
 
             let maxNode = 1
 
+            let fromToCount={};
+
             const addNode = (event_type) => {
                 let found = nodes.filter((item) => {
                     return (item.label == event_type)
@@ -86,6 +103,13 @@ class EventtypeGraph extends React.Component {
                 // let found = edges.filter((item) => {
                 //     return (item.from == from) && (item.to == to) && (item.label == relation_type)
                 // })
+                let x = fromToCount[from+to];
+                if (!x) {
+                    x = 0;
+                }
+
+                let y = ( ( x == 0 ) ? ( x ) :( (x % 2) - 0.5) );
+
                 let edge = {
                     arrowStrikethrough: false,
                     from: from,
@@ -107,8 +131,14 @@ class EventtypeGraph extends React.Component {
                                     'black'
                     },
                     highlight: 'black',
+                    smooth: {
+                        enabled: true,
+                        type: 'curvedCW',
+                        roundness: y
+                    }
                     // length: 1 / (count * count * count)
                 }
+                fromToCount[from+to] = x+1;
                 edges.push(edge);
                 // }
             }
@@ -145,7 +175,7 @@ class EventtypeGraph extends React.Component {
         if ( data == null) {
             return <div style={{ textAlign: "center", verticalAlign:"center"}}>No Graph Available. Select an Event Type.</div>;
         } else {
-            return <div>{this.props.title}<br/><Graph graph={data} options={this.state.graphOptions} style={{ width : '100%', height:'600px'}}/></div>;
+            return <div>{this.props.title}<br/><Graph graph={data} options={this.state.graphOptions} style={{ width : '100%', height:'400px'}}/></div>;
         }
     }
 }

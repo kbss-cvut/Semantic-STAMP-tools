@@ -77,7 +77,7 @@ module.exports = {
      */
     getMonthRangeFromNow(monthsBack) {
         const today = new Date();
-        const maxDate = this.getDateInt(today.getFullYear(),today.getMonth());
+        const maxDate = this.getDateInt(today.getFullYear(),today.getMonth()+1);
         const lastPeriod = new Date();
         lastPeriod.setMonth(lastPeriod.getMonth()-monthsBack);
         const minDate = this.getDateInt(lastPeriod.getFullYear(),lastPeriod.getMonth());

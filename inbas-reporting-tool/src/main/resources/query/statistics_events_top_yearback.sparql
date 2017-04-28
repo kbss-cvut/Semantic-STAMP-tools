@@ -8,10 +8,21 @@ PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 
 SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count)
 {
-  [a aso:Occurrence] <http://onto.fel.cvut.cz/ontologies/ufo/has_part> [
+  ?event
     rt:has_event_type ?event_type_iri ;
     aso:has_start_time ?start_time
-  ] .
+  .
+
+  ?event rt:has_event_type ?event_type_iri ;
+    aso:has_start_time ?start_time .
+
+  FILTER NOT EXISTS {
+     [<http://onto.fel.cvut.cz/ontologies/ufo/has_factor> ?event]
+  }
+
+  FILTER NOT EXISTS {
+     ?event a aso:Occurrence .
+  }
 
   BIND(year(now()) AS ?thisYear)
   BIND(month(now()) AS ?thisMonth)

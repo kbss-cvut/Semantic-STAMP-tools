@@ -9,7 +9,6 @@ import Container from "./Container";
 import CustomFrame from "./CustomFrame";
 import EventList from "./widgets/EventList";
 import EventFactorChains from "./widgets/EventFactorChains";
-import EventFactorGraph from "./widgets/EventFactorGraph";
 import EventtypeDashboard from "./widgets/EventtypeDashboard";
 import OccurrenceList from "./widgets/OccurrenceList";
 import OccurrenceSeverityTrends from "./widgets/OccurrenceSeverityTrends";
@@ -36,10 +35,6 @@ class StatisticsController extends React.Component {
                     type: EventtypeDashboard,
                     title: 'Event Type Dashboard',
                 },
-                EventFactorGraph: {
-                    type: EventFactorGraph,
-                    title: 'Event Type - Factor Type Graph',
-                },
                 OccurrenceSeverityTrends: {
                     type: OccurrenceSeverityTrends,
                     title: 'Occurrence Severity Trend',
@@ -58,11 +53,6 @@ class StatisticsController extends React.Component {
                     columns: [{
                         className: 'col-md-12 col-sm-12 col-xs-12',
                         widgets: [{key: 'EventtypeDashboard'}],
-                    }]
-                },{
-                    columns: [{
-                        className: 'col-md-12 col-sm-12 col-xs-12',
-                        widgets: [{key: 'EventFactorGraph'}],
                     }]
                 },{
                     columns: [{
