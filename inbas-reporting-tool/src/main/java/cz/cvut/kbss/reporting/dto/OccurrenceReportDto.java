@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import cz.cvut.kbss.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.reporting.model.LogicalDocument;
-import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.Resource;
-import cz.cvut.kbss.reporting.model.Vocabulary;
+import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.rest.dto.model.FormGenData;
 
 import java.net.URI;
@@ -28,6 +25,8 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
     private URI phase;
 
     private OccurrenceDto occurrence;
+
+    private InitialReport initialReport;
 
     private FactorGraph factorGraph;
 
@@ -93,6 +92,14 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     public void setOccurrence(OccurrenceDto occurrence) {
         this.occurrence = occurrence;
+    }
+
+    public InitialReport getInitialReport() {
+        return initialReport;
+    }
+
+    public void setInitialReport(InitialReport initialReport) {
+        this.initialReport = initialReport;
     }
 
     public FactorGraph getFactorGraph() {

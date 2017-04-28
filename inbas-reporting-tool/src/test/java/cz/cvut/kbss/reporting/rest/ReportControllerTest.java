@@ -13,13 +13,12 @@ import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.environment.util.ReportRevisionComparator;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
-import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.Vocabulary;
+import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
+import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,6 +49,9 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Autowired
     private ReportBusinessService reportServiceMock;
+
+    @Autowired
+    private OccurrenceReportFactory reportFactoryMock;
 
     @Autowired
     private DtoMapper mapper;
@@ -345,5 +347,29 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                                         .andExpect(status().isInternalServerError()).andReturn();
         final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
         assertEquals(message, errorInfo.getMessage());
+    }
+
+    @Test
+    public void createFromInitialReturnsNewOccurrenceReportInstance() throws Exception {
+        final InitialReport initialReport = OccurrenceReportGenerator.generateInitialReport();
+        final OccurrenceReport newReport = new OccurrenceReport();
+        newReport.setInitialReport(initialReport);
+        newReport.setOccurrence(new Occurrence());
+        when(reportFactoryMock.createFromInitialReport(any())).thenReturn(newReport);
+        final MvcResult result = mockMvc.perform(post(REPORTS_PATH + "initial").content(toJson(initialReport))
+                                                                               .contentType(
+                                                                                       MediaType.APPLICATION_JSON_VALUE))
+                                        .andExpect(status().isOk()).andReturn();
+        final OccurrenceReportDto report = readValue(result, OccurrenceReportDto.class);
+        assertNotNull(report);
+        assertNotNull(report.getInitialReport());
+        assertEquals(initialReport.getDescription(), report.getInitialReport().getDescription());
+        verify(reportFactoryMock).createFromInitialReport(any());
+    }
+
+    @Test
+    public void createFromInitialReturnsBadRequestWhenInitialReportIsMissing() throws Exception {
+        mockMvc.perform(post(REPORTS_PATH + "initial").contentType(MediaType.APPLICATION_JSON_VALUE))
+               .andExpect(status().isBadRequest());
     }
 }

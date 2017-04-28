@@ -7,6 +7,7 @@ import cz.cvut.kbss.reporting.dto.agent.AgentDto;
 import cz.cvut.kbss.reporting.dto.agent.OrganizationDto;
 import cz.cvut.kbss.reporting.dto.agent.PersonDto;
 import cz.cvut.kbss.reporting.dto.event.EventDto;
+import cz.cvut.kbss.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
@@ -323,5 +324,29 @@ public class DtoMapperTest {
         assertFalse(mapper.canMap(String.class));
         assertFalse(mapper.canMap(FactorGraphEdge.class));
         assertFalse(mapper.canMap(FactorGraphItem.class));
+    }
+
+    @Test
+    public void occurrenceToFactorGraphResetsEventRegistry() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrenceWithDescendantEvents(true);
+        mapper.occurrenceToOccurrenceDto(occurrence);
+        mapper.occurrenceToFactorGraph(occurrence);
+        final Occurrence another = OccurrenceReportGenerator.generateOccurrence();
+        mapper.occurrenceToOccurrenceDto(another);
+        final FactorGraph result = mapper.occurrenceToFactorGraph(another);
+        assertEquals(1, result.getNodes().size());
+    }
+
+    // This happens when events are added to occurrence based on text analysis (when initial report is imported)
+    @Test
+    public void occurrenceToFactorGraphCorrectlySerializesOccurrenceWithChildrenWithoutUris() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
+            occurrence.addChild(OccurrenceReportGenerator.generateEvent());
+        }
+        mapper.occurrenceToOccurrenceDto(occurrence);
+        final FactorGraph result = mapper.occurrenceToFactorGraph(occurrence);
+        assertEquals(occurrence.getChildren().size() + 1, result.getNodes().size());
+        assertEquals(occurrence.getChildren().size(), result.getEdges().size());
     }
 }

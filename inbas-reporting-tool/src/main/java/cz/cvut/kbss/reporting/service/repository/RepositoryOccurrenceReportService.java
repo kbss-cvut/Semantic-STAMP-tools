@@ -7,6 +7,7 @@ import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.persistence.dao.InitialReportDao;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.reporting.persistence.dao.OwlKeySupportingDao;
 import cz.cvut.kbss.reporting.service.OccurrenceReportService;
@@ -28,6 +29,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
 
     @Autowired
     private OccurrenceReportDao reportDao;
+
+    @Autowired
+    private InitialReportDao initialReportDao;
 
     @Autowired
     private SecurityUtils securityUtils;
@@ -52,6 +56,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     protected void prePersist(OccurrenceReport instance) {
         initReportData(instance);
         synchronizeEventTypes(instance.getOccurrence());
+        if (instance.getInitialReport() != null) {
+            initialReportDao.persist(instance.getInitialReport());
+        }
     }
 
     private void initReportData(OccurrenceReport instance) {

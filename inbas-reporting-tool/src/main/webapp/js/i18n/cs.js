@@ -83,12 +83,10 @@ module.exports = {
         'dashboard.search-tile': 'Hledat hlášení',
         'dashboard.search-placeholder': 'Název hlášení',
         'dashboard.view-all-tile': 'Prohlížet všechna hlášení',
-        'dashboard.create-empty-tile': 'Začít s prázdným hlášením',
-        'dashboard.create-import-tile': 'Importovat hlášení',
         'dashboard.recent-panel-heading': 'Nedávno přidaná/upravená hlášení',
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
         'dashboard.recent.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
-        'dashboard.import.import-e5': 'Importovat hlášení ve formátu E5X/E5F',
+        'dashboard.import-initial-tile': 'Importovat hlášení',
 
         'dashboard.unprocessed': 'Máte {count} nezpracovaných hlášení.',
 
@@ -133,12 +131,14 @@ module.exports = {
         'occurrence.class': 'Třída závažnosti',
         'occurrence.class-tooltip': 'Třída závažnosti - pole je povinné',
 
-        'initial.panel-title': 'Prvotní hlášení',
-        'initial.table-report': 'Hlášení',
-        'initial.wizard.add-title': 'Přidat prvotní hlášení',
-        'initial.wizard.edit-title': 'Editovat prvotní hlášení',
-        'initial.label': 'Prvotní hlášení',
-        'initial.tooltip': 'Text prvotního hlášení - pole je povinné',
+        'report.initial.import.title': 'Import prvotního hlášení',
+        'report.initial.import.run': 'Importovat',
+        'report.initial.import.text.tooltip': 'Vložte text prvotního hlášení',
+        'report.initial.import.importing-msg': 'Probíhá analýza hlášení',
+        'report.initial.text.label': 'Text',
+        'report.initial.label': 'Prvotní hlášení',
+        'report.initial.view.tooltip': 'Zobrazit prvotní hlášení',
+        'report.initial.analysis-results.label': 'Výsledky analýzy hlášení',
 
         'report.summary': 'Shrnutí hlášení',
         'report.created-by-msg': 'Vytvořil(a) {name} {date}.',
@@ -207,6 +207,7 @@ module.exports = {
         'factors.smallscreen.start': 'Počátek',
         'factors.smallscreen.end': 'Konec',
         'factors.smallscreen.add-tooltip': 'Přidat událost',
+        'factors.event-suggested': 'Faktor navržen na základě analýzy prvotního hlášení.',
 
         'notfound.title': 'Nenalezeno',
         'notfound.msg-with-id': 'Záznam \'{resource}\' s identifikátorem {identifier} nenalezen.',

@@ -1,13 +1,16 @@
 package cz.cvut.kbss.reporting.rest;
 
+import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportList;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
+import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
+import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -26,12 +29,19 @@ public class ReportController extends BaseController {
 
     private static final String REPORT_KEY_PARAM = "key";
 
-    @Autowired
-    @Qualifier("cachingReportBusinessService")
-    private ReportBusinessService reportService;
+    private final ReportBusinessService reportService;
+
+    private final DtoMapper dtoMapper;
+
+    private final OccurrenceReportFactory reportFactory;
 
     @Autowired
-    private DtoMapper dtoMapper;
+    public ReportController(@Qualifier("cachingReportBusinessService") ReportBusinessService reportService,
+                            DtoMapper dtoMapper, OccurrenceReportFactory reportFactory) {
+        this.reportService = reportService;
+        this.dtoMapper = dtoMapper;
+        this.reportFactory = reportFactory;
+    }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ReportList getAllReports(@RequestParam MultiValueMap<String, String> params) {
@@ -141,5 +151,17 @@ public class ReportController extends BaseController {
                             " or the report chain does not exist.");
         }
         return dtoMapper.reportToReportDto(report);
+    }
+
+    /**
+     * Creates a new occurrence report instance based on the specified {@link InitialReport}.
+     *
+     * @param initialReport The report to start from
+     * @return New occurrence report (not persisted)
+     */
+    @RequestMapping(value = "/initial", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public OccurrenceReportDto createFromInitial(@RequestBody InitialReport initialReport) {
+        return dtoMapper.occurrenceReportToOccurrenceReportDto(reportFactory.createFromInitialReport(initialReport));
     }
 }

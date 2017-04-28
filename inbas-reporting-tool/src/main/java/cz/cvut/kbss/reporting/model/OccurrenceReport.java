@@ -33,6 +33,9 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
     @OWLObjectProperty(iri = Vocabulary.s_p_documents, fetch = FetchType.EAGER)
     private Occurrence occurrence;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_based_on, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, readOnly = true)
+    private InitialReport initialReport;
+
     @ParticipationConstraints(nonEmpty = true)
     @OWLObjectProperty(iri = Vocabulary.s_p_has_author, fetch = FetchType.EAGER)
     private Person author;
@@ -76,6 +79,7 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
         this.fileNumber = other.fileNumber;
         this.phase = other.phase;
         this.occurrence = Occurrence.copyOf(other.occurrence);
+        this.initialReport = other.initialReport;
         this.severityAssessment = other.severityAssessment;
         this.summary = other.summary;
         if (other.correctiveMeasures != null) {
@@ -117,6 +121,14 @@ public class OccurrenceReport extends AbstractEntity implements LogicalDocument,
 
     public void setOccurrence(Occurrence occurrence) {
         this.occurrence = occurrence;
+    }
+
+    public InitialReport getInitialReport() {
+        return initialReport;
+    }
+
+    public void setInitialReport(InitialReport initialReport) {
+        this.initialReport = initialReport;
     }
 
     public Person getAuthor() {

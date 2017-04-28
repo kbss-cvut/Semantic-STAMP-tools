@@ -11,6 +11,7 @@ describe('Factor detail dialog', function () {
         Generator = require('../environment/Generator').default,
         Actions = require('../../js/actions/Actions'),
         Constants = require('../../js/constants/Constants'),
+        Vocabulary = require('../../js/constants/Vocabulary'),
         FactorDetail = require('../../js/components/factor/FactorDetail').default,
         OptionsStore = require('../../js/stores/OptionsStore'),
         ReportFactory = require('../../js/model/ReportFactory'),
@@ -151,5 +152,18 @@ describe('Factor detail dialog', function () {
             detailsButton = Environment.getComponentByTagAndText(detail._modalFooter, 'button',
                 require('../../js/i18n/en').messages['factors.detail.details']);
         expect(detailsButton.disabled).toBeTruthy();
+    });
+
+    it('removes the \'suggested\' type on save', () => {
+        spyOn(OptionsStore, 'getOptions').and.returnValue(Generator.getJsonLdSample());
+        const et = Generator.getJsonLdSample()[0]['@id'];
+        factor.statement.types = [Vocabulary.SUGGESTED, et];
+        factor.statement.eventType = et;
+        const detail = Environment.render(<FactorDetail scale='second' factor={factor} onSave={callbacks.onSave}
+                                                        onClose={callbacks.onClose} onDelete={callbacks.onDelete}
+                                                        show={true} report={report}/>);
+        detail.onSave();
+        const statement = factor.statement;
+        expect(statement.types.indexOf(Vocabulary.SUGGESTED)).toEqual(-1);
     });
 });

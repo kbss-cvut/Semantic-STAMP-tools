@@ -1,64 +1,76 @@
 'use strict';
 
-var React = require('react');
-var Reflux = require('reflux');
+import React from "react";
+import Actions from "../../actions/Actions";
+import Dashboard from "./Dashboard";
+import I18nWrapper from "../../i18n/I18nWrapper";
+import injectIntl from "../../utils/injectIntl";
+import Routes from "../../utils/Routes";
+import Routing from "../../utils/Routing";
+import UserStore from "../../stores/UserStore";
 
-var injectIntl = require('../../utils/injectIntl');
+class DashboardController extends React.Component {
 
-var Actions = require('../../actions/Actions');
-var Routing = require('../../utils/Routing');
-var Routes = require('../../utils/Routes');
-var UserStore = require('../../stores/UserStore');
-var Dashboard = require('./Dashboard').default;
-var I18nMixin = require('../../i18n/I18nMixin');
-
-var DashboardController = React.createClass({
-    mixins: [
-        Reflux.listenTo(UserStore, 'onUserLoaded'),
-        I18nMixin
-    ],
-    getInitialState: function () {
-        return {
+    constructor(props) {
+        super(props);
+        this.state = {
             firstName: UserStore.getCurrentUser() ? UserStore.getCurrentUser().firstName : ''
-        }
-    },
+        };
+    }
 
-    componentWillMount: function () {
+    componentWillMount() {
         Actions.loadAllReports();
-    },
+        this.unsubscribe = UserStore.listen(this.onUserLoaded);
+    }
 
-    onUserLoaded: function (user) {
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    onUserLoaded = (user) => {
         this.setState({firstName: user.firstName});
-    },
+    };
 
-    createEmptyReport: function () {
+    static createEmptyReport() {
         Routing.transitionTo(Routes.createReport, {
             handlers: {
                 onSuccess: Routes.reports,
                 onCancel: Routes.dashboard
             }
         });
-    },
+    }
 
-    openReport: function (report) {
+    static openReport(report) {
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
             handlers: {onCancel: Routes.dashboard}
         });
-    },
+    }
 
-    showReports: function () {
+    static showReports() {
         Routing.transitionTo(Routes.reports);
-    },
+    }
+
+    static onImportFinish = (report) => {
+        Routing.transitionTo(Routes.createReport, {
+            payload: report,
+            handlers: {
+                onSuccess: Routes.reports,
+                onCancel: Routes.dashboard
+            }
+        });
+    };
 
 
-    render: function () {
+    render() {
         return <div>
             <Dashboard userFirstName={this.state.firstName}
-                       showAllReports={this.showReports} createEmptyReport={this.createEmptyReport}
-                       openReport={this.openReport}/>
+                       showAllReports={DashboardController.showReports}
+                       createEmptyReport={DashboardController.createEmptyReport}
+                       onImportFinish={DashboardController.onImportFinish}
+                       openReport={DashboardController.openReport}/>
         </div>;
     }
-});
+}
 
-module.exports = injectIntl(DashboardController);
+export default injectIntl(I18nWrapper(DashboardController));

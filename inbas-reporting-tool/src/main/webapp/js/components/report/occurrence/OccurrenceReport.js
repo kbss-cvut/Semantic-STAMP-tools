@@ -13,6 +13,7 @@ const Attachments = require('../attachment/Attachments').default;
 const BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
 const Factors = require('../../factor/Factors');
 const CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
+const InitialReport = require('../initial/InitialReport').default;
 const PhaseTransition = require('../../misc/PhaseTransition').default;
 const ReportProvenance = require('../ReportProvenance').default;
 const ReportSummary = require('../ReportSummary').default;
@@ -39,7 +40,8 @@ const OccurrenceReport = React.createClass({
             loadingWizard: false,
             isWizardOpen: false,
             wizardProperties: null,
-            showDeleteDialog: false
+            showDeleteDialog: false,
+            showInitialReport: false
         };
     },
 
@@ -87,12 +89,22 @@ const OccurrenceReport = React.createClass({
         this.setState({isWizardOpen: false});
     },
 
+    _displayInitialReport: function () {
+        this.setState({showInitialReport: true});
+    },
+
+    _hideInitialReport: function () {
+        this.setState({showInitialReport: false});
+    },
+
     render: function () {
         const report = this.props.report;
 
         return <div>
             <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
                           onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
+            {this.state.showInitialReport &&
+            <InitialReport initialReport={report.initialReport} onClose={this._hideInitialReport}/>}
 
             <Panel header={this.renderHeader()} bsStyle='primary'>
                 <ButtonToolbar className='float-right'>
@@ -121,7 +133,14 @@ const OccurrenceReport = React.createClass({
                     </div>
 
                     <Panel>
-                        <ReportProvenance report={report} revisions={this.props.revisions}/>
+                        <ReportProvenance report={report}>
+                            <div className='row'>
+                                <div className='col-xs-4'>
+                                    {this.props.revisions}
+                                </div>
+                            </div>
+                            {this._renderInitialReportTrigger()}
+                        </ReportProvenance>
                     </Panel>
 
                     {this.renderButtons()}
@@ -164,6 +183,20 @@ const OccurrenceReport = React.createClass({
             <Factors ref={(c) => this.factors = c ? c.getWrappedInstance() : c} report={this.props.report}
                      rootAttribute='occurrence'
                      onChange={this.onChanges}/>;
+    },
+
+    _renderInitialReportTrigger: function () {
+        if (!this.props.report.initialReport) {
+            return null;
+        }
+        return <div className='row'>
+            <div className='col-xs-2 form-group'>
+                <Button bsStyle='primary' bsSize='small' onClick={this._displayInitialReport}
+                        title={this.i18n('report.initial.view.tooltip')}>
+                    {this.i18n('report.initial.label')}
+                </Button>
+            </div>
+        </div>;
     },
 
     renderButtons: function () {
