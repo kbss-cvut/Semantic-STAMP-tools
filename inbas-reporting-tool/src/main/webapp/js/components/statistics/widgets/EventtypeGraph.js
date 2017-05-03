@@ -29,6 +29,7 @@ class EventtypeGraph extends React.Component {
                         if ( path.indexOf('layout') !== -1 ) {
                             if (
                                 (path.length == 1)
+                                || (option == 'enabled')
                                 || (option == 'levelSeparation')
                                 || (option == 'treeSpacing')
                                 || (option == 'direction')

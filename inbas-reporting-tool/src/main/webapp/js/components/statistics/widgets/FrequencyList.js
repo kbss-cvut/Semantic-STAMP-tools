@@ -16,6 +16,7 @@ var FrequencyList = React.createClass({
 
     propTypes: {
         query: React.PropTypes.string.isRequired,
+        allowZeros: React.PropTypes.bool.isRequired,
         // onSelect: React.PropTypes.function.isRequired
     },
 
@@ -78,7 +79,7 @@ var FrequencyList = React.createClass({
 
             const sum= data.reduce((memo, val) => memo + Number(val.count), 0);
 
-            if ( sum > 0 ) {
+            if ( this.props.allowZeros || ( sum > 0 ) ) {
                 rows.push({
                     key: i,
                     data: data,

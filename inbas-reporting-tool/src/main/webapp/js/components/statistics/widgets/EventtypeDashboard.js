@@ -41,7 +41,7 @@ class EventtypeDashboard extends React.Component {
             <tbody>
             <tr>
                 <td className="col-xs-4 vtop">
-                    <FrequencyList query="events_top_yearback" onSelect={(data) => this.onSelect(data)}
+                    <FrequencyList query="events_top_yearback" allowZeros={true} onSelect={(data) => this.onSelect(data)}
                                    loadingOn={this.props.loadingOn} loadingOff={this.props.loadingOff}/>
                 </td>
 

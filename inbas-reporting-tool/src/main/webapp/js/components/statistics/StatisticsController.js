@@ -21,11 +21,7 @@ class StatisticsController extends React.Component {
             widgets: {
                 OccurrenceList: {
                     type: OccurrenceList,
-                    title: 'Top 5 Occurrence Categories',
-                },
-                EventList: {
-                    type: EventList,
-                    title: 'Top Event types',
+                    title: 'Occurrence Categories (Top 5 in Last Year)',
                 },
                 EventFactorChains: {
                     type: EventFactorChains,
@@ -33,7 +29,7 @@ class StatisticsController extends React.Component {
                 },
                 EventtypeDashboard: {
                     type: EventtypeDashboard,
-                    title: 'Event Type Dashboard',
+                    title: 'Root Event Types',
                 },
                 OccurrenceSeverityTrends: {
                     type: OccurrenceSeverityTrends,

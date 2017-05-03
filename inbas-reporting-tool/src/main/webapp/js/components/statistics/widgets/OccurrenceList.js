@@ -4,7 +4,7 @@ import React from "react";
 import FrequencyList from "./FrequencyList";
 
 const OccurrenceList = () => {
-    return <FrequencyList query="occurrence_categories_top_yearback" fromColor="red" toColor="lemonChiffon"/>;
+    return <FrequencyList query="occurrence_categories_top_yearback" allowZeros={false} fromColor="red" toColor="lemonChiffon"/>;
 };
 
 export default OccurrenceList;
