@@ -101,7 +101,7 @@ public class TextAnalyzingOccurrenceReportFactory extends DefaultOccurrenceRepor
 
     private void enhanceReportWithTextAnalysisResults(OccurrenceReport report, TextAnalysisResultWrapper result) {
         final Double confidence = Double.parseDouble(result.confidence);
-        result.getResults().parallelStream().forEach(r -> {
+        result.getResults().forEach(r -> {
             attachTextAnalysisResultsToInitialReport(report.getInitialReport(), r, confidence);
             addEventForExtractedEventType(report, r);
         });
