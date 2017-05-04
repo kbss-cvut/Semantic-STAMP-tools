@@ -1,5 +1,5 @@
 #
-# Query to check if a term is an event type. FD version.
+# Query to check whether a term is an event type. GE version.
 #
 BASE <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/>
 

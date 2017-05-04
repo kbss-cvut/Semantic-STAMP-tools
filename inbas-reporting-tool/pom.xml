@@ -13,7 +13,7 @@
 
     <name>INBAS Reporting Tool</name>
     <artifactId>inbas-reporting-tool</artifactId>
-    <version>0.10.0</version>
+    <version>0.10.1</version>
     <packaging>war</packaging>
 
     <properties>
@@ -21,7 +21,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <cz.cvut.kbss.jopa.version>0.9.5</cz.cvut.kbss.jopa.version>
+        <cz.cvut.kbss.jopa.version>0.9.6</cz.cvut.kbss.jopa.version>
         <org.springframework.version>4.3.5.RELEASE</org.springframework.version>
         <org.springframework.security.version>4.2.1.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.7.3</com.fasterxml.jackson.version>
@@ -361,6 +361,13 @@
             <properties>
                 <profile.name>dsa</profile.name>
                 <deployment>DSA</deployment>
+            </properties>
+        </profile>
+        <profile>
+            <id>ge</id>
+            <properties>
+                <profile.name>ge</profile.name>
+                <deployment>GE</deployment>
             </properties>
         </profile>
     </profiles>
