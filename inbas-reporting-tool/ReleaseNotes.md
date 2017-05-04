@@ -1,5 +1,9 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.10.1 - May 4, 2017
+- New deployment added (GE).
+- Upgraded to JOPA 0.9.6.
+
 ### 0.10.0 - April 24, 2017
 - Added support for initial reports (Feature #379, Task #383, Task #381).
 - Added support for initial report import (Task #382).
