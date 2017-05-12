@@ -7,6 +7,20 @@ PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 
 SELECT ?event_type ?relation_type ?factor_type (COUNT(*) AS ?count) {
+  {
+    SELECT ?fileNumber (max(?revision) AS ?maxRevision) {
+  	?report doc:has_revision ?revision ;
+  	        doc:has_file_number ?fileNumber .
+    } GROUP BY ?fileNumber
+  }
+
+  ?report  doc:documents ?occurrence ;
+           doc:has_revision ?maxRevision ;
+           doc:has_file_number ?fileNumber .
+
+  ?occurrence ufo:has_part+ ?ct .
+
+
     ?ct rt:has_event_type ?central_type .
     {
       {
