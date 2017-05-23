@@ -9,8 +9,8 @@ import ReportValidator from "../../validation/ReportValidator";
 import ReportNotRenderable from "../ReportNotRenderable";
 import ResourceNotFound from "../ResourceNotFound";
 
-var Report = (props) => {
-    var report = props.report;
+const Report = (props) => {
+    const report = props.report;
     if (props.loading) {
         return <Mask text={props.i18n('detail.loading')}/>;
     }

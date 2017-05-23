@@ -39,6 +39,7 @@ module.exports = {
         'detail.saving': 'Saving...',
         'detail.invalid-tooltip': 'Some of the required values are missing',
         'detail.large-time-diff-tooltip': 'Occurrence start and end time difference is too large',
+        'detail.large-time-diff-event-tooltip': 'Time difference between occurrence and its sub-events is too large',
         'detail.submit': 'Create new revision',
         'detail.submit-tooltip': 'Create new revision of this report',
         'detail.submit-success-message': 'Report successfully submitted.',

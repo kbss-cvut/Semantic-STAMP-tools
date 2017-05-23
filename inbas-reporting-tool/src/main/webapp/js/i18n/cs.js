@@ -39,6 +39,7 @@ module.exports = {
         'detail.saving': 'Ukládám...',
         'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
         'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký',
+        'detail.large-time-diff-event-tooltip': 'Časový rozdíl mezi událostí a jejími podudálostmi je příliš velký',
         'detail.submit': 'Nová revize',
         'detail.submit-tooltip': 'Vytvořit novou revizi tohoto hlášení',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
