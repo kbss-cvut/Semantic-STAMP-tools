@@ -6,52 +6,49 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 #PREFIX er: <http://localhost:48080/rdf4j-server/repositories/>
 
-SELECT ?event_type ?event_type_iri ?year ?month (count(*) AS ?count)
-{
+SELECT ?event_type ?event_type_iri ?year ?month (count(*) AS ?count) {
   {
-    SELECT ?event_type_iri (count(*) AS ?count) {
-      [a aso:Occurrence]
-        rt:has_event_type ?event_type_iri ;
-        aso:has_start_time ?start_time .
-
+    SELECT DISTINCT ?min {
       {
         SELECT (count(*) AS ?min) {
           [a aso:Occurrence]
-            rt:has_event_type ?event_type_iri ;
-            aso:has_start_time ?start_time .
-
+          rt:has_event_type ?event_type_iri ;
+          aso:has_start_time ?start_time .
           BIND(year(now()) AS ?thisYear)
           BIND(month(now()) AS ?thisMonth)
           BIND(year(?start_time) AS ?year)
           BIND(month(?start_time) AS ?month)
-
           FILTER (((?year + 1 = ?thisYear) && (?month >= ?thisMonth)) || (?year = ?thisYear))
         }
         GROUP BY ?event_type_iri
         ORDER BY desc(?min)
-        OFFSET 4
-        LIMIT 1
+        LIMIT 5
       }
+    }
+  }
+  {
+    SELECT ?event_type_iri (count(*) AS ?cnt) {
+      [a aso:Occurrence]
+        rt:has_event_type ?event_type_iri ;
+        aso:has_start_time ?start_time .
       BIND(year(now()) AS ?thisYear)
       BIND(month(now()) AS ?thisMonth)
       BIND(year(?start_time) AS ?year)
       BIND(month(?start_time) AS ?month)
-
       FILTER (((?year + 1 = ?thisYear) && (?month >= ?thisMonth)) || (?year = ?thisYear))
     }
     GROUP BY ?event_type_iri ?min
-    HAVING (?count >= ?min)
-    ORDER BY desc(?count)
+    ORDER BY desc(?cnt)
+
   }
+  FILTER(?cnt = ?min)
 
   [a aso:Occurrence] rt:has_event_type ?event_type_iri ;
     aso:has_start_time ?start_time .
-
   BIND(year(now()) AS ?thisYear)
   BIND(month(now()) AS ?thisMonth)
   BIND(year(?start_time) AS ?year)
   BIND(month(?start_time) AS ?month)
-
   FILTER (((?year + 1 = ?thisYear) && (?month >= ?thisMonth)) || (?year = ?thisYear))
 
   OPTIONAL {
