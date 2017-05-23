@@ -9,6 +9,8 @@ var Routing = require('../../../utils/Routing');
 var Routes = require('../../../utils/Routes');
 var RouterStore = require('../../../stores/RouterStore');
 var ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMixin');
+const ReportValidator = require('../../../validation/ReportValidator');
+const ReportNotRenderable = require('../../ReportNotRenderable').default;
 
 var OccurrenceReportController = React.createClass({
     mixins: [
@@ -49,13 +51,18 @@ var OccurrenceReportController = React.createClass({
 
 
     render: function () {
-        var handlers = {
+        const report = this.props.report;
+        if (!ReportValidator.canRender(report)) {
+            const error = ReportValidator.getRenderError(report);
+            return <ReportNotRenderable messageId={error.messageId} canFix={error.canFix}/>;
+        }
+        const handlers = {
             onChange: this.onChange,
             onSuccess: this.onSuccess,
             onCancel: this.onCancel,
             onRemove: this.onRemove
         };
-        return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+        return <ReportDetail report={report} handlers={handlers} revisions={this.renderRevisionInfo()}
                              readOnly={!this.isLatestRevision()}/>;
     }
 });

@@ -34,6 +34,7 @@ module.exports = {
         'unknown': 'Neznámé',
         'uploading-mask': 'Nahrávám',
         'please-wait': 'Prosím čekejte...',
+        'issue-fix': 'Opravit problém',
 
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',

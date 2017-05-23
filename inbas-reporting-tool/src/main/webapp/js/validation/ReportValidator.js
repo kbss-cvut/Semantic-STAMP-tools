@@ -40,7 +40,7 @@ const ReportValidator = {
      */
     getRenderError: function (report) {
         if (!report) {
-            return '';
+            return {messageId: '', canFix: false};
         }
         if (validators[report.javaClass]) {
             return validators[report.javaClass].getRenderError(report);
@@ -97,14 +97,15 @@ const OccurrenceReportValidator = {
     },
 
     getRenderError: function (report) {
+        const error = {canFix: true};
         if (!this._isOccurrenceStartEndTimeDiffValid(report)) {
-            return 'detail.large-time-diff-tooltip';
+            error.messageId = 'detail.large-time-diff-tooltip';
         }
         if (!this._isOccurrenceAndEventTimeDiffValid(report)) {
-            return 'detail.large-time-diff-event-tooltip';
+            error.messageId = 'detail.large-time-diff-event-tooltip';
         }
         // More checks can be added
-        return null;
+        return error.messageId ? error: null;
     }
 };
 
