@@ -54,6 +54,7 @@ module.exports = {
         'detail.fix.end-time': 'End time',
         'detail.fix.done': 'Done',
         'detail.fix.done.tooltip': 'Report is fixed and ready to be displayed now',
+        'detail.fix.time-diff-hint': 'Maximum difference between occurrence/event start and end time can be {value, plural, one {# hour} other {# hours}}.',
 
         'login.title': Constants.APP_NAME + ' - Login',
         'login.username': 'Username',

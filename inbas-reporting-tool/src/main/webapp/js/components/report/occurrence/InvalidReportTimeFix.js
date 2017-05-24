@@ -3,6 +3,7 @@
 import React from "react";
 import {Button, ButtonToolbar, Panel, Table} from "react-bootstrap";
 import DateTimePicker from "react-bootstrap-datetimepicker";
+import {FormattedMessage} from "react-intl";
 import assign from "object-assign";
 import JsonLdUtils from "jsonld-utils";
 import Actions from "../../../actions/Actions";
@@ -11,6 +12,7 @@ import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import ObjectTypeResolver from "../../../utils/ObjectTypeResolver";
 import OptionsStore from "../../../stores/OptionsStore";
+import Utils from "../../../utils/Utils";
 import Vocabulary from "../../../constants/Vocabulary";
 
 class InvalidReportTimeFix extends React.Component {
@@ -119,6 +121,10 @@ class InvalidReportTimeFix extends React.Component {
                 {this._renderEvents()}
                 </tbody>
             </Table>
+            <div className='notice-small'>
+                <FormattedMessage id='detail.fix.time-diff-hint'
+                                  values={{value: Utils.convertTime('second', 'hour', Constants.MAX_OCCURRENCE_START_END_DIFF / 1000)}}/>
+            </div>
             <ButtonToolbar className='float-right'>
                 <Button bsSize='small' bsStyle='primary' title={this.i18n('detail.fix.done.tooltip')}
                         onClick={this.props.onFinish}>

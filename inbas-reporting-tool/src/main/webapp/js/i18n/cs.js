@@ -55,6 +55,7 @@ module.exports = {
         'detail.fix.end-time': 'Konec',
         'detail.fix.done': 'Hotovo',
         'detail.fix.done.tooltip': 'Hlášení je opraveno a připraveno k zobrazení',
+        'detail.fix.time-diff-hint': 'Největší rozdíl v čase počátku a konce události může být {value, plural, =0 {# hodin} one {# hodina} few {# hodiny} other {# hodin}}.',
 
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
