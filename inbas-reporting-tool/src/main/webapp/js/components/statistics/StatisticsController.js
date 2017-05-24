@@ -7,7 +7,6 @@ import Dashboard, {addWidget} from "react-dazzle";
 import EditBar from "./EditBar";
 import Container from "./Container";
 import CustomFrame from "./CustomFrame";
-import EventList from "./widgets/EventList";
 import EventFactorChains from "./widgets/EventFactorChains";
 import EventtypeDashboard from "./widgets/EventtypeDashboard";
 import OccurrenceList from "./widgets/OccurrenceList";

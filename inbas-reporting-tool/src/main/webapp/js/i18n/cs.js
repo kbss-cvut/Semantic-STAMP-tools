@@ -39,8 +39,8 @@ module.exports = {
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',
         'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
-        'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký',
-        'detail.large-time-diff-event-tooltip': 'Časový rozdíl mezi událostí a jejími podudálostmi je příliš velký',
+        'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký.',
+        'detail.large-time-diff-event-tooltip': 'Časový rozdíl mezi událostí a jejími podudálostmi je příliš velký.',
         'detail.submit': 'Nová revize',
         'detail.submit-tooltip': 'Vytvořit novou revizi tohoto hlášení',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
@@ -50,6 +50,11 @@ module.exports = {
         'detail.loading': 'Načítám hlášení...',
         'detail.not-found.title': 'Hlášení nenalezeno',
         'detail.remove-failed-message': 'Hlášení se nepodařilo odstranit. Odpověď serveru: ',
+        'detail.fix.title': 'Oprava hlášení',
+        'detail.fix.start-time': 'Počátek',
+        'detail.fix.end-time': 'Konec',
+        'detail.fix.done': 'Hotovo',
+        'detail.fix.done.tooltip': 'Hlášení je opraveno a připraveno k zobrazení',
 
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',

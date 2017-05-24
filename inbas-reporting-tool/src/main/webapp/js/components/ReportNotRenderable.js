@@ -16,7 +16,8 @@ class ReportNotRenderable extends React.Component {
 
     static propTypes = {
         messageId: React.PropTypes.string,
-        canFix: React.PropTypes.bool
+        canFix: React.PropTypes.bool,
+        onFix: React.PropTypes.func
     };
 
     static defaultProps = {
@@ -32,10 +33,6 @@ class ReportNotRenderable extends React.Component {
         Routing.transitionToHome();
     }
 
-    onFix = () => {
-
-    };
-
     render() {
         let text;
         if (this.props.messageId) {
@@ -50,7 +47,7 @@ class ReportNotRenderable extends React.Component {
 
             <ButtonToolbar className='detail-button-toolbar'>
                 {this.props.canFix &&
-                <Button onClick={this.onFix} bsStyle='primary' bsSize='small'>{this.i18n('issue-fix')}</Button>}
+                <Button onClick={this.props.onFix} bsStyle='primary' bsSize='small'>{this.i18n('issue-fix')}</Button>}
                 <Button onClick={this.onClose} bsSize='small'>{this.i18n('close')}</Button>
             </ButtonToolbar>
         </Alert>);
