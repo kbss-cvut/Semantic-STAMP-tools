@@ -57,9 +57,7 @@ public class FactorGraphOrphanRemover {
                                             update.stream()
                                                   .filter(f -> f.getUri() != null && f.getUri().equals(of.getUri()))
                                                   .findFirst();
-                if (af.isPresent()) {
-                    removeOrphansImpl(of.getEvent(), af.get().getEvent());
-                }
+                af.ifPresent(factor -> removeOrphansImpl(of.getEvent(), factor.getEvent()));
             }
         }
     }
