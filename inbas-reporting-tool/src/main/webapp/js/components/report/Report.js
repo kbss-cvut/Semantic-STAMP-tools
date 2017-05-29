@@ -5,20 +5,15 @@ import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import Mask from "../Mask";
 import ReportType from "../../model/ReportType";
-import ReportValidator from "../../validation/ReportValidator";
-import ReportNotRenderable from "../ReportNotRenderable";
 import ResourceNotFound from "../ResourceNotFound";
 
-var Report = (props) => {
-    var report = props.report;
+const Report = (props) => {
+    const report = props.report;
     if (props.loading) {
         return <Mask text={props.i18n('detail.loading')}/>;
     }
     if (!report) {
         return <ResourceNotFound resource={props.i18n('detail.not-found.title')}/>;
-    }
-    if (!ReportValidator.canRender(report)) {
-        return <ReportNotRenderable messageId={ReportValidator.getRenderError(report)}/>;
     }
     return React.createElement(ReportType.getDetailController(report), {
         report: report,

@@ -215,18 +215,18 @@ public abstract class DtoMapper {
         final Map<Integer, EventDto> dtoMap = new HashMap<>();
         graph.getNodes().forEach(n -> dtoMap.put(n.getReferenceId(), n));
         final Map<Integer, FactorGraphItem> instanceMap = new HashMap<>(dtoMap.size());
-        graph.getNodes().forEach(n -> {
-            if (n instanceof OccurrenceDto) {
-                instanceMap.put(n.getReferenceId(), occurrenceDtoToOccurrence((OccurrenceDto) n));
+        Occurrence occurrence = null;
+        for (EventDto node : graph.getNodes()) {
+            if (node instanceof OccurrenceDto) {
+                occurrence = occurrenceDtoToOccurrence((OccurrenceDto) node);
+                instanceMap.put(node.getReferenceId(), occurrence);
             } else {
-                instanceMap.put(n.getReferenceId(), eventDtoToEvent(n));
+                instanceMap.put(node.getReferenceId(), eventDtoToEvent(node));
             }
-        });
+        }
         transformEdgesToRelations(graph, dtoMap, instanceMap);
-        final Optional<FactorGraphItem> occurrence = instanceMap.values().stream()
-                                                                .filter(item -> item instanceof Occurrence).findFirst();
-        assert occurrence.isPresent();
-        return (Occurrence) occurrence.get();
+        assert occurrence != null;
+        return occurrence;
     }
 
     private void transformEdgesToRelations(FactorGraph graph, Map<Integer, EventDto> dtoMap,
@@ -242,6 +242,7 @@ public abstract class DtoMapper {
                 factor.setUri(e.getUri());
                 factor.addType(e.getLinkType());
                 factor.setEvent((Event) instanceMap.get(source.getReferenceId()));
+                assert factor.getEvent() != null;
                 instanceMap.get(target.getReferenceId()).addFactor(factor);
             }
         }

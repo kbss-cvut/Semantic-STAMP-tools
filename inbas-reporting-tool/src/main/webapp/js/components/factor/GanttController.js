@@ -136,7 +136,7 @@ const GanttController = {
             }
             let eventType = ObjectTypeResolver.resolveType(task.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE)),
                 eventTypeCls = eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '',
-                typeSuggested = task.statement.types.indexOf(Vocabulary.SUGGESTED) !== -1;
+                typeSuggested = task.statement.types && task.statement.types.indexOf(Vocabulary.SUGGESTED) !== -1;
             return classNames(eventTypeCls, {'factor-suggested': typeSuggested});
         };
         gantt.templates.tooltip_date_format = function (date) {

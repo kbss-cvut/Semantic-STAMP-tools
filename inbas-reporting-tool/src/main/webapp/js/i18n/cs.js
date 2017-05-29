@@ -34,11 +34,13 @@ module.exports = {
         'unknown': 'Neznámé',
         'uploading-mask': 'Nahrávám',
         'please-wait': 'Prosím čekejte...',
+        'issue-fix': 'Opravit problém',
 
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',
         'detail.invalid-tooltip': 'Některá povinná pole nejsou vyplněna',
-        'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký',
+        'detail.large-time-diff-tooltip': 'Časový rozdíl počátku a konce události je příliš velký.',
+        'detail.large-time-diff-event-tooltip': 'Časový rozdíl mezi událostí a jejími podudálostmi je příliš velký.',
         'detail.submit': 'Nová revize',
         'detail.submit-tooltip': 'Vytvořit novou revizi tohoto hlášení',
         'detail.submit-success-message': 'Zpráva úspěšně odeslána.',
@@ -48,6 +50,12 @@ module.exports = {
         'detail.loading': 'Načítám hlášení...',
         'detail.not-found.title': 'Hlášení nenalezeno',
         'detail.remove-failed-message': 'Hlášení se nepodařilo odstranit. Odpověď serveru: ',
+        'detail.fix.title': 'Oprava hlášení',
+        'detail.fix.start-time': 'Počátek',
+        'detail.fix.end-time': 'Konec',
+        'detail.fix.done': 'Hotovo',
+        'detail.fix.done.tooltip': 'Hlášení je opraveno a připraveno k zobrazení',
+        'detail.fix.time-diff-hint': 'Největší rozdíl v čase počátku a konce události může být {value, plural, =0 {# hodin} one {# hodina} few {# hodiny} other {# hodin}}.',
 
 
         'login.title': Constants.APP_NAME + ' - Přihlášení',
