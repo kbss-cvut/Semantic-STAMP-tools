@@ -4,6 +4,7 @@ describe('Occurrence report controller', function () {
 
     const React = require('react'),
         Button = require('react-bootstrap').Button,
+        assign = require('object-assign'),
         rewire = require('rewire'),
         TestUtils = require('react-addons-test-utils'),
         Environment = require('../environment/Environment'),
@@ -216,5 +217,20 @@ describe('Occurrence report controller', function () {
                 expect(report.factorGraph.edges[i].to).toEqual(report.factorGraph.nodes[index]);
             }
         }
+    });
+
+    it('does not show time diff issue when occurrence start time changes in report', () => {
+        const report = Generator.generateOccurrenceReport();
+        report.factorGraph = {};
+        report.factorGraph.nodes = [report.occurrence];
+        const component = Environment.render(<ReportController report={report}/>);
+        let notRenderableError = TestUtils.scryRenderedComponentsWithType(component, ReportNotRenderable.WrappedComponent);
+        expect(notRenderableError.length).toEqual(0);
+        const occurrenceUpdate = assign({}, report.occurrence);
+        occurrenceUpdate.startTime = Date.now() - 127 * 3600 * 1000;
+        occurrenceUpdate.endTime = occurrenceUpdate.startTime + 1000;
+        component.onChange({occurrence: occurrenceUpdate});
+        notRenderableError = TestUtils.scryRenderedComponentsWithType(component, ReportNotRenderable.WrappedComponent);
+        expect(notRenderableError.length).toEqual(0);
     });
 });

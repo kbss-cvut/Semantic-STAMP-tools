@@ -87,7 +87,8 @@ const OccurrenceReportValidator = {
         const start = report.occurrence.startTime;
         if (report.factorGraph) {
             const nodes = report.factorGraph.nodes;
-            for (let i = 0, len = nodes.length; i < len; i++) {
+            // Skip the root of the graph
+            for (let i = 1, len = nodes.length; i < len; i++) {
                 if (Math.abs(nodes[i].startTime - start) > Constants.MAX_OCCURRENCE_START_END_DIFF) {
                     return false;
                 }
