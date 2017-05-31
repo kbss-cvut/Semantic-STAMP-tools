@@ -159,7 +159,9 @@ public class Aso2E5X {
                 for(AbstractEvent event : extractFatorGraph(r.getOccurrence())) {
                     EntityBuilder eventElementBuilder = createEvent(event);
                     Element evtEl = this.addSubEntity(eventElementBuilder);
-                    evtEl.setAttribute("ID", "ID"+r.getKey() + "_" + i++);
+                    if(evtEl != null) {
+                        evtEl.setAttribute("ID", "ID" + r.getKey() + "_" + i++);
+                    }
                 }
 
                 this.addSubEntity(createNarrative(r));
@@ -564,27 +566,29 @@ public class Aso2E5X {
 
 
 
-    public static void validateDocument(String fileName, Document doc) throws MalformedURLException {
-        validateDocument(fileName, new DOMSource(doc));
+    public static boolean validateDocument(String fileName, Document doc) throws MalformedURLException {
+        return validateDocument(fileName, new DOMSource(doc));
     }
 
-    public static void validateDocument(String fileName, InputStream is) throws MalformedURLException {
+    public static boolean validateDocument(String fileName, InputStream is) throws MalformedURLException {
         Source source = new StreamSource(is);
-        validateDocument(fileName, source);
+        return validateDocument(fileName, source);
     }
 
-    public static void validateDocument(String fileName, Source source) throws MalformedURLException {
+    public static boolean validateDocument(String fileName, Source source) throws MalformedURLException {
         Schema schema = loadSchema(E5XTerms.dataBridgeNS);
         try{
             Validator validator = schema.newValidator();
             validator.setErrorHandler(new DefaultErrorHandler());
             validator.validate(source);
             LOG.info("{} is valid.", fileName);
+            return true;
         } catch (SAXException e) {
             LOG.warn(fileName + " file is NOT valid.", e);
         } catch (IOException e) {
             LOG.warn("error reading file " + fileName , e);
         }
+        return false;
     }
 
     public static void validateDocument2(String fileName, InputStream is) throws MalformedURLException, ParserConfigurationException {

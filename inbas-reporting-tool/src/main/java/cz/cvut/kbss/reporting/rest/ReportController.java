@@ -174,44 +174,52 @@ public class ReportController extends BaseController {
         return dtoMapper.occurrenceReportToOccurrenceReportDto(reportFactory.createFromInitialReport(initialReport));
     }
 
+    /**
+     * Export report with key to e5x xml
+     * @param key
+     * @param response
+     */
     @RequestMapping(value = "/{key}/export/e5xxml", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public void exportReportToE5XXml(@PathVariable("key") String key, HttpServletResponse response){
-        LOG.info("exportReportToE5XXml for report with key {}", key);
-//        LOG.info("exportReportToE5XXml for report with key {}", key);
-        byte[] reportE5X = reportExporter.exportReportToE5X(key, false);
-//        byte[] reportE5X = "Some important text that will be sent as a file!\n".getBytes();
-        if(reportE5X == null){
-            throw NotFoundException.create("Occurrence Report", key);
-        }
-        try {
-            response.getOutputStream().write(reportE5X);
-            response.flushBuffer();
-        } catch (IOException e) {
-            LOG.warn(String.format("Error writing file to output stream. Filename was '{}'", key), e);
-            throw new RuntimeException("IOError writing file to output stream", e);
-        }
+        expoortReportToE5XImpl(key, response, false);
     }
 
+    /**
+     * Export report with key to e5x (zipped e5x xml)
+     * @param key
+     * @param response
+     */
     @RequestMapping(value = "/{key}/export/e5x", method = RequestMethod.GET, produces = {"application/zip"})
-            //"application/force-download"
-            //,headers = {"Content - Transfer - Encodin=binary"})//MediaType.APPLICATION_OCTET_STREAM_VALUE)//"application/zip")
-//    @ResponseStatus(HttpStatus.OK)
     public void exportReportToE5X(@PathVariable("key") String key, HttpServletResponse response){
-        final LogicalDocument report = reportService.findByKey(key);
+        expoortReportToE5XImpl(key, response, true);
+    }
 
-        byte[] reportE5X = reportExporter.exportReportToE5X(key,true);
+    /**
+     * export the report with key as E5X.
+     * @param key
+     * @param response
+     * @param zip true for e5x (zipped e5x xml), false for e5x xml
+     */
+    protected void expoortReportToE5XImpl(String key, HttpServletResponse response, boolean zip){
+        String fileType = (zip ? "e5x" : "e5x xml");
+        // transform report
+        byte[] reportE5X = reportExporter.exportReportToE5X(key,zip);
         if(reportE5X == null){
+            LOG.trace("Cannot export {}. No such Occurrence Report with key {}", fileType, key);
             throw NotFoundException.create("Occurrence Report", key);
         }
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFileNumber() + ".e5x\"");
-//        return reportE5X;
-        try {
+        if(zip) { // make response downloadable
+            final LogicalDocument report = reportService.findByKey(key);
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFileNumber() + ".e5x\"");
+        }
+        try { // send the transformed to the response's output stream
             response.getOutputStream().write(reportE5X);
             response.flushBuffer();
             response.getOutputStream().close();
         } catch (IOException e) {
-            LOG.warn(String.format("Error writing file to output stream. Filename was '{}'", key), e);
-            throw new RuntimeException("IOError writing file to output stream", e);
+            String message = String.format("IO error writing %s export of report with key %s to output stream", fileType, key);
+            LOG.warn(message, e);
+            throw new RuntimeException(message, e);
         }
     }
 

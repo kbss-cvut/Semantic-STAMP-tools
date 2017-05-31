@@ -40,29 +40,41 @@ public class ReportExporter {
         }
     }
 
+    // TODO - add control for - report with key not found, create e5x is not valid, etc.
     public byte[] exportReportToE5X(String key, boolean zip){
         LOG.info("read report with key {}", key);
         OccurrenceReport report = (OccurrenceReport)reportService.findByKey(key);
+        if(report == null){
+            LOG.trace("No such report with key {}.", key);
+            return null;
+        }
+
         String fileNumber = Long.toString(report.getFileNumber());
+
         String reportRevision = fileNumber + ":" + key;
         Aso2E5X aso2E5XTExporter = new Aso2E5X(e5xSchema);
         try {
             LOG.info("converting report with key {} to e5x DOM", key);
             Document doc = aso2E5XTExporter.convert(report);
+            if(doc == null){
+                LOG.trace("Could not transform report with key {}", key);
+                return null;
+            }
+
             LOG.info("serializing report with key {} to e5x xml", key);
             ByteArrayOutputStream reportStream = new ByteArrayOutputStream();
             Aso2E5X.serializeDocument(doc, reportStream);
 
             LOG.info("validate the e5x xml output");
-            Aso2E5X.validateDocument(reportRevision,doc);
+            Aso2E5X.validateDocument(reportRevision, doc);
 
-            // for debugging
-            try {
-                String output = reportStream.toString(Constants.UTF_8_ENCODING);
-                System.out.println(output);
-            } catch (UnsupportedEncodingException e) {
-                LOG.error(String.format("The encoding %s used to encode/decode the e5x output is not supported", Constants.UTF_8_ENCODING), e);
-            }
+//            // for debugging
+//            try {
+//                String output = reportStream.toString(Constants.UTF_8_ENCODING);
+//                System.out.println(output);
+//            } catch (UnsupportedEncodingException e) {
+//                LOG.error(String.format("The encoding %s used to encode/decode the e5x output is not supported", Constants.UTF_8_ENCODING), e);
+//            }
 
             byte[] outputBytes = reportStream.toByteArray();
 
