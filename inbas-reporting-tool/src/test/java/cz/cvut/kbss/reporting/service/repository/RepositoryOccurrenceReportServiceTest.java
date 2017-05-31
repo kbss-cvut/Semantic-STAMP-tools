@@ -100,9 +100,9 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     }
 
     @Test
-    public void createNewRevisionPersistsNewReportWithIncreasedRevisionNumberSameFileNumberCurrentUserAsAuthorCurrentTimeAsCreationDate() {
+    public void createNewRevisionPersistsNewReportWithIncreasedRevisionNumberSameFileNumberCurrentUserAsAuthorCurrentTimeAsCreationDate() throws Exception {
         final OccurrenceReport firstRevision = persistFirstRevision(false);
-
+        Thread.sleep(100);
         final OccurrenceReport newRevision = occurrenceReportService.createNewRevision(firstRevision.getFileNumber());
         assertNotNull(newRevision);
         assertNotNull(newRevision.getUri());
