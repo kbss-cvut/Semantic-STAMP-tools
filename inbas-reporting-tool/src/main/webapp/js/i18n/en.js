@@ -16,6 +16,7 @@ module.exports = {
         'cancel-tooltip': 'Discard changes',
         'save': 'Save',
         'delete': 'Delete',
+        'exportToE5X': 'export to E5X',
         'remove': 'Remove',
         'headline': 'Headline',
         'summary': 'Summary',

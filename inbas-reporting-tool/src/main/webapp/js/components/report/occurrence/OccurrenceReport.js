@@ -25,6 +25,8 @@ const SmallScreenFactors = require('../../factor/smallscreen/SmallScreenFactors'
 const WizardGenerator = require('../../wizard/generator/WizardGenerator');
 const WizardWindow = require('../../wizard/WizardWindow');
 
+const BASE_URL_WITH_SLASH = 'rest/reports/';
+
 const OccurrenceReport = React.createClass({
     mixins: [MessageMixin, I18nMixin, ReportDetailMixin],
 
@@ -67,6 +69,11 @@ const OccurrenceReport = React.createClass({
     onSubmit: function () {
         this.onLoading();
         Actions.submitReport(this.props.report, this.onSubmitSuccess, this.onSubmitError);
+    },
+
+    onExportToE5X: function(){
+        let localFileAddress = BASE_URL_WITH_SLASH + this.props.report.key + "/export/e5x";
+        window.open(localFileAddress);
     },
 
     _reportSummary: function () {
@@ -214,6 +221,7 @@ const OccurrenceReport = React.createClass({
             {this.renderSubmitButton()}
             <PhaseTransition report={this.props.report} onLoading={this.onLoading} disabled={saveDisabled}
                              onSuccess={this.onPhaseTransitionSuccess} onError={this.onPhaseTransitionError}/>
+            {this.renderExportToE5XButton()}
             {this.renderDeleteButton()}
         </ButtonToolbar>;
     },
@@ -239,6 +247,13 @@ const OccurrenceReport = React.createClass({
                     disabled={this.state.submitting !== false}>
                 {this.i18n('detail.submit')}
             </Button>;
+    },
+
+    renderExportToE5XButton: function(){
+        // return //<a href="http://localhost:8080/inbas-reporting-tool/rest/reports/183895455013452902024/export/e5x" title={this.i18n('exportToE5X')} class='btn btn-sm btn-primary' >{this.i18n('exportToE5X')}</a>
+        return <Button bsStyle='primary' bsSize='small' title={this.i18n('exportToE5X')} onClick={this.onExportToE5X}>
+            {this.i18n('exportToE5X')}
+        </Button>;
     }
 });
 

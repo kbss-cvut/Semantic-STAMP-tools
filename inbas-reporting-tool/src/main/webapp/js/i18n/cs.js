@@ -16,6 +16,7 @@ module.exports = {
         'cancel-tooltip': 'Zrušit a zahodit změny',
         'save': 'Uložit',
         'delete': 'Smazat',
+        'exportToE5X': 'exportovat do E5X',
         'remove': 'Odstranit',
         'headline': 'Název',
         'summary': 'Shrnutí',
