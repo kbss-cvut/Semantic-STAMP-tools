@@ -17,7 +17,9 @@ public class E5XTerms {
 
     public static interface E5XTerm {
         public String getXmlElementName();
-
+        public default String getNamespace(){
+            return dataBridgeNS;
+        }
         public String getEccairsId();
     }
 
@@ -30,7 +32,8 @@ public class E5XTerms {
         Explanatory_Factor("Explanatory_Factor", "15"), // not E5X entity
         Aerodrome_General("Aerodrome_General","1"),
         Air_Space("Air_Space","3"),
-        
+        Reporting_History("Reporting_History","53"),
+
         ;
         private String xmlElementName;
         private String eccairsId;
@@ -151,6 +154,7 @@ public class E5XTerms {
     public static enum EventsAttribute implements E5XTerm {
         // registration relator
         Event_Type("Event_Type","390"),
+        Phase("Phase","391"),
         Narrative_Text("Narrative_Text","425"),
         Event_Justification("Event_Justification","704"), // not E5X attribute
         Descriptive_Factor("Descriptive_Factor", "12"), // not E5X attribute, Entity relation
@@ -170,6 +174,38 @@ public class E5XTerms {
         public String getEccairsId() {
             return eccairsId;
         }
+    }
+
+    public static enum Reporting_HistoryAttributes implements E5XTerm {
+
+        Report_Identification("Report_Identification","438"),
+        Reporting_Entity("Reporting_Entity","447"),
+        Reporting_Form_Type("Reporting_Form_Type","495"),
+        Report_Status("Report_Status","800"),
+        Reporting_Date("Reporting_Date","801"),
+        Report("Report","802"), // report attachments
+        Parties_Informed("Parties_Informed","1064"),
+        Corrective_Actions("Corrective_Actions","1069"),
+        Conclusions("Conclusions", "1070"),
+        Tracking_Sheet_Number("Tracking_Sheet_Number", "1071"),
+        Report_Version("Report_Version", "1084"),
+        ;
+
+        private String xmlElementName;
+        private String eccairsId;
+        private Reporting_HistoryAttributes(String xmlElementName, String eccairsId) {
+            this.xmlElementName = xmlElementName;
+            this.eccairsId = eccairsId;
+        }
+
+        public String getXmlElementName() {
+            return xmlElementName;
+        }
+
+        public String getEccairsId() {
+            return eccairsId;
+        }
+
     }
     public static enum Descriptive_FactorAttribute implements E5XTerm { // not E5X entity
         // registration relator

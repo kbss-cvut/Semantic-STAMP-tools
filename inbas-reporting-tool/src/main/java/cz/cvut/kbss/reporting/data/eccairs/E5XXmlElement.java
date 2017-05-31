@@ -3,7 +3,7 @@ package cz.cvut.kbss.reporting.data.eccairs;
 /**
  * Created by user on 5/23/2017.
  */
-public enum E5XXmlElement {
+public enum E5XXmlElement implements E5XTerms.E5XTerm{
 
 
 
@@ -31,11 +31,17 @@ public enum E5XXmlElement {
         this.namespace = namespace;
     }
 
-    public String getElementName() {
+    public String getNamespace() {
+        return namespace;
+    }
+
+    @Override
+    public String getXmlElementName() {
         return elementName;
     }
 
-    public String getNamespace() {
-        return namespace;
+    @Override
+    public String getEccairsId() {
+        return null;
     }
 }
