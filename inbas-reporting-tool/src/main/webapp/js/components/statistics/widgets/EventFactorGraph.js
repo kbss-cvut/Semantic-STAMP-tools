@@ -51,7 +51,7 @@ class EventFactorGraph extends React.Component {
                     node = found[0];
                     node.size = node.size + 1;
                     node.mass = node.mass + 1;
-                    node.title = node.label + " ( "+node.mass+" )";
+                    node.title = node.label + " ( "+(node.mass-5)+" )";
                 } else {
                     node = {
                         id: maxNode++,

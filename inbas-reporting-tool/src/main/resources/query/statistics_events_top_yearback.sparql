@@ -16,8 +16,13 @@ SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count)
      ?event a aso:Occurrence .
   }
 
-  FILTER NOT EXISTS {
-     [<http://onto.fel.cvut.cz/ontologies/aviation-safety/has_factor> [rt:has_event_type ?event_type_iri]]
+  {
+    SELECT DISTINCT ?event_type_iri {
+      ?event_2 rt:has_event_type ?event_type_iri .
+      FILTER NOT EXISTS {
+     	  ?event_3 <http://onto.fel.cvut.cz/ontologies/aviation-safety/has_factor> ?event_2
+      }
+    }
   }
 
   BIND(year(now()) AS ?thisYear)

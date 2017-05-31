@@ -1,24 +1,33 @@
 'use strict';
 
-var React = require('react');
+const React = require('react');
 
-var Actions = require('../../../actions/Actions');
-var Constants = require('../../../constants/Constants');
-var ReportDetail = require('./OccurrenceReport');
-var Routing = require('../../../utils/Routing');
-var Routes = require('../../../utils/Routes');
-var RouterStore = require('../../../stores/RouterStore');
-var ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMixin');
+const Actions = require('../../../actions/Actions');
+const Constants = require('../../../constants/Constants');
+const InvalidReportTimeFix = require('./InvalidReportTimeFix').default;
+let ReportDetail = require('./OccurrenceReport');
+const Routing = require('../../../utils/Routing');
+const Routes = require('../../../utils/Routes');
+const RouterStore = require('../../../stores/RouterStore');
+const ReportDetailControllerMixin = require('../../mixin/ReportDetailControllerMixin');
+const ReportValidator = require('../../../validation/ReportValidator');
+const ReportNotRenderable = require('../../ReportNotRenderable').default;
 
-var OccurrenceReportController = React.createClass({
+const OccurrenceReportController = React.createClass({
     mixins: [
         ReportDetailControllerMixin
     ],
 
     componentDidMount: function () {
-        Actions.loadOptions();
+        Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CLASS);
         Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
-        Actions.loadOptions('factorType');
+        Actions.loadOptions(Constants.OPTIONS.FACTOR_TYPE);
+    },
+
+    getInitialState: function () {
+        return {
+            showFix: false
+        }
     },
 
     onSuccess: function (key) {
@@ -39,7 +48,7 @@ var OccurrenceReportController = React.createClass({
     },
 
     onCancel: function () {
-        var handlers = RouterStore.getViewHandlers(Routes.editReport.name);
+        const handlers = RouterStore.getViewHandlers(Routes.editReport.name);
         if (handlers) {
             Routing.transitionTo(handlers.onCancel);
         } else {
@@ -47,15 +56,33 @@ var OccurrenceReportController = React.createClass({
         }
     },
 
+    _onFixRenderingIssue: function () {
+        this.setState({showFix: true});
+    },
+
+    _onFinishFix: function () {
+        this.setState({showFix: false});
+    },
+
 
     render: function () {
-        var handlers = {
+        const report = this.props.report;
+        if (this.state.showFix) {
+            return <InvalidReportTimeFix report={this.props.report} onChange={this.onChange}
+                                         onFinish={this._onFinishFix}/>
+        }
+        if (!ReportValidator.canRender(report)) {
+            const error = ReportValidator.getRenderError(report);
+            return <ReportNotRenderable messageId={error.messageId} canFix={error.canFix}
+                                        onFix={this._onFixRenderingIssue}/>;
+        }
+        const handlers = {
             onChange: this.onChange,
             onSuccess: this.onSuccess,
             onCancel: this.onCancel,
             onRemove: this.onRemove
         };
-        return <ReportDetail report={this.props.report} handlers={handlers} revisions={this.renderRevisionInfo()}
+        return <ReportDetail report={report} handlers={handlers} revisions={this.renderRevisionInfo()}
                              readOnly={!this.isLatestRevision()}/>;
     }
 });
