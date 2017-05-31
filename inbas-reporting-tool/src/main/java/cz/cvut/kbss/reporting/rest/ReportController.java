@@ -10,7 +10,10 @@ import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
+import cz.cvut.kbss.reporting.service.data.export.ReportExporter;
 import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
+import cz.cvut.kbss.reporting.util.Constants;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,12 +41,15 @@ public class ReportController extends BaseController {
 
     private final OccurrenceReportFactory reportFactory;
 
+    private final ReportExporter reportExporter;
+
     @Autowired
     public ReportController(@Qualifier("cachingReportBusinessService") ReportBusinessService reportService,
-                            DtoMapper dtoMapper, OccurrenceReportFactory reportFactory) {
+                            DtoMapper dtoMapper, OccurrenceReportFactory reportFactory, ReportExporter reportExporter) {
         this.reportService = reportService;
         this.dtoMapper = dtoMapper;
         this.reportFactory = reportFactory;
+        this.reportExporter = reportExporter;
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -164,4 +173,46 @@ public class ReportController extends BaseController {
     public OccurrenceReportDto createFromInitial(@RequestBody InitialReport initialReport) {
         return dtoMapper.occurrenceReportToOccurrenceReportDto(reportFactory.createFromInitialReport(initialReport));
     }
+
+    @RequestMapping(value = "/{key}/export/e5xxml", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
+    public void exportReportToE5XXml(@PathVariable("key") String key, HttpServletResponse response){
+        LOG.info("exportReportToE5XXml for report with key {}", key);
+//        LOG.info("exportReportToE5XXml for report with key {}", key);
+        byte[] reportE5X = reportExporter.exportReportToE5X(key, false);
+//        byte[] reportE5X = "Some important text that will be sent as a file!\n".getBytes();
+        if(reportE5X == null){
+            throw NotFoundException.create("Occurrence Report", key);
+        }
+        try {
+            response.getOutputStream().write(reportE5X);
+            response.flushBuffer();
+        } catch (IOException e) {
+            LOG.warn(String.format("Error writing file to output stream. Filename was '{}'", key), e);
+            throw new RuntimeException("IOError writing file to output stream", e);
+        }
+    }
+
+    @RequestMapping(value = "/{key}/export/e5x", method = RequestMethod.GET, produces = {"application/zip"})
+            //"application/force-download"
+            //,headers = {"Content - Transfer - Encodin=binary"})//MediaType.APPLICATION_OCTET_STREAM_VALUE)//"application/zip")
+//    @ResponseStatus(HttpStatus.OK)
+    public void exportReportToE5X(@PathVariable("key") String key, HttpServletResponse response){
+        final LogicalDocument report = reportService.findByKey(key);
+
+        byte[] reportE5X = reportExporter.exportReportToE5X(key,true);
+        if(reportE5X == null){
+            throw NotFoundException.create("Occurrence Report", key);
+        }
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFileNumber() + ".e5x\"");
+//        return reportE5X;
+        try {
+            response.getOutputStream().write(reportE5X);
+            response.flushBuffer();
+            response.getOutputStream().close();
+        } catch (IOException e) {
+            LOG.warn(String.format("Error writing file to output stream. Filename was '{}'", key), e);
+            throw new RuntimeException("IOError writing file to output stream", e);
+        }
+    }
+
 }
