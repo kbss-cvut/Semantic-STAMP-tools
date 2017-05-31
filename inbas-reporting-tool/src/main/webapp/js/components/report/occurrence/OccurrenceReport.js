@@ -250,7 +250,6 @@ const OccurrenceReport = React.createClass({
     },
 
     renderExportToE5XButton: function(){
-        // return //<a href="http://localhost:8080/inbas-reporting-tool/rest/reports/183895455013452902024/export/e5x" title={this.i18n('exportToE5X')} class='btn btn-sm btn-primary' >{this.i18n('exportToE5X')}</a>
         return <Button bsStyle='primary' bsSize='small' title={this.i18n('exportToE5X')} onClick={this.onExportToE5X} disabled={this.state.submitting !== false}>
             {this.i18n('exportToE5X')}
         </Button>;
