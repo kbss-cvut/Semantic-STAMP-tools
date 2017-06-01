@@ -1,21 +1,19 @@
 package cz.cvut.kbss.reporting.service.data.export;
 
-import cz.cvut.kbss.reporting.data.eccairs.Aso2E5X;
-import cz.cvut.kbss.reporting.data.eccairs.E5XTerms;
+import cz.cvut.kbss.reporting.data.eccairs.*;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
-import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 
 import javax.annotation.PostConstruct;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.validation.Schema;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 /**
@@ -30,10 +28,13 @@ public class ReportExporter {
 
     protected Schema e5xSchema;
 
+    protected OccurrenceRportE5XExporter occurrenceRportE5XExporter;
+
     @PostConstruct
     protected void init(){
         try {
-            e5xSchema = Aso2E5X.loadSchema(E5XTerms.dataBridgeNS);
+            e5xSchema = XMLUtils.loadSchema(E5XTerms.dataBridgeNS);
+            occurrenceRportE5XExporter = createExporter();
         } catch (MalformedURLException e) {
             LOG.error(String.format("could not load e5x schema, malformed URL \"%s\"", E5XTerms.dataBridgeNS), e);
             LOG.warn("generated e5x failes will not be validated.");
@@ -52,10 +53,9 @@ public class ReportExporter {
         String fileNumber = Long.toString(report.getFileNumber());
 
         String reportRevision = fileNumber + ":" + key;
-        Aso2E5X aso2E5XTExporter = new Aso2E5X(e5xSchema);
         try {
             LOG.info("converting report with key {} to e5x DOM", key);
-            Document doc = aso2E5XTExporter.convert(report);
+            Document doc = occurrenceRportE5XExporter.convert(report);
             if(doc == null){
                 LOG.trace("Could not transform report with key {}", key);
                 return null;
@@ -63,10 +63,10 @@ public class ReportExporter {
 
             LOG.info("serializing report with key {} to e5x xml", key);
             ByteArrayOutputStream reportStream = new ByteArrayOutputStream();
-            Aso2E5X.serializeDocument(doc, reportStream);
+            XMLUtils.serializeDocument(doc, reportStream);
 
             LOG.info("validate the e5x xml output");
-            Aso2E5X.validateDocument(reportRevision, doc);
+            XMLUtils.validateDocument(E5XTerms.dataBridgeNS, reportRevision, doc);
 
 //            // for debugging
 //            try {
@@ -81,7 +81,7 @@ public class ReportExporter {
             if(zip){
                 LOG.info("zipping e5x xml to e5x file");
                 ByteArrayOutputStream e5xZipped = new ByteArrayOutputStream();
-                Aso2E5X.generateE5XFile(outputBytes, e5xZipped, reportRevision);
+                AbstractOccurrenceReportE5XExporter.generateE5XFile(outputBytes, e5xZipped, reportRevision);
                 outputBytes = e5xZipped.toByteArray();
             }
 
@@ -95,5 +95,9 @@ public class ReportExporter {
             LOG.error(String.format("cannot convert occurrence report with key=\"%s\"to e5x xml, io error while zipping e5x xml content.", key, E5XTerms.dataBridgeNS), e);
         }
         return null;
+    }
+
+    protected OccurrenceRportE5XExporter createExporter(){
+        return new Aso2E5X(e5xSchema);
     }
 }

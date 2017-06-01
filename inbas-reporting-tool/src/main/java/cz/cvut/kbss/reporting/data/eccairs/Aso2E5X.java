@@ -5,7 +5,6 @@
  */
 package cz.cvut.kbss.reporting.data.eccairs;
 
-import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
 import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.reporting.factorgraph.traversal.DefaultFactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.AbstractEvent;
@@ -15,95 +14,42 @@ import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.qam.Question;
 import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.DetectHtml;
-import cz.cvut.kbss.reporting.util.DocConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
-import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 //import org.omg.PortableServer.POAPackage.AdapterAlreadyExistsHelper;
 
 
 /**
  * Transform an OccurrenceReport into a e5x document.
- * Not thread safe.
- * Notes on the generation of e5x output
+ * @implNote Generates dom elements. Notes on the generation of e5x output
  * - attributes should be placed in the correct order. e.g. First is Local_Date followed by UTC_Date followed by Headline
- * 
+ *
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-public class Aso2E5X {
+public class Aso2E5X extends AbstractOccurrenceReportE5XExporter{
     
     private static final Logger LOG = LoggerFactory.getLogger(Aso2E5X.class);
 
-    protected static Map<String,Schema> schemaMap = new HashMap<>();
-
-    protected ThreadLocal<DateFormat> dateFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"));
-    protected ThreadLocal<DateFormat> timeFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat("HH:mm:ss"));
-    protected ThreadLocal<DocConverter> docConverter = ThreadLocal.withInitial(() -> new DocConverter());
-
-    protected Document d;
-    protected Schema schema;
-
-
     public Aso2E5X(Schema schema) {
-        this.schema = schema;
+        super(schema);
     }
 
-    public Document convert(OccurrenceReport r) throws ParserConfigurationException, MalformedURLException {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-//        dbFactory.setSchema(schema);
-
-        dbFactory.setNamespaceAware(true);
-        DocumentBuilder documentBuilder = dbFactory.newDocumentBuilder();
-        documentBuilder.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void warning(SAXParseException exception) throws SAXException {
-                LOG.warn("warning when building an e5x", exception);
-            }
-
-            @Override
-            public void error(SAXParseException exception) throws SAXException {
-                LOG.warn("error when building an e5x", exception);
-            }
-
-            @Override
-            public void fatalError(SAXParseException exception) throws SAXException {
-                LOG.warn("fatalError when building an e5x", exception);
-            }
-        });
-        d = documentBuilder.newDocument();
-        Element root = createSET(r);
-        elementCreateOccurrence(root, r);
-        return d;
+    protected Document convertImpl(OccurrenceReport occurrenceReport) {
+        Element root = createSET(occurrenceReport);
+        elementCreateOccurrence(root, occurrenceReport);
+        return getDocument();
     }
     
     protected Element createSET(OccurrenceReport r){
@@ -117,7 +63,7 @@ public class Aso2E5X {
         set.setAttribute("TaxonomyVersion", "3.4.0.2");
         set.setAttribute("Domain", "RIT");
         set.setAttribute("Version", "1.0.0.0");
-        d.appendChild(set);
+        getDocument().appendChild(set);
         return set;
     }
     
@@ -180,15 +126,18 @@ public class Aso2E5X {
             return null;
         }
         if(DetectHtml.isHtml(summary)){
-            String summaryRtf = docConverter.get().convertHtml2Rtf(summary);
-            try {
-                summary = new String(Base64.getDecoder().decode(summaryRtf.getBytes(Constants.UTF_8_ENCODING)), Constants.UTF_8_ENCODING);
-                return createNarrative(summary, E5XXmlElement.EncodedText);
-            }catch(UnsupportedEncodingException ex){
-                LOG.error("Failed converting narrative from html to base 64.", ex);
-            }
+            summary = docConverter.get().convertHtml2PlainText(summary);
+            if(summary == null)
+                return null;
+//            String summaryRtf = docConverter.get().convertHtml2Rtf(summary);
+//            try {
+//                summary = new String(Base64.getDecoder().decode(summaryRtf.getBytes(Constants.UTF_8_ENCODING)), Constants.UTF_8_ENCODING);
+//                return createNarrative(summary, E5XXmlElement.EncodedText);
+//            }catch(UnsupportedEncodingException ex){
+//                LOG.error("Failed converting narrative from html to base 64.", ex);
+//            }
         }
-        return createNarrative(summary, E5XXmlElement.PlainText);
+        return createNarrative(summary.trim(), E5XXmlElement.PlainText);
     }
 
     protected EntityBuilder createNarrative(String narrative, E5XXmlElement enclosingElement){
@@ -421,8 +370,6 @@ public class Aso2E5X {
         return null;
     }
 
-
-
     public class EventTypeHandler{
         protected Pattern eventPattern;
 
@@ -525,126 +472,16 @@ public class Aso2E5X {
     }
 
     protected Element createElement(E5XTerms.E5XTerm term){
-        Element el = d.createElementNS(term.getNamespace(), term.getXmlElementName());
+        Element el = getDocument().createElementNS(term.getNamespace(), term.getXmlElementName());
         el.setAttribute("xmlns", E5XTerms.dataBridgeNS);
         el.setAttribute("xmlns:dt", E5XTerms.dataTypesNS);
         return el;
     }
 
 //    protected Element createElement(E5XXmlElement e5xmlElement){
-//        Element el = d.createElement(e5xmlElement.getElementName());
+//        Element el = document.createElement(e5xmlElement.getElementName());
 //        el.setAttribute("__attr__", E5XTerms.dataBridgeNS);
 //        el.setAttribute("__at_tr__", E5XTerms.dataTypesNS);
 //        return el;
 //    }
-
-    public static void serializeDocument(Document d, String fileName){
-        try (FileOutputStream fos = new FileOutputStream(fileName)){ 
-            serializeDocument(d, fos);
-        } catch (FileNotFoundException ex) {
-            LOG.info(String.format("Could not serialize xml document into file\"%s\", file not found.", fileName), ex );
-        } catch (IOException ex) {
-            LOG.info(String.format("Could not serialize xml document into file\"%s\", an error occured during writing to file.", fileName), ex );
-        }
-    }
-
-    public static void serializeDocument(Document d, OutputStream os){
-        try {
-            TransformerFactory tf = TransformerFactory.newInstance();
-            Transformer transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            DOMSource source = new DOMSource(d);
-
-            StreamResult result = new StreamResult(os);
-            transformer.transform(source, result);
-        } catch (TransformerConfigurationException ex) {
-            LOG.info("Could not serialize xml document, configuring the transformer to serialize the docuemnt failed", ex);
-        } catch (TransformerException ex) {
-            LOG.info("Could not serialize xml document, the transformation from DOM to stream failed", ex);
-        }
-    }
-
-    public static Schema loadSchema(String schemaLocation) throws MalformedURLException {
-        Schema schema = schemaMap.get(schemaLocation);
-        if(schema == null) {
-            URL schemaFile = new URL(schemaLocation);
-            // or File schemaFile = new File("/location/to/xsd"); // etc.
-            SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            try {
-                schema = schemaFactory.newSchema(schemaFile);
-                schemaMap.put(schemaLocation, schema);
-            } catch (SAXException e) {
-                LOG.warn(schemaFile + "Schema file NOT valid", e);
-            }
-        }
-        return schema;
-    }
-
-
-
-    public static boolean validateDocument(String fileName, Document doc) throws MalformedURLException {
-        return validateDocument(fileName, new DOMSource(doc));
-    }
-
-    public static boolean validateDocument(String fileName, InputStream is) throws MalformedURLException {
-        Source source = new StreamSource(is);
-        return validateDocument(fileName, source);
-    }
-
-    public static boolean validateDocument(String fileName, Source source) throws MalformedURLException {
-        Schema schema = loadSchema(E5XTerms.dataBridgeNS);
-        try{
-            Validator validator = schema.newValidator();
-            validator.setErrorHandler(new DefaultErrorHandler());
-            validator.validate(source);
-            LOG.info("{} is valid.", fileName);
-            return true;
-        } catch (SAXException e) {
-            LOG.warn(fileName + " file is NOT valid.", e);
-        } catch (IOException e) {
-            LOG.warn("error reading file " + fileName , e);
-        }
-        return false;
-    }
-
-    public static void validateDocument2(String fileName, InputStream is) throws MalformedURLException, ParserConfigurationException {
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        dbFactory.setSchema(loadSchema(E5XTerms.dataBridgeNS));
-        DocumentBuilder documentBuilder = dbFactory.newDocumentBuilder();
-        documentBuilder.setErrorHandler(new DefaultErrorHandler());
-        try {
-
-            Document doc = documentBuilder.parse(is);
-        } catch (SAXException e) {
-            LOG.warn(fileName + " file is NOT valid.", e);
-        } catch (IOException e) {
-            LOG.warn(fileName + " could not be validated, error reading file " + fileName , e);
-        }
-
-    }
-
-    public static void validateFile2(String fileName) throws FileNotFoundException, MalformedURLException, ParserConfigurationException {
-        validateDocument2(fileName, new FileInputStream(fileName));
-    }
-
-    public static void validateFile(String fileName) throws FileNotFoundException, MalformedURLException {
-        validateDocument(fileName, new FileInputStream(fileName));
-    }
-
-    public static void generateE5XFile(byte[] content, OutputStream os, String fileName) throws IOException {
-        ZipOutputStream zip = new ZipOutputStream(os);
-        // create the zip entry for the xml content
-        ZipEntry xmlEntry = new ZipEntry(fileName + ".xml");
-        zip.putNextEntry(xmlEntry);
-        zip.write(content);
-        zip.closeEntry();
-        zip.flush();
-        zip.close();
-    }
-
-    public static void generateE5XFile(byte[] content, String path, String fileName) throws Exception {
-        generateE5XFile(content, new FileOutputStream(path + "/" + fileName + ".e5x"), fileName);
-    }
-
 }

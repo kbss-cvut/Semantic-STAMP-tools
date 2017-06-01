@@ -12,6 +12,7 @@ import java.util.function.Function;
  * Created by Bogdan Kostov on 5/31/2017.
  */
 public class DocConverter {
+    // TODO - add logger and log messages
     protected StyledEditorKit htmlKit = new HTMLEditorKit();
     protected StyledEditorKit rtfKit = new RTFEditorKit();
 //    protected StyledEditorKit txtKit = new EditorKit();
