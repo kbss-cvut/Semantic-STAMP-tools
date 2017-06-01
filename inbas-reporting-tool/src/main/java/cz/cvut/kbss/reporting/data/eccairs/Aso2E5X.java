@@ -13,6 +13,9 @@ import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.qam.Question;
+import cz.cvut.kbss.reporting.util.Constants;
+import cz.cvut.kbss.reporting.util.DetectHtml;
+import cz.cvut.kbss.reporting.util.DocConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -63,8 +66,9 @@ public class Aso2E5X {
 
     protected static Map<String,Schema> schemaMap = new HashMap<>();
 
-    public DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    public DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+    protected ThreadLocal<DateFormat> dateFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"));
+    protected ThreadLocal<DateFormat> timeFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat("HH:mm:ss"));
+    protected ThreadLocal<DocConverter> docConverter = ThreadLocal.withInitial(() -> new DocConverter());
 
     protected Document d;
     protected Schema schema;
@@ -143,14 +147,14 @@ public class Aso2E5X {
                 Date d = r.getOccurrence().getStartTime();
                 if(d != null) { // add this attributes only if the date is not null
                     // UTC, and local date time
-                    dateFormat.setTimeZone(TimeZone.getDefault());
-                    timeFormat.setTimeZone(TimeZone.getDefault());
-                    this.addAttribute(E5XTerms.OccurrenceAttribute.Local_Date, dateFormat.format(d));
-                    this.addAttribute(E5XTerms.OccurrenceAttribute.Local_Time, timeFormat.format(d));
-                    dateFormat.setTimeZone(TimeZone.getTimeZone("Z"));
-                    timeFormat.setTimeZone(TimeZone.getTimeZone("Z"));
-                    this.addAttribute(E5XTerms.OccurrenceAttribute.UTC_Date, dateFormat.format(d));
-                    this.addAttribute(E5XTerms.OccurrenceAttribute.UTC_Time, timeFormat.format(d));
+                    dateFormat.get().setTimeZone(TimeZone.getDefault());
+                    timeFormat.get().setTimeZone(TimeZone.getDefault());
+                    this.addAttribute(E5XTerms.OccurrenceAttribute.Local_Date, dateFormat.get().format(d));
+                    this.addAttribute(E5XTerms.OccurrenceAttribute.Local_Time, timeFormat.get().format(d));
+                    dateFormat.get().setTimeZone(TimeZone.getTimeZone("Z"));
+                    timeFormat.get().setTimeZone(TimeZone.getTimeZone("Z"));
+                    this.addAttribute(E5XTerms.OccurrenceAttribute.UTC_Date, dateFormat.get().format(d));
+                    this.addAttribute(E5XTerms.OccurrenceAttribute.UTC_Time, timeFormat.get().format(d));
                 }
                 this.addAttribute(E5XTerms.OccurrenceAttribute.Headline, r.getOccurrence().getName());
 
@@ -175,14 +179,27 @@ public class Aso2E5X {
         if(summary == null || summary.isEmpty()){
             return null;
         }
-        return new EntityBuilder(E5XTerms.Entity.Narrative){
+        if(DetectHtml.isHtml(summary)){
+            String summaryRtf = docConverter.get().convertHtml2Rtf(summary);
+            try {
+                summary = new String(Base64.getDecoder().decode(summaryRtf.getBytes(Constants.UTF_8_ENCODING)), Constants.UTF_8_ENCODING);
+                return createNarrative(summary, E5XXmlElement.EncodedText);
+            }catch(UnsupportedEncodingException ex){
+                LOG.error("Failed converting narrative from html to base 64.", ex);
+            }
+        }
+        return createNarrative(summary, E5XXmlElement.PlainText);
+    }
+
+    protected EntityBuilder createNarrative(String narrative, E5XXmlElement enclosingElement){
+        return new EntityBuilder(E5XTerms.Entity.Narrative) {
             @Override
             protected void build() {
-                this.addAttribute(E5XTerms.NarrativeAttribute.Narrative_Language, "12");// TODO - use the value from the question if present. Otherwise do not add this attribute
-                this.addAttribute(E5XTerms.NarrativeAttribute.Narrative_Text, r.getSummary(),
-                        () -> createElement(E5XXmlElement.PlainText)
+                // TODO - use the value from the question if present. Otherwise do not add this attribute
+                this.addAttribute(E5XTerms.NarrativeAttribute.Narrative_Language, "12");
+                this.addAttribute(E5XTerms.NarrativeAttribute.Narrative_Text, narrative,
+                        () -> createElement(enclosingElement)
                 );
-
             }
         };
     }
@@ -198,7 +215,7 @@ public class Aso2E5X {
 //                this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Reporting_Entity, ); // TODO reporting entity, Person, Organization
 //                this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Report_Status, ); // TODO reporting entity, [r.getPhase()]
 
-                this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Reporting_Date, dateFormat.format(r.getDateCreated())); // Use current day, Use the local date
+                this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Reporting_Date, dateFormat.get().format(r.getDateCreated())); // Use current day, Use the local date
                 this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Report_Version, r.getKey()); //
             }
         };

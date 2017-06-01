@@ -14,6 +14,7 @@ public enum E5XXmlElement implements E5XTerms.E5XTerm{
     LINKS("LINKS"),
     SET("SET"),
     PlainText("dt:PlainText", E5XTerms.dataTypesNS),
+    EncodedText("dt:EncodedText",E5XTerms.dataTypesNS),
     ;
 
 
