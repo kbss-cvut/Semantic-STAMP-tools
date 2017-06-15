@@ -54,5 +54,15 @@ CONSTRUCT {
       ?term rdfs:label ?label.
       OPTIONAL {  ?term rdfs:comment ?comment. }
       BIND( aviation-safety:aviation-ontology-safety-event as ?type )
+   } UNION { # ,eda terms
+      SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/maintenance-specific> {
+         GRAPH <http://onto.fel.cvut.cz/ontologies/aviation-safety/maintenance/meda/event>{
+           ?term rdfs:subClassOf+ aviation-safety:safety_event .
+           # add all labels - not everything is returned due to missing labels
+           ?term rdfs:label ?label.
+           OPTIONAL {?term rdfs:comment ?comment. }
+           BIND( aviation-safety:safety-event as ?type )
+         }
+      }
    }
 }
