@@ -64,7 +64,7 @@ class OccurrenceSeverityTrends extends React.Component {
         });
 
         const barLabels = ["Not Determined", "Occurrence Without Safety Effect", "Incident", "Serious Incident", "Accident"];
-        const color=['#fff800', '#ffcb00', '#ffa900','#ff7100','#ff0000'];
+        const color=['#D8D8D8','#fff800', '#FFCC78','#ED8800','#E70000'];
 
         const bars = barLabels.map((label, index) => {
             return <Bar key={index} dataKey={label} stackId="a" fill={color[index]}/>
