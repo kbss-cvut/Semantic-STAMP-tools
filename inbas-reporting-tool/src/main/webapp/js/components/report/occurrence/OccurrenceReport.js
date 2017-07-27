@@ -71,7 +71,7 @@ const OccurrenceReport = React.createClass({
         Actions.submitReport(this.props.report, this.onSubmitSuccess, this.onSubmitError);
     },
 
-    onExportToE5X: function(){
+    onExportToE5X: function () {
         let localFileAddress = BASE_URL_WITH_SLASH + this.props.report.key + "/export/e5x";
         window.open(localFileAddress);
     },
@@ -227,8 +227,7 @@ const OccurrenceReport = React.createClass({
     },
 
     _getSaveButtonLabel: function () {
-        return this.i18n(this.state.submitting === Actions.newRevisionFromLatestEccairs ? 'please-wait' :
-            this.state.submitting ? 'detail.saving' : 'save');
+        return this.i18n(this.state.submitting ? 'detail.saving' : 'save');
     },
 
     getSaveButtonTitle: function () {
@@ -249,10 +248,12 @@ const OccurrenceReport = React.createClass({
             </Button>;
     },
 
-    renderExportToE5XButton: function(){
-        return <Button bsStyle='primary' bsSize='small' title={this.i18n('exportToE5X')} onClick={this.onExportToE5X} disabled={this.state.submitting !== false}>
-            {this.i18n('exportToE5X')}
-        </Button>;
+    renderExportToE5XButton: function () {
+        return this.props.report.isNew ? null :
+            <Button bsStyle='primary' bsSize='small' title={this.i18n('exportToE5X')} onClick={this.onExportToE5X}
+                    disabled={this.state.submitting !== false}>
+                {this.i18n('exportToE5X')}
+            </Button>;
     }
 });
 

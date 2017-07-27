@@ -124,4 +124,11 @@ describe('OccurrenceReport', function () {
             summaryButton = TestUtils.findRenderedDOMComponentWithClass(component, 'detail-top-button');
         expect(summaryButton.disabled).toBeTruthy();
     });
+
+    it('does not display the Export to E5X button for new, unsaved report', () => {
+        report = ReportFactory.createOccurrenceReport();
+        const component = Environment.render(<OccurrenceReport report={report} handlers={handlers}/>),
+            exportButton = Environment.getComponentByTagAndContainedText(component, 'button', messages['exportToE5X']);
+        expect(exportButton).toBeNull();
+    });
 });
