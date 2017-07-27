@@ -15,10 +15,14 @@ class EventtypeGraph extends React.Component {
             graphOptions: {
                 layout: {
                     randomSeed: 1,
-                    improvedLayout: true,
+                    improvedLayout: true
                 },
                 physics: {
                     enabled: false,
+                    hierarchicalRepulsion: {
+                        damping:0.5
+
+                    }
                 //     barnesHut: {
                 //         avoidOverlap: 0.1
                 //     }
@@ -33,6 +37,8 @@ class EventtypeGraph extends React.Component {
                                 || (option == 'levelSeparation')
                                 || (option == 'treeSpacing')
                                 || (option == 'direction')
+                                || (option == 'sortMethod')
+
                             ) {
                                 return true;
                             } else {
