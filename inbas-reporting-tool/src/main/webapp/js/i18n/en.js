@@ -176,6 +176,7 @@ module.exports = {
         'report.attachments.create.description-label': 'Description',
         'report.attachments.create.description-tooltip': 'Optional description of the attachment',
         'report.attachments.table.reference': 'Reference',
+        'report.attachments.save.disabled-tooltip': 'Attachment value is required',
 
         'report.occurrence.category.label': 'Occurrence category',
         'occurrencereport.title': 'Occurrence report',

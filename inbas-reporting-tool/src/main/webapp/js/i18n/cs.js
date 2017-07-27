@@ -175,6 +175,7 @@ module.exports = {
         'report.attachments.create.description-label': 'Popis',
         'report.attachments.create.description-tooltip': 'Volitelný popis přílohy',
         'report.attachments.table.reference': 'Příloha',
+        'report.attachments.save.disabled-tooltip': 'Identifikace přílohy je vyžadována',
 
         'report.occurrence.category.label': 'Klasifikace události',
         'occurrencereport.title': 'Hlášení o události',

@@ -38,10 +38,11 @@ class CreateAttachment extends React.Component {
     };
 
     render() {
+        const valid = this.state.reference.length > 0;
         return <div className='row form-group'>
             <div className='col-xs-4'>
                 <Input name='attachment_reference'
-                       label={this.i18n('report.attachments.create.reference-label') + '*'}
+                       label={this.i18n('report.attachments.create.reference-label')}
                        title={this.i18n('report.attachments.create.reference-tooltip')}
                        value={this.state.reference} onChange={this._onChange}/>
             </div>
@@ -53,7 +54,7 @@ class CreateAttachment extends React.Component {
             </div>
             <div className='col-xs-1'>
                 <Button className='in-input-line' bsSize='small' bsStyle='primary' onClick={this._onSave}
-                        disabled={this.state.reference.length === 0}>
+                        disabled={!valid} title={!valid ? this.i18n('report.attachments.save.disabled-tooltip') : null}>
                     {this.i18n('report.attachments.create.button')}
                 </Button>
             </div>
