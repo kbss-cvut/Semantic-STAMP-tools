@@ -134,7 +134,9 @@ module.exports = {
 
         'occurrence.headline-tooltip': 'Krátké pojmenování události - pole je povinné',
         'occurrence.start-time': 'Počátek události',
-        'occurrence.start-time-tooltip': 'Datum a čas kdy k události došlo. Pozn.: Změna počátku události posouvá celou událost v čase. Změna konce události ovlivňuje její trvání.',
+        'occurrence.start-time-tooltip': 'Datum a čas kdy k události došlo.\nPozn.: Změna počátku události posouvá celou událost v čase. Změna konce události ovlivňuje její trvání.',
+        'occurrence.start.date-tooltip': 'Datum kdy k události došlo.\nPozn.: Změna počátku události posouvá celou událost v čase. Změna konce události ovlivňuje její trvání.',
+        'occurrence.start.time-tooltip': 'Čas kdy k události došlo.\nPozn.: Změna počátku události posouvá celou událost v čase. Změna konce události ovlivňuje její trvání.',
         'occurrence.end-time': 'Konec události',
         'occurrence.end-time-tooltip': 'Datum a čas kdy událost skončila',
         'occurrence.class': 'Třída závažnosti',

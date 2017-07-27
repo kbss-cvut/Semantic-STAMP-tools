@@ -147,7 +147,7 @@ const GanttController = {
             let tooltip = '<b>' + task.text + '</b><br/>';
             tooltip += '<b>Start date:</b> ' + gantt.templates.tooltip_date_format(start) +
                 '<br/><b>End date:</b> ' + gantt.templates.tooltip_date_format(end);
-            if (task.statement.types.indexOf(Vocabulary.SUGGESTED) !== -1) {
+            if (task.statement.types && task.statement.types.indexOf(Vocabulary.SUGGESTED) !== -1) {
                 tooltip += '<br/><i>' + I18nStore.i18n('factors.event-suggested') + '</i>';
             }
             return tooltip;
