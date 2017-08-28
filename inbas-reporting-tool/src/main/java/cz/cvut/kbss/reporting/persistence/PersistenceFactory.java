@@ -31,10 +31,14 @@ public class PersistenceFactory {
 
     private static final Map<String, String> DEFAULT_PARAMS = initParams();
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
     private EntityManagerFactory emf;
+
+    @Autowired
+    public PersistenceFactory(Environment environment) {
+        this.environment = environment;
+    }
 
     @Bean
     @Primary
@@ -44,6 +48,9 @@ public class PersistenceFactory {
 
     @PostConstruct
     private void init() {
+        // Allow Apache HTTP client used by RDF4J to use a larger connection pool
+        // Temporary, should be configurable via JOPA
+        System.setProperty("http.maxConnections", "20");
         final Map<String, String> properties = new HashMap<>(DEFAULT_PARAMS);
         properties.put(ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(REPOSITORY_URL.toString()));
         properties.put(DATA_SOURCE_CLASS, environment.getProperty(DRIVER.toString()));
