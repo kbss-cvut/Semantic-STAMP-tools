@@ -1,6 +1,6 @@
 # INBAS Reporting Tool Release Notes
 
-### 0.10.2 - August 28, 2017
+### 0.11.1 - August 28, 2017
 - Support for export to E5X (Feature #88).
 - Time difference resolution (Bug #450, Feature #441). 
 - Split occurrence start and end specification to date and time (Feature #472).
