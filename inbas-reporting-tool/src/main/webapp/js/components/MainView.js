@@ -70,6 +70,7 @@ class MainView extends React.Component {
                         </li>
                         <NavDropdown id='logout' title={name}>
                             <MenuItem onClick={this._openUserProfile}>{this.i18n('main.user-profile')}</MenuItem>
+                            <MenuItem divider/>
                             <MenuItem href='#' onClick={Authentication.logout}>{this.i18n('main.logout')}</MenuItem>
                         </NavDropdown>
                     </Nav>
