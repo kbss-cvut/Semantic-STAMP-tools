@@ -814,3 +814,21 @@ button.in-input-line {
 .text-analysis-result:first-child {
     margin-left: 0;
 }
+
+.profile-container {
+    width: 45%;
+    margin: auto;
+}
+
+.profile-panel {
+    margin-bottom: 0 !important;
+    padding-bottom: 5em;
+}
+
+.profile-form {
+    margin: 1em 0;
+}
+
+.profile-button {
+    margin: 0 0.5em;
+}

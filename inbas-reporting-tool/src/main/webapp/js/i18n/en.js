@@ -78,6 +78,7 @@ module.exports = {
         'main.dashboard-nav': 'Dashboards',
         'main.reports-nav': 'Reports',
         'main.statistics-nav': 'Statistics',
+        'main.user-profile': 'User profile',
         'main.logout': 'Logout',
         'main.search-placeholder': 'Search',
         'main.search.fulltext': 'Search in all narratives',
@@ -259,6 +260,17 @@ module.exports = {
         'editor.rich.blockquote': 'Blockquote',
         'editor.rich.bold': 'Bold',
         'editor.rich.italic': 'Italic',
-        'editor.rich.underline': 'Underline'
+        'editor.rich.underline': 'Underline',
+
+        'profile.header': 'User profile',
+        'profile.invalid': 'User profile data are not valid. There are attributes missing.',
+        'profile.originalPassword': 'Original password',
+        'profile.update.success': 'User profile successfully updated.',
+        'profile.update.error': 'Profile update failed. Server responded with message: ',
+        'profile.password.toggle': 'Change password',
+        'profile.password.original': 'Original password',
+        'profile.password.new': 'New password',
+        'profile.password.confirm': 'Confirm password',
+        'profile.username.exists': 'Username already exists'
     }
 };

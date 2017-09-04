@@ -1,34 +1,39 @@
 'use strict';
 
-var Reflux = require('reflux');
+const Reflux = require('reflux');
 
-var Actions = require('../actions/Actions');
-var Ajax = require('../utils/Ajax');
+const Actions = require('../actions/Actions');
+const Ajax = require('../utils/Ajax');
 
-var currentUser = null;
-var loaded = false;
+let currentUser = null;
+let loaded = false;
 
 function loadCurrentUser() {
     Ajax.get('rest/persons/current').end(UserStore.userLoaded);
 }
 
-var UserStore = Reflux.createStore({
+const UserStore = Reflux.createStore({
     listenables: [Actions],
     onLoadUser: function () {
-        if (currentUser === null) {
-            loadCurrentUser();
-        }
+        loadCurrentUser();
     },
+
     userLoaded: function (user) {
         currentUser = user;
         loaded = true;
         this.trigger(this.getCurrentUser());
     },
+
     getCurrentUser: function () {
         return currentUser;
     },
+
     isLoaded: function () {
         return loaded;
+    },
+
+    onUpdateUser: function (user, onSuccess, onError) {
+        Ajax.put('rest/persons/current', user).end(onSuccess, onError);
     }
 });
 

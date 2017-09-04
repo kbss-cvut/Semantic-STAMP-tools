@@ -80,6 +80,7 @@ module.exports = {
         'main.dashboard-nav': 'Hlavní strana',
         'main.reports-nav': 'Hlášení',
         'main.statistics-nav': 'Statistiky',
+        'main.user-profile': 'Profil uživatele',
         'main.logout': 'Odhlásit se',
         'main.search-placeholder': 'Hledat',
         'main.search.fulltext': 'Hledat ve všech popisech',
@@ -257,6 +258,17 @@ module.exports = {
         'editor.rich.blockquote': 'Citace',
         'editor.rich.bold': 'Tučné',
         'editor.rich.italic': 'Kurzíva',
-        'editor.rich.underline': 'Podtržené'
+        'editor.rich.underline': 'Podtržené',
+
+        'profile.header': 'Profil uživatele',
+        'profile.invalid': 'Vyplněná data nejsou validní. Chybí hodnoty některých atributů.',
+        'profile.originalPassword': 'Původní heslo',
+        'profile.update.success': 'Profil úspěšně aktualizován.',
+        'profile.update.error': 'Profil se nepodařilo aktualizovat. Odpověď serveru: ',
+        'profile.password.toggle': 'Změnit heslo',
+        'profile.password.original': 'Původní heslo',
+        'profile.password.new': 'Nové heslo',
+        'profile.password.confirm': 'Potvrzení hesla',
+        'profile.username.exists': 'Uživatel s daným uživatelským jménem již existuje'
     }
 };
