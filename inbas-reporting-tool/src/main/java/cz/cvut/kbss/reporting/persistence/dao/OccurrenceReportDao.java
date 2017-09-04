@@ -36,9 +36,9 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
         final OccurrenceReport original = em.find(OccurrenceReport.class, entity.getUri());
         assert original != null;
         em.detach(original);
+        occurrenceDao.update(entity.getOccurrence(), em);
         final OccurrenceReport merged = em.merge(entity);
         new OrphanRemover(em).removeOrphans(original.getCorrectiveMeasures(), merged.getCorrectiveMeasures());
-        occurrenceDao.update(entity.getOccurrence(), em);
     }
 
     @Override

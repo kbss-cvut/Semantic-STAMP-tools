@@ -45,9 +45,9 @@ public class TestPersistenceFactory {
         final Map<String, String> properties = getDefaultProperties();
         properties.put(JOPAPersistenceProperties.ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(URL_PROPERTY));
         properties.put(JOPAPersistenceProperties.DATA_SOURCE_CLASS, environment.getProperty(DRIVER_PROPERTY));
-        if (environment.getProperty(USERNAME_PROPERTY) != null) {
-            properties.put(JOPAPersistenceProperties.DATA_SOURCE_USERNAME, environment.getProperty(USERNAME_PROPERTY));
-            properties.put(JOPAPersistenceProperties.DATA_SOURCE_PASSWORD, environment.getProperty(PASSWORD_PROPERTY));
+        if (environment.containsProperty(USERNAME_PROPERTY)) {
+            properties.put(OntoDriverProperties.DATA_SOURCE_USERNAME, environment.getProperty(USERNAME_PROPERTY));
+            properties.put(OntoDriverProperties.DATA_SOURCE_PASSWORD, environment.getProperty(PASSWORD_PROPERTY));
         }
         this.emf = Persistence.createEntityManagerFactory("inbasTestPU", properties);
     }

@@ -29,6 +29,8 @@ import static cz.cvut.kbss.reporting.util.ConfigParam.REPOSITORY_URL;
 @PropertySource("classpath:config.properties")
 public class PersistenceFactory {
 
+    private static final String USERNAME_PROPERTY = "username";
+    private static final String PASSWORD_PROPERTY = "password";
     private static final Map<String, String> DEFAULT_PARAMS = initParams();
 
     private final Environment environment;
@@ -54,6 +56,10 @@ public class PersistenceFactory {
         final Map<String, String> properties = new HashMap<>(DEFAULT_PARAMS);
         properties.put(ONTOLOGY_PHYSICAL_URI_KEY, environment.getProperty(REPOSITORY_URL.toString()));
         properties.put(DATA_SOURCE_CLASS, environment.getProperty(DRIVER.toString()));
+        if (environment.containsProperty(USERNAME_PROPERTY)) {
+            properties.put(OntoDriverProperties.DATA_SOURCE_USERNAME, environment.getProperty(USERNAME_PROPERTY));
+            properties.put(OntoDriverProperties.DATA_SOURCE_PASSWORD, environment.getProperty(PASSWORD_PROPERTY));
+        }
         this.emf = Persistence.createEntityManagerFactory("inbasPU", properties);
     }
 

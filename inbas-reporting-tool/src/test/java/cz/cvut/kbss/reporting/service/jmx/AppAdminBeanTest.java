@@ -1,6 +1,7 @@
 package cz.cvut.kbss.reporting.service.jmx;
 
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import cz.cvut.kbss.jopa.model.descriptors.EntityDescriptor;
 import cz.cvut.kbss.jopa.sessions.Cache;
 import cz.cvut.kbss.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
@@ -54,9 +55,9 @@ public class AppAdminBeanTest extends BaseServiceTestRunner {
     public void invalidateCacheEvictsPersistenceProviderCache() {
         final Person p = persistPerson();
         final Cache cache = emf.getCache();
-        assertTrue(cache.contains(Person.class, p.getUri()));
+        assertTrue(cache.contains(Person.class, p.getUri(), new EntityDescriptor()));
         adminBean.invalidateCaches();
-        assertFalse(cache.contains(Person.class, p.getUri()));
+        assertFalse(cache.contains(Person.class, p.getUri(), new EntityDescriptor()));
     }
 
     @Component
