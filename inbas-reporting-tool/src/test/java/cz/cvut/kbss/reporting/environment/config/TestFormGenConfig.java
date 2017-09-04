@@ -12,7 +12,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 @Configuration
@@ -38,7 +41,7 @@ public class TestFormGenConfig {
 
     @Bean
     public SecurityUtils securityUtils() {
-        return new SecurityUtils();
+        return new SecurityUtils(mock(UserDetailsService.class), new BCryptPasswordEncoder());
     }
 
     @Bean

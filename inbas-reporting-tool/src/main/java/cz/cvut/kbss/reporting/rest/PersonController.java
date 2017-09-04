@@ -1,9 +1,12 @@
 package cz.cvut.kbss.reporting.rest;
 
+import cz.cvut.kbss.reporting.dto.PersonUpdateDto;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.PersonService;
+import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,8 +21,18 @@ import java.security.Principal;
 @RequestMapping("/persons")
 public class PersonController extends BaseController {
 
+    private final PersonService personService;
+
+    private final SecurityUtils securityUtils;
+
+    private final DtoMapper dtoMapper;
+
     @Autowired
-    private PersonService personService;
+    public PersonController(PersonService personService, SecurityUtils securityUtils, DtoMapper dtoMapper) {
+        this.personService = personService;
+        this.securityUtils = securityUtils;
+        this.dtoMapper = dtoMapper;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Person getByUsername(@PathVariable("username") String username) {
@@ -47,5 +60,24 @@ public class PersonController extends BaseController {
         final HttpHeaders headers = RestUtils
                 .createLocationHeaderFromCurrentUri("/{username}", person.getUsername());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/current", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateCurrentUser(@RequestBody PersonUpdateDto dto) {
+        if (dto.getPassword() != null) {
+            securityUtils.verifyCurrentUserPassword(dto.getPasswordOriginal());
+        }
+        final Person person = dtoMapper.personUpdateDtoToPerson(dto);
+        personService.update(person);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Person {} successfully updated.", person);
+        }
+    }
+
+    @RequestMapping(value = "/exists", method = RequestMethod.GET)
+    @ResponseBody
+    public String desUsernameExist(@RequestParam(name = "username") String username) {
+        return Boolean.toString(personService.exists(username));
     }
 }

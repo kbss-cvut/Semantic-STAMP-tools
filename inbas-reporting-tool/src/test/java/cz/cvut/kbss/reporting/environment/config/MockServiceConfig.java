@@ -8,6 +8,7 @@ import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
 import cz.cvut.kbss.reporting.service.formgen.FormGenService;
 import cz.cvut.kbss.reporting.service.options.OptionsService;
 import cz.cvut.kbss.reporting.service.search.SearchService;
+import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -98,5 +99,10 @@ public class MockServiceConfig {
     @Bean
     public ReportExporter reportExporter() {
         return mock(ReportExporter.class);
+    }
+
+    @Bean
+    public SecurityUtils securityUtils() {
+        return mock(SecurityUtils.class);
     }
 }

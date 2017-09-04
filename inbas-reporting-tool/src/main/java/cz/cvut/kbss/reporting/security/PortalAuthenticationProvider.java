@@ -9,6 +9,7 @@ import cz.cvut.kbss.reporting.security.portal.PortalEndpoint;
 import cz.cvut.kbss.reporting.security.portal.PortalEndpointType;
 import cz.cvut.kbss.reporting.security.portal.PortalUserDetails;
 import cz.cvut.kbss.reporting.service.PersonService;
+import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
@@ -23,9 +24,6 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -55,6 +53,9 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         final String username = authentication.getPrincipal().toString();
@@ -63,17 +64,10 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         }
         final String password = authentication.getCredentials().toString();
         final Person authenticatedUser = authenticateAgainstPortal(username, password);
-        saveUser(authenticatedUser);
         final UserDetails userDetails = new PortalUserDetails(authenticatedUser);
-        userDetails.eraseCredentials();
-        final AuthenticationToken token = new AuthenticationToken(userDetails.getAuthorities(), userDetails);
-        token.setAuthenticated(true);
-        token.setDetails(userDetails);
-
-        final SecurityContext context = new SecurityContextImpl();
-        context.setAuthentication(token);
-        SecurityContextHolder.setContext(context);
-        return token;
+        final AuthenticationToken auth = securityUtils.setCurrentUser(userDetails);
+        saveUser(authenticatedUser);
+        return auth;
     }
 
     private Person authenticateAgainstPortal(String username, String password) {

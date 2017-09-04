@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.kbss.reporting.model.util.HasDerivableUri;
 import cz.cvut.kbss.reporting.util.Constants;
@@ -29,6 +30,9 @@ public class Person implements HasDerivableUri, Serializable {
     @OWLDataProperty(iri = Vocabulary.s_p_accountName)
     private String username;
 
+    // This means that password won't be sent to the client, but it is still possible to update it
+    // Because it will be deserialized when received in JSON from the client
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OWLDataProperty(iri = Vocabulary.s_p_password)
     private String password;
 
