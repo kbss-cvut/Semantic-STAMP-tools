@@ -1,9 +1,9 @@
 'use strict';
 
-var Actions = require('../actions/Actions');
-var Routes = require('./Routes');
+const Actions = require('../actions/Actions');
+const Routes = require('./Routes');
 
-var rules = {};
+const rules = {};
 
 /**
  * Rules for each route is just an array of functions, that should be executed.

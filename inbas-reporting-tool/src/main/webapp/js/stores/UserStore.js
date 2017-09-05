@@ -14,6 +14,21 @@ function loadCurrentUser() {
 
 const UserStore = Reflux.createStore({
     listenables: [Actions],
+
+    onLoadUsers: function () {
+        Ajax.get('rest/persons').end((data) => {
+            this.trigger({
+                action: Actions.loadUsers,
+                users: data
+            });
+        }, () => {
+            this.trigger({
+                action: Actions.loadUsers,
+                users: []
+            });
+        });
+    },
+
     onLoadUser: function () {
         loadCurrentUser();
     },
@@ -21,7 +36,10 @@ const UserStore = Reflux.createStore({
     userLoaded: function (user) {
         currentUser = user;
         loaded = true;
-        this.trigger(this.getCurrentUser());
+        this.trigger({
+            action: Actions.loadUser,
+            user: this.getCurrentUser()
+        });
     },
 
     getCurrentUser: function () {

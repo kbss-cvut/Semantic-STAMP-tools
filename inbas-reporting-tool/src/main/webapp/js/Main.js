@@ -1,11 +1,12 @@
 'use strict';
 // Have the imports here, so that the I18nStore is initialized before any of the components which might need it
 import React from "react";
-import {Router, Route, IndexRoute} from "react-router";
+import {IndexRoute, Route, Router} from "react-router";
 import {IntlProvider} from "react-intl";
 import {history} from "./utils/Routing";
 import Routes from "./utils/Routes";
 import Actions from "./actions/Actions";
+import Administration from "./components/admin/Administration";
 import Login from "./components/login/Login";
 import Register from "./components/register/Register";
 import MainView from "./components/MainView";
@@ -47,6 +48,7 @@ export default class Main extends React.Component {
                     <Route path={Routes.createReport.path} onEnter={onRouteEnter} component={ReportDetailController}/>
                     <Route path={Routes.editReport.path} onEnter={onRouteEnter} component={ReportDetailController}/>
                     <Route path={Routes.searchResults.path} onEnter={onRouteEnter} component={SearchResultController}/>
+                    <Route path={Routes.administration.path} onEnter={onRouteEnter} component={Administration}/>
                 </Route>
             </Router>
         </IntlProvider>;

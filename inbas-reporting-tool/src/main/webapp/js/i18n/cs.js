@@ -80,6 +80,7 @@ module.exports = {
         'main.dashboard-nav': 'Hlavní strana',
         'main.reports-nav': 'Hlášení',
         'main.statistics-nav': 'Statistiky',
+        'main.admin-nav': 'Administrace',
         'main.user-profile': 'Profil uživatele',
         'main.logout': 'Odhlásit se',
         'main.search-placeholder': 'Hledat',
@@ -269,6 +270,8 @@ module.exports = {
         'profile.password.original': 'Původní heslo',
         'profile.password.new': 'Nové heslo',
         'profile.password.confirm': 'Potvrzení hesla',
-        'profile.username.exists': 'Uživatel s daným uživatelským jménem již existuje'
+        'profile.username.exists': 'Uživatel s daným uživatelským jménem již existuje',
+
+        'users.title': 'Uživatelé'
     }
 };

@@ -3,7 +3,9 @@
 import React from "react";
 import {MenuItem, Nav, Navbar, NavDropdown, NavItem} from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap";
+import {IfGranted} from "react-authorization";
 
+import Actions from "../actions/Actions";
 import Authentication from "../utils/Authentication";
 import Constants from "../constants/Constants";
 import I18nStore from "../stores/I18nStore";
@@ -12,6 +14,7 @@ import injectIntl from "../utils/injectIntl";
 import NavSearch from "./main/NavSearch"
 import ProfileController from "./profile/ProfileController";
 import UserStore from "../stores/UserStore";
+import Vocabulary from "../constants/Vocabulary";
 
 class MainView extends React.Component {
 
@@ -32,8 +35,9 @@ class MainView extends React.Component {
         this.unsubscribe();
     }
 
-    _onUserLoaded = () => {
-        this.forceUpdate();
+    _onUserLoaded = (data) => {
+        if (data.action === Actions.loadUser)
+            this.forceUpdate();
     };
 
     _openUserProfile = () => {
@@ -59,10 +63,12 @@ class MainView extends React.Component {
                     <Nav>
                         <LinkContainer
                             to='dashboard'><NavItem>{this.i18n('main.dashboard-nav')}</NavItem></LinkContainer>
-                        <LinkContainer
-                            to='reports'><NavItem>{this.i18n('main.reports-nav')}</NavItem></LinkContainer>
+                        <LinkContainer to='reports'><NavItem>{this.i18n('main.reports-nav')}</NavItem></LinkContainer>
                         <LinkContainer
                             to='statistics'><NavItem>{this.i18n('main.statistics-nav')}</NavItem></LinkContainer>
+                        <IfGranted expected={Vocabulary.ROLE_ADMIN} actual={user.types} element='span'>
+                            <LinkContainer to='admin'><NavItem>{this.i18n('main.admin-nav')}</NavItem></LinkContainer>
+                        </IfGranted>
                     </Nav>
                     <Nav pullRight style={{margin: '0 -15px 0 0'}}>
                         <li>

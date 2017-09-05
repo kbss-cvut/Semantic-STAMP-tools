@@ -1,6 +1,6 @@
 'use strict';
 
-var Routes = {
+module.exports = {
 
     login: {name: 'login', path: 'login'},
     register: {name: 'register', path: 'register'},
@@ -9,7 +9,6 @@ var Routes = {
     statistics: {name: 'statistics', path: 'statistics'},
     createReport: {name: 'createReport', path: 'reports/create'},
     editReport: {name: 'editReport', path: 'reports/:reportKey'},
-    searchResults: {name: 'searchResults', path: 'search'}
+    searchResults: {name: 'searchResults', path: 'search'},
+    administration: {name: 'admin', path: 'admin'}
 };
-
-module.exports = Routes;

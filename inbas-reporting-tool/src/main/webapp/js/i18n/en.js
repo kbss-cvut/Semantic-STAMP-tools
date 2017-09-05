@@ -78,6 +78,7 @@ module.exports = {
         'main.dashboard-nav': 'Dashboards',
         'main.reports-nav': 'Reports',
         'main.statistics-nav': 'Statistics',
+        'main.admin-nav': 'Administration',
         'main.user-profile': 'User profile',
         'main.logout': 'Logout',
         'main.search-placeholder': 'Search',
@@ -271,6 +272,8 @@ module.exports = {
         'profile.password.original': 'Original password',
         'profile.password.new': 'New password',
         'profile.password.confirm': 'Confirm password',
-        'profile.username.exists': 'Username already exists'
+        'profile.username.exists': 'Username already exists',
+
+        'users.title': 'Users'
     }
 };

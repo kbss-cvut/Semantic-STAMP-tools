@@ -25,8 +25,9 @@ class ProfileController extends React.Component {
         this.unsubscribe();
     }
 
-    _onUserLoaded = (user) => {
-        this.setState({user: user});
+    _onUserLoaded = (data) => {
+        if (data.action === Actions.loadUser)
+        this.setState({user: data.user});
     };
 
     onChange = (change) => {

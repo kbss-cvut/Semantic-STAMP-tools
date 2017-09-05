@@ -108,6 +108,15 @@ export default class Generator {
 
     static _uriBase = 'http://onto.fel.cvut.cz/ontologies/inbas';
 
+    static generatePerson() {
+        return {
+            uri: Generator.getRandomUri(),
+            firstName: 'User',
+            lastName: '4584',
+            username: 'simmons@nid.gov'
+        };
+    }
+
     static generateFactorGraphNodes() {
         const nodes = [];
         let referenceIdCounter = Date.now();
