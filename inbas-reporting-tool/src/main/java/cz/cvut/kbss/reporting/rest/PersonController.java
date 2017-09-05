@@ -5,6 +5,7 @@ import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
+import cz.cvut.kbss.reporting.security.SecurityConstants;
 import cz.cvut.kbss.reporting.service.PersonService;
 import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/persons")
@@ -32,6 +34,12 @@ public class PersonController extends BaseController {
         this.personService = personService;
         this.securityUtils = securityUtils;
         this.dtoMapper = dtoMapper;
+    }
+
+    @PreAuthorize("hasRole('" + SecurityConstants.ROLE_ADMIN + "')")
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Collection<Person> getAll() {
+        return personService.findAll();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)

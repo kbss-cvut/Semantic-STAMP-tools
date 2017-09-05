@@ -20,14 +20,19 @@ public class OntologyAuthenticationProvider implements AuthenticationProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntologyAuthenticationProvider.class);
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final SecurityUtils securityUtils;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private SecurityUtils securityUtils;
+    public OntologyAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder,
+                                          SecurityUtils securityUtils) {
+        this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
+        this.securityUtils = securityUtils;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

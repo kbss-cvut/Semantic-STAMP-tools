@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.rest;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import cz.cvut.kbss.reporting.dto.PersonUpdateDto;
 import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
 import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
@@ -7,6 +8,7 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.reporting.service.PersonService;
 import cz.cvut.kbss.reporting.service.security.SecurityUtils;
@@ -25,6 +27,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -144,19 +149,6 @@ public class PersonControllerTest extends BaseControllerTestRunner {
         verify(securityUtilsMock).verifyCurrentUserPassword(update.getPasswordOriginal());
     }
 
-    @Test
-    public void doesUsernameExistReturnsValueForQuery() throws Exception {
-        Environment.setCurrentUser(Generator.getPerson());
-        when(personService.exists(anyString())).thenReturn(true);
-        final String username = "masterchief";
-        final MvcResult mvcResult = mockMvc
-                .perform(get("/persons/exists").param("username", username).accept(MediaType.TEXT_PLAIN_VALUE))
-                .andExpect(status().isOk()).andReturn();
-        final String result = mvcResult.getResponse().getContentAsString();
-        assertTrue(Boolean.parseBoolean(result));
-        verify(personService).exists(username);
-    }
-
     private static class TestPersonDto extends PersonUpdateDto {
         // We are using this to bypass the WRITE_ONLY access to the password property in Person
         private String password;
@@ -170,5 +162,52 @@ public class PersonControllerTest extends BaseControllerTestRunner {
         public void setPassword(String password) {
             this.password = password;
         }
+    }
+
+    @Test
+    public void doesUsernameExistReturnsValueForQuery() throws Exception {
+        Environment.setCurrentUser(Generator.getPerson());
+        when(personService.exists(anyString())).thenReturn(true);
+        final String username = "masterchief";
+        final MvcResult mvcResult = mockMvc
+                .perform(get("/persons/exists").param("username", username).accept(MediaType.TEXT_PLAIN_VALUE))
+                .andExpect(status().isOk()).andReturn();
+        final String result = mvcResult.getResponse().getContentAsString();
+        assertTrue(Boolean.parseBoolean(result));
+        verify(personService).exists(username);
+    }
+
+    @Test
+    public void findAllReturnsAllUsers() throws Exception {
+        final Person user = Generator.getPerson();
+        user.getTypes().add(Vocabulary.s_c_admin);
+        Environment.setCurrentUser(user);
+        final List<Person> persons = IntStream.range(0, 5).mapToObj(i -> {
+            final Person p = new Person();
+            p.setUri(Generator.generateUri());
+            p.setFirstName("firstName" + i);
+            p.setLastName("lastName" + i);
+            p.setUsername("username" + i);
+            p.setPassword("password" + i);
+            return p;
+        }).collect(Collectors.toList());
+        when(personService.findAll()).thenReturn(persons);
+
+        final MvcResult mvcResult = mockMvc.perform(get("/persons")).andExpect(status().isOk()).andReturn();
+        final List<Person> result = readValue(mvcResult, new TypeReference<List<Person>>() {
+        });
+        assertEquals(persons.size(), result.size());
+        for (int i = 0; i < persons.size(); i++) {
+            assertEquals(persons.get(i).getUri(), result.get(i).getUri());
+            assertNull(result.get(i).getPassword());
+        }
+    }
+
+    @Test
+    public void findAllThrowsForbiddenForUnauthorizedUser() throws Exception {
+        Environment.setCurrentUser(Generator.getPerson());
+        when(personService.findAll()).thenReturn(Collections.emptyList());
+
+        mockMvc.perform(get("/persons")).andExpect(status().isForbidden());
     }
 }
