@@ -31,7 +31,7 @@ public class ReportExporter {
     protected OccurrenceRportE5XExporter occurrenceRportE5XExporter;
 
     @PostConstruct
-    protected void init(){
+    protected void init() {
         try {
             e5xSchema = XMLUtils.loadSchema(E5XTerms.dataBridgeNS);
             occurrenceRportE5XExporter = createExporter();
@@ -42,11 +42,11 @@ public class ReportExporter {
     }
 
     // TODO - add control for - report with key not found, create e5x is not valid, etc.
-    public byte[] exportReportToE5X(String key, boolean zip){
-        LOG.info("read report with key {}", key);
-        OccurrenceReport report = (OccurrenceReport)reportService.findByKey(key);
-        if(report == null){
-            LOG.trace("No such report with key {}.", key);
+    public byte[] exportReportToE5X(String key, boolean zip) {
+        LOG.debug("read report with key {}", key);
+        OccurrenceReport report = (OccurrenceReport) reportService.findByKey(key);
+        if (report == null) {
+            LOG.warn("No such report with key {}.", key);
             return null;
         }
 
@@ -54,18 +54,18 @@ public class ReportExporter {
 
         String reportRevision = fileNumber + ":" + key;
         try {
-            LOG.info("converting report with key {} to e5x DOM", key);
+            LOG.debug("converting report with key {} to e5x DOM", key);
             Document doc = occurrenceRportE5XExporter.convert(report);
-            if(doc == null){
-                LOG.trace("Could not transform report with key {}", key);
+            if (doc == null) {
+                LOG.warn("Could not transform report with key {}", key);
                 return null;
             }
 
-            LOG.info("serializing report with key {} to e5x xml", key);
+            LOG.debug("serializing report with key {} to e5x xml", key);
             ByteArrayOutputStream reportStream = new ByteArrayOutputStream();
             XMLUtils.serializeDocument(doc, reportStream);
 
-            LOG.info("validate the e5x xml output");
+            LOG.debug("validate the e5x xml output");
             XMLUtils.validateDocument(E5XTerms.dataBridgeNS, reportRevision, doc);
 
 //            // for debugging
@@ -78,8 +78,8 @@ public class ReportExporter {
 
             byte[] outputBytes = reportStream.toByteArray();
 
-            if(zip){
-                LOG.info("zipping e5x xml to e5x file");
+            if (zip) {
+                LOG.debug("zipping e5x xml to e5x file");
                 ByteArrayOutputStream e5xZipped = new ByteArrayOutputStream();
                 AbstractOccurrenceReportE5XExporter.generateE5XFile(outputBytes, e5xZipped, reportRevision);
                 outputBytes = e5xZipped.toByteArray();
@@ -88,16 +88,21 @@ public class ReportExporter {
             return outputBytes;
 
         } catch (ParserConfigurationException e) {
-            LOG.error(String.format("cannot convert occurrence report with key=\"%s\"to e5x xml, failed to create document builder with given configuration ", key), e);
+            LOG.error(String.format(
+                    "cannot convert occurrence report with key=\"%s\"to e5x xml, failed to create document builder with given configuration ",
+                    key), e);
         } catch (MalformedURLException e) {
-            LOG.error(String.format("cannot convert occurrence report with key=\"%s\"to e5x xml, bad schema url=\"%s\"", key, E5XTerms.dataBridgeNS), e);
+            LOG.error(String.format("cannot convert occurrence report with key=\"%s\"to e5x xml, bad schema url=\"%s\"",
+                    key, E5XTerms.dataBridgeNS), e);
         } catch (IOException e) {
-            LOG.error(String.format("cannot convert occurrence report with key=\"%s\"to e5x xml, io error while zipping e5x xml content.", key, E5XTerms.dataBridgeNS), e);
+            LOG.error(String.format(
+                    "cannot convert occurrence report with key=\"%s\"to e5x xml, io error while zipping e5x xml content.",
+                    key, E5XTerms.dataBridgeNS), e);
         }
         return null;
     }
 
-    protected OccurrenceRportE5XExporter createExporter(){
+    protected OccurrenceRportE5XExporter createExporter() {
         return new Aso2E5X(e5xSchema);
     }
 }
