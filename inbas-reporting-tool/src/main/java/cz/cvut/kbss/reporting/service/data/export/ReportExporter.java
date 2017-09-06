@@ -16,9 +16,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-/**
- * Created by user on 5/24/2017.
- */
 @Service
 public class ReportExporter {
     private static final Logger LOG = LoggerFactory.getLogger(ReportExporter.class);
@@ -28,13 +25,13 @@ public class ReportExporter {
 
     protected Schema e5xSchema;
 
-    protected OccurrenceRportE5XExporter occurrenceRportE5XExporter;
+    protected OccurrenceReportE5XExporter occurrenceReportE5XExporter;
 
     @PostConstruct
     protected void init() {
         try {
             e5xSchema = XMLUtils.loadSchema(E5XTerms.dataBridgeNS);
-            occurrenceRportE5XExporter = createExporter();
+            occurrenceReportE5XExporter = createExporter();
         } catch (MalformedURLException e) {
             LOG.error(String.format("could not load e5x schema, malformed URL \"%s\"", E5XTerms.dataBridgeNS), e);
             LOG.warn("generated e5x failes will not be validated.");
@@ -44,7 +41,7 @@ public class ReportExporter {
     // TODO - add control for - report with key not found, create e5x is not valid, etc.
     public byte[] exportReportToE5X(String key, boolean zip) {
         LOG.debug("read report with key {}", key);
-        OccurrenceReport report = (OccurrenceReport) reportService.findByKey(key);
+        OccurrenceReport report = reportService.findByKey(key);
         if (report == null) {
             LOG.warn("No such report with key {}.", key);
             return null;
@@ -55,7 +52,7 @@ public class ReportExporter {
         String reportRevision = fileNumber + ":" + key;
         try {
             LOG.debug("converting report with key {} to e5x DOM", key);
-            Document doc = occurrenceRportE5XExporter.convert(report);
+            Document doc = occurrenceReportE5XExporter.convert(report);
             if (doc == null) {
                 LOG.warn("Could not transform report with key {}", key);
                 return null;
@@ -102,7 +99,7 @@ public class ReportExporter {
         return null;
     }
 
-    protected OccurrenceRportE5XExporter createExporter() {
+    protected OccurrenceReportE5XExporter createExporter() {
         return new Aso2E5X(e5xSchema);
     }
 }

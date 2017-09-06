@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 /**
  * Created by Bogdan Kostov on 6/1/2017.
  */
-public interface OccurrenceRportE5XExporter {
+public interface OccurrenceReportE5XExporter {
 
     Document convert(OccurrenceReport r) throws ParserConfigurationException, MalformedURLException;
 }

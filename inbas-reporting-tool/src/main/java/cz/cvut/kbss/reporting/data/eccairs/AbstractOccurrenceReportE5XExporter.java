@@ -27,7 +27,7 @@ import java.util.zip.ZipOutputStream;
  *
  * Created by Bogdan Kostov on 6/1/2017.
  */
-public abstract class AbstractOccurrenceReportE5XExporter implements OccurrenceRportE5XExporter{
+public abstract class AbstractOccurrenceReportE5XExporter implements OccurrenceReportE5XExporter {
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractOccurrenceReportE5XExporter.class);
     // thread-safe in in this usecase scenario, the state
