@@ -32,7 +32,7 @@
         <deployment>DEV</deployment>
     </properties>
 
-    <!-- For the JOPA maven plugin -->
+    <!-- For Checkstyle maven plugin -->
     <pluginRepositories>
         <pluginRepository>
             <id>kbss</id>
