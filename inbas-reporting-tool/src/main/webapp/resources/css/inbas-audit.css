@@ -159,6 +159,10 @@ td.actions button {
     margin: auto;
 }
 
+.modal-content .register-panel {
+    bottom: auto;
+}
+
 .register-panel.expanded {
     height: 345px;
 }

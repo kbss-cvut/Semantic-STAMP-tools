@@ -281,6 +281,8 @@ module.exports = {
         'users.table.username': 'Username',
         'users.table.status': 'Account status',
         'users.table.blocked.tooltip': 'Account is blocked!',
-        'users.table.not.blocked.tooltip': 'Account is accessible'
+        'users.table.not.blocked.tooltip': 'Account is accessible',
+        'users.register': 'Add new user',
+        'users.register.success': 'User successfully created.'
     }
 };

@@ -5,6 +5,7 @@ import Ajax from "../../utils/Ajax";
 import I18nStore from "../../stores/I18nStore";
 import Logger from "../../utils/Logger";
 import Register from "./Register";
+import Routes from "../../utils/Routes";
 import Routing from "../../utils/Routing";
 
 export default class RegisterController extends React.Component {
@@ -42,7 +43,11 @@ export default class RegisterController extends React.Component {
             });
     };
 
+    cancel = () => {
+        Routing.transitionTo(Routes.login);
+    };
+
     render() {
-        return <Register onRegister={this.register}/>;
+        return <Register onRegister={this.register} onCancel={this.cancel}/>;
     }
 }

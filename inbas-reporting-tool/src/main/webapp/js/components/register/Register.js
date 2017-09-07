@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Alert, Button, Panel} from "react-bootstrap";
+import classNames from "classnames";
+import Constants from "../../constants/Constants";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import HorizontalInput from "../HorizontalInput";
 import Mask from "../Mask";
 import PersonValidator from "../../validation/PersonValidator";
-import Routing from "../../utils/Routing";
-import Routes from "../../utils/Routes";
 
 class Register extends React.Component {
     constructor(props) {
@@ -23,6 +23,12 @@ class Register extends React.Component {
             errorMessage: '',
             mask: false
         };
+    }
+
+    componentWillUnmount() {
+        if (this.messageTimeout) {
+            clearTimeout(this.messageTimeout);
+        }
     }
 
     onChange = (e) => {
@@ -61,14 +67,11 @@ class Register extends React.Component {
 
     _onError = (msg) => {
         this.setState({mask: false, alertVisible: true, errorMessage: msg});
-    };
-
-    cancel = () => {
-        Routing.transitionTo(Routes.login);
+        this.messageTimeout = setTimeout(() => this.dismissAlert(), Constants.MESSAGE_DURATION);
     };
 
     render() {
-        const panelCls = this.state.alertVisible ? 'register-panel expanded' : 'register-panel';
+        const panelCls = classNames('register-panel', {'expanded': this.state.alertVisible});
         const mask = this.state.mask ? <Mask text={this.i18n('register.mask')}/> : null;
         return <Panel header={<h3>{this.i18n('register.title')}</h3>} bsStyle='info' className={panelCls}>
             {mask}
@@ -107,7 +110,7 @@ class Register extends React.Component {
                     <Button bsStyle='success' bsSize='small' ref='submit'
                             disabled={!PersonValidator.isValid(this.state) || this.state.mask}
                             onClick={this.register}>{this.i18n('register.submit')}</Button>
-                    <Button bsSize='small' onClick={this.cancel} style={{margin: '0 0 0 3.2em'}}
+                    <Button bsSize='small' onClick={this.props.onCancel} style={{margin: '0 0 0 3.2em'}}
                             disabled={this.state.mask}>{this.i18n('cancel')}</Button>
                 </div>
             </form>
@@ -115,10 +118,9 @@ class Register extends React.Component {
     }
 
     renderAlert() {
-        return this.state.alertVisible ?
-            <Alert bsStyle='danger' bsSize='small' dismissAfter={3000} onDismiss={this.dismissAlert}>
-                <div>{this.state.errorMessage}</div>
-            </Alert> : null;
+        return this.state.alertVisible ? <Alert bsStyle='danger' bsSize='small' onDismiss={this.dismissAlert}>
+            <div>{this.state.errorMessage}</div>
+        </Alert> : null;
     }
 
     renderPasswordConfirm() {
@@ -139,7 +141,8 @@ class Register extends React.Component {
 }
 
 Register.propTypes = {
-    onRegister: PropTypes.func.isRequired
+    onRegister: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired
 };
 
 export default injectIntl(I18nWrapper(Register));
