@@ -5,6 +5,7 @@ import {Panel} from "react-bootstrap";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import Mask from "../Mask";
+import UserTable from "./UserTable";
 
 class Users extends React.Component {
     constructor(props) {
@@ -17,7 +18,9 @@ class Users extends React.Component {
         if (users === null) {
             return <Mask/>;
         }
-        return <Panel header={<h5>{this.i18n('users.title')}</h5>} bsStyle='info'></Panel>;
+        return <Panel header={<h5>{this.i18n('users.title')}</h5>} bsStyle='primary'>
+            <UserTable users={users}/>
+        </Panel>;
     }
 }
 

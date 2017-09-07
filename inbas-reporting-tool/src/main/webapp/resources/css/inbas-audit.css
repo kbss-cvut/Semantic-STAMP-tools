@@ -90,6 +90,11 @@ body {
     vertical-align: top;
 }
 
+td.vertical-middle {
+    vertical-align: middle !important; /* Use important to override bootstrap */
+}
+
+/* TODO Replace all usages with vertical-middle */
 td.report-row {
     vertical-align: middle !important; /* Use important to override bootstrap */
 }
@@ -122,10 +127,6 @@ ul.autocomplete-results.extended {
     margin-left: 0.2em;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     cursor: pointer;
-}
-
-.vertical-middle {
-    vertical-align: middle;
 }
 
 td.actions {

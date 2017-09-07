@@ -272,6 +272,11 @@ module.exports = {
         'profile.password.confirm': 'Potvrzení hesla',
         'profile.username.exists': 'Uživatel s daným uživatelským jménem již existuje',
 
-        'users.title': 'Uživatelé'
+        'users.title': 'Uživatelé',
+        'users.table.name': 'Jméno',
+        'users.table.username': 'Uživatelské jméno',
+        'users.table.status': 'Stav účtu?',
+        'users.table.blocked.tooltip': 'Účet je zablokován!',
+        'users.table.not.blocked.tooltip': 'Účet je dostupný'
     }
 };
