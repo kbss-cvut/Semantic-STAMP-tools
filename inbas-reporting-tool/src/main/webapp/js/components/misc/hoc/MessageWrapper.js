@@ -1,5 +1,3 @@
-'use strict';
-
 import React from "react";
 import {Alert} from "react-bootstrap";
 import Constants from "../../../constants/Constants";
@@ -81,17 +79,20 @@ const MessageWrapper = (Component, options) => {
                     showErrorMessage: this.showErrorMessage,
                     showWarnMessage: this.showWarnMessage,
                     showMessage: this.showMessage
-                };
+                },
+                message = this.state.message;
             return React.createElement(tag, null,
-                <Component ref={(c) => this._wrappedComponent = c} {...methods} {...this.props}/>,
-                this.state.message && <div className='message-container'>
-                    <Alert bsStyle={this.state.message.type} onDismiss={this._dismissMessage}>
-                        <p>{this.state.message.text}</p>
+                <Component ref={(c) => this._wrappedComponent = c}
+                           messageDisplayed={message !== null} {...methods} {...this.props}/>,
+                message !== null && <div className='message-container'>
+                    <Alert bsStyle={message.type} onDismiss={this._dismissMessage}>
+                        <p>{message.text}</p>
                     </Alert>
                 </div>
             );
         }
     }
+
     Wrapped.displayName = "MessageWrapper(" + getDisplayName(Component) + ")";
     Wrapped.WrappedComponent = Component.WrappedComponent ? Component.WrappedComponent : Component;
     return Wrapped;

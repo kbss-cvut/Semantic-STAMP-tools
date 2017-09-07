@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Button, Panel} from "react-bootstrap";
+import classNames from "classnames";
 
 import Ajax from "../../utils/Ajax";
 import I18nWrapper from "../../i18n/I18nWrapper";
@@ -70,8 +71,9 @@ class Profile extends React.Component {
     render() {
         const user = this.props.user,
             isValid = PersonValidator.isValid(user, this.state.passwordEdit),
-            passwordsMatch = user.password === user.passwordConfirm;
-        return <Panel header={<h5>{this.i18n('profile.header')}</h5>} bsStyle='info' className='profile-panel'>
+            passwordsMatch = user.password === user.passwordConfirm,
+            panelCls = classNames('profile-panel', {'expanded': this.props.messageDisplayed});
+        return <Panel header={<h5>{this.i18n('profile.header')}</h5>} bsStyle='info' className={panelCls}>
             <form className='form-horizontal profile-form'>
                 <div className='row'>
                     <div className='col-xs-6'>
