@@ -76,6 +76,8 @@ module.exports = {
         'register.passwords-not-matching-tooltip': 'Heslo a jeho potvrzení se neshodují',
         'register.submit': 'Registrovat',
         'register.mask': 'Registruji...',
+        'register.error': 'Uživatele se nepodařilo zaregistrovat.',
+        'register.login.error': 'Nepodařilo se přihlásit k nově vytvořenému uživateli.',
 
         'main.dashboard-nav': 'Hlavní strana',
         'main.reports-nav': 'Hlášení',

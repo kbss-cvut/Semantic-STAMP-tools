@@ -74,6 +74,8 @@ module.exports = {
         'register.passwords-not-matching-tooltip': 'Passwords don\'t match',
         'register.submit': 'Register',
         'register.mask': 'Registering...',
+        'register.error': 'Unable to register user account.',
+        'register.login.error': 'Unable to login into the newly created account.',
 
         'main.dashboard-nav': 'Dashboards',
         'main.reports-nav': 'Reports',

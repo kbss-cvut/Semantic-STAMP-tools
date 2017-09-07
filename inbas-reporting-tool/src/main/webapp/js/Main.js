@@ -8,7 +8,7 @@ import Routes from "./utils/Routes";
 import Actions from "./actions/Actions";
 import Administration from "./components/admin/Administration";
 import Login from "./components/login/Login";
-import Register from "./components/register/Register";
+import RegisterController from "./components/register/RegisterController";
 import MainView from "./components/MainView";
 import DashboardController from "./components/dashboard/DashboardController";
 import ReportsController from "./components/report/ReportsController";
@@ -41,7 +41,7 @@ export default class Main extends React.Component {
                 <Route path='/' component={MainView}>
                     <IndexRoute component={DashboardController}/>
                     <Route path={Routes.login.path} onEnter={onRouteEnter} component={Login}/>
-                    <Route path={Routes.register.path} onEnter={onRouteEnter} component={Register}/>
+                    <Route path={Routes.register.path} onEnter={onRouteEnter} component={RegisterController}/>
                     <Route path={Routes.dashboard.path} onEnter={onRouteEnter} component={DashboardController}/>
                     <Route path={Routes.reports.path} onEnter={onRouteEnter} component={ReportsController}/>
                     <Route path={Routes.statistics.path} onEnter={onRouteEnter} component={StatisticsController}/>
