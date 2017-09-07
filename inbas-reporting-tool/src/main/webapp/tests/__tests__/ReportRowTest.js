@@ -19,7 +19,7 @@ describe('Report row', () => {
         report.date = 0;
         var component = Environment.renderIntoTable(<ReportRow actions={actions} report={report}/>);
 
-        var cells = TestUtils.scryRenderedDOMComponentsWithClass(component, 'report-row'),
+        var cells = TestUtils.scryRenderedDOMComponentsWithClass(component, 'vertical-middle'),
             dateCell = cells[1];
         expect(dateCell.textContent).toMatch(/01-01-70 0(0|1):00/);
     });

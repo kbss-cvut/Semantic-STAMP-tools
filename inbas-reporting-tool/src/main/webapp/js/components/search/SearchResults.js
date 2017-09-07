@@ -71,10 +71,10 @@ let SearchResultRow = (props) => {
         headline = props.record['headline']['value'],
         snippet = props.record['snippet']['value'];
     return <tr>
-        <td className='report-row'><a href={'#/' + Routes.reports.path + '/' + key}
+        <td className='vertical-middle'><a href={'#/' + Routes.reports.path + '/' + key}
                                       title={props.i18n('reports.open-tooltip')}>{headline}</a>
         </td>
-        <td className='report-row'>
+        <td className='vertical-middle'>
             <div dangerouslySetInnerHTML={{__html: snippet}}/>
         </td>
     </tr>;

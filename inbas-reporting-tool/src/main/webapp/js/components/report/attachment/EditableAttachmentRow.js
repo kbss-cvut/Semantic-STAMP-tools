@@ -37,13 +37,13 @@ class EditableAttachmentRow extends React.Component {
     render() {
         const valid = this.state.reference.length > 0;
         return <tr>
-            <td className='report-row inline'>
+            <td className='vertical-middle inline'>
                 <Input name='attachment_edit_reference' value={this.state.reference} onChange={this._onChange}/>
             </td>
-            <td className='report-row inline'>
+            <td className='vertical-middle inline'>
                 <Input name='attachment_edit_description' value={this.state.description} onChange={this._onChange}/>
             </td>
-            <td className='report-row actions'>
+            <td className='vertical-middle actions'>
                 <Button bsStyle='success' bsSize='small' disabled={!valid}
                         title={!valid ? this.i18n('report.attachments.save.disabled-tooltip') : null}
                         onClick={this._onSave}>{this.i18n('save')}</Button>

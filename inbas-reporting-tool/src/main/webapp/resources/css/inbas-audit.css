@@ -94,11 +94,6 @@ td.vertical-middle {
     vertical-align: middle !important; /* Use important to override bootstrap */
 }
 
-/* TODO Replace all usages with vertical-middle */
-td.report-row {
-    vertical-align: middle !important; /* Use important to override bootstrap */
-}
-
 ul.autocomplete-results {
     margin-top: -15px;
     padding: 0.3em 0.5em 0.5em 0.5em;

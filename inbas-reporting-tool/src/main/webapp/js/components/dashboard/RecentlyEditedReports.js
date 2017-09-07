@@ -98,15 +98,15 @@ const ReportRow = injectIntl(React.createClass({
         const report = ReportType.getReport(this.props.report),
             dateEdited = report.lastModified ? report.lastModified : report.dateCreated;
         return <tr>
-            <td className='report-row'>
+            <td className='vertical-middle'>
                 <a href='javascript:void(0);' onClick={this.onOpenClick}
                    title={this.i18n('reports.open-tooltip')}><CollapsibleText
                     text={report.identification}
                     maxLength={20}/></a>
             </td>
-            <td className='report-row content-center'>{Utils.formatDate(report.date)}</td>
-            <td className='report-row content-center'>{Utils.formatDate(new Date(dateEdited))}</td>
-            <td className='report-row content-center'>
+            <td className='vertical-middle content-center'>{Utils.formatDate(report.date)}</td>
+            <td className='vertical-middle content-center'>{Utils.formatDate(new Date(dateEdited))}</td>
+            <td className='vertical-middle content-center'>
                 <Label title={this.i18n(report.toString())}>{this.i18n(report.getPrimaryLabel())}</Label>
             </td>
         </tr>;
