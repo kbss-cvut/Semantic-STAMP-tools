@@ -43,10 +43,10 @@ class Login extends React.Component {
         this.setState({alertVisible: true, mask: false});
     };
 
-    login() {
+    login = () => {
         Authentication.login(this.state.username, this.state.password, this.onLoginError);
         this.setState({mask: true});
-    }
+    };
 
     register() {
         Routing.transitionTo(Routes.register);

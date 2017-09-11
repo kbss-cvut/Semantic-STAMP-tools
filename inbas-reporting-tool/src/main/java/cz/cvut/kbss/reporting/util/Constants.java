@@ -1,5 +1,8 @@
 package cz.cvut.kbss.reporting.util;
 
+import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
+
 public final class Constants {
 
     /**
@@ -60,7 +63,7 @@ public final class Constants {
     // File upload
 
     /**
-     * Temporary location where uploaded files will be stored
+     * Temporary location where uploaded files will be stored.
      */
     public static final String UPLOADED_FILE_LOCATION = "/tmp/";
 
@@ -82,7 +85,7 @@ public final class Constants {
     // Query files
 
     /**
-     * Folder containing query files for the application
+     * Folder containing query files for the application.
      */
     public static final String QUERY_FILES_DIRECTORY = "query";
 
@@ -114,6 +117,22 @@ public final class Constants {
      * Anything longer that this threshold may be trimmed.
      */
     public static final int DESCRIPTION_TO_STRING_THRESHOLD = 50;
+
+    /**
+     * Default system administrator account.
+     */
+    public static final Person SYSTEM_ADMIN = initAdmin();
+
+    public static final String ADMIN_CREDENTIALS_FILE = ".inbas-admin";
+
+    private static Person initAdmin() {
+        final Person admin = new Person();
+        admin.setFirstName("System");
+        admin.setLastName("Administrator");
+        admin.setUsername("admin@inbas.cz");
+        admin.getTypes().add(Vocabulary.s_c_admin);
+        return admin;
+    }
 
     private Constants() {
         throw new AssertionError();
