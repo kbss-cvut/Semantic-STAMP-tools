@@ -29,6 +29,7 @@ module.exports = {
             Configuration.intl = I18nStore.getIntl();
             Configuration.typeaheadResultList = TypeaheadResultList;
             Configuration.inputComponent = Input;
+            Configuration.readOnly = true;
             WizardGenerator.createWizard(data, {}, wizardTitle, renderCallback);
         }, () => {
             Logger.log('Received no valid wizard. Using the default one.');
@@ -46,6 +47,7 @@ module.exports = {
             Configuration.intl = I18nStore.getIntl();
             Configuration.typeaheadResultList = TypeaheadResultList;
             Configuration.inputComponent = Input;
+            Configuration.readOnly = false;
             WizardGenerator.createWizard(data, event.question, wizardTitle, renderCallback);
         }, () => {
             Logger.log('Received no valid wizard. Using the default one.');
