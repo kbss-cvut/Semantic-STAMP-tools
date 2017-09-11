@@ -23,7 +23,7 @@ const I18nMixin = require('../../../i18n/I18nMixin');
 const ReportDetailMixin = require('../../mixin/ReportDetailMixin');
 const SmallScreenFactors = require('../../factor/smallscreen/SmallScreenFactors').default;
 const WizardGenerator = require('../../wizard/generator/WizardGenerator');
-const WizardWindow = require('../../wizard/WizardWindow');
+const WizardWindow = require('../../wizard/WizardWindow').default;
 
 const BASE_URL_WITH_SLASH = 'rest/reports/';
 
@@ -109,7 +109,7 @@ const OccurrenceReport = React.createClass({
 
         return <div>
             <WizardWindow {...this.state.wizardProperties} show={this.state.isWizardOpen}
-                          onHide={this.closeSummaryWizard} enableForwardSkip={true}/>
+                          onHide={this.closeSummaryWizard} enableForwardSkip={true} readOnly={true}/>
             {this.state.showInitialReport &&
             <InitialReport initialReport={report.initialReport} onClose={this._hideInitialReport}/>}
 

@@ -1,41 +1,35 @@
-'use strict';
+import React from "react";
+import PropTypes from "prop-types";
+import {Modal} from "react-bootstrap";
+import assign from "object-assign";
 
-const React = require('react');
-const Modal = require('react-bootstrap').Modal;
-const assign = require('object-assign');
+import Wizard from "./Wizard";
 
-const Wizard = require('./Wizard');
+const WizardWindow = (props) => {
+    const properties = assign({}, props, {onClose: props.onHide}),
+        modalProps = assign({}, props);
+    delete modalProps.steps;
+    delete modalProps.onFinish;
+    delete modalProps.start;
+    delete modalProps.readOnly;
+    delete modalProps.enableForwardSkip;
 
-const WizardWindow = React.createClass({
-    propTypes: {
-        onHide: React.PropTypes.func,
-        title: React.PropTypes.string,
-        show: React.PropTypes.bool
-    },
+    return <Modal {...modalProps} show={props.show} bsSize="large" title={props.title}
+                  animation={true} dialogClassName="large-modal">
+        <Modal.Header closeButton>
+            <Modal.Title>{props.title}</Modal.Title>
+        </Modal.Header>
 
-    render: function () {
-        const properties = assign({}, this.props, {onClose: this.props.onHide});
+        <div className="modal-body" style={{overflow: 'hidden'}}>
+            <Wizard {...properties}/>
+        </div>
+    </Modal>;
+};
 
-        return <Modal {...this._getModalProps()} show={this.props.show} bsSize="large" title={this.props.title}
-                      animation={true} dialogClassName="large-modal">
-            <Modal.Header closeButton>
-                <Modal.Title>{this.props.title}</Modal.Title>
-            </Modal.Header>
+WizardWindow.propTypes = {
+    onHide: PropTypes.func,
+    title: PropTypes.string,
+    show: PropTypes.bool
+};
 
-            <div className="modal-body" style={{overflow: 'hidden'}}>
-                <Wizard {...properties}/>
-            </div>
-        </Modal>;
-    },
-
-    _getModalProps: function () {
-        const modalProps = assign({}, this.props);
-        delete modalProps.steps;
-        delete modalProps.onFinish;
-        delete modalProps.start;
-        delete modalProps.enableForwardSkip;
-        return modalProps;
-    }
-});
-
-module.exports = WizardWindow;
+export default WizardWindow;
