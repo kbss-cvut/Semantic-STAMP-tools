@@ -23,9 +23,9 @@ public class ReportExporter {
     @Autowired
     protected ReportBusinessService reportService;
 
-    protected Schema e5xSchema;
+    private Schema e5xSchema;
 
-    protected OccurrenceReportE5XExporter occurrenceReportE5XExporter;
+    private OccurrenceReportE5XExporter occurrenceReportE5XExporter;
 
     @PostConstruct
     protected void init() {
@@ -34,11 +34,10 @@ public class ReportExporter {
             occurrenceReportE5XExporter = createExporter();
         } catch (MalformedURLException e) {
             LOG.error(String.format("could not load e5x schema, malformed URL \"%s\"", E5XTerms.dataBridgeNS), e);
-            LOG.warn("generated e5x failes will not be validated.");
+            LOG.warn("generated e5x failed will not be validated.");
         }
     }
 
-    // TODO - add control for - report with key not found, create e5x is not valid, etc.
     public byte[] exportReportToE5X(String key, boolean zip) {
         LOG.debug("read report with key {}", key);
         OccurrenceReport report = reportService.findByKey(key);
@@ -51,32 +50,24 @@ public class ReportExporter {
 
         String reportRevision = fileNumber + ":" + key;
         try {
-            LOG.debug("converting report with key {} to e5x DOM", key);
+            LOG.trace("converting report with key {} to e5x DOM", key);
             Document doc = occurrenceReportE5XExporter.convert(report);
             if (doc == null) {
                 LOG.warn("Could not transform report with key {}", key);
                 return null;
             }
 
-            LOG.debug("serializing report with key {} to e5x xml", key);
+            LOG.trace("serializing report with key {} to e5x xml", key);
             ByteArrayOutputStream reportStream = new ByteArrayOutputStream();
             XMLUtils.serializeDocument(doc, reportStream);
 
-            LOG.debug("validate the e5x xml output");
+            LOG.trace("validating the e5x xml output");
             XMLUtils.validateDocument(E5XTerms.dataBridgeNS, reportRevision, doc);
-
-//            // for debugging
-//            try {
-//                String output = reportStream.toString(Constants.UTF_8_ENCODING);
-//                System.out.println(output);
-//            } catch (UnsupportedEncodingException e) {
-//                LOG.error(String.format("The encoding %s used to encode/decode the e5x output is not supported", Constants.UTF_8_ENCODING), e);
-//            }
 
             byte[] outputBytes = reportStream.toByteArray();
 
             if (zip) {
-                LOG.debug("zipping e5x xml to e5x file");
+                LOG.trace("zipping e5x xml to e5x file");
                 ByteArrayOutputStream e5xZipped = new ByteArrayOutputStream();
                 AbstractOccurrenceReportE5XExporter.generateE5XFile(outputBytes, e5xZipped, reportRevision);
                 outputBytes = e5xZipped.toByteArray();
@@ -94,7 +85,7 @@ public class ReportExporter {
         } catch (IOException e) {
             LOG.error(String.format(
                     "cannot convert occurrence report with key=\"%s\"to e5x xml, io error while zipping e5x xml content.",
-                    key, E5XTerms.dataBridgeNS), e);
+                    key), e);
         }
         return null;
     }
