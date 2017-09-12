@@ -6,6 +6,7 @@ import cz.cvut.kbss.reporting.environment.config.TestServiceConfig;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.persistence.dao.PersonDao;
+import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.junit.AfterClass;
 import org.junit.runner.RunWith;
@@ -16,6 +17,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestServiceConfig.class, TestPersistenceConfig.class, MockSesamePersistence.class})
@@ -36,9 +39,16 @@ public abstract class BaseServiceTestRunner {
     }
 
     @AfterClass
-    public static void tearDownAfterClass() {
+    public static void tearDownAfterClass() throws Exception {
+        deleteAdminCredentialsFile();
+    }
+
+    protected static void deleteAdminCredentialsFile() throws IOException {
+        final Properties props = new Properties();
+        props.load(BaseServiceTestRunner.class.getClassLoader().getResourceAsStream("config.properties"));
         final File credentialsFile = new File(
-                System.getProperty("user.home") + File.separator + Constants.ADMIN_CREDENTIALS_FILE);
+                props.getProperty(ConfigParam.ADMIN_CREDENTIALS_LOCATION.toString()) + File.separator +
+                        Constants.ADMIN_CREDENTIALS_FILE);
         if (credentialsFile.exists()) {
             credentialsFile.delete();
         }

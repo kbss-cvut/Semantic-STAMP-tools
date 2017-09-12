@@ -11,12 +11,14 @@ import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.PersonService;
 import cz.cvut.kbss.reporting.service.cache.ReportCache;
 import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
+import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +34,9 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 public class AppAdminBeanTest extends BaseServiceTestRunner {
+
+    @Autowired
+    private Environment environment;
 
     @Autowired
     private AppAdminBean adminBean;
@@ -52,12 +57,8 @@ public class AppAdminBeanTest extends BaseServiceTestRunner {
     private EntityManagerFactory emf;
 
     @After
-    public void tearDown() {
-        final File credentialsFile = new File(
-                System.getProperty("user.home") + File.separator + Constants.ADMIN_CREDENTIALS_FILE);
-        if (credentialsFile.exists()) {
-            credentialsFile.delete();
-        }
+    public void tearDown() throws Exception {
+        deleteAdminCredentialsFile();
     }
 
     @Test
@@ -118,7 +119,7 @@ public class AppAdminBeanTest extends BaseServiceTestRunner {
     @Test
     public void savesAdminLoginCredentialsIntoHiddenFileInUserHome() throws Exception {
         final Person admin = personService.findByUsername(Constants.SYSTEM_ADMIN.getUsername());
-        final String home = System.getProperty("user.home");
+        final String home = environment.getProperty(ConfigParam.ADMIN_CREDENTIALS_LOCATION.toString());
         final File credentialsFile = new File(home + File.separator + Constants.ADMIN_CREDENTIALS_FILE);
         assertTrue(credentialsFile.exists());
         assertTrue(credentialsFile.isHidden());

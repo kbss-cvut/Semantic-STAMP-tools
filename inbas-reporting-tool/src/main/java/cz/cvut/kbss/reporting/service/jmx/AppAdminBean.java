@@ -2,8 +2,10 @@ package cz.cvut.kbss.reporting.service.jmx;
 
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.service.ConfigReader;
 import cz.cvut.kbss.reporting.service.PersonService;
 import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
+import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +37,13 @@ public class AppAdminBean implements ApplicationEventPublisherAware {
 
     private final EntityManagerFactory emf;
 
+    private final ConfigReader configReader;
     private final PersonService personService;
 
     @Autowired
-    public AppAdminBean(EntityManagerFactory emf, PersonService personService) {
+    public AppAdminBean(EntityManagerFactory emf, ConfigReader configReader, PersonService personService) {
         this.emf = emf;
+        this.configReader = configReader;
         this.personService = personService;
     }
 
@@ -67,8 +71,13 @@ public class AppAdminBean implements ApplicationEventPublisherAware {
         LOG.info("----------------------------------------------");
         LOG.info("Admin credentials are: {}/{}", admin.getUsername(), passwordPlain);
         LOG.info("----------------------------------------------");
+        final File directory = new File(configReader.getConfig(ConfigParam.ADMIN_CREDENTIALS_LOCATION));
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
         final File credentialsFile = new File(
-                System.getProperty("user.home") + File.separator + Constants.ADMIN_CREDENTIALS_FILE);
+                configReader.getConfig(ConfigParam.ADMIN_CREDENTIALS_LOCATION) + File.separator +
+                        Constants.ADMIN_CREDENTIALS_FILE);
         try {
             Files.write(credentialsFile.toPath(),
                     Collections.singletonList(admin.getUsername() + "/" + passwordPlain),

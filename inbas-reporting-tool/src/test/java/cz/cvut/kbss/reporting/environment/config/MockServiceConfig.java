@@ -11,6 +11,7 @@ import cz.cvut.kbss.reporting.service.search.SearchService;
 import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,8 +58,8 @@ public class MockServiceConfig {
     }
 
     @Bean
-    public ConfigReader configReader() {
-        return new ConfigReader();
+    public ConfigReader configReader(Environment environment) {
+        return new ConfigReader(environment);
     }
 
     @Bean(name = "localDataLoader")

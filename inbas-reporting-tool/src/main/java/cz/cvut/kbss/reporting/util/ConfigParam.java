@@ -10,6 +10,7 @@ public enum ConfigParam {
     FORM_GEN_SERVICE_URL("formGenServiceUrl"),
     TEXT_ANALYSIS_SERVICE_URL("textAnalysisServiceUrl"),
     TEXT_ANALYSIS_VOCABULARIES("text-analysis.vocabularies"),
+    ADMIN_CREDENTIALS_LOCATION("adminCredentialsFileLocation"),
 
     INDEX_FILE("indexFile");    // index.html location, used by Portal authentication
 
