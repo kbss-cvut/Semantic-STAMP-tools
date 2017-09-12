@@ -22,8 +22,8 @@ import javax.xml.validation.Validator;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by Bogdan Kostov on 6/1/2017.
@@ -32,7 +32,7 @@ public class XMLUtils {
 
     private static final Logger LOG = LoggerFactory.getLogger(XMLUtils.class);
 
-    protected static Map<String, Schema> schemaMap = new HashMap<>();
+    private static Map<String, Schema> schemaMap = new ConcurrentHashMap<>();
 
     public static void serializeDocument(Document d, String fileName) {
         try (FileOutputStream fos = new FileOutputStream(fileName)) {
