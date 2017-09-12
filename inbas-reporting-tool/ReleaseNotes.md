@@ -1,5 +1,14 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.11.2 - September 12, 2017
+- Fixed the issue with E5X export requiring graphical interface to be present (Bug #479).
+- Added ECCAIRS schema into project, so that it does not have to be loaded remotely at runtime (Bug #482).
+- Added editable user profile (Feature #494).
+- Added default admin account. Credentials are outputted into LOG and into a hidden file in user home on creation (#Task 489).
+- Added support for admin-based user registration (admin can add new users) (Task #491).
+- Added basic administration screen, currently with a list of all application users (Task #492).
+- Report summary wizard is read only - it does not contain the confusing "Finish" button and all inputs are disabled. (Bug #498).
+
 ### 0.11.1 - August 28, 2017
 - Support for export to E5X (Feature #88).
 - Time difference resolution (Bug #450, Feature #441). 
