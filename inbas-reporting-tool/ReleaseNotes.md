@@ -8,6 +8,7 @@
 - Added support for admin-based user registration (admin can add new users) (Task #491).
 - Added basic administration screen, currently with a list of all application users (Task #492).
 - Report summary wizard is read only - it does not contain the confusing "Finish" button and all inputs are disabled. (Bug #498).
+- Upgraded to JOPA 0.9.9.
 
 ### 0.11.1 - August 28, 2017
 - Support for export to E5X (Feature #88).
