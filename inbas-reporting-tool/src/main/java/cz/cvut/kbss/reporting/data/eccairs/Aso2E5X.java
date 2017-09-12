@@ -149,13 +149,13 @@ public class Aso2E5X extends AbstractOccurrenceReportE5XExporter {
                 if (r.getOccurrence() == null)// do not add elements if the occurrence is null
                     return;
 
-                this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Report_Identification, r.getFileNumber());
+                this.addAttribute(E5XTerms.ReportingHistoryAttributes.Report_Identification, r.getFileNumber());
 //                this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Reporting_Entity, ); // TODO reporting entity, Person, Organization
 //                this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Report_Status, ); // TODO reporting entity, [r.getPhase()]
 
-                this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Reporting_Date,
+                this.addAttribute(E5XTerms.ReportingHistoryAttributes.Reporting_Date,
                         dateFormat.get().format(r.getDateCreated())); // Use current day, Use the local date
-                this.addAttribute(E5XTerms.Reporting_HistoryAttributes.Report_Version, r.getKey()); //
+                this.addAttribute(E5XTerms.ReportingHistoryAttributes.Report_Version, r.getKey()); //
             }
         };
     }

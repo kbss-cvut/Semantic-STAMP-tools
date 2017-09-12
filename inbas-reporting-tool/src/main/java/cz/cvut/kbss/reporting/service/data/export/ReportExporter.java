@@ -1,6 +1,7 @@
 package cz.cvut.kbss.reporting.service.data.export;
 
 import cz.cvut.kbss.reporting.data.eccairs.*;
+import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
 import org.slf4j.Logger;
@@ -30,11 +31,11 @@ public class ReportExporter {
     @PostConstruct
     protected void init() {
         try {
-            e5xSchema = XMLUtils.loadSchema(E5XTerms.dataBridgeNS);
+            e5xSchema = XMLUtils.loadSchema(E5XTerms.DATA_BRIDGE_FILE);
             occurrenceReportE5XExporter = createExporter();
-        } catch (MalformedURLException e) {
-            LOG.error(String.format("could not load e5x schema, malformed URL \"%s\"", E5XTerms.dataBridgeNS), e);
-            LOG.warn("generated e5x failed will not be validated.");
+        } catch (NotFoundException e) {
+            LOG.error(String.format("Could not load e5x schema from \"%s\"", E5XTerms.DATA_BRIDGE_FILE), e);
+            LOG.warn("The generated e5x will not be validated.");
         }
     }
 
@@ -62,7 +63,7 @@ public class ReportExporter {
             XMLUtils.serializeDocument(doc, reportStream);
 
             LOG.trace("validating the e5x xml output");
-            XMLUtils.validateDocument(E5XTerms.dataBridgeNS, reportRevision, doc);
+            XMLUtils.validateDocument(E5XTerms.DATA_BRIDGE_FILE, reportRevision, doc);
 
             byte[] outputBytes = reportStream.toByteArray();
 
@@ -81,7 +82,7 @@ public class ReportExporter {
                     key), e);
         } catch (MalformedURLException e) {
             LOG.error(String.format("cannot convert occurrence report with key=\"%s\"to e5x xml, bad schema url=\"%s\"",
-                    key, E5XTerms.dataBridgeNS), e);
+                    key, E5XTerms.DATA_BRIDGE_FILE), e);
         } catch (IOException e) {
             LOG.error(String.format(
                     "cannot convert occurrence report with key=\"%s\"to e5x xml, io error while zipping e5x xml content.",
