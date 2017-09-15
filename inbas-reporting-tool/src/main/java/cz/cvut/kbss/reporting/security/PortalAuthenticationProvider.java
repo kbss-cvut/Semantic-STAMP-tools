@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -65,8 +66,12 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         final String password = authentication.getCredentials().toString();
         final Person authenticatedUser = authenticateAgainstPortal(username, password);
         final UserDetails userDetails = new PortalUserDetails(authenticatedUser);
+        final Person original = personService.findByUsername(authenticatedUser.getUsername());
+        if (original != null && SecurityUtils.isLocked(original)) {
+            throw new LockedException("Account is locked.");
+        }
         final AuthenticationToken auth = securityUtils.setCurrentUser(userDetails);
-        saveUser(authenticatedUser);
+        saveUser(authenticatedUser, original);
         return auth;
     }
 
@@ -126,8 +131,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     /**
      * We store the user because it is associated with occurrence reports.
      */
-    private void saveUser(Person user) {
-        final Person existing = personService.findByUsername(user.getUsername());
+    private void saveUser(Person user, Person existing) {
         if (existing == null) {
             personService.persist(user);
             return;

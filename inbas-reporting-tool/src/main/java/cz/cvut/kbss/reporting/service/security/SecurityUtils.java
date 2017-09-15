@@ -1,6 +1,7 @@
 package cz.cvut.kbss.reporting.service.security;
 
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.security.model.AuthenticationToken;
 import cz.cvut.kbss.reporting.security.model.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class SecurityUtils {
@@ -87,5 +90,16 @@ public class SecurityUtils {
         if (!passwordEncoder.matches(password, currentUser.getPassword())) {
             throw new IllegalArgumentException("The specified password does not match the original one.");
         }
+    }
+
+    /**
+     * Checks whether the specified user account is locked.
+     *
+     * @param user The user to check
+     * @return Info whether the user is locked
+     */
+    public static boolean isLocked(Person user) {
+        Objects.requireNonNull(user);
+        return user.getTypes().contains(Vocabulary.s_c_locked);
     }
 }

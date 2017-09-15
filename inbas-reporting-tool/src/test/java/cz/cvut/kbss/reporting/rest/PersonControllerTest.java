@@ -180,7 +180,7 @@ public class PersonControllerTest extends BaseControllerTestRunner {
     @Test
     public void findAllReturnsAllUsers() throws Exception {
         final Person user = Generator.getPerson();
-        user.getTypes().add(Vocabulary.s_c_admin);
+        user.addType(Vocabulary.s_c_admin);
         Environment.setCurrentUser(user);
         final List<Person> persons = IntStream.range(0, 5).mapToObj(i -> {
             final Person p = new Person();

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -42,6 +43,9 @@ public class OntologyAuthenticationProvider implements AuthenticationProvider {
         }
 
         final UserDetails userDetails = (UserDetails) userDetailsService.loadUserByUsername(username);
+        if (!userDetails.isAccountNonLocked()) {
+            throw new LockedException("Account is locked.");
+        }
         final String password = (String) authentication.getCredentials();
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("Provided credentials don't match.");

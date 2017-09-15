@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_Person)
@@ -124,6 +125,16 @@ public class Person implements HasDerivableUri, Serializable {
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    /**
+     * Adds the specified type to this instance's ontological types.
+     * @param type The type to add
+     */
+    public void addType(String type) {
+        Objects.requireNonNull(type);
+        assert types != null;
+        types.add(type);
     }
 
     @Override

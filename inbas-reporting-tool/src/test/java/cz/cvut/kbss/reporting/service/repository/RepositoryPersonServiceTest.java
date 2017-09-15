@@ -6,10 +6,12 @@ import cz.cvut.kbss.reporting.exception.AuthorizationException;
 import cz.cvut.kbss.reporting.exception.UsernameExistsException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.security.model.AuthenticationToken;
 import cz.cvut.kbss.reporting.security.model.UserDetails;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.PersonService;
+import cz.cvut.kbss.reporting.service.event.LoginAttemptsThresholdExceeded;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -150,5 +152,16 @@ public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
     public void existsReturnsTrueForExistingUsername() {
         final Person person = persistPerson();
         assertTrue(personService.exists(person.getUsername()));
+    }
+
+    @Test
+    public void addsLockedClassToUserWhenLoginLimitExceededEventIsReceivedForHim() {
+        final Person person = persistPerson();
+        assertFalse(person.getTypes().contains(Vocabulary.s_c_locked));
+        final LoginAttemptsThresholdExceeded event = new LoginAttemptsThresholdExceeded(this, person);
+        ((RepositoryPersonService) personService).onApplicationEvent(event);
+
+        final Person result = personService.find(person.getUri());
+        assertTrue(result.getTypes().contains(Vocabulary.s_c_locked));
     }
 }

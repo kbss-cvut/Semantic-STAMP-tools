@@ -17,7 +17,9 @@ import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
@@ -27,6 +29,7 @@ import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,6 +52,9 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
         RestConfig.class,
         MockSesamePersistence.class}, initializers = PropertyMockingApplicationContextInitializer.class)
 public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private static final String USERNAME = "masterchief";
     private static final String COMPANY_ID = "117";
@@ -80,8 +86,9 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         this.mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
-    @Test(expected = AuthenticationServiceException.class)
+    @Test
     public void unsuccessfulLoginThrowsAuthenticationServiceException() {
+        thrown.expect(AuthenticationServiceException.class);
         String expectedUrl = getExpectedUrl();
         mockServer.expect(requestTo(expectedUrl)).andExpect(method(HttpMethod.GET))
                   .andRespond(withUnauthorizedRequest());
@@ -212,8 +219,10 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         }
     }
 
-    @Test(expected = AuthenticationServiceException.class)
+    @Test
     public void throwsAuthenticationExceptionWhenPortalUrlIsNotAvailable() {
+        thrown.expect(AuthenticationServiceException.class);
+        thrown.expectMessage("Portal is not available.");
         final MockEnvironment me = (MockEnvironment) environment;
         me.setProperty(ConfigParam.PORTAL_URL.toString(), "");
         setCompanyIdInCurrentRequest(COMPANY_ID);
@@ -221,8 +230,10 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         provider.authenticate(createAuthentication(USERNAME));
     }
 
-    @Test(expected = AuthenticationServiceException.class)
+    @Test
     public void throwsAuthenticationExceptionWhenApplicationIsNotRunningOnPortal() {
+        thrown.expect(AuthenticationServiceException.class);
+        thrown.expectMessage("Portal is not available.");
         final MockHttpServletRequest request = new MockHttpServletRequest();
         // No company id -> not running on portal
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
@@ -233,5 +244,21 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
     @Test
     public void supportsUsernameAndPasswordAuthentication() {
         assertTrue(provider.supports(UsernamePasswordAuthenticationToken.class));
+    }
+
+    @Test
+    public void throwsLockedExceptionWhenAccountIsLocked() throws Exception {
+        thrown.expect(LockedException.class);
+        thrown.expectMessage("Account is locked.");
+        final PortalUser userData = getPortalUser();
+        final Person p = persistUser(userData);
+        p.addType(Vocabulary.s_c_locked);
+        personDao.update(p);
+        mockServer.expect(requestTo(getExpectedUrl())).andExpect(method(HttpMethod.GET))
+                  .andRespond(withSuccess(objectMapper.writeValueAsBytes(userData),
+                          MediaType.APPLICATION_JSON));
+        setCompanyIdInCurrentRequest(COMPANY_ID);
+
+        provider.authenticate(createAuthentication(USERNAME));
     }
 }

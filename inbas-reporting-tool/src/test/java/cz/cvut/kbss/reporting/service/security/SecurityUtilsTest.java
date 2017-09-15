@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.service.security;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.security.model.UserDetails;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import org.junit.After;
@@ -81,5 +82,16 @@ public class SecurityUtilsTest extends BaseServiceTestRunner {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage(containsString("does not match"));
         securityUtils.verifyCurrentUserPassword(password);
+    }
+
+    @Test
+    public void isLockedReturnsTrueForLockedAccount() {
+        person.addType(Vocabulary.s_c_locked);
+        assertTrue(SecurityUtils.isLocked(person));
+    }
+
+    @Test
+    public void isLockedReturnsFalseForActiveAccount() {
+        assertFalse(SecurityUtils.isLocked(person));
     }
 }
