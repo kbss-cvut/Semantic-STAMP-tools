@@ -20,10 +20,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,29 +35,28 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 
 @Service("portalAuthenticationProvider")
-public class PortalAuthenticationProvider implements AuthenticationProvider {
+public class PortalAuthenticationProvider extends AbstractAuthenticationProvider {
 
     private static final String PORTAL_TYPE_CONFIG = "portalEndpointType";
 
     private static final Logger LOG = LoggerFactory.getLogger(PortalAuthenticationProvider.class);
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
+
+    private final PersonService personService;
+
+    private final RestTemplate restTemplate;
 
     @Autowired
-    private PersonService personService;
+    public PortalAuthenticationProvider(Environment environment, PersonService personService,
+                                        RestTemplate restTemplate, PasswordEncoder passwordEncoder,
+                                        SecurityUtils securityUtils, LoginTracker loginTracker) {
+        super(passwordEncoder, securityUtils, loginTracker);
+        this.environment = environment;
+        this.personService = personService;
+        this.restTemplate = restTemplate;
+    }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private RestTemplate restTemplate;
-
-    @Autowired
-    private SecurityUtils securityUtils;
-
-    @Autowired
-    private LoginTracker loginTracker;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -76,7 +73,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         }
         final AuthenticationToken auth = securityUtils.setCurrentUser(userDetails);
         saveUser(authenticatedUser, original);
-        loginTracker.successfulLoginAttempt(authenticatedUser);
+        loginSuccess(authenticatedUser);
         return auth;
     }
 
@@ -144,10 +141,5 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         if (!existing.nameEquals(user) || !passwordEncoder.matches(user.getPassword(), existing.getPassword())) {
             personService.update(user);
         }
-    }
-
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

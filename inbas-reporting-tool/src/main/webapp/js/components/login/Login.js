@@ -50,7 +50,7 @@ class Login extends React.Component {
 
     login = () => {
         Authentication.login(this.state.username, this.state.password, this.onLoginError);
-        this.setState({mask: true});
+        this.setState({mask: true, errorMessage: null});
     };
 
     register() {

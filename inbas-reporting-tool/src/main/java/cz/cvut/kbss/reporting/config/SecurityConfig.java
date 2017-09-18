@@ -76,8 +76,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
             .and().headers().frameOptions().sameOrigin()
             .and()
-            .authenticationProvider(portalAuthenticationProvider)
-            .authenticationProvider(ontologyAuthenticationProvider)
 //            .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
             .csrf().disable()
             .formLogin().successHandler(authenticationSuccessHandler)
