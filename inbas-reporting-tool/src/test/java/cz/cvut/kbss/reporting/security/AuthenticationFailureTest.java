@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,7 +30,7 @@ public class AuthenticationFailureTest extends BaseServiceTestRunner {
     private ObjectMapper mapper;
 
     @Test
-    public void authenticationFailureReturnsLoginStatusWithErrorInfo() throws Exception {
+    public void authenticationFailureReturnsLoginStatusWithErrorInfoOnUsernameNotFound() throws Exception {
         final MockHttpServletRequest request = AuthenticationSuccessTest.request();
         final MockHttpServletResponse response = AuthenticationSuccessTest.response();
         final String msg = "Username not found";
@@ -40,5 +41,20 @@ public class AuthenticationFailureTest extends BaseServiceTestRunner {
         assertFalse(status.isLoggedIn());
         assertNull(status.getUsername());
         assertEquals(msg, status.getErrorMessage());
+        assertEquals("login.error", status.getErrorId());
+    }
+
+    @Test
+    public void authenticationFailureReturnsLoginStatusWIthErrorInfoOnAccountLocked() throws Exception {
+        final MockHttpServletRequest request = AuthenticationSuccessTest.request();
+        final MockHttpServletResponse response = AuthenticationSuccessTest.response();
+        final String msg = "Account is locked.";
+        failure.onAuthenticationFailure(request, response, new LockedException(msg));
+        final LoginStatus status = mapper.readValue(response.getContentAsString(), LoginStatus.class);
+        assertFalse(status.isSuccess());
+        assertFalse(status.isLoggedIn());
+        assertNull(status.getUsername());
+        assertEquals(msg, status.getErrorMessage());
+        assertEquals("login.locked", status.getErrorId());
     }
 }

@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.security;
 
 import cz.cvut.kbss.reporting.security.model.AuthenticationToken;
 import cz.cvut.kbss.reporting.security.model.UserDetails;
+import cz.cvut.kbss.reporting.service.security.LoginTracker;
 import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +28,15 @@ public class OntologyAuthenticationProvider implements AuthenticationProvider {
 
     private final SecurityUtils securityUtils;
 
+    private final LoginTracker loginTracker;
+
     @Autowired
     public OntologyAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder,
-                                          SecurityUtils securityUtils) {
+                                          SecurityUtils securityUtils, LoginTracker loginTracker) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.securityUtils = securityUtils;
+        this.loginTracker = loginTracker;
     }
 
     @Override
@@ -48,8 +52,10 @@ public class OntologyAuthenticationProvider implements AuthenticationProvider {
         }
         final String password = (String) authentication.getCredentials();
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            loginTracker.unsuccessfulLoginAttempt(userDetails.getUser());
             throw new BadCredentialsException("Provided credentials don't match.");
         }
+        loginTracker.successfulLoginAttempt(userDetails.getUser());
         return securityUtils.setCurrentUser(userDetails);
     }
 

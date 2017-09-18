@@ -8,11 +8,13 @@ import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.security.model.UserDetails;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
+import cz.cvut.kbss.reporting.service.security.LoginTracker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -27,6 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(classes = {TestSecurityConfig.class, RestConfig.class, MockSesamePersistence.class})
 public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
@@ -37,6 +40,9 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
     @Autowired
     @Qualifier("ontologyAuthenticationProvider")
     private AuthenticationProvider provider;
+
+    @Autowired
+    private LoginTracker loginTracker;
 
     private Person user;
 
@@ -109,5 +115,28 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
             final SecurityContext context = SecurityContextHolder.getContext();
             assertNull(context.getAuthentication());
         }
+    }
+
+    @Test
+    public void failedLoginNotifiesLoginTracker() {
+        thrown.expect(BadCredentialsException.class);
+        final Authentication auth = authentication(Generator.USERNAME, "unknownPassword");
+        try {
+            provider.authenticate(auth);
+        } finally {
+            final ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
+            verify(loginTracker).unsuccessfulLoginAttempt(captor.capture());
+            assertEquals(user.getUri(), captor.getValue().getUri());
+        }
+    }
+
+    @Test
+    public void successfulLoginNotifiesLoginTracker() {
+        final Authentication auth = authentication(Generator.USERNAME, Generator.PASSWORD);
+        final Authentication result = provider.authenticate(auth);
+        assertTrue(result.isAuthenticated());
+        final ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
+        verify(loginTracker).successfulLoginAttempt(captor.capture());
+        assertEquals(user.getUri(), captor.getValue().getUri());
     }
 }

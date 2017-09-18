@@ -14,12 +14,14 @@ import cz.cvut.kbss.reporting.security.portal.PortalEndpoint;
 import cz.cvut.kbss.reporting.security.portal.PortalEndpointType;
 import cz.cvut.kbss.reporting.security.portal.PortalUserDetails;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
+import cz.cvut.kbss.reporting.service.security.LoginTracker;
 import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
@@ -43,6 +45,7 @@ import javax.servlet.http.Cookie;
 import java.net.URI;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -71,6 +74,9 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
 
     @Autowired
     private PasswordEncoder encoder;
+
+    @Autowired
+    private LoginTracker loginTracker;
 
     @Autowired
     @Qualifier("portalAuthenticationProvider")
@@ -260,5 +266,20 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         setCompanyIdInCurrentRequest(COMPANY_ID);
 
         provider.authenticate(createAuthentication(USERNAME));
+    }
+
+    @Test
+    public void successfulLoginNotifiesLoginTracker() throws Exception {
+        final PortalUser userData = getPortalUser();
+        mockServer.expect(requestTo(getExpectedUrl())).andExpect(method(HttpMethod.GET))
+                  .andRespond(withSuccess(objectMapper.writeValueAsBytes(userData),
+                          MediaType.APPLICATION_JSON));
+        setCompanyIdInCurrentRequest(COMPANY_ID);
+
+        final Authentication auth = provider.authenticate(createAuthentication(USERNAME));
+        assertTrue(auth.isAuthenticated());
+        final ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
+        verify(loginTracker).successfulLoginAttempt(captor.capture());
+        assertEquals(userData.getEmailAddress(), captor.getValue().getUsername());
     }
 }

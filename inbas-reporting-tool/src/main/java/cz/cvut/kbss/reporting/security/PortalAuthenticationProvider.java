@@ -9,6 +9,7 @@ import cz.cvut.kbss.reporting.security.portal.PortalEndpoint;
 import cz.cvut.kbss.reporting.security.portal.PortalEndpointType;
 import cz.cvut.kbss.reporting.security.portal.PortalUserDetails;
 import cz.cvut.kbss.reporting.service.PersonService;
+import cz.cvut.kbss.reporting.service.security.LoginTracker;
 import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
@@ -57,6 +58,9 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private SecurityUtils securityUtils;
 
+    @Autowired
+    private LoginTracker loginTracker;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         final String username = authentication.getPrincipal().toString();
@@ -72,6 +76,7 @@ public class PortalAuthenticationProvider implements AuthenticationProvider {
         }
         final AuthenticationToken auth = securityUtils.setCurrentUser(userDetails);
         saveUser(authenticatedUser, original);
+        loginTracker.successfulLoginAttempt(authenticatedUser);
         return auth;
     }
 

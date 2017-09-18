@@ -18,7 +18,7 @@ var Authentication = {
                 }
                 var status = JSON.parse(resp.text);
                 if (!status.success || !status.loggedIn) {
-                    errorCallback();
+                    errorCallback(status);
                     return;
                 }
                 Actions.loadUser();

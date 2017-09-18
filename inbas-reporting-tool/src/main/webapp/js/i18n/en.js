@@ -64,6 +64,7 @@ module.exports = {
         'login.register': 'Register',
         'login.error': 'Authentication failed.',
         'login.progress-mask': 'Logging in...',
+        'login.locked': 'Account locked.',
 
         'register.title': Constants.APP_NAME + ' - Registration',
         'register.first-name': 'First name',
