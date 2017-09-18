@@ -1,11 +1,13 @@
 package cz.cvut.kbss.reporting.config;
 
 import cz.cvut.kbss.reporting.security.SecurityConstants;
+import cz.cvut.kbss.reporting.util.ConfigParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -31,6 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     @Autowired
+    private Environment environment;
+
+    @Autowired
     private AuthenticationEntryPoint authenticationEntryPoint;
 
     @Autowired
@@ -52,8 +57,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(ontologyAuthenticationProvider)
-            .authenticationProvider(portalAuthenticationProvider);
+        auth.authenticationProvider(ontologyAuthenticationProvider);
+        // Enable portal provider only when portal URL is configured
+        if (environment.containsProperty(ConfigParam.PORTAL_URL.toString())) {
+            auth.authenticationProvider(portalAuthenticationProvider);
+        }
     }
 
     @Bean
