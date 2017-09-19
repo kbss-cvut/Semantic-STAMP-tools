@@ -281,8 +281,8 @@ module.exports = {
         'users.table.name': 'Name',
         'users.table.username': 'Username',
         'users.table.status': 'Account status',
-        'users.table.blocked.tooltip': 'Account is blocked!',
-        'users.table.not.blocked.tooltip': 'Account is accessible',
+        'users.table.locked.tooltip': 'Account is locked!',
+        'users.table.not.locked.tooltip': 'Account is accessible',
         'users.register': 'Add new user',
         'users.register.success': 'User successfully created.'
     }

@@ -279,8 +279,8 @@ module.exports = {
         'users.table.name': 'Jméno',
         'users.table.username': 'Uživatelské jméno',
         'users.table.status': 'Stav účtu?',
-        'users.table.blocked.tooltip': 'Účet je zablokován!',
-        'users.table.not.blocked.tooltip': 'Účet je dostupný',
+        'users.table.locked.tooltip': 'Účet je zablokován!',
+        'users.table.not.locked.tooltip': 'Účet je dostupný',
         'users.register': 'Přidat uživatele',
         'users.register.success': 'Uživatel úspěšně vytvořen.'
     }

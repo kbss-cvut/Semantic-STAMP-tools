@@ -4,6 +4,7 @@ import {Glyphicon, Table} from "react-bootstrap";
 
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
+import Vocabulary from "../../constants/Vocabulary";
 
 class UserTable extends React.Component {
     constructor(props) {
@@ -43,13 +44,14 @@ UserTable.propTypes = {
 
 let UserRow = (props) => {
     const user = props.user,
-        i18n = props.i18n;
+        i18n = props.i18n,
+        isLocked = isUserLocked(user);
     return <tr>
         <td className='vertical-middle'>{user.firstName + ' ' + user.lastName}</td>
         <td className='vertical-middle'>{user.username}</td>
-        <td className='vertical-middle content-center'>
-            <Glyphicon glyph={user.blocked ? 'alert' : 'ok'}
-                       title={i18n(user.blocked ? 'users.table.blocked.tooltip' : 'users.table.not.blocked.tooltip')}/>
+        <td className='vertical-middle content-center status'>
+            <Glyphicon glyph={isLocked ? 'alert' : 'ok'}
+                       title={i18n(isLocked ? 'users.table.locked.tooltip' : 'users.table.not.locked.tooltip')}/>
         </td>
         <td className='vertical-middle actions'>
             &nbsp;
@@ -62,5 +64,9 @@ UserRow.propTypes = {
 };
 
 UserRow = injectIntl(I18nWrapper(UserRow));
+
+function isUserLocked(user) {
+    return user.types.indexOf(Vocabulary.LOCKED) !== -1;
+}
 
 export default injectIntl(I18nWrapper(UserTable));

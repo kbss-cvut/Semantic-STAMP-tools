@@ -835,3 +835,7 @@ button.in-input-line {
 .profile-button {
     margin: 0 0.5em;
 }
+
+td.status {
+    padding-bottom: 2px !important;
+}

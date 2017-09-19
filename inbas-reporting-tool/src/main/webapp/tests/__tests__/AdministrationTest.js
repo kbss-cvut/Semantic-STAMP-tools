@@ -5,6 +5,7 @@ import Generator from "../environment/Generator";
 import Actions from "../../js/actions/Actions";
 import Administration from "../../js/components/admin/Administration";
 import UserStore from "../../js/stores/UserStore";
+import UsersController from "../../js/components/admin/UsersController";
 import Vocabulary from "../../js/constants/Vocabulary";
 
 class Wrapper extends React.Component {
@@ -26,7 +27,7 @@ describe('Administration', () => {
         spyOn(UserStore, 'getCurrentUser').and.returnValue(user);
 
         const component = Environment.render(<Wrapper><Administration/></Wrapper>),
-            usersComp = TestUtils.scryRenderedComponentsWithType(component, require('../../js/components/admin/UsersController').default);
+            usersComp = TestUtils.scryRenderedComponentsWithType(component, UsersController);
         expect(usersComp.length).toEqual(0);
     });
 
@@ -36,7 +37,30 @@ describe('Administration', () => {
         spyOn(UserStore, 'getCurrentUser').and.returnValue(user);
 
         const component = Environment.render(<Wrapper><Administration/></Wrapper>),
-            usersComp = TestUtils.findRenderedComponentWithType(component, require('../../js/components/admin/UsersController').default);
+            usersComp = TestUtils.findRenderedComponentWithType(component, UsersController);
         expect(usersComp).not.toBeNull();
+    });
+
+    it('indicates locked user account by appropriate icon', () => {
+        const user = Generator.generatePerson();
+        user.types = [Vocabulary.ROLE_ADMIN];
+        const users = [user, {
+            uri: Generator.getRandomUri(),
+            firstName: 'locked',
+            lastName: 'user',
+            username: 'locked@inbas.cz',
+            types: [Vocabulary.LOCKED]
+        }];
+        spyOn(UserStore, 'getCurrentUser').and.returnValue(user);
+
+
+        const component = Environment.render(<Wrapper><Administration/></Wrapper>),
+            controller = TestUtils.findRenderedComponentWithType(component, UsersController);
+        controller._onUsersLoaded({action: Actions.loadUsers, users: users});
+
+        const statusIcons = TestUtils.scryRenderedComponentsWithType(controller, require("react-bootstrap").Glyphicon);
+        expect(statusIcons.length).toEqual(2);
+        expect(statusIcons[0].props.glyph).toEqual('ok');
+        expect(statusIcons[1].props.glyph).toEqual('alert');
     });
 });
