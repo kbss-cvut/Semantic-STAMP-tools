@@ -4,6 +4,7 @@ import {Modal} from "react-bootstrap";
 
 import Actions from "../../actions/Actions";
 import Ajax from "../../utils/Ajax";
+import Constants from "../../constants/Constants";
 import I18nStore from "../../stores/I18nStore";
 import Register from "../register/Register";
 
@@ -14,7 +15,7 @@ class UserRegistration extends React.Component {
     }
 
     _register = (user, onSuccess, onError) => {
-        Ajax.post('rest/persons', user).end((body, resp) => {
+        Ajax.post(Constants.REST_PREFIX + 'persons', user).end((body, resp) => {
             if (resp.status === 201) {
                 onSuccess();
                 Actions.loadUsers();

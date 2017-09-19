@@ -4,10 +4,10 @@
  * Internationalization store for access from non-react components and objects.
  */
 
-var _messages = [];
-var _intl = {};
+let _messages = [];
+let _intl = {};
 
-var I18nStore = {
+module.exports = {
 
     setMessages: function (messages) {
         _messages = messages;
@@ -25,5 +25,3 @@ var I18nStore = {
         return _intl;
     }
 };
-
-module.exports = I18nStore;

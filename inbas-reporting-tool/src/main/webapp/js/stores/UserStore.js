@@ -4,8 +4,9 @@ const Reflux = require('reflux');
 
 const Actions = require('../actions/Actions');
 const Ajax = require('../utils/Ajax');
+const Constants = require('../constants/Constants');
 
-const BASE_URL = 'rest/persons';
+const BASE_URL = Constants.REST_PREFIX + 'persons';
 
 let currentUser = null;
 let loaded = false;
