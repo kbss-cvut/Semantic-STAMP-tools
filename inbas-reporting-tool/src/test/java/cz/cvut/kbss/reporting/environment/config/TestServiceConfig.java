@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.environment.config;
 
 import cz.cvut.kbss.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.reporting.service.data.export.ReportExporter;
+import cz.cvut.kbss.reporting.service.jmx.AppAdminBean;
 import cz.cvut.kbss.reporting.service.repository.RepositoryOccurrenceReportService;
 import cz.cvut.kbss.reporting.service.security.LoginTracker;
 import org.springframework.context.annotation.Bean;
@@ -41,5 +42,10 @@ public class TestServiceConfig {
     @Bean
     public LoginTracker loginTracker() {
         return mock(LoginTracker.class);
+    }
+
+    @Bean
+    public AppAdminBean appAdminBean() {
+        return mock(AppAdminBean.class);
     }
 }
