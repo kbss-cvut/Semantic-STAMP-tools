@@ -34,9 +34,19 @@ export default class UsersController extends React.Component {
         }, onError);
     };
 
+    _disable = (user) => {
+
+    };
+
+    _enable = (user) => {
+
+    };
+
     render() {
         const actions = {
-            unlock: this._unlock
+            unlock: this._unlock,
+            disable: this._disable,
+            enable: this._enable
         };
         return <div>
             <Users users={this.state.users} actions={actions}/>

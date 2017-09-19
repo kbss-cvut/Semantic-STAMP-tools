@@ -15,5 +15,6 @@ module.exports = {
 
     ROLE_ADMIN: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/admin',
 
-    LOCKED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/locked'
+    LOCKED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/locked',
+    DISABLED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/disabled'
 };

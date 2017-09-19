@@ -73,7 +73,9 @@ class Users extends React.Component {
             return <Mask/>;
         }
         const actions = {
-            unlock: this._openUnlock
+            unlock: this._openUnlock,
+            enable: this.props.actions.enable,
+            disable: this.props.actions.disable
         };
         return <Panel header={<h5>{this.i18n('users.title')}</h5>} bsStyle='primary'>
             <UserRegistration onClose={this._closeRegistration} onSuccess={this._finishRegistration}

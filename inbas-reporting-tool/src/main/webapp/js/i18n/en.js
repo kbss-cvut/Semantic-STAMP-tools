@@ -290,6 +290,8 @@ module.exports = {
         'users.unlock.title': 'Unlock user {firstName} {lastName}',
         'users.unlock.submit.tooltip': 'Password must not be empty and its confirmation must match',
         'users.unlock.success': 'User {firstName} {lastName} successfully unlocked.',
-        'users.unlock.failure': 'Unable to unlock user {firstName} {lastName}. Check the log for details.'
+        'users.unlock.failure': 'Unable to unlock user {firstName} {lastName}. Check the log for details.',
+        'users.disable': 'Disable',
+        'users.enable': 'Enable'
     }
 };

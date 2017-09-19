@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Button, Glyphicon, Table} from "react-bootstrap";
+import classNames from "classnames";
 
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
@@ -32,13 +33,11 @@ class UserTable extends React.Component {
     _renderRows() {
         const users = this.props.users,
             pendingUnlockUser = this.props.pendingUnlockUser,
+            actions = this.props.actions,
             rows = [];
         for (let i = 0, len = users.length; i < len; i++) {
-            if (users[i] === pendingUnlockUser) {
-                rows.push(<UserRow key={users[i].uri} user={users[i]} unlock={this.props.actions.unlock} pending/>);
-            } else {
-                rows.push(<UserRow key={users[i].uri} user={users[i]} unlock={this.props.actions.unlock}/>);
-            }
+            rows.push(<UserRow key={users[i].uri} user={users[i]} unlock={actions.unlock} disable={actions.disable}
+                               enable={actions.enable} pending={pendingUnlockUser === users[i]}/>);
         }
         return rows;
     }
@@ -53,19 +52,30 @@ UserTable.propTypes = {
 let UserRow = (props) => {
     const user = props.user,
         i18n = props.i18n,
-        isLocked = isUserLocked(user);
-    const status = props.pending ? <Mask classes='mask-container' withoutText/> :
-        <Glyphicon glyph={isLocked ? 'alert' : 'ok'}
-                   title={i18n(isLocked ? 'users.table.locked.tooltip' : 'users.table.not.locked.tooltip')}/>;
+        isLocked = isUserLocked(user),
+        isDisabled = isUserDisabled(user),
+        classes = classNames('vertical-middle', {'italics': isDisabled}),
+        status = props.pending ? <Mask classes='mask-container' withoutText/> :
+            <Glyphicon glyph={isLocked ? 'alert' : 'ok'}
+                       title={i18n(isLocked ? 'users.table.locked.tooltip' : 'users.table.not.locked.tooltip')}/>;
+    let changeButton;
+    if (isDisabled) {
+        changeButton = <Button bsStyle='primary' bsSize='small' onClick={props.enable}>{i18n('users.enable')}</Button>;
+    } else {
+        changeButton =
+            <Button bsStyle='primary' bsSize='small' onClick={props.disable}>{i18n('users.disable')}</Button>;
+    }
+
     return <tr>
-        <td className='vertical-middle'>{user.firstName + ' ' + user.lastName}</td>
-        <td className='vertical-middle'>{user.username}</td>
+        <td className={classes}>{user.firstName + ' ' + user.lastName}</td>
+        <td className={classes}>{user.username}</td>
         <td className='vertical-middle content-center status' style={{position: 'relative'}}>
             {status}
         </td>
         <td className='vertical-middle actions'>
             {isLocked && !props.pending && <Button bsStyle='primary' bsSize='small' onClick={() => props.unlock(user)}
                                                    title={i18n('users.table.locked.unlock.tooltip')}>{i18n('users.table.locked.unlock')}</Button>}
+            {changeButton}
         </td>
     </tr>;
 };
@@ -73,6 +83,8 @@ let UserRow = (props) => {
 UserRow.propTypes = {
     user: PropTypes.object.isRequired,
     unlock: PropTypes.func.isRequired,
+    enable: PropTypes.func.isRequired,
+    disable: PropTypes.func.isRequired,
     pending: PropTypes.bool
 };
 
@@ -80,6 +92,10 @@ UserRow = injectIntl(I18nWrapper(UserRow));
 
 function isUserLocked(user) {
     return user.types.indexOf(Vocabulary.LOCKED) !== -1;
+}
+
+function isUserDisabled(user) {
+    return user.types.indexOf(Vocabulary.DISABLED) !== -1;
 }
 
 export default injectIntl(I18nWrapper(UserTable));
