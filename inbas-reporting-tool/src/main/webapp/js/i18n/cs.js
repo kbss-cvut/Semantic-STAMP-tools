@@ -286,6 +286,8 @@ module.exports = {
         'users.register': 'Přidat uživatele',
         'users.register.success': 'Uživatel úspěšně vytvořen.',
         'users.unlock.title': 'Odblokovat účet uživatele {firstName} {lastName}',
-        'users.unlock.submit.tooltip': 'Heslo nesmí být prázdné a jeho potvrzení musí odpovídat'
+        'users.unlock.submit.tooltip': 'Heslo nesmí být prázdné a jeho potvrzení musí odpovídat',
+        'users.unlock.success': 'Účet uživatele {firstName} {lastName} byl odblokován.',
+        'users.unlock.failure': 'Účet uživatele {firstName} {lastName} se nepodařilo odblokovat. Detaily naleznete v logu.'
     }
 };

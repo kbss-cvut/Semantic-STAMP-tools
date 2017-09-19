@@ -288,6 +288,8 @@ module.exports = {
         'users.register': 'Add new user',
         'users.register.success': 'User successfully created.',
         'users.unlock.title': 'Unlock user {firstName} {lastName}',
-        'users.unlock.submit.tooltip': 'Password must not be empty and its confirmation must match'
+        'users.unlock.submit.tooltip': 'Password must not be empty and its confirmation must match',
+        'users.unlock.success': 'User {firstName} {lastName} successfully unlocked.',
+        'users.unlock.failure': 'Unable to unlock user {firstName} {lastName}. Check the log for details.'
     }
 };

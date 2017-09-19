@@ -204,6 +204,10 @@ td.actions button {
     vertical-align: middle;
 }
 
+.spinner-container.without-text {
+    height: 32px;
+}
+
 .spinner-container .spinner-message {
     color: #337ab7;
     font-size: 11px;

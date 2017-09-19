@@ -207,7 +207,7 @@ public class PersonControllerTest extends BaseControllerTestRunner {
         admin.addType(Vocabulary.s_c_admin);
         Environment.setCurrentUser(admin);
         final Person user = new Person();
-        user.setUsername("locked@admin.cz");
+        user.setUsername("locked@inbas.cz");
         user.lock();
         final String newPassword = "newPassword";
         when(personService.findByUsername(user.getUsername())).thenReturn(user);
@@ -229,6 +229,19 @@ public class PersonControllerTest extends BaseControllerTestRunner {
         mockMvc.perform(put("/persons/unlock").param("username", username).content("newPassword"))
                .andExpect(status().isNotFound());
         verify(personService).findByUsername(username);
+        verify(personService, never()).unlock(any(), anyString());
+    }
+
+    @Test
+    public void unlockUserThrowsForbiddenForNonAdmin() throws Exception {
+        final Person admin = Generator.getPerson();
+        Environment.setCurrentUser(admin);
+        final String username = "locked@inbas.cz";
+        final String newPassword = "newPassword";
+
+        mockMvc.perform(put("/persons/unlock").param("username", username).content(newPassword))
+               .andExpect(status().isForbidden());
+        verify(personService, never()).findByUsername(any());
         verify(personService, never()).unlock(any(), anyString());
     }
 }

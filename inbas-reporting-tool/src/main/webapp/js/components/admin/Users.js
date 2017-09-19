@@ -17,7 +17,8 @@ class Users extends React.Component {
         this.state = {
             showRegistration: false,
             showUnlock: false,
-            unlockUser: null
+            unlockUser: null,
+            unlockPending: null
         };
     }
 
@@ -39,7 +40,27 @@ class Users extends React.Component {
     };
 
     _unlockUser = (newPassword) => {
-        // TODO
+        this.setState({unlockPending: this.state.unlockUser});
+        this.props.actions.unlock(this.state.unlockUser, newPassword, this._onUnlockSuccess, this._onUnlockFailure);
+        this._closeUnlock();
+    };
+
+    _onUnlockSuccess = () => {
+        const user = this.state.unlockPending;
+        this.props.showSuccessMessage(this.props.formatMessage('users.unlock.success', {
+            firstName: user.firstName,
+            lastName: user.lastName
+        }));
+        this.setState({unlockPending: null});
+    };
+
+    _onUnlockFailure = () => {
+        const user = this.state.unlockPending;
+        this.props.showErrorMessage(this.props.formatMessage('users.unlock.failure', {
+            firstName: user.firstName,
+            lastName: user.lastName
+        }));
+        this.setState({unlockPending: null});
     };
 
     _closeUnlock = () => {
@@ -59,7 +80,7 @@ class Users extends React.Component {
                               show={this.state.showRegistration}/>
             <PasswordReset show={this.state.showUnlock} user={this.state.unlockUser} onSubmit={this._unlockUser}
                            onCancel={this._closeUnlock}/>
-            <UserTable users={users} actions={actions}/>
+            <UserTable users={users} actions={actions} pendingUnlockUser={this.state.unlockPending}/>
             <Button bsSize='small' bsStyle='primary'
                     onClick={this._openRegistration}>{this.i18n('users.register')}</Button>
         </Panel>;

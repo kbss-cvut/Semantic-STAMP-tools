@@ -15,6 +15,16 @@ class PasswordReset extends React.Component {
         };
     }
 
+    componentWillReceiveProps() {
+        this.setState({password: '', passwordConfirm: ''});
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.show && !prevProps.show) {
+            this.passwordInput.focus();
+        }
+    }
+
     _onChange = (e) => {
         const change = {};
         change[e.target.name] = e.target.value;
@@ -34,7 +44,7 @@ class PasswordReset extends React.Component {
     };
 
     _passwordValid() {
-        return this.state.password.length > 0 || this.state.password === this.state.passwordConfirm;
+        return this.state.password.length > 0 && this.state.password === this.state.passwordConfirm;
     }
 
     render() {
@@ -51,8 +61,9 @@ class PasswordReset extends React.Component {
             })}</h3>} bsStyle='info' className='profile-panel'>
                 <div className='row'>
                     <div className='col-xs-6'>
-                        <Input name='password' type='password' label={this.i18n('profile.password.new')}
-                               value={this.state.password} onChange={this._onChange}/>
+                        <Input name='password' type='password' ref={c => this.passwordInput = c}
+                               label={this.i18n('profile.password.new')} value={this.state.password}
+                               onChange={this._onChange}/>
                     </div>
                     <div className='col-xs-6'>
                         <Input name='passwordConfirm' type='password' label={this.i18n('profile.password.confirm')}

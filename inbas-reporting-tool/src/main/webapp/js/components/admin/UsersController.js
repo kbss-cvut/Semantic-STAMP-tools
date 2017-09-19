@@ -27,9 +27,16 @@ export default class UsersController extends React.Component {
         }
     };
 
+    _unlock = (user, newPassword, onSuccess, onError) => {
+        Actions.unlockUser(user, newPassword, () => {
+            Actions.loadUsers();
+            onSuccess();
+        }, onError);
+    };
+
     render() {
         const actions = {
-
+            unlock: this._unlock
         };
         return <div>
             <Users users={this.state.users} actions={actions}/>
