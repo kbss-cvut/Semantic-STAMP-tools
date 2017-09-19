@@ -42,20 +42,20 @@ public class PersonController extends BaseController {
         return personService.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person getByUsername(@PathVariable("username") String username) {
-        final Person p = personService.findByUsername(username);
-        if (p == null) {
-            throw NotFoundException.create("Person", username);
-        }
+    @RequestMapping(method = RequestMethod.GET, value = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Person getCurrent(Principal principal) {
+        final String username = principal.getName();
+        final Person p = getByUsername(username);
         p.erasePassword();
         return p;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person getCurrent(Principal principal) {
-        final String username = principal.getName();
-        return getByUsername(username);
+    private Person getByUsername(String username) {
+        final Person p = personService.findByUsername(username);
+        if (p == null) {
+            throw NotFoundException.create("Person", username);
+        }
+        return p;
     }
 
     @PreAuthorize("permitAll()")
@@ -85,7 +85,15 @@ public class PersonController extends BaseController {
 
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
     @ResponseBody
-    public String desUsernameExist(@RequestParam(name = "username") String username) {
+    public String doesUsernameExist(@RequestParam(name = "username") String username) {
         return Boolean.toString(personService.exists(username));
+    }
+
+    @PreAuthorize("hasRole('" + SecurityConstants.ROLE_ADMIN + "')")
+    @RequestMapping(value = "/unlock", method = RequestMethod.PUT)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void unlockUser(@RequestParam(name = "username") String username, @RequestBody String newPassword) {
+        final Person user = getByUsername(username);
+        personService.unlock(user, newPassword);
     }
 }

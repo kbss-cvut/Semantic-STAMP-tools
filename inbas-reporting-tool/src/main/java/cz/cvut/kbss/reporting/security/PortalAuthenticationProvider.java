@@ -68,7 +68,7 @@ public class PortalAuthenticationProvider extends AbstractAuthenticationProvider
         final Person authenticatedUser = authenticateAgainstPortal(username, password);
         final UserDetails userDetails = new PortalUserDetails(authenticatedUser);
         final Person original = personService.findByUsername(authenticatedUser.getUsername());
-        if (original != null && SecurityUtils.isLocked(original)) {
+        if (original != null && original.isLocked()) {
             throw new LockedException("Account is locked.");
         }
         final AuthenticationToken auth = securityUtils.setCurrentUser(userDetails);

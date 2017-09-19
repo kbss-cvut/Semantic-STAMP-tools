@@ -164,4 +164,18 @@ public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
         final Person result = personService.find(person.getUri());
         assertTrue(result.getTypes().contains(Vocabulary.s_c_locked));
     }
+
+    @Test
+    public void unlockRemovesLockedClassFromUserAndSetsHimNewPassword() {
+        final Person person = Generator.getPerson();
+        person.lock();
+        person.encodePassword(passwordEncoder);
+        personDao.persist(person);
+        final String newPassword = "newPassword";
+
+        personService.unlock(person, newPassword);
+        final Person result = personService.find(person.getUri());
+        assertFalse(result.isLocked());
+        assertTrue(passwordEncoder.matches(newPassword, result.getPassword()));
+    }
 }

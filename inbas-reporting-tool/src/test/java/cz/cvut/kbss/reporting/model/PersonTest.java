@@ -115,4 +115,30 @@ public class PersonTest {
         other.setFirstName("c");
         assertFalse(person.nameEquals(other));
     }
+
+    @Test
+    public void isLockedReturnsFalseForNonLockedInstance() {
+        assertFalse(person.isLocked());
+    }
+
+    @Test
+    public void isLockedReturnsTrueForLockedInstance() {
+        person.addType(Vocabulary.s_c_locked);
+        assertTrue(person.isLocked());
+    }
+
+    @Test
+    public void lockSetsLockedStatusOfInstance() {
+        assertFalse(person.isLocked());
+        person.lock();
+        assertTrue(person.isLocked());
+    }
+
+    @Test
+    public void unlockRemovesLockedStatusOfInstance() {
+        person.lock();
+        assertTrue(person.isLocked());
+        person.unlock();
+        assertFalse(person.isLocked());
+    }
 }

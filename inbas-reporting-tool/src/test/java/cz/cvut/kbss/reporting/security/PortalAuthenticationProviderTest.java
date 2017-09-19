@@ -258,7 +258,7 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         thrown.expectMessage("Account is locked.");
         final PortalUser userData = getPortalUser();
         final Person p = persistUser(userData);
-        p.addType(Vocabulary.s_c_locked);
+        p.lock();
         personDao.update(p);
         mockServer.expect(requestTo(getExpectedUrl())).andExpect(method(HttpMethod.GET))
                   .andRespond(withSuccess(objectMapper.writeValueAsBytes(userData),

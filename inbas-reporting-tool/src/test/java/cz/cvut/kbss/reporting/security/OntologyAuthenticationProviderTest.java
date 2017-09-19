@@ -5,7 +5,6 @@ import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.config.TestSecurityConfig;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.security.model.UserDetails;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.security.LoginTracker;
@@ -106,7 +105,7 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
     public void authenticateThrowsLockedExceptionForLockedAccount() {
         thrown.expect(LockedException.class);
         thrown.expectMessage("Account is locked.");
-        user.addType(Vocabulary.s_c_locked);
+        user.lock();
         personDao.update(user);
         final Authentication auth = authentication(user.getUsername(), user.getPassword());
         try {

@@ -4,7 +4,6 @@ import cz.cvut.kbss.reporting.exception.AuthorizationException;
 import cz.cvut.kbss.reporting.exception.UsernameExistsException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.dao.GenericDao;
 import cz.cvut.kbss.reporting.persistence.dao.PersonDao;
 import cz.cvut.kbss.reporting.service.PersonService;
@@ -14,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 public class RepositoryPersonService extends BaseRepositoryService<Person>
@@ -86,9 +87,20 @@ public class RepositoryPersonService extends BaseRepositoryService<Person>
     }
 
     @Override
+    public void unlock(Person user, String newPassword) {
+        Objects.requireNonNull(user);
+        Objects.requireNonNull(newPassword);
+        user.unlock();
+        user.setPassword(newPassword);
+        user.encodePassword(passwordEncoder);
+        personDao.update(user);
+        LOG.debug("Unlocked user account {}.", user);
+    }
+
+    @Override
     public void onApplicationEvent(LoginAttemptsThresholdExceeded event) {
         final Person toDisable = personDao.find(event.getUser().getUri());
-        toDisable.addType(Vocabulary.s_c_locked);
+        toDisable.lock();
         personDao.update(toDisable);
         LOG.info("Locked user account {}.", toDisable);
     }

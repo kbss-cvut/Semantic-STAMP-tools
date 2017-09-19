@@ -129,6 +129,7 @@ public class Person implements HasDerivableUri, Serializable {
 
     /**
      * Adds the specified type to this instance's ontological types.
+     *
      * @param type The type to add
      */
     public void addType(String type) {
@@ -144,7 +145,7 @@ public class Person implements HasDerivableUri, Serializable {
 
     /**
      * Generates URI using {@link Constants#PERSON_BASE_URI} and the person's first and last name.
-     *
+     * <p>
      * If the URI is already set, nothing happens.
      */
     @Override
@@ -172,5 +173,30 @@ public class Person implements HasDerivableUri, Serializable {
      */
     public boolean nameEquals(Person other) {
         return other != null && firstName.equals(other.firstName) && lastName.equals(other.lastName);
+    }
+
+    /**
+     * Checks whether the account represented by this instance is locked.
+     *
+     * @return Locked status
+     */
+    public boolean isLocked() {
+        return types.contains(Vocabulary.s_c_locked);
+    }
+
+    /**
+     * Locks the account represented by this instance.
+     */
+    public void lock() {
+        assert types != null;
+        types.add(Vocabulary.s_c_locked);
+    }
+
+    /**
+     * Unlocks the account represented by this instance.
+     */
+    public void unlock() {
+        assert types != null;
+        types.remove(Vocabulary.s_c_locked);
     }
 }

@@ -2,7 +2,6 @@ package cz.cvut.kbss.reporting.security.model;
 
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.security.SecurityConstants;
-import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -65,7 +64,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     @Override
     public boolean isAccountNonLocked() {
-        return !SecurityUtils.isLocked(person);
+        return !person.isLocked();
     }
 
     @Override
