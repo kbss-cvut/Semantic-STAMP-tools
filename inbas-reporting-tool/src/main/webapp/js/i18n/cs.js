@@ -281,7 +281,11 @@ module.exports = {
         'users.table.status': 'Stav účtu?',
         'users.table.locked.tooltip': 'Účet je zablokován!',
         'users.table.not.locked.tooltip': 'Účet je dostupný',
+        'users.table.locked.unlock': 'Odblokovat',
+        'users.table.locked.unlock.tooltip': 'Odblokovat tento účet',
         'users.register': 'Přidat uživatele',
-        'users.register.success': 'Uživatel úspěšně vytvořen.'
+        'users.register.success': 'Uživatel úspěšně vytvořen.',
+        'users.unlock.title': 'Odblokovat účet uživatele {firstName} {lastName}',
+        'users.unlock.submit.tooltip': 'Heslo nesmí být prázdné a jeho potvrzení musí odpovídat'
     }
 };

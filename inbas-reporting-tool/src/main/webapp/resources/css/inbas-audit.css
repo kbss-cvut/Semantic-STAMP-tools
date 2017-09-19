@@ -817,7 +817,7 @@ button.in-input-line {
 
 .profile-container {
     width: 45%;
-    margin: auto;
+    margin: 30px auto;
 }
 
 .profile-panel {
@@ -838,4 +838,8 @@ button.in-input-line {
 
 td.status {
     padding-bottom: 2px !important;
+}
+
+button.right {
+    margin-left: 0.5em;
 }

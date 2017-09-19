@@ -1,30 +1,10 @@
-'use strict';
-
 import React from "react";
 import ReactDOM from "react-dom";
-import {Checkbox, Col, ControlLabel, FormGroup, FormControl, HelpBlock, Radio} from "react-bootstrap";
+import PropTypes from "prop-types";
+import {Checkbox, Col, ControlLabel, FormControl, FormGroup, HelpBlock, Radio} from "react-bootstrap";
 import assign from "object-assign";
 
-export default class HorizontalInput extends React.Component {
-    static propTypes = {
-        type: React.PropTypes.string,
-        label: React.PropTypes.string,
-        value: React.PropTypes.any,
-        onChange: React.PropTypes.func,
-        help: React.PropTypes.string,
-        validation: React.PropTypes.oneOf(['success', 'warning', 'error']),
-        labelWidth: React.PropTypes.number,     // Width of the label
-        inputWidth: React.PropTypes.number,     // Width of the input component container
-        inputOffset: React.PropTypes.number     // Offset to put before the input component. Applicable only for
-                                                // checkboxes and radios
-    };
-
-    static defaultProps = {
-        type: 'text',
-        labelWidth: 3,
-        inputWidth: 9,
-        inputOffset: 3
-    };
+class HorizontalInput extends React.Component {
 
     constructor(props) {
         super(props);
@@ -54,7 +34,7 @@ export default class HorizontalInput extends React.Component {
     }
 
     _getInputProps() {
-        var props = assign({}, this.props);
+        const props = assign({}, this.props);
         delete props.inputOffset;
         delete props.inputWidth;
         delete props.labelWidth;
@@ -86,7 +66,7 @@ export default class HorizontalInput extends React.Component {
                 <FormControl componentClass='select' ref={c => this.input = c} {...this._getInputProps()}>
                     {this.props.children}
                 </FormControl>
-                {this.props.validation && <FormControl.Feedback />}
+                {this.props.validation && <FormControl.Feedback/>}
                 {this._renderHelp()}
             </Col>
         </FormGroup>;
@@ -103,7 +83,7 @@ export default class HorizontalInput extends React.Component {
             <Col sm={this.props.inputWidth}>
                 <FormControl componentClass='textarea' style={{height: 'auto'}}
                              ref={c => this.input = c} {...this._getInputProps()}/>
-                {this.props.validation && <FormControl.Feedback />}
+                {this.props.validation && <FormControl.Feedback/>}
                 {this._renderHelp()}
             </Col>
         </FormGroup>;
@@ -118,9 +98,31 @@ export default class HorizontalInput extends React.Component {
             {this._renderLabel()}
             <Col sm={this.props.inputWidth}>
                 <FormControl ref={c => this.input = c} componentClass='input' {...this._getInputProps()}/>
-                {this.props.validation && <FormControl.Feedback />}
+                {this.props.validation && <FormControl.Feedback/>}
                 {this._renderHelp()}
             </Col>
         </FormGroup>;
     }
 }
+
+HorizontalInput.propTypes = {
+    type: PropTypes.string,
+    label: PropTypes.string,
+    value: PropTypes.any,
+    onChange: PropTypes.func,
+    help: PropTypes.string,
+    validation: PropTypes.oneOf(['success', 'warning', 'error']),
+    labelWidth: PropTypes.number,     // Width of the label
+    inputWidth: PropTypes.number,     // Width of the input component container
+    inputOffset: PropTypes.number     // Offset to put before the input component. Applicable only for checkboxes and
+                                      // radios
+};
+
+HorizontalInput.defaultProps = {
+    type: 'text',
+    labelWidth: 3,
+    inputWidth: 9,
+    inputOffset: 3
+};
+
+export default HorizontalInput;

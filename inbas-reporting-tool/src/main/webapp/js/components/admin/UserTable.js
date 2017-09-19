@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Glyphicon, Table} from "react-bootstrap";
+import {Button, Glyphicon, Table} from "react-bootstrap";
 
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
@@ -32,14 +32,15 @@ class UserTable extends React.Component {
         const users = this.props.users,
             rows = [];
         for (let i = 0, len = users.length; i < len; i++) {
-            rows.push(<UserRow key={users[i].uri} user={users[i]}/>);
+            rows.push(<UserRow key={users[i].uri} user={users[i]} unlock={this.props.actions.unlock}/>);
         }
         return rows;
     }
 }
 
 UserTable.propTypes = {
-    users: PropTypes.array.isRequired
+    users: PropTypes.array.isRequired,
+    actions: PropTypes.object.isRequired
 };
 
 let UserRow = (props) => {
@@ -54,13 +55,15 @@ let UserRow = (props) => {
                        title={i18n(isLocked ? 'users.table.locked.tooltip' : 'users.table.not.locked.tooltip')}/>
         </td>
         <td className='vertical-middle actions'>
-            &nbsp;
+            {isLocked && <Button bsStyle='primary' bsSize='small' onClick={() => props.unlock(user)}
+                                 title={i18n('users.table.locked.unlock.tooltip')}>{i18n('users.table.locked.unlock')}</Button>}
         </td>
     </tr>;
 };
 
 UserRow.propTypes = {
-    user: PropTypes.object.isRequired
+    user: PropTypes.object.isRequired,
+    unlock: PropTypes.func.isRequired
 };
 
 UserRow = injectIntl(I18nWrapper(UserRow));

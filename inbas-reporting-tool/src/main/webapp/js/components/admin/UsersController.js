@@ -28,8 +28,11 @@ export default class UsersController extends React.Component {
     };
 
     render() {
+        const actions = {
+
+        };
         return <div>
-            <Users users={this.state.users}/>
+            <Users users={this.state.users} actions={actions}/>
         </div>;
     }
 }

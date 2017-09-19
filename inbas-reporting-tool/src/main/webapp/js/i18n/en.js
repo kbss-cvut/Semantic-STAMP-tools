@@ -283,7 +283,11 @@ module.exports = {
         'users.table.status': 'Account status',
         'users.table.locked.tooltip': 'Account is locked!',
         'users.table.not.locked.tooltip': 'Account is accessible',
+        'users.table.locked.unlock': 'Unlock',
+        'users.table.locked.unlock.tooltip': 'Unlock this user account',
         'users.register': 'Add new user',
-        'users.register.success': 'User successfully created.'
+        'users.register.success': 'User successfully created.',
+        'users.unlock.title': 'Unlock user {firstName} {lastName}',
+        'users.unlock.submit.tooltip': 'Password must not be empty and its confirmation must match'
     }
 };
