@@ -1,5 +1,12 @@
 # INBAS Reporting Tool Release Notes
 
+
+### 0.11.3 - September 20, 2017
+- Track unsuccessful user login attempts (Task #487).
+- Lock account when maximum number of unsuccessful login attempts is reached (Feature #486).
+- Admin is able to unlock user account and set new password (Task #493).
+- Admin is able to active/deactivate user account (Feature #499).
+
 ### 0.11.2 - September 12, 2017
 - Fixed the issue with E5X export requiring graphical interface to be present (Bug #479).
 - Added ECCAIRS schema into project, so that it does not have to be loaded remotely at runtime (Bug #482).
