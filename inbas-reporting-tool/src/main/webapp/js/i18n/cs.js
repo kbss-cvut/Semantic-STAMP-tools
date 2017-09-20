@@ -67,6 +67,7 @@ module.exports = {
         'login.error': 'Přihlášení se nezdařilo.',
         'login.progress-mask': 'Přihlašuji...',
         'login.locked': 'Účet je zablokován.',
+        'login.disabled': 'Účet byl deaktivován.',
 
         'register.title': Constants.APP_NAME + ' - Nový uživatel',
         'register.first-name': 'Jméno',

@@ -1,8 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Button, Panel} from "react-bootstrap";
-
-import Actions from "../../actions/Actions";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import Mask from "../Mask";
@@ -12,15 +10,18 @@ import UserRegistration from "./UserRegistration";
 import UserTable from "./UserTable";
 
 const STATUS_UPDATE_MESSAGES = {};
-STATUS_UPDATE_MESSAGES[Actions.unlockUser] = {
+const ENABLE = 'enable';
+const UNLOCK = 'unlock';
+const DISABLE = 'disable';
+STATUS_UPDATE_MESSAGES[UNLOCK] = {
     success: 'users.unlock.success',
     failure: 'users.unlock.failure'
 };
-STATUS_UPDATE_MESSAGES[Actions.disableUser] = {
+STATUS_UPDATE_MESSAGES[DISABLE] = {
     success: 'users.disable.success',
     failure: 'users.disable.failure'
 };
-STATUS_UPDATE_MESSAGES[Actions.enableUser] = {
+STATUS_UPDATE_MESSAGES[ENABLE] = {
     success: 'users.enable.success',
     failure: 'users.enable.failure'
 };
@@ -84,12 +85,12 @@ class Users extends React.Component {
 
     _disableUser = (user) => {
         this.setState({statusPending: user});
-        this.props.actions.disableUser(user, this._onStatusUpdateSuccess, this._onStatusUpdateFailure);
+        this.props.actions.disable(user, this._onStatusUpdateSuccess, this._onStatusUpdateFailure);
     };
 
     _enableUser = (user) => {
         this.setState({statusPending: user});
-        this.props.actions.enableUser(user, this._onStatusUpdateSuccess, this._onStatusUpdateFailure);
+        this.props.actions.enable(user, this._onStatusUpdateSuccess, this._onStatusUpdateFailure);
     };
 
     render() {
@@ -120,3 +121,4 @@ Users.propTypes = {
 };
 
 export default injectIntl(I18nWrapper(MessageWrapper(Users)));
+export {ENABLE, DISABLE, UNLOCK};

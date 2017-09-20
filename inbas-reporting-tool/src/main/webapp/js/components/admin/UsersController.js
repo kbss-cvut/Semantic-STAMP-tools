@@ -1,7 +1,7 @@
 import React from "react";
 
 import Actions from "../../actions/Actions";
-import Users from "./Users";
+import Users, {DISABLE, ENABLE, UNLOCK} from "./Users";
 import UserStore from "../../stores/UserStore";
 
 export default class UsersController extends React.Component {
@@ -30,27 +30,27 @@ export default class UsersController extends React.Component {
     _unlock = (user, newPassword, onSuccess, onError) => {
         Actions.unlockUser(user, newPassword, () => {
             Actions.loadUsers();
-            onSuccess(Actions.unlockUser);
+            onSuccess(UNLOCK);
         }, () => {
-            onError(Actions.unlockUser);
+            onError(UNLOCK);
         });
     };
 
     _disable = (user, onSuccess, onError) => {
         Actions.disableUser(user, () => {
             Actions.loadUsers();
-            onSuccess(Actions.disableUser);
+            onSuccess(DISABLE);
         }, () => {
-            onError(Actions.disableUser);
+            onError(DISABLE);
         });
     };
 
     _enable = (user, onSuccess, onError) => {
         Actions.enableUser(user, () => {
             Actions.loadUsers();
-            onSuccess(Actions.enableUser);
+            onSuccess(ENABLE);
         }, () => {
-            onError(Actions.enableUser);
+            onError(ENABLE);
         });
     };
 

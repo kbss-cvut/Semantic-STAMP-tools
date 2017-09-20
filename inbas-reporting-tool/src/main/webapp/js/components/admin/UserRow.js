@@ -6,6 +6,7 @@ import classNames from "classnames";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import Mask from "../Mask";
+import UserStore from "../../stores/UserStore";
 import Vocabulary from "../../constants/Vocabulary";
 
 class UserRow extends React.Component {
@@ -61,12 +62,16 @@ class UserRow extends React.Component {
     }
 
     _renderAccountEnableDisableButton() {
+        const user = this.props.user;
+        if (UserStore.getCurrentUser().uri === user.uri) {
+            return null;
+        }
         if (this._isDisabled()) {
             return <Button bsStyle='success' bsSize='small'
-                           onClick={this.props.enable}>{this.i18n('users.enable')}</Button>;
+                           onClick={() => this.props.enable(user)}>{this.i18n('users.enable')}</Button>;
         } else {
             return <Button bsStyle='warning' bsSize='small'
-                           onClick={this.props.disable}>{this.i18n('users.disable')}</Button>;
+                           onClick={() => this.props.disable(user)}>{this.i18n('users.disable')}</Button>;
         }
     }
 }
