@@ -841,6 +841,7 @@ button.in-input-line {
 }
 
 td.status {
+    position: relative;
     padding-bottom: 2px !important;
 }
 

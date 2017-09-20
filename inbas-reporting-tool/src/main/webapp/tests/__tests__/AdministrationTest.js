@@ -41,7 +41,7 @@ describe('Administration', () => {
         expect(usersComp).not.toBeNull();
     });
 
-    it('indicates locked user account by appropriate icon', () => {
+    it('indicates account status by appropriate icon', () => {
         const user = Generator.generatePerson();
         user.types = [Vocabulary.ROLE_ADMIN];
         const users = [user, {
@@ -50,6 +50,12 @@ describe('Administration', () => {
             lastName: 'user',
             username: 'locked@inbas.cz',
             types: [Vocabulary.LOCKED]
+        }, {
+            uri: Generator.getRandomUri(),
+            firstName: 'disabled',
+            lastName: 'user',
+            username: 'disabled@inbas.cz',
+            types: [Vocabulary.DISABLED]
         }];
         spyOn(UserStore, 'getCurrentUser').and.returnValue(user);
 
@@ -59,8 +65,9 @@ describe('Administration', () => {
         controller._onUsersLoaded({action: Actions.loadUsers, users: users});
 
         const statusIcons = TestUtils.scryRenderedComponentsWithType(controller, require("react-bootstrap").Glyphicon);
-        expect(statusIcons.length).toEqual(2);
+        expect(statusIcons.length).toEqual(3);
         expect(statusIcons[0].props.glyph).toEqual('ok');
-        expect(statusIcons[1].props.glyph).toEqual('alert');
+        expect(statusIcons[1].props.glyph).toEqual('ban-circle');
+        expect(statusIcons[2].props.glyph).toEqual('minus');
     });
 });
