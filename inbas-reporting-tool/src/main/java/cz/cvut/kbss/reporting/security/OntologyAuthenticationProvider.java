@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,9 +35,7 @@ public class OntologyAuthenticationProvider extends AbstractAuthenticationProvid
         }
 
         final UserDetails userDetails = (UserDetails) userDetailsService.loadUserByUsername(username);
-        if (!userDetails.isAccountNonLocked()) {
-            throw new LockedException("Account is locked.");
-        }
+        verifyAccountStatus(userDetails.getUser());
         final String password = (String) authentication.getCredentials();
         if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             loginFailure(userDetails.getUser());

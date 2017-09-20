@@ -29,10 +29,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
@@ -281,5 +278,21 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         final ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
         verify(loginTracker).successfulLoginAttempt(captor.capture());
         assertEquals(userData.getEmailAddress(), captor.getValue().getUsername());
+    }
+
+    @Test
+    public void throwsDisabledExceptionWhenAccountIsDisabled() throws Exception {
+        thrown.expect(DisabledException.class);
+        thrown.expectMessage("Account is disabled.");
+        final PortalUser userData = getPortalUser();
+        final Person p = persistUser(userData);
+        p.disable();
+        personDao.update(p);
+        mockServer.expect(requestTo(getExpectedUrl())).andExpect(method(HttpMethod.GET))
+                  .andRespond(withSuccess(objectMapper.writeValueAsBytes(userData),
+                          MediaType.APPLICATION_JSON));
+        setCompanyIdInCurrentRequest(COMPANY_ID);
+
+        provider.authenticate(createAuthentication(USERNAME));
     }
 }

@@ -21,7 +21,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -68,8 +67,8 @@ public class PortalAuthenticationProvider extends AbstractAuthenticationProvider
         final Person authenticatedUser = authenticateAgainstPortal(username, password);
         final UserDetails userDetails = new PortalUserDetails(authenticatedUser);
         final Person original = personService.findByUsername(authenticatedUser.getUsername());
-        if (original != null && original.isLocked()) {
-            throw new LockedException("Account is locked.");
+        if (original != null) {
+            verifyAccountStatus(original);
         }
         final AuthenticationToken auth = securityUtils.setCurrentUser(userDetails);
         saveUser(authenticatedUser, original);

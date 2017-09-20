@@ -5,6 +5,7 @@ import cz.cvut.kbss.reporting.security.model.LoginStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -40,6 +41,8 @@ public class AuthenticationFailure implements AuthenticationFailureHandler {
         final LoginStatus status = new LoginStatus(false, false, null, e.getMessage());
         if (e instanceof LockedException) {
             status.setErrorId("login.locked");
+        } else if (e instanceof DisabledException) {
+            status.setErrorId("login.disabled");
         } else if (e instanceof UsernameNotFoundException) {
             status.setErrorId("login.error");
         }

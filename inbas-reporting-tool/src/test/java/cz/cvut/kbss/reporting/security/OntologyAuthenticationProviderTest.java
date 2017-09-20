@@ -16,10 +16,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.LockedException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -107,7 +104,7 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
         thrown.expectMessage("Account is locked.");
         user.lock();
         personDao.update(user);
-        final Authentication auth = authentication(user.getUsername(), user.getPassword());
+        final Authentication auth = authentication(user.getUsername(), Generator.PASSWORD);
         try {
             provider.authenticate(auth);
         } finally {
@@ -137,5 +134,20 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
         final ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
         verify(loginTracker).successfulLoginAttempt(captor.capture());
         assertEquals(user.getUri(), captor.getValue().getUri());
+    }
+
+    @Test
+    public void authenticateThrowsDisabledExceptionForDisabledAccount() {
+        thrown.expect(DisabledException.class);
+        thrown.expectMessage("Account is disabled.");
+        user.disable();
+        personDao.update(user);
+        final Authentication auth = authentication(user.getUsername(), Generator.PASSWORD);
+        try {
+            provider.authenticate(auth);
+        } finally {
+            final SecurityContext context = SecurityContextHolder.getContext();
+            assertNull(context.getAuthentication());
+        }
     }
 }
