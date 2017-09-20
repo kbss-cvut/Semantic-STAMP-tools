@@ -234,8 +234,8 @@ public class PersonControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void unlockUserThrowsForbiddenForNonAdmin() throws Exception {
-        final Person admin = Generator.getPerson();
-        Environment.setCurrentUser(admin);
+        final Person nonAdmin = Generator.getPerson();
+        Environment.setCurrentUser(nonAdmin);
         final String username = "locked@inbas.cz";
         final String newPassword = "newPassword";
 
@@ -243,5 +243,58 @@ public class PersonControllerTest extends BaseControllerTestRunner {
                .andExpect(status().isForbidden());
         verify(personService, never()).findByUsername(any());
         verify(personService, never()).unlock(any(), anyString());
+    }
+
+    @Test
+    public void enableCallsEnableOnPersonService() throws Exception {
+        final Person admin = Generator.getPerson();
+        admin.addType(Vocabulary.s_c_admin);
+        Environment.setCurrentUser(admin);
+        final Person person = new Person();
+        person.disable();
+        person.setUsername("disabled@inbas.cz");
+        when(personService.findByUsername(person.getUsername())).thenReturn(person);
+
+        mockMvc.perform(post("/persons/status").param("username", person.getUsername()))
+               .andExpect(status().isNoContent());
+        verify(personService).enable(person);
+    }
+
+    @Test
+    public void enableThrowsNotFoundForUnknownUsername() throws Exception {
+        final Person admin = Generator.getPerson();
+        admin.addType(Vocabulary.s_c_admin);
+        Environment.setCurrentUser(admin);
+        final String username = "unknown@inbas.cz";
+        when(personService.findByUsername(username)).thenReturn(null);
+
+        mockMvc.perform(post("/persons/status").param("username", username)).andExpect(status().isNotFound());
+        verify(personService, never()).enable(any());
+    }
+
+    @Test
+    public void disableCallsDisableOnPersonService() throws Exception {
+        final Person admin = Generator.getPerson();
+        admin.addType(Vocabulary.s_c_admin);
+        Environment.setCurrentUser(admin);
+        final Person person = new Person();
+        person.setUsername("enabled@inbas.cz");
+        when(personService.findByUsername(person.getUsername())).thenReturn(person);
+
+        mockMvc.perform(delete("/persons/status").param("username", person.getUsername()))
+               .andExpect(status().isNoContent());
+        verify(personService).disable(person);
+    }
+
+    @Test
+    public void disableThrowsNotFoundForUnknownUsername() throws Exception {
+        final Person admin = Generator.getPerson();
+        admin.addType(Vocabulary.s_c_admin);
+        Environment.setCurrentUser(admin);
+        final String username = "unknown@inbas.cz";
+        when(personService.findByUsername(username)).thenReturn(null);
+
+        mockMvc.perform(delete("/persons/status").param("username", username)).andExpect(status().isNotFound());
+        verify(personService, never()).disable(any());
     }
 }

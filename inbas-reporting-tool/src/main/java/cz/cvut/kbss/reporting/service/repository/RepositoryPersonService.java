@@ -94,7 +94,23 @@ public class RepositoryPersonService extends BaseRepositoryService<Person>
         user.setPassword(newPassword);
         user.encodePassword(passwordEncoder);
         personDao.update(user);
-        LOG.debug("Unlocked user account {}.", user);
+        LOG.info("Unlocked user account {}.", user);
+    }
+
+    @Override
+    public void enable(Person user) {
+        Objects.requireNonNull(user);
+        user.enable();
+        personDao.update(user);
+        LOG.info("Enabled user account {}.", user);
+    }
+
+    @Override
+    public void disable(Person user) {
+        Objects.requireNonNull(user);
+        user.disable();
+        personDao.update(user);
+        LOG.info("Disabled user account {}.", user);
     }
 
     @Override

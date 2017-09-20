@@ -141,4 +141,19 @@ public class PersonTest {
         person.unlock();
         assertFalse(person.isLocked());
     }
+
+    @Test
+    public void disableAddsDisabledTypeToInstance() {
+        assertTrue(person.isEnabled());
+        person.disable();
+        assertFalse(person.isEnabled());
+    }
+
+    @Test
+    public void enableRemovesDisabledTypeFromInstance() {
+        person.addType(Vocabulary.s_c_disabled);
+        assertFalse(person.isEnabled());
+        person.enable();
+        assertTrue(person.isEnabled());
+    }
 }

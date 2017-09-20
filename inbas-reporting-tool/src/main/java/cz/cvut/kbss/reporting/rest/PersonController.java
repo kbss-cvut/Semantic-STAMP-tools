@@ -96,4 +96,18 @@ public class PersonController extends BaseController {
         final Person user = getByUsername(username);
         personService.unlock(user, newPassword);
     }
+
+    @PreAuthorize("hasRole('" + SecurityConstants.ROLE_ADMIN + "')")
+    @RequestMapping(value = "/status", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void enable(@RequestParam(name = "username") String username) {
+        personService.enable(getByUsername(username));
+    }
+
+    @PreAuthorize("hasRole('" + SecurityConstants.ROLE_ADMIN + "')")
+    @RequestMapping(value = "/status", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void disable(@RequestParam(name = "username") String username) {
+        personService.disable(getByUsername(username));
+    }
 }

@@ -178,4 +178,27 @@ public class RepositoryPersonServiceTest extends BaseServiceTestRunner {
         assertFalse(result.isLocked());
         assertTrue(passwordEncoder.matches(newPassword, result.getPassword()));
     }
+
+    @Test
+    public void disableDisablesPersonAccount() {
+        final Person person = persistPerson();
+        assertTrue(person.isEnabled());
+
+        personService.disable(person);
+        final Person result = personService.find(person.getUri());
+        assertFalse(result.isEnabled());
+    }
+
+    @Test
+    public void enableEnablesDisabledPersonAccount() {
+        final Person person = Generator.getPerson();
+        person.disable();
+        person.encodePassword(passwordEncoder);
+        personDao.persist(person);
+        assertFalse(person.isEnabled());
+
+        personService.enable(person);
+        final Person result = personService.find(person.getUri());
+        assertTrue(result.isEnabled());
+    }
 }
