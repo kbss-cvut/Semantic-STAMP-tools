@@ -289,6 +289,12 @@ module.exports = {
         'users.unlock.title': 'Odblokovat účet uživatele {firstName} {lastName}',
         'users.unlock.submit.tooltip': 'Heslo nesmí být prázdné a jeho potvrzení musí odpovídat',
         'users.unlock.success': 'Účet uživatele {firstName} {lastName} byl odblokován.',
-        'users.unlock.failure': 'Účet uživatele {firstName} {lastName} se nepodařilo odblokovat. Detaily naleznete v logu.'
+        'users.unlock.failure': 'Účet uživatele {firstName} {lastName} se nepodařilo odblokovat. Detaily naleznete v logu.',
+        'users.disable': 'Deaktivovat',
+        'users.disable.success': 'Účet uživatele {firstName} {lastName} byl deaktivován.',
+        'users.disable.failure': 'Účet uživatele {firstName} {lastName} se nepodařilo deaktivovat. Detaily naleznete v logu.',
+        'users.enable': 'Aktivovat',
+        'users.enable.success': 'Účet uživatele {firstName} {lastName} byl aktivován.',
+        'users.enable.failure': 'Účet uživatele {firstName} {lastName} se nepodařilo aktivovat. Detaily naleznete v logu.',
     }
 };

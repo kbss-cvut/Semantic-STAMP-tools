@@ -30,16 +30,28 @@ export default class UsersController extends React.Component {
     _unlock = (user, newPassword, onSuccess, onError) => {
         Actions.unlockUser(user, newPassword, () => {
             Actions.loadUsers();
-            onSuccess();
-        }, onError);
+            onSuccess(Actions.unlockUser);
+        }, () => {
+            onError(Actions.unlockUser);
+        });
     };
 
-    _disable = (user) => {
-
+    _disable = (user, onSuccess, onError) => {
+        Actions.disableUser(user, () => {
+            Actions.loadUsers();
+            onSuccess(Actions.disableUser);
+        }, () => {
+            onError(Actions.disableUser);
+        });
     };
 
-    _enable = (user) => {
-
+    _enable = (user, onSuccess, onError) => {
+        Actions.enableUser(user, () => {
+            Actions.loadUsers();
+            onSuccess(Actions.enableUser);
+        }, () => {
+            onError(Actions.enableUser);
+        });
     };
 
     render() {

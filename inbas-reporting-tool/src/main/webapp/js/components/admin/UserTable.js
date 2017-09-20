@@ -30,12 +30,12 @@ class UserTable extends React.Component {
 
     _renderRows() {
         const users = this.props.users,
-            pendingUnlockUser = this.props.pendingUnlockUser,
+            statusPending = this.props.statusPending,
             actions = this.props.actions,
             rows = [];
         for (let i = 0, len = users.length; i < len; i++) {
             rows.push(<UserRow key={users[i].uri} user={users[i]} unlock={actions.unlock} disable={actions.disable}
-                               enable={actions.enable} pending={pendingUnlockUser === users[i]}/>);
+                               enable={actions.enable} pending={statusPending === users[i]}/>);
         }
         return rows;
     }
@@ -44,7 +44,7 @@ class UserTable extends React.Component {
 UserTable.propTypes = {
     users: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired,
-    pendingUnlockUser: PropTypes.object
+    statusPending: PropTypes.object
 };
 
 export default injectIntl(I18nWrapper(UserTable));

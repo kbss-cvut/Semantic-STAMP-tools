@@ -5,6 +5,7 @@ const Reflux = require('reflux');
 const Actions = require('../actions/Actions');
 const Ajax = require('../utils/Ajax');
 const Constants = require('../constants/Constants');
+const Vocabulary = require('../constants/Vocabulary');
 
 const BASE_URL = Constants.REST_PREFIX + 'persons';
 
@@ -59,6 +60,14 @@ const UserStore = Reflux.createStore({
 
     onUnlockUser: function (user, newPassword, onSuccess, onError) {
         Ajax.put(BASE_URL + '/unlock?username=' + user.username, newPassword).type('text/plain').end(onSuccess, onError);
+    },
+
+    onDisableUser: function (user, onSuccess, onError) {
+        Ajax.post(BASE_URL + '/status?username=' + user.username, Vocabulary.DISABLED, 'text/plain').end(onSuccess, onError);
+    },
+
+    onEnableUser: function (user, onSuccess, onError) {
+        Ajax.del(BASE_URL + '/status?username=' + user.username).send(Vocabulary.DISABLED).type('text/plain').end(onSuccess, onError);
     }
 });
 

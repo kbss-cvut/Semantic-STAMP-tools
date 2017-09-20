@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {Button, Panel} from "react-bootstrap";
 
+import Actions from "../../actions/Actions";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import Mask from "../Mask";
@@ -9,6 +10,20 @@ import MessageWrapper from "../misc/hoc/MessageWrapper";
 import PasswordReset from "./PasswordReset";
 import UserRegistration from "./UserRegistration";
 import UserTable from "./UserTable";
+
+const STATUS_UPDATE_MESSAGES = {};
+STATUS_UPDATE_MESSAGES[Actions.unlockUser] = {
+    success: 'users.unlock.success',
+    failure: 'users.unlock.failure'
+};
+STATUS_UPDATE_MESSAGES[Actions.disableUser] = {
+    success: 'users.disable.success',
+    failure: 'users.disable.failure'
+};
+STATUS_UPDATE_MESSAGES[Actions.enableUser] = {
+    success: 'users.enable.success',
+    failure: 'users.enable.failure'
+};
 
 class Users extends React.Component {
     constructor(props) {
@@ -18,7 +33,7 @@ class Users extends React.Component {
             showRegistration: false,
             showUnlock: false,
             unlockUser: null,
-            unlockPending: null
+            statusPending: null
         };
     }
 
@@ -40,31 +55,41 @@ class Users extends React.Component {
     };
 
     _unlockUser = (newPassword) => {
-        this.setState({unlockPending: this.state.unlockUser});
-        this.props.actions.unlock(this.state.unlockUser, newPassword, this._onUnlockSuccess, this._onUnlockFailure);
+        this.setState({statusPending: this.state.unlockUser});
+        this.props.actions.unlock(this.state.unlockUser, newPassword, this._onStatusUpdateSuccess, this._onStatusUpdateFailure);
         this._closeUnlock();
-    };
-
-    _onUnlockSuccess = () => {
-        const user = this.state.unlockPending;
-        this.props.showSuccessMessage(this.props.formatMessage('users.unlock.success', {
-            firstName: user.firstName,
-            lastName: user.lastName
-        }));
-        this.setState({unlockPending: null});
-    };
-
-    _onUnlockFailure = () => {
-        const user = this.state.unlockPending;
-        this.props.showErrorMessage(this.props.formatMessage('users.unlock.failure', {
-            firstName: user.firstName,
-            lastName: user.lastName
-        }));
-        this.setState({unlockPending: null});
     };
 
     _closeUnlock = () => {
         this.setState({showUnlock: false, unlockUser: null});
+    };
+
+    _onStatusUpdateSuccess = (action) => {
+        const user = this.state.statusPending;
+        this.props.showSuccessMessage(this.props.formatMessage(STATUS_UPDATE_MESSAGES[action].success, {
+            firstName: user.firstName,
+            lastName: user.lastName
+        }));
+        this.setState({statusPending: null});
+    };
+
+    _onStatusUpdateFailure = (action) => {
+        const user = this.state.statusPending;
+        this.props.showErrorMessage(this.props.formatMessage(STATUS_UPDATE_MESSAGES[action].failure, {
+            firstName: user.firstName,
+            lastName: user.lastName
+        }));
+        this.setState({statusPending: null});
+    };
+
+    _disableUser = (user) => {
+        this.setState({statusPending: user});
+        this.props.actions.disableUser(user, this._onStatusUpdateSuccess, this._onStatusUpdateFailure);
+    };
+
+    _enableUser = (user) => {
+        this.setState({statusPending: user});
+        this.props.actions.enableUser(user, this._onStatusUpdateSuccess, this._onStatusUpdateFailure);
     };
 
     render() {
@@ -74,15 +99,15 @@ class Users extends React.Component {
         }
         const actions = {
             unlock: this._openUnlock,
-            enable: this.props.actions.enable,
-            disable: this.props.actions.disable
+            enable: this._enableUser,
+            disable: this._disableUser
         };
         return <Panel header={<h5>{this.i18n('users.title')}</h5>} bsStyle='primary'>
             <UserRegistration onClose={this._closeRegistration} onSuccess={this._finishRegistration}
                               show={this.state.showRegistration}/>
             <PasswordReset show={this.state.showUnlock} user={this.state.unlockUser} onSubmit={this._unlockUser}
                            onCancel={this._closeUnlock}/>
-            <UserTable users={users} actions={actions} pendingUnlockUser={this.state.unlockPending}/>
+            <UserTable users={users} actions={actions} statusPending={this.state.statusPending}/>
             <Button bsSize='small' bsStyle='primary'
                     onClick={this._openRegistration}>{this.i18n('users.register')}</Button>
         </Panel>;

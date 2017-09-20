@@ -293,6 +293,10 @@ module.exports = {
         'users.unlock.success': 'User {firstName} {lastName} successfully unlocked.',
         'users.unlock.failure': 'Unable to unlock user {firstName} {lastName}. Check the log for details.',
         'users.disable': 'Disable',
-        'users.enable': 'Enable'
+        'users.disable.success': 'User {firstName} {lastName} successfully disabled.',
+        'users.disable.failure': 'Unable to disable user {firstName} {lastName}. Check the log for details.',
+        'users.enable': 'Enable',
+        'users.enable.success': 'User {firstName} {lastName} successfully enabled.',
+        'users.enable.failure': 'Unable to enable user {firstName} {lastName}. Check the log for details.',
     }
 };
