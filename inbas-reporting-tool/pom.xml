@@ -274,13 +274,12 @@
                         <version>1.5.3</version>
                         <executions>
                             <execution>
-                                <id>java-src-replace</id>
+                                <id>admin-jmx-name</id>
                                 <phase>process-sources</phase>
                                 <goals>
                                     <goal>replace</goal>
                                 </goals>
                                 <configuration>
-                                    <ignoreMissingFile>true</ignoreMissingFile>
                                     <file>
                                         ${project.basedir}/src/main/java/cz/cvut/kbss/reporting/service/jmx/AppAdminBean.java
                                     </file>
@@ -290,6 +289,24 @@
                                     <regex>false</regex>
                                     <token>INBASAdminBean</token>
                                     <value>${deployment}-AdminBean</value>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>project-version</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <file>
+                                        ${project.basedir}/src/main/java/cz/cvut/kbss/reporting/util/Constants.java
+                                    </file>
+                                    <outputFile>
+                                        ${project.basedir}/src/main/java/cz/cvut/kbss/reporting/util/Constants.java
+                                    </outputFile>
+                                    <regex>false</regex>
+                                    <token>$VERSION$</token>
+                                    <value>${project.version}</value>
                                 </configuration>
                             </execution>
                             <execution>

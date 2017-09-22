@@ -119,11 +119,19 @@ public final class Constants {
     public static final int DESCRIPTION_TO_STRING_THRESHOLD = 50;
 
     /**
+     * Name of the file into which admin credentials are written when the account is created.
+     */
+    public static final String ADMIN_CREDENTIALS_FILE = ".inbas-admin";
+
+    /**
+     * Version of this application.
+     */
+    public static final String VERSION = "$VERSION$";
+
+    /**
      * Default system administrator account.
      */
     public static final Person SYSTEM_ADMIN = initAdmin();
-
-    public static final String ADMIN_CREDENTIALS_FILE = ".inbas-admin";
 
     private static Person initAdmin() {
         final Person admin = new Person();

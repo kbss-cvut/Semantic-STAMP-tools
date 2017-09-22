@@ -1,7 +1,10 @@
 package cz.cvut.kbss.reporting.config;
 
 import cz.cvut.kbss.reporting.security.SecurityConstants;
+import cz.cvut.kbss.reporting.servlet.DiagnosticsContextFilter;
 import cz.cvut.kbss.reporting.util.Constants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
@@ -10,6 +13,8 @@ import javax.servlet.*;
 import java.util.EnumSet;
 
 public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(DispatcherServletInitializer.class);
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -28,9 +33,12 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        System.out.println("****** Application Context Initialization ******");
+        LOG.info("******************************************************");
+        LOG.info("*          INBAS Reporting Tool {}.", Constants.VERSION);
+        LOG.info("******************************************************");
 
         initSecurityFilter(servletContext);
+        initMdcFilter(servletContext);
         servletContext.addListener(new RequestContextListener());
         servletContext.getSessionCookieConfig().setName(SecurityConstants.SESSION_COOKIE_NAME);
         super.onStartup(servletContext);
@@ -41,6 +49,13 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
                 DelegatingFilterProxy.class);
         final EnumSet<DispatcherType> es = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
         securityFilter.addMappingForUrlPatterns(es, true, "/*");
+    }
+
+    private void initMdcFilter(ServletContext servletContext) {
+        FilterRegistration.Dynamic mdcFilter = servletContext
+                .addFilter("diagnosticsContextFilter", new DiagnosticsContextFilter());
+        final EnumSet<DispatcherType> es = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
+        mdcFilter.addMappingForUrlPatterns(es, true, "/*");
     }
 
     @Override
