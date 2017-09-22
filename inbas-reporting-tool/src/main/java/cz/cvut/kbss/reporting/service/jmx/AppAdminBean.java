@@ -1,6 +1,5 @@
 package cz.cvut.kbss.reporting.service.jmx;
 
-import ch.qos.logback.classic.LoggerContext;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.service.ConfigReader;
@@ -18,7 +17,6 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,7 +25,7 @@ import java.util.Collections;
 import java.util.Random;
 
 @Component
-@ManagedResource(objectName = "bean:name=FD-AdminBean", description = "Application administration bean.")
+@ManagedResource(objectName = "bean:name=INBASAdminBean", description = "Application administration bean.")
 public class AppAdminBean implements ApplicationEventPublisherAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppAdminBean.class);
@@ -101,13 +99,5 @@ public class AppAdminBean implements ApplicationEventPublisherAware {
             }
         }
         return sb.toString();
-    }
-
-    @PreDestroy
-    void tearDown() {
-        // Shuts down logback context, which unregisters logback JMX bean. Prevents memory leaks on undeploy
-        // See https://logback.qos.ch/manual/jmxConfig.html
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-        lc.stop();
     }
 }
