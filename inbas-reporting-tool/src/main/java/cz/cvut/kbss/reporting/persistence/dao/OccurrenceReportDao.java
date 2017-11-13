@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> implements GenericDao<OccurrenceReport> {
@@ -20,6 +22,32 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> impleme
     public OccurrenceReportDao(OccurrenceDao occurrenceDao) {
         super(OccurrenceReport.class);
         this.occurrenceDao = occurrenceDao;
+    }
+
+    @Override
+    protected List<OccurrenceReport> findAll(EntityManager em) {
+        // Uses the reportlist version of OccurrenceReport, which does not contain attributes not used in the views, so that
+        // loading of the instances is faster
+        final List<cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport> res = em
+                .createNativeQuery("SELECT ?x WHERE { " +
+                                "?x a ?type ; " +
+                                "?hasFileNumber ?fileNo ;" +
+                                "?hasRevision ?revision ;" +
+                                "?hasOccurrence ?occurrence ." +
+                                "?occurrence ?hasStartTime ?startTime ." +
+                                "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
+                                "{ ?y a ?type; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . } GROUP BY ?iFileNo }" +
+                                "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
+                                "} ORDER BY DESC(?startTime) DESC(?revision)",
+                        cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport.class)
+                .setParameter("type", typeUri)
+                .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
+                .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
+                .setParameter("hasOccurrence", URI.create(Vocabulary.s_p_documents))
+                .setParameter("hasStartTime", URI.create(Vocabulary.s_p_has_start_time))
+                .getResultList();
+        return res.stream().map(cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport::toOccurrenceReport)
+                  .collect(Collectors.toList());
     }
 
     @Override
