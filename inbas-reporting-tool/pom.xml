@@ -13,7 +13,7 @@
 
     <name>INBAS Reporting Tool</name>
     <artifactId>inbas-reporting-tool</artifactId>
-    <version>0.11.3</version>
+    <version>0.11.4</version>
     <packaging>war</packaging>
 
     <properties>

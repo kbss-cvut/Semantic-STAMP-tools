@@ -1,6 +1,13 @@
 # INBAS Reporting Tool Release Notes
 
 
+### 0.11.4 - November 15, 2017
+- Library updates (JOPA, logback, SLF4J, MapStruct).
+- Expose JMX bean for runtime configuration of logback (Feature #502).
+- Build the application with AspectJ, so that lazy loading and in-transactional change processing works properly (Task #501).
+- More efficient strategy of loading all reports.
+- Support for extended sessions for mobile applications (Feature #522).
+
 ### 0.11.3 - September 20, 2017
 - Track unsuccessful user login attempts (Task #487).
 - Lock account when maximum number of unsuccessful login attempts is reached (Feature #486).
