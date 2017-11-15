@@ -33,6 +33,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
         LOG.info("******************************************************");
         LOG.info("*          INBAS Reporting Tool {}.", Constants.VERSION);
         LOG.info("******************************************************");
@@ -41,7 +42,6 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
         initMdcFilter(servletContext);
         servletContext.addListener(new RequestContextListener());
         servletContext.getSessionCookieConfig().setName(SecurityConstants.SESSION_COOKIE_NAME);
-        super.onStartup(servletContext);
     }
 
     private void initSecurityFilter(ServletContext servletContext) {

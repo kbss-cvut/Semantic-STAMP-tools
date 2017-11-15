@@ -55,6 +55,19 @@ public final class Constants {
      */
     public static final String COMPANY_ID_COOKIE = "COMPANY_ID";
 
+
+    /**
+     * Custom HTTP header for identifying type of client of the application.
+     */
+    public static final String CLIENT_TYPE_HEADER = "X-INBAS-Client";
+
+    /**
+     * Denotes mobile client.
+     *
+     * @see #CLIENT_TYPE_HEADER
+     */
+    public static final String CLIENT_TYPE_MOBILE = "mobile";
+
     /**
      * Default location of the index.html file, relative to the application classpath.
      */

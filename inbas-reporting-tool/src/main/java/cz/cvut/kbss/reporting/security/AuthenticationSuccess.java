@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -37,10 +38,13 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
 
     private final ConfigReader config;
 
+    private final HttpSession session;
+
     @Autowired
-    public AuthenticationSuccess(ObjectMapper mapper, ConfigReader config) {
+    public AuthenticationSuccess(ObjectMapper mapper, ConfigReader config, HttpSession session) {
         this.mapper = mapper;
         this.config = config;
+        this.session = session;
     }
 
     @Override
@@ -56,6 +60,14 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
             final LoginStatus loginStatus = new LoginStatus(true, authentication.isAuthenticated(), username, null);
             mapper.writeValue(httpServletResponse.getOutputStream(), loginStatus);
         }
+        setSessionTimeout(httpServletRequest);
+    }
+
+    private String getUsername(Authentication authentication) {
+        if (authentication == null) {
+            return "";
+        }
+        return ((UserDetails) authentication.getPrincipal()).getUsername();
     }
 
     /**
@@ -70,13 +82,6 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
         return RestUtils.getCookie(request, Constants.COMPANY_ID_COOKIE) != null;
     }
 
-    private String getUsername(Authentication authentication) {
-        if (authentication == null) {
-            return "";
-        }
-        return ((UserDetails) authentication.getPrincipal()).getUsername();
-    }
-
     private void returnIndex(HttpServletResponse response) {
         final ClassPathResource indexFile = new ClassPathResource(config.getConfig(ConfigParam.INDEX_FILE));
         try (BufferedReader in = new BufferedReader(new InputStreamReader(indexFile.getInputStream()))) {
@@ -88,6 +93,15 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
             LOG.error("Unable to write index.html into response stream.", e);
         }
         response.setHeader("Content-Type", "text/html");
+    }
+
+    private void setSessionTimeout(HttpServletRequest request) {
+        final String clientType = request.getHeader(Constants.CLIENT_TYPE_HEADER);
+        if (clientType != null && clientType.equals(Constants.CLIENT_TYPE_MOBILE)) {
+            session.setMaxInactiveInterval(SecurityConstants.EXTENDED_SESSION_TIMEOUT);
+        } else {
+            session.setMaxInactiveInterval(SecurityConstants.SESSION_TIMEOUT);
+        }
     }
 
     @Override

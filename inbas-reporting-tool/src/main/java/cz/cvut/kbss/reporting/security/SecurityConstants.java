@@ -26,6 +26,13 @@ public class SecurityConstants {
     public static final int SESSION_TIMEOUT = 30 * 60;
 
     /**
+     * Extended session timeout.
+     * <p>
+     * Used for mobile application authorization. 7 days.
+     */
+    public static final int EXTENDED_SESSION_TIMEOUT = 60 * 60 * 24 * 7;
+
+    /**
      * Maximum number of unsuccessful login attempts.
      */
     public static final int MAX_LOGIN_ATTEMPTS = 5;

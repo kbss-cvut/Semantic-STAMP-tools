@@ -24,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.*;
 
@@ -42,6 +43,9 @@ public class AuthenticationSuccessTest extends BaseServiceTestRunner {
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private HttpSession session;
 
     @Test
     public void authenticationSuccessReturnsResponseContainingUsername() throws Exception {
@@ -118,5 +122,22 @@ public class AuthenticationSuccessTest extends BaseServiceTestRunner {
         assertFalse(status.isLoggedIn());
         assertNull(status.getUsername());
         assertNull(status.getErrorMessage());
+    }
+
+    @Test
+    public void authenticationSuccessSetsDefaultSessionMaxInterval() throws Exception {
+        final MockHttpServletRequest request = request();
+        final MockHttpServletResponse response = response();
+        success.onAuthenticationSuccess(request, response, generateAuthenticationToken());
+        assertEquals(SecurityConstants.SESSION_TIMEOUT, session.getMaxInactiveInterval());
+    }
+
+    @Test
+    public void authenticationSuccessSetsExtendedSessionMaxIntervalForMobileClient() throws Exception {
+        final MockHttpServletRequest request = request();
+        request.addHeader(Constants.CLIENT_TYPE_HEADER, Constants.CLIENT_TYPE_MOBILE);
+        final MockHttpServletResponse response = response();
+        success.onAuthenticationSuccess(request, response, generateAuthenticationToken());
+        assertEquals(SecurityConstants.EXTENDED_SESSION_TIMEOUT, session.getMaxInactiveInterval());
     }
 }
