@@ -43,7 +43,7 @@ class DashboardController extends React.Component {
     static openReport(report) {
         Routing.transitionTo(Routes.editReport, {
             params: {reportKey: report.key},
-            handlers: {onCancel: Routes.dashboard}
+            handlers: {onCancel: Routes.reports}
         });
     }
 
