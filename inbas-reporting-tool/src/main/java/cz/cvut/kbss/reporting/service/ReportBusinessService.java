@@ -5,6 +5,8 @@ import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +30,14 @@ public interface ReportBusinessService {
      * @return All reports in the system
      */
     List<ReportDto> findAll();
+
+    /**
+     * Gets a page of all reports lists.
+     *
+     * @param pageSpec Specification of the page to retrieve
+     * @return Page of reports
+     */
+    Page<ReportDto> findAll(Pageable pageSpec);
 
     /**
      * Gets reports with the specified keys.

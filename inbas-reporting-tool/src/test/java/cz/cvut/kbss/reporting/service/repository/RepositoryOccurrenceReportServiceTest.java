@@ -18,6 +18,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.util.*;
@@ -470,5 +473,17 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         } finally {
             em.close();
         }
+    }
+
+    @Test
+    public void findAllWithPageSpecificationReturnsMatchingPageWithReports() {
+        final int count = 10;
+        final List<OccurrenceReport> reports = OccurrenceReportGenerator.generateReports(false, count);
+        occurrenceReportService.persist(reports);
+        final Pageable pageSpec = PageRequest.of(0, 2);
+        final Page<OccurrenceReport> result = occurrenceReportService.findAll(pageSpec);
+        assertEquals(2, result.getNumberOfElements());
+        assertEquals(reports.get(0).getUri(), result.getContent().get(0).getUri());
+        assertEquals(reports.get(1).getUri(), result.getContent().get(1).getUri());
     }
 }

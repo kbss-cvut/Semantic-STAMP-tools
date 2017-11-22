@@ -67,7 +67,7 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
                 .getResultList();
         return new PageImpl<>(
                 res.stream().map(cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport::toOccurrenceReport)
-                   .collect(Collectors.toList()));
+                   .collect(Collectors.toList()), pageSpec, 0L);
     }
 
     @Override
@@ -107,7 +107,8 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
         final EntityManager em = entityManager();
         try {
             return em.createNativeQuery(
-                    "SELECT ?x WHERE { ?x a ?type ;" +
+                    "SELECT ?x WHERE { " +
+                            "?x a ?type ;" +
                             "?documents ?occurrence . }",
                     OccurrenceReport.class)
                      .setParameter("type", typeIri)

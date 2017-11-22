@@ -18,6 +18,8 @@ import cz.cvut.kbss.reporting.service.visitor.EventTypeSynchronizer;
 import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -134,5 +136,11 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     public void removeReportChain(Long fileNumber) {
         Objects.requireNonNull(fileNumber);
         reportDao.removeReportChain(fileNumber);
+    }
+
+    @Override
+    public Page<OccurrenceReport> findAll(Pageable pageSpec) {
+        Objects.requireNonNull(pageSpec);
+        return reportDao.findAll(pageSpec);
     }
 }

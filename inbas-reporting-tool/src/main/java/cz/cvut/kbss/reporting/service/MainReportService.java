@@ -11,6 +11,9 @@ import cz.cvut.kbss.reporting.model.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.reporting.persistence.dao.ReportDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -49,6 +52,17 @@ public class MainReportService implements ReportBusinessService {
         final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
         result.sort(new DocumentDateAndRevisionComparator());
         return result;
+    }
+
+    @Override
+    public Page<ReportDto> findAll(Pageable pageSpec) {
+        final List<LogicalDocument> reports = new ArrayList<>();
+        // Combine reports from all services
+        services.values().forEach(service -> reports.addAll(service.findAll(pageSpec).getContent()));
+        final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
+        result.sort(new DocumentDateAndRevisionComparator());
+        // And return corresponding page
+        return new PageImpl<>(result.subList(0, Math.min(result.size(), pageSpec.getPageSize())), pageSpec, 0L);
     }
 
     @Override

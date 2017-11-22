@@ -5,6 +5,8 @@ import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.service.cache.ReportCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -18,11 +20,15 @@ import java.util.List;
 @Service("cachingReportBusinessService")
 public class CachingReportBusinessService implements ReportBusinessService {
 
-    @Autowired
-    private ReportCache reportCache;
+    private final ReportCache reportCache;
+
+    private final ReportBusinessService reportService;
 
     @Autowired
-    private ReportBusinessService reportService;
+    public CachingReportBusinessService(ReportCache reportCache, ReportBusinessService reportService) {
+        this.reportCache = reportCache;
+        this.reportService = reportService;
+    }
 
     @Override
     public List<ReportDto> findAll() {
@@ -32,6 +38,11 @@ public class CachingReportBusinessService implements ReportBusinessService {
         final List<ReportDto> reports = reportService.findAll();
         reportCache.initialize(reports);
         return reports;
+    }
+
+    @Override
+    public Page<ReportDto> findAll(Pageable pageSpec) {
+        return reportService.findAll(pageSpec);
     }
 
     @Override

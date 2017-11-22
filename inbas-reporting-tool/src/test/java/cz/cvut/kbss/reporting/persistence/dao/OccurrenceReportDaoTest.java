@@ -6,6 +6,7 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
+import org.hamcrest.number.OrderingComparison;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -354,13 +355,22 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
 
     private List<OccurrenceReport> generateReports() {
         final int reportCount = 15;
-        final List<OccurrenceReport> reports = new ArrayList<>(reportCount);
-        for (int i = 0; i < reportCount; i++) {
-            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
-            r.setAuthor(author);
-            r.getOccurrence().setStartTime(new Date(System.currentTimeMillis() - i * 1000));
-            reports.add(r);
-        }
+        final List<OccurrenceReport> reports = OccurrenceReportGenerator.generateReports(true, reportCount);
+        reports.forEach(r -> r.setAuthor(author));
         return reports;
+    }
+
+    @Test
+    public void pageableReturnedFromFindAllContainsPageNumberSizeAndIsLast() {
+        final List<OccurrenceReport> reports = generateReports();
+        occurrenceReportDao.persist(reports);
+        final int pageNo = 1;
+        final int pageSize = reports.size() / (pageNo + 1) + 1;
+        final Pageable pageReq = PageRequest.of(pageNo, pageSize);
+        final Page<OccurrenceReport> page = occurrenceReportDao.findAll(pageReq);
+        assertNotNull(page);
+        assertEquals(pageNo, page.getNumber());
+        assertEquals(pageSize, page.getSize());
+        assertThat(page.getNumberOfElements(), OrderingComparison.lessThan(pageSize));
     }
 }

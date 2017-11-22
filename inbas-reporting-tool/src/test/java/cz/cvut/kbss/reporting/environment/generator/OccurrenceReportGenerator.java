@@ -7,6 +7,21 @@ import java.net.URI;
 import java.util.*;
 
 public class OccurrenceReportGenerator {
+
+    /**
+     * Generates a list of occurrence reports, which are in descending order based on occurrence start time.
+     */
+    public static List<OccurrenceReport> generateReports(boolean setAttributes, int count) {
+        assert count > 0;
+        final List<OccurrenceReport> reports = new ArrayList<>(count);
+        for (int i = 0; i < count; i++) {
+            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(setAttributes);
+            r.getOccurrence().setStartTime(new Date(System.currentTimeMillis() - i * 1000));
+            reports.add(r);
+        }
+        return reports;
+    }
+
     /**
      * Generates occurrence report.
      * <p>

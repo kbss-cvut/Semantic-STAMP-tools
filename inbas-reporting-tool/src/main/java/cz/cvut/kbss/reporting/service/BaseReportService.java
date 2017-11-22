@@ -8,7 +8,7 @@ import cz.cvut.kbss.reporting.model.LogicalDocument;
  *
  * @param <T> Report type
  */
-interface BaseReportService<T extends LogicalDocument> extends BaseService<T> {
+interface BaseReportService<T extends LogicalDocument> extends PagingService<T> {
 
     /**
      * Finds instance with the specified key.

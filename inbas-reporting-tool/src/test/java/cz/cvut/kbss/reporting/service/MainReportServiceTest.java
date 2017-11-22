@@ -20,6 +20,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -277,5 +280,32 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertNotNull(result);
         assertEquals(keys.size() - unknownKeyCount, result.size());
         assertTrue(Environment.areEqual(reports, result));
+    }
+
+    @Test
+    public void pageableFindAllMergesPagesFromAllRegisteredServicesAndReturnsNewPageOfSpecifiedSize() {
+        final int count = 10;
+        generateReports(count);
+        final Pageable pageSpec = PageRequest.of(0, 5);
+
+        final Page<ReportDto> result = reportService.findAll(pageSpec);
+        assertEquals(pageSpec.getPageSize(), result.getNumberOfElements());
+    }
+
+    private List<OccurrenceReport> generateReports(int count) {
+        final List<OccurrenceReport> reports = OccurrenceReportGenerator.generateReports(true, count);
+        reports.forEach(r -> r.setAuthor(author));
+        occurrenceReportDao.persist(reports);
+        return reports;
+    }
+
+    @Test
+    public void pageableFindAllHandlesSituationWhenPageSizeIsBiggerThanResultSize() {
+        final int count = 10;
+        generateReports(count);
+        final Pageable pageSpec = PageRequest.of(0, count + 1);
+
+        final Page<ReportDto> result = reportService.findAll(pageSpec);
+        assertEquals(count, result.getNumberOfElements());
     }
 }
