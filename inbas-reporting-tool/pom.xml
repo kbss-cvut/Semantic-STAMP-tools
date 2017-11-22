@@ -23,10 +23,9 @@
 
         <cz.cvut.kbss.jopa.version>0.9.11</cz.cvut.kbss.jopa.version>
         <org.springframework.version>4.3.5.RELEASE</org.springframework.version>
+        <org.springframework.data.version>2.0.1.RELEASE</org.springframework.data.version>
         <org.springframework.security.version>4.2.1.RELEASE</org.springframework.security.version>
         <com.fasterxml.jackson.version>2.7.3</com.fasterxml.jackson.version>
-        <junit.version>4.12</junit.version>
-        <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
         <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
 
         <deployment>DEV</deployment>
@@ -72,6 +71,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>${org.springframework.data.version}</version>
         </dependency>
 
         <!-- Spring Security -->
@@ -136,17 +140,10 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>${ch.qos.logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.version}</version>
         </dependency>
 
         <!-- Map Struct for DTO <-> entities mapping -->
@@ -167,7 +164,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -184,7 +180,6 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
