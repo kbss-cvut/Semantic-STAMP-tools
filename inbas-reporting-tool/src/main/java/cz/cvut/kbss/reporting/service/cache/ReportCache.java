@@ -64,7 +64,7 @@ public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
      */
     public List<ReportDto> getAll() {
         final List<ReportDto> reports = new ArrayList<>(cache.values());
-        Collections.sort(reports, new DocumentDateAndRevisionComparator());
+        reports.sort(new DocumentDateAndRevisionComparator());
         return reports;
     }
 

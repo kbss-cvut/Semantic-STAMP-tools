@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * Base interface for data access objects.
+ *
+ * @param <T> Type managed by this DAO
  */
 public interface GenericDao<T> {
 

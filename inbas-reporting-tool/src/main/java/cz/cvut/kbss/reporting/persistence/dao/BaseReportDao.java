@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 
-abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupportingDao<T> {
+abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupportingDao<T> implements PagingDao<T> {
 
     final URI typeIri;
 
@@ -21,26 +21,6 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
         final OWLClass owlClass = type.getDeclaredAnnotation(OWLClass.class);
         assert owlClass != null;
         this.typeIri = URI.create(owlClass.iri());
-    }
-
-    @Override
-    protected List<T> findAll(EntityManager em) {
-        return em.createNativeQuery("SELECT ?x WHERE { " +
-                "?x a ?type ; " +
-                "?hasFileNumber ?fileNo ;" +
-                "?hasRevision ?revision ;" +
-                "?hasOccurrence ?occurrence ." +
-                "?occurrence ?hasStartTime ?startTime ." +
-                "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
-                "{ ?y a ?type; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . } GROUP BY ?iFileNo }" +
-                "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
-                "} ORDER BY DESC(?startTime) DESC(?revision)", type)
-                 .setParameter("type", typeUri)
-                 .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
-                 .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
-                 .setParameter("hasOccurrence", URI.create(Vocabulary.s_p_documents))
-                 .setParameter("hasStartTime", URI.create(Vocabulary.s_p_has_start_time))
-                 .getResultList();
     }
 
     /**

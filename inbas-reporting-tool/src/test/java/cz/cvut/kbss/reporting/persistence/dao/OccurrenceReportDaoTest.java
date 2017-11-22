@@ -9,6 +9,9 @@ import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.util.*;
@@ -331,5 +334,33 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         occurrenceReportDao.remove(report);
         verifyAllInstancesRemoved(emf, Vocabulary.s_c_question);
         verifyAllInstancesRemoved(emf, Vocabulary.s_c_answer);
+    }
+
+    @Test
+    public void pageableFindAllReturnsReportsOnMatchingPage() {
+        final List<OccurrenceReport> reports = generateReports();
+        occurrenceReportDao.persist(reports);
+        final int pageSize = 5;
+        final int pageNo = 1;   // Page numbers start from 0
+        final Pageable pageReq = PageRequest.of(pageNo, pageSize);
+        final Page<OccurrenceReport> page = occurrenceReportDao.findAll(pageReq);
+        assertNotNull(page);
+        final List<OccurrenceReport> result = page.getContent();
+        assertEquals(pageSize, result.size());
+        for (int i = 0; i < pageSize; i++) {
+            assertEquals(reports.get(pageSize * pageNo + i).getUri(), result.get(i).getUri());
+        }
+    }
+
+    private List<OccurrenceReport> generateReports() {
+        final int reportCount = 15;
+        final List<OccurrenceReport> reports = new ArrayList<>(reportCount);
+        for (int i = 0; i < reportCount; i++) {
+            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
+            r.setAuthor(author);
+            r.getOccurrence().setStartTime(new Date(System.currentTimeMillis() - i * 1000));
+            reports.add(r);
+        }
+        return reports;
     }
 }

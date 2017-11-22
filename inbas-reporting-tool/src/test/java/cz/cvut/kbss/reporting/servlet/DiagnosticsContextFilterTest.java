@@ -45,7 +45,7 @@ public class DiagnosticsContextFilterTest {
         final Principal token = new AuthenticationToken(Collections.emptyList(), new UserDetails(person));
         when(requestMock.getUserPrincipal()).thenReturn(token);
         doAnswer((answer) -> {
-            assertEquals(MDC.get(DiagnosticsContextFilter.DMC_KEY), Generator.USERNAME);
+            assertEquals(Generator.USERNAME, MDC.get(DiagnosticsContextFilter.DMC_KEY));
             return null;
         }).when(chainMock).doFilter(requestMock, responseMock);
 
