@@ -31,6 +31,7 @@ import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -41,6 +42,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.Cookie;
 import java.net.URI;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -294,5 +296,13 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
         setCompanyIdInCurrentRequest(COMPANY_ID);
 
         provider.authenticate(createAuthentication(USERNAME));
+    }
+
+    @Test
+    public void authenticateThrowsAuthenticationExceptionForEmptyUsername() {
+        thrown.expect(UsernameNotFoundException.class);
+        thrown.expectMessage(containsString("Username cannot be empty."));
+        final Authentication auth = createAuthentication("");
+        provider.authenticate(auth);
     }
 }

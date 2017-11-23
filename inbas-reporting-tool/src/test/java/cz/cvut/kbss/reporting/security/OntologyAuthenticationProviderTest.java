@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
@@ -149,5 +150,13 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
             final SecurityContext context = SecurityContextHolder.getContext();
             assertNull(context.getAuthentication());
         }
+    }
+
+    @Test
+    public void authenticateThrowsAuthenticationExceptionForEmptyUsername() {
+        thrown.expect(UsernameNotFoundException.class);
+        thrown.expectMessage(containsString("Username cannot be empty."));
+        final Authentication auth = authentication("", "");
+        provider.authenticate(auth);
     }
 }

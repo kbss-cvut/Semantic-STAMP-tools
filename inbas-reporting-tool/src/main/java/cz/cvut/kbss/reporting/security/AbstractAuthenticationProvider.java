@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 abstract class AbstractAuthenticationProvider implements AuthenticationProvider {
@@ -27,8 +28,8 @@ abstract class AbstractAuthenticationProvider implements AuthenticationProvider 
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(aClass) ||
-                AuthenticationToken.class.isAssignableFrom(aClass);
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(aClass)
+                || AuthenticationToken.class.isAssignableFrom(aClass);
     }
 
     void loginSuccess(Person user) {
@@ -45,6 +46,12 @@ abstract class AbstractAuthenticationProvider implements AuthenticationProvider 
         }
         if (!user.isEnabled()) {
             throw new DisabledException("Account is disabled.");
+        }
+    }
+
+    void verifyUsernameNotEmpty(String username) {
+        if (username.isEmpty()) {
+            throw new UsernameNotFoundException("Username cannot be empty.");
         }
     }
 }

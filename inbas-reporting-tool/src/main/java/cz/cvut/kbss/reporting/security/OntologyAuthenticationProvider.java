@@ -30,9 +30,8 @@ public class OntologyAuthenticationProvider extends AbstractAuthenticationProvid
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         final String username = authentication.getPrincipal().toString();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Authenticating user {}", username);
-        }
+        verifyUsernameNotEmpty(username);
+        LOG.debug("Authenticating user {}", username);
 
         final UserDetails userDetails = (UserDetails) userDetailsService.loadUserByUsername(username);
         verifyAccountStatus(userDetails.getUser());

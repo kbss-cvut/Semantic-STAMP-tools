@@ -60,9 +60,9 @@ public class PortalAuthenticationProvider extends AbstractAuthenticationProvider
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         final String username = authentication.getPrincipal().toString();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Authenticating user {} against the portal.", username);
-        }
+        verifyUsernameNotEmpty(username);
+        LOG.debug("Authenticating user {} against the portal.", username);
+        
         final String password = authentication.getCredentials().toString();
         final Person authenticatedUser = authenticateAgainstPortal(username, password);
         final UserDetails userDetails = new PortalUserDetails(authenticatedUser);
