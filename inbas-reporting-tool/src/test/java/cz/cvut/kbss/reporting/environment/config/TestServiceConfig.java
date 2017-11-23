@@ -1,6 +1,7 @@
 package cz.cvut.kbss.reporting.environment.config;
 
 import cz.cvut.kbss.reporting.service.OccurrenceReportService;
+import cz.cvut.kbss.reporting.service.cache.ReportCache;
 import cz.cvut.kbss.reporting.service.data.export.ReportExporter;
 import cz.cvut.kbss.reporting.service.jmx.AppAdminBean;
 import cz.cvut.kbss.reporting.service.repository.RepositoryOccurrenceReportService;
@@ -47,5 +48,10 @@ public class TestServiceConfig {
     @Bean
     public AppAdminBean appAdminBean() {
         return mock(AppAdminBean.class);
+    }
+
+    @Bean
+    public ReportCache reportCache() {
+        return spy(new ReportCache());
     }
 }

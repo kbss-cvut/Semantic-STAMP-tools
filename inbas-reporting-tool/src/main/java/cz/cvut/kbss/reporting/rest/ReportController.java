@@ -12,10 +12,9 @@ import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.reporting.service.data.export.ReportExporter;
 import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
-import cz.cvut.kbss.reporting.util.Constants;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
@@ -53,10 +51,15 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ReportList getAllReports(@RequestParam MultiValueMap<String, String> params) {
+    public ReportList getAllReports(@RequestParam(name = "page", required = false) Integer page,
+                                    @RequestParam(name = "size", required = false) Integer pageSize,
+                                    @RequestParam MultiValueMap<String, String> params) {
         if (params.containsKey(REPORT_KEY_PARAM)) {
             final Collection<String> keys = params.get(REPORT_KEY_PARAM);
             return new ReportList(reportService.findAll(keys));
+        }
+        if (pageSize != null) {
+            return new ReportList(reportService.findAll(PageRequest.of(page, pageSize)).getContent());
         }
         return new ReportList(reportService.findAll());
     }
@@ -176,39 +179,42 @@ public class ReportController extends BaseController {
 
     /**
      * Export report with key to e5x xml
+     *
      * @param key
      * @param response
      */
     @RequestMapping(value = "/{key}/export/e5xxml", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
-    public void exportReportToE5XXml(@PathVariable("key") String key, HttpServletResponse response){
+    public void exportReportToE5XXml(@PathVariable("key") String key, HttpServletResponse response) {
         expoortReportToE5XImpl(key, response, false);
     }
 
     /**
      * Export report with key to e5x (zipped e5x xml)
+     *
      * @param key
      * @param response
      */
     @RequestMapping(value = "/{key}/export/e5x", method = RequestMethod.GET, produces = {"application/zip"})
-    public void exportReportToE5X(@PathVariable("key") String key, HttpServletResponse response){
+    public void exportReportToE5X(@PathVariable("key") String key, HttpServletResponse response) {
         expoortReportToE5XImpl(key, response, true);
     }
 
     /**
      * export the report with key as E5X.
+     *
      * @param key
      * @param response
-     * @param zip true for e5x (zipped e5x xml), false for e5x xml
+     * @param zip      true for e5x (zipped e5x xml), false for e5x xml
      */
-    protected void expoortReportToE5XImpl(String key, HttpServletResponse response, boolean zip){
+    protected void expoortReportToE5XImpl(String key, HttpServletResponse response, boolean zip) {
         String fileType = (zip ? "e5x" : "e5x xml");
         // transform report
-        byte[] reportE5X = reportExporter.exportReportToE5X(key,zip);
-        if(reportE5X == null){
+        byte[] reportE5X = reportExporter.exportReportToE5X(key, zip);
+        if (reportE5X == null) {
             LOG.trace("Cannot export {}. No such Occurrence Report with key {}", fileType, key);
             throw NotFoundException.create("Occurrence Report", key);
         }
-        if(zip) { // make response downloadable
+        if (zip) { // make response downloadable
             final LogicalDocument report = reportService.findByKey(key);
             response.setHeader("Content-Disposition", "attachment; filename=\"" + report.getFileNumber() + ".e5x\"");
         }
@@ -217,7 +223,8 @@ public class ReportController extends BaseController {
             response.flushBuffer();
             response.getOutputStream().close();
         } catch (IOException e) {
-            String message = String.format("IO error writing %s export of report with key %s to output stream", fileType, key);
+            String message = String
+                    .format("IO error writing %s export of report with key %s to output stream", fileType, key);
             LOG.warn(message, e);
             throw new RuntimeException(message, e);
         }

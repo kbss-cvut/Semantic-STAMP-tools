@@ -15,14 +15,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 public class CachingReportBusinessServiceTest extends BaseServiceTestRunner {
 
@@ -135,7 +137,7 @@ public class CachingReportBusinessServiceTest extends BaseServiceTestRunner {
      */
     private List<LogicalDocument> initReportChains() {
         final List<LogicalDocument> latestRevisions = new ArrayList<>();
-        for (int i = 0; i < Generator.randomInt(10); i++) {
+        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
             final List<OccurrenceReport> chain = persistOccurrenceReportChain();
             latestRevisions.add(chain.get(chain.size() - 1));
         }
@@ -212,5 +214,30 @@ public class CachingReportBusinessServiceTest extends BaseServiceTestRunner {
         final List<ReportDto> result = reportService.findAll(keys);
         assertFalse(reportCache.isInitialized());
         assertEquals(keys.size(), result.size());
+    }
+
+    @Test
+    public void findAllPagedReturnsCachedReportsWhenCacheIsInitialized() {
+        final List<LogicalDocument> reports = initReportChains();
+
+        assertTrue(reportCache.getAll().isEmpty());
+        reportService.findAll();    // initializes cache
+
+        final int page = 0;
+        final int pageSize = reports.size() / 2;
+        reportService.findAll(PageRequest.of(page, pageSize));
+        verify(occurrenceReportService).findAll();
+        verify(occurrenceReportService, never()).findAll(any(Pageable.class));
+        verify(reportCache).getAll(PageRequest.of(page, pageSize));
+    }
+
+    @Test
+    public void findAllPagedReturnsReportsFromStorageWhenCacheIsNotInitialized() {
+        final List<LogicalDocument> reports = initReportChains();
+        final int page = 0;
+        final int pageSize = reports.size() / 2;
+        reportService.findAll(PageRequest.of(page, pageSize));
+        verify(occurrenceReportService).findAll(PageRequest.of(page, pageSize));
+        verify(reportCache, never()).getAll(PageRequest.of(page, pageSize));
     }
 }

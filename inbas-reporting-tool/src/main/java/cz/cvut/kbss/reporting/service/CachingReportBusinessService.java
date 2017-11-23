@@ -42,6 +42,9 @@ public class CachingReportBusinessService implements ReportBusinessService {
 
     @Override
     public Page<ReportDto> findAll(Pageable pageSpec) {
+        if (reportCache.isInitialized()) {
+            return reportCache.getAll(pageSpec);
+        }
         return reportService.findAll(pageSpec);
     }
 

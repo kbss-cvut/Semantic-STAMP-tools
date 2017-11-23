@@ -6,6 +6,9 @@ import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -66,6 +69,21 @@ public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
         final List<ReportDto> reports = new ArrayList<>(cache.values());
         reports.sort(new DocumentDateAndRevisionComparator());
         return reports;
+    }
+
+    /**
+     * Gets a page of reports from this cache, ordered by date created and revision number, descending.
+     *
+     * @return List of cached reports
+     */
+    public Page<ReportDto> getAll(Pageable pageSpec) {
+        final int start = pageSpec.getPageNumber() * pageSpec.getPageSize();
+        if (start >= cache.size()) {
+            return Page.empty(pageSpec);
+        }
+        final List<ReportDto> reports = getAll();
+        final int end = Math.min(start + pageSpec.getPageSize(), reports.size());
+        return new PageImpl<>(reports.subList(start, end), pageSpec, reports.size());
     }
 
     @Override

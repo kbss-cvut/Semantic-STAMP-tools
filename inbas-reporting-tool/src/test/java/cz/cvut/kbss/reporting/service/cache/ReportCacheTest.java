@@ -4,8 +4,11 @@ import cz.cvut.kbss.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
+import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
 import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
 import org.junit.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -31,7 +34,7 @@ public class ReportCacheTest {
 
     private List<ReportDto> generateReports() {
         final List<ReportDto> lst = new ArrayList<>();
-        for (int i = 0; i < Generator.randomInt(10); i++) {
+        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
             final Date date = new Date(System.currentTimeMillis() + i * 10000);
             final ReportDto dtoOne = new OccurrenceReportDto();
             dtoOne.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas#instance-" + i));
@@ -114,5 +117,43 @@ public class ReportCacheTest {
         assertTrue(cache.isInitialized());
         cache.evict();
         assertFalse(cache.isInitialized());
+    }
+
+    @Test
+    public void findAllPagedReturnsCorrespondingPage() {
+        final List<ReportDto> lst = generateReports();
+        cache.initialize(lst);
+        lst.sort(new DocumentDateAndRevisionComparator());
+        final int page = 0;
+        final int pageSize = lst.size() - 1;
+        final Page<ReportDto> result = cache.getAll(PageRequest.of(page, pageSize));
+        assertEquals(pageSize, result.getNumberOfElements());
+        for (int i = 0; i < pageSize; i++) {
+            assertEquals(lst.get(i), result.getContent().get(i));
+        }
+    }
+
+    @Test
+    public void findAllPagedReturnsIncompletePageIfThereAreNotEnoughElementsForFullPage() {
+        final List<ReportDto> lst = generateReports();
+        cache.initialize(lst);
+        lst.sort(new DocumentDateAndRevisionComparator());
+        final int page = 1;
+        final int pageSize = lst.size() - 1;
+        final Page<ReportDto> result = cache.getAll(PageRequest.of(page, pageSize));
+        assertEquals(1, result.getNumberOfElements());
+        assertEquals(lst.get(lst.size() - 1), result.getContent().get(0));
+        assertTrue(result.isLast());
+        assertEquals(lst.size(), result.getTotalElements());
+    }
+
+    @Test
+    public void findAllPagedReturnsEmptyListForFirstPageElementIndexLargerThanReportCount() {
+        final List<ReportDto> lst = generateReports();
+        cache.initialize(lst);
+        final int pageSize = lst.size() / 2;
+        final int page = pageSize * 3;
+        final Page<ReportDto> result = cache.getAll(PageRequest.of(page, pageSize));
+        assertTrue(result.getContent().isEmpty());
     }
 }
