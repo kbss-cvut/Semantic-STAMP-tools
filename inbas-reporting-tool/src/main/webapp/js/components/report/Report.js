@@ -11,7 +11,7 @@ const Report = (props) => {
         return <Mask text={props.i18n('detail.loading')}/>;
     }
     if (!report) {
-        return <ResourceNotFound resource={props.i18n('detail.not-found.title')}/>;
+        return <ResourceNotFound resource={props.i18n('detail.not-found.resource')}/>;
     }
     return React.createElement(ReportType.getDetailController(report), {
         report: report,

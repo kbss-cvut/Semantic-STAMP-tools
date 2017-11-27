@@ -49,7 +49,7 @@ module.exports = {
         'detail.phase-transition-success-message': 'Report phase transition successful.',
         'detail.phase-transition-failed-message': 'Report phase transition failed with error: ',
         'detail.loading': 'Loading report...',
-        'detail.not-found.title': 'Report not found',
+        'detail.not-found.resource': 'Report',
         'detail.fix.title': 'Fix report',
         'detail.fix.start-time': 'Start time',
         'detail.fix.end-time': 'End time',

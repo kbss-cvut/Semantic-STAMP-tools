@@ -1,5 +1,3 @@
-'use strict';
-
 import React from "react";
 import Typeahead from "react-bootstrap-typeahead";
 import Actions from "../../actions/Actions";

@@ -49,7 +49,7 @@ module.exports = {
         'detail.phase-transition-success-message': 'Hlášení úspěšně převedeno do další fáze.',
         'detail.phase-transition-failed-message': 'Přechod do další fáze se nezdařil. Zachycena chyba: ',
         'detail.loading': 'Načítám hlášení...',
-        'detail.not-found.title': 'Hlášení nenalezeno',
+        'detail.not-found.resource': 'Hlášení',
         'detail.remove-failed-message': 'Hlášení se nepodařilo odstranit. Odpověď serveru: ',
         'detail.fix.title': 'Oprava hlášení',
         'detail.fix.start-time': 'Počátek',

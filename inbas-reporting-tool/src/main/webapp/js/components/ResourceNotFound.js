@@ -1,52 +1,40 @@
-/**
- * @jsx
- */
-'use strict';
+import React from "react";
+import PropTypes from "prop-types";
+import {Alert, Button} from "react-bootstrap";
+import {FormattedMessage} from "react-intl";
 
-var React = require('react');
-var Alert = require('react-bootstrap').Alert;
-var Button = require('react-bootstrap').Button;
-var injectIntl = require('../utils/injectIntl');
-var FormattedMessage = require('react-intl').FormattedMessage;
-
-var Routing = require('../utils/Routing');
-var I18nMixin = require('../i18n/I18nMixin');
+import I18nWrapper from "../i18n/I18nWrapper";
+import injectIntl from "../utils/injectIntl";
+import Routing from "../utils/Routing";
 
 /**
  * Shows alert with message informing that a resource could not be found.
  *
  * Closing the alert transitions the user to the application's home.
  */
-var ResourceNotFound = React.createClass({
-    mixins: [I18nMixin],
-
-    propTypes: {
-        resource: React.PropTypes.string.isRequired,
-        identifier: React.PropTypes.object
-    },
-
-    onClose: function () {
-        Routing.transitionToHome();
-    },
-
-    render: function () {
-        var text;
-        if (this.props.identifier) {
-            text = <FormattedMessage id='notfound.msg-with-id'
-                                     values={{resource: this.props.resource, identifier: this.props.identifier}}/>;
-        } else {
-            text = <FormattedMessage id='notfound.msg' values={{resource: this.props.resource}}/>;
-        }
-        return (<Alert bsStyle='danger' onDismiss={this.onClose}>
-            <h4>{this.i18n('notfound.title')}</h4>
-
-            <p>{text}</p>
-
-            <p>
-                <Button onClick={this.onClose}>{this.i18n('close')}</Button>
-            </p>
-        </Alert>);
+const ResourceNotFound = (props) => {
+    const onClose = () => Routing.transitionToHome();
+    let text;
+    if (props.identifier) {
+        text = <FormattedMessage id='notfound.msg-with-id'
+                                 values={{resource: props.resource, identifier: props.identifier}}/>;
+    } else {
+        text = <FormattedMessage id='notfound.msg' values={{resource: props.resource}}/>;
     }
-});
+    return <Alert bsStyle='danger' onDismiss={onClose}>
+        <h4>{props.i18n('notfound.title')}</h4>
 
-module.exports = injectIntl(ResourceNotFound);
+        <p>{text}</p>
+
+        <p>
+            <Button onClick={onClose}>{props.i18n('close')}</Button>
+        </p>
+    </Alert>;
+};
+
+ResourceNotFound.propTypes = {
+    resource: PropTypes.string.isRequired,
+    identifier: PropTypes.object
+};
+
+export default injectIntl(I18nWrapper(ResourceNotFound));
