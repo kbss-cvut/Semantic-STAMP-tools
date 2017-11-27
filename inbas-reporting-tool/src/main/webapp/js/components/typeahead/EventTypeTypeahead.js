@@ -1,56 +1,67 @@
-'use strict';
+import React from "react";
+import PropTypes from "prop-types";
+import Typeahead from "react-bootstrap-typeahead";
+import JsonLdUtils from "jsonld-utils";
 
-var React = require('react');
-var Reflux = require('reflux');
-var Typeahead = require('react-bootstrap-typeahead');
-var injectIntl = require('../../utils/injectIntl');
-var JsonLdUtils = require('jsonld-utils').default;
+import Actions from "../../actions/Actions";
+import Constants from "../../constants/Constants";
+import I18nWrapper from "../../i18n/I18nWrapper";
+import injectIntl from "../../utils/injectIntl";
+import OptionsStore from "../../stores/OptionsStore";
+import EventTypeTypeaheadResultList from "./EventTypeTypeaheadResultList";
 
-var Actions = require('../../actions/Actions');
-var TypeaheadResultList = require('./EventTypeTypeaheadResultList').default;
-var OptionsStore = require('../../stores/OptionsStore');
-var I18nMixin = require('../../i18n/I18nMixin');
+class EventTypeTypeahead extends React.Component {
 
-var EventTypeTypeahead = React.createClass({
-    mixins: [Reflux.ListenerMixin, I18nMixin],
-
-    propTypes: {
-        onSelect: React.PropTypes.func.isRequired
-    },
-
-    getInitialState: function () {
-        return {
+    constructor(props) {
+        super(props);
+        this.i18n = props.i18n;
+        this.state = {
             options: []
         };
-    },
+    }
 
-    componentDidMount: function () {
-        this.listenTo(OptionsStore, this.onEventsLoaded);
-        Actions.loadOptions('eventType');
+    componentDidMount() {
+        this.unsubscribe = OptionsStore.listen(this.onEventsLoaded);
+        Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE);
         if (this.props.focus) {
             this.focus();
         }
-    },
+    }
 
-    onEventsLoaded: function (type, data) {
-        if (type === 'eventType') {
+    onEventsLoaded = (type, data) => {
+        if (type === Constants.OPTIONS.EVENT_TYPE) {
             this.setState({options: JsonLdUtils.processTypeaheadOptions(data)});
         }
-    },
+    };
 
-    focus: function () {
-        this.refs.eventTypeSelect.focus();
-    },
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
 
-    render: function () {
-        var value = this.props.value ? this.props.value : null,
+    focus() {
+        this.eventTypeSelect.focus();
+    }
+
+    render() {
+        const value = this.props.value ? this.props.value : null,
             placeholder = this.props.placeholder ? this.props.placeholder : this.i18n('eventtype.title');
 
-        return <Typeahead ref='eventTypeSelect' label={this.props.label} name='eventType' size='small'
+        return <Typeahead ref={c => this.eventTypeSelect = c} label={this.props.label} name='eventType' size='small'
                           formInputOption='id' placeholder={placeholder} onOptionSelected={this.props.onSelect}
                           filterOption='name' value={value} displayOption='name' options={this.state.options}
-                          customListComponent={TypeaheadResultList}/>;
+                          customListComponent={EventTypeTypeaheadResultList}/>;
     }
-});
+}
 
-module.exports = injectIntl(EventTypeTypeahead);
+EventTypeTypeahead.propTypes = {
+    onSelect: PropTypes.func.isRequired,
+    focus: PropTypes.bool,
+    placeholder: PropTypes.string,
+    value: PropTypes.string
+};
+
+EventTypeTypeahead.defaultProps = {
+    focus: false
+};
+
+export default injectIntl(I18nWrapper(EventTypeTypeahead));

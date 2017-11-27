@@ -2,14 +2,13 @@
 
 describe('Occurrence classification', () => {
 
-    var React = require('react'),
+    const React = require('react'),
         Environment = require('../environment/Environment'),
         Generator = require('../environment/Generator').default,
-        OccurrenceClassification = require('../../js/components/report/occurrence/OccurrenceClassification'),
+        OccurrenceClassification = require('../../js/components/report/occurrence/OccurrenceClassification').default,
         OptionsStore = require('../../js/stores/OptionsStore'),
-        JsonLdUtils = require('jsonld-utils').default,
-        Actions = require('../../js/actions/Actions'),
-        report, onChange;
+        JsonLdUtils = require('jsonld-utils').default;
+    let report, onChange;
 
     beforeEach(() => {
         report = {
