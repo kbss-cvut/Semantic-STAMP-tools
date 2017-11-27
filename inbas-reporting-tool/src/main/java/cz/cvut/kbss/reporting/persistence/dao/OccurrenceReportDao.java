@@ -49,12 +49,11 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
                 .createNativeQuery("SELECT ?x WHERE { " +
                                 "?x a ?type ; " +
                                 "?hasFileNumber ?fileNo ;" +
-                                "?hasRevision ?revision ;" +
+                                "?hasRevision ?maxRev ;" +
                                 "?hasOccurrence ?occurrence ." +
                                 "?occurrence ?hasStartTime ?startTime ." +
-                                "{ SELECT (MAX(?rev) AS ?maxRev) ?iFileNo WHERE " +
-                                "{ ?y a ?type; ?hasFileNumber ?iFileNo ; ?hasRevision ?rev . } GROUP BY ?iFileNo }" +
-                                "FILTER (?revision = ?maxRev && ?fileNo = ?iFileNo)" +
+                                "{ SELECT (MAX(?rev) AS ?maxRev) ?fileNo WHERE " +
+                                "{ ?y a ?type; ?hasFileNumber ?fileNo ; ?hasRevision ?rev . } GROUP BY ?fileNo }" +
                                 "} ORDER BY DESC(?startTime) DESC(?revision) LIMIT ?limit OFFSET ?offset",
                         cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport.class)
                 .setParameter("type", typeUri)
