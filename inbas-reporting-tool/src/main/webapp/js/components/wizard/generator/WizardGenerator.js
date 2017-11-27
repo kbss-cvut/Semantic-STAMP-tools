@@ -10,7 +10,7 @@ const I18nStore = require('../../../stores/I18nStore');
 const JsonReferenceResolver = require('../../../utils/JsonReferenceResolver').default;
 const Logger = require('../../../utils/Logger');
 const Input = require('../../Input').default;
-const TypeaheadResultList = require('../../typeahead/TypeaheadResultList');
+const TypeaheadResultList = require('../../typeahead/TypeaheadResultList').default;
 const Utils = require('../../../utils/Utils');
 const WizardStore = require('../../../stores/WizardStore');
 

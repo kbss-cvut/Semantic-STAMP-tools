@@ -9,7 +9,7 @@ var injectIntl = require('../../utils/injectIntl');
 var Actions = require('../../actions/Actions');
 var ReportStore = require('../../stores/ReportStore');
 var ReportType = require('../../model/ReportType');
-var TypeaheadResultList = require('./TypeaheadResultList');
+var TypeaheadResultList = require('./TypeaheadResultList').default;
 var Utils = require('../../utils/Utils');
 var I18nMixin = require('../../i18n/I18nMixin');
 

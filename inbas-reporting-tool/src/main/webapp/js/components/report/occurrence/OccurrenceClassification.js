@@ -1,52 +1,50 @@
-'use strict';
+import React from "react";
+import PropTypes from "prop-types";
+import Typeahead from "react-bootstrap-typeahead";
+import JsonLdUtils from "jsonld-utils";
 
-var React = require('react');
-var Reflux = require('reflux');
-var Typeahead = require('react-bootstrap-typeahead');
-var TypeaheadResultList = require('../../typeahead/EventTypeTypeaheadResultList').default;
-var JsonLdUtils = require('jsonld-utils').default;
+import Constants from "../../../constants/Constants";
+import ExternalLink from "../../misc/ExternalLink";
+import I18nWrapper from "../../../i18n/I18nWrapper";
+import injectIntl from "../../../utils/injectIntl";
+import OptionsStore from "../../../stores/OptionsStore";
+import Select from "../../Select";
+import EventTypeTypeaheadResultList from "../../typeahead/EventTypeTypeaheadResultList";
+import Vocabulary from "../../../constants/Vocabulary";
 
-var injectIntl = require('../../../utils/injectIntl');
 
-var Select = require('../../Select');
-var OptionsStore = require('../../../stores/OptionsStore');
-var I18nMixin = require('../../../i18n/I18nMixin');
-var Constants = require('../../../constants/Constants');
-var Vocabulary = require('../../../constants/Vocabulary');
-var ExternalLink = require('../../misc/ExternalLink').default;
+class OccurrenceClassification extends React.Component {
 
-var OccurrenceClassification = React.createClass({
-    mixins: [Reflux.ListenerMixin, I18nMixin],
-
-    propTypes: {
-        report: React.PropTypes.object.isRequired,
-        onChange: React.PropTypes.func.isRequired
-    },
-
-    getInitialState: function () {
-        return {
+    constructor(props) {
+        super(props);
+        this.i18n = props.i18n;
+        this.state = {
             occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
             occurrenceCategories: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY))
         };
-    },
+    }
 
-    componentDidMount: function () {
-        this.listenTo(OptionsStore, this._onOptionsLoaded);
-    },
+    componentDidMount() {
+        this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
+    }
 
-    _onOptionsLoaded: function (type, data) {
+    _onOptionsLoaded = (type, data) => {
         if (type === Constants.OPTIONS.OCCURRENCE_CLASS) {
             this.setState({occurrenceClasses: data});
         } else if (type === Constants.OPTIONS.OCCURRENCE_CATEGORY) {
             this.setState({occurrenceCategories: JsonLdUtils.processTypeaheadOptions(data)});
-            var selected = this._resolveSelectedCategory();
+            const selected = this._resolveSelectedCategory();
             if (selected) {
-                this.refs.occurrenceCategory.selectOption(selected);
+                this.occurrenceCategory.selectOption(selected);
             }
         }
-    },
+    };
 
-    _transformOccurrenceClasses: function () {
+    componentWillUnmount() {
+        this.unsubscribe();
+    }
+
+    _transformOccurrenceClasses() {
         return this.state.occurrenceClasses.map((item) => {
             return {
                 value: item['@id'],
@@ -54,26 +52,22 @@ var OccurrenceClassification = React.createClass({
                 title: JsonLdUtils.getJsonAttValue(item, Vocabulary.RDFS_COMMENT)
             };
         });
-    },
+    }
 
-    onChange: function (e) {
-        var change = {};
+    onChange = (e) => {
+        const change = {};
         change[e.target.name] = e.target.value;
         this.props.onChange(change);
-    },
+    };
 
-    onCategorySelect: function (cat) {
-        var occurrence = this.props.report.occurrence;
+    onCategorySelect = (cat) => {
+        const occurrence = this.props.report.occurrence;
         occurrence.eventType = cat.id;
         this.props.onChange({'occurrence': occurrence});
-    },
+    };
 
-    _onShowCategories: function () {
-        this.refs.occurrenceCategory.showOptions();
-    },
-
-    render: function () {
-        var report = this.props.report;
+    render() {
+        const report = this.props.report;
         return <div className='row'>
             <div className='col-xs-4'>
                 <Select label={this.i18n('occurrence.class') + '*'} name='severityAssessment'
@@ -83,36 +77,41 @@ var OccurrenceClassification = React.createClass({
             </div>
             <div className='col-xs-4'>
                 <Typeahead name='occurrenceCategory' label={this.i18n('report.occurrence.category.label') + '*'}
-                           ref='occurrenceCategory' formInputOption='id' optionsButton={true}
+                           ref={c => this.occurrenceCategory = c} formInputOption='id' optionsButton={true}
                            placeholder={this.i18n('report.occurrence.category.label')}
                            onOptionSelected={this.onCategorySelect} filterOption='name'
                            value={this._resolveCategoryValue()} size='small'
                            displayOption='name' options={this.state.occurrenceCategories}
-                           customListComponent={TypeaheadResultList}/>
+                           customListComponent={EventTypeTypeaheadResultList}/>
             </div>
             {this._renderCategoryLink()}
         </div>;
-    },
+    }
 
-    _resolveCategoryValue: function () {
-        var cat = this._resolveSelectedCategory();
+    _resolveCategoryValue() {
+        const cat = this._resolveSelectedCategory();
         return cat ? cat.name : '';
-    },
+    }
 
-    _resolveSelectedCategory: function () {
-        var catId = this.props.report.occurrence.eventType,
+    _resolveSelectedCategory() {
+        const catId = this.props.report.occurrence.eventType,
             categories = this.state.occurrenceCategories;
         return categories.find(function (item) {
             return item.id === catId;
         });
-    },
+    }
 
-    _renderCategoryLink: function () {
-        var cat = this.props.report.occurrence.eventType;
+    _renderCategoryLink() {
+        const cat = this.props.report.occurrence.eventType;
         return cat ?
             <div className='col-xs-1'><ExternalLink url={cat} title={this._resolveCategoryValue() + '\n' + cat}/>
             </div> : null;
     }
-});
+}
 
-module.exports = injectIntl(OccurrenceClassification);
+OccurrenceClassification.propTypes = {
+    report: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired
+};
+
+export default injectIntl(I18nWrapper(OccurrenceClassification));

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {ClipLoader} from "halogen";
+import {ClipLoader} from "react-spinners";
 import classNames from "classnames";
 import I18Store from "../stores/I18nStore";
 
@@ -10,7 +10,7 @@ const Mask = (props) => {
     return <div className={props.classes ? props.classes : 'mask'}>
         <div className={containerClasses}>
             <div style={{width: 32, height: 32, margin: 'auto'}}>
-                <ClipLoader color='#337ab7' size='32px'/>
+                <ClipLoader color='#337ab7' size={32}/>
             </div>
             {!props.withoutText && <div className='spinner-message'>{text}</div>}
         </div>

@@ -848,3 +848,7 @@ td.status {
 button.right {
     margin-left: 0.5em;
 }
+
+li.hover {
+    text-decoration: underline;
+}

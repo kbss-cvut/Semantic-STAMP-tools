@@ -1,6 +1,5 @@
-'use strict';
-
 import React from "react";
+import PropTypes from "prop-types";
 import OccurrenceClassification from "./OccurrenceClassification";
 import OccurrenceDetail from "./Occurrence";
 
@@ -13,8 +12,8 @@ const BasicOccurrenceInfo = (props) => {
 };
 
 BasicOccurrenceInfo.propTypes = {
-    report: React.PropTypes.object.isRequired,
-    onChange: React.PropTypes.func.isRequired
+    report: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
 export default BasicOccurrenceInfo;

@@ -1,43 +1,58 @@
-/**
- * @jsx
- */
+import React from "react";
+import PropTypes from "prop-types";
+import classNames from "classnames";
 
-'use strict';
+class TypeaheadResultList extends React.Component {
 
-var React = require('react');
-
-var TypeaheadResultList = React.createClass({
-
-    render: function () {
-        var listCls = this.props.options.length < 21 ? 'autocomplete-results' : 'autocomplete-results extended';
+    render() {
+        let listCls = this.props.options.length < 21 ? 'autocomplete-results' : 'autocomplete-results extended';
         if (this.props.customClasses.results) {
             listCls += ' ' + this.props.customClasses.results;
         }
-        var items = [];
-        for (var i = 0, len = this.props.options.length; i < len; i++) {
-            var onClick = this.onClick.bind(this, this.props.options[i]);
-            items.push(<li className='btn-link item' key={'typeahead-result-' + i}
+        const items = [],
+            classes = ['btn-link', 'item'];
+        for (let i = 0, len = this.props.options.length; i < len; i++) {
+            const onClick = this.onClick.bind(this, this.props.options[i]),
+                className = classNames(classes, {'hover': i === this.props.selectionIndex});
+            items.push(<li className={className} key={'typeahead-result-' + i}
                            onClick={onClick}>{this.getOptionLabel(this.props.options[i])}</li>);
         }
-        return (
-            <ul className={listCls}>
-                {items}
-            </ul>
-        );
-    },
+        return <ul className={listCls}>
+            {items}
+        </ul>;
+    }
 
-    getOptionLabel: function (option) {
+    getOptionLabel(option) {
         if (typeof this.props.displayOption === 'function') {
             return this.props.displayOption(option);
         } else {
             return option[this.props.displayOption];
         }
-    },
+    }
 
-    onClick: function(option, event) {
+    onClick(option, event) {
         event.preventDefault();
         this.props.onOptionSelected(option);
     }
-});
+}
 
-module.exports = TypeaheadResultList;
+TypeaheadResultList.propTypes = {
+    options: PropTypes.array,
+    customClasses: PropTypes.object,
+    customValue: PropTypes.string,
+    selectionIndex: PropTypes.number,
+    onOptionSelected: PropTypes.func,
+    displayOption: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+    defaultClassNames: PropTypes.bool
+};
+
+TypeaheadResultList.defaultProps = {
+    selectionIndex: null,
+    customClasses: {},
+    customValue: null,
+    onOptionSelected: function (option) {
+    },
+    defaultClassNames: true
+};
+
+export default TypeaheadResultList;
