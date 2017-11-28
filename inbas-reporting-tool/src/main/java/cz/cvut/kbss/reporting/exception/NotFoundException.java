@@ -3,10 +3,7 @@ package cz.cvut.kbss.reporting.exception;
 /**
  * Indicates that a resource was not found.
  */
-public class NotFoundException extends RuntimeException {
-
-    public NotFoundException() {
-    }
+public class NotFoundException extends ReportingToolException {
 
     public NotFoundException(String message) {
         super(message);

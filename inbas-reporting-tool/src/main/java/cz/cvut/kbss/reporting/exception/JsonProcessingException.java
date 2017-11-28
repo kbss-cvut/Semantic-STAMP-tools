@@ -3,7 +3,7 @@ package cz.cvut.kbss.reporting.exception;
 /**
  * Thrown when an error occurs during processing of JSON or JSON-LD data.
  */
-public class JsonProcessingException extends RuntimeException {
+public class JsonProcessingException extends ReportingToolException {
 
     public JsonProcessingException(String message) {
         super(message);

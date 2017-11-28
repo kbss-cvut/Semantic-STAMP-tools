@@ -3,10 +3,7 @@ package cz.cvut.kbss.reporting.exception;
 /**
  * High-level exception marking a validated object invalid.
  */
-public class ValidationException extends RuntimeException {
-
-    public ValidationException() {
-    }
+public class ValidationException extends ReportingToolException {
 
     public ValidationException(String message) {
         super(message);
