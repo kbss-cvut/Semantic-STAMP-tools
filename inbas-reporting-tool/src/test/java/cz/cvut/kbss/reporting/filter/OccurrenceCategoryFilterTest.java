@@ -6,6 +6,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
 
@@ -18,14 +23,24 @@ public class OccurrenceCategoryFilterTest {
     public void constructorRefusesNonUriValueWithValidationException() {
         final String value = "DELETE WHERE { ?x ?y ?z. }";
         thrown.expect(ValidationException.class);
-        thrown.expectMessage(containsString("is not a valid occurrence category URI."));
-        new OccurrenceCategoryFilter(value);
+        thrown.expectMessage(containsString("is not a valid URI."));
+        new OccurrenceCategoryFilter(Collections.singletonList(value));
     }
 
     @Test
-    public void toQueryStringProducesCorrectSparqlTriplePattern() {
+    public void toQueryStringWithSingleValueProducesCorrectSparqlTriplePattern() {
         final String value = Generator.generateUri().toString();
-        final ReportFilter filter = new OccurrenceCategoryFilter(value);
-        assertThat(filter.toQueryString(), containsString("?occurrence a <" + value + "> ."));
+        final ReportFilter filter = new OccurrenceCategoryFilter(Collections.singletonList(value));
+        assertThat(filter.toQueryString(), containsString("(?occurrenceType = <" + value + ">)"));
+    }
+
+    @Test
+    public void toQueryStringWithMultipleValuesProducesUnion() {
+        final List<String> values = IntStream.range(0, 5).mapToObj(i -> Generator.generateUri().toString()).collect(
+                Collectors.toList());
+        final ReportFilter filter = new OccurrenceCategoryFilter(values);
+        final String queryString = filter.toQueryString();
+        assertThat(queryString, containsString("(?occurrenceType IN ("));
+        values.forEach(v -> assertThat(queryString, containsString("<" + v + ">")));
     }
 }

@@ -1,8 +1,8 @@
 package cz.cvut.kbss.reporting.filter;
 
-import cz.cvut.kbss.reporting.exception.ValidationException;
-
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents report filtering by occurrence category.
@@ -11,20 +11,21 @@ class OccurrenceCategoryFilter extends ReportFilter {
 
     static final String KEY = "occurrenceCategory";
 
-    private final URI value;
+    private final List<String> values;
 
-    OccurrenceCategoryFilter(String value) {
-        assert value != null;
-        try {
-            this.value = URI.create(value);
-        } catch (IllegalArgumentException e) {
-            throw new ValidationException("\"" + value + "\" is not a valid occurrence category URI.", e);
-        }
+    OccurrenceCategoryFilter(List<String> values) {
+        assert values != null;
+        this.values = new ArrayList<>(values);
+        this.values.forEach(ReportFilter::validateUri);
     }
 
     @Override
     public String toQueryString() {
         // Note: This relies on variable naming in the corresponding query in OccurrenceReportDao
-        return String.format("?occurrence a <%s> .", value);
+        if (values.size() == 1) {
+            return "(?occurrenceType = <" + values.get(0) + ">)";
+        }
+        final List<String> uris = values.stream().map(v -> "<" + v + ">").collect(Collectors.toList());
+        return "(?occurrenceType IN (" + String.join(",", uris) + ")";
     }
 }

@@ -48,19 +48,25 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
         final List<cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport> res = em
                 .createNativeQuery("SELECT ?x WHERE { " +
                                 "?x a ?type ; " +
+                                "?hasKey ?key ;" +
                                 "?hasFileNumber ?fileNo ;" +
                                 "?hasRevision ?maxRev ;" +
+                                "?hasSeverity ?severity ;" +
                                 "?hasOccurrence ?occurrence ." +
-                                "?occurrence ?hasStartTime ?startTime ." +
+                                "?occurrence ?hasStartTime ?startTime ;" +
+                                "?hasEventType ?occurrenceType ." +
                                 "{ SELECT (MAX(?rev) AS ?maxRev) ?fileNo WHERE " +
                                 "{ ?y a ?type; ?hasFileNumber ?fileNo ; ?hasRevision ?rev . } GROUP BY ?fileNo }" +
                                 "} ORDER BY DESC(?startTime) DESC(?revision) LIMIT ?limit OFFSET ?offset",
                         cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport.class)
                 .setParameter("type", typeUri)
+                .setParameter("hasKey", URI.create(Vocabulary.s_p_has_key))
                 .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
+                .setParameter("hasSeverity", URI.create(Vocabulary.s_p_has_severity_assessment))
                 .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                 .setParameter("hasOccurrence", URI.create(Vocabulary.s_p_documents))
                 .setParameter("hasStartTime", URI.create(Vocabulary.s_p_has_start_time))
+                .setParameter("hasEventType", URI.create(Vocabulary.s_p_has_event_type))
                 .setUntypedParameter("limit", pageSpec.getPageSize())
                 .setUntypedParameter("offset", pageSpec.getPageSize() * pageSpec.getPageNumber())
                 .getResultList();

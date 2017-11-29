@@ -1,5 +1,9 @@
 package cz.cvut.kbss.reporting.filter;
 
+import cz.cvut.kbss.reporting.exception.ValidationException;
+
+import java.net.URI;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -19,21 +23,37 @@ public abstract class ReportFilter {
 
     /**
      * Creates a {@code ReportFilter} instance for the specified key.
+     * <p>
+     * If there are multiple values specified, they are interpreted as a logical OR, i.e. report with any of the values
+     * matches the search criteria.
      *
-     * @param key   Key supplied in request, used to determine type of filter
-     * @param value Value to filter by
+     * @param key    Key supplied in request, used to determine type of filter
+     * @param values Values to filter by
      * @return filter instance or an empty optional if no filter exists for the specified key
      */
-    public static Optional<ReportFilter> create(String key, String value) {
+    public static Optional<ReportFilter> create(String key, List<String> values) {
         Objects.requireNonNull(key);
-        Objects.requireNonNull(value);
+        Objects.requireNonNull(values);
         switch (key) {
             case OccurrenceCategoryFilter.KEY:
-                return Optional.of(new OccurrenceCategoryFilter(value));
+                return Optional.of(new OccurrenceCategoryFilter(values));
             case SeverityAssessmentFilter.KEY:
-                return Optional.of(new SeverityAssessmentFilter(value));
+                return Optional.of(new SeverityAssessmentFilter(values));
             default:
                 return Optional.empty();
+        }
+    }
+
+    /**
+     * Verifies that the specified value is a valid URI.
+     *
+     * @param value The value to validate
+     */
+    static void validateUri(String value) {
+        try {
+            URI.create(value);
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException("\"" + value + "\" is not a valid URI.", e);
         }
     }
 }

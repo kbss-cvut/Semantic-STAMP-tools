@@ -1,9 +1,8 @@
 package cz.cvut.kbss.reporting.filter;
 
-import cz.cvut.kbss.reporting.exception.ValidationException;
-import cz.cvut.kbss.reporting.model.Vocabulary;
-
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents report filtering by severity assessment (occurrence class in 376).
@@ -12,19 +11,21 @@ class SeverityAssessmentFilter extends ReportFilter {
 
     static final String KEY = "severityAssessment";
 
-    private final URI value;
+    private final List<String> values;
 
-    SeverityAssessmentFilter(String value) {
-        assert value != null;
-        try {
-            this.value = URI.create(value);
-        } catch (IllegalArgumentException e) {
-            throw new ValidationException("\"" + value + "\" is not a valid occurrence class URI.", e);
-        }
+    SeverityAssessmentFilter(List<String> values) {
+        assert values != null;
+        this.values = new ArrayList<>(values);
+        values.forEach(ReportFilter::validateUri);
     }
 
     @Override
     public String toQueryString() {
-        return String.format("?x <%s> <%s> .", Vocabulary.s_p_has_severity_assessment, value);
+        // Note: This relies on variable naming in the corresponding query in OccurrenceReportDao
+        if (values.size() == 1) {
+            return "(?severity = <" + values.get(0) + ">)";
+        }
+        final List<String> uris = values.stream().map(v -> "<" + v + ">").collect(Collectors.toList());
+        return "(?severity IN (" + String.join(",", uris) + ")";
     }
 }
