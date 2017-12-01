@@ -25,15 +25,19 @@ import java.util.stream.Collectors;
 @Primary
 public class MainReportService implements ReportBusinessService {
 
-    @Autowired
-    private ReportDao reportDao;
+    private final ReportDao reportDao;
 
-    @Autowired
-    private OccurrenceReportService occurrenceReportService;
+    private final OccurrenceReportService occurrenceReportService;
 
     private final Map<String, Class<? extends LogicalDocument>> entitiesToOwlClasses = new HashMap<>();
 
     private final Map<Class<? extends LogicalDocument>, BaseReportService<? extends LogicalDocument>> services = new HashMap<>();
+
+    @Autowired
+    public MainReportService(ReportDao reportDao, OccurrenceReportService occurrenceReportService) {
+        this.reportDao = reportDao;
+        this.occurrenceReportService = occurrenceReportService;
+    }
 
     @PostConstruct
     private void initServiceMap() {
@@ -64,21 +68,6 @@ public class MainReportService implements ReportBusinessService {
         result.sort(new DocumentDateAndRevisionComparator());
         // And return corresponding page
         return new PageImpl<>(result.subList(0, Math.min(result.size(), pageSpec.getPageSize())), pageSpec, 0L);
-    }
-
-    @Override
-    public List<ReportDto> findAll(Collection<String> keys) {
-        Objects.requireNonNull(keys);
-        final List<LogicalDocument> reports = new ArrayList<>(keys.size());
-        for (String key : keys) {
-            final LogicalDocument report = findByKey(key);
-            if (report != null) {
-                reports.add(report);
-            }
-        }
-        final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
-        result.sort(new DocumentDateAndRevisionComparator());
-        return result;
     }
 
     @Override

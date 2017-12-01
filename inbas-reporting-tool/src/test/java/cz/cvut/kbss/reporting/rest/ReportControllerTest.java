@@ -13,24 +13,33 @@ import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.environment.util.ReportRevisionComparator;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
+import cz.cvut.kbss.reporting.filter.OccurrenceCategoryFilter;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
+import cz.cvut.kbss.reporting.filter.ReportKeyFilter;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
+import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,7 +77,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Test
     public void getAllReportsReturnsEmptyCollectionWhenThereAreNoReports() throws Exception {
-        when(reportServiceMock.findAll()).thenReturn(Collections.emptyList());
+        when(reportServiceMock.findAll(any(Pageable.class), anyCollection())).thenReturn(Page.empty());
         final MvcResult result = mockMvc.perform(get("/reports").accept(MediaType.APPLICATION_JSON_VALUE))
                                         .andExpect(status().isOk()).andReturn();
         final List<ReportDto> res = objectMapper
@@ -89,7 +98,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
             r.setKey(k);
             return r.toReportDto();
         }).collect(Collectors.toList());
-        when(reportServiceMock.findAll(keys)).thenReturn(reports);
+        when(reportServiceMock.findAll(any(Pageable.class), anyCollection())).thenReturn(new PageImpl<>(reports));
 
         final MvcResult result = mockMvc.perform(get("/reports").param("key", keys.toArray(new String[keys.size()])))
                                         .andExpect(status().isOk()).andReturn();
@@ -97,7 +106,10 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         });
         assertNotNull(res);
         assertTrue(Environment.areEqual(reports, res));
-        verify(reportServiceMock).findAll(keys);
+        final ArgumentCaptor<Collection<ReportFilter>> captor = ArgumentCaptor.forClass(Collection.class);
+        verify(reportServiceMock).findAll(any(Pageable.class), captor.capture());
+        assertEquals(1, captor.getValue().size());
+        assertEquals(ReportFilter.create(ReportKeyFilter.KEY, keys).get(), captor.getValue().iterator().next());
     }
 
     @Test
@@ -371,5 +383,31 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     public void createFromInitialReturnsBadRequestWhenInitialReportIsMissing() throws Exception {
         mockMvc.perform(post(REPORTS_PATH + "initial").contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void findAllExtractsFiltersFromQueryParameters() throws Exception {
+        final List<String> cats = IntStream.range(0, 5).mapToObj(i -> Generator.generateEventType().toString()).collect(
+                Collectors.toList());
+        when(reportServiceMock.findAll(any(Pageable.class), anyCollection()))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        mockMvc.perform(get(REPORTS_PATH).param(OccurrenceCategoryFilter.KEY, cats.toArray(new String[cats.size()])))
+               .andExpect(status().isOk());
+        final ReportFilter expectedFilter = ReportFilter.create(OccurrenceCategoryFilter.KEY, cats).get();
+        verify(reportServiceMock).findAll(any(Pageable.class), eq(Collections.singletonList(expectedFilter)));
+    }
+
+    @Test
+    public void findAllBuildsPageRequestFromQueryParameters() throws Exception {
+        final int pageNo = 0;
+        final int pageSize = 10;
+        when(reportServiceMock.findAll(any(Pageable.class), anyCollection()))
+                .thenReturn(new PageImpl<>(Collections.emptyList()));
+        mockMvc.perform(get(REPORTS_PATH).param(Constants.PAGE, Integer.toString(pageNo))
+                                         .param(Constants.PAGE_SIZE, Integer.toString(pageSize)))
+               .andExpect(status().isOk());
+        final ArgumentCaptor<Collection<ReportFilter>> captor = ArgumentCaptor.forClass(Collection.class);
+        verify(reportServiceMock).findAll(eq(PageRequest.of(pageNo, pageSize)), captor.capture());
+        assertTrue(captor.getValue().isEmpty());
     }
 }

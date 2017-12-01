@@ -4,6 +4,7 @@ import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportList;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
@@ -12,9 +13,11 @@ import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.reporting.service.data.export.ReportExporter;
 import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
+import cz.cvut.kbss.reporting.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,15 +27,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/reports")
 public class ReportController extends BaseController {
-
-    private static final String REPORT_KEY_PARAM = "key";
 
     private final ReportBusinessService reportService;
 
@@ -52,19 +54,23 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ReportList getAllReports(@RequestParam(name = "page", required = false) Integer page,
-                                    @RequestParam(name = "size", required = false) Integer pageSize,
+    public ReportList getAllReports(@RequestParam(name = Constants.PAGE, required = false) Integer page,
+                                    @RequestParam(name = Constants.PAGE_SIZE, required = false) Integer pageSize,
                                     @RequestParam MultiValueMap<String, String> params) {
-        if (params.containsKey(REPORT_KEY_PARAM)) {
-            final Collection<String> keys = params.get(REPORT_KEY_PARAM);
-            return new ReportList(reportService.findAll(keys));
+        return new ReportList(
+                reportService.findAll(buildPageRequest(page, pageSize), buildFilters(params)).getContent());
+    }
+
+    private Pageable buildPageRequest(Integer page, Integer pageSize) {
+        return PageRequest.of(page != null ? page : 0, pageSize != null ? pageSize : Integer.MAX_VALUE);
+    }
+
+    private Collection<ReportFilter> buildFilters(MultiValueMap<String, String> reqParams) {
+        final List<ReportFilter> filters = new ArrayList<>(reqParams.size());
+        for (Map.Entry<String, List<String>> param : reqParams.entrySet()) {
+            ReportFilter.create(param.getKey(), param.getValue()).ifPresent(filters::add);
         }
-        if (pageSize != null) {
-            // TODO
-            return new ReportList(
-                    reportService.findAll(PageRequest.of(page, pageSize), Collections.emptyList()).getContent());
-        }
-        return new ReportList(reportService.findAll());
+        return filters;
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -232,5 +238,4 @@ public class ReportController extends BaseController {
             throw new RuntimeException(message, e);
         }
     }
-
 }

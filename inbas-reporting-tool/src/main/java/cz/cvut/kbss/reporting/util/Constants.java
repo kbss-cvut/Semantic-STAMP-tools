@@ -125,6 +125,16 @@ public final class Constants {
     public static final String QUERY_QUERY_PARAM = "query";
 
     /**
+     * Query parameter for specifying page number.
+     */
+    public static final String PAGE = "page";
+
+    /**
+     * Query parameter for specifying page size.
+     */
+    public static final String PAGE_SIZE = "size";
+
+    /**
      * Maximum length of a description used by the {@code toString} method.
      * <p>
      * Anything longer that this threshold may be trimmed.

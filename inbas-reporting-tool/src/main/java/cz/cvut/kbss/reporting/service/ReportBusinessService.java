@@ -44,20 +44,6 @@ public interface ReportBusinessService {
     Page<ReportDto> findAll(Pageable pageSpec, Collection<ReportFilter> filters);
 
     /**
-     * Gets reports with the specified keys.
-     * <p>
-     * If no matching report is found for any of the keys, it is simply skipped, no exception is thrown.
-     * <p>
-     * The reports are sorted using the {@link DocumentDateAndRevisionComparator}.
-     *
-     * @param keys Array of report identifiers
-     * @return List of matching reports
-     */
-    @Deprecated
-    // TODO Remove
-    List<ReportDto> findAll(Collection<String> keys);
-
-    /**
      * Creates new report.
      *
      * @param report The instance to persist

@@ -28,4 +28,19 @@ public class OccurrenceCategoryFilter extends ReportFilter {
         final List<String> uris = values.stream().map(v -> "<" + v + ">").collect(Collectors.toList());
         return "?occurrenceCategory IN (" + String.join(",", uris) + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OccurrenceCategoryFilter)) return false;
+
+        OccurrenceCategoryFilter that = (OccurrenceCategoryFilter) o;
+
+        return values.equals(that.values);
+    }
+
+    @Override
+    public int hashCode() {
+        return values.hashCode();
+    }
 }

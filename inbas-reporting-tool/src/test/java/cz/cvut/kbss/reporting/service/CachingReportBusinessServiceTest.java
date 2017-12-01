@@ -12,7 +12,6 @@ import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.reporting.service.cache.ReportCache;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -208,17 +206,6 @@ public class CachingReportBusinessServiceTest extends BaseServiceTestRunner {
         assertEquals(chain.size(), revisions.size());
     }
 
-    @Test
-    public void findAllUsingKeysReadsReportsDirectlyFromDao() {
-        final List<LogicalDocument> latestRevisions = initReportChains();
-        final List<String> keys = latestRevisions.stream().map(LogicalDocument::getKey).collect(Collectors.toList());
-
-        final List<ReportDto> result = reportService.findAll(keys);
-        assertFalse(reportCache.isInitialized());
-        assertEquals(keys.size(), result.size());
-    }
-
-    @Ignore     // For now
     @Test
     public void findAllPagedReturnsCachedReportsWhenCacheIsInitialized() {
         final List<LogicalDocument> reports = initReportChains();

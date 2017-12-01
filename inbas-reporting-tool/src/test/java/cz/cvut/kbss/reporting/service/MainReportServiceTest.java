@@ -14,10 +14,8 @@ import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.util.HasOwlKey;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
-import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +28,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -251,16 +248,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertEquals(expected, result.getPhase());
     }
 
-    @Test
-    public void findAllWithKeysReturnsListOfMatchingReports() {
-        final List<LogicalDocument> reports = generateReportsForFindAllFilter();
-        final List<String> keys = reports.stream().map(HasOwlKey::getKey).collect(Collectors.toList());
-
-        final List<ReportDto> result = reportService.findAll(keys);
-        assertNotNull(result);
-        assertTrue(Environment.areEqual(reports, result));
-    }
-
     private List<LogicalDocument> generateReportsForFindAllFilter() {
         final List<LogicalDocument> list = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(5, 10); i++) {
@@ -268,21 +255,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
             list.add(chain.get(Generator.randomIndex(chain)));
         }
         return list;
-    }
-
-    @Test
-    public void findAllWithKeysSkipsKeysForWhichNoReportExists() {
-        final List<LogicalDocument> reports = generateReportsForFindAllFilter();
-        final List<String> keys = reports.stream().map(HasOwlKey::getKey).collect(Collectors.toList());
-        final int unknownKeyCount = Generator.randomInt(5, 10);
-        for (int i = 0; i < unknownKeyCount; i++) {
-            keys.add(IdentificationUtils.generateKey());
-        }
-
-        final List<ReportDto> result = reportService.findAll(keys);
-        assertNotNull(result);
-        assertEquals(keys.size() - unknownKeyCount, result.size());
-        assertTrue(Environment.areEqual(reports, result));
     }
 
     @Test
