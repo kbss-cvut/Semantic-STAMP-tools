@@ -1,14 +1,29 @@
 package cz.cvut.kbss.reporting.service;
 
 import cz.cvut.kbss.reporting.exception.NotFoundException;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Collection;
 
 /**
  * Base interface which every report-specific service has to implement.
  *
  * @param <T> Report type
  */
-interface BaseReportService<T extends LogicalDocument> extends PagingService<T> {
+interface BaseReportService<T extends LogicalDocument> extends BaseService<T> {
+
+    /**
+     * Gets a page of reports corresponding to the specified filters.
+     *
+     * @param pageSpec Page specification
+     * @param filters  Filters, can be empty
+     * @return Page of matching reports
+     * @throws NullPointerException if {@code pageSpec} or {@code filters} is {@code null}
+     */
+    Page<T> findAll(Pageable pageSpec, Collection<ReportFilter> filters);
 
     /**
      * Finds instance with the specified key.

@@ -350,7 +350,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final int pageSize = 5;
         final int pageNo = 1;   // Page numbers start from 0
         final Pageable pageReq = PageRequest.of(pageNo, pageSize);
-        final Page<OccurrenceReport> page = occurrenceReportDao.findAll(pageReq);
+        final Page<OccurrenceReport> page = occurrenceReportDao.findAll(pageReq, Collections.emptyList());
         assertNotNull(page);
         final List<OccurrenceReport> result = page.getContent();
         assertEquals(pageSize, result.size());
@@ -373,7 +373,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final int pageNo = 1;
         final int pageSize = reports.size() / (pageNo + 1) + 1;
         final Pageable pageReq = PageRequest.of(pageNo, pageSize);
-        final Page<OccurrenceReport> page = occurrenceReportDao.findAll(pageReq);
+        final Page<OccurrenceReport> page = occurrenceReportDao.findAll(pageReq, Collections.emptyList());
         assertNotNull(page);
         assertEquals(pageNo, page.getNumber());
         assertEquals(pageSize, page.getSize());

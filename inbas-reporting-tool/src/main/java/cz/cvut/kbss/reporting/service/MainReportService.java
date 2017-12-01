@@ -4,6 +4,7 @@ import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.UnsupportedReportTypeException;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
@@ -55,10 +56,10 @@ public class MainReportService implements ReportBusinessService {
     }
 
     @Override
-    public Page<ReportDto> findAll(Pageable pageSpec) {
+    public Page<ReportDto> findAll(Pageable pageSpec, Collection<ReportFilter> filters) {
         final List<LogicalDocument> reports = new ArrayList<>();
         // Combine reports from all services
-        services.values().forEach(service -> reports.addAll(service.findAll(pageSpec).getContent()));
+        services.values().forEach(service -> reports.addAll(service.findAll(pageSpec, filters).getContent()));
         final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
         result.sort(new DocumentDateAndRevisionComparator());
         // And return corresponding page

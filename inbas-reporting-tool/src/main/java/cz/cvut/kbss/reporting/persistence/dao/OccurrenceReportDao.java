@@ -52,17 +52,6 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
     }
 
     @Override
-    public Page<OccurrenceReport> findAll(Pageable pageSpec) {
-        Objects.requireNonNull(pageSpec);
-        final EntityManager em = entityManager();
-        try {
-            return findAll(pageSpec, Collections.emptyList(), em);
-        } finally {
-            em.close();
-        }
-    }
-
-    @Override
     public Page<OccurrenceReport> findAll(Pageable pageSpec, Collection<ReportFilter> filters) {
         Objects.requireNonNull(pageSpec);
         Objects.requireNonNull(filters);

@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupportingDao<T> implements PagingDao<T> {
+abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupportingDao<T> {
 
     final URI typeIri;
 
@@ -115,7 +115,6 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
                 return;
             }
             em.getTransaction().begin();
-            // Better call the remove method instead of directly remove on EM in case there is some additional remove logic
             chain.forEach(r -> remove(r, em));
             em.getTransaction().commit();
         } finally {

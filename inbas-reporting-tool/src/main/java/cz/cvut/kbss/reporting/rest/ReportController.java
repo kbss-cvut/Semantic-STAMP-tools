@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -59,7 +60,9 @@ public class ReportController extends BaseController {
             return new ReportList(reportService.findAll(keys));
         }
         if (pageSize != null) {
-            return new ReportList(reportService.findAll(PageRequest.of(page, pageSize)).getContent());
+            // TODO
+            return new ReportList(
+                    reportService.findAll(PageRequest.of(page, pageSize), Collections.emptyList()).getContent());
         }
         return new ReportList(reportService.findAll());
     }

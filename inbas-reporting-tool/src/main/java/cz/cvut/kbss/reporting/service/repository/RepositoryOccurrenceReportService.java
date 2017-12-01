@@ -5,6 +5,7 @@ import cz.cvut.kbss.reporting.factorgraph.EventChildIndexer;
 import cz.cvut.kbss.reporting.factorgraph.traversal.DefaultFactorGraphTraverser;
 import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.persistence.dao.InitialReportDao;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
 
@@ -139,8 +141,9 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     }
 
     @Override
-    public Page<OccurrenceReport> findAll(Pageable pageSpec) {
+    public Page<OccurrenceReport> findAll(Pageable pageSpec, Collection<ReportFilter> filters) {
         Objects.requireNonNull(pageSpec);
-        return reportDao.findAll(pageSpec);
+        Objects.requireNonNull(filters);
+        return reportDao.findAll(pageSpec, filters);
     }
 }

@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.service;
 
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.service.cache.ReportCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +42,11 @@ public class CachingReportBusinessService implements ReportBusinessService {
     }
 
     @Override
-    public Page<ReportDto> findAll(Pageable pageSpec) {
-        if (reportCache.isInitialized()) {
-            return reportCache.getAll(pageSpec);
-        }
-        return reportService.findAll(pageSpec);
+    public Page<ReportDto> findAll(Pageable pageSpec, Collection<ReportFilter> filters) {
+//        if (reportCache.isInitialized()) {
+//            return reportCache.getAll(pageSpec);
+//        }
+        return reportService.findAll(pageSpec, filters);
     }
 
     @Override

@@ -8,6 +8,8 @@ import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.environment.util.UnsupportedReport;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.UnsupportedReportTypeException;
+import cz.cvut.kbss.reporting.filter.OccurrenceCategoryFilter;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
@@ -26,6 +28,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -288,7 +291,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         generateReports(count);
         final Pageable pageSpec = PageRequest.of(0, 5);
 
-        final Page<ReportDto> result = reportService.findAll(pageSpec);
+        final Page<ReportDto> result = reportService.findAll(pageSpec, Collections.emptyList());
         assertEquals(pageSpec.getPageSize(), result.getNumberOfElements());
     }
 
@@ -302,10 +305,13 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Test
     public void pageableFindAllHandlesSituationWhenPageSizeIsBiggerThanResultSize() {
         final int count = 10;
-        generateReports(count);
-        final Pageable pageSpec = PageRequest.of(0, count + 1);
+        final List<OccurrenceReport> reports = generateReports(count);
+        final URI occurrenceCategory = reports.get(0).getOccurrence().getEventType();
+        final ReportFilter filter = ReportFilter
+                .create(OccurrenceCategoryFilter.KEY, Collections.singletonList(occurrenceCategory.toString())).get();
+        final Pageable pageSpec = PageRequest.of(0, count);
 
-        final Page<ReportDto> result = reportService.findAll(pageSpec);
-        assertEquals(count, result.getNumberOfElements());
+        final Page<ReportDto> result = reportService.findAll(pageSpec, Collections.singletonList(filter));
+        assertTrue(result.getNumberOfElements() < count);
     }
 }

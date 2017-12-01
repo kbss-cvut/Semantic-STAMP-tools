@@ -9,6 +9,8 @@ import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.factorgraph.FactorGraphNodeVisitor;
 import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
+import cz.cvut.kbss.reporting.filter.OccurrenceCategoryFilter;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
@@ -103,7 +105,8 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     }
 
     @Test
-    public void createNewRevisionPersistsNewReportWithIncreasedRevisionNumberSameFileNumberCurrentUserAsAuthorCurrentTimeAsCreationDate() throws Exception {
+    public void createNewRevisionPersistsNewReportWithIncreasedRevisionNumberSameFileNumberCurrentUserAsAuthorCurrentTimeAsCreationDate()
+            throws Exception {
         final OccurrenceReport firstRevision = persistFirstRevision(false);
         Thread.sleep(100);
         final OccurrenceReport newRevision = occurrenceReportService.createNewRevision(firstRevision.getFileNumber());
@@ -481,9 +484,25 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         final List<OccurrenceReport> reports = OccurrenceReportGenerator.generateReports(false, count);
         occurrenceReportService.persist(reports);
         final Pageable pageSpec = PageRequest.of(0, 2);
-        final Page<OccurrenceReport> result = occurrenceReportService.findAll(pageSpec);
+        final Page<OccurrenceReport> result = occurrenceReportService.findAll(pageSpec, Collections.emptyList());
         assertEquals(2, result.getNumberOfElements());
         assertEquals(reports.get(0).getUri(), result.getContent().get(0).getUri());
         assertEquals(reports.get(1).getUri(), result.getContent().get(1).getUri());
+    }
+
+    @Test
+    public void findAllWithFiltersReturnsMatchingPageWithReports() {
+        final int count = 10;
+        final List<OccurrenceReport> reports = OccurrenceReportGenerator.generateReports(false, count);
+        occurrenceReportService.persist(reports);
+        final URI eventType = reports.get(0).getOccurrence().getEventType();
+        final Pageable pageSpec = PageRequest.of(0, count);
+        final ReportFilter filter = ReportFilter
+                .create(OccurrenceCategoryFilter.KEY, Collections.singletonList(eventType.toString())).get();
+
+        final Page<OccurrenceReport> result = occurrenceReportService
+                .findAll(pageSpec, Collections.singletonList(filter));
+        assertTrue(result.getNumberOfElements() > 0);
+        result.getContent().forEach(r -> assertEquals(eventType, r.getOccurrence().getEventType()));
     }
 }

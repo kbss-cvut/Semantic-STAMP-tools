@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.service;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
 import org.springframework.data.domain.Page;
@@ -28,16 +29,19 @@ public interface ReportBusinessService {
      * The reports are sorted using the {@link DocumentDateAndRevisionComparator}.
      *
      * @return All reports in the system
+     * @deprecated Use {@link #findAll(Pageable, Collection)}
      */
+    @Deprecated
     List<ReportDto> findAll();
 
     /**
-     * Gets a page of all reports lists.
+     * Gets a page of reports matching the specified filters (if present).
      *
      * @param pageSpec Specification of the page to retrieve
+     * @param filters  Filters to use on reports. Optional, use empty collection if there are not filters
      * @return Page of reports
      */
-    Page<ReportDto> findAll(Pageable pageSpec);
+    Page<ReportDto> findAll(Pageable pageSpec, Collection<ReportFilter> filters);
 
     /**
      * Gets reports with the specified keys.
@@ -49,6 +53,8 @@ public interface ReportBusinessService {
      * @param keys Array of report identifiers
      * @return List of matching reports
      */
+    @Deprecated
+    // TODO Remove
     List<ReportDto> findAll(Collection<String> keys);
 
     /**
