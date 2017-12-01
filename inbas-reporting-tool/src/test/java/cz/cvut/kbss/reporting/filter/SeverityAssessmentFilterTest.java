@@ -28,14 +28,14 @@ public class SeverityAssessmentFilterTest {
     }
 
     @Test
-    public void toQueryStringWithSingleValueProducesCorrectSparqlTriplePattern() {
+    public void toQueryStringWithSingleValueProducesCorrectEqualityFilter() {
         final String value = Generator.generateUri().toString();
         final ReportFilter filter = new SeverityAssessmentFilter(Collections.singletonList(value));
         assertThat(filter.toQueryString(), containsString("?severity = <" + value + ">"));
     }
 
     @Test
-    public void toQueryStringWithMultipleValuesProducesUnion() {
+    public void toQueryStringWithMultipleValuesProducesFilterIn() {
         final List<String> values = IntStream.range(0, 5).mapToObj(i -> Generator.generateUri().toString()).collect(
                 Collectors.toList());
         final ReportFilter filter = new SeverityAssessmentFilter(values);

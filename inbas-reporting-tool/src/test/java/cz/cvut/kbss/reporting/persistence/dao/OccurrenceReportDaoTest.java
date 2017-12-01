@@ -6,6 +6,7 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.filter.OccurrenceCategoryFilter;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
+import cz.cvut.kbss.reporting.filter.ReportKeyFilter;
 import cz.cvut.kbss.reporting.filter.SeverityAssessmentFilter;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
@@ -457,5 +458,19 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         assertTrue(result.getNumberOfElements() > 0);
         result.getContent().forEach(r -> assertThat(r.getOccurrence().getEventType(),
                 Matchers.anyOf(Matchers.equalTo(categoryOne), Matchers.equalTo(categoryTwo))));
+    }
+
+    @Test
+    public void findAllReturnsMatchingReportKeyFilter() {
+        final List<OccurrenceReport> reports = generateReports();
+        occurrenceReportDao.persist(reports);
+        final Set<String> keys = reports.stream().filter(r -> Generator.randomBoolean()).map(AbstractReport::getKey)
+                                        .collect(Collectors.toSet());
+        final ReportFilter filter = ReportFilter.create(ReportKeyFilter.KEY, new ArrayList<>(keys)).get();
+
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.singletonList(filter));
+        assertEquals(keys.size(), result.getNumberOfElements());
+        result.getContent().forEach(r -> assertTrue(keys.contains(r.getKey())));
     }
 }

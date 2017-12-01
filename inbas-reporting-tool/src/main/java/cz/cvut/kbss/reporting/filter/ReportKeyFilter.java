@@ -1,6 +1,10 @@
 package cz.cvut.kbss.reporting.filter;
 
+import cz.cvut.kbss.reporting.util.Constants;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Allows to filter reports by their key.
@@ -9,12 +13,19 @@ public class ReportKeyFilter extends ReportFilter {
 
     public static final String KEY = "key";
 
-    public ReportKeyFilter(List<String> values) {
+    private final List<String> values;
+
+    ReportKeyFilter(List<String> values) {
+        assert values != null;
+        this.values = new ArrayList<>(values);
     }
 
     @Override
     public String toQueryString() {
-        // TODO
-        return null;
+        if (values.size() == 1) {
+            return "?key = \"" + values.get(0) + "\"@" + Constants.PU_LANGUAGE;
+        }
+        return "?key IN (" + String.join(",",
+                values.stream().map(v -> "\"" + v + "\"@" + Constants.PU_LANGUAGE).collect(Collectors.toList())) + ")";
     }
 }
