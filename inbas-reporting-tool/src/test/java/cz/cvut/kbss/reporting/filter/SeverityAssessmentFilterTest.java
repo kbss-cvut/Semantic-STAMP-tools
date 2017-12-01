@@ -31,7 +31,7 @@ public class SeverityAssessmentFilterTest {
     public void toQueryStringWithSingleValueProducesCorrectSparqlTriplePattern() {
         final String value = Generator.generateUri().toString();
         final ReportFilter filter = new SeverityAssessmentFilter(Collections.singletonList(value));
-        assertThat(filter.toQueryString(), containsString("(?severity = <" + value + ">)"));
+        assertThat(filter.toQueryString(), containsString("?severity = <" + value + ">"));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class SeverityAssessmentFilterTest {
                 Collectors.toList());
         final ReportFilter filter = new SeverityAssessmentFilter(values);
         final String queryString = filter.toQueryString();
-        assertThat(queryString, containsString("(?severity IN ("));
+        assertThat(queryString, containsString("?severity IN ("));
         values.forEach(v -> assertThat(queryString, containsString("<" + v + ">")));
     }
 }

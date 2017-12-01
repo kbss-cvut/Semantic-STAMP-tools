@@ -39,6 +39,8 @@ public abstract class ReportFilter {
                 return Optional.of(new OccurrenceCategoryFilter(values));
             case SeverityAssessmentFilter.KEY:
                 return Optional.of(new SeverityAssessmentFilter(values));
+            case ReportKeyFilter.KEY:
+                return Optional.of(new ReportKeyFilter(values));
             default:
                 return Optional.empty();
         }

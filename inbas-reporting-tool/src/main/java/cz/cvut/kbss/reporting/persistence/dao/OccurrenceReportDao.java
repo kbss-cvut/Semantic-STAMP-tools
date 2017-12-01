@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.persistence.dao;
 
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Vocabulary;
@@ -14,11 +15,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
 public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
+
+    private static final String SELECT = "SELECT ?x WHERE { ";
+    private static final String WHERE_CONDITION = "?x a ?type ; " +
+            "?hasKey ?key ;" +
+            "?hasFileNumber ?fileNo ;" +
+            "?hasRevision ?maxRev ;" +
+            "?hasOccurrence ?occurrence ." +
+            "OPTIONAL { ?x ?hasSeverity ?severity . }" +
+            "?occurrence ?hasStartTime ?startTime ;" +
+            "?hasEventType ?occurrenceCategory ." +
+            "{ SELECT (MAX(?rev) AS ?maxRev) ?fileNo WHERE " +
+            "{ ?y a ?type; ?hasFileNumber ?fileNo ; ?hasRevision ?rev . } GROUP BY ?fileNo }";
+    private static final String QUERY_TAIL = "} ORDER BY DESC(?startTime) DESC(?revision) LIMIT ?limit OFFSET ?offset";
 
     private final OccurrenceDao occurrenceDao;
 
@@ -31,33 +48,35 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
     @Override
     protected List<OccurrenceReport> findAll(EntityManager em) {
         final Pageable pageSpec = PageRequest.of(0, Integer.MAX_VALUE);
-        return findAll(pageSpec, em).getContent();
+        return findAll(pageSpec, Collections.emptyList(), em).getContent();
     }
 
     @Override
     public Page<OccurrenceReport> findAll(Pageable pageSpec) {
+        Objects.requireNonNull(pageSpec);
         final EntityManager em = entityManager();
         try {
-            return findAll(pageSpec, em);
+            return findAll(pageSpec, Collections.emptyList(), em);
         } finally {
             em.close();
         }
     }
 
-    private Page<OccurrenceReport> findAll(Pageable pageSpec, EntityManager em) {
+    @Override
+    public Page<OccurrenceReport> findAll(Pageable pageSpec, Collection<ReportFilter> filters) {
+        Objects.requireNonNull(pageSpec);
+        Objects.requireNonNull(filters);
+        final EntityManager em = entityManager();
+        try {
+            return findAll(pageSpec, filters, em);
+        } finally {
+            em.close();
+        }
+    }
+
+    private Page<OccurrenceReport> findAll(Pageable pageSpec, Collection<ReportFilter> filters, EntityManager em) {
         final List<cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport> res = em
-                .createNativeQuery("SELECT ?x WHERE { " +
-                                "?x a ?type ; " +
-                                "?hasKey ?key ;" +
-                                "?hasFileNumber ?fileNo ;" +
-                                "?hasRevision ?maxRev ;" +
-                                "?hasSeverity ?severity ;" +
-                                "?hasOccurrence ?occurrence ." +
-                                "?occurrence ?hasStartTime ?startTime ;" +
-                                "?hasEventType ?occurrenceType ." +
-                                "{ SELECT (MAX(?rev) AS ?maxRev) ?fileNo WHERE " +
-                                "{ ?y a ?type; ?hasFileNumber ?fileNo ; ?hasRevision ?rev . } GROUP BY ?fileNo }" +
-                                "} ORDER BY DESC(?startTime) DESC(?revision) LIMIT ?limit OFFSET ?offset",
+                .createNativeQuery(buildQuery(filters),
                         cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport.class)
                 .setParameter("type", typeUri)
                 .setParameter("hasKey", URI.create(Vocabulary.s_p_has_key))
@@ -73,6 +92,19 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
         return new PageImpl<>(
                 res.stream().map(cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport::toOccurrenceReport)
                    .collect(Collectors.toList()), pageSpec, 0L);
+    }
+
+    private String buildQuery(Collection<ReportFilter> filters) {
+        final StringBuilder sb = new StringBuilder(SELECT);
+        sb.append(WHERE_CONDITION);
+        if (!filters.isEmpty()) {
+            sb.append(" FILTER (");
+            sb.append(String.join(" && ",
+                    filters.stream().map(ReportFilter::toQueryString).collect(Collectors.toList())));
+            sb.append(')');
+        }
+        sb.append(QUERY_TAIL);
+        return sb.toString();
     }
 
     @Override

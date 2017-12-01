@@ -4,11 +4,15 @@ import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.exceptions.NoUniqueResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +26,16 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
         assert owlClass != null;
         this.typeIri = URI.create(owlClass.iri());
     }
+
+    /**
+     * Gets a page of reports corresponding to the specified filters.
+     *
+     * @param pageSpec Page specification
+     * @param filters  Filters, can be empty
+     * @return Page of matching reports
+     * @throws NullPointerException if {@code pageSpec} or {@code filters} is {@code null}
+     */
+    public abstract Page<T> findAll(Pageable pageSpec, Collection<ReportFilter> filters);
 
     /**
      * Gets latest revision in report chain with the specified file number.
@@ -111,7 +125,8 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
 
     private List<T> loadChain(Long fileNumber, EntityManager em) {
         return em.createNativeQuery("SELECT ?x WHERE { ?x a ?type; ?hasFileNumber ?fileNo . }", type)
-                 .setParameter("type", typeIri).setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
+                 .setParameter("type", typeIri)
+                 .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                  .setParameter("fileNo", fileNumber).getResultList();
     }
 }

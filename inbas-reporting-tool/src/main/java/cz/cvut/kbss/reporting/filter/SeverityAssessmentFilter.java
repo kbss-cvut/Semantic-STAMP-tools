@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 /**
  * Represents report filtering by severity assessment (occurrence class in 376).
  */
-class SeverityAssessmentFilter extends ReportFilter {
+public class SeverityAssessmentFilter extends ReportFilter {
 
-    static final String KEY = "severityAssessment";
+    public static final String KEY = "severityAssessment";
 
     private final List<String> values;
 
@@ -23,9 +23,9 @@ class SeverityAssessmentFilter extends ReportFilter {
     public String toQueryString() {
         // Note: This relies on variable naming in the corresponding query in OccurrenceReportDao
         if (values.size() == 1) {
-            return "(?severity = <" + values.get(0) + ">)";
+            return "?severity = <" + values.get(0) + ">";
         }
         final List<String> uris = values.stream().map(v -> "<" + v + ">").collect(Collectors.toList());
-        return "(?severity IN (" + String.join(",", uris) + ")";
+        return "?severity IN (" + String.join(",", uris) + ")";
     }
 }

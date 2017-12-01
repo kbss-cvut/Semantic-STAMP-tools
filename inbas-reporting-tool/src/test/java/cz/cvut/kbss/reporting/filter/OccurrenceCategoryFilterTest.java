@@ -31,7 +31,7 @@ public class OccurrenceCategoryFilterTest {
     public void toQueryStringWithSingleValueProducesCorrectSparqlTriplePattern() {
         final String value = Generator.generateUri().toString();
         final ReportFilter filter = new OccurrenceCategoryFilter(Collections.singletonList(value));
-        assertThat(filter.toQueryString(), containsString("(?occurrenceType = <" + value + ">)"));
+        assertThat(filter.toQueryString(), containsString("?occurrenceCategory = <" + value + ">"));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class OccurrenceCategoryFilterTest {
                 Collectors.toList());
         final ReportFilter filter = new OccurrenceCategoryFilter(values);
         final String queryString = filter.toQueryString();
-        assertThat(queryString, containsString("(?occurrenceType IN ("));
+        assertThat(queryString, containsString("?occurrenceCategory IN ("));
         values.forEach(v -> assertThat(queryString, containsString("<" + v + ">")));
     }
 }

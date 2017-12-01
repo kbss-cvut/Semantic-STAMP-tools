@@ -4,8 +4,12 @@ import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
+import cz.cvut.kbss.reporting.filter.OccurrenceCategoryFilter;
+import cz.cvut.kbss.reporting.filter.ReportFilter;
+import cz.cvut.kbss.reporting.filter.SeverityAssessmentFilter;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
+import org.hamcrest.Matchers;
 import org.hamcrest.number.OrderingComparison;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static cz.cvut.kbss.reporting.environment.util.TestUtils.verifyAllInstancesRemoved;
 import static org.junit.Assert.*;
@@ -372,5 +378,84 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         assertEquals(pageNo, page.getNumber());
         assertEquals(pageSize, page.getSize());
         assertThat(page.getNumberOfElements(), OrderingComparison.lessThan(pageSize));
+    }
+
+    @Test
+    public void findAllReturnsReportsWithMatchingOccurrenceCategory() {
+        final URI occurrenceCategory = Generator.generateEventType();
+        final List<OccurrenceReport> matching = generateReportsForFiltering(
+                r -> r.getOccurrence().setEventType(occurrenceCategory));
+
+        final ReportFilter filter = ReportFilter.create(OccurrenceCategoryFilter.KEY,
+                Collections.singletonList(occurrenceCategory.toString())).get();
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.singletonList(filter));
+        assertEquals(matching.size(), result.getNumberOfElements());
+        for (int i = 0; i < matching.size(); i++) {
+            assertEquals(matching.get(i).getUri(), result.getContent().get(i).getUri());
+        }
+    }
+
+    private List<OccurrenceReport> generateReportsForFiltering(Consumer<OccurrenceReport> transformation) {
+        final List<OccurrenceReport> allReports = generateReports();
+        final List<OccurrenceReport> matching = allReports.stream().filter(r -> Generator.randomBoolean())
+                                                          .peek(transformation)
+                                                          .collect(Collectors.toList());
+        matching.sort(Comparator.comparing((OccurrenceReport r) -> r.getOccurrence().getStartTime()).reversed());
+        occurrenceReportDao.persist(allReports);
+        return matching;
+    }
+
+    @Test
+    public void findAllReturnsReportsWithMatchingSeverityAssessment() {
+        final URI severity = Generator.generateUri();
+        final List<OccurrenceReport> matching = generateReportsForFiltering(r -> r.setSeverityAssessment(severity));
+
+        final ReportFilter filter = ReportFilter.create(SeverityAssessmentFilter.KEY,
+                Collections.singletonList(severity.toString())).get();
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.singletonList(filter));
+        assertEquals(matching.size(), result.getNumberOfElements());
+        for (int i = 0; i < matching.size(); i++) {
+            assertEquals(matching.get(i).getUri(), result.getContent().get(i).getUri());
+        }
+    }
+
+    @Test
+    public void findAllReturnsReportsMatchingCombinedOccurrenceCategoryAndSeverityFilter() {
+        final URI severity = Generator.generateUri();
+        final URI occurrenceCategory = Generator.generateEventType();
+        final List<OccurrenceReport> matching = generateReportsForFiltering(r -> {
+            r.setSeverityAssessment(severity);
+            r.getOccurrence().setEventType(occurrenceCategory);
+        });
+
+        final ReportFilter severityFilter = ReportFilter.create(SeverityAssessmentFilter.KEY,
+                Collections.singletonList(severity.toString())).get();
+        final ReportFilter categoryFilter = ReportFilter
+                .create(OccurrenceCategoryFilter.KEY, Collections.singletonList(occurrenceCategory.toString())).get();
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Arrays.asList(severityFilter, categoryFilter));
+        assertEquals(matching.size(), result.getNumberOfElements());
+        for (int i = 0; i < matching.size(); i++) {
+            assertEquals(matching.get(i).getUri(), result.getContent().get(i).getUri());
+        }
+    }
+
+    @Test
+    public void findAllReturnsReportsMatchingMultivaluedFilter() {
+        final List<OccurrenceReport> reports = generateReports();
+        occurrenceReportDao.persist(reports);
+        final URI categoryOne = reports.get(Generator.randomIndex(reports)).getOccurrence().getEventType();
+        final URI categoryTwo = reports.get(Generator.randomIndex(reports)).getOccurrence().getEventType();
+        final ReportFilter filter = ReportFilter
+                .create(OccurrenceCategoryFilter.KEY, Arrays.asList(categoryOne.toString(), categoryTwo.toString()))
+                .get();
+
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.singletonList(filter));
+        assertTrue(result.getNumberOfElements() > 0);
+        result.getContent().forEach(r -> assertThat(r.getOccurrence().getEventType(),
+                Matchers.anyOf(Matchers.equalTo(categoryOne), Matchers.equalTo(categoryTwo))));
     }
 }

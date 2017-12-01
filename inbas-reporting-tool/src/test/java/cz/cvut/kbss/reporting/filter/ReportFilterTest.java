@@ -33,4 +33,13 @@ public class ReportFilterTest {
         assertTrue(filter.isPresent());
         assertTrue(filter.get() instanceof SeverityAssessmentFilter);
     }
+
+    @Test
+    public void createReturnsReportKeyFilterForKey() {
+        final String value = Generator.generateUri().toString();
+        final Optional<ReportFilter> filter = ReportFilter
+                .create(ReportKeyFilter.KEY, Collections.singletonList(value));
+        assertTrue(filter.isPresent());
+        assertTrue(filter.get() instanceof ReportKeyFilter);
+    }
 }
