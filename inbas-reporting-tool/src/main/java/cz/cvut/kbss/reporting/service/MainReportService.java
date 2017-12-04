@@ -64,8 +64,9 @@ public class MainReportService implements ReportBusinessService {
         final List<LogicalDocument> reports = new ArrayList<>();
         // Combine reports from all services
         services.values().forEach(service -> reports.addAll(service.findAll(pageSpec, filters).getContent()));
-        final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
-        result.sort(new DocumentDateAndRevisionComparator());
+        final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto)
+                                              .sorted(new DocumentDateAndRevisionComparator())
+                                              .collect(Collectors.toList());
         // And return corresponding page
         return new PageImpl<>(result.subList(0, Math.min(result.size(), pageSpec.getPageSize())), pageSpec, 0L);
     }
