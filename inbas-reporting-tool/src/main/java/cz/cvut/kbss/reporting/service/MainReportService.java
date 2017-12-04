@@ -54,9 +54,9 @@ public class MainReportService implements ReportBusinessService {
     public List<ReportDto> findAll() {
         final List<LogicalDocument> reports = new ArrayList<>();
         services.values().forEach(service -> reports.addAll(service.findAll()));
-        final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto).collect(Collectors.toList());
-        result.sort(new DocumentDateAndRevisionComparator());
-        return result;
+        return reports.stream().map(LogicalDocument::toReportDto)
+                      .sorted(new DocumentDateAndRevisionComparator())
+                      .collect(Collectors.toList());
     }
 
     @Override
@@ -84,6 +84,15 @@ public class MainReportService implements ReportBusinessService {
         return (BaseReportService<T>) services.get(instance.getClass());
     }
 
+    private <T extends LogicalDocument> BaseReportService<T> resolveService(Set<String> types) {
+        for (String type : types) {
+            if (entitiesToOwlClasses.containsKey(type)) {
+                return (BaseReportService<T>) services.get(entitiesToOwlClasses.get(type));
+            }
+        }
+        throw new UnsupportedReportTypeException("No service found for instance with types " + types);
+    }
+
     @Override
     public <T extends LogicalDocument> T findByKey(String key) {
         Objects.requireNonNull(key);
@@ -93,15 +102,6 @@ public class MainReportService implements ReportBusinessService {
         }
         final BaseReportService<T> service = resolveService(types);
         return service.findByKey(key);
-    }
-
-    private <T extends LogicalDocument> BaseReportService<T> resolveService(Set<String> types) {
-        for (String type : types) {
-            if (entitiesToOwlClasses.containsKey(type)) {
-                return (BaseReportService<T>) services.get(entitiesToOwlClasses.get(type));
-            }
-        }
-        throw new UnsupportedReportTypeException("No service found for instance with types " + types);
     }
 
     @Override
