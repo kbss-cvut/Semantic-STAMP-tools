@@ -1,5 +1,10 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.11.5 - December 4, 2017
+- Updated to the latest JOPA (0.9.12).
+- Added support for server-side report paging (Task #520).
+- Added support for server-side report filtering (Feature #521).
+- Inherit versions of SLF4J, Logback, JUnit and Mockito from the parent project.
 
 ### 0.11.4 - November 15, 2017
 - Library updates (JOPA, logback, SLF4J, MapStruct).
