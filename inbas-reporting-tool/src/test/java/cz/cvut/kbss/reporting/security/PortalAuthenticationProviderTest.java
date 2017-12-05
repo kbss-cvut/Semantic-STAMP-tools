@@ -3,8 +3,6 @@ package cz.cvut.kbss.reporting.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
-import cz.cvut.kbss.reporting.config.RestConfig;
-import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.reporting.environment.config.TestSecurityConfig;
 import cz.cvut.kbss.reporting.model.Person;
@@ -50,9 +48,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withUnauthorizedRequest;
 
-@ContextConfiguration(classes = {TestSecurityConfig.class,
-        RestConfig.class,
-        MockSesamePersistence.class}, initializers = PropertyMockingApplicationContextInitializer.class)
+@ContextConfiguration(classes = {TestSecurityConfig.class}, initializers = PropertyMockingApplicationContextInitializer.class)
 public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
 
     @Rule
@@ -87,7 +83,7 @@ public class PortalAuthenticationProviderTest extends BaseServiceTestRunner {
     private MockRestServiceServer mockServer;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 

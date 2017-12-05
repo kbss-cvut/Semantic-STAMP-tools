@@ -1,8 +1,6 @@
 package cz.cvut.kbss.reporting.rest;
 
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
-import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
-import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
@@ -12,11 +10,11 @@ import cz.cvut.kbss.reporting.service.OccurrenceService;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.net.URI;
@@ -27,16 +25,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class OccurrenceControllerTest extends BaseControllerTestRunner {
 
-    @Autowired
+    @Mock
     private OccurrenceService occurrenceService;
 
+    @InjectMocks
+    private OccurrenceController controller;
+
     @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        Mockito.reset(occurrenceService);
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        super.setUp(controller);
         Environment.setCurrentUser(Generator.getPerson());
     }
 

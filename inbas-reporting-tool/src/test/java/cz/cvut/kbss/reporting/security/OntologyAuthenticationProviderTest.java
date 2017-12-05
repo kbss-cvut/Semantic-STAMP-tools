@@ -1,7 +1,5 @@
 package cz.cvut.kbss.reporting.security;
 
-import cz.cvut.kbss.reporting.config.RestConfig;
-import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.config.TestSecurityConfig;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.model.Person;
@@ -28,7 +26,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
-@ContextConfiguration(classes = {TestSecurityConfig.class, RestConfig.class, MockSesamePersistence.class})
+@ContextConfiguration(classes = {TestSecurityConfig.class})
 public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
 
     @Rule
@@ -44,13 +42,13 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
     private Person user;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.user = persistPerson();
         SecurityContextHolder.setContext(new SecurityContextImpl());
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         SecurityContextHolder.setContext(new SecurityContextImpl());
     }
 

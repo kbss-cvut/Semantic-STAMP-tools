@@ -1,6 +1,5 @@
 package cz.cvut.kbss.reporting.rest.dto.mapper;
 
-import cz.cvut.kbss.reporting.config.RestConfig;
 import cz.cvut.kbss.reporting.dto.CorrectiveMeasureRequestDto;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.agent.AgentDto;
@@ -10,8 +9,6 @@ import cz.cvut.kbss.reporting.dto.event.EventDto;
 import cz.cvut.kbss.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.reporting.dto.event.FactorGraphEdge;
 import cz.cvut.kbss.reporting.dto.event.OccurrenceDto;
-import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
-import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
@@ -20,10 +17,6 @@ import cz.cvut.kbss.reporting.model.util.HasUri;
 import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -33,12 +26,9 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {RestConfig.class, MockServiceConfig.class, MockSesamePersistence.class})
 public class DtoMapperTest {
 
-    @Autowired
-    private DtoMapper mapper;
+    private DtoMapper mapper = new DtoMapperImpl();
 
     @Test
     public void correctiveMeasureRequestToDtoCopiesBasicAttributes() {

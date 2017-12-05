@@ -1,8 +1,6 @@
 package cz.cvut.kbss.reporting.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.kbss.reporting.config.RestConfig;
-import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.reporting.environment.config.TestSecurityConfig;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
@@ -28,9 +26,7 @@ import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = {TestSecurityConfig.class,
-        RestConfig.class,
-        MockSesamePersistence.class}, initializers = PropertyMockingApplicationContextInitializer.class)
+@ContextConfiguration(classes = {TestSecurityConfig.class}, initializers = PropertyMockingApplicationContextInitializer.class)
 public class AuthenticationSuccessTest extends BaseServiceTestRunner {
 
     private Person person = Generator.getPerson();

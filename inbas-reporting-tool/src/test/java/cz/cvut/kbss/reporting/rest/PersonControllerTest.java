@@ -2,30 +2,42 @@ package cz.cvut.kbss.reporting.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import cz.cvut.kbss.reporting.dto.PersonUpdateDto;
-import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
-import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
+import cz.cvut.kbss.reporting.environment.config.RestSecurityConfig;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
+import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
+import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapperImpl;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;
+import cz.cvut.kbss.reporting.rest.handler.RestExceptionHandler;
+import cz.cvut.kbss.reporting.security.model.UserDetails;
 import cz.cvut.kbss.reporting.service.PersonService;
 import cz.cvut.kbss.reporting.service.security.SecurityUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.servlet.Filter;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,11 +46,22 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {RestSecurityConfig.class, PersonControllerTest.Config.class})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@WebAppConfiguration
 public class PersonControllerTest extends BaseControllerTestRunner {
+
+    @Autowired
+    private Filter springSecurityFilterChain;
+
+    @Autowired
+    private WebApplicationContext context;
 
     @Autowired
     private PersonService personService;
@@ -48,8 +71,54 @@ public class PersonControllerTest extends BaseControllerTestRunner {
 
     @Before
     public void setUp() throws Exception {
-        super.setUp();
-        Mockito.reset(personService);
+        MockitoAnnotations.initMocks(this);
+        super.setupObjectMapper();
+        // WebApplicationContext is required for proper security. Otherwise, standaloneSetup could be used
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity(springSecurityFilterChain))
+                                      .build();
+    }
+
+    /**
+     * Inner class is necessary to provide the controller as a bean, so that the WebApplicationContext can map it.
+     */
+    @EnableWebMvc
+    @Configuration
+    public static class Config {
+        @Mock
+        private PersonService personService;
+
+        @Mock
+        private SecurityUtils securityUtilsMock;
+
+        @Spy
+        private DtoMapper dtoMapper = new DtoMapperImpl();
+
+        @InjectMocks
+        private PersonController controller;
+
+        Config() {
+            MockitoAnnotations.initMocks(this);
+        }
+
+        @Bean
+        public PersonService personService() {
+            return personService;
+        }
+
+        @Bean
+        public PersonController personController() {
+            return controller;
+        }
+
+        @Bean
+        public SecurityUtils securityUtils() {
+            return securityUtilsMock;
+        }
+
+        @Bean
+        public RestExceptionHandler restExceptionHandler() {
+            return new RestExceptionHandler();
+        }
     }
 
     @Test
@@ -238,8 +307,9 @@ public class PersonControllerTest extends BaseControllerTestRunner {
         Environment.setCurrentUser(nonAdmin);
         final String username = "locked@inbas.cz";
         final String newPassword = "newPassword";
+        final UserDetails userDetails = new UserDetails(nonAdmin);
 
-        mockMvc.perform(put("/persons/unlock").param("username", username).content(newPassword))
+        mockMvc.perform(put("/persons/unlock").param("username", username).content(newPassword).with(user(userDetails)))
                .andExpect(status().isForbidden());
         verify(personService, never()).findByUsername(any());
         verify(personService, never()).unlock(any(), anyString());

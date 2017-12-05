@@ -25,7 +25,7 @@ public class OccurrenceReportDtoSerializationTest {
 
     @Before
     public void setUp() {
-        this.mapper = new ObjectMapper();
+        this.mapper = Environment.getObjectMapper();
         this.dtoMapper = new DtoMapperImpl();
     }
 

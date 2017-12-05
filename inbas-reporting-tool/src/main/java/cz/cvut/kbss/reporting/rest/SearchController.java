@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/search")
-public class SearchController {
+public class SearchController extends BaseController {
 
     static final String EXPRESSION_PARAM = "expression";
 

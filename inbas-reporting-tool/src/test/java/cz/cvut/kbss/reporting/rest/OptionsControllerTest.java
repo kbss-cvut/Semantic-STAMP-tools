@@ -1,16 +1,14 @@
 package cz.cvut.kbss.reporting.rest;
 
-import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
-import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.service.options.OptionsService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.assertEquals;
@@ -19,16 +17,18 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class OptionsControllerTest extends BaseControllerTestRunner {
 
-    @Autowired
+    @Mock
     private OptionsService optionsServiceMock;
 
+    @InjectMocks
+    private OptionsController controller;
+
     @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        Mockito.reset(optionsServiceMock);
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        super.setUp(controller);
         Environment.setCurrentUser(Generator.getPerson());
     }
 

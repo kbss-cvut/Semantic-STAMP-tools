@@ -11,8 +11,12 @@ import java.lang.reflect.Modifier;
 @Component
 public class GenericMapper {
 
+    private final DtoMapper dtoMapper;
+
     @Autowired
-    private DtoMapper dtoMapper;
+    public GenericMapper(DtoMapper dtoMapper) {
+        this.dtoMapper = dtoMapper;
+    }
 
     /**
      * Maps the specified object to/from DTO, if it is supported by this mapper.

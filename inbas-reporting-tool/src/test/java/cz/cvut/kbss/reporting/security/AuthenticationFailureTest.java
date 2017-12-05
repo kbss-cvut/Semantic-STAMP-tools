@@ -1,8 +1,6 @@
 package cz.cvut.kbss.reporting.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.cvut.kbss.reporting.config.RestConfig;
-import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.reporting.environment.config.TestSecurityConfig;
 import cz.cvut.kbss.reporting.security.model.LoginStatus;
@@ -19,9 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(classes = {TestSecurityConfig.class,
-        RestConfig.class,
-        MockSesamePersistence.class}, initializers = PropertyMockingApplicationContextInitializer.class)
+@ContextConfiguration(classes = {TestSecurityConfig.class}, initializers = PropertyMockingApplicationContextInitializer.class)
 public class AuthenticationFailureTest extends BaseServiceTestRunner {
 
     @Autowired

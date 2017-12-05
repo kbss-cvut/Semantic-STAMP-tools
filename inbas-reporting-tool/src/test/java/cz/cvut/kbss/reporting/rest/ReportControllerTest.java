@@ -5,8 +5,6 @@ import cz.cvut.kbss.jopa.exceptions.RollbackException;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.reporting.environment.config.MockServiceConfig;
-import cz.cvut.kbss.reporting.environment.config.MockSesamePersistence;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
@@ -18,7 +16,6 @@ import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.filter.ReportKeyFilter;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
-import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
@@ -26,15 +23,12 @@ import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.net.URI;
@@ -51,26 +45,25 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ContextConfiguration(classes = {MockServiceConfig.class, MockSesamePersistence.class})
 public class ReportControllerTest extends BaseControllerTestRunner {
 
     private static final String REPORTS_PATH = "/reports/";
 
-    @Autowired
+    @Mock
     private ReportBusinessService reportServiceMock;
 
-    @Autowired
+    @Mock
     private OccurrenceReportFactory reportFactoryMock;
 
-    @Autowired
-    private DtoMapper mapper;
+    @InjectMocks
+    private ReportController controller;
 
     private Person author;
 
     @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        Mockito.reset(reportServiceMock);
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        super.setUp(controller);
         this.author = Generator.getPerson();
         Environment.setCurrentUser(author);
     }
@@ -228,7 +221,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         }).when(reportServiceMock).persist(any(OccurrenceReport.class));
 
         final MvcResult result = mockMvc
-                .perform(post("/reports").content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                .perform(post("/reports").content(toJson(dtoMapper.occurrenceReportToOccurrenceReportDto(report)))
                                          .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
         verifyLocationEquals(REPORTS_PATH + key, result);
@@ -240,7 +233,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         Mockito.doThrow(new ValidationException("Invalid report.")).when(reportServiceMock)
                .persist(any(OccurrenceReport.class));
-        mockMvc.perform(post("/reports").content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+        mockMvc.perform(post("/reports").content(toJson(dtoMapper.occurrenceReportToOccurrenceReportDto(report)))
                                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isConflict());
         verify(reportServiceMock).persist(any(OccurrenceReport.class));
@@ -276,7 +269,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final OccurrenceReport report = prepareReport();
         mockMvc.perform(
                 put(REPORTS_PATH + report.getKey())
-                        .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                        .content(toJson(dtoMapper.occurrenceReportToOccurrenceReportDto(report)))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isNoContent());
         final ArgumentCaptor<OccurrenceReport> captor = ArgumentCaptor.forClass(OccurrenceReport.class);
@@ -302,7 +295,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         report.setKey(IdentificationUtils.generateKey());
         final String otherKey = IdentificationUtils.generateKey();
         mockMvc.perform(
-                put(REPORTS_PATH + otherKey).content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                put(REPORTS_PATH + otherKey).content(toJson(dtoMapper.occurrenceReportToOccurrenceReportDto(report)))
                                             .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isBadRequest());
     }
@@ -315,7 +308,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         when(reportServiceMock.findByKey(report.getKey())).thenReturn(null);
         mockMvc.perform(
                 put(REPORTS_PATH + report.getKey())
-                        .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                        .content(toJson(dtoMapper.occurrenceReportToOccurrenceReportDto(report)))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isNotFound());
         verify(reportServiceMock).findByKey(report.getKey());
@@ -328,7 +321,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         doThrow(new ValidationException("Invalid report.")).when(reportServiceMock).update(any(OccurrenceReport.class));
         mockMvc.perform(
                 put(REPORTS_PATH + report.getKey())
-                        .content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                        .content(toJson(dtoMapper.occurrenceReportToOccurrenceReportDto(report)))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                .andExpect(status().isConflict());
     }
@@ -354,7 +347,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         Mockito.doThrow(new PersistenceException(new RollbackException(message))).when(reportServiceMock)
                .persist(any(OccurrenceReport.class));
         final MvcResult result = mockMvc.perform(
-                post(REPORTS_PATH).content(toJson(mapper.occurrenceReportToOccurrenceReportDto(report)))
+                post(REPORTS_PATH).content(toJson(dtoMapper.occurrenceReportToOccurrenceReportDto(report)))
                                   .contentType(MediaType.APPLICATION_JSON_VALUE))
                                         .andExpect(status().isInternalServerError()).andReturn();
         final ErrorInfo errorInfo = readValue(result, ErrorInfo.class);
