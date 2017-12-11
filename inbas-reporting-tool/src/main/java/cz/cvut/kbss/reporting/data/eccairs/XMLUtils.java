@@ -1,12 +1,12 @@
 package cz.cvut.kbss.reporting.data.eccairs;
 
-import com.sun.org.apache.xml.internal.utils.DefaultErrorHandler;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -125,7 +125,7 @@ public class XMLUtils {
         Schema schema = loadSchema(schemaLocation);
         try {
             Validator validator = schema.newValidator();
-            validator.setErrorHandler(new DefaultErrorHandler());
+            validator.setErrorHandler(new DefaultHandler());
             validator.validate(source);
             LOG.info("{} is valid.", fileName);
             return true;
@@ -142,7 +142,7 @@ public class XMLUtils {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         dbFactory.setSchema(loadSchema(schemaLocation));
         DocumentBuilder documentBuilder = dbFactory.newDocumentBuilder();
-        documentBuilder.setErrorHandler(new DefaultErrorHandler());
+        documentBuilder.setErrorHandler(new DefaultHandler());
         try {
 
             Document doc = documentBuilder.parse(is);

@@ -12,6 +12,8 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     private Person person;
 
+    private boolean extended;
+
     protected final Set<GrantedAuthority> authorities;
 
     public UserDetails(Person person) {
@@ -79,5 +81,31 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     public Person getUser() {
         return person;
+    }
+
+    public void setExtended() {
+        this.extended = true;
+    }
+
+    public boolean isExtended() {
+        return extended;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof UserDetails)) {
+            return false;
+        }
+        UserDetails that = (UserDetails) o;
+        return Objects.equals(person.getUri(), that.person.getUri()) && Objects.equals(authorities, that.authorities) &&
+                extended == that.extended;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(person.getUri(), authorities, extended);
     }
 }

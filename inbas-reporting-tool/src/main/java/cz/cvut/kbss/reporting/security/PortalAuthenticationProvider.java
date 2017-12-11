@@ -62,7 +62,7 @@ public class PortalAuthenticationProvider extends AbstractAuthenticationProvider
         final String username = authentication.getPrincipal().toString();
         verifyUsernameNotEmpty(username);
         LOG.debug("Authenticating user {} against the portal.", username);
-        
+
         final String password = authentication.getCredentials().toString();
         final Person authenticatedUser = authenticateAgainstPortal(username, password);
         final UserDetails userDetails = new PortalUserDetails(authenticatedUser);

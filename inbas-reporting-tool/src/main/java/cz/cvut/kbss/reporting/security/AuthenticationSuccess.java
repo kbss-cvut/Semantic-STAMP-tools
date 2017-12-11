@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -49,7 +48,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                        Authentication authentication) throws IOException, ServletException {
+                                        Authentication authentication) throws IOException {
         final String username = getUsername(authentication);
         if (LOG.isTraceEnabled()) {
             LOG.trace("Successfully authenticated user {}", username);
@@ -67,7 +66,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
         if (authentication == null) {
             return "";
         }
-        return ((UserDetails) authentication.getPrincipal()).getUsername();
+        return ((UserDetails) authentication.getDetails()).getUsername();
     }
 
     /**
@@ -106,7 +105,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
 
     @Override
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                Authentication authentication) throws IOException, ServletException {
+                                Authentication authentication) throws IOException {
         if (LOG.isTraceEnabled()) {
             LOG.trace("Successfully logged out user {}", getUsername(authentication));
         }

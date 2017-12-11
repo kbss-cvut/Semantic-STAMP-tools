@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.security;
 import cz.cvut.kbss.reporting.security.model.UserDetails;
 import cz.cvut.kbss.reporting.service.security.LoginTracker;
 import cz.cvut.kbss.reporting.service.security.SecurityUtils;
+import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Service("ontologyAuthenticationProvider")
 public class OntologyAuthenticationProvider extends AbstractAuthenticationProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(OntologyAuthenticationProvider.class);
 
     private final UserDetailsService userDetailsService;
+
+    @Autowired
+    private HttpServletRequest request;
 
     @Autowired
     public OntologyAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder,
@@ -41,6 +47,14 @@ public class OntologyAuthenticationProvider extends AbstractAuthenticationProvid
             throw new BadCredentialsException("Provided credentials don't match.");
         }
         loginSuccess(userDetails.getUser());
+        setupExtendedSessionForMobileUser(userDetails);
         return securityUtils.setCurrentUser(userDetails);
+    }
+
+    private void setupExtendedSessionForMobileUser(UserDetails userDetails) {
+        final String client = request.getHeader(Constants.CLIENT_TYPE_HEADER);
+        if (client != null && client.equals(Constants.CLIENT_TYPE_MOBILE)) {
+            userDetails.setExtended();
+        }
     }
 }

@@ -7,6 +7,7 @@ import cz.cvut.kbss.reporting.security.SecurityConstants;
 import org.junit.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class UserDetailsTest {
@@ -28,5 +29,16 @@ public class UserDetailsTest {
                 details.getAuthorities().contains(new SimpleGrantedAuthority(SecurityConstants.Role.USER.getName())));
         assertTrue(
                 details.getAuthorities().contains(new SimpleGrantedAuthority(SecurityConstants.Role.ADMIN.getName())));
+    }
+
+    @Test
+    public void detailsOfSamePersonAreEqual() {
+        final Person pOne = Generator.getPerson();
+        final Person pTwo = Generator.getPerson();
+        assertEquals(pOne.getUri(), pTwo.getUri());
+        assertTrue(pOne.nameEquals(pTwo));
+        final UserDetails detailsOne = new UserDetails(pOne);
+        final UserDetails detailsTwo = new UserDetails(pTwo);
+        assertEquals(detailsOne, detailsTwo);
     }
 }

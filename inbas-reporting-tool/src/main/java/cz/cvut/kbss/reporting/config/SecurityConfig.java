@@ -8,17 +8,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+
+import javax.servlet.http.HttpSessionListener;
 
 @Configuration
 @EnableWebSecurity
@@ -56,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationProvider portalAuthenticationProvider;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(ontologyAuthenticationProvider);
         // Enable portal provider only when portal URL is configured
         if (environment.containsProperty(ConfigParam.PORTAL_URL.toString())) {
@@ -65,9 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    public HttpSessionListener httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 
     @Override
@@ -85,6 +87,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .logout().invalidateHttpSession(true).deleteCookies(COOKIES_TO_DESTROY)
             .logoutUrl(SecurityConstants.LOGOUT_URI).logoutSuccessHandler(logoutSuccessHandler)
-            .and().sessionManagement().maximumSessions(1);
+            .and()
+            .sessionManagement()
+            .sessionFixation().migrateSession()
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            .invalidSessionUrl("/")
+            .maximumSessions(1)
+            .expiredUrl("/");
     }
 }

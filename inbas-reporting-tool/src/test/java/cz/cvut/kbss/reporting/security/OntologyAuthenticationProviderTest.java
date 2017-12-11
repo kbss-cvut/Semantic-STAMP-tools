@@ -6,6 +6,7 @@ import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.security.model.UserDetails;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.security.LoginTracker;
+import cz.cvut.kbss.reporting.util.Constants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,6 +15,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,6 +23,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
@@ -38,6 +42,9 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
 
     @Autowired
     private LoginTracker loginTracker;
+
+    @Autowired
+    private HttpServletRequest request;
 
     private Person user;
 
@@ -156,5 +163,14 @@ public class OntologyAuthenticationProviderTest extends BaseServiceTestRunner {
         thrown.expectMessage(containsString("Username cannot be empty."));
         final Authentication auth = authentication("", "");
         provider.authenticate(auth);
+    }
+
+    @Test
+    public void authenticateSetsExtendedUserDetailsForMobileClient() {
+        ((MockHttpServletRequest) request).addHeader(Constants.CLIENT_TYPE_HEADER, Constants.CLIENT_TYPE_MOBILE);
+        final Authentication auth = authentication(Generator.USERNAME, Generator.PASSWORD);
+        provider.authenticate(auth);
+        final UserDetails details = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        assertTrue(details.isExtended());
     }
 }
