@@ -1,5 +1,10 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.11.6 - December 12, 2017
+- Allow user to have one mobile and one web session (Task #534).
+- Allow to filter reports by author and last editor (Task #533).
+- Simplified REST services test setup (Task #531).
+
 ### 0.11.5 - December 4, 2017
 - Updated to the latest JOPA (0.9.12).
 - Added support for server-side report paging (Task #520).
