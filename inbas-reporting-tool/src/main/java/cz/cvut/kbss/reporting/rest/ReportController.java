@@ -78,9 +78,8 @@ public class ReportController extends BaseController {
     public ResponseEntity<Void> createReport(@RequestBody LogicalDocument reportDto) {
         final LogicalDocument report = dtoMapper.reportDtoToReport(reportDto);
         reportService.persist(report);
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Report {} successfully persisted.", report);
-        }
+
+        LOG.trace("Report {} successfully persisted.", report);
         final String key = report.getKey();
         final HttpHeaders headers = RestUtils.createLocationHeaderFromCurrentUri("/{key}", key);
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
@@ -110,9 +109,7 @@ public class ReportController extends BaseController {
             throw NotFoundException.create("Report", key);
         }
         reportService.update(report);
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Updated report {}.", report);
-        }
+        LOG.trace("Updated report {}.", report);
     }
 
     @RequestMapping(value = "/{key}/phase", method = RequestMethod.PUT)
@@ -194,7 +191,7 @@ public class ReportController extends BaseController {
      */
     @RequestMapping(value = "/{key}/export/e5xxml", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
     public void exportReportToE5XXml(@PathVariable("key") String key, HttpServletResponse response) {
-        expoortReportToE5XImpl(key, response, false);
+        exportReportToE5XImpl(key, response, false);
     }
 
     /**
@@ -205,7 +202,7 @@ public class ReportController extends BaseController {
      */
     @RequestMapping(value = "/{key}/export/e5x", method = RequestMethod.GET, produces = {"application/zip"})
     public void exportReportToE5X(@PathVariable("key") String key, HttpServletResponse response) {
-        expoortReportToE5XImpl(key, response, true);
+        exportReportToE5XImpl(key, response, true);
     }
 
     /**
@@ -215,12 +212,12 @@ public class ReportController extends BaseController {
      * @param response
      * @param zip      true for e5x (zipped e5x xml), false for e5x xml
      */
-    protected void expoortReportToE5XImpl(String key, HttpServletResponse response, boolean zip) {
+    protected void exportReportToE5XImpl(String key, HttpServletResponse response, boolean zip) {
         String fileType = (zip ? "e5x" : "e5x xml");
         // transform report
         byte[] reportE5X = reportExporter.exportReportToE5X(key, zip);
         if (reportE5X == null) {
-            LOG.trace("Cannot export {}. No such Occurrence Report with key {}", fileType, key);
+            LOG.trace("Cannot export {}. No such Occurrence Report with key {}.", fileType, key);
             throw NotFoundException.create("Occurrence Report", key);
         }
         if (zip) { // make response downloadable

@@ -50,9 +50,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                         Authentication authentication) throws IOException {
         final String username = getUsername(authentication);
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Successfully authenticated user {}", username);
-        }
+        LOG.trace("Successfully authenticated user {}", username);
         if (runningOnPortal(authentication, httpServletRequest)) {
             returnIndex(httpServletResponse);
         } else {
@@ -106,9 +104,7 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
     @Override
     public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                 Authentication authentication) throws IOException {
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("Successfully logged out user {}", getUsername(authentication));
-        }
+        LOG.trace("Successfully logged out user {}", getUsername(authentication));
         final LoginStatus loginStatus = new LoginStatus(false, true, null, null);
         mapper.writeValue(httpServletResponse.getOutputStream(), loginStatus);
     }

@@ -62,9 +62,8 @@ public class PersonController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> create(@RequestBody Person person) {
         personService.persist(person);
-        if (LOG.isTraceEnabled()) {
-            LOG.trace("User {} successfully registered.", person);
-        }
+        LOG.trace("User {} successfully registered.", person);
+
         final HttpHeaders headers = RestUtils
                 .createLocationHeaderFromCurrentUri("/{username}", person.getUsername());
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
@@ -78,9 +77,7 @@ public class PersonController extends BaseController {
         }
         final Person person = dtoMapper.personUpdateDtoToPerson(dto);
         personService.update(person);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Person {} successfully updated.", person);
-        }
+        LOG.debug("Person {} successfully updated.", person);
     }
 
     @RequestMapping(value = "/exists", method = RequestMethod.GET)
