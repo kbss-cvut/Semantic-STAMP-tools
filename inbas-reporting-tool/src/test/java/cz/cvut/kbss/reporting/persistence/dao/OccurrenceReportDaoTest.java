@@ -4,10 +4,8 @@ import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
-import cz.cvut.kbss.reporting.filter.OccurrenceCategoryFilter;
-import cz.cvut.kbss.reporting.filter.ReportFilter;
-import cz.cvut.kbss.reporting.filter.ReportKeyFilter;
-import cz.cvut.kbss.reporting.filter.SeverityAssessmentFilter;
+import cz.cvut.kbss.reporting.environment.util.Environment;
+import cz.cvut.kbss.reporting.filter.*;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
 import org.hamcrest.Matchers;
@@ -46,7 +44,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     private Person author;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.author = Generator.getPerson();
         persistPerson(author);
     }
@@ -401,8 +399,10 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final List<OccurrenceReport> allReports = generateReports();
         final List<OccurrenceReport> matching = allReports.stream().filter(r -> Generator.randomBoolean())
                                                           .peek(transformation)
+                                                          .sorted(Comparator.comparing(
+                                                                  (OccurrenceReport r) -> r.getOccurrence()
+                                                                                           .getStartTime()).reversed())
                                                           .collect(Collectors.toList());
-        matching.sort(Comparator.comparing((OccurrenceReport r) -> r.getOccurrence().getStartTime()).reversed());
         occurrenceReportDao.persist(allReports);
         return matching;
     }
@@ -472,5 +472,77 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
                 .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.singletonList(filter));
         assertEquals(keys.size(), result.getNumberOfElements());
         result.getContent().forEach(r -> assertTrue(keys.contains(r.getKey())));
+    }
+
+    @Test
+    public void findAllReturnsReportsWithAuthorMatchingPersonFilter() {
+        final List<OccurrenceReport> reports = generateReports();
+        final Person anotherPerson = generateAnotherPerson();
+        persistPerson(anotherPerson);
+        final List<OccurrenceReport> matching = reports.stream().filter(r -> Generator.randomBoolean())
+                                                       .collect(Collectors.toList());
+        matching.forEach(r -> r.setAuthor(anotherPerson));
+        occurrenceReportDao.persist(reports);
+        Environment.setCurrentUser(anotherPerson);
+        final ReportFilter filter = ReportFilter
+                .create(PersonFilter.KEY, Collections.singletonList(Boolean.TRUE.toString())).get();
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.singletonList(filter));
+        assertEquals(matching.size(), result.getNumberOfElements());
+        result.getContent().forEach(r -> assertEquals(anotherPerson.getUri(), r.getAuthor().getUri()));
+    }
+
+    private Person generateAnotherPerson() {
+        final Person anotherPerson = new Person();
+        anotherPerson.setFirstName("another");
+        anotherPerson.setLastName("person");
+        anotherPerson.setUsername("another@person.cz");
+        anotherPerson.setPassword("aaa");
+        anotherPerson.generateUri();
+        return anotherPerson;
+    }
+
+    @Test
+    public void findAllReturnsReportsWithLastEditorMatchingPersonFilter() {
+        final List<OccurrenceReport> reports = generateReports();
+        final Person anotherPerson = generateAnotherPerson();
+        persistPerson(anotherPerson);
+        final List<OccurrenceReport> matching = reports.stream().filter(r -> Generator.randomBoolean())
+                                                       .collect(Collectors.toList());
+        matching.forEach(r -> r.setLastModifiedBy(anotherPerson));
+        occurrenceReportDao.persist(reports);
+        Environment.setCurrentUser(anotherPerson);
+        final ReportFilter filter = ReportFilter
+                .create(PersonFilter.KEY, Collections.singletonList(Boolean.TRUE.toString())).get();
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.singletonList(filter));
+        assertEquals(matching.size(), result.getNumberOfElements());
+        result.getContent().forEach(r -> assertEquals(anotherPerson.getUri(), r.getLastModifiedBy().getUri()));
+    }
+
+    @Test
+    public void findAllReturnsReportsWithAuthorOrLastEditorMatchingPersonFilter() {
+        final List<OccurrenceReport> reports = generateReports();
+        final Person anotherPerson = generateAnotherPerson();
+        persistPerson(anotherPerson);
+        final List<OccurrenceReport> matching = reports.stream().filter(r -> Generator.randomBoolean())
+                                                       .collect(Collectors.toList());
+        for (OccurrenceReport r : matching) {
+            if (Generator.randomBoolean()) {
+                r.setAuthor(anotherPerson);
+            } else {
+                r.setLastModifiedBy(anotherPerson);
+            }
+        }
+        occurrenceReportDao.persist(reports);
+        Environment.setCurrentUser(anotherPerson);
+        final ReportFilter filter = ReportFilter
+                .create(PersonFilter.KEY, Collections.singletonList(Boolean.TRUE.toString())).get();
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.singletonList(filter));
+        assertEquals(matching.size(), result.getNumberOfElements());
+        result.getContent()
+              .forEach(r -> assertTrue(r.getAuthor().getUri().equals(anotherPerson.getUri()) ||
+                      r.getLastModifiedBy() != null && r.getLastModifiedBy().getUri().equals(anotherPerson.getUri())));
     }
 }

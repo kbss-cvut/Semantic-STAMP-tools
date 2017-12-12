@@ -25,15 +25,26 @@ public class SecurityUtils {
     }
 
     /**
+     * This is a statically accessible variant of the {@link #getCurrentUser()} method.
+     * <p>
+     * It allows to access currently logged in user without injecting {@code SecurityUtils} as a bean.
+     *
+     * @return Currently logged in user
+     */
+    public static Person currentUser() {
+        final SecurityContext context = SecurityContextHolder.getContext();
+        assert context != null;
+        final UserDetails userDetails = (UserDetails) context.getAuthentication().getDetails();
+        return userDetails.getUser();
+    }
+
+    /**
      * Gets the currently authenticated user.
      *
      * @return Current user
      */
     public Person getCurrentUser() {
-        final SecurityContext context = SecurityContextHolder.getContext();
-        assert context != null;
-        final UserDetails userDetails = (UserDetails) context.getAuthentication().getDetails();
-        return userDetails.getUser();
+        return currentUser();
     }
 
     /**

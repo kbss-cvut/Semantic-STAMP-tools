@@ -6,6 +6,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Report filters represent a uniform way of filtering reports.
@@ -41,6 +42,8 @@ public abstract class ReportFilter {
                 return Optional.of(new SeverityAssessmentFilter(values));
             case ReportKeyFilter.KEY:
                 return Optional.of(new ReportKeyFilter(values));
+            case PersonFilter.KEY:
+                return PersonFilter.create(values).map(Function.identity());
             default:
                 return Optional.empty();
         }

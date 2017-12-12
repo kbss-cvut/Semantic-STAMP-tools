@@ -29,8 +29,10 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
             "?hasKey ?key ;" +
             "?hasFileNumber ?fileNo ;" +
             "?hasRevision ?maxRev ;" +
+            "?hasAuthor ?author ;" +
             "?hasOccurrence ?occurrence ." +
             "OPTIONAL { ?x ?hasSeverity ?severity . }" +
+            "OPTIONAL { ?x ?hasLastEditor ?lastEditor . }" +
             "?occurrence ?hasStartTime ?startTime ;" +
             "?hasEventType ?occurrenceCategory ." +
             "{ SELECT (MAX(?rev) AS ?maxRev) ?fileNo WHERE " +
@@ -71,7 +73,9 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
                 .setParameter("hasKey", URI.create(Vocabulary.s_p_has_key))
                 .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
                 .setParameter("hasSeverity", URI.create(Vocabulary.s_p_has_severity_assessment))
+                .setParameter("hasLastEditor", URI.create(Vocabulary.s_p_has_last_editor))
                 .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
+                .setParameter("hasAuthor", URI.create(Vocabulary.s_p_has_author))
                 .setParameter("hasOccurrence", URI.create(Vocabulary.s_p_documents))
                 .setParameter("hasStartTime", URI.create(Vocabulary.s_p_has_start_time))
                 .setParameter("hasEventType", URI.create(Vocabulary.s_p_has_event_type))

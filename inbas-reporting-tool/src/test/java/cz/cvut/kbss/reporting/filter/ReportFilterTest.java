@@ -42,4 +42,12 @@ public class ReportFilterTest {
         assertTrue(filter.isPresent());
         assertTrue(filter.get() instanceof ReportKeyFilter);
     }
+
+    @Test
+    public void createReturnsPersonFilterForMineKey() {
+        final Optional<ReportFilter> filter = ReportFilter
+                .create(PersonFilter.KEY, Collections.singletonList(Boolean.TRUE.toString()));
+        assertTrue(filter.isPresent());
+        assertTrue(filter.get() instanceof PersonFilter);
+    }
 }
