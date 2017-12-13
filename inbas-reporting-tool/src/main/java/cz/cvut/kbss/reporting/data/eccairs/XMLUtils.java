@@ -83,9 +83,11 @@ public class XMLUtils {
         try {
             SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
             try {
+                LOG.debug("Loading schema from URL {}.", schemaLocation);
                 URL schemaFile = new URL(schemaLocation);
                 schema = schemaFactory.newSchema(schemaFile);
             } catch (MalformedURLException e) {
+                LOG.warn("Failed to load schema from URL. Trying local file.");
                 schema = tryLoadingSchemaFromFile(schemaLocation, schemaFactory);
             }
             schemaMap.put(schemaLocation, schema);
@@ -97,6 +99,7 @@ public class XMLUtils {
 
     private static Schema tryLoadingSchemaFromFile(String schemaLocation, SchemaFactory schemaFactory)
             throws SAXException {
+        LOG.debug("Loading schema from file {}.", schemaLocation);
         final File schemaFile = new File(schemaLocation);
         if (schemaFile.exists()) {
             return schemaFactory.newSchema(new File(schemaLocation));

@@ -1,7 +1,6 @@
 package cz.cvut.kbss.reporting.service.data.export;
 
 import cz.cvut.kbss.reporting.data.eccairs.*;
-import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
 import org.slf4j.Logger;
@@ -33,7 +32,7 @@ public class ReportExporter {
         try {
             e5xSchema = XMLUtils.loadSchema(E5XTerms.DATA_BRIDGE_FILE);
             occurrenceReportE5XExporter = createExporter();
-        } catch (NotFoundException e) {
+        } catch (RuntimeException e) {
             LOG.error(String.format("Could not load e5x schema from \"%s\"", E5XTerms.DATA_BRIDGE_FILE), e);
             LOG.warn("The generated e5x will not be validated.");
         }
