@@ -24,7 +24,7 @@ import java.util.*;
 public abstract class DtoMapper {
 
     private final SplittableRandom random = new SplittableRandom();
-    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part);
+    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part_A);
 
     private static final Map<Class<?>, Class<?>> mappedClasses = initMappedClasses();
 
@@ -48,7 +48,6 @@ public abstract class DtoMapper {
         map.put(Event.class, EventDto.class);
         map.put(EventDto.class, Event.class);
         map.put(Occurrence.class, OccurrenceDto.class);
-        map.put(Occurrence.class, FactorGraph.class);
         map.put(OccurrenceDto.class, Occurrence.class);
         map.put(FactorGraph.class, Occurrence.class);
         return map;

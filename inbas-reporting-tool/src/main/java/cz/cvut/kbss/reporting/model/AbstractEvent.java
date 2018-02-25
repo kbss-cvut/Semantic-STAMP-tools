@@ -30,7 +30,7 @@ public abstract class AbstractEvent extends AbstractEntity implements FactorGrap
     @OWLObjectProperty(iri = Vocabulary.s_p_has_factor, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     protected Set<Factor> factors;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_part, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_part_A, fetch = FetchType.EAGER, cascade = {CascadeType.MERGE,
             CascadeType.REMOVE})
     protected Set<Event> children;
 

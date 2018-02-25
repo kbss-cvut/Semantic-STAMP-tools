@@ -29,7 +29,7 @@ import static org.junit.Assert.*;
  */
 public class EventFactorsSerializationTest {
 
-    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part);
+    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part_A);
     private static final String NODE_URI_PREFIX = "http://krizik.felk.cvut.cz/node-";
 
     private DtoMapper dtoMapper;
@@ -40,7 +40,7 @@ public class EventFactorsSerializationTest {
     }
 
     @Test
-    public void testSerializationOfOccurrenceWithSubEvents() throws Exception {
+    public void testSerializationOfOccurrenceWithSubEvents() {
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
         dtoMapper.occurrenceToOccurrenceDto(occurrence);
         final FactorGraph container = dtoMapper.occurrenceToFactorGraph(occurrence);
@@ -131,7 +131,7 @@ public class EventFactorsSerializationTest {
     }
 
     @Test
-    public void testSerializationOfLinksBetweenOccurrenceAndEventsAtSameLevel() throws Exception {
+    public void testSerializationOfLinksBetweenOccurrenceAndEventsAtSameLevel() {
         final Occurrence occurrence = generateOccurrenceWithLinkChainOnSameLevel();
         dtoMapper.occurrenceToOccurrenceDto(occurrence);
         final FactorGraph container = dtoMapper.occurrenceToFactorGraph(occurrence);
@@ -139,7 +139,7 @@ public class EventFactorsSerializationTest {
     }
 
     @Test
-    public void serializationMapsFactorUriToEdgeUri() throws Exception {
+    public void serializationMapsFactorUriToEdgeUri() {
         final Occurrence occurrence = occurrence();
         final Event e1 = event();
         final Event e2 = event();
@@ -186,7 +186,7 @@ public class EventFactorsSerializationTest {
     }
 
     @Test
-    public void testSerializationOfOccurrenceWithSubEventsConnectedByFactors() throws Exception {
+    public void testSerializationOfOccurrenceWithSubEventsConnectedByFactors() {
         final Occurrence occurrence = generateOccurrenceWithSubEvents();
         addFactorsToStructure(occurrence.getChildren());
         dtoMapper.occurrenceToOccurrenceDto(occurrence);

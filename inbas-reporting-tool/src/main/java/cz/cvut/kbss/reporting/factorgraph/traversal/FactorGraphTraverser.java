@@ -18,7 +18,7 @@ import java.util.TreeSet;
  */
 public abstract class FactorGraphTraverser {
 
-    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part);
+    private static final URI HAS_PART_URI = URI.create(Vocabulary.s_p_has_part_A);
 
     private final List<FactorGraphNodeVisitor> nodeVisitors = new ArrayList<>(2);
     private FactorGraphEdgeVisitor factorGraphEdgeVisitor;

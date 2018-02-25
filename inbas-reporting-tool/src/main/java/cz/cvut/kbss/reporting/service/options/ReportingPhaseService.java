@@ -35,7 +35,7 @@ public class ReportingPhaseService {
             LOG.warn("Reporting phases are not available (Message: {}).", e.getMessage());
             return;
         }
-        this.phases.addAll(JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than));
+        this.phases.addAll(JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than_A));
         this.defaultPhase = JsonLdProcessing.getItemWithType(json, Vocabulary.s_c_default_phase);
         if (defaultPhase == null) {
             LOG.warn("Default reporting phase not found.");

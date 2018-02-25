@@ -40,8 +40,7 @@ public class OccurrenceTest {
             return;
         }
         assertNotNull(copy);
-        final Set<Event> sortedCopy = new TreeSet<>();
-        sortedCopy.addAll(copy);
+        final Set<Event> sortedCopy = new TreeSet<>(copy);
         assertEquals(original.size(), sortedCopy.size());
         final Iterator<Event> itOrig = original.iterator();
         final Iterator<Event> itCopy = sortedCopy.iterator();
