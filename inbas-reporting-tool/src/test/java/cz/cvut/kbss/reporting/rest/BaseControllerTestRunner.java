@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static cz.cvut.kbss.reporting.environment.util.Environment.*;
 import static org.junit.Assert.assertEquals;
 
 public abstract class BaseControllerTestRunner {
@@ -26,6 +27,8 @@ public abstract class BaseControllerTestRunner {
     public void setUp(BaseController controller) {
         setupObjectMapper();
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler())
+                                      .setMessageConverters(createJsonLdMessageConverter(),
+                                              createDefaultMessageConverter(), createStringEncodingMessageConverter())
                                       .build();
     }
 

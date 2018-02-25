@@ -4,19 +4,28 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.cvut.kbss.jsonld.JsonLd;
+import cz.cvut.kbss.jsonld.jackson.JsonLdModule;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.util.HasUri;
 import cz.cvut.kbss.reporting.security.model.AuthenticationToken;
 import cz.cvut.kbss.reporting.security.model.UserDetails;
+import cz.cvut.kbss.reporting.util.Constants;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -50,7 +59,7 @@ public class Environment {
      */
     public static Principal getCurrentUserPrincipal() {
         return SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() :
-               null;
+                null;
     }
 
     public static Person getCurrentUser() {
@@ -70,6 +79,30 @@ public class Environment {
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         }
         return objectMapper;
+    }
+
+    /**
+     * Creates a Jackson JSON-LD message converter.
+     *
+     * @return JSON-LD message converter
+     */
+    public static HttpMessageConverter<?> createJsonLdMessageConverter() {
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.registerModule(new JsonLdModule());
+        final MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter(mapper);
+        converter.setSupportedMediaTypes(Collections.singletonList(MediaType.valueOf(JsonLd.MEDIA_TYPE)));
+        return converter;
+    }
+
+    public static HttpMessageConverter<?> createDefaultMessageConverter() {
+        return new MappingJackson2HttpMessageConverter(getObjectMapper());
+    }
+
+    public static HttpMessageConverter<?> createStringEncodingMessageConverter() {
+        return new StringHttpMessageConverter(Charset.forName(Constants.UTF_8_ENCODING));
     }
 
     /**

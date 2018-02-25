@@ -3,6 +3,8 @@ package cz.cvut.kbss.reporting.dto.event;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import cz.cvut.kbss.jopa.model.annotations.*;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.qam.Question;
 import cz.cvut.kbss.reporting.model.util.HasUri;
 
@@ -12,20 +14,27 @@ import java.util.Set;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "javaClass")
 @JsonIdentityInfo(property = "referenceId", generator = ObjectIdGenerators.PropertyGenerator.class)
+@OWLClass(iri = Vocabulary.s_c_event)
 public class EventDto implements HasUri {
 
+    @Id
     private URI uri;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_has_start_time)
     private Date startTime;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_has_end_time)
     private Date endTime;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_event_type)
     private URI eventType;
 
+    @Types
     private Set<String> types;
 
     private Integer referenceId;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_question)
     private Question question;
 
     private Integer index;

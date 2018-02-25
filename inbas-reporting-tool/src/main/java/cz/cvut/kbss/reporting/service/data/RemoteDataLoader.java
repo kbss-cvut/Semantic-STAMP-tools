@@ -1,7 +1,7 @@
 package cz.cvut.kbss.reporting.service.data;
 
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.exception.WebServiceIntegrationException;
-import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class RemoteDataLoader implements DataLoader {
     private HttpHeaders processHeaders(Map<String, String> params) {
         final HttpHeaders headers = new HttpHeaders();
         // Set default accept type to JSON-LD
-        headers.set(HttpHeaders.ACCEPT, Constants.APPLICATION_JSON_LD_TYPE);
+        headers.set(HttpHeaders.ACCEPT, JsonLd.MEDIA_TYPE);
         for (String header : SUPPORTED_HEADERS) {
             if (params.containsKey(header)) {
                 headers.set(header, params.get(header));

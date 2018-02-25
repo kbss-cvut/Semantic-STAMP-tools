@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.rest;
 
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.Occurrence;
@@ -25,12 +26,13 @@ public class OccurrenceController extends BaseController {
     @Autowired
     private DtoMapper mapper;
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public Collection<Occurrence> getOccurrences() {
         return occurrenceService.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{key}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/{key}",
+                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public Occurrence findByKey(@PathVariable("key") String key) {
         final Occurrence o = occurrenceService.findByKey(key);
         if (o == null) {
@@ -39,7 +41,8 @@ public class OccurrenceController extends BaseController {
         return o;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{key}/report", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/{key}/report",
+                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public OccurrenceReportDto getOccurrenceReport(@PathVariable("key") String key) {
         final Occurrence occurrence = findByKey(key);
         final OccurrenceReport report = occurrenceService.findByOccurrence(occurrence);

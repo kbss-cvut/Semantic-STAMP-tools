@@ -1,6 +1,8 @@
 package cz.cvut.kbss.reporting.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.github.jsonldjava.utils.JsonUtils;
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.dto.PersonUpdateDto;
 import cz.cvut.kbss.reporting.environment.config.RestSecurityConfig;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
@@ -24,6 +26,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -36,13 +39,16 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.servlet.Filter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -70,7 +76,7 @@ public class PersonControllerTest extends BaseControllerTestRunner {
     private SecurityUtils securityUtilsMock;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         super.setupObjectMapper();
         // WebApplicationContext is required for proper security. Otherwise, standaloneSetup could be used
@@ -83,7 +89,7 @@ public class PersonControllerTest extends BaseControllerTestRunner {
      */
     @EnableWebMvc
     @Configuration
-    public static class Config {
+    public static class Config extends WebMvcConfigurerAdapter {
         @Mock
         private PersonService personService;
 
@@ -118,6 +124,14 @@ public class PersonControllerTest extends BaseControllerTestRunner {
         @Bean
         public RestExceptionHandler restExceptionHandler() {
             return new RestExceptionHandler();
+        }
+
+        @Override
+        public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+            converters.add(Environment.createJsonLdMessageConverter());
+            converters.add(Environment.createDefaultMessageConverter());
+            converters.add(Environment.createStringEncodingMessageConverter());
+            super.configureMessageConverters(converters);
         }
     }
 
@@ -241,15 +255,7 @@ public class PersonControllerTest extends BaseControllerTestRunner {
         final Person user = Generator.getPerson();
         user.addType(Vocabulary.s_c_admin);
         Environment.setCurrentUser(user);
-        final List<Person> persons = IntStream.range(0, 5).mapToObj(i -> {
-            final Person p = new Person();
-            p.setUri(Generator.generateUri());
-            p.setFirstName("firstName" + i);
-            p.setLastName("lastName" + i);
-            p.setUsername("username" + i);
-            p.setPassword("password" + i);
-            return p;
-        }).collect(Collectors.toList());
+        final List<Person> persons = generatePersons();
         when(personService.findAll()).thenReturn(persons);
 
         final MvcResult mvcResult = mockMvc.perform(get("/persons")).andExpect(status().isOk()).andReturn();
@@ -260,6 +266,18 @@ public class PersonControllerTest extends BaseControllerTestRunner {
             assertEquals(persons.get(i).getUri(), result.get(i).getUri());
             assertNull(result.get(i).getPassword());
         }
+    }
+
+    private List<Person> generatePersons() {
+        return IntStream.range(0, 5).mapToObj(i -> {
+            final Person p = new Person();
+            p.setUri(Generator.generateUri());
+            p.setFirstName("firstName" + i);
+            p.setLastName("lastName" + i);
+            p.setUsername("username" + i);
+            p.setPassword("password" + i);
+            return p;
+        }).collect(Collectors.toList());
     }
 
     @Test
@@ -366,5 +384,43 @@ public class PersonControllerTest extends BaseControllerTestRunner {
 
         mockMvc.perform(delete("/persons/status").param("username", username)).andExpect(status().isNotFound());
         verify(personService, never()).disable(any());
+    }
+
+    @Test
+    public void findAllSupportsJsonLdMediaType() throws Exception {
+        final Person user = Generator.getPerson();
+        user.addType(Vocabulary.s_c_admin);
+        Environment.setCurrentUser(user);
+        final List<Person> persons = generatePersons();
+        when(personService.findAll()).thenReturn(persons);
+
+        final MvcResult mvcResult =
+                mockMvc.perform(get("/persons").accept(JsonLd.MEDIA_TYPE)).andExpect(status().isOk()).andReturn();
+        assertThat(mvcResult.getResponse().getContentType(), containsString(JsonLd.MEDIA_TYPE));
+        final Object result = JsonUtils.fromString(mvcResult.getResponse().getContentAsString());
+        assertTrue(result instanceof List);
+        final List<?> lResult = (List<?>) result;
+        assertEquals(persons.size(), lResult.size());
+        for (int i = 0; i < persons.size(); i++) {
+            final Object item = lResult.get(i);
+            assertTrue(item instanceof Map);
+            final Map<?, ?> mItem = (Map<?, ?>) item;
+            assertEquals(persons.get(i).getUri().toString(), mItem.get(JsonLd.ID));
+        }
+    }
+
+    @Test
+    public void registerSupportsJsonLdMediaType() throws Exception {
+        authenticateAnonymously();
+        final Person p = Generator.getPerson();
+        MvcResult result = mockMvc.perform(
+                post("/persons").content(Environment.loadData("data/personJsonLd.json", String.class))
+                                .contentType(JsonLd.MEDIA_TYPE))
+                                  .andReturn();
+        assertEquals(HttpStatus.CREATED, HttpStatus.valueOf(result.getResponse().getStatus()));
+        final ArgumentCaptor<Person> captor = ArgumentCaptor.forClass(Person.class);
+        verify(personService).persist(captor.capture());
+        assertTrue(p.nameEquals(captor.getValue()));
+        verifyLocationEquals("/persons/" + p.getUsername(), result);
     }
 }

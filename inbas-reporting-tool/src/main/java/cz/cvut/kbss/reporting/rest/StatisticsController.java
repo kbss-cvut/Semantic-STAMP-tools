@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.rest;
 
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.reporting.service.ConfigReader;
@@ -21,7 +22,8 @@ public class StatisticsController extends BaseController {
     @Autowired
     private ConfigReader configReader;
 
-    @RequestMapping(path = "/{queryName}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(path = "/{queryName}", method = RequestMethod.GET,
+                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public RawJson getQueryResult(@PathVariable String queryName, @RequestParam Map<String, String> bindings) {
         if (queryName.isEmpty()) {
             throw new BadRequestException("Query name is missing.");

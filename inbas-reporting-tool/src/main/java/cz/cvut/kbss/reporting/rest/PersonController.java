@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.rest;
 
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.dto.PersonUpdateDto;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.Person;
@@ -37,12 +38,13 @@ public class PersonController extends BaseController {
     }
 
     @PreAuthorize("hasRole('" + SecurityConstants.ROLE_ADMIN + "')")
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public Collection<Person> getAll() {
         return personService.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/current", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/current",
+                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public Person getCurrent(Principal principal) {
         final String username = principal.getName();
         final Person p = getByUsername(username);
@@ -59,7 +61,7 @@ public class PersonController extends BaseController {
     }
 
     @PreAuthorize("permitAll()")
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public ResponseEntity<Void> create(@RequestBody Person person) {
         personService.persist(person);
         LOG.trace("User {} successfully registered.", person);
@@ -69,7 +71,8 @@ public class PersonController extends BaseController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/current", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/current", method = RequestMethod.PUT,
+                    consumes = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateCurrentUser(@RequestBody PersonUpdateDto dto) {
         if (dto.getPassword() != null) {

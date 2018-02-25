@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.rest;
 
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.service.options.OptionsService;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class OptionsController extends BaseController {
     @Autowired
     private OptionsService optionsService;
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public Object getOptions(@RequestParam(value = Constants.OPTIONS_TYPE_QUERY_PARAM) String type) {
         try {
             return optionsService.getOptions(type);

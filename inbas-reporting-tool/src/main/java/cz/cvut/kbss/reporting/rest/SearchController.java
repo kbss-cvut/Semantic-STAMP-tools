@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.rest;
 
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.reporting.service.search.SearchService;
@@ -25,7 +26,7 @@ public class SearchController extends BaseController {
      * @param expression The expression to search for
      * @return Search results
      */
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public RawJson fullTextSearch(@RequestParam(value = EXPRESSION_PARAM, defaultValue = "") String expression) {
         if (expression.isEmpty()) {
             throw new BadRequestException("Cannot search for an empty string.");

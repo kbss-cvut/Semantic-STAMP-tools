@@ -36,11 +36,6 @@ public final class Constants {
     public static final String UTF_8_ENCODING = "UTF-8";
 
     /**
-     * JSON-LD MIME type.
-     */
-    public static final String APPLICATION_JSON_LD_TYPE = "application/ld+json";
-
-    /**
      * text/boolean MIME type. Useful for ASK queries.
      */
     public static final String TEXT_BOOLEAN_TYPE = "text/boolean";

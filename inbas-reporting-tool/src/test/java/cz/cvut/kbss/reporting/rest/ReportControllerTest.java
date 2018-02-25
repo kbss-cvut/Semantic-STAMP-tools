@@ -1,7 +1,9 @@
 package cz.cvut.kbss.reporting.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.github.jsonldjava.utils.JsonUtils;
 import cz.cvut.kbss.jopa.exceptions.RollbackException;
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
@@ -22,6 +24,7 @@ import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
 import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.*;
 import org.springframework.data.domain.Page;
@@ -32,10 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -402,5 +402,24 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         final ArgumentCaptor<Collection<ReportFilter>> captor = ArgumentCaptor.forClass(Collection.class);
         verify(reportServiceMock).findAll(eq(PageRequest.of(pageNo, pageSize)), captor.capture());
         assertTrue(captor.getValue().isEmpty());
+    }
+
+    @Ignore
+    @Test
+    public void getReportSupportsJsonLdMediaType() throws Exception {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.getOccurrence().setUri(URI.create(Vocabulary.s_c_Occurrence + "#32145"));
+        report.setKey(IdentificationUtils.generateKey());
+        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance12345"));
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final MvcResult mvcResult = mockMvc.perform(get(REPORTS_PATH + report.getKey()).accept(JsonLd.MEDIA_TYPE))
+                                           .andExpect(status().isOk())
+                                           .andReturn();
+        final Object result = JsonUtils.fromString(mvcResult.getResponse().getContentAsString());
+        assertTrue(result instanceof Map);
+        final Map<?, ?> mResult = (Map<?, ?>) result;
+        assertEquals(report.getUri().toString(), mResult.get(JsonLd.ID));
+        assertTrue(mResult.containsKey(Vocabulary.s_p_documents));
+        assertTrue(mResult.containsKey(Vocabulary.s_p_has_author));
     }
 }

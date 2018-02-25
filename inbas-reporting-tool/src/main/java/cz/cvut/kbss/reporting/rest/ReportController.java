@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.rest;
 
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportList;
@@ -53,7 +54,7 @@ public class ReportController extends BaseController {
         this.reportExporter = reportExporter;
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public ReportList getAllReports(@RequestParam(name = Constants.PAGE, required = false) Integer page,
                                     @RequestParam(name = Constants.PAGE_SIZE, required = false) Integer pageSize,
                                     @RequestParam MultiValueMap<String, String> params) {
@@ -73,7 +74,7 @@ public class ReportController extends BaseController {
         return filters;
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> createReport(@RequestBody LogicalDocument reportDto) {
         final LogicalDocument report = dtoMapper.reportDtoToReport(reportDto);
@@ -85,7 +86,8 @@ public class ReportController extends BaseController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{key}", method = RequestMethod.GET,
+                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public LogicalDocument getReport(@PathVariable("key") String key) {
         return dtoMapper.reportToReportDto(getReportInternal(key));
     }
@@ -98,7 +100,8 @@ public class ReportController extends BaseController {
         return report;
     }
 
-    @RequestMapping(value = "/{key}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{key}", method = RequestMethod.PUT,
+                    consumes = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateReport(@PathVariable("key") String key, @RequestBody LogicalDocument reportUpdate) {
         if (!key.equals(reportUpdate.getKey())) {
@@ -125,7 +128,8 @@ public class ReportController extends BaseController {
         reportService.removeReportChain(fileNumber);
     }
 
-    @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET,
+                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public LogicalDocument findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
         final LogicalDocument report = reportService.findLatestRevision(fileNumber);
         if (report == null) {
@@ -134,7 +138,8 @@ public class ReportController extends BaseController {
         return dtoMapper.reportToReportDto(report);
     }
 
-    @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET,
+                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public List<ReportRevisionInfo> getReportChainRevisions(@PathVariable("fileNumber") Long fileNumber) {
         final List<ReportRevisionInfo> revisions = reportService.getReportChainRevisions(fileNumber);
         if (revisions.isEmpty()) {
@@ -159,7 +164,8 @@ public class ReportController extends BaseController {
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET,
+                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public LogicalDocument getRevision(@PathVariable("fileNumber") Long fileNumber,
                                        @PathVariable("revision") Integer revision) {
         final LogicalDocument report = reportService.findRevision(fileNumber, revision);
@@ -177,8 +183,9 @@ public class ReportController extends BaseController {
      * @param initialReport The report to start from
      * @return New occurrence report (not persisted)
      */
-    @RequestMapping(value = "/initial", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/initial", method = RequestMethod.POST,
+                    consumes = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE},
+                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public OccurrenceReportDto createFromInitial(@RequestBody InitialReport initialReport) {
         return dtoMapper.occurrenceReportToOccurrenceReportDto(reportFactory.createFromInitialReport(initialReport));
     }
@@ -186,10 +193,11 @@ public class ReportController extends BaseController {
     /**
      * Export report with key to e5x xml
      *
-     * @param key
-     * @param response
+     * @param key      Report key
+     * @param response HTTP response object into which the exported XML will be written
      */
-    @RequestMapping(value = "/{key}/export/e5xxml", method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
+    @RequestMapping(value = "/{key}/export/e5xxml", method = RequestMethod.GET,
+                    produces = MediaType.APPLICATION_XML_VALUE)
     public void exportReportToE5XXml(@PathVariable("key") String key, HttpServletResponse response) {
         exportReportToE5XImpl(key, response, false);
     }
@@ -197,8 +205,8 @@ public class ReportController extends BaseController {
     /**
      * Export report with key to e5x (zipped e5x xml)
      *
-     * @param key
-     * @param response
+     * @param key      Report key
+     * @param response HTTP response object into which the exported zipped XML will be written
      */
     @RequestMapping(value = "/{key}/export/e5x", method = RequestMethod.GET, produces = {"application/zip"})
     public void exportReportToE5X(@PathVariable("key") String key, HttpServletResponse response) {
@@ -208,8 +216,8 @@ public class ReportController extends BaseController {
     /**
      * export the report with key as E5X.
      *
-     * @param key
-     * @param response
+     * @param key      Report key
+     * @param response Target HTTP response object
      * @param zip      true for e5x (zipped e5x xml), false for e5x xml
      */
     protected void exportReportToE5XImpl(String key, HttpServletResponse response, boolean zip) {

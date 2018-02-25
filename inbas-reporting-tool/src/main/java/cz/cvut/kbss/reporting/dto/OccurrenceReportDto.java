@@ -1,6 +1,7 @@
 package cz.cvut.kbss.reporting.dto;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import cz.cvut.kbss.jopa.model.annotations.*;
 import cz.cvut.kbss.reporting.dto.event.FactorGraph;
 import cz.cvut.kbss.reporting.dto.event.OccurrenceDto;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
@@ -14,40 +15,58 @@ import java.util.Set;
 
 // It is important that occurrence comes before factorGraph, because it defines a reference to the occurrence, which can the be used
 @JsonPropertyOrder(value = {"uri, key, occurrence, factorGraph"})
+@OWLClass(iri = Vocabulary.s_c_occurrence_report)
 public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
+    @Id
     private URI uri;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_has_key)
     private String key;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_has_file_number)
     private Long fileNumber;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_reporting_phase)
     private URI phase;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_documents)
     private OccurrenceDto occurrence;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_based_on)
     private InitialReport initialReport;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_factor)
     private FactorGraph factorGraph;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_author)
     private Person author;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_created)
     private Date dateCreated;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_modified)
     private Date lastModified;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_last_editor)
     private Person lastModifiedBy;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_has_revision)
     private Integer revision;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_severity_assessment)
     private URI severityAssessment;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure)
     private Set<CorrectiveMeasureRequestDto> correctiveMeasures;
 
+    @OWLAnnotationProperty(iri = Vocabulary.s_p_description)
     private String summary;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_references)
     private Set<Resource> references;
 
+    @Types
     private Set<String> types;
 
     @Override
