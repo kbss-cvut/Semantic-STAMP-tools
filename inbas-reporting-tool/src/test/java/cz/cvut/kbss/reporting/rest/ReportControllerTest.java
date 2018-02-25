@@ -422,4 +422,21 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         assertTrue(mResult.containsKey(Vocabulary.s_p_documents));
         assertTrue(mResult.containsKey(Vocabulary.s_p_has_author));
     }
+
+    @Ignore
+    @Test
+    public void createReportSupportsJsonLdMediaType() throws Exception {
+        final String key = "117";
+        doAnswer(call -> {
+            final OccurrenceReport r = (OccurrenceReport) call.getArguments()[0];
+            r.setKey(key);
+            return null;
+        }).when(reportServiceMock).persist(any(OccurrenceReport.class));
+
+        final MvcResult result = mockMvc.perform(
+                post("/reports").content(Environment.loadData("data/occurrenceReportJsonLd.json", String.class))
+                                .contentType(JsonLd.MEDIA_TYPE)).andReturn();
+        verifyLocationEquals(REPORTS_PATH + key, result);
+        verify(reportServiceMock).persist(any(OccurrenceReport.class));
+    }
 }
