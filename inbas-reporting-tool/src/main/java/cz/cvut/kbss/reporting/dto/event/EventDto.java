@@ -37,6 +37,7 @@ public class EventDto implements HasUri {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_question)
     private Question question;
 
+    @OWLDataProperty(iri = Vocabulary.s_p_child_index)
     private Integer index;
 
     @Override

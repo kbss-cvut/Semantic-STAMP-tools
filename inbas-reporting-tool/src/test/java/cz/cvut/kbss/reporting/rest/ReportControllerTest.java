@@ -404,7 +404,6 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         assertTrue(captor.getValue().isEmpty());
     }
 
-    @Ignore
     @Test
     public void getReportSupportsJsonLdMediaType() throws Exception {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);

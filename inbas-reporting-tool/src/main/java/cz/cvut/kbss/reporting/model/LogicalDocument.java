@@ -15,6 +15,7 @@ import java.util.Date;
  * all reports. In the future, the interface should be replaced with a proper parent class, which would declare the
  * corresponding fields.
  */
+//@OWLClass(iri = Vocabulary.s_c_logical_document)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "javaClass")
 public interface LogicalDocument extends HasOwlKey, HasUri {
 
