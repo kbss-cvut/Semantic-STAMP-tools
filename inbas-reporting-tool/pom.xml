@@ -526,6 +526,7 @@
                     <whole-ontology-as-ics>true</whole-ontology-as-ics>
                     <!--<context-name>eccairs-model</context-name>-->
                     <vocabulary-only>true</vocabulary-only>
+                    <ignore-failed-imports>true</ignore-failed-imports>
                 </configuration>
                 <executions>
                     <execution>

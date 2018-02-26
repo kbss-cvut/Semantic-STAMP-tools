@@ -26,7 +26,7 @@ public class JsonLdProcessingTest {
         final List<URI> expected = Arrays.asList(URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/first"),
                 URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/second"),
                 URI.create("http://onto.fel.cvut.cz/ontologies/inbas-test/third"));
-        assertEquals(expected, JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than_A));
+        assertEquals(expected, JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class JsonLdProcessingTest {
         final String invalidJson = "This is definitely not a valid JSON.";
         thrown.expect(JsonProcessingException.class);
         thrown.expectMessage("The specified JSON is not valid. JSON: " + invalidJson);
-        JsonLdProcessing.getOrderedOptions(new RawJson(invalidJson), Vocabulary.s_p_is_higher_than_A);
+        JsonLdProcessing.getOrderedOptions(new RawJson(invalidJson), Vocabulary.s_p_is_higher_than);
     }
 
     @Test
@@ -42,7 +42,7 @@ public class JsonLdProcessingTest {
         final RawJson json = new RawJson(Environment.loadData("data/occurrenceWithSubEvents.json", String.class));
         thrown.expect(JsonProcessingException.class);
         thrown.expectMessage("The specified JSON does not contain options that can be sorted.");
-        JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than_A);
+        JsonLdProcessing.getOrderedOptions(json, Vocabulary.s_p_is_higher_than);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class JsonLdProcessingTest {
     public void getItemWithTypeReturnsNullIfNoMatchingItemIsFound() throws Exception {
         final RawJson json = new RawJson(Environment.loadData("option/reportingPhase.json", String.class));
         // Order property is definitely not it types of any of the items
-        assertNull(JsonLdProcessing.getItemWithType(json, Vocabulary.s_p_is_higher_than_A));
+        assertNull(JsonLdProcessing.getItemWithType(json, Vocabulary.s_p_is_higher_than));
     }
 
     @Test

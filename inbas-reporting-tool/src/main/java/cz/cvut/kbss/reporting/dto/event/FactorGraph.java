@@ -7,13 +7,13 @@ import cz.cvut.kbss.reporting.model.Vocabulary;
 import java.util.List;
 import java.util.Set;
 
-@OWLClass(iri = Vocabulary.ONTOLOGY_IRI_model_A + "/factor_graph")
+@OWLClass(iri = Vocabulary.ONTOLOGY_IRI_model + "/factor_graph")
 public class FactorGraph {
 
-    @OWLObjectProperty(iri = Vocabulary.ONTOLOGY_IRI_model_A + "/has_nodes")
+    @OWLObjectProperty(iri = Vocabulary.ONTOLOGY_IRI_model + "/has_nodes")
     private List<EventDto> nodes;
 
-    @OWLObjectProperty(iri = Vocabulary.ONTOLOGY_IRI_model_A + "/has_edges")
+    @OWLObjectProperty(iri = Vocabulary.ONTOLOGY_IRI_model + "/has_edges")
     private Set<FactorGraphEdge> edges;
 
     public List<EventDto> getNodes() {

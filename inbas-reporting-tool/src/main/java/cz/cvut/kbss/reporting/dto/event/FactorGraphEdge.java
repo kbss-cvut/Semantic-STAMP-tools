@@ -8,19 +8,19 @@ import cz.cvut.kbss.reporting.model.Vocabulary;
 
 import java.net.URI;
 
-@OWLClass(iri = Vocabulary.ONTOLOGY_IRI_model_A + "/factor_graph_edge")
+@OWLClass(iri = Vocabulary.ONTOLOGY_IRI_model + "/factor_graph_edge")
 public class FactorGraphEdge {
 
     @Id
     private URI uri;
 
-    @OWLDataProperty(iri = Vocabulary.ONTOLOGY_IRI_model_A + "/edge_from")
+    @OWLDataProperty(iri = Vocabulary.ONTOLOGY_IRI_model + "/edge_from")
     private Integer from;
 
-    @OWLDataProperty(iri = Vocabulary.ONTOLOGY_IRI_model_A + "/edge_to")
+    @OWLDataProperty(iri = Vocabulary.ONTOLOGY_IRI_model + "/edge_to")
     private Integer to;
 
-    @OWLObjectProperty(iri = Vocabulary.ONTOLOGY_IRI_model_A + "/edge_type")
+    @OWLObjectProperty(iri = Vocabulary.ONTOLOGY_IRI_model + "/edge_type")
     private URI linkType;
 
     public FactorGraphEdge() {
