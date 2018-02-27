@@ -48,6 +48,7 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
 
     protected AbstractReport() {
         this.types = new HashSet<>(4);
+        types.add(Vocabulary.s_c_report);
     }
 
     @Override
