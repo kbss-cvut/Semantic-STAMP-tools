@@ -11,6 +11,7 @@ import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,7 +41,8 @@ public class AuthenticationSuccess implements AuthenticationSuccessHandler, Logo
     private final HttpSession session;
 
     @Autowired
-    public AuthenticationSuccess(ObjectMapper mapper, ConfigReader config, HttpSession session) {
+    public AuthenticationSuccess(@Qualifier("objectMapper") ObjectMapper mapper, ConfigReader config,
+                                 HttpSession session) {
         this.mapper = mapper;
         this.config = config;
         this.session = session;

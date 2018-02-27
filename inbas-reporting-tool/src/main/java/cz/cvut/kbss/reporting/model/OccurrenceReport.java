@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@OWLClass(iri = Vocabulary.s_c_occurrence_report)
+@OWLClass(iri = Vocabulary.s_c_occurrence_report_A)
 public class OccurrenceReport extends AbstractOccurrenceReport {
 
     @ParticipationConstraints(nonEmpty = true)
@@ -82,7 +82,7 @@ public class OccurrenceReport extends AbstractOccurrenceReport {
         final OccurrenceReportDto dto = new OccurrenceReportDto();
         copyBasicAttributesToDto(dto);
         dto.setPhase(phase);
-        dto.getTypes().add(Vocabulary.s_c_occurrence_report);
+        dto.getTypes().add(Vocabulary.s_c_occurrence_report_A);
         assert occurrence != null;
         dto.setIdentification(occurrence.getName());
         dto.setDate(occurrence.getStartTime());

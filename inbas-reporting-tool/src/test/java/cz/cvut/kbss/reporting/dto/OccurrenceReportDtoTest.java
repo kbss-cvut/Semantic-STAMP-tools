@@ -44,6 +44,6 @@ public class OccurrenceReportDtoTest {
         final OccurrenceReportDto dto = dtoMapper
                 .occurrenceReportToOccurrenceReportDto(OccurrenceReportGenerator.generateOccurrenceReport(true));
         final ReportDto target = dto.toReportDto();
-        assertTrue(target.getTypes().contains(Vocabulary.s_c_occurrence_report));
+        assertTrue(target.getTypes().contains(Vocabulary.s_c_occurrence_report_A));
     }
 }

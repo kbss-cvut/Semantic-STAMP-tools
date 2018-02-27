@@ -9,7 +9,7 @@ import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.model.AbstractOccurrenceReport;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 
-@OWLClass(iri = Vocabulary.s_c_occurrence_report)
+@OWLClass(iri = Vocabulary.s_c_occurrence_report_A)
 public class OccurrenceReport extends AbstractOccurrenceReport {
 
     @ParticipationConstraints(nonEmpty = true)
@@ -29,7 +29,7 @@ public class OccurrenceReport extends AbstractOccurrenceReport {
         final OccurrenceReportDto dto = new OccurrenceReportDto();
         copyBasicAttributesToDto(dto);
         dto.setPhase(phase);
-        dto.getTypes().add(Vocabulary.s_c_occurrence_report);
+        dto.getTypes().add(Vocabulary.s_c_occurrence_report_A);
         assert occurrence != null;
         dto.setIdentification(occurrence.getName());
         dto.setDate(occurrence.getStartTime());

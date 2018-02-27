@@ -93,6 +93,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void configurePathMatch(PathMatchConfigurer matcher) {
-        matcher.setUseRegisteredSuffixPatternMatch(false);
+        matcher.setUseSuffixPatternMatch(false);
     }
 }

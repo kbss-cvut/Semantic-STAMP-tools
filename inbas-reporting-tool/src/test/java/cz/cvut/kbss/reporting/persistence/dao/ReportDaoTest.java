@@ -34,7 +34,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
     public void getReportTypesReturnsClassesOfOccurrenceReport() {
         final OccurrenceReport report = persistReport();
         // At least these
-        final Set<String> minExpected = new HashSet<>(Arrays.asList(Vocabulary.s_c_report, Vocabulary.s_c_occurrence_report));
+        final Set<String> minExpected = new HashSet<>(Arrays.asList(Vocabulary.s_c_report, Vocabulary.s_c_occurrence_report_A));
         final Set<String> types = reportDao.getReportTypes(report.getKey());
         assertTrue(types.containsAll(minExpected));
     }
@@ -51,7 +51,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
     public void getReportTypesGetsTypesForReportIdentifiedByUri() {
         final OccurrenceReport report = persistReport();
         // At least these
-        final Set<String> minExpected = new HashSet<>(Arrays.asList(Vocabulary.s_c_report, Vocabulary.s_c_occurrence_report));
+        final Set<String> minExpected = new HashSet<>(Arrays.asList(Vocabulary.s_c_report, Vocabulary.s_c_occurrence_report_A));
         final Set<String> types = reportDao.getReportTypes(report.getUri());
         assertTrue(types.containsAll(minExpected));
     }
@@ -68,7 +68,7 @@ public class ReportDaoTest extends BaseDaoTestRunner {
         final List<OccurrenceReport> chain = persistReportChain();
         // At least these
         final Set<String> minExpected = new HashSet<>();
-        minExpected.add(Vocabulary.s_c_occurrence_report);
+        minExpected.add(Vocabulary.s_c_occurrence_report_A);
         chain.forEach(r -> minExpected.addAll(r.getTypes()));
 
         final Set<String> types = reportDao.getChainTypes(chain.get(0).getFileNumber());

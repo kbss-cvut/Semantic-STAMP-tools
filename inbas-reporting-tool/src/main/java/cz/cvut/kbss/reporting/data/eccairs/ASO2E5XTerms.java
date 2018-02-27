@@ -17,7 +17,7 @@ public class ASO2E5XTerms {
     
     private void initMapping(){
         // entities
-        map.put(Vocabulary.s_c_occurrence_report, "Occurrence");
+        map.put(Vocabulary.s_c_occurrence_report_A, "Occurrence");
         map.put(Vocabulary.s_c_Aerodrome, "Aerodrome_General");
         map.put(Vocabulary.s_c_Airspace, "Air_Space");
 // TODO        map.put(Vocabulary.s_c_Air_, "Air_Navigation_Service");

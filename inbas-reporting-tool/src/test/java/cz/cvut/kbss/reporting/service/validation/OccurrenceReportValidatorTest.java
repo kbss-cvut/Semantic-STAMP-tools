@@ -36,7 +36,7 @@ public class OccurrenceReportValidatorTest {
     public void validReportPassesUpdateValidation() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setKey(IdentificationUtils.generateKey());
-        report.setUri(URI.create(Vocabulary.s_c_occurrence_report + "#instance"));
+        report.setUri(URI.create(Vocabulary.s_c_occurrence_report_A + "#instance"));
         report.getAuthor().generateUri();
         final OccurrenceReport copy = new OccurrenceReport(report);
         copy.setKey(report.getKey());
