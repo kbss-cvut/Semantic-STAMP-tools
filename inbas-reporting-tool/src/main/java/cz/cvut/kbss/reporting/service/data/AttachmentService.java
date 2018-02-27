@@ -2,7 +2,6 @@ package cz.cvut.kbss.reporting.service.data;
 
 import cz.cvut.kbss.reporting.exception.AttachmentException;
 import cz.cvut.kbss.reporting.model.AbstractReport;
-import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.Resource;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.service.ConfigReader;
@@ -18,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Manages binary file attachments (images, audio, video etc.) of reports.
@@ -92,7 +92,7 @@ public class AttachmentService {
         }
     }
 
-    private String generateReportAttachmentsPath(File attachmentsDir, LogicalDocument report) {
+    private String generateReportAttachmentsPath(File attachmentsDir, AbstractReport report) {
         return attachmentsDir.getAbsolutePath() + File.separator + report.getFileNumber() + File.separator +
                 report.getKey();
     }
@@ -109,5 +109,25 @@ public class AttachmentService {
         resource.setTypes(Collections.singleton(Vocabulary.s_c_SensoryData));
         report.addReference(resource);
         reportService.update(report);
+    }
+
+    /**
+     * Retrieves the attachment file with the specified name related to the specified report.
+     *
+     * @param report   Report to which the file is attached
+     * @param fileName Attachment name
+     * @return Attachment file
+     * @throws AttachmentException If the attachment does not exist
+     */
+    public File getAttachment(AbstractReport report, String fileName) {
+        Objects.requireNonNull(report);
+        Objects.requireNonNull(fileName);
+
+        final String attachmentPath = generateReportAttachmentsPath(getAttachmentsDir(), report);
+        final File result = new File(attachmentPath + File.separator + fileName);
+        if (!result.exists()) {
+            throw new AttachmentException("Attachment file " + fileName + " not found for report " + report + ".");
+        }
+        return result;
     }
 }
