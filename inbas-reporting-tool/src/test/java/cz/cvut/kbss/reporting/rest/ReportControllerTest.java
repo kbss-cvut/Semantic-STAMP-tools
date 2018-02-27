@@ -20,6 +20,7 @@ import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
+import cz.cvut.kbss.reporting.service.data.AttachmentService;
 import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
 import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
@@ -31,14 +32,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.File;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -54,6 +61,9 @@ public class ReportControllerTest extends BaseControllerTestRunner {
 
     @Mock
     private OccurrenceReportFactory reportFactoryMock;
+
+    @Mock
+    private AttachmentService attachmentServiceMock;
 
     @InjectMocks
     private ReportController controller;
@@ -437,5 +447,82 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                                 .contentType(JsonLd.MEDIA_TYPE)).andReturn();
         verifyLocationEquals(REPORTS_PATH + key, result);
         verify(reportServiceMock).persist(any(OccurrenceReport.class));
+    }
+
+    @Test
+    public void getAttachmentRetrievesAttachmentFile() throws Exception {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setKey(IdentificationUtils.generateKey());
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final File attachment = generateBinaryFile();
+        when(attachmentServiceMock.getAttachment(report, attachment.getName())).thenReturn(attachment);
+
+        final MvcResult mvcResult = mockMvc
+                .perform(get(REPORTS_PATH + report.getKey() + "/attachments/" + attachment.getName()))
+                .andExpect(status().isOk())
+                .andReturn();
+        final String disposition = mvcResult.getResponse().getHeader(HttpHeaders.CONTENT_DISPOSITION);
+        assertThat(disposition, containsString(attachment.getName()));
+        final byte[] result = mvcResult.getResponse().getContentAsByteArray();
+        assertTrue(Arrays.equals(Environment.DATA.getBytes(), result));
+    }
+
+    private File generateBinaryFile() throws Exception {
+        final File file = File.createTempFile("attachment", ".jpg");
+        file.deleteOnExit();
+        Files.write(file.toPath(), Environment.DATA.getBytes(), StandardOpenOption.APPEND);
+        return file;
+    }
+
+    @Test
+    public void getAttachmentThrowsNotFoundForUnknownReportKey() throws Exception {
+        final String unknownKey = "12345";
+        final String fileName = "image.jpg";
+        when(reportServiceMock.findByKey(unknownKey)).thenReturn(null);
+        mockMvc.perform(get(REPORTS_PATH + unknownKey + "/attachments/" + fileName))
+               .andExpect(status().isNotFound());
+        verify(attachmentServiceMock, never()).getAttachment(any(), anyString());
+    }
+
+    @Test
+    public void addAttachmentAddsAttachmentToReport() throws Exception {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setKey(IdentificationUtils.generateKey());
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final File attachment = generateBinaryFile();
+
+        final MockMultipartFile upload = new MockMultipartFile("file", attachment.getName(), MediaType.IMAGE_JPEG_VALUE,
+                Environment.DATA.getBytes());
+        mockMvc.perform(fileUpload(REPORTS_PATH + report.getKey() + "/attachments").file(upload))
+               .andExpect(status().isCreated());
+        verify(attachmentServiceMock).addAttachment(eq(report), eq(attachment.getName()), notNull());
+    }
+
+    @Test
+    public void addAttachmentReturnsAttachmentLocationInHeader() throws Exception {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setKey(IdentificationUtils.generateKey());
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final File attachment = generateBinaryFile();
+
+        final MockMultipartFile upload = new MockMultipartFile("file", attachment.getName(), MediaType.IMAGE_JPEG_VALUE,
+                Environment.DATA.getBytes());
+        final MvcResult mvcResult = mockMvc
+                .perform(fileUpload(REPORTS_PATH + report.getKey() + "/attachments").file(upload))
+                .andExpect(status().isCreated()).andReturn();
+        verifyLocationEquals(REPORTS_PATH + report.getKey() + "/attachments/" + attachment.getName(), mvcResult);
+    }
+
+    @Test
+    public void addAttachmentThrowsNotFoundExceptionForUnknownReportKey() throws Exception {
+        final String reportKey = "12345";
+        when(reportServiceMock.findByKey(reportKey)).thenReturn(null);
+        final File attachment = generateBinaryFile();
+
+        final MockMultipartFile upload = new MockMultipartFile("file", attachment.getName(), MediaType.IMAGE_JPEG_VALUE,
+                Environment.DATA.getBytes());
+        mockMvc.perform(fileUpload(REPORTS_PATH + reportKey + "/attachments").file(upload))
+               .andExpect(status().isNotFound());
+        verify(attachmentServiceMock, never()).addAttachment(any(), eq(attachment.getName()), any());
     }
 }

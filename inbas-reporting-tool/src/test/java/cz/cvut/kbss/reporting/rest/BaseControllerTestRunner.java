@@ -28,7 +28,9 @@ public abstract class BaseControllerTestRunner {
         setupObjectMapper();
         this.mockMvc = MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new RestExceptionHandler())
                                       .setMessageConverters(createJsonLdMessageConverter(),
-                                              createDefaultMessageConverter(), createStringEncodingMessageConverter())
+                                              createDefaultMessageConverter(), createStringEncodingMessageConverter(),
+                                              createResourceMessageConverter())
+                                      .setUseSuffixPatternMatch(false)
                                       .build();
     }
 

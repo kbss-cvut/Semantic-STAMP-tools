@@ -14,6 +14,7 @@ import cz.cvut.kbss.reporting.security.model.UserDetails;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.context.SecurityContext;
@@ -30,6 +31,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public class Environment {
+
+    /**
+     * Binary test data for attachment-processing tests.
+     */
+    public static final String DATA = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     private static Person currentUser;
 
@@ -59,7 +65,7 @@ public class Environment {
      */
     public static Principal getCurrentUserPrincipal() {
         return SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() :
-                null;
+               null;
     }
 
     public static Person getCurrentUser() {
@@ -103,6 +109,10 @@ public class Environment {
 
     public static HttpMessageConverter<?> createStringEncodingMessageConverter() {
         return new StringHttpMessageConverter(Charset.forName(Constants.UTF_8_ENCODING));
+    }
+
+    public static HttpMessageConverter<?> createResourceMessageConverter() {
+        return new ResourceHttpMessageConverter();
     }
 
     /**

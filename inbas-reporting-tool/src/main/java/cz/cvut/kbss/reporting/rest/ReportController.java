@@ -4,19 +4,23 @@ import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportList;
+import cz.cvut.kbss.reporting.exception.AttachmentException;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
+import cz.cvut.kbss.reporting.model.AbstractReport;
 import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
 import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
+import cz.cvut.kbss.reporting.service.data.AttachmentService;
 import cz.cvut.kbss.reporting.service.data.export.ReportExporter;
 import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -25,8 +29,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,13 +51,17 @@ public class ReportController extends BaseController {
 
     private final ReportExporter reportExporter;
 
+    private final AttachmentService attachmentService;
+
     @Autowired
     public ReportController(@Qualifier("cachingReportBusinessService") ReportBusinessService reportService,
-                            DtoMapper dtoMapper, OccurrenceReportFactory reportFactory, ReportExporter reportExporter) {
+                            DtoMapper dtoMapper, OccurrenceReportFactory reportFactory, ReportExporter reportExporter,
+                            AttachmentService attachmentService) {
         this.reportService = reportService;
         this.dtoMapper = dtoMapper;
         this.reportFactory = reportFactory;
         this.reportExporter = reportExporter;
+        this.attachmentService = attachmentService;
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
@@ -87,13 +97,13 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/{key}", method = RequestMethod.GET,
-                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
+            produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public LogicalDocument getReport(@PathVariable("key") String key) {
         return dtoMapper.reportToReportDto(getReportInternal(key));
     }
 
-    private LogicalDocument getReportInternal(String key) {
-        final LogicalDocument report = reportService.findByKey(key);
+    private AbstractReport getReportInternal(String key) {
+        final AbstractReport report = reportService.findByKey(key);
         if (report == null) {
             throw NotFoundException.create("Occurrence report", key);
         }
@@ -101,7 +111,7 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/{key}", method = RequestMethod.PUT,
-                    consumes = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
+            consumes = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateReport(@PathVariable("key") String key, @RequestBody LogicalDocument reportUpdate) {
         if (!key.equals(reportUpdate.getKey())) {
@@ -122,6 +132,35 @@ public class ReportController extends BaseController {
         reportService.transitionToNextPhase(report);
     }
 
+    @RequestMapping(value = "/{key}/attachments", method = RequestMethod.POST)
+    public ResponseEntity<Void> addAttachment(@PathVariable("key") String key,
+                                              @RequestParam("file") MultipartFile attachment) {
+        final AbstractReport report = getReportInternal(key);
+        try {
+            attachmentService.addAttachment(report, attachment.getOriginalFilename(), attachment.getInputStream());
+        } catch (IOException e) {
+            throw new AttachmentException("Unable to read file content from request.", e);
+        }
+        final HttpHeaders location = RestUtils
+                .createLocationHeaderFromCurrentUri("/{name}", attachment.getOriginalFilename());
+        return new ResponseEntity<>(location, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/{key}/attachments/{name}", method = RequestMethod.GET)
+    public ResponseEntity<FileSystemResource> getAttachment(@PathVariable("key") String key,
+                                                            @PathVariable("name") String name,
+                                                            HttpServletResponse response) {
+        final AbstractReport report = reportService.findByKey(key);
+        if (report == null) {
+            // Can't use the regular NotFoundException mechanism, because Spring expects to return an image file, so
+            // it is unable to return a JSON with error info
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + name);
+        final File attachment = attachmentService.getAttachment(report, name);
+        return new ResponseEntity<>(new FileSystemResource(attachment), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeChain(@PathVariable("fileNumber") Long fileNumber) {
@@ -129,7 +168,7 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/chain/{fileNumber}", method = RequestMethod.GET,
-                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
+            produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public LogicalDocument findLatestRevision(@PathVariable("fileNumber") Long fileNumber) {
         final LogicalDocument report = reportService.findLatestRevision(fileNumber);
         if (report == null) {
@@ -139,7 +178,7 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions", method = RequestMethod.GET,
-                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
+            produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public List<ReportRevisionInfo> getReportChainRevisions(@PathVariable("fileNumber") Long fileNumber) {
         final List<ReportRevisionInfo> revisions = reportService.getReportChainRevisions(fileNumber);
         if (revisions.isEmpty()) {
@@ -165,7 +204,7 @@ public class ReportController extends BaseController {
     }
 
     @RequestMapping(value = "/chain/{fileNumber}/revisions/{revision}", method = RequestMethod.GET,
-                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
+            produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public LogicalDocument getRevision(@PathVariable("fileNumber") Long fileNumber,
                                        @PathVariable("revision") Integer revision) {
         final LogicalDocument report = reportService.findRevision(fileNumber, revision);
@@ -184,8 +223,8 @@ public class ReportController extends BaseController {
      * @return New occurrence report (not persisted)
      */
     @RequestMapping(value = "/initial", method = RequestMethod.POST,
-                    consumes = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE},
-                    produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
+            consumes = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE},
+            produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public OccurrenceReportDto createFromInitial(@RequestBody InitialReport initialReport) {
         return dtoMapper.occurrenceReportToOccurrenceReportDto(reportFactory.createFromInitialReport(initialReport));
     }
@@ -197,7 +236,7 @@ public class ReportController extends BaseController {
      * @param response HTTP response object into which the exported XML will be written
      */
     @RequestMapping(value = "/{key}/export/e5xxml", method = RequestMethod.GET,
-                    produces = MediaType.APPLICATION_XML_VALUE)
+            produces = MediaType.APPLICATION_XML_VALUE)
     public void exportReportToE5XXml(@PathVariable("key") String key, HttpServletResponse response) {
         exportReportToE5XImpl(key, response, false);
     }

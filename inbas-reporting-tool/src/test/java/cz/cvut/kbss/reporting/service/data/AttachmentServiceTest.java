@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.service.data;
 import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.exception.AttachmentException;
+import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Resource;
@@ -29,14 +30,13 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Optional;
 
+import static cz.cvut.kbss.reporting.environment.util.Environment.DATA;
 import static cz.cvut.kbss.reporting.util.ConfigParam.ATTACHMENT_DIR;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
 @ContextConfiguration(initializers = PropertyMockingApplicationContextInitializer.class)
 public class AttachmentServiceTest extends BaseServiceTestRunner {
-
-    private static final String DATA = "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -163,11 +163,11 @@ public class AttachmentServiceTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void getAttachmentThrowsAttachmentExceptionWhenCorrespondingFileIsNotFound() throws Exception {
+    public void getAttachmentThrowsNotFoundExceptionWhenCorrespondingFileIsNotFound() throws Exception {
         reportService.persist(report);
         copyAttachment(report);
         final String wrongName = "wrongName.jpg";
-        thrown.expect(AttachmentException.class);
+        thrown.expect(NotFoundException.class);
         thrown.expectMessage(containsString("Attachment file " + wrongName + " not found for report " + report));
 
         service.getAttachment(report, wrongName);

@@ -44,7 +44,8 @@ public class TestUtils {
 
     /**
      * Checks that there are no instances of the specified class in the repository.
-     * @param emf Persistence context factory
+     *
+     * @param emf      Persistence context factory
      * @param classIri IRI of the class to check
      */
     public static void verifyAllInstancesRemoved(EntityManagerFactory emf, String classIri) {
