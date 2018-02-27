@@ -139,4 +139,14 @@ public class OccurrenceReportTest {
         final OccurrenceReport copy = new OccurrenceReport(report);
         assertSame(report.getInitialReport(), copy.getInitialReport());
     }
+
+    @Test
+    public void addReferenceInitializesAttributeWhenItIsNull() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        assertNull(report.getReferences());
+        final Resource r = new Resource();
+        r.setReference("test");
+        report.addReference(r);
+        assertTrue(report.getReferences().contains(r));
+    }
 }

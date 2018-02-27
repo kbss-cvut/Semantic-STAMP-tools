@@ -6,6 +6,7 @@ import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @MappedSuperclass
@@ -120,6 +121,19 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
 
     public void setReferences(Set<Resource> references) {
         this.references = references;
+    }
+
+    /**
+     * Adds the specified resource reference to this report.
+     *
+     * @param resource The resource to add
+     */
+    public void addReference(Resource resource) {
+        Objects.requireNonNull(resource);
+        if (references == null) {
+            this.references = new HashSet<>(4);
+        }
+        references.add(resource);
     }
 
     public Set<String> getTypes() {

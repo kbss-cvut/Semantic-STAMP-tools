@@ -3,6 +3,9 @@ package cz.cvut.kbss.reporting.util;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 
+/**
+ * Application-wide constants.
+ */
 public final class Constants {
 
     /**

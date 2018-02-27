@@ -45,7 +45,11 @@ public enum ConfigParam {
     /**
      * index.html location, used by Portal authentication
      */
-    INDEX_FILE("indexFile");
+    INDEX_FILE("indexFile"),
+    /**
+     * Directory into which report attachments should be stored.
+     */
+    ATTACHMENT_DIR("attachmentDir");
 
     private final String name;
 

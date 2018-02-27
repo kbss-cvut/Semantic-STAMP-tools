@@ -3,8 +3,10 @@ package cz.cvut.kbss.reporting.model;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.ParticipationConstraints;
+import cz.cvut.kbss.jopa.model.annotations.Types;
 
 import java.util.Objects;
+import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_Resource)
 public class Resource extends AbstractEntity {
@@ -15,6 +17,9 @@ public class Resource extends AbstractEntity {
 
     @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String description;
+
+    @Types
+    private Set<String> types;
 
     public Resource() {
     }
@@ -39,6 +44,14 @@ public class Resource extends AbstractEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<String> getTypes() {
+        return types;
+    }
+
+    public void setTypes(Set<String> types) {
+        this.types = types;
     }
 
     @Override
