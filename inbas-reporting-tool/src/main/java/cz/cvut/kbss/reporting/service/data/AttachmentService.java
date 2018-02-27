@@ -17,7 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Objects;
 
 /**
@@ -130,5 +132,66 @@ public class AttachmentService {
             throw new NotFoundException("Attachment file " + fileName + " not found for report " + report + ".");
         }
         return result;
+    }
+
+    /**
+     * Deletes attachment file represented by the specified resource.
+     *
+     * @param report   Report to which the resource is attached
+     * @param resource Resource representing the attachment file
+     */
+    public void deleteAttachment(AbstractReport report, Resource resource) {
+        Objects.requireNonNull(report);
+        Objects.requireNonNull(resource);
+
+        final File attachment = new File(
+                generateReportAttachmentsPath(getAttachmentsDir(), report) + File.separator + resource.getReference());
+        if (!attachment.exists()) {
+            return;
+        }
+        boolean result = attachment.delete();
+        if (result) {
+            LOG.debug("Successfully deleted attachment {} of report {}.", resource.getReference(), report);
+        } else {
+            LOG.warn("Failed to delete attachment {} of report {}.", resource.getReference(), report);
+        }
+    }
+
+    /**
+     * Deletes all attachment files related to the specified report.
+     *
+     * @param report Report whose attachments should be removed
+     */
+    public void deleteAttachments(AbstractReport report) {
+        Objects.requireNonNull(report);
+        final File reportDir = new File(generateReportAttachmentsPath(getAttachmentsDir(), report));
+        if (!reportDir.exists()) {
+            return;
+        }
+        LOG.debug("Deleting all attachments of report {}.", report);
+        recursivelyDeleteDirectory(reportDir);
+    }
+
+    private void recursivelyDeleteDirectory(File directory) {
+        try {
+            Files.walk(directory.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+        } catch (IOException e) {
+            throw new AttachmentException("Unable to delete attachment directory " + directory, e);
+        }
+    }
+
+    /**
+     * Deletes all attachments related to reports in a chain with the specified file number.
+     *
+     * @param fileNumber Report chain identifier
+     */
+    public void deleteAttachments(Long fileNumber) {
+        Objects.requireNonNull(fileNumber);
+        final File chainDir = new File(getAttachmentsDir().getAbsolutePath() + File.separator + fileNumber);
+        if (!chainDir.exists()) {
+            return;
+        }
+        LOG.debug("Deleting all attachments for report chain with file number {}.", fileNumber);
+        recursivelyDeleteDirectory(chainDir);
     }
 }

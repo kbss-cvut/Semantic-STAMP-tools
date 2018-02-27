@@ -248,15 +248,6 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertEquals(expected, result.getPhase());
     }
 
-    private List<LogicalDocument> generateReportsForFindAllFilter() {
-        final List<LogicalDocument> list = new ArrayList<>();
-        for (int i = 0; i < Generator.randomInt(5, 10); i++) {
-            final List<OccurrenceReport> chain = persistOccurrenceReportChain();
-            list.add(chain.get(Generator.randomIndex(chain)));
-        }
-        return list;
-    }
-
     @Test
     public void pageableFindAllMergesPagesFromAllRegisteredServicesAndReturnsNewPageOfSpecifiedSize() {
         final int count = 10;

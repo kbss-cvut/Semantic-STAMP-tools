@@ -4,13 +4,11 @@ import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationConte
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.exception.AttachmentException;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
-import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.Person;
-import cz.cvut.kbss.reporting.model.Resource;
-import cz.cvut.kbss.reporting.model.Vocabulary;
+import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.ConfigReader;
 import cz.cvut.kbss.reporting.service.repository.RepositoryOccurrenceReportService;
+import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -64,7 +62,8 @@ public class AttachmentServiceTest extends BaseServiceTestRunner {
         this.testFile = File.createTempFile("attachmentTest", ".jpg");
         testFile.deleteOnExit();
         Files.write(testFile.toPath(), DATA.getBytes(), StandardOpenOption.APPEND);
-        this.report = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        this.report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setKey(IdentificationUtils.generateKey());
     }
 
     @After
@@ -98,14 +97,18 @@ public class AttachmentServiceTest extends BaseServiceTestRunner {
     public void addAttachmentSavesFileToDirectoryCorrespondingToReportFileNumberAndKey() throws Exception {
         reportService.persist(report);
         service.addAttachment(report, testFile.getName(), new FileInputStream(testFile));
-        final String path = Long.toString(report.getFileNumber()) + File.separator + report.getKey();
-        final File targetDir = new File(configReader.getConfig(ATTACHMENT_DIR) + File.separator + path);
+        final File targetDir = new File(reportAttachmentsPath(report));
         assertTrue(targetDir.exists());
         assertTrue(targetDir.isDirectory());
         final File attachment = new File(targetDir.getAbsolutePath() + File.separator + testFile.getName());
         assertTrue(attachment.exists());
         final byte[] content = Files.readAllBytes(attachment.toPath());
         assertTrue(Arrays.equals(Files.readAllBytes(testFile.toPath()), content));
+    }
+
+    private String reportAttachmentsPath(AbstractReport report) {
+        return configReader.getConfig(ATTACHMENT_DIR) + File.separator + report.getFileNumber() + File.separator +
+                report.getKey();
     }
 
     @Test
@@ -117,9 +120,8 @@ public class AttachmentServiceTest extends BaseServiceTestRunner {
         service.addAttachment(report, testFile.getName(), new FileInputStream(testFile));
     }
 
-    private void copyAttachment(OccurrenceReport report) throws Exception {
-        final String attPath = Long.toString(report.getFileNumber()) + File.separator + report.getKey();
-        final File targetDir = new File(configReader.getConfig(ATTACHMENT_DIR) + File.separator + attPath);
+    private void copyAttachment(AbstractReport report) throws Exception {
+        final File targetDir = new File(reportAttachmentsPath(report));
         Files.createDirectories(targetDir.toPath());
         final File targetFile = new File(targetDir.getAbsolutePath() + File.separator + testFile.getName());
         Files.copy(testFile.toPath(), targetFile.toPath());
@@ -155,10 +157,7 @@ public class AttachmentServiceTest extends BaseServiceTestRunner {
 
         final File result = service.getAttachment(report, testFile.getName());
         assertNotNull(result);
-        final String filePath =
-                Long.toString(report.getFileNumber()) + File.separator + report.getKey() + File.separator +
-                        testFile.getName();
-        final File expected = new File(configReader.getConfig(ATTACHMENT_DIR) + File.separator + filePath);
+        final File expected = new File(reportAttachmentsPath(report) + File.separator + testFile.getName());
         assertEquals(expected, result);
     }
 
@@ -171,5 +170,80 @@ public class AttachmentServiceTest extends BaseServiceTestRunner {
         thrown.expectMessage(containsString("Attachment file " + wrongName + " not found for report " + report));
 
         service.getAttachment(report, wrongName);
+    }
+
+    @Test
+    public void deleteAttachmentsRemovesWholeFolderRelatedToSpecifiedReport() throws Exception {
+        reportService.persist(report);
+        copyAttachment(report);
+
+        service.deleteAttachments(report);
+        final File reportDir = new File(reportAttachmentsPath(report));
+        assertFalse(reportDir.exists());
+    }
+
+    @Test
+    public void deleteAttachmentsDoesNothingWhenReportHasNone() {
+        final OccurrenceReport otherReport = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        otherReport.setKey(IdentificationUtils.generateKey());
+        service.deleteAttachments(otherReport);
+        assertTrue(new File(configReader.getConfig(ATTACHMENT_DIR)).exists());
+    }
+
+    @Test
+    public void deleteAttachmentsRemovesWholeChainDirectory() throws Exception {
+        reportService.persist(report);
+        copyAttachment(report);
+        final OccurrenceReport anotherInChain = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        anotherInChain.setFileNumber(report.getFileNumber());
+        anotherInChain.setKey(IdentificationUtils.generateKey());
+        copyAttachment(anotherInChain);
+
+        service.deleteAttachments(report.getFileNumber());
+        assertFalse(new File(reportAttachmentsPath(report)).exists());
+        assertFalse(new File(reportAttachmentsPath(anotherInChain)).exists());
+        assertFalse(
+                new File(configReader.getConfig(ATTACHMENT_DIR) + File.separator + report.getFileNumber()).exists());
+    }
+
+    @Test
+    public void deleteAttachmentsDoesNothingWhenChainHasNoAttachments() {
+        final Long fileNo = System.currentTimeMillis();
+        service.deleteAttachments(fileNo);
+        assertTrue(new File(configReader.getConfig(ATTACHMENT_DIR)).exists());
+    }
+
+    @Test
+    public void deleteAttachmentRemovesAttachmentFile() throws Exception {
+        reportService.persist(report);
+        copyAttachment(report);
+        final Resource resource = new Resource();
+        resource.setReference(testFile.getName());
+        report.addReference(resource);
+
+        service.deleteAttachment(report, resource);
+        assertFalse(new File(reportAttachmentsPath(report) + File.separator + testFile.getName()).exists());
+    }
+
+    @Test
+    public void deleteAttachmentDoesNothingForUnknownResource() throws Exception {
+        reportService.persist(report);
+        copyAttachment(report);
+        final Resource resource = new Resource();
+        resource.setReference("unknown.png");
+        report.addReference(resource);
+
+        service.deleteAttachment(report, resource);
+        // Original attachment was retained
+        assertTrue(new File(reportAttachmentsPath(report) + File.separator + testFile.getName()).exists());
+    }
+
+    @Test
+    public void deleteAttachmentDoesNothingForUnknownReport() {
+        final OccurrenceReport otherReport = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        otherReport.setKey(IdentificationUtils.generateKey());
+        final Resource resource = new Resource();
+        resource.setReference("unknown.png");
+        service.deleteAttachment(otherReport, resource);
     }
 }
