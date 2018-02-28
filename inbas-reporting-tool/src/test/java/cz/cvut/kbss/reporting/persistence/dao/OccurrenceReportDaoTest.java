@@ -545,4 +545,30 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
               .forEach(r -> assertTrue(r.getAuthor().getUri().equals(anotherPerson.getUri()) ||
                       r.getLastModifiedBy() != null && r.getLastModifiedBy().getUri().equals(anotherPerson.getUri())));
     }
+
+    @Test
+    public void updateRemovesOrphanResourcesAttachedToReport() {
+        final OccurrenceReport report = report(false);
+        final Resource rOne = new Resource();
+        rOne.setReference("12345");
+        final Resource rTwo = new Resource();
+        rTwo.setReference("54321");
+        report.addReference(rOne);
+        report.addReference(rTwo);
+        occurrenceReportDao.persist(report);
+
+        report.getReferences().remove(rOne);
+        occurrenceReportDao.update(report);
+
+        final OccurrenceReport result = occurrenceReportDao.find(report.getUri());
+        assertEquals(1, result.getReferences().size());
+        assertEquals(rTwo.getUri(), result.getReferences().iterator().next().getUri());
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNull(em.find(Resource.class, rOne.getUri()));
+            assertNotNull(em.find(Resource.class, rTwo.getUri()));
+        } finally {
+            em.close();
+        }
+    }
 }

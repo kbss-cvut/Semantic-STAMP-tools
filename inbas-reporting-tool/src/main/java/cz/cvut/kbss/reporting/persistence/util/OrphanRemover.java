@@ -24,15 +24,34 @@ public class OrphanRemover {
         this.em = Objects.requireNonNull(em);
     }
 
+    /**
+     * Compares the original and updated collection of instances and removes from repository those which are in original
+     * but are not in the updates.
+     *
+     * @param originals Original collection
+     * @param updates   Updated collection
+     */
     public <T extends HasUri> void removeOrphans(Collection<T> originals, Collection<T> updates) {
-        final Set<URI> updateUris = updates == null ? Collections.emptySet() :
-                                    updates.stream().map(HasUri::getUri).collect(Collectors.toSet());
-        final Set<T> orphans = originals == null ? Collections.emptySet() :
-                               originals.stream().filter(m -> !updateUris.contains(m.getUri()))
-                                        .collect(Collectors.toSet());
-        orphans.forEach(o -> {
-            final T toRemove = em.merge(o);
+        final Set<T> orphans = resolveOrphans(originals, updates);
+        orphans.forEach(orphan -> {
+            final T toRemove = em.merge(orphan);
             em.remove(toRemove);
         });
+    }
+
+    /**
+     * Compares the original and updated collection and determines which of the elements were in the original but are not
+     * in the update - the orphan elements.
+     *
+     * @param originals Original collection
+     * @param updates   Updated collection
+     * @return Set of detected orphans
+     */
+    public static <T extends HasUri> Set<T> resolveOrphans(Collection<T> originals, Collection<T> updates) {
+        final Set<URI> updateUris = updates == null ? Collections.emptySet() :
+                                    updates.stream().map(HasUri::getUri).collect(Collectors.toSet());
+        return originals == null ? Collections.emptySet() :
+               originals.stream().filter(m -> !updateUris.contains(m.getUri()))
+                        .collect(Collectors.toSet());
     }
 }

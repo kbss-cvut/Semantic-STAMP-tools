@@ -116,7 +116,9 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
         em.detach(original);
         occurrenceDao.update(entity.getOccurrence(), em);
         final OccurrenceReport merged = em.merge(entity);
-        new OrphanRemover(em).removeOrphans(original.getCorrectiveMeasures(), merged.getCorrectiveMeasures());
+        final OrphanRemover orphanRemover = new OrphanRemover(em);
+        orphanRemover.removeOrphans(original.getCorrectiveMeasures(), merged.getCorrectiveMeasures());
+        orphanRemover.removeOrphans(original.getReferences(), merged.getReferences());
     }
 
     @Override

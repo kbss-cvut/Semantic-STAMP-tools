@@ -14,12 +14,17 @@ import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
+import cz.cvut.kbss.reporting.service.event.ResourceRemovalEvent;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 
 public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner {
 
@@ -42,12 +48,17 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
     @Autowired
     private EntityManagerFactory emf;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisherMock;
+
     private Person author;
 
     @Before
     public void setUp() {
+        MockitoAnnotations.initMocks(this);
         this.author = persistPerson();
         Environment.setCurrentUser(author);
+        occurrenceReportService.setApplicationEventPublisher(eventPublisherMock);
     }
 
     @Test
@@ -504,5 +515,25 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
                 .findAll(pageSpec, Collections.singletonList(filter));
         assertTrue(result.getNumberOfElements() > 0);
         result.getContent().forEach(r -> assertEquals(eventType, r.getOccurrence().getEventType()));
+    }
+
+    @Test
+    public void updatePublishesResourceRemovalEventForResourcesRemovedFromReport() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        final Resource rOne = new Resource();
+        rOne.setReference("12345");
+        report.addReference(rOne);
+        final Resource rTwo = new Resource();
+        rTwo.setReference("54321");
+        report.addReference(rTwo);
+        occurrenceReportService.persist(report);
+
+        report.getReferences().remove(rTwo);
+        occurrenceReportService.update(report);
+        final ArgumentCaptor<ResourceRemovalEvent> captor = ArgumentCaptor.forClass(ResourceRemovalEvent.class);
+        verify(eventPublisherMock).publishEvent(captor.capture());
+        assertEquals(report, captor.getValue().getReport());
+        assertEquals(rTwo, captor.getValue().getResource());
     }
 }
