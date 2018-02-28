@@ -10,7 +10,10 @@ import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
 import cz.cvut.kbss.reporting.model.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.reporting.persistence.dao.ReportDao;
+import cz.cvut.kbss.reporting.service.event.ReportChainRemovalEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Primary
-public class MainReportService implements ReportBusinessService {
+public class MainReportService implements ReportBusinessService, ApplicationEventPublisherAware {
 
     private final ReportDao reportDao;
 
@@ -32,6 +35,8 @@ public class MainReportService implements ReportBusinessService {
     private final Map<String, Class<? extends LogicalDocument>> entitiesToOwlClasses = new HashMap<>();
 
     private final Map<Class<? extends LogicalDocument>, BaseReportService<? extends LogicalDocument>> services = new HashMap<>();
+
+    private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public MainReportService(ReportDao reportDao, OccurrenceReportService occurrenceReportService) {
@@ -129,6 +134,11 @@ public class MainReportService implements ReportBusinessService {
             return;
         }
         resolveService(types).removeReportChain(fileNumber);
+        notifyOfChainRemoval(fileNumber);
+    }
+
+    private void notifyOfChainRemoval(Long fileNumber) {
+        eventPublisher.publishEvent(new ReportChainRemovalEvent(this, fileNumber));
     }
 
     @Override
@@ -164,5 +174,10 @@ public class MainReportService implements ReportBusinessService {
     public <T extends LogicalDocument> void transitionToNextPhase(T report) {
         Objects.requireNonNull(report);
         resolveService(report).transitionToNextPhase(report);
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
     }
 }

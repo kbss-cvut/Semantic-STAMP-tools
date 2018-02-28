@@ -15,11 +15,16 @@ import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
+import cz.cvut.kbss.reporting.service.event.ReportChainRemovalEvent;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,13 +35,14 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 
 public class MainReportServiceTest extends BaseServiceTestRunner {
 
     // More tests should be added as additional support for additional report types is added
 
     @Autowired
-    private ReportBusinessService reportService;
+    private MainReportService reportService;
 
     @Autowired
     private OccurrenceReportDao occurrenceReportDao;
@@ -50,12 +56,17 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Autowired
     private ReportingPhaseService phaseService;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisherMock;
+
     private Person author;
 
     @Before
     public void setUp() {
+        MockitoAnnotations.initMocks(this);
         this.author = persistPerson();
         Environment.setCurrentUser(author);
+        reportService.setApplicationEventPublisher(eventPublisherMock);
     }
 
     @Test
@@ -276,5 +287,16 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
 
         final Page<ReportDto> result = reportService.findAll(pageSpec, Collections.singletonList(filter));
         assertTrue(result.getNumberOfElements() < count);
+    }
+
+    @Test
+    public void removeReportChainPublishesRemovalEvent() {
+        final List<OccurrenceReport> chain = persistOccurrenceReportChain();
+        final Long fileNumber = chain.get(0).getFileNumber();
+        reportService.removeReportChain(fileNumber);
+
+        final ArgumentCaptor<ReportChainRemovalEvent> captor = ArgumentCaptor.forClass(ReportChainRemovalEvent.class);
+        verify(eventPublisherMock).publishEvent(captor.capture());
+        assertEquals(fileNumber, captor.getValue().getFileNumber());
     }
 }

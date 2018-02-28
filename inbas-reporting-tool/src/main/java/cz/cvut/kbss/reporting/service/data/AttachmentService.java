@@ -7,10 +7,14 @@ import cz.cvut.kbss.reporting.model.Resource;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.service.ConfigReader;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
+import cz.cvut.kbss.reporting.service.event.AbstractRemovalEvent;
+import cz.cvut.kbss.reporting.service.event.ReportChainRemovalEvent;
+import cz.cvut.kbss.reporting.service.event.ResourceRemovalEvent;
 import cz.cvut.kbss.reporting.util.ConfigParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -26,7 +30,7 @@ import java.util.Objects;
  * Manages binary file attachments (images, audio, video etc.) of reports.
  */
 @Service
-public class AttachmentService {
+public class AttachmentService implements ApplicationListener<AbstractRemovalEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(AttachmentService.class);
 
@@ -193,5 +197,15 @@ public class AttachmentService {
         }
         LOG.debug("Deleting all attachments for report chain with file number {}.", fileNumber);
         recursivelyDeleteDirectory(chainDir);
+    }
+
+    @Override
+    public void onApplicationEvent(AbstractRemovalEvent removalEvent) {
+        if (removalEvent instanceof ReportChainRemovalEvent) {
+            deleteAttachments(((ReportChainRemovalEvent) removalEvent).getFileNumber());
+        } else if (removalEvent instanceof ResourceRemovalEvent) {
+            final ResourceRemovalEvent event = (ResourceRemovalEvent) removalEvent;
+            deleteAttachment(event.getReport(), event.getResource());
+        }
     }
 }

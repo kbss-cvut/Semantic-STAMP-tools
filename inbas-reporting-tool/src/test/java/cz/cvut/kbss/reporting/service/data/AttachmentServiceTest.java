@@ -7,6 +7,8 @@ import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.ConfigReader;
+import cz.cvut.kbss.reporting.service.event.ReportChainRemovalEvent;
+import cz.cvut.kbss.reporting.service.event.ResourceRemovalEvent;
 import cz.cvut.kbss.reporting.service.repository.RepositoryOccurrenceReportService;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.After;
@@ -245,5 +247,26 @@ public class AttachmentServiceTest extends BaseServiceTestRunner {
         final Resource resource = new Resource();
         resource.setReference("unknown.png");
         service.deleteAttachment(otherReport, resource);
+    }
+
+    @Test
+    public void deletesReportChainAttachmentsOnChainRemovalEvent() throws Exception {
+        reportService.persist(report);
+        copyAttachment(report);
+
+        service.onApplicationEvent(new ReportChainRemovalEvent(this, report.getFileNumber()));
+        assertFalse(
+                new File(configReader.getConfig(ATTACHMENT_DIR) + File.separator + report.getFileNumber()).exists());
+    }
+
+    @Test
+    public void deletesAttachmentOnResourceRemovalEvent() throws Exception {
+        reportService.persist(report);
+        copyAttachment(report);
+        final Resource resource = new Resource();
+        resource.setReference(testFile.getName());
+
+        service.onApplicationEvent(new ResourceRemovalEvent(this, report, resource));
+        assertFalse(new File(reportAttachmentsPath(report) + File.separator + testFile.getName()).exists());
     }
 }
