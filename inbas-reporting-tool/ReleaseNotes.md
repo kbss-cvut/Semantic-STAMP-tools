@@ -1,5 +1,10 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.12.0 - February 28, 2018
+- Added support for binary file attachments to reports (server-side only) (Feature #535).
+- Partial support for JSON-LD in REST services (Feature #523).
+- Library updates (JOPA, Jackson).
+
 ### 0.11.6 - December 12, 2017
 - Allow user to have one mobile and one web session (Task #534).
 - Allow to filter reports by author and last editor (Task #533).
