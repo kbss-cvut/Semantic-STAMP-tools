@@ -3,12 +3,10 @@ package cz.cvut.kbss.reporting.service.data;
 import cz.cvut.kbss.reporting.exception.AttachmentException;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.model.AbstractReport;
+import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.Resource;
-import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.service.ConfigReader;
-import cz.cvut.kbss.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.reporting.service.event.AbstractRemovalEvent;
-import cz.cvut.kbss.reporting.service.event.ReportChainRemovalEvent;
 import cz.cvut.kbss.reporting.service.event.ResourceRemovalEvent;
 import cz.cvut.kbss.reporting.util.ConfigParam;
 import org.slf4j.Logger;
@@ -22,12 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
 /**
  * Manages binary file attachments (images, audio, video etc.) of reports.
+ * <p>
+ * The attachments are stored hierarchically by report chain (file number) and report (key).
  */
 @Service
 public class AttachmentService implements ApplicationListener<AbstractRemovalEvent> {
@@ -36,31 +35,25 @@ public class AttachmentService implements ApplicationListener<AbstractRemovalEve
 
     private final ConfigReader configReader;
 
-    private final ReportBusinessService reportService;
-
     @Autowired
-    public AttachmentService(ConfigReader configReader, ReportBusinessService reportService) {
+    public AttachmentService(ConfigReader configReader) {
         this.configReader = configReader;
-        this.reportService = reportService;
     }
 
     /**
      * Stores the specified attachment related to the specified report.
-     * <p>
-     * This also adds a corresponding {@link Resource} instance to the report.
      *
      * @param report   Report to which the file is attached
      * @param fileName Name of the attachment file
      * @param content  The attached file content
      * @throws AttachmentException When attachment storing fails
      */
-    public void addAttachment(AbstractReport report, String fileName, InputStream content) {
+    public void addAttachment(LogicalDocument report, String fileName, InputStream content) {
         LOG.debug("Adding attachment {} to report {}.", fileName, report);
         attachFile(report, fileName, content);
-        addResourceReference(report, fileName);
     }
 
-    private void attachFile(AbstractReport report, String fileName, InputStream content) {
+    private void attachFile(LogicalDocument report, String fileName, InputStream content) {
         final File attachmentsDir = getAttachmentsDir();
         final File targetDir = new File(generateReportAttachmentsPath(attachmentsDir, report));
         ensureDirectoryExists(targetDir);
@@ -99,7 +92,7 @@ public class AttachmentService implements ApplicationListener<AbstractRemovalEve
         }
     }
 
-    private String generateReportAttachmentsPath(File attachmentsDir, AbstractReport report) {
+    private String generateReportAttachmentsPath(File attachmentsDir, LogicalDocument report) {
         return attachmentsDir.getAbsolutePath() + File.separator + report.getFileNumber() + File.separator +
                 report.getKey();
     }
@@ -110,12 +103,37 @@ public class AttachmentService implements ApplicationListener<AbstractRemovalEve
         }
     }
 
-    private void addResourceReference(AbstractReport report, String fileName) {
-        final Resource resource = new Resource();
-        resource.setReference(fileName);
-        resource.setTypes(Collections.singleton(Vocabulary.s_c_SensoryData));
-        report.addReference(resource);
-        reportService.update(report);
+    /**
+     * Copies attachment files from the source report to the target report.
+     *
+     * @param source Source report
+     * @param target Target report
+     * @throws AttachmentException If attachment copying fails
+     */
+    public void copyAttachments(LogicalDocument source, LogicalDocument target) {
+        final File sourceDir = new File(generateReportAttachmentsPath(getAttachmentsDir(), source));
+        if (!sourceDir.exists()) {
+            return;
+        }
+        final File targetDir = new File(generateReportAttachmentsPath(getAttachmentsDir(), target));
+        try {
+            if (!targetDir.exists()) {
+                Files.createDirectory(targetDir.toPath());
+            }
+            LOG.debug("Copying attachments from report {} to report {}.", source, target);
+            Files.list(sourceDir.toPath())
+                 .forEach(fp -> {
+                     try {
+                         Files.copy(fp, targetDir.toPath().resolve(sourceDir.toPath().relativize(fp)));
+                     } catch (IOException e) {
+                         throw new AttachmentException("Unable to copy attachment " + fp + " to report " + target + ".",
+                                 e);
+                     }
+                 });
+        } catch (IOException e) {
+            throw new AttachmentException(
+                    "Unable to copy attachments from report " + source + " to report " + target + ".", e);
+        }
     }
 
     /**
@@ -201,9 +219,7 @@ public class AttachmentService implements ApplicationListener<AbstractRemovalEve
 
     @Override
     public void onApplicationEvent(AbstractRemovalEvent removalEvent) {
-        if (removalEvent instanceof ReportChainRemovalEvent) {
-            deleteAttachments(((ReportChainRemovalEvent) removalEvent).getFileNumber());
-        } else if (removalEvent instanceof ResourceRemovalEvent) {
+        if (removalEvent instanceof ResourceRemovalEvent) {
             final ResourceRemovalEvent event = (ResourceRemovalEvent) removalEvent;
             deleteAttachment(event.getReport(), event.getResource());
         }

@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.service;
 
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
+import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationContextInitializer;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
@@ -10,33 +11,37 @@ import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.reporting.filter.OccurrenceCategoryFilter;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
-import cz.cvut.kbss.reporting.model.LogicalDocument;
-import cz.cvut.kbss.reporting.model.Occurrence;
-import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
-import cz.cvut.kbss.reporting.service.event.ReportChainRemovalEvent;
+import cz.cvut.kbss.reporting.service.data.AttachmentService;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mock.env.MockEnvironment;
+import org.springframework.test.context.ContextConfiguration;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
+import static cz.cvut.kbss.reporting.environment.util.Environment.DATA;
+import static cz.cvut.kbss.reporting.util.ConfigParam.ATTACHMENT_DIR;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
+@ContextConfiguration(initializers = PropertyMockingApplicationContextInitializer.class)
 public class MainReportServiceTest extends BaseServiceTestRunner {
 
     // More tests should be added as additional support for additional report types is added
@@ -56,17 +61,26 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Autowired
     private ReportingPhaseService phaseService;
 
-    @Mock
-    private ApplicationEventPublisher eventPublisherMock;
+    @Autowired
+    private org.springframework.core.env.Environment environment;
+
+    @Autowired
+    private AttachmentService attachmentServiceSpy;
+
+    private File testFile;
 
     private Person author;
 
     @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() throws Exception {
         this.author = persistPerson();
         Environment.setCurrentUser(author);
-        reportService.setApplicationEventPublisher(eventPublisherMock);
+        this.testFile = File.createTempFile("attachmentTest", ".jpg");
+        testFile.deleteOnExit();
+        Files.write(testFile.toPath(), DATA.getBytes(), StandardOpenOption.APPEND);
+        final File attachmentsDir = Files.createTempDirectory("rt-attachments").toFile();
+        attachmentsDir.deleteOnExit();
+        ((MockEnvironment) environment).setProperty(ATTACHMENT_DIR.toString(), attachmentsDir.getAbsolutePath());
     }
 
     @Test
@@ -290,13 +304,46 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     }
 
     @Test
-    public void removeReportChainPublishesRemovalEvent() {
+    public void removeReportChainRemovesAttachments() {
         final List<OccurrenceReport> chain = persistOccurrenceReportChain();
         final Long fileNumber = chain.get(0).getFileNumber();
         reportService.removeReportChain(fileNumber);
 
-        final ArgumentCaptor<ReportChainRemovalEvent> captor = ArgumentCaptor.forClass(ReportChainRemovalEvent.class);
-        verify(eventPublisherMock).publishEvent(captor.capture());
-        assertEquals(fileNumber, captor.getValue().getFileNumber());
+        verify(attachmentServiceSpy).deleteAttachments(fileNumber);
+    }
+
+    @Test
+    public void addAttachmentAddsResourceToReport() throws Exception {
+        final OccurrenceReport report = persistOccurrenceReport();
+        final int refCount = report.getReferences() != null ? report.getReferences().size() : 0;
+        reportService.addAttachment(report, testFile.getName(), new FileInputStream(testFile));
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertEquals(refCount + 1, result.getReferences().size());
+        assertTrue(result.getReferences().stream().anyMatch(r -> r.getReference().equals(testFile.getName())));
+    }
+
+    @Test
+    public void addAttachmentAddsTypeToCreatedResource() throws Exception {
+        final OccurrenceReport report = persistOccurrenceReport();
+        reportService.addAttachment(report, testFile.getName(), new FileInputStream(testFile));
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        final Optional<Resource> res = result.getReferences().stream()
+                                             .filter(r -> r.getReference().equals(testFile.getName())).findAny();
+        assertTrue(res.isPresent());
+        assertTrue(res.get().getTypes().contains(Vocabulary.s_c_SensoryData));
+    }
+
+    @Test
+    public void createNewRevisionCopiesAttachments() throws Exception {
+        final OccurrenceReport report = persistOccurrenceReport();
+        reportService.addAttachment(report, testFile.getName(), new FileInputStream(testFile));
+
+        final OccurrenceReport newRevision = reportService.createNewRevision(report.getFileNumber());
+        final ArgumentCaptor<OccurrenceReport> captor = ArgumentCaptor.forClass(OccurrenceReport.class);
+        verify(attachmentServiceSpy).copyAttachments(captor.capture(), captor.capture());
+        assertEquals(report.getUri(), captor.getAllValues().get(0).getUri());
+        assertEquals(newRevision.getUri(), captor.getAllValues().get(1).getUri());
     }
 }

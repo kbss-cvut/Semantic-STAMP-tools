@@ -495,7 +495,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                 Environment.DATA.getBytes());
         mockMvc.perform(fileUpload(REPORTS_PATH + report.getKey() + "/attachments").file(upload))
                .andExpect(status().isCreated());
-        verify(attachmentServiceMock).addAttachment(eq(report), eq(attachment.getName()), notNull());
+        verify(reportServiceMock).addAttachment(eq(report), eq(attachment.getName()), notNull());
     }
 
     @Test

@@ -5,15 +5,12 @@ import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
-import cz.cvut.kbss.reporting.model.LogicalDocument;
-import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
 import cz.cvut.kbss.reporting.model.util.EntityToOwlClassMapper;
 import cz.cvut.kbss.reporting.persistence.dao.ReportDao;
-import cz.cvut.kbss.reporting.service.event.ReportChainRemovalEvent;
+import cz.cvut.kbss.reporting.service.data.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,27 +18,30 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Primary
-public class MainReportService implements ReportBusinessService, ApplicationEventPublisherAware {
+public class MainReportService implements ReportBusinessService {
 
     private final ReportDao reportDao;
 
     private final OccurrenceReportService occurrenceReportService;
 
+    private final AttachmentService attachmentService;
+
     private final Map<String, Class<? extends LogicalDocument>> entitiesToOwlClasses = new HashMap<>();
 
     private final Map<Class<? extends LogicalDocument>, BaseReportService<? extends LogicalDocument>> services = new HashMap<>();
 
-    private ApplicationEventPublisher eventPublisher;
-
     @Autowired
-    public MainReportService(ReportDao reportDao, OccurrenceReportService occurrenceReportService) {
+    public MainReportService(ReportDao reportDao, OccurrenceReportService occurrenceReportService,
+                             AttachmentService attachmentService) {
         this.reportDao = reportDao;
         this.occurrenceReportService = occurrenceReportService;
+        this.attachmentService = attachmentService;
     }
 
     @PostConstruct
@@ -134,11 +134,7 @@ public class MainReportService implements ReportBusinessService, ApplicationEven
             return;
         }
         resolveService(types).removeReportChain(fileNumber);
-        notifyOfChainRemoval(fileNumber);
-    }
-
-    private void notifyOfChainRemoval(Long fileNumber) {
-        eventPublisher.publishEvent(new ReportChainRemovalEvent(this, fileNumber));
+        attachmentService.deleteAttachments(fileNumber);
     }
 
     @Override
@@ -154,8 +150,11 @@ public class MainReportService implements ReportBusinessService, ApplicationEven
         if (types.isEmpty()) {
             throw NotFoundException.create("Report chain", fileNumber);
         }
+        final T previousRevision = findLatestRevision(fileNumber);
         final BaseReportService<T> service = resolveService(types);
-        return service.createNewRevision(fileNumber);
+        final T newRevision = service.createNewRevision(fileNumber);
+        attachmentService.copyAttachments(previousRevision, newRevision);
+        return newRevision;
     }
 
     @Override
@@ -177,7 +176,16 @@ public class MainReportService implements ReportBusinessService, ApplicationEven
     }
 
     @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher eventPublisher) {
-        this.eventPublisher = eventPublisher;
+    public void addAttachment(AbstractReport report, String fileName, InputStream content) {
+        attachmentService.addAttachment(report, fileName, content);
+        addResourceReference(report, fileName);
+    }
+
+    private void addResourceReference(AbstractReport report, String fileName) {
+        final Resource resource = new Resource();
+        resource.setReference(fileName);
+        resource.setTypes(Collections.singleton(Vocabulary.s_c_SensoryData));
+        report.addReference(resource);
+        resolveService(report).update(report);
     }
 }

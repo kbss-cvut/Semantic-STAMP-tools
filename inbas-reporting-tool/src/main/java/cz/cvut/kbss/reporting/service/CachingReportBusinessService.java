@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.service;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
+import cz.cvut.kbss.reporting.model.AbstractReport;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.service.cache.ReportCache;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
@@ -98,5 +100,10 @@ public class CachingReportBusinessService implements ReportBusinessService {
     public <T extends LogicalDocument> void transitionToNextPhase(T report) {
         reportService.transitionToNextPhase(report);
         reportCache.put(report.toReportDto());
+    }
+
+    @Override
+    public void addAttachment(AbstractReport report, String fileName, InputStream content) {
+        reportService.addAttachment(report, fileName, content);
     }
 }

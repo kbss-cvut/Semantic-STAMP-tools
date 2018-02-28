@@ -4,11 +4,13 @@ import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
+import cz.cvut.kbss.reporting.model.AbstractReport;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
@@ -116,4 +118,15 @@ public interface ReportBusinessService {
      * @param report The report to transition
      */
     <T extends LogicalDocument> void transitionToNextPhase(T report);
+
+    /**
+     * Adds attachment to the specified report.
+     * <p>
+     * This saves the attachment content and adds a resource representing the attachment to the report.
+     *
+     * @param report   Report to which the file is attached
+     * @param fileName Name of the attachment file
+     * @param content  The attached file content
+     */
+    void addAttachment(AbstractReport report, String fileName, InputStream content);
 }

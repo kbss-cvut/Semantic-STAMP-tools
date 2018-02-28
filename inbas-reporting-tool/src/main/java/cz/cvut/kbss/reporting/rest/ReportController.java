@@ -137,7 +137,7 @@ public class ReportController extends BaseController {
                                               @RequestParam("file") MultipartFile attachment) {
         final AbstractReport report = getReportInternal(key);
         try {
-            attachmentService.addAttachment(report, attachment.getOriginalFilename(), attachment.getInputStream());
+            reportService.addAttachment(report, attachment.getOriginalFilename(), attachment.getInputStream());
         } catch (IOException e) {
             throw new AttachmentException("Unable to read file content from request.", e);
         }

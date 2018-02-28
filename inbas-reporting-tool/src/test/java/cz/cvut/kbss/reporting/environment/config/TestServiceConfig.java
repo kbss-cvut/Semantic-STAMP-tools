@@ -2,8 +2,10 @@ package cz.cvut.kbss.reporting.environment.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.cvut.kbss.reporting.environment.util.Environment;
+import cz.cvut.kbss.reporting.service.ConfigReader;
 import cz.cvut.kbss.reporting.service.OccurrenceReportService;
 import cz.cvut.kbss.reporting.service.cache.ReportCache;
+import cz.cvut.kbss.reporting.service.data.AttachmentService;
 import cz.cvut.kbss.reporting.service.data.export.ReportExporter;
 import cz.cvut.kbss.reporting.service.jmx.AppAdminBean;
 import cz.cvut.kbss.reporting.service.repository.RepositoryOccurrenceReportService;
@@ -62,5 +64,11 @@ public class TestServiceConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return Environment.getObjectMapper();
+    }
+
+    @Bean
+    @Primary
+    public AttachmentService attachmentService(ConfigReader configReader) {
+        return spy(new AttachmentService(configReader));
     }
 }
