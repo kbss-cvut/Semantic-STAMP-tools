@@ -66,6 +66,10 @@ public class AttachmentServiceTest extends BaseServiceTestRunner {
         Files.write(testFile.toPath(), DATA.getBytes(), StandardOpenOption.APPEND);
         this.report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setKey(IdentificationUtils.generateKey());
+        final File attachmentsDir = Files.createTempDirectory("rt-attachments").toFile();
+        attachmentsDir.deleteOnExit();
+        ((MockEnvironment) environment)
+                .setProperty(configReader.getConfig(ATTACHMENT_DIR), attachmentsDir.getAbsolutePath());
     }
 
     @After
