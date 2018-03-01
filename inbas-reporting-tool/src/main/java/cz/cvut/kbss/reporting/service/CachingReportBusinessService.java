@@ -103,7 +103,7 @@ public class CachingReportBusinessService implements ReportBusinessService {
     }
 
     @Override
-    public void addAttachment(AbstractReport report, String fileName, InputStream content) {
-        reportService.addAttachment(report, fileName, content);
+    public void addAttachment(AbstractReport report, String fileName, String description, InputStream content) {
+        reportService.addAttachment(report, fileName, description, content);
     }
 }

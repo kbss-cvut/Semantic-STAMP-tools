@@ -176,14 +176,15 @@ public class MainReportService implements ReportBusinessService {
     }
 
     @Override
-    public void addAttachment(AbstractReport report, String fileName, InputStream content) {
+    public void addAttachment(AbstractReport report, String fileName, String description, InputStream content) {
         attachmentService.addAttachment(report, fileName, content);
-        addResourceReference(report, fileName);
+        addResourceReference(report, fileName, description);
     }
 
-    private void addResourceReference(AbstractReport report, String fileName) {
+    private void addResourceReference(AbstractReport report, String fileName, String description) {
         final Resource resource = new Resource();
         resource.setReference(fileName);
+        resource.setDescription(description);
         resource.setTypes(Collections.singleton(Vocabulary.s_c_SensoryData));
         report.addReference(resource);
         resolveService(report).update(report);

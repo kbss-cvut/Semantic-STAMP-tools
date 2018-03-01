@@ -134,10 +134,12 @@ public class ReportController extends BaseController {
 
     @RequestMapping(value = "/{key}/attachments", method = RequestMethod.POST)
     public ResponseEntity<Void> addAttachment(@PathVariable("key") String key,
-                                              @RequestParam("file") MultipartFile attachment) {
+                                              @RequestParam("file") MultipartFile attachment,
+                                              @RequestParam(value = "description", required = false) String description) {
         final AbstractReport report = getReportInternal(key);
         try {
-            reportService.addAttachment(report, attachment.getOriginalFilename(), attachment.getInputStream());
+            reportService
+                    .addAttachment(report, attachment.getOriginalFilename(), description, attachment.getInputStream());
         } catch (IOException e) {
             throw new AttachmentException("Unable to read file content from request.", e);
         }

@@ -296,7 +296,8 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         final List<OccurrenceReport> reports = generateReports(count);
         final URI occurrenceCategory = reports.get(0).getOccurrence().getEventType();
         final ReportFilter filter = ReportFilter
-                .create(OccurrenceCategoryFilter.KEY, Collections.singletonList(occurrenceCategory.toString())).get();
+                .create(OccurrenceCategoryFilter.KEY, Collections.singletonList(occurrenceCategory.toString()))
+                .orElseThrow(AssertionError::new);
         final Pageable pageSpec = PageRequest.of(0, count);
 
         final Page<ReportDto> result = reportService.findAll(pageSpec, Collections.singletonList(filter));
@@ -316,7 +317,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     public void addAttachmentAddsResourceToReport() throws Exception {
         final OccurrenceReport report = persistOccurrenceReport();
         final int refCount = report.getReferences() != null ? report.getReferences().size() : 0;
-        reportService.addAttachment(report, testFile.getName(), new FileInputStream(testFile));
+        reportService.addAttachment(report, testFile.getName(), null, new FileInputStream(testFile));
 
         final OccurrenceReport result = occurrenceReportService.find(report.getUri());
         assertEquals(refCount + 1, result.getReferences().size());
@@ -326,7 +327,7 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     @Test
     public void addAttachmentAddsTypeToCreatedResource() throws Exception {
         final OccurrenceReport report = persistOccurrenceReport();
-        reportService.addAttachment(report, testFile.getName(), new FileInputStream(testFile));
+        reportService.addAttachment(report, testFile.getName(), null, new FileInputStream(testFile));
 
         final OccurrenceReport result = occurrenceReportService.find(report.getUri());
         final Optional<Resource> res = result.getReferences().stream()
@@ -336,9 +337,22 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
     }
 
     @Test
+    public void addAttachmentAddsDescriptionToResource() throws Exception {
+        final OccurrenceReport report = persistOccurrenceReport();
+        final String description = "This is an attachment description.";
+        reportService.addAttachment(report, testFile.getName(), description, new FileInputStream(testFile));
+
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        final Optional<Resource> res = result.getReferences().stream()
+                                             .filter(r -> r.getReference().equals(testFile.getName())).findAny();
+        assertTrue(res.isPresent());
+        assertEquals(description, res.get().getDescription());
+    }
+
+    @Test
     public void createNewRevisionCopiesAttachments() throws Exception {
         final OccurrenceReport report = persistOccurrenceReport();
-        reportService.addAttachment(report, testFile.getName(), new FileInputStream(testFile));
+        reportService.addAttachment(report, testFile.getName(), null, new FileInputStream(testFile));
 
         final OccurrenceReport newRevision = reportService.createNewRevision(report.getFileNumber());
         final ArgumentCaptor<OccurrenceReport> captor = ArgumentCaptor.forClass(OccurrenceReport.class);

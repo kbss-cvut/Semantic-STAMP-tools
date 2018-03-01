@@ -124,9 +124,10 @@ public interface ReportBusinessService {
      * <p>
      * This saves the attachment content and adds a resource representing the attachment to the report.
      *
-     * @param report   Report to which the file is attached
-     * @param fileName Name of the attachment file
-     * @param content  The attached file content
+     * @param report      Report to which the file is attached
+     * @param fileName    Name of the attachment file
+     * @param description Description of the attachment. Optional
+     * @param content     The attached file content
      */
-    void addAttachment(AbstractReport report, String fileName, InputStream content);
+    void addAttachment(AbstractReport report, String fileName, String description, InputStream content);
 }

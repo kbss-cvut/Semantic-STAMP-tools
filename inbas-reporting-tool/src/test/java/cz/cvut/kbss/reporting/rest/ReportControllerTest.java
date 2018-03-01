@@ -396,7 +396,8 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                 .thenReturn(new PageImpl<>(Collections.emptyList()));
         mockMvc.perform(get(REPORTS_PATH).param(OccurrenceCategoryFilter.KEY, cats.toArray(new String[cats.size()])))
                .andExpect(status().isOk());
-        final ReportFilter expectedFilter = ReportFilter.create(OccurrenceCategoryFilter.KEY, cats).get();
+        final ReportFilter expectedFilter = ReportFilter.create(OccurrenceCategoryFilter.KEY, cats)
+                                                        .orElseThrow(AssertionError::new);
         verify(reportServiceMock).findAll(any(Pageable.class), eq(Collections.singletonList(expectedFilter)));
     }
 
@@ -495,7 +496,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                 Environment.DATA.getBytes());
         mockMvc.perform(fileUpload(REPORTS_PATH + report.getKey() + "/attachments").file(upload))
                .andExpect(status().isCreated());
-        verify(reportServiceMock).addAttachment(eq(report), eq(attachment.getName()), notNull());
+        verify(reportServiceMock).addAttachment(eq(report), eq(attachment.getName()), eq(null), notNull());
     }
 
     @Test
@@ -524,5 +525,21 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         mockMvc.perform(fileUpload(REPORTS_PATH + reportKey + "/attachments").file(upload))
                .andExpect(status().isNotFound());
         verify(attachmentServiceMock, never()).addAttachment(any(), eq(attachment.getName()), any());
+    }
+
+    @Test
+    public void addAttachmentsPassesDescriptionToAdd() throws Exception {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setKey(IdentificationUtils.generateKey());
+        when(reportServiceMock.findByKey(report.getKey())).thenReturn(report);
+        final File attachment = generateBinaryFile();
+        final String description = "Attachment description";
+
+        final MockMultipartFile upload = new MockMultipartFile("file", attachment.getName(), MediaType.IMAGE_JPEG_VALUE,
+                Environment.DATA.getBytes());
+        mockMvc.perform(fileUpload(REPORTS_PATH + report.getKey() + "/attachments").file(upload)
+                                                                                   .param("description", description))
+               .andExpect(status().isCreated());
+        verify(reportServiceMock).addAttachment(eq(report), eq(attachment.getName()), eq(description), notNull());
     }
 }
