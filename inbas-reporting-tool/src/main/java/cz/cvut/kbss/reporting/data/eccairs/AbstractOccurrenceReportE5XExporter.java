@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -23,9 +22,8 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * Common base class for occurrence report converters.
+ * <p>
  * Instances are thread safe. See {@link Aso2E5X#convert}.
- *
- * Created by Bogdan Kostov on 6/1/2017.
  */
 public abstract class AbstractOccurrenceReportE5XExporter implements OccurrenceReportE5XExporter {
 
@@ -36,9 +34,10 @@ public abstract class AbstractOccurrenceReportE5XExporter implements OccurrenceR
     // non thread safe
     protected ThreadLocal<DateFormat> dateFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd"));
     protected ThreadLocal<DateFormat> timeFormat = ThreadLocal.withInitial(() -> new SimpleDateFormat("HH:mm:ss"));
-    protected ThreadLocal<DocConverter> docConverter = ThreadLocal.withInitial(() -> new DocConverter());
+    protected ThreadLocal<DocConverter> docConverter = ThreadLocal.withInitial(DocConverter::new);
 
-    private ThreadLocal<DocumentBuilderFactory> dbFactory = ThreadLocal.withInitial(() -> DocumentBuilderFactory.newInstance());
+    private ThreadLocal<DocumentBuilderFactory> dbFactory = ThreadLocal
+            .withInitial(DocumentBuilderFactory::newInstance);
 
     // created in method convert.
     private ThreadLocal<DocumentBuilder> documentBuilder = ThreadLocal.withInitial(() -> {
@@ -46,17 +45,17 @@ public abstract class AbstractOccurrenceReportE5XExporter implements OccurrenceR
             DocumentBuilder documentBuilder = dbFactory.get().newDocumentBuilder();
             documentBuilder.setErrorHandler(new ErrorHandler() {
                 @Override
-                public void warning(SAXParseException exception) throws SAXException {
+                public void warning(SAXParseException exception) {
                     LOG.warn("warning when building an e5x", exception);
                 }
 
                 @Override
-                public void error(SAXParseException exception) throws SAXException {
+                public void error(SAXParseException exception) {
                     LOG.warn("error when building an e5x", exception);
                 }
 
                 @Override
-                public void fatalError(SAXParseException exception) throws SAXException {
+                public void fatalError(SAXParseException exception) {
                     LOG.warn("fatalError when building an e5x", exception);
                 }
             });
@@ -82,14 +81,14 @@ public abstract class AbstractOccurrenceReportE5XExporter implements OccurrenceR
 
 
     /**
-     * @implNote must not make nested calls to it self in order to ensure thread safety of instances of the class
      * @param occurrenceReport the report to be exported
      * @return the e5x xml dom representation of the report
      * @throws ParserConfigurationException
      * @throws MalformedURLException
+     * @implNote must not make nested calls to it self in order to ensure thread safety of instances of the class
      */
     @Override
-    public Document convert(OccurrenceReport occurrenceReport) throws ParserConfigurationException, MalformedURLException {
+    public Document convert(OccurrenceReport occurrenceReport) {
         documentBuilder.get().reset();
         document.set(documentBuilder.get().newDocument());
         return convertImpl(occurrenceReport);
@@ -101,6 +100,7 @@ public abstract class AbstractOccurrenceReportE5XExporter implements OccurrenceR
 
     /**
      * The document
+     *
      * @param occurrenceReport
      * @return
      */

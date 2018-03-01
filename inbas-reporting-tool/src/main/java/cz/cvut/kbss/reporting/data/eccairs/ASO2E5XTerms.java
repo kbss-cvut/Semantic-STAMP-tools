@@ -5,17 +5,13 @@ import cz.cvut.kbss.reporting.model.Vocabulary;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
- */
 public class ASO2E5XTerms {
-    protected Map<String,String> map = new HashMap<>();
+    protected Map<String, String> map = new HashMap<>();
 
     public ASO2E5XTerms() {
     }
-    
-    private void initMapping(){
+
+    private void initMapping() {
         // entities
         map.put(Vocabulary.s_c_occurrence_report_A, "Occurrence");
         map.put(Vocabulary.s_c_Aerodrome, "Aerodrome_General");
