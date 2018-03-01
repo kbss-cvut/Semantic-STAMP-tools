@@ -15,6 +15,7 @@ import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.reporting.service.data.AttachmentService;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,11 +31,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static cz.cvut.kbss.reporting.environment.util.Environment.DATA;
 import static cz.cvut.kbss.reporting.util.ConfigParam.ATTACHMENT_DIR;
@@ -81,6 +80,15 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         final File attachmentsDir = Files.createTempDirectory("rt-attachments").toFile();
         attachmentsDir.deleteOnExit();
         ((MockEnvironment) environment).setProperty(ATTACHMENT_DIR.toString(), attachmentsDir.getAbsolutePath());
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        final File attachmentsDir = new File(environment.getProperty(ATTACHMENT_DIR.toString()));
+        if (attachmentsDir.exists()) {
+            Files.walk(attachmentsDir.toPath()).sorted(Comparator.reverseOrder()).map(Path::toFile)
+                 .forEach(File::delete);
+        }
     }
 
     @Test
