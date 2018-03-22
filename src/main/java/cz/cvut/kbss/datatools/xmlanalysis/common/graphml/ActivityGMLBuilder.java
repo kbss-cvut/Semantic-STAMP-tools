@@ -31,4 +31,18 @@ public class ActivityGMLBuilder extends UMLGMLBuilder{
         Vertex v = addVertex(label, label);
         return v;
     }
+
+    public void addUpTriangle(String activityName) {
+        addWithShape(activityName, "triangle");
+    }
+
+    public void addDownTriagle(String activityName) {
+        addWithShape(activityName, "triangle2");
+    }
+    
+    protected Vertex addWithShape(String label, String shape){
+        Vertex v = addVertex(label, label);
+        v.setProperty("graphics", mapOf("type", shape));
+        return v;
+    }
 }

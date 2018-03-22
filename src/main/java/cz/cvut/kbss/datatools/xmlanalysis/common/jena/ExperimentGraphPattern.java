@@ -5,6 +5,10 @@
  */
 package cz.cvut.kbss.datatools.xmlanalysis.common.jena;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.apache.jena.ext.com.google.common.collect.Iterators;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
@@ -20,9 +24,11 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.QuerySolutionMap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.impl.ModelCom;
 import org.apache.jena.rdf.model.impl.PropertyImpl;
+import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.sparql.syntax.Element;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.util.iterator.SingletonIterator;
@@ -84,11 +90,15 @@ public class ExperimentGraphPattern {
         String personURI = "http://onto.fel.cvut.cz/ontologies/aviation/" + className;
         // template descriptor
         String construct = String.format("PREFIX rdfs: <%s>\n", RDFS.uri)
-                + "CONSTRUCT {?person a rdfs:Class. } WHERE{\n"
-                + "BIND(IRI(concat(\"http://onto.fel.cvut.cz/ontologies/aviation/\",str(?className))) as ?person)\n"
-//                + "BIND(IRI(\"http://onto.fel.cvut.cz/ontologies/aviation/incident\") as ?person)\n"
+                + "CONSTRUCT WHERE{\n"
                 + "?person a rdfs:Class. \n "
                 + "}";
+//        String construct = String.format("PREFIX rdfs: <%s>\n", RDFS.uri)
+//                + "CONSTRUCT {?person a rdfs:Class. } WHERE{\n"
+//                + "BIND(IRI(concat(\"http://onto.fel.cvut.cz/ontologies/aviation/\",str(?className))) as ?person)\n"
+////                + "BIND(IRI(\"http://onto.fel.cvut.cz/ontologies/aviation/incident\") as ?person)\n"
+//                + "?person a rdfs:Class. \n "
+//                + "}";
 //        LOG.info("sparql construct query template:\n{}", construct);
         // create the template
 //        Model m = ModelFactory.createDefaultModel();
@@ -113,9 +123,20 @@ public class ExperimentGraphPattern {
         m2.write(System.out, "TTL");
     }
     
+    
+    public static void testInstantiatePattern(){
+        String graphPattern = "?person a rdfs:Class.";
+        Map<String,RDFNode> varMap = new HashMap<>();
+        varMap.put("person", ResourceFactory.createResource("http://onto.fel.cvut.cz/ontologies/person/p-1"));
+        Model instance = GraphPatternUtils.instantiatePattern(varMap, graphPattern, null);
+        instance.write(System.out, "TTL");
+    }
+    
     public static void main(String[] args) {
-        experimentWithSPARQLConstructAsTemplate();
+//        experimentWithSPARQLConstructAsTemplate();
 //        experimentWithTrueModel();
+        testInstantiatePattern();
+        
         
     }
 }

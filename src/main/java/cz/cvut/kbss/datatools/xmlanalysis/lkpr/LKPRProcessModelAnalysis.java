@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -140,6 +139,17 @@ public class LKPRProcessModelAnalysis {
             set.add(activityName);
             b.addCircle(activityName);
         };
+        
+        Consumer<Node> upTriangle = n -> {
+            String activityName = n.getAttributes().getNamedItem("name").getTextContent().trim();
+            set.add(activityName);
+            b.addUpTriangle(activityName);
+        };
+        Consumer<Node> downTriangle = n -> {
+            String activityName = n.getAttributes().getNamedItem("name").getTextContent().trim();
+            set.add(activityName);
+            b.addDownTriagle(activityName);
+        };
         Consumer<Node> branch = n -> {
             String activityName = n.getAttributes().getNamedItem("name").getTextContent().trim();
             set.add(activityName);
@@ -149,12 +159,12 @@ public class LKPRProcessModelAnalysis {
         XMLCollections.asStream(apel.nodesWithPrefixPathName(el, "//INSTANCE[@class='End']", "")).forEach(circle);
         XMLCollections.asStream(apel.nodesWithPrefixPathName(el, "//INSTANCE[@class='Process start']", "")).forEach(circle);
         XMLCollections.asStream(apel.nodesWithPrefixPathName(el, "//INSTANCE[@class='Decision']", "")).forEach(branch);
-        XMLCollections.asStream(apel.nodesWithPrefixPathName(el, "//INSTANCE[@class='Merging']", "")).forEach(branch);
-        XMLCollections.asStream(apel.nodesWithPrefixPathName(el, "//INSTANCE[@class='Parallelity']", "")).forEach(branch);
+        XMLCollections.asStream(apel.nodesWithPrefixPathName(el, "//INSTANCE[@class='Parallelity']", "")).forEach(upTriangle);
+        XMLCollections.asStream(apel.nodesWithPrefixPathName(el, "//INSTANCE[@class='Merging']", "")).forEach(downTriangle);
         
         out.println("Generating GML graph ...");
         out.println("Nodes inserted into GML graph:");
-        out.println("----------------------------------------------------------------------------------------");
+        out.println("------------------------ ----------------------------------------------------------------");
         set.forEach(s -> out.println("\t" + s));
         out.println();
         out.println("Report Edge processing into GML graph:");
