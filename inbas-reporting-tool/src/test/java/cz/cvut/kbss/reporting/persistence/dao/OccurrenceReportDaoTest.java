@@ -66,7 +66,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     private OccurrenceReport report(boolean withFactorGraph) {
         final OccurrenceReport report =
                 withFactorGraph ? OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph() :
-                OccurrenceReportGenerator.generateOccurrenceReport(true);
+                        OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         return report;
     }
@@ -570,5 +570,19 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         } finally {
             em.close();
         }
+    }
+
+    @Test
+    public void updateEvictsPossiblyStaleReportListInstanceFromSecondLevelCache() {
+        final OccurrenceReport report = report(false);
+        occurrenceReportDao.persist(report);
+        occurrenceReportDao.findAll(PageRequest.of(0, 1), Collections.emptyList());
+        final String newSummary = "updated summary";
+        report.setSummary(newSummary);
+        occurrenceReportDao.update(report);
+        final Page<OccurrenceReport> updated =
+                occurrenceReportDao.findAll(PageRequest.of(0, 1), Collections.emptyList());
+        final OccurrenceReport result = updated.getContent().get(0);
+        assertEquals(newSummary, result.getSummary());
     }
 }

@@ -119,6 +119,8 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
         final OrphanRemover orphanRemover = new OrphanRemover(em);
         orphanRemover.removeOrphans(original.getCorrectiveMeasures(), merged.getCorrectiveMeasures());
         orphanRemover.removeOrphans(original.getReferences(), merged.getReferences());
+        em.getEntityManagerFactory().getCache()
+          .evict(cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport.class, entity.getUri(), null);
     }
 
     @Override
