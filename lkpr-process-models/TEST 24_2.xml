@@ -2485,6 +2485,8 @@
                     ATTR &quot;Kommentar&quot;
                 </ATTRIBUTE>
             </INSTANCE>
+
+
             <CONNECTOR id="con.59905" class="Subsequent">
                 <FROM instance="Process start" class="Process start"></FROM>
                 <TO instance="Activity 1" class="Activity"></TO>

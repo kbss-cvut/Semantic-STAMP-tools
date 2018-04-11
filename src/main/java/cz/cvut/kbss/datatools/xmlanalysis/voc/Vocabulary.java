@@ -37,6 +37,8 @@ public class Vocabulary {
     public final static Resource j_c_Role = ResourceFactory.createResource(c_Role);
     public final static String c_Organizational_Unit = "http://onto.fel.cvut.cz/ontologies/aviation/airport/lkpr/pm/organizational-unit"; 
     public final static Resource j_c_Organizational_Unit = ResourceFactory.createResource(c_Organizational_Unit);
+    public final static String c_Connector = "http://onto.fel.cvut.cz/ontologies/aviation/airport/lkpr/pm/c_Connector";
+    public final static Resource j_c_c_Connector = ResourceFactory.createResource(c_Connector);
 //    public final static String p_partOfCluster = "http://onto.fel.cvut.cz/ontologies/dataset-descriptor/part-of-cluster"; 
 //    public final static Property j_p_partOfCluster = ResourceFactory.createProperty(p_partOfCluster);
 

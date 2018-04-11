@@ -33,11 +33,11 @@ import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+import java.util.stream.Collectors;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 /**
  *
@@ -179,6 +179,15 @@ public class ConvertADOXMLProcessModelToUFO {
      * This method converts relations represented using the CONNECTOR element
      */
     public void processConnectors(){
+        processConnector("//CONNECTOR [@class='Subsequent']", Vocabulary.c_Connector);
+        processConnector("/CONNECTOR  [@class='Belongs to']", Vocabulary.c_Connector);
+        processConnector("//CONNECTOR [@class='Has role']", Vocabulary.c_Connector);
+       processConnector("//CONNECTOR [@class='Grouped into (risk)']", Vocabulary.c_Connector);
+//        processConnector("/CONNECTOR/FROM [@class='Belongs to']", Vocabulary.c_EventType);
+//        processConnector("//CONNECTOR [@class='Organizational unit']", Vocabulary.c_Agent);
+//        processConnector("//CONNECTOR [@class='Performer']", Vocabulary.c_Agent);
+//        processConnector("//CONNECTOR [@class='Role']", Vocabulary.c_Role);
+//        processConnector("//CONNECTOR [@class='Risk']", Vocabulary.c_Risk);
         // TODO 
         // CONNECTOR element
         // its children FROM and TO elements
@@ -193,7 +202,7 @@ public class ConvertADOXMLProcessModelToUFO {
      */
     public void processInstances(String xpath, String type){
         // select the List of nodes matching the xpath
-        List<Node> nodes = getNodeList(xpath); 
+        List<Node> nodes = getNodeList(xpath);
         LOG.info("process activities, there are {} activities to be processed", nodes.size());
         
         // a graph pattern to be instantiated 
@@ -222,6 +231,68 @@ public class ConvertADOXMLProcessModelToUFO {
             }
         }
     }
+    public void processConnector(String xpath, String type){
+        // select the List of nodes matching the xpath
+        List<Node> nodes1 = getNodeList(xpath);
+        List<Node> nodes2 = getNodeList("/CONNECTOR/FROM");
+        LOG.info("process connectores, there are {} activities to be processed", nodes1.size());
+
+        // a graph pattern to be instantiated
+        String graphPattern =
+                "?instance a ?type;\n"
+                        + "rdfs:label ?name;"
+                        + "lkpr-pm:from ?from;"
+                        + "lkpr-pm:to ?to;"
+                        + "lkpr-pm:id ?id.";
+
+        // process all matching nodes
+        for (Node node : nodes1){
+            if(node.getAttributes() != null){ // the converted node should have attributes
+                List<Node> nodes = XMLCollections.asList(node.getChildNodes());
+                NamedNodeMap am = node.getAttributes();
+//                for (Node nodec : nodes2){
+//                    if(nodec.getAttributes() != null){
+//                        Attr attr = (Attr) nodec.getAttributes().getNamedItem("class");
+//                        if (attr != null) {
+//                            String attribute= attr.getValue();
+//                            System.out.println("attributef: " + attribute);
+//                        }
+////                        NamedNodeMap am1 = nodec.getAttributes();
+////                        System.out.println("HEY  "+ am1.getNamedItem("class"));
+//
+//                    }
+//               }
+//                Node child = node.getLastChild();
+//                NamedNodeMap attrs = child.getAttributes();
+//
+//                if (attrs != null) {
+//                    System.out.println("HEY  ");
+//                    Node comp = attrs.getNamedItem("class");
+//                    String compString = comp.getNodeValue();
+//                    System.out.println("HEY  "+compString);
+//               }
+               String name = Optional.ofNullable(am.getNamedItem("class")).map(n -> n.getTextContent()).orElse(null);
+                String id1 = Optional.ofNullable(am.getNamedItem("id")).map(n -> n.getTextContent()).orElse(null);
+                String from = nodes.stream().filter(nc -> "FROM".equals(nc.getNodeName()))
+                        .map(nc -> nc.getAttributes().getNamedItem("instance").getTextContent()).findAny().orElse(null).trim();
+                String to = nodes.stream().filter(nc -> "TO".equals(nc.getNodeName()))
+                        .map(nc -> nc.getAttributes().getNamedItem("instance").getTextContent()).findAny().orElse(null).trim();
+                if(id1 != null){// the converted node should have a value for its name and id attributes
+                    // construct variable to resource mapping to be substituted in the graph pattern
+                    Map<String,RDFNode> varMap = new HashMap<>();
+                    varMap.put("name", ResourceFactory.createStringLiteral(name));
+                    varMap.put("from", ResourceFactory.createStringLiteral(from));
+                    varMap.put("to", ResourceFactory.createStringLiteral(to));
+                    varMap.put("id", ResourceFactory.createStringLiteral(id1));
+                    varMap.put("type", ResourceFactory.createResource(type));
+                    varMap.put("instance", ResourceFactory.createResource(createURIByName(id1)));
+
+                    // instantiate the pattern and add it to the result model
+                    instantiatePatternAndAddToModel1(graphPattern, varMap);
+                }
+            }
+        }
+    }
     
     /**
      * Utility method to instantiate a graph pattern (create a jena model based 
@@ -234,8 +305,12 @@ public class ConvertADOXMLProcessModelToUFO {
         model.add(activityModel);
         LOG.info("constructed model for of sise {} for elements with xpath ({})", activityModel.size(), xpath);
     }
-    
-    
+
+    public void instantiatePatternAndAddToModel1(String graphPattern, Map<String,RDFNode> varnameMapping){
+        Model activityModel = GraphPatternUtils.instantiatePattern(varnameMapping, graphPattern, pm);
+        model.add(activityModel);
+        LOG.info("constructed model for of sise {} for elements with xpath ({})", activityModel.size(), xpath);
+    }
     /**
      * Utility method to select list of nodes from the converted document using 
      * xpath.
