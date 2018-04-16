@@ -9,6 +9,8 @@ import cz.cvut.kbss.reporting.model.Event;
 import cz.cvut.kbss.reporting.model.Factor;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.Vocabulary;
+import cz.cvut.kbss.reporting.model.location.GPSLocation;
+import cz.cvut.kbss.reporting.model.location.Location;
 import cz.cvut.kbss.reporting.model.qam.Question;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
 import org.junit.Test;
@@ -292,5 +294,18 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
         assertTrue(hasChildWithFactor.isPresent());
         final Event childWithFactor = hasChildWithFactor.get().getChildren().iterator().next();
         assertEquals(1, childWithFactor.getFactors().size());
+    }
+
+    @Test
+    public void persistSavesOccurrenceWithGPSLocation() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        occurrence.setLocation(new GPSLocation(50.0755, 14.4378));
+        dao.persist(occurrence);
+
+        final Occurrence result = dao.find(occurrence.getUri());
+        final Location location = result.getLocation();
+        assertNotNull(location);
+        assertNotNull(location.getUri());
+        assertEquals(occurrence.getLocation(), location);
     }
 }

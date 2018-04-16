@@ -7,6 +7,7 @@ import cz.cvut.kbss.reporting.factorgraph.clone.EdgeCloningVisitor;
 import cz.cvut.kbss.reporting.factorgraph.clone.NodeCloningVisitor;
 import cz.cvut.kbss.reporting.factorgraph.traversal.DefaultFactorGraphTraverser;
 import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
+import cz.cvut.kbss.reporting.model.location.Location;
 import cz.cvut.kbss.reporting.model.util.HasOwlKey;
 
 import java.io.Serializable;
@@ -26,6 +27,9 @@ public class Occurrence extends AbstractEvent implements HasOwlKey, Serializable
     @OWLAnnotationProperty(iri = Vocabulary.s_p_label)
     private String name;
 
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_location, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Location location;
+
     @Transient
     private Integer referenceId;
 
@@ -38,6 +42,7 @@ public class Occurrence extends AbstractEvent implements HasOwlKey, Serializable
     public Occurrence(Occurrence other) {
         super(other);
         this.name = other.name;
+        this.location = other.location != null ? other.location.copy() : null;
     }
 
     @Override
@@ -56,6 +61,14 @@ public class Occurrence extends AbstractEvent implements HasOwlKey, Serializable
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     /**
