@@ -1,5 +1,10 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.12.1 - April 17, 2018
+- Added support for occurrence location specification (Feature #594).
+- Fixed the issue where get all reports returned obsolete versions of updated reports (Bug #581).
+- Support description of file attachments (Feature #535).
+
 ### 0.12.0 - February 28, 2018
 - Added support for binary file attachments to reports (server-side only) (Feature #535).
 - Partial support for JSON-LD in REST services (Feature #523).

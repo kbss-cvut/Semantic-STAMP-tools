@@ -30,7 +30,9 @@ Hlavní konfigurace reportovacího nástroje se nachází v souboru `src/main/re
 * `eventTypesRepository` - adresa úložiště, ve kterém se nachází taxonomie a slovníky používané RT,
 * `formGenRepositoryUrl` - adresa úložiště, které používá RT a generátor formulářů pro předávání dat, na jejichž základě se formuláře generují,
 * `formGenServiceUrl` - adresa webové služby generátoru formulářů,
-* `textAnalysisServiceUrl` - adresa webové služby analýzy textu.
+* `textAnalysisServiceUrl` - adresa webové služby analýzy textu,
+* `restrictLoginAttempts` - omezí počet neplatných po sobě následujících pokusů o přihlášení,
+* `attachmentDir` - Specifikuje složku, do které jsou ukládány souborové přílohy hlášení.
 
 Pokud při instalaci postupujete dle instalačního manuálu, není třeba tuto konfiguraci měnit, neboť je přednastavena pro hodnoty z manuálu.
 
