@@ -34,6 +34,7 @@ public class OccurrenceDao extends OwlKeySupportingDao<Occurrence> {
         final FactorGraphSaver saver = new FactorGraphSaver(em, new QuestionSaver());
         final FactorGraphTraverser traverser = new IdentityBasedFactorGraphTraverser(saver, null);
         traverser.traverse(entity);
+        mergeLocation(entity, original, em);
         em.merge(entity);
         mergeOccurrenceFactors(entity, em);
     }
@@ -42,6 +43,17 @@ public class OccurrenceDao extends OwlKeySupportingDao<Occurrence> {
         // We need to merge only the top-level events, others are merged by cascading as part of the event hierarchy
         if (occurrence.getFactors() != null) {
             occurrence.getFactors().forEach(f -> em.merge(f.getEvent()));
+        }
+    }
+
+    private void mergeLocation(Occurrence update, Occurrence original, EntityManager em) {
+        if (original.getLocation() != null) {
+            if (update.getLocation() == null) {
+                em.remove(original.getLocation());
+            } else if (!original.getLocation().getClass().isAssignableFrom(update.getLocation().getClass())) {
+                em.remove(original.getLocation());
+                update.getLocation().setUri(null);
+            }
         }
     }
 

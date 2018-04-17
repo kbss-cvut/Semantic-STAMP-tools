@@ -11,6 +11,7 @@ import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.location.GPSLocation;
 import cz.cvut.kbss.reporting.model.location.Location;
+import cz.cvut.kbss.reporting.model.location.NamedLocation;
 import cz.cvut.kbss.reporting.model.qam.Question;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
 import org.junit.Test;
@@ -307,5 +308,43 @@ public class OccurrenceDaoTest extends BaseDaoTestRunner {
         assertNotNull(location);
         assertNotNull(location.getUri());
         assertEquals(occurrence.getLocation(), location);
+    }
+
+    @Test
+    public void updateRemovesOrphanLocationInstanceWhenItDoesNotExistAnyMore() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        occurrence.setLocation(new GPSLocation(50.0755, 14.4378));
+        dao.persist(occurrence);
+        final URI locationUri = occurrence.getLocation().getUri();
+
+        occurrence.setLocation(null);
+        dao.update(occurrence);
+
+        assertNull(dao.find(occurrence.getUri()).getLocation());
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNull(em.find(Location.class, locationUri));
+        } finally {
+            em.close();
+        }
+    }
+
+    @Test
+    public void updateRemovesOrphanLocationInstanceWhenItsTypeChanges() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        occurrence.setLocation(new NamedLocation("Letiste Praha"));
+        dao.persist(occurrence);
+        final Location origLocation = occurrence.getLocation();
+        final Location newLocation = new GPSLocation(50.0755, 14.4378);
+        occurrence.setLocation(newLocation);
+        dao.update(occurrence);
+
+        assertEquals(newLocation, dao.find(occurrence.getUri()).getLocation());
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertNull(em.find(Location.class, origLocation.getUri()));
+        } finally {
+            em.close();
+        }
     }
 }
