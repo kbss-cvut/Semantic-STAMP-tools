@@ -103,7 +103,7 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         }).collect(Collectors.toList());
         when(reportServiceMock.findAll(any(Pageable.class), anyCollection())).thenReturn(new PageImpl<>(reports));
 
-        final MvcResult result = mockMvc.perform(get("/reports").param("key", keys.toArray(new String[keys.size()])))
+        final MvcResult result = mockMvc.perform(get("/reports").param("key", keys.toArray(new String[0])))
                                         .andExpect(status().isOk()).andReturn();
         final List<ReportDto> res = readValue(result, new TypeReference<List<ReportDto>>() {
         });

@@ -12,6 +12,7 @@ import cz.cvut.kbss.reporting.factorgraph.traversal.IdentityBasedFactorGraphTrav
 import cz.cvut.kbss.reporting.filter.OccurrenceCategoryFilter;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.*;
+import cz.cvut.kbss.reporting.model.location.GPSLocation;
 import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.event.ResourceRemovalEvent;
@@ -535,5 +536,20 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         verify(eventPublisherMock).publishEvent(captor.capture());
         assertEquals(report, captor.getValue().getReport());
         assertEquals(rTwo, captor.getValue().getResource());
+    }
+
+    @Test
+    public void createNewRevisionCopiesLocationIntoNewRevision() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        final double lat = 50.0755;
+        final double longitude = 14.4378;
+        report.getOccurrence().setLocation(new GPSLocation(lat, longitude));
+        occurrenceReportService.persist(report);
+
+        final OccurrenceReport newRevision = occurrenceReportService.createNewRevision(report.getFileNumber());
+        assertEquals(report.getOccurrence().getLocation(), newRevision.getOccurrence().getLocation());
+        final OccurrenceReport result = occurrenceReportService.find(newRevision.getUri());
+        assertEquals(report.getOccurrence().getLocation(), result.getOccurrence().getLocation());
     }
 }

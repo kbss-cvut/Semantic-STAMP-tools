@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.model;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.model.location.GPSLocation;
+import cz.cvut.kbss.reporting.model.location.NamedLocation;
 import cz.cvut.kbss.reporting.model.qam.Question;
 import org.junit.Test;
 
@@ -156,9 +157,19 @@ public class OccurrenceTest {
     }
 
     @Test
-    public void copyConstructorCopiesLocation() {
+    public void copyConstructorCopiesGPSLocation() {
         final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
         occurrence.setLocation(new GPSLocation(50.0755, 14.4378));
+
+        final Occurrence result = new Occurrence(occurrence);
+        assertEquals(occurrence.getLocation(), result.getLocation());
+        assertNotSame(occurrence.getLocation(), result.getLocation());
+    }
+
+    @Test
+    public void copyConstructorCopiesNamedLocation() {
+        final Occurrence occurrence = OccurrenceReportGenerator.generateOccurrence();
+        occurrence.setLocation(new NamedLocation("Letiste Praha"));
 
         final Occurrence result = new Occurrence(occurrence);
         assertEquals(occurrence.getLocation(), result.getLocation());

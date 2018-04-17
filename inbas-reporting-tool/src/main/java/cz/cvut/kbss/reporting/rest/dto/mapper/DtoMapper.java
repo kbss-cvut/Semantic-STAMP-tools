@@ -174,6 +174,7 @@ public abstract class DtoMapper {
         dto.setEndTime(occurrence.getEndTime());
         dto.setEventType(occurrence.getEventType());
         dto.setQuestion(occurrence.getQuestion());
+        dto.setLocation(occurrence.getLocation());
         dto.setReferenceId(random.nextInt());
         if (eventDtoRegistry == null) {
             reset();
