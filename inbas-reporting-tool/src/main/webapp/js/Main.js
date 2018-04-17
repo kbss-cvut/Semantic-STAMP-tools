@@ -1,4 +1,3 @@
-'use strict';
 // Have the imports here, so that the I18nStore is initialized before any of the components which might need it
 import React from "react";
 import {IndexRoute, Route, Router} from "react-router";

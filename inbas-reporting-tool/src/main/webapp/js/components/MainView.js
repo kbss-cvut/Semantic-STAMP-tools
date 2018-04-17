@@ -4,6 +4,7 @@ import React from "react";
 import {MenuItem, Nav, Navbar, NavDropdown, NavItem} from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap";
 import {IfGranted} from "react-authorization";
+import classNames from "classnames";
 
 import Actions from "../actions/Actions";
 import Authentication from "../utils/Authentication";
@@ -48,12 +49,17 @@ class MainView extends React.Component {
         this.setState({showProfile: false});
     };
 
+    _onSelectLang = (lang) => {
+        I18nStore.setActiveLanguage(lang);
+        window.location.reload();
+    };
+
     render() {
         if (!UserStore.isLoaded()) {
             return <div>{this.props.children}</div>;
         }
-        const user = UserStore.getCurrentUser();
-        const name = user.firstName.substr(0, 1) + '. ' + user.lastName;
+        const user = UserStore.getCurrentUser(),
+            name = user.firstName.substr(0, 1) + '. ' + user.lastName;
         return <div>
             <header>
                 <Navbar fluid={true}>
@@ -74,6 +80,9 @@ class MainView extends React.Component {
                         <li>
                             <NavSearch/>
                         </li>
+                        <li>
+                            {this._renderLanguageSelector()}
+                        </li>
                         <NavDropdown id='logout' title={name}>
                             <MenuItem onClick={this._openUserProfile}>{this.i18n('main.user-profile')}</MenuItem>
                             <MenuItem divider/>
@@ -86,6 +95,18 @@ class MainView extends React.Component {
                 <ProfileController show={this.state.showProfile} onClose={this._closeUserProfile}/>
                 {this.props.children}
             </section>
+        </div>;
+    }
+
+    _renderLanguageSelector() {
+        const csCls = classNames("lang", {"selected": I18nStore.getActiveLanguage() === Constants.LANG.CS}),
+            enCls = classNames("lang", {"selected": I18nStore.getActiveLanguage() === Constants.LANG.EN});
+        return <div className="lang">
+            <a className={csCls} href="#"
+               onClick={() => this._onSelectLang(Constants.LANG.CS)}>CS</a>
+            &nbsp;/&nbsp;
+            <a className={enCls} href="#"
+               onClick={() => this._onSelectLang(Constants.LANG.EN)}>EN</a>
         </div>;
     }
 }

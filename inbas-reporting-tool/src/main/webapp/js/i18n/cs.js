@@ -5,7 +5,7 @@
 const Constants = require('../constants/Constants');
 
 module.exports = {
-    'locale': 'cs',
+    'locale': Constants.LANG.CS,
 
     'messages': {
         'add': 'Přidat',

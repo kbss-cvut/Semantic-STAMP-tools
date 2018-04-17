@@ -6,6 +6,11 @@ module.exports = {
     APP_NAME: 'INBAS Reporting Tool',
     REST_PREFIX: 'rest/',
     ECCAIRS_URL: 'http://www.icao.int/safety/airnavigation/AIG/Documents/ADREP%20Taxonomy/ECCAIRS%20Aviation%201.3.0.12%20(Entities%20and%20Attributes).en.id.pdf',
+    LANG_COOKIE: 'INBAS-LANG',
+    LANG: {
+        CS: 'cs',
+        EN: 'en'
+    },
     HOME_ROUTE: Routes.dashboard,
     OPTIONS: {
         OCCURRENCE_CLASS: 'occurrenceClass',

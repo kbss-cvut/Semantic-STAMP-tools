@@ -852,3 +852,11 @@ button.right {
 li.hover {
     text-decoration: underline;
 }
+
+div.lang {
+    padding: 16px 0 16px 10px;
+}
+
+a.lang.selected {
+    font-weight: bold;
+}
