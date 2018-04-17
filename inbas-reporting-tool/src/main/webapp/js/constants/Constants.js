@@ -76,6 +76,8 @@ module.exports = {
     OCCURRENCE_JAVA_CLASS: 'cz.cvut.kbss.reporting.dto.event.OccurrenceDto',
     EVENT_JAVA_CLASS: 'cz.cvut.kbss.reporting.dto.event.EventDto',
     OCCURRENCE_REPORT_JAVA_CLASS: 'cz.cvut.kbss.reporting.dto.OccurrenceReportDto',
+    NAMED_LOCATION_JAVA_CLASS: 'cz.cvut.kbss.reporting.model.location.NamedLocation',
+    GPS_LOCATION_JAVA_CLASS: 'cz.cvut.kbss.reporting.model.location.GPSLocation',
 
     FULL_TEXT_SEARCH_OPTION: {
         id: 'full-text-search',

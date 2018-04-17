@@ -49,7 +49,7 @@ class Input extends React.Component {
             <FormControl componentClass='select' ref={c => this.input = c} {...inputProps}>
                 {this.props.children}
             </FormControl>
-            {this.props.validation && <FormControl.Feedback/>}
+            {this.props.validation && <FormControl.Feedback title={this.props.validationMessage}/>}
             {this._renderHelp()}
         </FormGroup>;
     }
@@ -87,7 +87,8 @@ Input.propTypes = {
     value: PropTypes.any,
     onChange: PropTypes.func,
     help: PropTypes.string,
-    validation: PropTypes.oneOf(['success', 'warning', 'error'])
+    validation: PropTypes.oneOf(['success', 'warning', 'error']),
+    validationMessage: PropTypes.string
 };
 
 Input.defaultProps = {
