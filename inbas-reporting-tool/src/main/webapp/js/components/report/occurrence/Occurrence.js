@@ -72,7 +72,7 @@ class Occurrence extends React.Component {
                         {this.i18n('occurrence.start-time')}
                     </label>
                     <DateTimePicker inputFormat='DD-MM-YYYY' dateTime={report.occurrence.startTime.toString()}
-                                    onChange={this.onStartChange} size='small' mode='date'
+                                    onChange={this.onStartChange} size='small' mode='date' pullRight={false}
                                     inputProps={{title: this.i18n('occurrence.start.date-tooltip')}}/>
                 </div>
                 <div className='picker-container form-group form-group-sm col-xs-2'>
