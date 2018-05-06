@@ -1,10 +1,12 @@
 'use strict';
 import React from "react";
-import I18nWrapper from "../../../i18n/I18nWrapper";
-import injectIntl from "../../../utils/injectIntl";
-import Utils from "../Utils";
 import Graph from "react-graph-vis";
-import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
+
+import I18nWrapper from "../../../../i18n/I18nWrapper";
+import injectIntl from "../../../../utils/injectIntl";
+import Utils from "../../Utils";
+import GraphUtils from "./GraphUtils";
+import LoadingWrapper from "../../../misc/hoc/LoadingWrapper";
 
 class EventtypeGraph extends React.Component {
 
@@ -78,90 +80,22 @@ class EventtypeGraph extends React.Component {
             let nodes = []
             let edges = []
 
-            let maxNode = 1
+            let maxNodeHolder = {value:1}
 
             let fromToCount={};
 
-            const addNode = (event_type) => {
-                let found = nodes.filter((item) => {
-                    return (item.label == event_type)
-                })
-                let node;
-                if (found.length == 1) {
-                    node = found[0];
-                    node.size = node.size + 1;
-                    node.mass = node.mass + 1;
-                    node.title = node.label + " ( "+node.mass+" )";
-                } else {
-                    node = {
-                        id: maxNode++,
-                        label: event_type,
-                        shape: 'dot',
-                        title: event_type + " ( 1 )",
-                        mass: 5,
-                        size: 5
-                    }
-                    nodes.push(node);
-                }
-                return node.id;
-            }
-
-            const addEdge = (from, to, relation_type, count) => {
-                // let found = edges.filter((item) => {
-                //     return (item.from == from) && (item.to == to) && (item.label == relation_type)
-                // })
-                let x = fromToCount[from+to];
-                if (!x) {
-                    x = 0;
-                }
-
-                let y = ( ( x == 0 ) ? ( x ) :( (x % 2) - 0.5) );
-
-                let edge = {
-                    arrowStrikethrough: false,
-                    from: from,
-                    to: to,
-                    title: ""+count,
-                    // label: relation_type,
-                    value: count,
-                    chosen: {
-                        label: count
-                    },
-                    color: {
-                        color: (relation_type == 'causes') ? 'rgb(255,153,153)' :
-                            (relation_type == 'mitigates') ? 'rgb(153,255,153)' :
-                                (relation_type == 'contributes to') ? 'rgb(255,204,153)' :
-                                    'rgb(200,200,200)',
-                        hover: (relation_type == 'causes') ? 'red' :
-                            (relation_type == 'mitigates') ? 'green' :
-                                (relation_type == 'contributes to') ? 'orange' :
-                                    'black'
-                    },
-                    highlight: 'black',
-                    smooth: {
-                        enabled: true,
-                        type: 'curvedCW',
-                        roundness: y
-                    }
-                    // length: 1 / (count * count * count)
-                }
-                fromToCount[from+to] = x+1;
-                edges.push(edge);
-                // }
-            }
-
             rows.forEach((item) => {
                 let ft,et;
-                if (item.factor_type) {
-                    ft = addNode(item.factor_type)
+                if (GraphUtils.validEventType(item.factor_type)) {
+                    ft = GraphUtils.addNode(item.factor_type, nodes, maxNodeHolder)
                 }
 
-                if (item.event_type) {
-                    et = addNode(item.event_type)
+                if (GraphUtils.validEventType(item.event_type)) {
+                    et = GraphUtils.addNode(item.event_type, nodes, maxNodeHolder)
                 }
 
                 if (et && ft) {
-                    addEdge(addNode(item.factor_type), addNode(item.event_type), item.relation_type, item.count);
+                    GraphUtils.addEdge(GraphUtils.addNode(item.factor_type, nodes,maxNodeHolder), GraphUtils.addNode(item.event_type, nodes), item.relation_type, item.count, fromToCount, edges,maxNodeHolder);
                 }
             });
 

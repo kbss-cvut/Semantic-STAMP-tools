@@ -7,7 +7,7 @@ PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
 
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 
-SELECT ?event_type ?relation_type ?factor_type (COUNT(distinct *) AS ?count) {
+SELECT ?event_type ?relation_type ?factor_type (COUNT(DISTINCT *) AS ?count) {
   {
     SELECT ?fileNumber (max(?revision) AS ?maxRevision) {
   	?report doc:has_revision ?revision ;
@@ -34,7 +34,6 @@ SELECT ?event_type ?relation_type ?factor_type (COUNT(distinct *) AS ?count) {
 
       OPTIONAL { SERVICE er:inbas-model-2016-01-21:22-46-17 { ?event_f_t rdfs:label ?factor_type_label. } }
       OPTIONAL { SERVICE er:eccairs-aviation-3.4.0.2        { ?event_f_t rdfs:label ?factor_type_label. } }
-
       OPTIONAL {
         [rt:has_event_type ?event_e_t] aso:has_factor [
           a ?rt ;
@@ -57,7 +56,6 @@ SELECT ?event_type ?relation_type ?factor_type (COUNT(distinct *) AS ?count) {
 
       OPTIONAL { SERVICE er:inbas-model-2016-01-21:22-46-17 { ?event_e_t rdfs:label ?event_type_label. } }
       OPTIONAL { SERVICE er:eccairs-aviation-3.4.0.2        { ?event_e_t rdfs:label ?event_type_label. } }
-
       OPTIONAL {
         ?et aso:has_factor [
           a ?rt ;
@@ -70,9 +68,9 @@ SELECT ?event_type ?relation_type ?factor_type (COUNT(distinct *) AS ?count) {
       }
     }
 
-    BIND(COALESCE(?event_type_label,?event_e_t) AS ?event_type)
-    BIND(COALESCE(?factor_type_label,?event_f_t) AS ?factor_type)
-    BIND(COALESCE(?relation_type_label,?rt) AS ?relation_type)
+  BIND(COALESCE(COALESCE(?event_type_label,?event_e_t),"NONE") AS ?event_type)
+  BIND(COALESCE(COALESCE(?factor_type_label,?event_f_t),"NONE") AS ?factor_type)
+  BIND(COALESCE(COALESCE(?relation_type_label,?rt),"NONE") AS ?relation_type)
 }
 GROUP BY ?event_type ?relation_type ?factor_type
 ORDER BY desc(?count) asc(?event_type)

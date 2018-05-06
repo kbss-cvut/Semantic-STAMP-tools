@@ -8,7 +8,7 @@ import EditBar from "./EditBar";
 import Container from "./Container";
 import CustomFrame from "./CustomFrame";
 import EventFactorChains from "./widgets/EventFactorChains";
-import EventtypeDashboard from "./widgets/EventtypeDashboard";
+import EventtypeDashboard from "./widgets/event-type-dashboard/EventtypeDashboard";
 import OccurrenceList from "./widgets/OccurrenceList";
 import OccurrenceSeverityTrends from "./widgets/OccurrenceSeverityTrends";
 

@@ -1,10 +1,10 @@
 'use strict';
 import React from "react";
-import FrequencyList from "./FrequencyList";
+import FrequencyList from "../FrequencyList";
 import EventtypeGraph from "./EventtypeGraph";
-import StatisticsStore from "../../../stores/StatisticsStore";
-import Actions from "../../../actions/Actions";
-import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
+import StatisticsStore from "../../../../stores/StatisticsStore";
+import Actions from "../../../../actions/Actions";
+import LoadingWrapper from "../../../misc/hoc/LoadingWrapper";
 
 class EventtypeDashboard extends React.Component {
 
