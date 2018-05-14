@@ -13,9 +13,9 @@ const WizardWindow = (props) => {
     delete modalProps.start;
     delete modalProps.readOnly;
     delete modalProps.enableForwardSkip;
+    delete modalProps.title;
 
-    return <Modal {...modalProps} show={props.show} bsSize="large" title={props.title}
-                  animation={true} dialogClassName="large-modal">
+    return <Modal {...modalProps} show={props.show} bsSize="large" animation={true} dialogClassName="large-modal">
         <Modal.Header closeButton>
             <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>

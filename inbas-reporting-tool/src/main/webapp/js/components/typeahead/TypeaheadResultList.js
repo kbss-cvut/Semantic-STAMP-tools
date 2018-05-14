@@ -12,14 +12,20 @@ class TypeaheadResultList extends React.Component {
         const items = [],
             classes = ['btn-link', 'item'];
         for (let i = 0, len = this.props.options.length; i < len; i++) {
-            const onClick = this.onClick.bind(this, this.props.options[i]),
+            const option = this.props.options[i],
+                onClick = this.onClick.bind(this, option),
                 className = classNames(classes, {'hover': i === this.props.selectionIndex});
             items.push(<li className={className} key={'typeahead-result-' + i}
-                           onClick={onClick}>{this.getOptionLabel(this.props.options[i])}</li>);
+                           title={TypeaheadResultList.getOptionTitle(option)}
+                           onClick={onClick}>{this.getOptionLabel(option)}</li>);
         }
         return <ul className={listCls}>
             {items}
         </ul>;
+    }
+
+    static getOptionTitle(option) {
+        return option.description ? option.description : undefined;
     }
 
     getOptionLabel(option) {

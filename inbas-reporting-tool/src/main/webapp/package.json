@@ -34,7 +34,7 @@
     "react-spinners": "~0.2.5",
     "reflux": "~0.4.1",
     "remarkable": "~1.6.2",
-    "semforms": "https://kbss.felk.cvut.cz/dist/semforms-0.1.4.tgz",
+    "semforms": "https://kbss.felk.cvut.cz/dist/semforms-0.1.5.tgz",
     "superagent": "~1.8.3"
   },
   "devDependencies": {
