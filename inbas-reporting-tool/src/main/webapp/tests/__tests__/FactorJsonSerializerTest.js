@@ -161,4 +161,15 @@ describe('Test factor tree hierarchy serialization for JSON', function () {
             expect(edge.uri).toEqual(factorLinks[i].uri);
         }
     });
+
+    it('returns original factor graph from report when GanttController graph is empty', () => {
+        report.factorGraph = {
+            nodes: [report.occurrence.referenceId],
+            edges: []
+        };
+        const factorGraph = FactorJsonSerializer.getFactorGraph(report);
+        expect(factorGraph.nodes.length).toEqual(1);
+        expect(factorGraph.nodes[0]).toEqual(report.occurrence.referenceId);
+        expect(factorGraph.edges.length).toEqual(0);
+    });
 });

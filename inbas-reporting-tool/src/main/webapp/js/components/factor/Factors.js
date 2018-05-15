@@ -94,7 +94,7 @@ const Factors = React.createClass({
     _onOptionsLoaded: function (type, data) {
         if (type === Constants.OPTIONS.EVENT_TYPE) {
             this.renderFactors(data);
-        } else if (type === 'factorType') {
+        } else if (type === Constants.OPTIONS.FACTOR_TYPE) {
             this.setState({factorTypeOptions: JsonLdUtils.processSelectOptions(data)});
         }
     },

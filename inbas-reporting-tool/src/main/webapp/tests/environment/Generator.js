@@ -1,5 +1,3 @@
-'use strict';
-
 import Constants from "../../js/constants/Constants";
 import Vocabulary from "../../js/constants/Vocabulary";
 
@@ -214,10 +212,9 @@ export default class Generator {
      * @param max [optional] Maximum generated number, optional. If not specified, max safe integer value is used.
      * @return {number}
      */
-    static getRandomInt(max) {
-        const min = 0,
-            bound = max ? max : Number.MAX_SAFE_INTEGER;
-        return Math.floor(Math.random() * (bound - min)) + min;
+    static getRandomInt(max = Number.MAX_SAFE_INTEGER) {
+        const min = 0;
+        return Math.floor(Math.random() * (max - min)) + min;
     }
 
     /**

@@ -15,9 +15,9 @@ const FactorJsonSerializer = {
         FactorSerializer.setGanttController(controller);
     },
 
-    getFactorGraph: function () {
+    getFactorGraph: function (report) {
         this._verifyGanttControllerIsSet();
-        return FactorSerializer.getFactorGraph();
+        return FactorSerializer.getFactorGraph(report);
     },
 
     _verifyGanttControllerIsSet: function () {
@@ -38,10 +38,15 @@ const FactorSerializer = {
         this.ganttController = controller;
     },
 
-    getFactorGraph: function () {
+    getFactorGraph: function (report) {
         this.ganttIdsToNodes = {};
         // Make sure nodes are processed before edges
         const nodes = this._getNodes();
+        if (nodes.length === 0) {
+            // This usually means the gantt has not been initialized, yet. Probably because event types haven't been
+            // loaded, yet
+            return report.factorGraph;
+        }
         return {
             nodes: nodes,
             edges: this._getEdges()
