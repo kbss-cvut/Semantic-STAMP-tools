@@ -21,7 +21,7 @@
     "react-authorization": "0.0.2",
     "react-bootstrap": "0.30.5",
     "react-bootstrap-datetimepicker": "https://kbss.felk.cvut.cz/dist/react-bootstrap-datetimepicker-0.0.7.tgz",
-    "react-bootstrap-typeahead": "https://kbss.felk.cvut.cz/dist/react-bootstrap-typeahead-0.0.14.tgz",
+    "react-bootstrap-typeahead": "https://kbss.felk.cvut.cz/dist/react-bootstrap-typeahead-0.0.15.tgz",
     "react-dazzle": "1.2.4",
     "react-graph-vis": "0.1.1",
     "react-modal": "1.7.3",
@@ -34,7 +34,7 @@
     "react-spinners": "~0.2.5",
     "reflux": "~0.4.1",
     "remarkable": "~1.6.2",
-    "semforms": "https://kbss.felk.cvut.cz/dist/semforms-0.1.5.tgz",
+    "semforms": "https://kbss.felk.cvut.cz/dist/semforms-0.1.6.tgz",
     "superagent": "~1.8.3"
   },
   "devDependencies": {
