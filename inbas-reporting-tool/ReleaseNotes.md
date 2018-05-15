@@ -1,5 +1,12 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.12.2 - May 15, 2018
+- Fixed incorrect display of generated summary form (Bug #623).
+- Improved generated summary form layout in general.
+- Support for language switching in the application (Feature #56).
+- Fixed NPX occurring when summary form was open before event types loaded.
+- Fixed datetime picker layout - now it is aligned with input field when displayed on left side of form.
+
 ### 0.12.1 - April 17, 2018
 - Added support for occurrence location specification (Feature #594).
 - Fixed the issue where get all reports returned obsolete versions of updated reports (Bug #581).
