@@ -151,7 +151,6 @@ public class Generator {
     public static Question generateQuestions(Integer maxDepth) {
         final int max = maxDepth != null ? maxDepth : Generator.randomInt(10);
         final Question root = question();
-        root.setUri(generateUri());
         root.setAnswers(Collections.singleton(answer()));
         generateQuestions(root, 0, max);
         return root;

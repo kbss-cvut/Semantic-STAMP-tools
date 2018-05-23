@@ -13,16 +13,14 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.reporting.model.*;
+import cz.cvut.kbss.reporting.model.qam.Question;
 import cz.cvut.kbss.reporting.model.util.HasUri;
 import cz.cvut.kbss.reporting.util.Constants;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Test;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -338,5 +336,48 @@ public class DtoMapperTest {
         final FactorGraph result = mapper.occurrenceToFactorGraph(occurrence);
         assertEquals(occurrence.getChildren().size() + 1, result.getNodes().size());
         assertEquals(occurrence.getChildren().size(), result.getEdges().size());
+    }
+
+    @Test
+    public void factorGraphToOccurrenceUnifiesQuestionsUnderOccurrence() {
+        final OccurrenceDto occurrence = new OccurrenceDto();
+        final Question root = Generator.question();
+        final Question qOne = Generator.question();
+        final Question qTwo = Generator.question();
+        qTwo.setUri(qOne.getUri());
+        root.setSubQuestions(new LinkedHashSet<>(Arrays.asList(qOne, qTwo)));
+        occurrence.setQuestion(root);
+        final FactorGraph fg = new FactorGraph();
+        fg.setNodes(Collections.singletonList(occurrence));
+        fg.setEdges(Collections.emptySet());
+        final Occurrence result = mapper.factorGraphToOccurrence(fg);
+        assertEquals(1, result.getQuestion().getSubQuestions().size());
+        assertTrue(result.getQuestion().getSubQuestions().contains(qOne));
+    }
+
+    @Test
+    public void factorGraphToOccurrenceUnifiesQuestionsUnderEvent() {
+        final OccurrenceDto occurrence = new OccurrenceDto();
+        occurrence.setReferenceId(Generator.randomInt());
+        final Question root = Generator.question();
+        final Question qOne = Generator.question();
+        final Question qTwo = Generator.question();
+        qTwo.setUri(qOne.getUri());
+        root.setSubQuestions(new LinkedHashSet<>(Arrays.asList(qOne, qTwo)));
+        final EventDto event = new EventDto();
+        event.setReferenceId(Generator.randomInt());
+        event.setQuestion(root);
+        final FactorGraph fg = new FactorGraph();
+        fg.setNodes(Arrays.asList(occurrence, event));
+        final FactorGraphEdge edge =
+                new FactorGraphEdge(Generator.generateUri(), occurrence.getReferenceId(), event.getReferenceId(),
+                        URI.create(Vocabulary.s_p_has_part_A));
+        fg.setEdges(Collections.singleton(edge));
+
+        final Occurrence result = mapper.factorGraphToOccurrence(fg);
+        assertEquals(1, result.getChildren().size());
+        final Event eResult = result.getChildren().iterator().next();
+        assertEquals(1, eResult.getQuestion().getSubQuestions().size());
+        assertTrue(eResult.getQuestion().getSubQuestions().contains(qOne));
     }
 }

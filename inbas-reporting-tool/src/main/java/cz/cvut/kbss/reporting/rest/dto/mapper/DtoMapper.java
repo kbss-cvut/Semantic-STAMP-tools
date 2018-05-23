@@ -14,6 +14,7 @@ import cz.cvut.kbss.reporting.factorgraph.FactorGraphItem;
 import cz.cvut.kbss.reporting.factorgraph.traversal.FactorGraphTraverser;
 import cz.cvut.kbss.reporting.factorgraph.traversal.IdentityBasedFactorGraphTraverser;
 import cz.cvut.kbss.reporting.model.*;
+import cz.cvut.kbss.reporting.model.util.QuestionUnifier;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -220,12 +221,14 @@ public abstract class DtoMapper {
         final Map<Integer, FactorGraphItem> instanceMap = new HashMap<>(dtoMap.size());
         Occurrence occurrence = null;
         for (EventDto node : graph.getNodes()) {
+            final AbstractEvent event;
             if (node instanceof OccurrenceDto) {
-                occurrence = occurrenceDtoToOccurrence((OccurrenceDto) node);
-                instanceMap.put(node.getReferenceId(), occurrence);
+                event = occurrence = occurrenceDtoToOccurrence((OccurrenceDto) node);
             } else {
-                instanceMap.put(node.getReferenceId(), eventDtoToEvent(node));
+                event = eventDtoToEvent(node);
             }
+            new QuestionUnifier().unifyQuestions(event);
+            instanceMap.put(node.getReferenceId(), event);
         }
         transformEdgesToRelations(graph, dtoMap, instanceMap);
         assert occurrence != null;
