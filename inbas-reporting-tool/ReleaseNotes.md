@@ -1,5 +1,10 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.12.3 - May 31, 2018
+- Modification of vocabularies (Bug #574).
+- Report loading time optimizations.
+- Unify multiple occurrences of the same question DTO -> entity transformation (Task #485).
+
 ### 0.12.2 - May 15, 2018
 - Fixed incorrect display of generated summary form (Bug #623).
 - Improved generated summary form layout in general.
