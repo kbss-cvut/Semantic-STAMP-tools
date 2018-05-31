@@ -131,6 +131,8 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
         newRevision.setAuthor(securityUtils.getCurrentUser());
         newRevision.setDateCreated(new Date());
         reportDao.persist(newRevision);
+        latest.setNextRevision(newRevision);
+        reportDao.update(latest);
         return newRevision;
     }
 

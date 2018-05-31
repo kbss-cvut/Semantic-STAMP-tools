@@ -90,6 +90,7 @@ public class OccurrenceReportGenerator {
             newRev.setAuthor(author);
             newRev.setRevision(previous.getRevision() + 1);
             newRev.setDateCreated(new Date());
+            previous.setNextRevision(newRev);
             reports.add(newRev);
             previous = newRev;
         }

@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@OWLClass(iri = Vocabulary.s_c_occurrence_report_A)
+@OWLClass(iri = Vocabulary.s_c_occurrence_report)
 public class OccurrenceReport extends AbstractOccurrenceReport {
 
     @ParticipationConstraints(nonEmpty = true)
@@ -20,6 +20,9 @@ public class OccurrenceReport extends AbstractOccurrenceReport {
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<CorrectiveMeasureRequest> correctiveMeasures;
+
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_next_revision, fetch = FetchType.EAGER)
+    private OccurrenceReport nextRevision;
 
     public OccurrenceReport() {
         getTypes().add(Vocabulary.s_c_report);
@@ -67,6 +70,14 @@ public class OccurrenceReport extends AbstractOccurrenceReport {
         this.correctiveMeasures = correctiveMeasures;
     }
 
+    public OccurrenceReport getNextRevision() {
+        return nextRevision;
+    }
+
+    public void setNextRevision(OccurrenceReport nextRevision) {
+        this.nextRevision = nextRevision;
+    }
+
     @Override
     public String toString() {
         return "OccurrenceReport{" +
@@ -82,7 +93,7 @@ public class OccurrenceReport extends AbstractOccurrenceReport {
         final OccurrenceReportDto dto = new OccurrenceReportDto();
         copyBasicAttributesToDto(dto);
         dto.setPhase(phase);
-        dto.getTypes().add(Vocabulary.s_c_occurrence_report_A);
+        dto.getTypes().add(Vocabulary.s_c_occurrence_report);
         assert occurrence != null;
         dto.setIdentification(occurrence.getName());
         dto.setDate(occurrence.getStartTime());

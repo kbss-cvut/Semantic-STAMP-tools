@@ -15,7 +15,7 @@ import java.util.Set;
 
 // It is important that occurrence comes before factorGraph, because it defines a reference to the occurrence, which can the be used
 @JsonPropertyOrder(value = {"uri, key, occurrence, factorGraph"})
-@OWLClass(iri = Vocabulary.s_c_occurrence_report_A)
+@OWLClass(iri = Vocabulary.s_c_occurrence_report)
 public class OccurrenceReportDto implements LogicalDocument, FormGenData {
 
     @Id
@@ -227,7 +227,7 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
         res.setLastModified(lastModified);
         res.setRevision(revision);
         res.setTypes(types != null ? new HashSet<>(types) : new HashSet<>());
-        res.getTypes().add(Vocabulary.s_c_occurrence_report_A);
+        res.getTypes().add(Vocabulary.s_c_occurrence_report);
         assert occurrence != null;
         res.setIdentification(occurrence.getName());
         res.setDate(occurrence.getStartTime());

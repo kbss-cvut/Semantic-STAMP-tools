@@ -1,9 +1,9 @@
 package cz.cvut.kbss.reporting.service.validation;
 
+import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.exception.ValidationException;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
-import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.util.IdentificationUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.net.URI;
 import java.util.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,7 +35,7 @@ public class OccurrenceReportValidatorTest {
     public void validReportPassesUpdateValidation() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setKey(IdentificationUtils.generateKey());
-        report.setUri(URI.create(Vocabulary.s_c_occurrence_report_A + "#instance"));
+        report.setUri(Generator.generateUri());
         report.getAuthor().generateUri();
         final OccurrenceReport copy = new OccurrenceReport(report);
         copy.setKey(report.getKey());

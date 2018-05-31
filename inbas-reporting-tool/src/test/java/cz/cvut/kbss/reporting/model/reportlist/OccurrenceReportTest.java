@@ -33,7 +33,7 @@ public class OccurrenceReportTest {
         r.setRevision(1);
         r.setSummary("Summary");
         r.setSeverityAssessment(Generator.generateUri());
-        r.setTypes(Collections.singleton(Vocabulary.s_c_occurrence_report_A));
+        r.setTypes(Collections.singleton(Vocabulary.s_c_occurrence_report));
 
         final Occurrence occurrence = new Occurrence();
         occurrence.setName("TestOccurrence");

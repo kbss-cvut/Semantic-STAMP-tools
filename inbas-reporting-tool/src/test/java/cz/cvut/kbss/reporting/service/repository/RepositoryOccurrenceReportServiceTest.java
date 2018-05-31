@@ -552,4 +552,17 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         final OccurrenceReport result = occurrenceReportService.find(newRevision.getUri());
         assertEquals(report.getOccurrence().getLocation(), result.getOccurrence().getLocation());
     }
+
+    @Test
+    public void createNewRevisionAttachesNewRevisionToChainByConnectingItToOriginalLatestRevision() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        occurrenceReportService.persist(report);
+
+        final OccurrenceReport newRevision = occurrenceReportService.createNewRevision(report.getFileNumber());
+        assertEquals(report.getFileNumber(), newRevision.getFileNumber());
+        final OccurrenceReport result = occurrenceReportService.find(report.getUri());
+        assertNotNull(result.getNextRevision());
+        assertEquals(newRevision.getUri(), result.getNextRevision().getUri());
+    }
 }

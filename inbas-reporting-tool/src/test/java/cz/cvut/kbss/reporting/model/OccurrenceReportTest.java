@@ -107,7 +107,7 @@ public class OccurrenceReportTest {
     public void toReportDtoAddsOccurrenceReportToTypes() {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
         final ReportDto dto = report.toReportDto();
-        assertTrue(dto.getTypes().contains(Vocabulary.s_c_occurrence_report_A));
+        assertTrue(dto.getTypes().contains(Vocabulary.s_c_occurrence_report));
     }
 
     @Test

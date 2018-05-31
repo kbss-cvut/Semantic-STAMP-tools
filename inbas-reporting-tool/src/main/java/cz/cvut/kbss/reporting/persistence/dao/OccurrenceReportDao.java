@@ -24,19 +24,19 @@ import java.util.stream.Collectors;
 @Repository
 public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
 
-    private static final String SELECT = "SELECT ?x WHERE { ";
+    private static final String SELECT = "SELECT DISTINCT ?x WHERE { ";
     private static final String WHERE_CONDITION = "?x a ?type ; " +
             "?hasKey ?key ;" +
-            "?hasFileNumber ?fileNo ;" +
-            "?hasRevision ?maxRev ;" +
+            "?hasRevision ?revision ;" +
             "?hasAuthor ?author ;" +
             "?hasOccurrence ?occurrence ." +
             "OPTIONAL { ?x ?hasSeverity ?severity . }" +
             "OPTIONAL { ?x ?hasLastEditor ?lastEditor . }" +
             "?occurrence ?hasStartTime ?startTime ;" +
             "?hasEventType ?occurrenceCategory ." +
-            "{ SELECT (MAX(?rev) AS ?maxRev) ?fileNo WHERE " +
-            "{ ?y a ?type; ?hasFileNumber ?fileNo ; ?hasRevision ?rev . } GROUP BY ?fileNo }";
+            "FILTER NOT EXISTS { " +
+            "?y a ?type . " +
+            "?x ?hasNext ?y . }";
     private static final String QUERY_TAIL = "} ORDER BY DESC(?startTime) DESC(?revision) LIMIT ?limit OFFSET ?offset";
 
     private final OccurrenceDao occurrenceDao;
@@ -74,11 +74,11 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
                 .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
                 .setParameter("hasSeverity", URI.create(Vocabulary.s_p_has_severity_assessment))
                 .setParameter("hasLastEditor", URI.create(Vocabulary.s_p_has_last_editor))
-                .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                 .setParameter("hasAuthor", URI.create(Vocabulary.s_p_has_author))
                 .setParameter("hasOccurrence", URI.create(Vocabulary.s_p_documents))
                 .setParameter("hasStartTime", URI.create(Vocabulary.s_p_has_start_time))
                 .setParameter("hasEventType", URI.create(Vocabulary.s_p_has_event_type))
+                .setParameter("hasNext", URI.create(Vocabulary.s_p_has_next_revision))
                 .setUntypedParameter("limit", pageSpec.getPageSize())
                 .setUntypedParameter("offset", pageSpec.getPageSize() * pageSpec.getPageNumber())
                 .getResultList();

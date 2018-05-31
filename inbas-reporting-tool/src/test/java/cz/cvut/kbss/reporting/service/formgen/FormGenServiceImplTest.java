@@ -89,7 +89,7 @@ public class FormGenServiceImplTest {
         final EntityManager em = emf.createEntityManager();
         try {
             assertTrue(em.createNativeQuery("ASK { ?x a ?report .} ", Boolean.class).setParameter("report", URI.create(
-                    Vocabulary.s_c_occurrence_report_A)).getSingleResult());
+                    Vocabulary.s_c_occurrence_report)).getSingleResult());
         } finally {
             em.close();
         }
