@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -229,5 +230,15 @@ public class CachingReportBusinessServiceTest extends BaseServiceTestRunner {
         reportService.findAll(PageRequest.of(page, pageSize), Collections.emptyList());
         verify(occurrenceReportService).findAll(PageRequest.of(page, pageSize), Collections.emptyList());
         verify(reportCache, never()).getAll(PageRequest.of(page, pageSize));
+    }
+
+    @Test
+    public void findAllInitializesCacheWhenPagingSpecificationContainsNoPage() {
+        final List<LogicalDocument> reports = initReportChains();
+        final Page<ReportDto> result = reportService
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.emptyList());
+        assertEquals(reports.size(), result.getNumberOfElements());
+        verify(occurrenceReportService).findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.emptyList());
+        verify(reportCache).initialize(result.getContent());
     }
 }

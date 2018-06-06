@@ -39,6 +39,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import static cz.cvut.kbss.reporting.util.Constants.DEFAULT_PAGE_SPEC;
+
 @RestController
 @RequestMapping("/reports")
 public class ReportController extends BaseController {
@@ -73,7 +75,8 @@ public class ReportController extends BaseController {
     }
 
     private Pageable buildPageRequest(Integer page, Integer pageSize) {
-        return PageRequest.of(page != null ? page : 0, pageSize != null ? pageSize : Integer.MAX_VALUE);
+        return PageRequest.of(page != null ? page : DEFAULT_PAGE_SPEC.getPageNumber(),
+                pageSize != null ? pageSize : DEFAULT_PAGE_SPEC.getPageSize());
     }
 
     private Collection<ReportFilter> buildFilters(MultiValueMap<String, String> reqParams) {

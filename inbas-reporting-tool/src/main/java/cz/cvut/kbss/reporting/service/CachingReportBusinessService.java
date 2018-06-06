@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 
+import static cz.cvut.kbss.reporting.util.Constants.DEFAULT_PAGE_SPEC;
+
 /**
  * Report caching version of the report business service.
  * <p>
@@ -47,8 +49,18 @@ public class CachingReportBusinessService implements ReportBusinessService {
     public Page<ReportDto> findAll(Pageable pageSpec, Collection<ReportFilter> filters) {
         if (reportCache.isInitialized() && filters.isEmpty()) {
             return reportCache.getAll(pageSpec);
+
         }
-        return reportService.findAll(pageSpec, filters);
+        final Page<ReportDto> result = reportService.findAll(pageSpec, filters);
+        if (isDefaultPage(result)) {
+            reportCache.initialize(result.getContent());
+        }
+        return result;
+    }
+
+    private boolean isDefaultPage(Page<ReportDto> page) {
+        return page.getNumber() == DEFAULT_PAGE_SPEC.getPageNumber() &&
+                page.getSize() == DEFAULT_PAGE_SPEC.getPageSize();
     }
 
     @Override

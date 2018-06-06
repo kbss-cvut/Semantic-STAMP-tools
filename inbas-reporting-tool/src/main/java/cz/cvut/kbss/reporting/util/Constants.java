@@ -2,6 +2,8 @@ package cz.cvut.kbss.reporting.util;
 
 import cz.cvut.kbss.reporting.model.Person;
 import cz.cvut.kbss.reporting.model.Vocabulary;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Application-wide constants.
@@ -148,6 +150,13 @@ public final class Constants {
      * Version of this application.
      */
     public static final String VERSION = "$VERSION$";
+
+    /**
+     * Default page specification, corresponding to a find all query without no page specification.
+     * <p>
+     * I.e., the request asks for the first page (number = 0) and its size is {@link Integer#MAX_VALUE}.
+     */
+    public static Pageable DEFAULT_PAGE_SPEC = PageRequest.of(0, Integer.MAX_VALUE);
 
     /**
      * Default system administrator account.
