@@ -100,6 +100,17 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
         return sb.toString();
     }
 
+    private long getReportCount(EntityManager em) {
+        return em.createNativeQuery("SELECT (count(?x) as ?cnt) WHERE {" +
+                "?x a ?type ;" +
+                "FILTER NOT EXISTS {\n" +
+                "?y a ?type ." +
+                "?x ?hasNext ?y . }" +
+                "}", Long.class)
+                 .setParameter("type", typeUri)
+                 .setParameter("hasNext", URI.create(Vocabulary.s_p_has_next_revision)).getSingleResult();
+    }
+
     @Override
     protected void persist(OccurrenceReport entity, EntityManager em) {
         assert entity != null;
@@ -145,7 +156,7 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
                             "?x a ?type ;" +
                             "?documents ?occurrence . }",
                     OccurrenceReport.class)
-                     .setParameter("type", typeIri)
+                     .setParameter("type", typeUri)
                      .setParameter("documents", URI.create(Vocabulary.s_p_documents))
                      .setParameter("occurrence", occurrence.getUri())
                      .getSingleResult();

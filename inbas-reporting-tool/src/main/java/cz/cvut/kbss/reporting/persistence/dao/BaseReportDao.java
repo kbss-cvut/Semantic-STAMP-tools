@@ -3,7 +3,6 @@ package cz.cvut.kbss.reporting.persistence.dao;
 import cz.cvut.kbss.jopa.exceptions.NoResultException;
 import cz.cvut.kbss.jopa.exceptions.NoUniqueResultException;
 import cz.cvut.kbss.jopa.model.EntityManager;
-import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.model.Vocabulary;
@@ -18,13 +17,8 @@ import java.util.Objects;
 
 abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupportingDao<T> {
 
-    final URI typeIri;
-
     BaseReportDao(Class<T> type) {
         super(type);
-        final OWLClass owlClass = type.getDeclaredAnnotation(OWLClass.class);
-        assert owlClass != null;
-        this.typeIri = URI.create(owlClass.iri());
     }
 
     /**
@@ -83,7 +77,7 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
                     "?x a ?type ;" +
                     "?hasFileNumber ?fileNo ;" +
                     "?hasRevision ?revision . }", type)
-                     .setParameter("type", typeIri)
+                     .setParameter("type", typeUri)
                      .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                      .setParameter("fileNo", fileNumber)
                      .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
@@ -124,7 +118,7 @@ abstract class BaseReportDao<T extends LogicalDocument> extends OwlKeySupporting
 
     private List<T> loadChain(Long fileNumber, EntityManager em) {
         return em.createNativeQuery("SELECT ?x WHERE { ?x a ?type; ?hasFileNumber ?fileNo . }", type)
-                 .setParameter("type", typeIri)
+                 .setParameter("type", typeUri)
                  .setParameter("hasFileNumber", URI.create(Vocabulary.s_p_has_file_number))
                  .setParameter("fileNo", fileNumber).getResultList();
     }
