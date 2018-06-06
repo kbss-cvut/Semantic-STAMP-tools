@@ -40,7 +40,8 @@ describe('Report store', function () {
     function mockResponse(err, body) {
         reqMock.end.and.callFake(function (handler) {
             handler(err, {
-                body: body
+                body: body,
+                header: {}
             });
         });
     }
@@ -99,7 +100,8 @@ describe('Report store', function () {
         reqMock.end.and.callFake(function (handler) {
             setTimeout(() => {
                 handler(null, {
-                    body: reports
+                    body: reports,
+                    header: {}
                 });
             }, 500);
 
@@ -226,5 +228,22 @@ describe('Report store', function () {
             ReportStore.onLoadReportsForSearch();
             expect(Ajax.get).not.toHaveBeenCalled();
         });
+    });
+
+    it('loads multiple pages of reports', () => {
+        spyOn(Ajax, 'get').and.callThrough();
+        let counter = 0;
+        reqMock.end.and.callFake(function (handler) {
+            const header = counter === 0 ? {
+                    'link': '<http://localhost/reports?page=1&size=2>; rel=next'
+                } : {};
+            counter++;
+            handler(null, {
+                body: reports,
+                header: header
+            });
+        });
+        ReportStore.onLoadAllReports();
+        expect(Ajax.get).toHaveBeenCalledTimes(2);
     });
 });

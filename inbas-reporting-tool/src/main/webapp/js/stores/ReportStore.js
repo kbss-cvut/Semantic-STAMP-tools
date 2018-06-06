@@ -1,6 +1,7 @@
 'use strict';
 
 const Reflux = require('reflux');
+const parseLinkHeader = require('parse-link-header');
 
 const Actions = require('../actions/Actions');
 let Ajax = require('../utils/Ajax');
@@ -15,6 +16,12 @@ const BASE_URL_WITH_SLASH = Constants.REST_PREFIX + 'reports/';
 let reportsLoading = false;
 // Was the last report load filtered by report keys
 let lastLoadWithKeys = false;
+
+function hasNextPage(resp) {
+    const linkHeader = resp.header['link'],
+        links = parseLinkHeader(linkHeader);
+    return links && links.next;
+}
 
 const ReportStore = Reflux.createStore({
     listenables: [Actions],
@@ -33,16 +40,17 @@ const ReportStore = Reflux.createStore({
         }
         reportsLoading = true;
         lastLoadWithKeys = keys.length !== 0;
+        if (lastLoadWithKeys) {
+            this._loadReportsByKeys(keys);
+        } else {
+            this._loadReportsPage();
+        }
+    },
+
+    _loadReportsByKeys: function (keys) {
         Ajax.get(this._initLoadUri(keys)).end((data) => {
             reportsLoading = false;
             this._reports = data;
-            if (!lastLoadWithKeys) {
-                this._searchReports = this._reports;
-                this.trigger({
-                    action: Actions.loadReportsForSearch,
-                    reports: this._searchReports
-                });
-            }
             this.trigger({
                 action: Actions.loadAllReports,
                 reports: this._reports
@@ -63,6 +71,38 @@ const ReportStore = Reflux.createStore({
             url += (i === 0 ? '?' : '&') + 'key=' + keys[i];
         }
         return url;
+    },
+
+    _loadReportsPage: function (pageNo = 0) {
+        const url = BASE_URL + '?page=' + pageNo + '&size=' + Constants.LOADING_PAGE_SIZE;
+        Ajax.get(url).end((data, resp) => {
+            if (pageNo === 0) {
+                this._reports = data;
+            } else {
+                this._reports = this._reports.concat(data);
+            }
+            this.trigger({
+                action: Actions.loadAllReports,
+                reports: this._reports
+            });
+            this._searchReports = this._reports;
+            this.trigger({
+                action: Actions.loadReportsForSearch,
+                reports: this._searchReports
+            });
+            if (hasNextPage(resp)) {
+                this._loadReportsPage(pageNo + 1);
+            } else {
+                reportsLoading = false;
+            }
+        }, () => {
+            reportsLoading = false;
+            this.trigger({
+                action: Actions.loadAllReports,
+                reports: []
+            });
+            Actions.publishMessage('reports.unable-to-load', Constants.MESSAGE_TYPE.ERROR, Actions.loadAllReports);
+        });
     },
 
     onLoadReportsForSearch: function () {
