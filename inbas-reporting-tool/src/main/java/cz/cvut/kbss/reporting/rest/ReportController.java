@@ -3,6 +3,7 @@ package cz.cvut.kbss.reporting.rest;
 import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.dto.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.ReportRevisionInfo;
+import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportList;
 import cz.cvut.kbss.reporting.exception.AttachmentException;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
@@ -11,6 +12,7 @@ import cz.cvut.kbss.reporting.model.AbstractReport;
 import cz.cvut.kbss.reporting.model.InitialReport;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
 import cz.cvut.kbss.reporting.rest.dto.mapper.DtoMapper;
+import cz.cvut.kbss.reporting.rest.event.PaginatedResultRetrievedEvent;
 import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
@@ -20,7 +22,10 @@ import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +35,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -41,7 +47,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/reports")
-public class ReportController extends BaseController {
+public class ReportController extends BaseController implements ApplicationEventPublisherAware {
 
     private final ReportBusinessService reportService;
 
@@ -52,6 +58,8 @@ public class ReportController extends BaseController {
     private final ReportExporter reportExporter;
 
     private final AttachmentService attachmentService;
+
+    private ApplicationEventPublisher eventPublisher;
 
     @Autowired
     public ReportController(@Qualifier("cachingReportBusinessService") ReportBusinessService reportService,
@@ -67,9 +75,11 @@ public class ReportController extends BaseController {
     @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
     public ReportList getAllReports(@RequestParam(name = Constants.PAGE, required = false) Integer page,
                                     @RequestParam(name = Constants.PAGE_SIZE, required = false) Integer pageSize,
-                                    @RequestParam MultiValueMap<String, String> params) {
-        return new ReportList(
-                reportService.findAll(buildPageRequest(page, pageSize), buildFilters(params)).getContent());
+                                    @RequestParam MultiValueMap<String, String> params,
+                                    UriComponentsBuilder uriBuilder, HttpServletResponse response) {
+        final Page<ReportDto> reports = reportService.findAll(buildPageRequest(page, pageSize), buildFilters(params));
+        eventPublisher.publishEvent(new PaginatedResultRetrievedEvent(this, uriBuilder, response, reports));
+        return new ReportList(reports.getContent());
     }
 
     private Pageable buildPageRequest(Integer page, Integer pageSize) {
@@ -283,5 +293,10 @@ public class ReportController extends BaseController {
             LOG.warn(message, e);
             throw new RuntimeException(message, e);
         }
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
     }
 }
