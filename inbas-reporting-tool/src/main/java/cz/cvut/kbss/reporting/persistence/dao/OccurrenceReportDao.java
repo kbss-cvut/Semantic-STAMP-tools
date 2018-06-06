@@ -7,7 +7,9 @@ import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.util.OrphanRemover;
+import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +24,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
-public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
+public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
+        implements ApplicationListener<InvalidateCacheEvent> {
 
     private static final String SELECT = "SELECT DISTINCT ?x WHERE { ";
     private static final String WHERE_CONDITION = "?x a ?type ; " +
@@ -38,6 +41,9 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
             "?y a ?type . " +
             "?x ?hasNext ?y . }";
     private static final String QUERY_TAIL = "} ORDER BY DESC(?startTime) DESC(?revision) LIMIT ?limit OFFSET ?offset";
+
+    // Current count of latest revisions of reports
+    private volatile long reportCount = -1;
 
     private final OccurrenceDao occurrenceDao;
 
@@ -84,7 +90,7 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
                 .getResultList();
         return new PageImpl<>(
                 res.stream().map(cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport::toOccurrenceReport)
-                   .collect(Collectors.toList()), pageSpec, 0L);
+                   .collect(Collectors.toList()), pageSpec, getReportCount(em));
     }
 
     private String buildQuery(Collection<ReportFilter> filters) {
@@ -100,15 +106,29 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
         return sb.toString();
     }
 
+    /**
+     * Gets total count of latest revisions of all reports in the repository.
+     *
+     * @param em EntityManager
+     * @return Report count
+     */
     private long getReportCount(EntityManager em) {
-        return em.createNativeQuery("SELECT (count(?x) as ?cnt) WHERE {" +
-                "?x a ?type ;" +
-                "FILTER NOT EXISTS {\n" +
-                "?y a ?type ." +
-                "?x ?hasNext ?y . }" +
-                "}", Long.class)
-                 .setParameter("type", typeUri)
-                 .setParameter("hasNext", URI.create(Vocabulary.s_p_has_next_revision)).getSingleResult();
+        if (reportCount == -1) {
+            this.reportCount = em.createNativeQuery("SELECT (count(?x) as ?cnt) WHERE {" +
+                    "?x a ?type ;" +
+                    "FILTER NOT EXISTS {\n" +
+                    "?y a ?type ." +
+                    "?x ?hasNext ?y . }" +
+                    "}", Integer.class) // Count returns an xsd:int (as per SPARQL specification)
+                                 .setParameter("type", typeUri)
+                                 .setParameter("hasNext", URI.create(Vocabulary.s_p_has_next_revision))
+                                 .getSingleResult();
+        }
+        return reportCount;
+    }
+
+    private void resetReportCount() {
+        this.reportCount = -1;
     }
 
     @Override
@@ -118,6 +138,7 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
             occurrenceDao.persist(entity.getOccurrence(), em);
         }
         super.persist(entity, em);
+        resetReportCount();
     }
 
     @Override
@@ -138,6 +159,7 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
     protected void remove(OccurrenceReport entity, EntityManager em) {
         occurrenceDao.remove(entity.getOccurrence(), em);
         super.remove(entity, em);
+        resetReportCount();
     }
 
     /**
@@ -165,5 +187,10 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport> {
         } finally {
             em.close();
         }
+    }
+
+    @Override
+    public void onApplicationEvent(InvalidateCacheEvent invalidateCacheEvent) {
+        resetReportCount();
     }
 }

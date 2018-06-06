@@ -8,6 +8,7 @@ import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.filter.*;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
+import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
 import org.hamcrest.Matchers;
 import org.hamcrest.number.OrderingComparison;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.*;
 import java.util.function.Consumer;
@@ -66,7 +68,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     private OccurrenceReport report(boolean withFactorGraph) {
         final OccurrenceReport report =
                 withFactorGraph ? OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph() :
-                        OccurrenceReportGenerator.generateOccurrenceReport(true);
+                OccurrenceReportGenerator.generateOccurrenceReport(true);
         report.setAuthor(author);
         return report;
     }
@@ -584,5 +586,52 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
                 occurrenceReportDao.findAll(PageRequest.of(0, 1), Collections.emptyList());
         final OccurrenceReport result = updated.getContent().get(0);
         assertEquals(newSummary, result.getSummary());
+    }
+
+    @Test
+    public void findAllReturnsPageWithCorrectTotalReportCount() {
+        final List<OccurrenceReport> reports = generateReports();
+        occurrenceReportDao.persist(reports);
+        final Pageable req = PageRequest.of(0, reports.size() - 1);
+        final Page<OccurrenceReport> result = occurrenceReportDao.findAll(req, Collections.emptyList());
+        assertEquals(reports.size(), result.getTotalElements());
+    }
+
+    @Test
+    public void findAllReturnsCorrectTotalCountAfterReportPersist() {
+        final List<OccurrenceReport> reports = generateReports();
+        occurrenceReportDao.persist(reports);
+        final Pageable req = PageRequest.of(0, reports.size() - 1);
+        final Page<OccurrenceReport> intermediate = occurrenceReportDao.findAll(req, Collections.emptyList());
+        assertEquals(reports.size(), intermediate.getTotalElements());
+        final OccurrenceReport added = report(false);
+        occurrenceReportDao.persist(added);
+        final Page<OccurrenceReport> result = occurrenceReportDao.findAll(req, Collections.emptyList());
+        assertEquals(intermediate.getTotalElements() + 1, result.getTotalElements());
+    }
+
+    @Test
+    public void findAllReturnsCorrectTotalCountAfterReportRemoval() {
+        final List<OccurrenceReport> reports = generateReports();
+        occurrenceReportDao.persist(reports);
+        final Pageable req = PageRequest.of(0, reports.size() / 2);
+        final Page<OccurrenceReport> intermediate = occurrenceReportDao.findAll(req, Collections.emptyList());
+        assertEquals(reports.size(), intermediate.getTotalElements());
+        occurrenceReportDao.remove(reports.get(Generator.randomIndex(reports)));
+        final Page<OccurrenceReport> result = occurrenceReportDao.findAll(req, Collections.emptyList());
+        assertEquals(intermediate.getTotalElements() - 1, result.getTotalElements());
+    }
+
+    @Test
+    public void invalidateCacheCausesReportCountReset() throws Exception {
+        final List<OccurrenceReport> reports = generateReports();
+        occurrenceReportDao.persist(reports);
+        occurrenceReportDao.findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.emptyList());
+        final Field countField = OccurrenceReportDao.class.getDeclaredField("reportCount");
+        countField.setAccessible(true);
+        final long count = (long) countField.get(occurrenceReportDao);
+        assertEquals(reports.size(), count);
+        occurrenceReportDao.onApplicationEvent(new InvalidateCacheEvent(this));
+        assertEquals(-1, (long) countField.get(occurrenceReportDao));
     }
 }
