@@ -7,6 +7,7 @@ import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.filter.*;
 import cz.cvut.kbss.reporting.model.*;
+import cz.cvut.kbss.reporting.model.util.ReportLastModifiedComparator;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
 import org.hamcrest.Matchers;
@@ -22,6 +23,7 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static cz.cvut.kbss.reporting.environment.util.TestUtils.verifyAllInstancesRemoved;
@@ -348,6 +350,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     public void pageableFindAllReturnsReportsOnMatchingPage() {
         final List<OccurrenceReport> reports = generateReports();
         occurrenceReportDao.persist(reports);
+        reports.sort(Comparator.comparing(OccurrenceReport::getDateCreated).reversed());
         final int pageSize = 5;
         final int pageNo = 1;   // Page numbers start from 0
         final Pageable pageReq = PageRequest.of(pageNo, pageSize);
@@ -402,8 +405,8 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         final List<OccurrenceReport> matching = allReports.stream().filter(r -> Generator.randomBoolean())
                                                           .peek(transformation)
                                                           .sorted(Comparator.comparing(
-                                                                  (OccurrenceReport r) -> r.getOccurrence()
-                                                                                           .getStartTime()).reversed())
+                                                                  (Function<OccurrenceReport, Date>) AbstractReport::getDateCreated)
+                                                                            .reversed())
                                                           .collect(Collectors.toList());
         occurrenceReportDao.persist(allReports);
         return matching;
@@ -633,5 +636,46 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         assertEquals(reports.size(), count);
         occurrenceReportDao.onApplicationEvent(new InvalidateCacheEvent(this));
         assertEquals(-1, (long) countField.get(occurrenceReportDao));
+    }
+
+    @Test
+    public void findAllReturnsReportsOrderedByLastModifiedDateDescending() {
+        final List<OccurrenceReport> reports = generateReports();
+        Collections.shuffle(reports);
+        for (int i = 0; i < reports.size(); i++) {
+            reports.get(i).setDateCreated(new Date(System.currentTimeMillis() - 24 * 3600 * 1000));
+            reports.get(i).setLastModified(new Date(System.currentTimeMillis() - i * 10000));
+        }
+        Collections.shuffle(reports);
+        occurrenceReportDao.persist(reports);
+        reports.sort(Comparator.comparing(OccurrenceReport::getLastModified).reversed());
+
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.emptyList());
+        assertEquals(reports.size(), result.getNumberOfElements());
+        for (int i = 0; i < reports.size(); i++) {
+            assertEquals(reports.get(i).getUri(), result.getContent().get(i).getUri());
+        }
+    }
+
+    @Test
+    public void findAllReturnsReportsOrderedByLastModifiedOrDateCreatedDescending() {
+        final List<OccurrenceReport> reports = generateReports();
+        Collections.shuffle(reports);
+        for (int i = 0; i < reports.size(); i++) {
+            if (Generator.randomBoolean()) {
+                reports.get(i).setLastModified(new Date(System.currentTimeMillis() + i * 10000));
+            }
+        }
+        Collections.shuffle(reports);
+        occurrenceReportDao.persist(reports);
+        reports.sort(new ReportLastModifiedComparator());
+
+        final Page<OccurrenceReport> result = occurrenceReportDao
+                .findAll(PageRequest.of(0, Integer.MAX_VALUE), Collections.emptyList());
+        assertEquals(reports.size(), result.getNumberOfElements());
+        for (int i = 0; i < reports.size(); i++) {
+            assertEquals(reports.get(i).getUri(), result.getContent().get(i).getUri());
+        }
     }
 }

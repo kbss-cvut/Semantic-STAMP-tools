@@ -4,7 +4,7 @@ import cz.cvut.kbss.reporting.dto.reportlist.OccurrenceReportDto;
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
 import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
-import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
+import cz.cvut.kbss.reporting.model.util.ReportLastModifiedComparator;
 import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
 import org.junit.Test;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,7 @@ public class ReportCacheTest {
     private ReportCache cache = new ReportCache();
 
     @Test
-    public void getAllReturnsReportsOrderedByCreatedDateAndRevisionNumberDescending() {
+    public void getAllReturnsReportsOrderedByLastModifiedOrCreatedDateDescending() {
         final List<ReportDto> reports = generateReports();
         final List<ReportDto> toAdd = new ArrayList<>(reports);
         Collections.shuffle(toAdd); // ensure random insertion
@@ -40,19 +40,12 @@ public class ReportCacheTest {
             dtoOne.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas#instance-" + i));
             dtoOne.setFileNumber((long) Generator.randomInt());
             dtoOne.setDateCreated(date);
-            dtoOne.setRevision(i + 1);
-            final ReportDto dtoTwo = new OccurrenceReportDto();
-            dtoTwo.setUri(URI.create("http://krizik.felk.cvut.cz/ontologies/inbas#instance-" + (i + 117)));
-            dtoTwo.setFileNumber((long) Generator.randomInt());
-            dtoTwo.setDateCreated(date);
-            dtoTwo.setRevision(dtoOne.getRevision() + 1);
+            dtoOne.setLastModified(date);
+            dtoOne.setRevision(1);
             lst.add(dtoOne);
-            lst.add(dtoTwo);
         }
         // Ensures expected order
         Collections.reverse(lst);
-        assertEquals(lst.get(0).getDateCreated(), lst.get(1).getDateCreated());
-        assertTrue(lst.get(0).getRevision() > lst.get(1).getRevision());
         return lst;
     }
 
@@ -123,7 +116,7 @@ public class ReportCacheTest {
     public void findAllPagedReturnsCorrespondingPage() {
         final List<ReportDto> lst = generateReports();
         cache.initialize(lst);
-        lst.sort(new DocumentDateAndRevisionComparator());
+        lst.sort(new ReportLastModifiedComparator());
         final int page = 0;
         final int pageSize = lst.size() - 1;
         final Page<ReportDto> result = cache.getAll(PageRequest.of(page, pageSize));
@@ -137,7 +130,7 @@ public class ReportCacheTest {
     public void findAllPagedReturnsIncompletePageIfThereAreNotEnoughElementsForFullPage() {
         final List<ReportDto> lst = generateReports();
         cache.initialize(lst);
-        lst.sort(new DocumentDateAndRevisionComparator());
+        lst.sort(new ReportLastModifiedComparator());
         final int page = 1;
         final int pageSize = lst.size() - 1;
         final Page<ReportDto> result = cache.getAll(PageRequest.of(page, pageSize));

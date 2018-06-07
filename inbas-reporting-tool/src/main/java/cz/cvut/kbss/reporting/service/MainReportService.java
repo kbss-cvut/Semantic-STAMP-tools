@@ -6,8 +6,8 @@ import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.*;
-import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
 import cz.cvut.kbss.reporting.model.util.EntityToOwlClassMapper;
+import cz.cvut.kbss.reporting.model.util.ReportLastModifiedComparator;
 import cz.cvut.kbss.reporting.persistence.dao.ReportDao;
 import cz.cvut.kbss.reporting.service.data.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +60,7 @@ public class MainReportService implements ReportBusinessService {
         final List<LogicalDocument> reports = new ArrayList<>();
         services.values().forEach(service -> reports.addAll(service.findAll()));
         return reports.stream().map(LogicalDocument::toReportDto)
-                      .sorted(new DocumentDateAndRevisionComparator())
+                      .sorted(new ReportLastModifiedComparator())
                       .collect(Collectors.toList());
     }
 
@@ -75,7 +75,7 @@ public class MainReportService implements ReportBusinessService {
             totalOfTotals += page.getTotalElements();
         }
         final List<ReportDto> result = reports.stream().map(LogicalDocument::toReportDto)
-                                              .sorted(new DocumentDateAndRevisionComparator())
+                                              .sorted(new ReportLastModifiedComparator())
                                               .collect(Collectors.toList());
         // And return corresponding page
         return new PageImpl<>(result.subList(0, Math.min(result.size(), pageSpec.getPageSize())), pageSpec,

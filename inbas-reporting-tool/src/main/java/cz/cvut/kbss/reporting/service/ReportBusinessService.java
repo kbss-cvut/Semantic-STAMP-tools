@@ -6,7 +6,7 @@ import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.AbstractReport;
 import cz.cvut.kbss.reporting.model.LogicalDocument;
-import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
+import cz.cvut.kbss.reporting.model.util.ReportLastModifiedComparator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,7 +28,7 @@ public interface ReportBusinessService {
     /**
      * Gets all reports.
      * <p>
-     * The reports are sorted using the {@link DocumentDateAndRevisionComparator}.
+     * The reports are sorted using the {@link ReportLastModifiedComparator}.
      *
      * @return All reports in the system
      * @deprecated Use {@link #findAll(Pageable, Collection)}

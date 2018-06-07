@@ -1,7 +1,7 @@
 package cz.cvut.kbss.reporting.service.cache;
 
 import cz.cvut.kbss.reporting.dto.reportlist.ReportDto;
-import cz.cvut.kbss.reporting.model.util.DocumentDateAndRevisionComparator;
+import cz.cvut.kbss.reporting.model.util.ReportLastModifiedComparator;
 import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +67,7 @@ public class ReportCache implements ApplicationListener<InvalidateCacheEvent> {
      */
     public List<ReportDto> getAll() {
         final List<ReportDto> reports = new ArrayList<>(cache.values());
-        reports.sort(new DocumentDateAndRevisionComparator());
+        reports.sort(new ReportLastModifiedComparator());
         return reports;
     }
 

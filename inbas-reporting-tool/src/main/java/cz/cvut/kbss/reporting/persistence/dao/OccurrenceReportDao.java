@@ -30,17 +30,18 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
     private static final String SELECT = "SELECT DISTINCT ?x WHERE { ";
     private static final String WHERE_CONDITION = "?x a ?type ; " +
             "?hasKey ?key ;" +
-            "?hasRevision ?revision ;" +
             "?hasAuthor ?author ;" +
+            "?hasCreatedDate ?created ;" +
             "?hasOccurrence ?occurrence ." +
             "OPTIONAL { ?x ?hasSeverity ?severity . }" +
             "OPTIONAL { ?x ?hasLastEditor ?lastEditor . }" +
-            "?occurrence ?hasStartTime ?startTime ;" +
-            "?hasEventType ?occurrenceCategory ." +
+            "OPTIONAL { ?x ?hasLastEditedDate ?lastModified . }" +
+            "?occurrence ?hasEventType ?occurrenceCategory ." +
             "FILTER NOT EXISTS { " +
             "?y a ?type . " +
-            "?x ?hasNext ?y . }";
-    private static final String QUERY_TAIL = "} ORDER BY DESC(?startTime) DESC(?revision) LIMIT ?limit OFFSET ?offset";
+            "?x ?hasNext ?y . }" +
+            "BIND (IF (BOUND(?lastModified), ?lastModified, ?created) AS ?edited)";
+    private static final String QUERY_TAIL = "} ORDER BY DESC(?edited) LIMIT ?limit OFFSET ?offset";
 
     // Current count of latest revisions of reports
     private volatile long reportCount = -1;
@@ -77,14 +78,14 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
                         cz.cvut.kbss.reporting.model.reportlist.OccurrenceReport.class)
                 .setParameter("type", typeUri)
                 .setParameter("hasKey", URI.create(Vocabulary.s_p_has_key))
-                .setParameter("hasRevision", URI.create(Vocabulary.s_p_has_revision))
                 .setParameter("hasSeverity", URI.create(Vocabulary.s_p_has_severity_assessment))
                 .setParameter("hasLastEditor", URI.create(Vocabulary.s_p_has_last_editor))
                 .setParameter("hasAuthor", URI.create(Vocabulary.s_p_has_author))
                 .setParameter("hasOccurrence", URI.create(Vocabulary.s_p_documents))
-                .setParameter("hasStartTime", URI.create(Vocabulary.s_p_has_start_time))
                 .setParameter("hasEventType", URI.create(Vocabulary.s_p_has_event_type))
                 .setParameter("hasNext", URI.create(Vocabulary.s_p_has_next_revision))
+                .setParameter("hasCreatedDate", URI.create(Vocabulary.s_p_created))
+                .setParameter("hasLastEditedDate", URI.create(Vocabulary.s_p_modified))
                 .setUntypedParameter("limit", pageSpec.getPageSize())
                 .setUntypedParameter("offset", pageSpec.getPageSize() * pageSpec.getPageNumber())
                 .getResultList();

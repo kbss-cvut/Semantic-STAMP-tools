@@ -5,6 +5,7 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.util.ReportLastModifiedComparator;
 import cz.cvut.kbss.reporting.persistence.BaseDaoTestRunner;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
 import org.junit.Before;
@@ -36,7 +37,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
     }
 
     @Test
-    public void findAllGetsReportsOrderedByOccurrenceStartDescending() {
+    public void findAllGetsReportsOrderedByLastModifiedDateDescending() {
         final List<OccurrenceReport> reports = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(10); i++) {
             final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
@@ -45,7 +46,7 @@ public class BaseReportDaoTest extends BaseDaoTestRunner {
             reports.add(r);
         }
         dao.persist(reports);
-        Collections.reverse(reports);   // First report will have highest start date
+        reports.sort(new ReportLastModifiedComparator());
 
         final List<OccurrenceReport> result = dao.findAll();
         assertEquals(reports.size(), result.size());
