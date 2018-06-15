@@ -1,5 +1,6 @@
 package cz.cvut.kbss.reporting.service.options;
 
+import cz.cvut.kbss.reporting.persistence.dao.ExistingDataDao;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.service.ConfigReader;
 import cz.cvut.kbss.reporting.service.data.DataLoader;
@@ -21,30 +22,39 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @Service
 public class OptionsServiceImpl implements OptionsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OptionsServiceImpl.class);
 
-    @Autowired
     private ConfigReader configReader;
 
-    @Autowired
-    @Qualifier("localDataLoader")
     private DataLoader localLoader;
 
-    @Autowired
-    @Qualifier("remoteDataLoader")
     private DataLoader remoteLoader;
+
+    private ExistingDataDao existingDataDao;
 
     private final Map<String, String> remoteOptions = new HashMap<>();
     private final Map<String, String> localOptions = new HashMap<>();
+    private final Map<String, Supplier> knownOptions = new HashMap<>();
+
+    @Autowired
+    public OptionsServiceImpl(ConfigReader configReader, @Qualifier("localDataLoader") DataLoader localLoader,
+                              @Qualifier("remoteDataLoader") DataLoader remoteLoader, ExistingDataDao dataDao) {
+        this.configReader = configReader;
+        this.localLoader = localLoader;
+        this.remoteLoader = remoteLoader;
+        this.existingDataDao = dataDao;
+    }
 
     @PostConstruct
     private void setupOptions() {
         discoverRemoteQueryFiles();
         discoverLocalOptionsFiles();
+        registerKnownOptionTypes();
     }
 
     private void discoverRemoteQueryFiles() {
@@ -86,6 +96,12 @@ public class OptionsServiceImpl implements OptionsService {
         discoverOptionsFiles(folderUrl, localOptions);
     }
 
+    private void registerKnownOptionTypes() {
+        knownOptions
+                .put(OptionType.EXISTING_OCCURRENCE_CATEGORIES.getName(), existingDataDao::getUsedOccurrenceCategories);
+        knownOptions.put(OptionType.EXISTING_EVENT_TYPES.getName(), existingDataDao::getUsedEventTypes);
+    }
+
     @Override
     public Object getOptions(String type) {
         Objects.requireNonNull(type);
@@ -93,13 +109,15 @@ public class OptionsServiceImpl implements OptionsService {
             return loadRemoteData(remoteOptions.get(type));
         } else if (localOptions.containsKey(type)) {
             return loadLocalData(localOptions.get(type));
+        } else if (knownOptions.containsKey(type)) {
+            return knownOptions.get(type).get();
         }
         throw new IllegalArgumentException("Unsupported option type " + type);
     }
 
     private RawJson loadRemoteData(String queryFile) {
         final String repositoryUrl = configReader.getConfig(ConfigParam.EVENT_TYPE_REPOSITORY_URL);
-        if (repositoryUrl .isEmpty()) {
+        if (repositoryUrl.isEmpty()) {
             throw new IllegalStateException("Missing repository URL configuration.");
         }
         String query = localLoader.loadData(queryFile, Collections.emptyMap());

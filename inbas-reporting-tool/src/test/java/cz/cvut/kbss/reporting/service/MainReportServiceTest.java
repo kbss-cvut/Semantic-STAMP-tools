@@ -368,4 +368,13 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         assertEquals(report.getUri(), captor.getAllValues().get(0).getUri());
         assertEquals(newRevision.getUri(), captor.getAllValues().get(1).getUri());
     }
+
+    @Test
+    public void pageableFindAllReturnsPageWithCorrectTotalSumOfReports() {
+        final int count = 10;
+        generateReports(count);
+
+        final Page<ReportDto> result = reportService.findAll(PageRequest.of(0, 5), Collections.emptyList());
+        assertEquals(count, result.getTotalElements());
+    }
 }

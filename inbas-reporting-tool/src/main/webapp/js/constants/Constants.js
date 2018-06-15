@@ -72,6 +72,9 @@ module.exports = {
     // Default page size (used by the PagingMixin)
     PAGE_SIZE: 20,
 
+    // Size of a single page loaded from server (# of reports)
+    LOADING_PAGE_SIZE: 100,
+
     // Maximum time difference between occurrence start and end. 24 hours in millis
     MAX_OCCURRENCE_START_END_DIFF: 1000 * 60 * 60 * 24,
 

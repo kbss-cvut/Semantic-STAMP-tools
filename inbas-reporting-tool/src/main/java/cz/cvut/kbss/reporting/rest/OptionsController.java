@@ -7,13 +7,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@PreAuthorize("permitAll()")
+/**
+ * Retrieves options for populating selectors and typeaheads in the UI.
+ * <p>
+ * This endpoint now requires authorization like the rest of the API since some of the options rely on data present in
+ * repository.
+ */
 @RestController
 @RequestMapping("/options")
 public class OptionsController extends BaseController {

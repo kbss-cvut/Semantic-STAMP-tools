@@ -18,7 +18,11 @@ import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.filter.ReportKeyFilter;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
+import cz.cvut.kbss.reporting.rest.event.PaginatedResultRetrievedEvent;
 import cz.cvut.kbss.reporting.rest.handler.ErrorInfo;
+import cz.cvut.kbss.reporting.rest.handler.HateoasPagingListener;
+import cz.cvut.kbss.reporting.rest.handler.HttpLinkHeaderUtil;
+import cz.cvut.kbss.reporting.rest.util.HttpPaginationLink;
 import cz.cvut.kbss.reporting.service.ReportBusinessService;
 import cz.cvut.kbss.reporting.service.data.AttachmentService;
 import cz.cvut.kbss.reporting.service.factory.OccurrenceReportFactory;
@@ -28,6 +32,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.*;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -65,6 +70,9 @@ public class ReportControllerTest extends BaseControllerTestRunner {
     @Mock
     private AttachmentService attachmentServiceMock;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisherMock;
+
     @InjectMocks
     private ReportController controller;
 
@@ -76,6 +84,12 @@ public class ReportControllerTest extends BaseControllerTestRunner {
         super.setUp(controller);
         this.author = Generator.getPerson();
         Environment.setCurrentUser(author);
+        final HateoasPagingListener pagingListener = new HateoasPagingListener();
+        doAnswer(a -> {
+            final PaginatedResultRetrievedEvent evt = a.getArgument(0);
+            pagingListener.onApplicationEvent(evt);
+            return null;
+        }).when(eventPublisherMock).publishEvent(any());
     }
 
     @Test
@@ -542,5 +556,28 @@ public class ReportControllerTest extends BaseControllerTestRunner {
                                                                                    .param("description", description))
                .andExpect(status().isCreated());
         verify(reportServiceMock).addAttachment(eq(report), eq(attachment.getName()), eq(description), notNull());
+    }
+
+    @Test
+    public void findAllReturnsResponseWithPaginationLinks() throws Exception {
+        final int pageNo = 0;
+        final int pageSize = 5;
+        final List<ReportDto> reports = IntStream.range(0, 10).mapToObj(i -> {
+            final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(true);
+            return r.toReportDto();
+        }).collect(Collectors.toList());
+        when(reportServiceMock.findAll(any(Pageable.class), anyCollection()))
+                .thenReturn(new PageImpl<>(reports.subList(0, pageSize), PageRequest.of(pageNo, pageSize), reports.size()));
+        final MvcResult mvcResult = mockMvc.perform(get(REPORTS_PATH).param(Constants.PAGE, Integer.toString(pageNo))
+                                         .param(Constants.PAGE_SIZE, Integer.toString(pageSize)))
+               .andExpect(status().isOk()).andReturn();
+        final String linkHeader = mvcResult.getResponse().getHeader(HttpHeaders.LINK);
+        assertNotNull(linkHeader);
+        final String nextLink = HttpLinkHeaderUtil.extractURIByRel(linkHeader, HttpPaginationLink.NEXT.getName());
+        assertThat(nextLink, containsString("page=" + (pageNo + 1)));
+        assertThat(nextLink, containsString("size=" + pageSize));
+        final String lastLink = HttpLinkHeaderUtil.extractURIByRel(linkHeader, HttpPaginationLink.LAST.getName());
+        assertThat(lastLink, containsString("page=" + (pageNo + 1)));
+        assertThat(lastLink, containsString("size=" + pageSize));
     }
 }

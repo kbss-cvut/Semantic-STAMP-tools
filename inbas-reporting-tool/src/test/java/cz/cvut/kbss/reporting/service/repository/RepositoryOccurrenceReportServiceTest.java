@@ -14,6 +14,7 @@ import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.*;
 import cz.cvut.kbss.reporting.model.location.GPSLocation;
 import cz.cvut.kbss.reporting.model.textanalysis.ExtractedItem;
+import cz.cvut.kbss.reporting.model.util.ReportLastModifiedComparator;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.service.event.ResourceRemovalEvent;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
@@ -495,6 +496,7 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         final int count = 10;
         final List<OccurrenceReport> reports = OccurrenceReportGenerator.generateReports(false, count);
         occurrenceReportService.persist(reports);
+        reports.sort(new ReportLastModifiedComparator());
         final Pageable pageSpec = PageRequest.of(0, 2);
         final Page<OccurrenceReport> result = occurrenceReportService.findAll(pageSpec, Collections.emptyList());
         assertEquals(2, result.getNumberOfElements());

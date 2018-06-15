@@ -33,7 +33,12 @@ describe('Utility functions tests', function () {
 
         it('returns empty string for null argument', () => {
             expect(Utils.formatDate(null)).toEqual('');
-        })
+        });
+
+        it('formats year smaller than 10 to dwo digits', () => {
+            const date = new Date(2009, 1, 1);
+            expect(Utils.formatDate(date)).toMatch(/[0-9]{2}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2}/);
+        });
     });
 
     describe('convertTime', () => {

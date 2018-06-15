@@ -1,5 +1,12 @@
 # INBAS Reporting Tool Release Notes
 
+### 0.12.4 - June 15, 2018
+- HATEOAS paging in reports REST API (Task #530).
+- Major improvements in reports loading in the UI.
+- Modified report chain structure.
+- Do not show filter reports table if there is only one value.
+- REST API to retrieve known occurrence categories and event types.
+
 ### 0.12.3 - May 31, 2018
 - Modification of vocabularies (Bug #574).
 - Report loading time optimizations.

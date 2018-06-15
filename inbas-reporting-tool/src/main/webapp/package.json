@@ -15,6 +15,7 @@
     "jsonld": "~0.4.6",
     "jsonld-utils": "https://kbss.felk.cvut.cz/dist/jsonld-utils-0.0.7.tgz",
     "object-assign": "~4.1.0",
+    "parse-link-header": "~1.0.1",
     "prop-types": "^15.5.8",
     "react": "~15.3.2",
     "recharts": "0.22.0",
@@ -65,7 +66,7 @@
   },
   "scripts": {
     "start": "watchify -o js/bundle.js -v -d js/app.js",
-    "startdev": "watchify -o ../../../target/inbas-reporting-tool-0.12.3/js/bundle.js -v -d js/app.js",
+    "startdev": "watchify -o ../../../target/inbas-reporting-tool-0.12.4/js/bundle.js -v -d js/app.js",
     "browserify": "browserify . -g [envify --NODE_ENV 'production'] -t -o js/bundle.js",
     "build-js": "browserify . -g [envify --NODE_ENV 'production'] -t | uglifyjs -cm > ../../../profiles/production/src/main/webapp/js/bundle.min.js",
     "build-css": "cleancss --skip-rebase -d -o ../../../profiles/production/src/main/webapp/resources/css/inbas-rt.min.css resources/css/inbas-rt.css",

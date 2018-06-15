@@ -16,7 +16,7 @@ public class OccurrenceReportGenerator {
         final List<OccurrenceReport> reports = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             final OccurrenceReport r = OccurrenceReportGenerator.generateOccurrenceReport(setAttributes);
-            r.getOccurrence().setStartTime(new Date(System.currentTimeMillis() - i * 1000));
+            r.getOccurrence().setStartTime(new Date(System.currentTimeMillis() - i * 10000));
             reports.add(r);
         }
         return reports;

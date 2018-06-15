@@ -28,7 +28,8 @@ module.exports = {
         }
         const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate().toString(),
             month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1).toString(),
-            year = (date.getFullYear() % 100).toString(),
+            y = date.getFullYear() % 100,
+            year = y < 10 ? '0' + y : y.toString(),
             h = date.getHours(),
             hour = h < 10 ? '0' + h : h.toString(),
             minute = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes().toString(),
