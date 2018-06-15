@@ -1,6 +1,11 @@
 package cz.cvut.kbss.reporting.service.options;
 
 import cz.cvut.kbss.reporting.environment.config.PropertyMockingApplicationContextInitializer;
+import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
+import cz.cvut.kbss.reporting.model.Event;
+import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.service.BaseServiceTestRunner;
 import cz.cvut.kbss.reporting.util.ConfigParam;
@@ -19,10 +24,9 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URLEncoder;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
@@ -43,6 +47,9 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
 
     @Autowired
     private Environment environment;
+
+    @Autowired
+    private OccurrenceReportDao reportDao;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -128,5 +135,40 @@ public class OptionsServiceImplTest extends BaseServiceTestRunner {
         thrown.expectMessage("Missing repository URL configuration.");
         ((MockEnvironment) environment).setProperty(ConfigParam.EVENT_TYPE_REPOSITORY_URL.toString(), "");
         optionsService.getOptions("eventType");
+    }
+
+    @Test
+    public void getOptionsReturnsExistingOccurrenceCategories() {
+        final Person author = persistPerson();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.setAuthor(author);
+        reportDao.persist(report);
+
+        final Object result = optionsService
+                .getOptions(OptionsService.OptionType.EXISTING_OCCURRENCE_CATEGORIES.getName());
+        assertTrue(result instanceof Collection);
+        final Collection<URI> collection = (Collection<URI>) result;
+        assertEquals(1, collection.size());
+        assertTrue(collection.contains(report.getOccurrence().getEventType()));
+    }
+
+    @Test
+    public void getOptionsReturnsExistingEventTypes() {
+        final Person author = persistPerson();
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReportWithFactorGraph();
+        report.setAuthor(author);
+        reportDao.persist(report);
+
+        final Object result = optionsService.getOptions(OptionsService.OptionType.EXISTING_EVENT_TYPES.getName());
+        assertTrue(result instanceof Collection);
+        final Collection<URI> collection = (Collection<URI>) result;
+        final Queue<Event> queue = new ArrayDeque<>(report.getOccurrence().getChildren());
+        Event current;
+        while ((current = queue.poll()) != null) {
+            if (current.getChildren() != null) {
+                queue.addAll(current.getChildren());
+            }
+            assertTrue(collection.contains(current.getEventType()));
+        }
     }
 }
