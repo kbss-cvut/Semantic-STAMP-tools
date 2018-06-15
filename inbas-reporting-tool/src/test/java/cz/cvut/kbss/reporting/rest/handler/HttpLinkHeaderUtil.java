@@ -27,6 +27,6 @@ public class HttpLinkHeaderUtil {
 
     private static Object extractTypeOfRelation(final String linkRelation) {
         final int positionOfEquals = linkRelation.indexOf('=');
-        return linkRelation.substring(positionOfEquals + 1, linkRelation.length()).trim();
+        return linkRelation.substring(positionOfEquals + 2, linkRelation.length() - 1).trim();
     }
 }

@@ -62,7 +62,8 @@ public class HateoasPagingListener implements ApplicationListener<PaginatedResul
             if (linkBuilder.length() > 0) {
                 linkBuilder.append(", ");
             }
-            linkBuilder.append('<').append(url).append('>').append("; ").append("rel=").append(type.getName());
+            linkBuilder.append('<').append(url).append('>').append("; ").append("rel=\"").append(type.getName())
+                       .append('\"');
         }
 
         private boolean hasLinks() {

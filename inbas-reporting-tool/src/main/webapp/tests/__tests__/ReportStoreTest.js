@@ -235,7 +235,7 @@ describe('Report store', function () {
         let counter = 0;
         reqMock.end.and.callFake(function (handler) {
             const header = counter === 0 ? {
-                    'link': '<http://localhost/reports?page=1&size=2>; rel=next'
+                    'link': '<http://localhost/reports?page=1&size=2>; rel=\"next\"'
                 } : {};
             counter++;
             handler(null, {
