@@ -366,7 +366,10 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
     private List<OccurrenceReport> generateReports() {
         final int reportCount = 15;
         final List<OccurrenceReport> reports = OccurrenceReportGenerator.generateReports(true, reportCount);
-        reports.forEach(r -> r.setAuthor(author));
+        for (int i = 0; i < reports.size(); i++) {
+            reports.get(i).setAuthor(author);
+            reports.get(i).setDateCreated(new Date(System.currentTimeMillis() - i * 1000));
+        }
         return reports;
     }
 
@@ -664,7 +667,7 @@ public class OccurrenceReportDaoTest extends BaseDaoTestRunner {
         Collections.shuffle(reports);
         for (int i = 0; i < reports.size(); i++) {
             if (Generator.randomBoolean()) {
-                reports.get(i).setLastModified(new Date(System.currentTimeMillis() + i * 10000));
+                reports.get(i).setLastModified(new Date(System.currentTimeMillis() + (i + 1) * 10000));
             }
         }
         Collections.shuffle(reports);
