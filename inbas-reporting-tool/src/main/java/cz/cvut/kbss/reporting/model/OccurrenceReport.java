@@ -15,7 +15,7 @@ public class OccurrenceReport extends AbstractOccurrenceReport {
     @OWLObjectProperty(iri = Vocabulary.s_p_documents, fetch = FetchType.EAGER)
     private Occurrence occurrence;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_based_on, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, readOnly = true)
+    @OWLObjectProperty(iri = Vocabulary.s_p_based_on, cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private InitialReport initialReport;
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_corrective_measure, cascade = CascadeType.ALL, fetch = FetchType.EAGER)

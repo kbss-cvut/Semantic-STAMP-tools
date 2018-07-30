@@ -13,10 +13,10 @@ import static cz.cvut.kbss.reporting.util.Constants.DESCRIPTION_TO_STRING_THRESH
 public class InitialReport extends AbstractEntity {
 
     @ParticipationConstraints(nonEmpty = true)
-    @OWLDataProperty(iri = Vocabulary.s_p_description, readOnly = true)
+    @OWLDataProperty(iri = Vocabulary.s_p_description)
     private String description;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_text_analysis_result, readOnly = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_text_analysis_result, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ExtractedItem> extractedItems;
 
     public String getDescription() {
