@@ -1,14 +1,18 @@
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+PREFIX as: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
+
+PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
+
 CONSTRUCT {
 ?term rdfs:label ?label .
 ?term rdfs:comment ?comment .
 } WHERE {
-  SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/inbas-model-2016-01-21:22-46-17> {
-    ?term rdfs:subPropertyOf+ <http://onto.fel.cvut.cz/ontologies/aviation-safety/is_factor_of> ;
+  SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 {
+    ?term rdfs:subPropertyOf+ as:is_factor_of ;
         rdfs:label ?label .
 
-    FILTER (?term != <http://onto.fel.cvut.cz/ontologies/aviation-safety/is_factor_of> )
+    FILTER (?term != as:is_factor_of )
     OPTIONAL {
         ?term rdfs:comment ?comment .
     }

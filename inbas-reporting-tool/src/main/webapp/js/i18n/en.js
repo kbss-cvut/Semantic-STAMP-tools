@@ -307,5 +307,14 @@ module.exports = {
         'users.enable': 'Enable',
         'users.enable.success': 'User {firstName} {lastName} successfully enabled.',
         'users.enable.failure': 'Unable to enable user {firstName} {lastName}. Check the log for details.',
+
+        'statistics.panel.occurrence-severity-trends.label' : 'Occurrence Severity Trends',
+        'statistics.panel.occurrence-categories-top.label' : 'Occurrence Categories (Top 5 in Last Year)',
+        'statistics.panel.root-events.label' : 'Root Events',
+        'statistics.panel.event-factor-chains.label' : 'Event - Factor Chains',
+
+        'statistics.frequencylist.eventtype.label': 'Event Type',
+        'statistics.frequencylist.annualcount.label': 'Annual Count',
+        'statistics.frequencylist.annualtrend.label': 'Annual Trend'
     }
 };

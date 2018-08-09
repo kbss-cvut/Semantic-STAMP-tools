@@ -7,6 +7,7 @@ import injectIntl from "../../../../utils/injectIntl";
 import Utils from "../../Utils";
 import GraphUtils from "./GraphUtils";
 import LoadingWrapper from "../../../misc/hoc/LoadingWrapper";
+import GraphOptions from "./GraphOptions";
 
 class EventtypeGraph extends React.Component {
 
@@ -14,60 +15,7 @@ class EventtypeGraph extends React.Component {
         super(props);
         this.state = {
             data: {},
-            graphOptions: {
-                layout: {
-                    randomSeed: 1,
-                    improvedLayout: true
-                },
-                physics: {
-                    enabled: false,
-                    hierarchicalRepulsion: {
-                        damping:0.5
-
-                    }
-                //     barnesHut: {
-                //         avoidOverlap: 0.1
-                //     }
-                },
-                configure: {
-                    enabled: true,
-                    filter: (option,path) => {
-                        if ( path.indexOf('layout') !== -1 ) {
-                            if (
-                                (path.length == 1)
-                                || (option == 'enabled')
-                                || (option == 'levelSeparation')
-                                || (option == 'treeSpacing')
-                                || (option == 'direction')
-                                || (option == 'sortMethod')
-
-                            ) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                        return false;
-                    },//, "edges","interaction", "manipulation", "selection", "renderer", "physics"]
-                    showButton: false
-                },
-
-                interaction: {
-                    hover: true,
-                    multiselect: true,
-                    selectConnectedEdges: true,
-                    hoverConnectedEdges: true,
-                    zoomView: true,
-                    tooltipDelay: 300
-                },
-                edges: {
-                    smooth: {
-                        enabled: true,
-                        type: 'continuous'
-                    }
-                },
-                // autoResize: true,
-            }
+            graphOptions: GraphOptions
         }
     }
 
@@ -106,7 +54,6 @@ class EventtypeGraph extends React.Component {
             return {nodes, edges};
         } else {
             return null;
-
         }
     };
 
@@ -116,7 +63,7 @@ class EventtypeGraph extends React.Component {
         if ( data == null) {
             return <div style={{ textAlign: "center", verticalAlign:"center"}}>No Graph Available. Select an Event Type.</div>;
         } else {
-            return <div>{this.props.title}<br/><Graph graph={data} options={this.state.graphOptions} style={{ width : '100%', height:'400px'}}/></div>;
+            return <div>{this.props.title}<br/><Graph graph={data} options={this.state.graphOptions} style={{ width : '100%', height:'500px'}}/></div>;
         }
     }
 }

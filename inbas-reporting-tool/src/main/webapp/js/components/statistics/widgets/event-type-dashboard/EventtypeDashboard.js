@@ -11,7 +11,6 @@ class EventtypeDashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            eventLabel : null,
             selectedQueryResults: null
         }
     }
@@ -25,7 +24,6 @@ class EventtypeDashboard extends React.Component {
         if (data && ( data.queryName != "eventfactorcontext")) {
             return;
         }
-
 
         if (data) {
             this.setState(
@@ -44,7 +42,6 @@ class EventtypeDashboard extends React.Component {
                     <FrequencyList query="events_top_yearback" allowZeros={true} onSelect={(data) => this.onSelect(data)}
                                    loadingOn={this.props.loadingOn} loadingOff={this.props.loadingOff}/>
                 </td>
-
                 <td className='col-xs-8 vtop'>
                     <EventtypeGraph eventTypeGraph={this.state.selectedQueryResults} loadingOn={this.props.loadingOn}
                                     loadingOff={this.props.loadingOff}/>

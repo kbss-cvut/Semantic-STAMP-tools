@@ -305,5 +305,14 @@ module.exports = {
         'users.enable': 'Aktivovat',
         'users.enable.success': 'Účet uživatele {firstName} {lastName} byl aktivován.',
         'users.enable.failure': 'Účet uživatele {firstName} {lastName} se nepodařilo aktivovat. Detaily naleznete v logu.',
+
+        'statistics.panel.occurrence-severity-trends.label' : 'Trend závažnosti událostí',
+        'statistics.panel.occurrence-categories-top.label' : 'Kategorie událostí (5 nejčastějších v posledním roce)',
+        'statistics.panel.root-events.label' : 'Kořenové události',
+        'statistics.panel.event-factor-chains.label' : 'Řetězce faktorů',
+
+        'statistics.frequencylist.eventtype.label': 'Typ události',
+        'statistics.frequencylist.annualcount.label': 'Roční počet',
+        'statistics.frequencylist.annualtrend.label': 'Roční trend'
     }
 };

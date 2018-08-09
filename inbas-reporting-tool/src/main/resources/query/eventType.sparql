@@ -8,8 +8,9 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 PREFIX eccairs-model: <http://onto.fel.cvut.cz/ontologies/eccairs/model/>
 PREFIX eccairs: <http://onto.fel.cvut.cz/ontologies/eccairs/>
-
 PREFIX eccairs-current: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/>
+
+PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 
 CONSTRUCT {
   ?term rdfs:label ?label ;
@@ -17,10 +18,10 @@ CONSTRUCT {
         rdfs:comment ?comment ;
 } WHERE {
     {
-      SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/uniset-factors> {
+      SERVICE SILENT er:uniset-factors {
          # all events
          ?term rdfs:label ?label2.
-         SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/eccairs-aviation> {
+         SERVICE SILENT er:eccairs-aviation {
             ?term rdfs:label ?label.
          }
          BIND(eccairs:event-type as ?type)

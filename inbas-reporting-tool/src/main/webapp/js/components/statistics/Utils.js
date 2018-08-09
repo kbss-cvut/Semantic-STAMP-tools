@@ -20,7 +20,6 @@ module.exports = {
      * Generates min and max year/month combination from a list of observations, each of which has a 'year' and 'month' attribute.
      */
     generateMinMax : function(list) {
-
         let minDate = Number.MAX_SAFE_INTEGER;
         let maxDate = Number.MIN_SAFE_INTEGER;
 

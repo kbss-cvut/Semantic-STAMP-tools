@@ -3,7 +3,7 @@
 import React from "react";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
-import {LineChart, Line, XAxis, Tooltip} from "recharts";
+import {Line, LineChart, Tooltip, XAxis} from "recharts";
 import Utils from "../Utils";
 
 class FrequencyListRow extends React.Component {
@@ -23,16 +23,13 @@ class FrequencyListRow extends React.Component {
     };
 
     render() {
-        const label = !(this.props.onClick) ?
-            <div>{this.props.row.eventType}</div> :
-            <a href='javascript:void(0);'
-               onClick={(e) => this.onMouseClick(e)}
-               title={this.props.row.eventTypeIri}>{this.props.row.eventType}
-               </a>;
-
-
         return <tr key={this.props.row.key}>
-            <td>{label}</td>
+            <td>{!(this.props.onClick) ?
+                <div>{this.props.row.eventType}</div> :
+                <a href='javascript:void(0);'
+                   onClick={(e) => this.onMouseClick(e)}
+                   title={this.props.row.eventTypeIri}>{this.props.row.eventType}
+                </a>}</td>
             <td>{this.props.row.totalSum}</td>
             <td><LineChart width={100} height={30} data={this.props.row.data}>
                 <XAxis dataKey='date' hide={true} tickFormatter={Utils.getDateString}/>

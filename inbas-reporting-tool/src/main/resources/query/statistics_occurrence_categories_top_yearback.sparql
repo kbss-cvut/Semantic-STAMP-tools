@@ -1,7 +1,8 @@
-PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
+PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
 
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 #PREFIX er: <http://localhost:48080/rdf4j-server/repositories/>
@@ -52,12 +53,12 @@ SELECT ?event_type ?event_type_iri ?year ?month (count(*) AS ?count) {
   FILTER (((?year + 1 = ?thisYear) && (?month >= ?thisMonth)) || (?year = ?thisYear))
 
   OPTIONAL {
-    SERVICE er:eccairs-aviation-3.4.0.2 {
+    SERVICE SILENT er:eccairs-aviation-3.4.0.2 {
       ?event_type_iri rdfs:label ?event_type.
     }
   }
   OPTIONAL {
-    SERVICE er:inbas-model-2016-01-21:22-46-17 {
+    SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 {
       ?event_type_iri rdfs:label ?event_type.
     }
   }

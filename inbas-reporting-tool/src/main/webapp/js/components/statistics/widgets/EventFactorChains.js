@@ -16,7 +16,9 @@ class EventFactorChains extends React.Component {
         this.state = {
             rows: [],
             dimensions: [],
-            reduce: (row, memo) => { return memo },
+            reduce: (row, memo) => {
+                return memo
+            },
             calculations: []
         }
     }
@@ -32,43 +34,30 @@ class EventFactorChains extends React.Component {
     };
 
     _onStatisticsLoaded = (data) => {
-        if (data && ( data.queryName != "eventfactorgraph")) {
+        if (!data || (data.queryName != "eventfactorgraph")) {
             return;
         }
 
-        this.setState(
-            {
-                width: 800
+        const dimensions = data.queryResults.head.vars.filter(
+            (varName) =>  !varName.startsWith('count')).map(
+            (varName) => {
+                return {value: varName, title: varName.replace('_', ' ')}
             }
         );
+        const calculations = [{
+            title: 'count', value: 'count',
+            template: val => val
+        }];
 
-        if (data) {
-            const rows =  Utils.sparql2table(data.queryResults.results.bindings);
-            const dimensions = data.queryResults.head.vars.filter(
-                (varName) => {
-                    return (!varName.startsWith('count'))
-                }).map(
-                (varName) => {
-                    return {value:varName, title: varName.replace('_', ' ')}
-                }
-            );
-            const calculations = [{
-                title: 'count', value: 'count',
-                template: function (val) {
-                    return val;
-                }
-            }];
-
-            this.setState(
-                {
-                    rows: rows,
-                    dimensions: dimensions,
-                    calculations: calculations,
-                    reportKey: Date.now()
-                }
-            );
-            this.props.loadingOff();
-        }
+        this.setState(
+            {
+                rows: Utils.sparql2table(data.queryResults.results.bindings),
+                dimensions: dimensions,
+                calculations: calculations,
+                reportKey: Date.now()
+            }
+        );
+        this.props.loadingOff();
     };
 
     reduce = (row, memo) => {
@@ -77,7 +66,7 @@ class EventFactorChains extends React.Component {
     };
 
     render() {
-        return ( <div className='centered'>
+        return (<div className='centered'>
             <ReactPivot
                 key={this.state.reportKey}
                 rows={this.state.rows}
@@ -88,7 +77,7 @@ class EventFactorChains extends React.Component {
                 sortDir='desc'
                 nPaginateRows={10}
                 compact={true}/>
-        </div> );
+        </div>);
     }
 }
 

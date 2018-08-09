@@ -1,98 +1,53 @@
 'use strict';
 
 import React from "react";
+import {Panel} from "react-bootstrap";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
-import Dashboard, {addWidget} from "react-dazzle";
-import EditBar from "./EditBar";
-import Container from "./Container";
-import CustomFrame from "./CustomFrame";
 import EventFactorChains from "./widgets/EventFactorChains";
 import EventtypeDashboard from "./widgets/event-type-dashboard/EventtypeDashboard";
 import OccurrenceList from "./widgets/OccurrenceList";
 import OccurrenceSeverityTrends from "./widgets/OccurrenceSeverityTrends";
+import {Responsive, WidthProvider} from 'react-grid-layout';
 
 class StatisticsController extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            widgets: {
-                OccurrenceList: {
-                    type: OccurrenceList,
-                    title: 'Occurrence Categories (Top 5 in Last Year)',
-                },
-                EventFactorChains: {
-                    type: EventFactorChains,
-                    title: 'Event - Factor Chains',
-                },
-                EventtypeDashboard: {
-                    type: EventtypeDashboard,
-                    title: 'Root Event Types',
-                },
-                OccurrenceSeverityTrends: {
-                    type: OccurrenceSeverityTrends,
-                    title: 'Occurrence Severity Trend',
-                }
-            },
-            layout: {
-                rows: [ {
-                    columns: [{
-                        className: 'col-md-6 col-sm-6 col-xs-6',
-                        widgets: [{key: 'OccurrenceSeverityTrends'}],
-                    }, {
-                        className: 'col-md-6 col-sm-6 col-xs-6',
-                        widgets: [{key: 'OccurrenceList'}],
-                    }],
-                },{
-                    columns: [{
-                        className: 'col-md-12 col-sm-12 col-xs-12',
-                        widgets: [{key: 'EventtypeDashboard'}],
-                    }]
-                },{
-                    columns: [{
-                        className: 'col-md-12 col-sm-12 col-xs-12',
-                        widgets: [{key: 'EventFactorChains'}],
-                    }]
-                }]
-            },
-            editMode: false,
-            isModalOpen: false,
-            addWidgetOptions: null,
-        }
+        this.i18n = props.i18n;
     }
 
-
-    /**
-     * When a widget moved, this will be called. Layout should be given back.
-     */
-    onMove = (layout) => {
-        this.setState({
-            layout: layout,
-        });
-    };
-
-    /**
-     * Toggles edit mode in dashboard.
-     */
-    toggleEdit = () => {
-        this.setState({
-            editMode: !this.state.editMode,
-        });
-    };
-
     render() {
-        return <div><Container>
-            <EditBar onEdit={this.toggleEdit}/>
-            <Dashboard
-                frameComponent={CustomFrame}
-                layout={this.state.layout}
-                widgets={this.state.widgets}
-                editable={this.state.editMode}
-                onMove={this.onMove}
-                addWidgetComponentText=""
-            />
-        </Container></div>
+        const sm = [
+            {i: 'top-left', x: 0, y: 0, w: 4, h: 2, isResizable: false, isDraggable: false},
+            {i: 'top-right', x: 0, y: 2, w: 4, h: 2, isResizable: false, isDraggable: false},
+            {i: 'main', x: 0, y: 4, w: 4, h: 4, isResizable: false, isDraggable: false},
+            {i: 'bottom', x: 0, y: 8, w: 4, h: 2, isResizable: false, isDraggable: false}
+        ];
+
+        const lg = [
+            {i: 'top-left', x: 0, y: 0, w: 4, h: 2, isResizable: false, isDraggable: false},
+            {i: 'top-right', x: 4, y: 0, w: 4, h: 2, isResizable: false, isDraggable: false},
+            {i: 'main', x: 0, y: 2, w: 8, h: 6, isResizable: false, isDraggable: false},
+            {i: 'bottom', x: 0, y: 8, w: 8, h: 2, isResizable: false, isDraggable: false}
+        ];
+
+        const layouts = {lg: lg, md: lg, sm: sm, xs: sm, xxs: sm};
+        const cols = {lg: 8, md: 8, sm: 4, xs: 4, xxs: 4};
+        const ResponsiveReactGridLayout = WidthProvider(Responsive);
+        return (<div>
+            <ResponsiveReactGridLayout
+                draggableCancel="input,textarea"
+                className="layout"
+                layouts={layouts}
+                cols={cols}
+                rowHeight={200}>
+                <div key="top-left"><Panel header={this.i18n('statistics.panel.occurrence-severity-trends.label')}><OccurrenceSeverityTrends/></Panel></div>
+                <div key="top-right"><Panel header={this.i18n('statistics.panel.occurrence-categories-top.label')}><OccurrenceList/></Panel></div>
+                <div key="main"><Panel header={this.i18n('statistics.panel.root-events.label')}><EventtypeDashboard/></Panel></div>
+                <div key="bottom"><Panel header={this.i18n('statistics.panel.event-factor-chains.label')}><EventFactorChains/></Panel></div>
+            </ResponsiveReactGridLayout>
+        </div>);
     }
 }
 

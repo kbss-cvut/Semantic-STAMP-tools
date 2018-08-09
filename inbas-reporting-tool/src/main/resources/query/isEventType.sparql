@@ -8,9 +8,11 @@ PREFIX eccairs: <http://onto.fel.cvut.cz/ontologies/eccairs/>
 
 PREFIX eccairs-current: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/>
 
+PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
+
 ASK WHERE {
     {
-      SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/uniset-factors> {
+      SERVICE SILENT er:uniset-factors {
          # all events
          ?term rdfs:label ?label .
       }

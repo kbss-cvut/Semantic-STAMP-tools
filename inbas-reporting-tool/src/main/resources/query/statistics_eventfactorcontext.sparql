@@ -1,9 +1,10 @@
-PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
-PREFIX doc: <http://onto.fel.cvut.cz/ontologies/documentation/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
 PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX doc: <http://onto.fel.cvut.cz/ontologies/documentation/>
+PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
+PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
 
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 

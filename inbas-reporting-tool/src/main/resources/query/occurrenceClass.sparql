@@ -8,11 +8,13 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 PREFIX eccairs-model: <http://onto.fel.cvut.cz/ontologies/eccairs/model/>
 
+PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
+
 CONSTRUCT {
   ?term rdfs:label ?label ;
   rdfs:comment ?comment ;
 } WHERE {
-  SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/eccairs-aviation-3.4.0.2> {
+  SERVICE SILENT er:eccairs-aviation-3.4.0.2 {
     <a-431> eccairs-model:has-child+  ?term.
     ?term rdfs:label ?label.
     ?term eccairs-model:has-explanation ?comment.

@@ -9,10 +9,11 @@ import FrequencyListRow from "./FrequencyListRow";
 import Utils from "../Utils";
 import Table from "react-bootstrap/lib/Table";
 import PagingMixin from "../../mixin/PagingMixin";
+import I18nMixin from "../../../i18n/I18nMixin";
 import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 
 var FrequencyList = React.createClass({
-    mixins: [PagingMixin],
+    mixins: [PagingMixin,I18nMixin],
 
     propTypes: {
         query: React.PropTypes.string.isRequired,
@@ -38,34 +39,20 @@ var FrequencyList = React.createClass({
     },
 
     _onStatisticsLoaded(data) {
-        if (data === undefined) {
-            return;
-        }
-
-        if (data.queryName != this.props.query) {
-            return;
-        }
-
-        if (!data.queryResults) {
+        if (!data || (data.queryName != this.props.query)) {
             return;
         }
 
         const rowData = Utils.sparql2table(data.queryResults.results.bindings);
-        const eventTypesIris = Utils.unique(rowData.map((item) => {
-            return item.event_type_iri
-        }));
+        const eventTypesIris = Utils.unique(rowData.map((item) => item.event_type_iri));
 
         const {minDate, maxDate} = Utils.getMonthRangeFromNow(12);
         let rows = [];
         for (let i in eventTypesIris) {
             const eventTypeIri = eventTypesIris[i];
-            const vals = rowData.filter((item2) => {
-                return (item2.event_type_iri == eventTypeIri)
-            });
+            const vals = rowData.filter((item2) => (item2.event_type_iri == eventTypeIri));
             let data = Utils.generateMonthTimeAxis(minDate, maxDate).map((item) => {
-                const match = vals.filter((item2) => {
-                    return (Number(item2.year) * 100 + Number(item2.month)) == item
-                });
+                const match = vals.filter((item2) =>  (Number(item2.year) * 100 + Number(item2.month)) == item);
                 let count = 0;
                 if (match && match[0]) {
                     count = count + Number(match[0].count)
@@ -77,7 +64,7 @@ var FrequencyList = React.createClass({
                 }
             });
 
-            const sum= data.reduce((memo, val) => memo + Number(val.count), 0);
+            const sum = data.reduce((memo, val) => memo + Number(val.count), 0);
 
             if ( this.props.allowZeros || ( sum > 0 ) ) {
                 rows.push({
@@ -90,9 +77,7 @@ var FrequencyList = React.createClass({
             }
         }
 
-        rows = rows.sort((a, b) => {
-            return b.totalSum - a.totalSum
-        });
+        rows = rows.sort((a, b) =>  b.totalSum - a.totalSum);
 
         this.setState(
             {
@@ -103,18 +88,16 @@ var FrequencyList = React.createClass({
     },
 
     render() {
-        const topList = this.state.rows.map((row) => {
-            return ( <FrequencyListRow key={row.key} row={row} onClick={this.props.onSelect}/> );
-        });
+        const topList = this.state.rows.map(row => <FrequencyListRow key={row.key} row={row} onClick={this.props.onSelect}/> );
 
         return (
             <div>
                 <Table striped bordered condensed hover>
                     <thead>
                     <tr>
-                        <th className='col-xs-4 content-center'>Event Type</th>
-                        <th className='col-xs-1 content-center'>Annual Count</th>
-                        <th className='col-xs-2 content-center'>Annual Trend</th>
+                        <th className='col-xs-4 content-center'>{this.i18n('statistics.frequencylist.eventtype.label')}</th>
+                        <th className='col-xs-1 content-center'>{this.i18n('statistics.frequencylist.annualcount.label')}</th>
+                        <th className='col-xs-2 content-center'>{this.i18n('statistics.frequencylist.annualtrend.label')}</th>
                     </tr>
                     </thead>
                     <tbody>

@@ -5,7 +5,7 @@ import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import StatisticsStore from "../../../stores/StatisticsStore";
 import Actions from "../../../actions/Actions";
-import {BarChart, Bar, Brush, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from "recharts";
+import {Bar, BarChart, Brush, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 import Utils from "../Utils";
 import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 
@@ -41,7 +41,7 @@ class OccurrenceSeverityTrends extends React.Component {
         const rows = Utils.sparql2table(data.queryResults.results.bindings);
         const {maxDate} = Utils.getMonthRangeFromNow(24);
         const {min} = Utils.generateMinMax(rows);
-        const data2 = Utils.generateMonthTimeAxis( min, maxDate).map((item) => {
+        const data2 = Utils.generateMonthTimeAxis(min, maxDate).map((item) => {
             const match = rows.filter((item2) => {
                 return (Utils.getDateInt(item2.year, item2.month)) == item
             });
@@ -64,7 +64,7 @@ class OccurrenceSeverityTrends extends React.Component {
         });
 
         const barLabels = ["Not Determined", "Occurrence Without Safety Effect", "Incident", "Serious Incident", "Accident"];
-        const color=['#D8D8D8','#fff800', '#FFCC78','#ED8800','#E70000'];
+        const color = ['#D8D8D8', '#fff800', '#FFCC78', '#ED8800', '#E70000'];
 
         const bars = barLabels.map((label, index) => {
             return <Bar key={index} dataKey={label} stackId="a" fill={color[index]}/>
@@ -81,16 +81,18 @@ class OccurrenceSeverityTrends extends React.Component {
 
     render() {
         return <div>
-            <BarChart width={600} height={300} data={this.state.data}
-                      margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-                <XAxis dataKey="date" tickFormatter={Utils.getDateString}/>
-                <YAxis/>
-                <CartesianGrid strokeDasharray="3 3"/>
-                <Tooltip labelFormatter={Utils.getDateString}/>
-                <Legend />
-                {this.state.bars}
-                <Brush dataKey='date' height={30} stroke="orange"/>
-            </BarChart>
+            <ResponsiveContainer width="100%" height={300}>
+                <BarChart width={600} height={300} data={this.state.data}
+                          margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                    <XAxis dataKey="date" tickFormatter={Utils.getDateString}/>
+                    <YAxis/>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <Tooltip labelFormatter={Utils.getDateString}/>
+                    <Legend/>
+                    {this.state.bars}
+                    <Brush dataKey='date' height={30} stroke="orange"/>
+                </BarChart>
+            </ResponsiveContainer>
         </div>;
     };
 }
