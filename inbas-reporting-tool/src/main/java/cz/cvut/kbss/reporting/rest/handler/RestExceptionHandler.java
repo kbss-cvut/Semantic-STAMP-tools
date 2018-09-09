@@ -1,8 +1,15 @@
 package cz.cvut.kbss.reporting.rest.handler;
 
 import cz.cvut.kbss.jopa.exceptions.OWLPersistenceException;
-import cz.cvut.kbss.reporting.exception.*;
+import cz.cvut.kbss.reporting.exception.MaxNumberOfReportsReachedException;
+import cz.cvut.kbss.reporting.exception.NotFoundException;
+import cz.cvut.kbss.reporting.exception.ReportImportingException;
+import cz.cvut.kbss.reporting.exception.UnsupportedReportTypeException;
+import cz.cvut.kbss.reporting.exception.UsernameExistsException;
+import cz.cvut.kbss.reporting.exception.ValidationException;
+import cz.cvut.kbss.reporting.exception.WebServiceIntegrationException;
 import cz.cvut.kbss.reporting.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -10,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Contains exception handlers for REST controllers.
@@ -86,6 +91,12 @@ public class RestExceptionHandler {
     @ExceptionHandler(OWLPersistenceException.class)
     public ResponseEntity<ErrorInfo> jopaException(HttpServletRequest request, OWLPersistenceException e) {
         logException("Persistence exception caught.", e);
+        return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MaxNumberOfReportsReachedException.class)
+    public ResponseEntity<ErrorInfo> maxNumberOfReportsReachedException(HttpServletRequest request, MaxNumberOfReportsReachedException e) {
+        logException("Maximum number of reports reached.", e);
         return new ResponseEntity<>(errorInfo(request, e), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

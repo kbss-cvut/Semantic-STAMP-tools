@@ -7,14 +7,31 @@ import cz.cvut.kbss.reporting.environment.generator.Generator;
 import cz.cvut.kbss.reporting.environment.generator.OccurrenceReportGenerator;
 import cz.cvut.kbss.reporting.environment.util.Environment;
 import cz.cvut.kbss.reporting.environment.util.UnsupportedReport;
+import cz.cvut.kbss.reporting.exception.MaxNumberOfReportsReachedException;
 import cz.cvut.kbss.reporting.exception.NotFoundException;
 import cz.cvut.kbss.reporting.exception.UnsupportedReportTypeException;
 import cz.cvut.kbss.reporting.filter.OccurrenceCategoryFilter;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
-import cz.cvut.kbss.reporting.model.*;
+import cz.cvut.kbss.reporting.model.LogicalDocument;
+import cz.cvut.kbss.reporting.model.Occurrence;
+import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.Person;
+import cz.cvut.kbss.reporting.model.Resource;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.reporting.service.data.AttachmentService;
 import cz.cvut.kbss.reporting.service.options.ReportingPhaseService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,17 +44,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.*;
-
 import static cz.cvut.kbss.reporting.environment.util.Environment.DATA;
 import static cz.cvut.kbss.reporting.util.ConfigParam.ATTACHMENT_DIR;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(initializers = PropertyMockingApplicationContextInitializer.class)
@@ -103,6 +116,13 @@ public class MainReportServiceTest extends BaseServiceTestRunner {
         final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
         reportService.persist(report);
         return report;
+    }
+
+    @Test(expected = MaxNumberOfReportsReachedException.class)
+    public void persistThrowsMaxNumberOfReportsReachedExceptionOnMaxNumberOfReportsReached() {
+        ((MockEnvironment) environment).setProperty("maxNumberOfReports","0");
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(false);
+        reportService.persist(report);
     }
 
     @Test(expected = UnsupportedReportTypeException.class)
