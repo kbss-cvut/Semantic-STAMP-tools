@@ -25,11 +25,9 @@ public class OccurrenceReport extends AbstractOccurrenceReport {
     private OccurrenceReport nextRevision;
 
     public OccurrenceReport() {
-        getTypes().add(Vocabulary.s_c_report);
     }
 
     public OccurrenceReport(OccurrenceReport other) {
-        this();
         Objects.requireNonNull(other);
         this.fileNumber = other.fileNumber;
         this.phase = other.phase;

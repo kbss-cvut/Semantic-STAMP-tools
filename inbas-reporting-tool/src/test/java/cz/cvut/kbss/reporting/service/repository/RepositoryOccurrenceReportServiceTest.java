@@ -567,4 +567,21 @@ public class RepositoryOccurrenceReportServiceTest extends BaseServiceTestRunner
         assertNotNull(result.getNextRevision());
         assertEquals(newRevision.getUri(), result.getNextRevision().getUri());
     }
+
+    @Test
+    public void persistAddsReportToTypes() {
+        final OccurrenceReport report = OccurrenceReportGenerator.generateOccurrenceReport(true);
+        report.getTypes().remove(Vocabulary.s_c_report);
+        occurrenceReportService.persist(report);
+        assertTrue(report.getTypes().contains(Vocabulary.s_c_report));
+
+        final EntityManager em = emf.createEntityManager();
+        try {
+            assertTrue(em.createNativeQuery("ASK { ?x a ?report . }", Boolean.class)
+                         .setParameter("x", report.getUri())
+                         .setParameter("report", URI.create(Vocabulary.s_c_report)).getSingleResult());
+        } finally {
+            em.close();
+        }
+    }
 }

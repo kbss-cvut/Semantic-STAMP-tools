@@ -47,8 +47,7 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
     protected Set<String> types;
 
     protected AbstractReport() {
-        this.types = new HashSet<>(4);
-        types.add(Vocabulary.s_c_report);
+        addType(Vocabulary.s_c_report);
     }
 
     @Override
@@ -143,6 +142,14 @@ public abstract class AbstractReport extends AbstractEntity implements LogicalDo
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    public void addType(String type) {
+        Objects.requireNonNull(type);
+        if (types == null) {
+            this.types = new HashSet<>(4);
+        }
+        types.add(type);
     }
 
     protected void copyBasicAttributesToDto(ReportDto dto) {

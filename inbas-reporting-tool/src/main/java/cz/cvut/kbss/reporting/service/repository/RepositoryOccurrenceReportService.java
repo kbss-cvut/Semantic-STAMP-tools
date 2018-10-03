@@ -9,6 +9,7 @@ import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
 import cz.cvut.kbss.reporting.model.Resource;
+import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.dao.InitialReportDao;
 import cz.cvut.kbss.reporting.persistence.dao.OccurrenceReportDao;
 import cz.cvut.kbss.reporting.persistence.dao.OwlKeySupportingDao;
@@ -74,6 +75,7 @@ public class RepositoryOccurrenceReportService extends KeySupportingRepositorySe
     }
 
     private void initReportData(OccurrenceReport instance) {
+        instance.addType(Vocabulary.s_c_report);
         instance.setAuthor(securityUtils.getCurrentUser());
         instance.setDateCreated(new Date());
         instance.setFileNumber(IdentificationUtils.generateFileNumber());
