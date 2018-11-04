@@ -2,6 +2,8 @@ package cz.cvut.kbss.reporting.model.util;
 
 import cz.cvut.kbss.reporting.model.AbstractEvent;
 import cz.cvut.kbss.reporting.model.qam.Question;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.*;
@@ -12,6 +14,8 @@ import java.util.*;
  * A depth-first search is used for the unification.
  */
 public class QuestionUnifier {
+
+    private static final Logger LOG = LoggerFactory.getLogger(QuestionUnifier.class);
 
     private final Map<URI, Question> visited = new HashMap<>();
 
@@ -41,6 +45,11 @@ public class QuestionUnifier {
             final Question child = it.next();
             if (visited.containsKey(child.getUri())) {
                 it.remove();
+                if (child.getUri().equals(root.getUri())) {
+                    // Not that this won't work for cycles spanning multiple levels of the QA tree
+                    LOG.warn("Encountered question-subquestions cycle for question {}.", root);
+                    continue;
+                }
                 replacements.add(visited.get(child.getUri()));
             } else {
                 unify(child);

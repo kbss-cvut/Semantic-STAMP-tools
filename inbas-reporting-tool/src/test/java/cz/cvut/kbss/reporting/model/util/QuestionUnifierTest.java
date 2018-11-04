@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import static org.junit.Assert.*;
@@ -54,5 +55,18 @@ public class QuestionUnifierTest {
         new QuestionUnifier().unifyQuestions(event);
         assertTrue(qTwo.getSubQuestions().contains(reused));
         assertFalse(qTwo.getSubQuestions().contains(qFive));
+    }
+
+    @Test
+    public void unifyQuestionsBreaksQuestionSubQuestionCycle() {
+        final Event event = OccurrenceReportGenerator.generateEvent();
+        final Question root = Generator.question();
+        event.setQuestion(root);
+        final Question selfRef = new Question(root);
+        selfRef.setUri(root.getUri());
+        root.setSubQuestions(new HashSet<>(Collections.singleton(selfRef)));
+
+        new QuestionUnifier().unifyQuestions(event);
+        assertFalse(root.getSubQuestions().contains(root));
     }
 }
