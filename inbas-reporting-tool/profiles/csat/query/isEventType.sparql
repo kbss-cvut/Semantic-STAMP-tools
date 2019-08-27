@@ -26,9 +26,15 @@ ASK WHERE {
          <a-385> eccairs-model:has-child+ ?term .
       }
     } UNION {
-      SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/eccairs-aviation-3.4.0.2> {
+            SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/eccairs-aviation-3.4.0.2> {
+               # all descriptive factors
+               <a-385> eccairs-model:has-child+ ?term .
+            }
+          }
+    UNION {
+      SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/stamp-event-type> {
          # all explanatory factors
-         <a-392> eccairs-model:has-child+ ?term .
+         ?term ufo:has-type+ ufo:event-type .
       }
     } UNION {
       ?term rdfs:subClassOf+ f:csa_layers_factors .

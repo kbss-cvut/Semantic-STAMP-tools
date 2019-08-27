@@ -13,7 +13,7 @@ PREFIX eccairs-3.4.0.2: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4
 
 PREFIX aviation-safety: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 PREFIX f: <http://onto.fel.cvut.cz/ontologies/csalayers/>
-
+PREFIX ufo:<http://onto.fel.cvut.cz/ontologies/ufo/>
 CONSTRUCT {
   ?term rdfs:label ?label ;
   a ?type ;
@@ -65,4 +65,17 @@ CONSTRUCT {
          }
       }
    }
+   UNION { # ,eda terms
+         SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/stamp-event-type> {
+            GRAPH <file://C:/fakepath/query.rdf>{
+              ?term ufo:has-type+ ufo:event-type .
+              # add all labels - not everything is returned due to missing labels
+              ?term rdfs:label ?label.
+              OPTIONAL {?term rdfs:comment ?comment. }
+              BIND( ufo:event-typ as ?type )
+            }
+         }
 }
+
+
+
