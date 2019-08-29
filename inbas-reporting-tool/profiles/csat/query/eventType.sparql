@@ -43,7 +43,7 @@ CONSTRUCT {
          <a-392> eccairs-model:has-child+  ?term.
          ?term rdfs:label ?label.
          ?term eccairs-model:has-explanation ?comment.
-      }
+
       BIND(eccairs:explanatory-factor as ?type)
     } UNION {
       ?term rdfs:subClassOf+ f:csa_layers_factors .
