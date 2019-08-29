@@ -37,6 +37,8 @@ CONSTRUCT {
       BIND(eccairs:descriptive-factor as ?type)
     } UNION {
       SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/eccairs-aviation-3.4.0.2> {
+      .
+      }
          # all explanatory factors
          <a-392> eccairs-model:has-child+  ?term.
          ?term rdfs:label ?label.
@@ -78,4 +80,4 @@ CONSTRUCT {
 }
 
 
-
+}
