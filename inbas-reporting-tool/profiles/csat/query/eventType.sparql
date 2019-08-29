@@ -21,14 +21,14 @@ CONSTRUCT {
 } WHERE {
     { # ,eda terms
          SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/stamp-events> {
-            GRAPH <http://onto.fel.cvut.cz/ontologies/stamp/events>{
+
               ?term ufo:has-type+ ufo:event-type .
               # add all labels - not everything is returned due to missing labels
                OPTIONAL { ?term rdfs:label ?label.}
               OPTIONAL {?term rdfs:comment ?comment. }
               BIND( ufo:event-typ as ?type )
             }
-         }
+
 }
 
 }
