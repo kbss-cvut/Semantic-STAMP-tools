@@ -1,9 +1,3 @@
-#
-# Query to get event types
-#
-BASE <http://onto.fel.cvut.cz/ontologies/stamp/stampevents>
-
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 PREFIX eccairs-model: <http://onto.fel.cvut.cz/ontologies/eccairs/model/>
@@ -20,7 +14,7 @@ CONSTRUCT {
   rdfs:comment ?comment ;
 } WHERE {
     { # ,eda terms
-         SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/stamprepo> {
+         SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/testlable> {
 
               ?term stamp:has-type+ stamp:event-type .
               # add all labels - not everything is returned due to missing labels
