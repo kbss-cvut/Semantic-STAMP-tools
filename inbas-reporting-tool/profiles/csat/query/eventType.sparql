@@ -14,7 +14,7 @@ CONSTRUCT {
   rdfs:comment ?comment ;
 } WHERE {
     { # ,eda terms
-         SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/testlable> {
+         SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/stampRT> {
 
               ?term stamp:has-type+ stamp:event-type .
               # add all labels - not everything is returned due to missing labels
