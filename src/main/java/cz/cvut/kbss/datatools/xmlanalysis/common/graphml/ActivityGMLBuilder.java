@@ -12,37 +12,46 @@ import com.tinkerpop.blueprints.Vertex;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 public class ActivityGMLBuilder extends UMLGMLBuilder{
-    
-    public Vertex addBranch(String label){
-        Vertex v = addVertex(label, label);
-        v.setProperty("graphics", mapOf("type", "diamond"));
-        // styling of the node goes here
-        // v.setProperty(atts, v);
-        return v;
+
+
+    public Vertex addBranch(NodeData nodeData){
+        return addWithShape(nodeData, "diamond");
     }
     
-    public Vertex addCircle(String label){
-        Vertex v = addVertex(label, label);
-        v.setProperty("graphics", mapOf("type", "ellipse"));
-        return v;
-    }
-    
-    public Vertex addActivity(String label){
-        Vertex v = addVertex(label, label);
-        return v;
+    public Vertex addCircle(NodeData nodeData){
+        return addWithShape(nodeData, "ellipse");
     }
 
-    public void addUpTriangle(String activityName) {
-        addWithShape(activityName, "triangle");
+    public Vertex addProcessStart(NodeData nodeData){
+        return addWithCustomShape(nodeData, "com.yworks.bpmn.Event.withShadow");
     }
 
-    public void addDownTriagle(String activityName) {
-        addWithShape(activityName, "triangle2");
+    public Vertex addProcessEnd(NodeData nodeData){
+        return addWithCustomShape(nodeData, "com.yworks.bpmn.Event.withShadow");
+    }
+
+    public Vertex addTrigger(NodeData nodeData){
+        return addWithCustomShape(nodeData, "com.yworks.bpmn.Event.withShadow");
+    }
+
+    public Vertex addSwimLane(NodeData nodeData){
+        return addGroup(nodeData);
     }
     
-    protected Vertex addWithShape(String label, String shape){
-        Vertex v = addVertex(label, label);
-        v.setProperty("graphics", mapOf("type", shape));
-        return v;
+    public Vertex addActivity(NodeData nodeData){
+        return addWithCustomShape(nodeData, "com.yworks.flowchart.process");
     }
+
+    public Vertex addSubProcess(NodeData nodeData){
+        return addWithCustomShape(nodeData, "com.yworks.flowchart.predefinedProcess");
+    }
+
+    public Vertex addUpTriangle(NodeData nodeData) {
+        return addWithShape(nodeData, "triangle");
+    }
+
+    public Vertex addDownTriagle(NodeData nodeData) {
+        return addWithShape(nodeData, "triangle2");
+    }
+
 }

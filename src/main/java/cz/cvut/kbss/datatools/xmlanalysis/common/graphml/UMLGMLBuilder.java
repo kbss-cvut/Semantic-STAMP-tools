@@ -16,10 +16,17 @@ import org.slf4j.LoggerFactory;
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
 public class UMLGMLBuilder extends GraphMLBuilder{
-    
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(UMLGMLBuilder.class);
-    
+
+    public Vertex addAggregation(NodeData nodeData){
+        return addGroup(nodeData);
+    }
+
+    public Vertex addCrossReference(NodeData nodeData){
+        return addWithCustomShape(nodeData, "com.yworks.flowchart.offPageReference");
+    }
+
     public Vertex addEntity(String entityType, String vertexId, Map<String, String> entityAttributes) {
         String atts = "";
         for (Map.Entry<String, String> e : entityAttributes.entrySet()) {
