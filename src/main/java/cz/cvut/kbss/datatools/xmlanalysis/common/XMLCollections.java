@@ -5,26 +5,16 @@
  */
 package cz.cvut.kbss.datatools.xmlanalysis.common;
 
-import java.util.AbstractList;
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.function.Function;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-/**
- *
- * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
- */
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
+
 public class XMLCollections {
     
     /**
@@ -114,7 +104,7 @@ public class XMLCollections {
      * and then converts it to a stream using the <code>asStream</code> method
      * @param nodeList
      * @return 
-     * @see asStream(Iterator)
+     * @see XMLCollections#asStream(Iterator)
      */
     public static Stream<Node> asStream(NodeList nodeList){
         return asStream(asIterator(nodeList), nodeList.getLength());
@@ -125,7 +115,7 @@ public class XMLCollections {
      * and then converts it to a stream using the <code>asStream</code> method
      * @param map
      * @return 
-     * @see asStream(Iterator)
+     * @see XMLCollections#asStream(Iterator)
      */
     public static Stream<Node> asStream(NamedNodeMap map){
         return asStream(asIterator(map), map.getLength());
