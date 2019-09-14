@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.kbss.datatools.xmlanalysis.lkpr.converters.adoxml;
+package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.adoxml;
 
-import cz.cvut.kbss.adoxml.MODEL;
 import cz.cvut.kbss.datatools.xmlanalysis.XMLProcessor;
 import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
 import cz.cvut.kbss.datatools.xmlanalysis.common.XMLCollections;
@@ -34,6 +33,9 @@ import java.util.stream.Stream;
 public class ConvertADOXMLProcessModelToUFO extends XMLProcessor {
     
     private static final Logger LOG = LoggerFactory.getLogger(ConvertADOXMLProcessModelToUFO.class);
+
+    public static final String MODEL_ELEMENT = "MODEL";
+
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     public static String ENCODING = "UTF-8";
@@ -627,7 +629,8 @@ public class ConvertADOXMLProcessModelToUFO extends XMLProcessor {
     }
 
     protected Node getModelNode(Node childNode){
-        while(childNode != null && !MODEL.class.getSimpleName().equals(childNode.getNodeName())){
+//        while(childNode != null && !MODEL.class.getSimpleName().equals(childNode.getNodeName())){
+        while(childNode != null && !MODEL_ELEMENT.equals(childNode.getNodeName())){
             childNode = childNode.getParentNode();
         }
         return childNode;

@@ -2,7 +2,7 @@ package cz.cvut.kbss.datatools.lkpr.adonis;
 
 
 import cz.cvut.kbss.datatools.xmlanalysis.XMLAnalyzer;
-import cz.cvut.kbss.datatools.xmlanalysis.lkpr.converters.adoxml.ConvertADOXMLProcessModelToUFO;
+import cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.adoxml.ConvertADOXMLProcessModelToUFO;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
