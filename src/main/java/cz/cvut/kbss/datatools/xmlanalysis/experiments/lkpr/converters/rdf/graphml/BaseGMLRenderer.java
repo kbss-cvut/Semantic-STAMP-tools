@@ -1,4 +1,4 @@
-package cz.cvut.kbss.datatools.xmlanalysis.view.graphml;
+package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf.graphml;
 
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.GraphMLBuilder;
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.UMLGMLBuilder;

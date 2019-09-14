@@ -1,7 +1,7 @@
-package cz.cvut.kbss.datatools.xmlanalysis.lkpr.converters.rdf;
+package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf;
 
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.GraphMLBuilder;
-import cz.cvut.kbss.datatools.xmlanalysis.view.graphml.*;
+import cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf.graphml.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;

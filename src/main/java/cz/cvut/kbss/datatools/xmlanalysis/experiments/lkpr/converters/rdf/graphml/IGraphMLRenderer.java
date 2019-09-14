@@ -1,4 +1,4 @@
-package cz.cvut.kbss.datatools.xmlanalysis.view.graphml;
+package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf.graphml;
 
 import org.apache.jena.rdf.model.Model;
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.GraphMLBuilder;
