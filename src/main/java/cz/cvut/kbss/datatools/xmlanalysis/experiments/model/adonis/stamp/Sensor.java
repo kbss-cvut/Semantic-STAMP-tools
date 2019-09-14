@@ -3,17 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.kbss.datatools.xmlanalysis.model.xml;
+package cz.cvut.kbss.datatools.xmlanalysis.experiments.model.adonis.stamp;
 
 /**
  *
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-public interface NamedElement {
-
-    
-    public String getName();
-
-    public void setName(String name);
+public class Sensor {
     
 }

@@ -3,12 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.kbss.datatools.xmlanalysis.model.adonis.stamp;
+package cz.cvut.kbss.datatools.xmlanalysis.experiments.model.adonis.we;
+
+import java.util.List;
 
 /**
- * The process/event which is controlled.
+ *
  * @author Bogdan Kostov <bogdan.kostov@fel.cvut.cz>
  */
-public class ControlledProcess {
+public class Role {
+    protected List<String> attributeNames;
+    protected String name;
+
     
 }
