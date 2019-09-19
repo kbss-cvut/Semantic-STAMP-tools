@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This should be used on a Collection field. Each element of the collection is either a Key
+ * This should be used on a Collection field. Each element of the collection is either a Key or it contains a definition of a key.
  */
 
 @Retention(RetentionPolicy.RUNTIME) @Target({ElementType.FIELD})

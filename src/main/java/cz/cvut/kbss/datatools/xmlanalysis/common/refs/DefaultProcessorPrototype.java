@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class DefaultProcessorPrototype {
 
     public List<ObjectJoin> protoExtractAnnotationData(Object inst){
