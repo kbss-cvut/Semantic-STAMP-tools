@@ -62,7 +62,6 @@ public class IDRuntime {
         if(r.getContainerField() != null){
             fkContainerInstance = ReflectionUtils.getValue(o, r.getContainerField());
         }
-        KeyMapping keyMapping = r.getKeyMapping();
 
         String kv = calculateId(fkContainerInstance, r.getKeyMapping().getForeignKey());
         Object toBeInjected = registry.get(kv);
@@ -119,7 +118,20 @@ public class IDRuntime {
     }
 
     protected String calculateId(Object obj, Key key){
-        return key.getFields().stream().map(f -> Objects.toString(ReflectionUtils.getValue(obj, f.getValue()))).collect(Collectors.joining());
+        // Fixing BUG: What if instances from different classes have the same keys.
+        // change to generate the value - ClassName[field1.Name=field1.Value;fieldN.Name=fieldN.Value]
+        // TODO: change to use the key id. This requires to fix a bug with the naming of keys
+
+        return String.format("%s[%s]",
+                key.getRefedClass().getCanonicalName(),
+                key.getFields().stream().map(f ->
+                        String.format(
+                                "%s=%s",
+                                f.getValue().getName(),
+                                Objects.toString(ReflectionUtils.getValue(obj, f.getValue()))
+                        )
+                ).collect(Collectors.joining(";"))
+        );
     }
 
 
