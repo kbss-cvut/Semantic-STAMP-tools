@@ -1,10 +1,16 @@
 package cz.cvut.kbss.datatools.xmlanalysis.common.refs.model;
 
+import java.util.Objects;
+
+/**
+ * A model for key mappings.
+ */
 public class KeyMapping {
     protected boolean isManyFK = false;
+    /** the foreign key */
     protected Key foreignKey;
+    /** the key */
     protected Key key;
-//    protected
 
     public KeyMapping() {
     }
@@ -37,5 +43,20 @@ public class KeyMapping {
 
     public void setManyFK(boolean manyFK) {
         isManyFK = manyFK;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        KeyMapping that = (KeyMapping) o;
+        return isManyFK == that.isManyFK &&
+                Objects.equals(foreignKey, that.foreignKey) &&
+                Objects.equals(key, that.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isManyFK, foreignKey, key);
     }
 }

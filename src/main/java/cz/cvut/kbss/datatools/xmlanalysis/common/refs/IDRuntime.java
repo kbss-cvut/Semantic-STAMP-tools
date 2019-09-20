@@ -14,9 +14,6 @@ public class IDRuntime {
     protected IdRelationalSchema schema;
     protected Map<String, Object> registry;
 
-
-
-
     public void injectReferences(Collection<Object> objects){
         buildSchema(objects);
 
@@ -127,7 +124,7 @@ public class IDRuntime {
                 key.getFields().stream().map(f ->
                         String.format(
                                 "%s=%s",
-                                f.getValue().getName(),
+                                f.getKey(),
                                 Objects.toString(ReflectionUtils.getValue(obj, f.getValue()))
                         )
                 ).collect(Collectors.joining(";"))

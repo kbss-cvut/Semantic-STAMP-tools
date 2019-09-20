@@ -6,11 +6,23 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * A model of a key definition. Keys are used in the following use-cases:
+ * - given an instance of class "cls" construct its value for this key definition
+ * - used in the model of a key-mapping.
+ */
 public class Key {
+    /** the name of the key. If one class has multiple keys each of them are named. This way if there is a foreign key
+     pointing to instances of such a class, the foreign key can specify which named-key is to be compared to.*/
     protected String keyName;
+    /** The class which contains the key fields*/
     protected Class cls;
+    /** The class which is being referred to by the key. If this key is not a foreign key, the value of this field is the
+     same as the csl field. */
     protected Class refedClass;
-    protected boolean isManyFK;
+    /** The key fields. The String in the pair is the key field name which corresponds to the mapped name of the corresponding key
+     field in refedClass. Together with the value of the fields the key field names are used to generate a unique key
+     value. */
     protected List<Pair<String, Field>> fields;
 
     public String getKeyName() {
@@ -59,14 +71,6 @@ public class Key {
         this.refedClass = refedClass;
     }
 
-    public boolean isManyFK() {
-        return isManyFK;
-    }
-
-    public void setManyFK(boolean manyFK) {
-        isManyFK = manyFK;
-    }
-
     protected String _fieldsIdCache = null;
     protected Integer _hashCache = null;
 
@@ -85,14 +89,14 @@ public class Key {
     @Override
     public int hashCode() {
         if(_hashCache == null){
-            _hashCache = Objects.hash(keyName, cls, refedClass, fieldsId(), isManyFK);
+            _hashCache = Objects.hash(keyName, cls, refedClass, fieldsId());
         }
         return _hashCache;
     }
 
     protected String fieldsId(){
         if(_fieldsIdCache == null){
-             _fieldsIdCache = fields.stream().map(p -> p.getLeft() + ", " + p.getRight().getName()).collect(Collectors.joining("-"));
+             _fieldsIdCache = fields.stream().map(p -> p.getLeft() + "-" + p.getRight().getName()).collect(Collectors.joining(";"));
         }
         return _fieldsIdCache;
     }

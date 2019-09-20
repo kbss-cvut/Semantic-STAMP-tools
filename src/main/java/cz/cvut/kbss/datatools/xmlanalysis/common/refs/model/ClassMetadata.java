@@ -1,15 +1,18 @@
 package cz.cvut.kbss.datatools.xmlanalysis.common.refs.model;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * A model of a class, its keys, key-mappings (key <-> foreign keys) and its relational fields(the ones where instances
+ * should be injected). Use-cases:
+ * - find the class metadata of an instance
+ * -
+ */
 public class ClassMetadata {
     protected Set<Key> keys;
-    protected List<KeyMapping> KeyMappings;
-    protected List<RelationField> relations;
-//    protected List<RelationField> inverseRelations; ? do we need that?
+    protected Set<KeyMapping> keyMappings;
+    protected Set<RelationField> relations;
 
 
     public KeyMapping getKeyMapping(String keyName){
@@ -31,19 +34,36 @@ public class ClassMetadata {
         this.keys = keys;
     }
 
-    public List<KeyMapping> getKeyMappings() {
-        return KeyMappings;
+    public Set<KeyMapping> getKeyMappings() {
+        return keyMappings;
     }
 
-    public void setKeyMappings(List<KeyMapping> keyMappings) {
-        KeyMappings = keyMappings;
+    public void setKeyMappings(Set<KeyMapping> keyMappings) {
+        this.keyMappings = keyMappings;
     }
 
-    public List<RelationField> getRelations() {
+    public Set<RelationField> getRelations() {
         return relations;
     }
 
-    public void setRelations(List<RelationField> relations) {
+    public void setRelations(Set<RelationField> relations) {
         this.relations = relations;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ClassMetadata that = (ClassMetadata) o;
+        return CompareUtils.equalsAsSets(keys, that.keys) &&
+                CompareUtils.equalsAsSets(keyMappings, that.keyMappings) &&
+                CompareUtils.equalsAsSets(relations, that.relations);
+    }
+
+    @Override
+    public int hashCode() {
+        ArrayList a;
+        HashSet s;
+        return Objects.hash(keys, keyMappings, relations);
     }
 }

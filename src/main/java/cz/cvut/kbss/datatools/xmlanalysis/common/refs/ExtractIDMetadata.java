@@ -4,10 +4,7 @@ package cz.cvut.kbss.datatools.xmlanalysis.common.refs;
 import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.FIDAttribute;
 import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.ManyFK;
 import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.Relation;
-import cz.cvut.kbss.datatools.xmlanalysis.common.refs.experiment.C;
 import cz.cvut.kbss.datatools.xmlanalysis.common.refs.model.*;
-import cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.model.Instance;
-import cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.model.InstanceRef;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -15,7 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -50,14 +46,14 @@ public class ExtractIDMetadata {
         clsMetadata.setRelations(extractRelationalFields(cls));
     }
 
-    protected List<RelationField> extractRelationalFields(Class cls){
+    protected Set<RelationField> extractRelationalFields(Class cls){
         return FieldUtils.getFieldsListWithAnnotation(cls, Relation.class)
                 .stream()
                 .map(f -> {
                     Relation r = f.getAnnotation(Relation.class);
                     return createRelationField(cls, r.value(), r.instanceRef(), f);
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
 //        return null; // TODO
     }
@@ -116,8 +112,9 @@ public class ExtractIDMetadata {
         ClassMetadata classMetadata = getClassMetadata(cls);
 
         List<KeyMapping> keyMappings = extractForeignKeys(cls);
-        classMetadata.setKeyMappings(new ArrayList<>(keyMappings));
+        classMetadata.setKeyMappings(new HashSet<>(keyMappings));
         // Associate Keys with their classes
+        // TODO : remove duplicate keys.
         for(KeyMapping m : keyMappings){
             Key k = m.getKey();
             ClassMetadata clsMetadata = getClassMetadata(k.getCls());
@@ -188,10 +185,10 @@ public class ExtractIDMetadata {
         // extract and prepare keys to construct a KeyMapping
         Class refedClass = extractReferencedClass(cls, keyName, fields);
 
+        // TODO : do not create duplicate keys.
         // create foreign Key
         Key fkey = new Key();
         fkey.setKeyName(keyName);
-        fkey.setManyFK(isManyFK);
         fkey.setCls(cls);
         fkey.setRefedClass(refedClass);
         fkey.setFields(fields.stream().map(this::createFKAttribute).collect(Collectors.toList()));
@@ -254,6 +251,7 @@ public class ExtractIDMetadata {
     ////////////////////////////////////////////////////////////////////
     // Extract Joins ///////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////
+    @Deprecated
     public List<Join> extractJoins(Class refCls){
         List<Join> ret = new ArrayList<>();
         // find attributes of keys
@@ -311,55 +309,5 @@ public class ExtractIDMetadata {
                         f -> f.getAnnotation(annotationClass),
                         Function.identity()
                         ));
-
-//        for(Field f: cls.getDeclaredFields()){
-//            T a = f.getAnnotation(annotationClass);
-//            if(a != null){
-//                ret.put(a, f);
-//            }
-//        }
-//        return ret;
-    }
-
-    ////////////////////////////////////////////////////////////////////
-    // Data Model Classes //////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////
-
-    public static void test1(){
-        ExtractIDMetadata extractIDMetadata = new ExtractIDMetadata();
-        List<Join> joins = extractIDMetadata.extractJoins(InstanceRef.class);
-        joins.forEach(System.out::println);
-
-        Instance i = new Instance("1","A","a");
-        InstanceRef ir = new InstanceRef("A", "a");
-
-        for(Join j : joins){
-            System.out.println(j.calcFromId(ir));
-            System.out.println(j.calcToId(i));
-        }
-    }
-
-    public static void orderTwoLists(){
-        List<String> l1 = new ArrayList<>(Arrays.asList("3","2","1"));
-        List<String> l2 = new ArrayList<>(Arrays.asList("1","2","3"));
-
-    }
-
-    public static void main(String[] args) {
-        Field f = FieldUtils.getField(C.class, "refs", true);
-//        System.out.println(f.getType().getCanonicalName());
-//        System.out.println(f.getType().getCanonicalName());
-        System.out.println(((ParameterizedType)f.getGenericType()).getActualTypeArguments()[0]);
-        System.out.println(((ParameterizedType)f.getGenericType()).getActualTypeArguments()[0].getTypeName());
-        System.out.println(((ParameterizedType)f.getGenericType()).getRawType().getTypeName());
-        System.out.println(((ParameterizedType)f.getGenericType()).getRawType());
-        System.out.println(f.getType().getCanonicalName());
-        System.out.println(f.getType().getGenericSuperclass());
-        System.out.println(Arrays.toString(f.getType().getGenericInterfaces()));
-//        System.out.println(((ParameterizedType)f.getGenericType()).getOwnerType());
-//        System.out.println(((ParameterizedType)f.getGenericType()).getOwnerType().getTypeName());
-
-        System.out.println(((ParameterizedType)FieldUtils.getField(C.class, "refs2", true).getGenericType()).getActualTypeArguments()[0]);
-
     }
 }
