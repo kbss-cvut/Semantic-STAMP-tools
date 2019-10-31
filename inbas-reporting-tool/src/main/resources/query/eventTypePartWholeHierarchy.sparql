@@ -1,0 +1,16 @@
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
+PREFIX bizagi: <http://bizagi.com/package/>
+PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+#
+# Query to get the part-whole relations among the event types - eventTypePartWholeHierarchy
+#
+
+CONSTRUCT {
+    ?e stamp:has-control-structure-element-part ?ce.
+} WHERE {
+    ?e a ufo:event-type.
+    ?e stamp:has-control-structure-element-part ?ce.
+    ?ce a ufo:event-type.
+}

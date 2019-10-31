@@ -4,7 +4,7 @@ import React from "react";
 import assign from "object-assign";
 import {QuestionAnswerProcessor} from "semforms";
 import classNames from "classnames";
-import {Button, ControlLabel, Form, FormControl, FormGroup, Glyphicon, InputGroup, Label, Modal} from "react-bootstrap";
+import {Button, ControlLabel, Form, FormControl, FormGroup, Glyphicon, InputGroup, Label, Modal, Tab, Tabs} from "react-bootstrap";
 import DateTimePicker from "react-bootstrap-datetimepicker";
 import {FormattedMessage} from "react-intl";
 import JsonLdUtils from "jsonld-utils";
@@ -23,6 +23,7 @@ import Utils from "../../utils/Utils";
 import Vocabulary from "../../constants/Vocabulary";
 import WizardGenerator from "../wizard/generator/WizardGenerator";
 import WizardWindow from "../wizard/WizardWindow";
+import TreeSelect from "../treeselect/TreeSelect";
 
 
 function convertDurationToCurrentUnit(factor) {
@@ -183,13 +184,6 @@ class FactorDetail extends React.Component {
 
 
     render() {
-        const eventTypeLabel = this.props.factor.text,
-            eventTypeBadge = this.renderFactorTypeIcon(),
-            eventTypeClassNames = classNames({
-                'col-xs-12': !this.state.eventType,
-                'col-xs-11': this.state.eventType,
-                'col-xs-10': this.state.eventType && eventTypeBadge
-            });
 
         // Modal body is given ref so that it is accessible in tests. See
         // https://github.com/react-bootstrap/react-bootstrap/issues/966
@@ -204,49 +198,9 @@ class FactorDetail extends React.Component {
                                     show={this.state.showDeleteDialog}/>
                 <Modal.Body ref={comp => this._modalContent = comp}>
                     {this._renderMask()}
-
-                    <div className='row'>
-                        {eventTypeBadge}
-                        <div className={eventTypeClassNames}>
-                            <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
-                                                value={eventTypeLabel}
-                                                label={this.i18n('factors.detail.type')}
-                                                onSelect={this.onEventTypeChange} focus={true}/>
-                        </div>
-                        {this._renderEventTypeLink()}
-                    </div>
                     <div>
-                        <div>
-                            <label className='control-label'>{this.i18n('factors.detail.time-period')}</label>
-                        </div>
-                        <div className='row'>
-                            <Form inline>
-                                {this._renderStartTimePicker()}
-                                <div className='col-xs-7'>
-                                    <div className='col-xs-9'>
-                                        <FormGroup bsSize='small'>
-                                            <ControlLabel>{this.i18n('factors.detail.duration')}</ControlLabel>
-                                            <InputGroup className='inline-input'>
-                                                <InputGroup.Button>
-                                                    <Button bsSize='small' disabled={this.state.duration === 0}
-                                                            onClick={this.onDurationMinus}><Glyphicon
-                                                        glyph='minus'/></Button>
-                                                </InputGroup.Button>
-                                                <FormControl type='text' value={this.state.duration}
-                                                             onChange={this.onDurationSet} size={3}/>
-                                                <InputGroup.Button>
-                                                    <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon
-                                                        glyph='plus'/></Button>
-                                                </InputGroup.Button>
-                                            </InputGroup>
-                                        </FormGroup>
-                                    </div>
-                                    <div className='col-xs-3' style={{padding: '7px 0 7px 0'}}>
-                                        {this.renderDuration()}
-                                    </div>
-                                </div>
-                            </Form>
-                        </div>
+                        {this._renderEventTypeChoosers()}
+                        {this._renderTemporalAttributes()}
                     </div>
                 </Modal.Body>
 
@@ -260,6 +214,72 @@ class FactorDetail extends React.Component {
             </Modal>
         </
             div >;
+    }
+
+    _renderEventTypeChoosers() {
+        const eventTypeLabel = this.props.factor.text,
+            eventTypeBadge = this.renderFactorTypeIcon(),
+            eventTypeClassNames = classNames({
+                'col-xs-12': !this.state.eventType,
+                'col-xs-11': this.state.eventType,
+                'col-xs-10': this.state.eventType && eventTypeBadge
+            });
+
+        // Modal body is given ref so that it is accessible in tests. See
+        // https://github.com/react-bootstrap/react-bootstrap/issues/966
+        return <div>
+            <Tabs activeKey={this.state.activeTab} onSelect={this.handleSelect}>
+                <Tab eventKey={1} title={"Tree select"}><TreeSelect value={eventTypeLabel} onSelect={this.onEventTypeChange}/></Tab>
+                <Tab eventKey={2} title={"Simple select"}>
+                    <div className='row'>
+                        {eventTypeBadge}
+                        <div className={eventTypeClassNames}>
+                            <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
+                                                value={eventTypeLabel}
+                                                label={this.i18n('factors.detail.type')}
+                                                onSelect={this.onEventTypeChange} focus={true}/>
+                        </div>
+                    </div>
+                </Tab>
+            </Tabs>
+            {this._renderEventTypeLink()}
+        </div>;
+    }
+
+    _renderTemporalAttributes(){
+        return <div>
+            <div>
+                <label className='control-label'>{this.i18n('factors.detail.time-period')}</label>
+            </div>
+            <div className='row'>
+                <Form inline>
+                    {this._renderStartTimePicker()}
+                    <div className='col-xs-7'>
+                        <div className='col-xs-9'>
+                            <FormGroup bsSize='small'>
+                                <ControlLabel>{this.i18n('factors.detail.duration')}</ControlLabel>
+                                <InputGroup className='inline-input'>
+                                    <InputGroup.Button>
+                                        <Button bsSize='small' disabled={this.state.duration === 0}
+                                                onClick={this.onDurationMinus}><Glyphicon
+                                            glyph='minus'/></Button>
+                                    </InputGroup.Button>
+                                    <FormControl type='text' value={this.state.duration}
+                                                 onChange={this.onDurationSet} size={3}/>
+                                    <InputGroup.Button>
+                                        <Button bsSize='small' onClick={this.onDurationPlus}><Glyphicon
+                                            glyph='plus'/></Button>
+                                    </InputGroup.Button>
+                                </InputGroup>
+                            </FormGroup>
+                        </div>
+                        <div className='col-xs-3' style={{padding: '7px 0 7px 0'}}>
+                            {this.renderDuration()}
+                        </div>
+                    </div>
+                </Form>
+            </div>
+        </div>;
     }
 
     _renderMask() {
