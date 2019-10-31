@@ -3,18 +3,26 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX as: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
 
 CONSTRUCT {
 ?term rdfs:label ?label .
 ?term rdfs:comment ?comment .
 } WHERE {
-  SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 {
-    ?term rdfs:subPropertyOf+ as:is_factor_of ;
-        rdfs:label ?label .
+  {
+    SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 {
+      ?term rdfs:subPropertyOf+ as:is_factor_of ;
+          rdfs:label ?label .
 
-    FILTER (?term != as:is_factor_of )
-    OPTIONAL {
-        ?term rdfs:comment ?comment .
-    }
+      FILTER (?term != as:is_factor_of )
+      OPTIONAL {
+          ?term rdfs:comment ?comment .
+      }
+  	}
+  }
+  UNION {
+    BIND(stamp:next as ?term)
+    BIND("next event" as ?label)
+    BIND("describs the flow between two events" as ?comment)
   }
 }

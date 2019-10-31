@@ -9,8 +9,9 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX eccairs-model: <http://onto.fel.cvut.cz/ontologies/eccairs/model/>
 PREFIX eccairs: <http://onto.fel.cvut.cz/ontologies/eccairs/>
 PREFIX eccairs-current: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/>
-PREFIX ufo:<http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
 
 CONSTRUCT {
   ?term rdfs:label ?label ;
@@ -18,13 +19,14 @@ CONSTRUCT {
         rdfs:comment ?comment ;
 } WHERE {
     { # ,eda terms
-           SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/stamp-events> {
-?term ufo:has-type+ ufo:event-type .
+        ?term a ufo:event-type .
                 # add all labels - not everything is returned due to missing labels
-                 OPTIONAL { ?term rdfs:label ?label.}
+                OPTIONAL { ?term rdfs:label ?label.}
                 OPTIONAL {?term rdfs:comment ?comment. }
-                BIND( ufo:event-typ as ?type )
-              }
-
-}
+                OPTIONAL {
+                    ?term a stamp:unsafe-event.
+                    BIND(stamp:unsafe-event as ?unsafe)
+                }
+                BIND( IF(BOUND(?unsafe), ?unsafe, ufo:event-type) as ?type )
+    }
 }
