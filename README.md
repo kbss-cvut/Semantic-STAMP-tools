@@ -1,1 +1,1 @@
-# Semantic-STAMP-tools
+# STAMP Based Investigation Tool (SBIT)
