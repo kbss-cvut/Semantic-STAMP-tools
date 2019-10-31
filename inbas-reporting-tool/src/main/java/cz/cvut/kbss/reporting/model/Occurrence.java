@@ -30,6 +30,9 @@ public class Occurrence extends AbstractEvent implements HasOwlKey, Serializable
     @OWLObjectProperty(iri = Vocabulary.s_p_has_location, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Location location;
 
+    @OWLObjectProperty(iri = StampVocabulary.s_p_has_loss_event)
+    private Event lossEvent;
+
     @Transient
     private Integer referenceId;
 
@@ -69,6 +72,14 @@ public class Occurrence extends AbstractEvent implements HasOwlKey, Serializable
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Event getLossEvent() {
+        return lossEvent;
+    }
+
+    public void setLossEvent(Event lossEvent) {
+        this.lossEvent = lossEvent;
     }
 
     /**

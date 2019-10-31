@@ -6,6 +6,7 @@ import cz.cvut.kbss.jopa.model.annotations.OWLAnnotationProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
 import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.OWLObjectProperty;
+import cz.cvut.kbss.reporting.model.StampVocabulary;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.location.Location;
 
@@ -21,6 +22,9 @@ public class OccurrenceDto extends EventDto {
 
     @OWLObjectProperty(iri = Vocabulary.s_p_has_location)
     private Location location;
+
+    @OWLObjectProperty(iri = StampVocabulary.s_p_has_loss_event)
+    private EventDto lossEvent;
 
     public String getKey() {
         return key;
@@ -44,5 +48,13 @@ public class OccurrenceDto extends EventDto {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public EventDto getLossEvent() {
+        return lossEvent;
+    }
+
+    public void setLossEvent(EventDto lossEvent) {
+        this.lossEvent = lossEvent;
     }
 }
