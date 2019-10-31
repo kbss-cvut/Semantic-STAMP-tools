@@ -1,0 +1,2753 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions name="ewaWebServer" targetNamespace="http://tempuri.org/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+                  xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/"
+                  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+                  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+                  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+                  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <wsp:Policy wsu:Id="BasicHttpBinding_ewaIWebServer_policy">
+        <wsp:ExactlyOne>
+            <wsp:All>
+                <wsoma:OptimizedMimeSerialization
+                        xmlns:wsoma="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization"/>
+                <sp:TransportBinding xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                    <wsp:Policy>
+                        <sp:TransportToken>
+                            <wsp:Policy>
+                                <sp:HttpsToken RequireClientCertificate="false"/>
+                            </wsp:Policy>
+                        </sp:TransportToken>
+                        <sp:AlgorithmSuite>
+                            <wsp:Policy>
+                                <sp:Basic256/>
+                            </wsp:Policy>
+                        </sp:AlgorithmSuite>
+                        <sp:Layout>
+                            <wsp:Policy>
+                                <sp:Strict/>
+                            </wsp:Policy>
+                        </sp:Layout>
+                    </wsp:Policy>
+                </sp:TransportBinding>
+            </wsp:All>
+        </wsp:ExactlyOne>
+    </wsp:Policy>
+    <wsdl:types>
+        <xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:import namespace="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+            <xs:import namespace="http://schemas.microsoft.com/Message"/>
+            <xs:element name="About">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AboutResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AboutResult" nillable="true" type="q1:ewaResult"
+                                    xmlns:q1="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AttachmentExists">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="attachmentKey" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AttachmentExistsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="AttachmentExistsResult" nillable="true" type="q2:ewaResult"
+                                    xmlns:q2="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQuery">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="libraryName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="options" type="xs:int"/>
+                        <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
+                        <xs:element minOccurs="0" name="batchSize" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExecuteQueryResult" nillable="true" type="q3:ewaResult"
+                                    xmlns:q3="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryAsTable">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="libraryName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="options" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryAsTableResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExecuteQueryAsTableResult" nillable="true" type="q4:ewaResult"
+                                    xmlns:q4="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="libraryName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExecuteQueryCountResult" nillable="true" type="q5:ewaResult"
+                                    xmlns:q5="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObject">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryObject" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="options" type="xs:int"/>
+                        <xs:element minOccurs="0" name="pageSize" type="xs:int"/>
+                        <xs:element minOccurs="0" name="batchSize" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExecuteQueryObjectResult" nillable="true" type="q6:ewaResult"
+                                    xmlns:q6="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectRaw">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="body" type="q7:StreamBody" xmlns:q7="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectRawResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExecuteQueryObjectRawResult" nillable="true" type="q8:ewaResult"
+                                    xmlns:q8="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectAsTable">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryObject" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="options" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectAsTableResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExecuteQueryObjectAsTableResult" nillable="true"
+                                    type="q9:ewaResult"
+                                    xmlns:q9="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectAsTableRaw">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="body" type="q10:StreamBody" xmlns:q10="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectAsTableRawResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExecuteQueryObjectAsTableRawResult" nillable="true"
+                                    type="q11:ewaResult"
+                                    xmlns:q11="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectCount">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryObject" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectCountResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExecuteQueryObjectCountResult" nillable="true"
+                                    type="q12:ewaResult"
+                                    xmlns:q12="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectCountRaw">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="body" type="q13:StreamBody" xmlns:q13="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ExecuteQueryObjectCountRawResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ExecuteQueryObjectCountRawResult" nillable="true"
+                                    type="q14:ewaResult"
+                                    xmlns:q14="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="FormatOccurrenceWithTemplate">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="eccairsNumber" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="responsibleEntity" type="xs:int"/>
+                        <xs:element minOccurs="0" name="templateName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="FormatOccurrenceWithTemplateResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="FormatOccurrenceWithTemplateResult" type="q15:StreamBody"
+                                    xmlns:q15="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="FormatOccurrenceWithTemplateByKey">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="occurrenceKey" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="templateName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="FormatOccurrenceWithTemplateByKeyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="FormatOccurrenceWithTemplateByKeyResult" type="q16:StreamBody"
+                                    xmlns:q16="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAllSubRepositories">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="rootRepository" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAllSubRepositoriesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetAllSubRepositoriesResult" nillable="true"
+                                    type="q17:ewaResult"
+                                    xmlns:q17="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttachment">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="attachmentKey" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttachmentResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="GetAttachmentResult" type="q18:StreamBody"
+                                    xmlns:q18="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttachmentsDetails">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="eccairsNumber" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="responsibleEntity" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttachmentsDetailsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetAttachmentsDetailsResult" nillable="true"
+                                    type="q19:ewaResult"
+                                    xmlns:q19="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttachmentsDetailsByKey">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="occurrenceKey" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttachmentsDetailsByKeyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetAttachmentsDetailsByKeyResult" nillable="true"
+                                    type="q20:ewaResult"
+                                    xmlns:q20="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetExecutedQuery">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationID" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetExecutedQueryResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetExecutedQueryResult" nillable="true" type="q21:ewaResult"
+                                    xmlns:q21="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetExecutedQueryObject">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="serializationOption" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetExecutedQueryObjectResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetExecutedQueryObjectResult" nillable="true"
+                                    type="q22:ewaResult"
+                                    xmlns:q22="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetLibraries">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetLibrariesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetLibrariesResult" nillable="true" type="q23:ewaResult"
+                                    xmlns:q23="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrence">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="eccairsNumber" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="responsibleEntity" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetOccurrenceResult" nillable="true" type="q24:ewaResult"
+                                    xmlns:q24="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceByKey">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="occurrenceKey" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceByKeyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetOccurrenceByKeyResult" nillable="true" type="q25:ewaResult"
+                                    xmlns:q25="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceAsPDF">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="eccairsNumber" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="responsibleEntity" type="xs:int"/>
+                        <xs:element minOccurs="0" name="viewName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceAsPDFResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="GetOccurrenceAsPDFResult" type="q26:StreamBody"
+                                    xmlns:q26="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceAsPDFByKey">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="occurrenceKey" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="viewName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceAsPDFByKeyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="GetOccurrenceAsPDFByKeyResult" type="q27:StreamBody"
+                                    xmlns:q27="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="eccairsNumber" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="responsibleEntity" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetOccurrenceDataResult" nillable="true" type="q28:ewaResult"
+                                    xmlns:q28="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceDataByKey">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="occurrenceKey" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrenceDataByKeyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetOccurrenceDataByKeyResult" nillable="true"
+                                    type="q29:ewaResult"
+                                    xmlns:q29="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrencePrintingTemplates">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetOccurrencePrintingTemplatesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetOccurrencePrintingTemplatesResult" nillable="true"
+                                    type="q30:ewaResult"
+                                    xmlns:q30="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueries">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="libraryName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueriesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetQueriesResult" nillable="true" type="q31:ewaResult"
+                                    xmlns:q31="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueriesByExample">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueriesByExampleResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetQueriesByExampleResult" nillable="true" type="q32:ewaResult"
+                                    xmlns:q32="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQuery">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationID" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetQueryResult" nillable="true" type="q33:ewaResult"
+                                    xmlns:q33="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryByExampleData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryByExampleDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetQueryByExampleDataResult" nillable="true"
+                                    type="q34:ewaResult"
+                                    xmlns:q34="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryByExampleObject">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="serializationOption" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryByExampleObjectResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetQueryByExampleObjectResult" nillable="true"
+                                    type="q35:ewaResult"
+                                    xmlns:q35="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryData">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="libraryName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryDataResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetQueryDataResult" nillable="true" type="q36:ewaResult"
+                                    xmlns:q36="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryObject">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="libraryName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="queryName" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="serializationOption" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryObjectResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetQueryObjectResult" nillable="true" type="q37:ewaResult"
+                                    xmlns:q37="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryResult">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationID" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="page" type="xs:int"/>
+                        <xs:element minOccurs="0" name="order" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetQueryResultResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetQueryResultResult" nillable="true" type="q38:ewaResult"
+                                    xmlns:q38="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetRepositories">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetRepositoriesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetRepositoriesResult" nillable="true" type="q39:ewaResult"
+                                    xmlns:q39="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetUserInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetUserInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetUserInfoResult" nillable="true" type="q40:ewaResult"
+                                    xmlns:q40="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetViewImage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="viewName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetViewImageResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="GetViewImageResult" type="q41:StreamBody"
+                                    xmlns:q41="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetViews">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="eccairsNumber" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="responsibleEntity" type="xs:int"/>
+                        <xs:element minOccurs="0" name="actionType" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetViewsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetViewsResult" nillable="true" type="q42:ewaResult"
+                                    xmlns:q42="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetViewsByKey">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="occurrenceKey" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="actionType" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetViewsByKeyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetViewsByKeyResult" nillable="true" type="q43:ewaResult"
+                                    xmlns:q43="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IsValidQueryResult">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationID" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IsValidQueryResultResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="IsValidQueryResultResult" nillable="true" type="q44:ewaResult"
+                                    xmlns:q44="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IsValidToken">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IsValidTokenResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="IsValidTokenResult" nillable="true" type="q45:ewaResult"
+                                    xmlns:q45="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Login">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="repository" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="language" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LoginResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="LoginResult" nillable="true" type="q46:ewaResult"
+                                    xmlns:q46="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LoginByInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="loginInfo" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LoginByInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="LoginByInfoResult" nillable="true" type="q47:ewaResult"
+                                    xmlns:q47="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Logout">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="LogoutResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="LogoutResult" nillable="true" type="q48:ewaResult"
+                                    xmlns:q48="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RefreshOccurrence">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="eccairsNumber" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="responsibleEntity" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RefreshOccurrenceResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="RefreshOccurrenceResult" nillable="true" type="q49:ewaResult"
+                                    xmlns:q49="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RefreshOccurrenceDataByKey">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="occurrenceKey" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RefreshOccurrenceDataByKeyResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="RefreshOccurrenceDataByKeyResult" nillable="true"
+                                    type="q50:ewaResult"
+                                    xmlns:q50="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ReleaseQueryResult">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="operationID" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="ReleaseQueryResultResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ReleaseQueryResultResult" nillable="true" type="q51:ewaResult"
+                                    xmlns:q51="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveUserInfoRaw">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="body" type="q52:StreamBody" xmlns:q52="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveUserInfoRawResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="SaveUserInfoRawResult" nillable="true" type="q53:ewaResult"
+                                    xmlns:q53="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveUserInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="userInfo" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveUserInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="SaveUserInfoResult" nillable="true" type="q54:ewaResult"
+                                    xmlns:q54="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttribute">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="attributeID" type="xs:int"/>
+                        <xs:element minOccurs="0" name="serializationOptions" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttributeResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetAttributeResult" nillable="true" type="q55:ewaResult"
+                                    xmlns:q55="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttributes">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="parentEntityID" type="xs:int"/>
+                        <xs:element minOccurs="0" name="serializationOptions" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttributesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetAttributesResult" nillable="true" type="q56:ewaResult"
+                                    xmlns:q56="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetEntity">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="entityID" type="xs:int"/>
+                        <xs:element minOccurs="0" name="serializationOptions" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetEntityResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetEntityResult" nillable="true" type="q57:ewaResult"
+                                    xmlns:q57="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetEntities">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="parentEntityID" type="xs:int"/>
+                        <xs:element minOccurs="0" name="serializationOptions" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetEntitiesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetEntitiesResult" nillable="true" type="q58:ewaResult"
+                                    xmlns:q58="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttributeValue">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="attributeID" type="xs:int"/>
+                        <xs:element minOccurs="0" name="valueData" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="serializationOptions" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetAttributeValueResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetAttributeValueResult" nillable="true" type="q59:ewaResult"
+                                    xmlns:q59="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetLexiconText">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="textID" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetLexiconTextResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetLexiconTextResult" nillable="true" type="q60:ewaResult"
+                                    xmlns:q60="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetUnits">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="attributeID" type="xs:int"/>
+                        <xs:element minOccurs="0" name="serializationOptions" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetUnitsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetUnitsResult" nillable="true" type="q61:ewaResult"
+                                    xmlns:q61="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetValuePath">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="attributeID" type="xs:int"/>
+                        <xs:element minOccurs="0" name="value" type="xs:int"/>
+                        <xs:element minOccurs="0" name="serializationOptions" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetValuePathResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetValuePathResult" nillable="true" type="q62:ewaResult"
+                                    xmlns:q62="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetValues">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="attributeID" type="xs:int"/>
+                        <xs:element minOccurs="0" name="parentValue" type="xs:int"/>
+                        <xs:element minOccurs="0" name="filter" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="extendedFilter" type="xs:boolean"/>
+                        <xs:element minOccurs="0" name="lastLevel" type="xs:int"/>
+                        <xs:element minOccurs="0" name="showDeletedValues" type="xs:boolean"/>
+                        <xs:element minOccurs="0" name="serializationOptions" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetValuesResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetValuesResult" nillable="true" type="q63:ewaResult"
+                                    xmlns:q63="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SetAttributeUnitID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="attributeID" type="xs:int"/>
+                        <xs:element minOccurs="0" name="unitID" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SetAttributeUnitIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="SetAttributeUnitIDResult" nillable="true" type="q64:ewaResult"
+                                    xmlns:q64="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="CreateUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userManagerToken" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="CreateUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="CreateUserResult" nillable="true" type="q65:ewaResult"
+                                    xmlns:q65="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DeleteUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userManagerToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DeleteUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="DeleteUserResult" nillable="true" type="q66:ewaResult"
+                                    xmlns:q66="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userManagerToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetUserResult" nillable="true" type="q67:ewaResult"
+                                    xmlns:q67="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetUsers">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userManagerToken" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetUsersResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetUsersResult" nillable="true" type="q68:ewaResult"
+                                    xmlns:q68="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveUserRaw">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="body" type="q69:StreamBody" xmlns:q69="http://schemas.microsoft.com/Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveUserRawResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="SaveUserRawResult" nillable="true" type="q70:ewaResult"
+                                    xmlns:q70="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveUser">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userManagerToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="user" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SaveUserResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="SaveUserResult" nillable="true" type="q71:ewaResult"
+                                    xmlns:q71="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="UserManagerLogin">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="repository" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="UserManagerLoginResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="UserManagerLoginResult" nillable="true" type="q72:ewaResult"
+                                    xmlns:q72="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="UserManagerLoginByInfo">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="loginInfo" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="UserManagerLoginByInfoResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="UserManagerLoginByInfoResult" nillable="true"
+                                    type="q73:ewaResult"
+                                    xmlns:q73="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetImpersonatedUserCredentials">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="userManagerToken" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="repository" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="language" nillable="true" type="xs:string"/>
+                        <xs:element minOccurs="0" name="validityMilliseconds" type="xs:int"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetImpersonatedUserCredentialsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="GetImpersonatedUserCredentialsResult" nillable="true"
+                                    type="q74:ewaResult"
+                                    xmlns:q74="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified"
+                   targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/">
+            <xs:element name="anyType" nillable="true" type="xs:anyType"/>
+            <xs:element name="anyURI" nillable="true" type="xs:anyURI"/>
+            <xs:element name="base64Binary" nillable="true" type="xs:base64Binary"/>
+            <xs:element name="boolean" nillable="true" type="xs:boolean"/>
+            <xs:element name="byte" nillable="true" type="xs:byte"/>
+            <xs:element name="dateTime" nillable="true" type="xs:dateTime"/>
+            <xs:element name="decimal" nillable="true" type="xs:decimal"/>
+            <xs:element name="double" nillable="true" type="xs:double"/>
+            <xs:element name="float" nillable="true" type="xs:float"/>
+            <xs:element name="int" nillable="true" type="xs:int"/>
+            <xs:element name="long" nillable="true" type="xs:long"/>
+            <xs:element name="QName" nillable="true" type="xs:QName"/>
+            <xs:element name="short" nillable="true" type="xs:short"/>
+            <xs:element name="string" nillable="true" type="xs:string"/>
+            <xs:element name="unsignedByte" nillable="true" type="xs:unsignedByte"/>
+            <xs:element name="unsignedInt" nillable="true" type="xs:unsignedInt"/>
+            <xs:element name="unsignedLong" nillable="true" type="xs:unsignedLong"/>
+            <xs:element name="unsignedShort" nillable="true" type="xs:unsignedShort"/>
+            <xs:element name="char" nillable="true" type="tns:char"/>
+            <xs:simpleType name="char">
+                <xs:restriction base="xs:int"/>
+            </xs:simpleType>
+            <xs:element name="duration" nillable="true" type="tns:duration"/>
+            <xs:simpleType name="duration">
+                <xs:restriction base="xs:duration">
+                    <xs:pattern value="\-?P(\d*D)?(T(\d*H)?(\d*M)?(\d*(\.\d*)?S)?)?"/>
+                    <xs:minInclusive value="-P10675199DT2H48M5.4775808S"/>
+                    <xs:maxInclusive value="P10675199DT2H48M5.4775807S"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="guid" nillable="true" type="tns:guid"/>
+            <xs:simpleType name="guid">
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:attribute name="FactoryType" type="xs:QName"/>
+            <xs:attribute name="Id" type="xs:ID"/>
+            <xs:attribute name="Ref" type="xs:IDREF"/>
+        </xs:schema>
+        <xs:schema elementFormDefault="qualified"
+                   targetNamespace="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                   xmlns:tns="http://schemas.datacontract.org/2004/07/ECCAIRS5.Repository.Web.API">
+            <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+            <xs:complexType name="ewaResult">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Data" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="ErrorDetails" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="ReturnCode" type="tns:ResultReturnCode"/>
+                    <xs:element minOccurs="0" name="UserToken" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ewaResult" nillable="true" type="tns:ewaResult"/>
+            <xs:simpleType name="ResultReturnCode">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="OK">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">1
+                                </EnumerationValue>
+                            </xs:appinfo>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="Error">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">2
+                                </EnumerationValue>
+                            </xs:appinfo>
+                        </xs:annotation>
+                    </xs:enumeration>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="ResultReturnCode" nillable="true" type="tns:ResultReturnCode"/>
+        </xs:schema>
+        <xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/Message"
+                   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.microsoft.com/Message">
+            <xs:simpleType name="StreamBody">
+                <xs:restriction base="xs:base64Binary"/>
+            </xs:simpleType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="ewaIWebServer_About_InputMessage">
+        <wsdl:part name="parameters" element="tns:About"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_About_OutputMessage">
+        <wsdl:part name="parameters" element="tns:AboutResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_AttachmentExists_InputMessage">
+        <wsdl:part name="parameters" element="tns:AttachmentExists"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_AttachmentExists_OutputMessage">
+        <wsdl:part name="parameters" element="tns:AttachmentExistsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQuery_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQuery"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQuery_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryAsTable_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryAsTable"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryAsTable_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryAsTableResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryCount_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryCount"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryCount_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryCountResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObject_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObject"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObject_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectRaw_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectRaw"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectRaw_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectRawResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectAsTable_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectAsTable"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectAsTable_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectAsTableResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectAsTableRaw_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectAsTableRaw"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectAsTableRaw_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectAsTableRawResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectCount_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectCount"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectCount_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectCountResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectCountRaw_InputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectCountRaw"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ExecuteQueryObjectCountRaw_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ExecuteQueryObjectCountRawResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_FormatOccurrenceWithTemplate_InputMessage">
+        <wsdl:part name="parameters" element="tns:FormatOccurrenceWithTemplate"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_FormatOccurrenceWithTemplate_OutputMessage">
+        <wsdl:part name="parameters" element="tns:FormatOccurrenceWithTemplateResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_FormatOccurrenceWithTemplateByKey_InputMessage">
+        <wsdl:part name="parameters" element="tns:FormatOccurrenceWithTemplateByKey"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_FormatOccurrenceWithTemplateByKey_OutputMessage">
+        <wsdl:part name="parameters" element="tns:FormatOccurrenceWithTemplateByKeyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAllSubRepositories_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetAllSubRepositories"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAllSubRepositories_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetAllSubRepositoriesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttachment_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttachment"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttachment_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttachmentResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttachmentsDetails_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttachmentsDetails"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttachmentsDetails_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttachmentsDetailsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttachmentsDetailsByKey_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttachmentsDetailsByKey"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttachmentsDetailsByKey_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttachmentsDetailsByKeyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetExecutedQuery_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetExecutedQuery"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetExecutedQuery_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetExecutedQueryResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetExecutedQueryObject_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetExecutedQueryObject"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetExecutedQueryObject_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetExecutedQueryObjectResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetLibraries_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetLibraries"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetLibraries_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetLibrariesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrence_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrence"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrence_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceByKey_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceByKey"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceByKey_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceByKeyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceAsPDF_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceAsPDF"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceAsPDF_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceAsPDFResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceAsPDFByKey_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceAsPDFByKey"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceAsPDFByKey_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceAsPDFByKeyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceData_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceData"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceData_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceDataResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceDataByKey_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceDataByKey"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrenceDataByKey_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrenceDataByKeyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrencePrintingTemplates_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrencePrintingTemplates"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetOccurrencePrintingTemplates_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetOccurrencePrintingTemplatesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueries_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueries"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueries_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueriesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueriesByExample_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueriesByExample"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueriesByExample_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueriesByExampleResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQuery_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetQuery"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQuery_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryByExampleData_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryByExampleData"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryByExampleData_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryByExampleDataResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryByExampleObject_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryByExampleObject"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryByExampleObject_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryByExampleObjectResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryData_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryData"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryData_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryDataResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryObject_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryObject"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryObject_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryObjectResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryResult_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryResult"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetQueryResult_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetQueryResultResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetRepositories_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetRepositories"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetRepositories_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetRepositoriesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetUserInfo_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetUserInfo"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetUserInfo_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetUserInfoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetViewImage_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetViewImage"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetViewImage_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetViewImageResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetViews_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetViews"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetViews_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetViewsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetViewsByKey_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetViewsByKey"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetViewsByKey_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetViewsByKeyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_IsValidQueryResult_InputMessage">
+        <wsdl:part name="parameters" element="tns:IsValidQueryResult"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_IsValidQueryResult_OutputMessage">
+        <wsdl:part name="parameters" element="tns:IsValidQueryResultResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_IsValidToken_InputMessage">
+        <wsdl:part name="parameters" element="tns:IsValidToken"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_IsValidToken_OutputMessage">
+        <wsdl:part name="parameters" element="tns:IsValidTokenResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_Login_InputMessage">
+        <wsdl:part name="parameters" element="tns:Login"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_Login_OutputMessage">
+        <wsdl:part name="parameters" element="tns:LoginResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_LoginByInfo_InputMessage">
+        <wsdl:part name="parameters" element="tns:LoginByInfo"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_LoginByInfo_OutputMessage">
+        <wsdl:part name="parameters" element="tns:LoginByInfoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_Logout_InputMessage">
+        <wsdl:part name="parameters" element="tns:Logout"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_Logout_OutputMessage">
+        <wsdl:part name="parameters" element="tns:LogoutResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_RefreshOccurrence_InputMessage">
+        <wsdl:part name="parameters" element="tns:RefreshOccurrence"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_RefreshOccurrence_OutputMessage">
+        <wsdl:part name="parameters" element="tns:RefreshOccurrenceResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_RefreshOccurrenceDataByKey_InputMessage">
+        <wsdl:part name="parameters" element="tns:RefreshOccurrenceDataByKey"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_RefreshOccurrenceDataByKey_OutputMessage">
+        <wsdl:part name="parameters" element="tns:RefreshOccurrenceDataByKeyResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ReleaseQueryResult_InputMessage">
+        <wsdl:part name="parameters" element="tns:ReleaseQueryResult"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_ReleaseQueryResult_OutputMessage">
+        <wsdl:part name="parameters" element="tns:ReleaseQueryResultResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SaveUserInfoRaw_InputMessage">
+        <wsdl:part name="parameters" element="tns:SaveUserInfoRaw"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SaveUserInfoRaw_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SaveUserInfoRawResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SaveUserInfo_InputMessage">
+        <wsdl:part name="parameters" element="tns:SaveUserInfo"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SaveUserInfo_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SaveUserInfoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttribute_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttribute"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttribute_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttributeResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttributes_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttributes"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttributes_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttributesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetEntity_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetEntity"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetEntity_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetEntityResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetEntities_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetEntities"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetEntities_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetEntitiesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttributeValue_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttributeValue"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetAttributeValue_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetAttributeValueResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetLexiconText_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetLexiconText"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetLexiconText_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetLexiconTextResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetUnits_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetUnits"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetUnits_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetUnitsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetValuePath_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetValuePath"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetValuePath_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetValuePathResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetValues_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetValues"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetValues_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetValuesResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SetAttributeUnitID_InputMessage">
+        <wsdl:part name="parameters" element="tns:SetAttributeUnitID"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SetAttributeUnitID_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SetAttributeUnitIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_CreateUser_InputMessage">
+        <wsdl:part name="parameters" element="tns:CreateUser"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_CreateUser_OutputMessage">
+        <wsdl:part name="parameters" element="tns:CreateUserResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_DeleteUser_InputMessage">
+        <wsdl:part name="parameters" element="tns:DeleteUser"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_DeleteUser_OutputMessage">
+        <wsdl:part name="parameters" element="tns:DeleteUserResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetUser_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetUser"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetUser_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetUserResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetUsers_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetUsers"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetUsers_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetUsersResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SaveUserRaw_InputMessage">
+        <wsdl:part name="parameters" element="tns:SaveUserRaw"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SaveUserRaw_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SaveUserRawResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SaveUser_InputMessage">
+        <wsdl:part name="parameters" element="tns:SaveUser"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_SaveUser_OutputMessage">
+        <wsdl:part name="parameters" element="tns:SaveUserResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_UserManagerLogin_InputMessage">
+        <wsdl:part name="parameters" element="tns:UserManagerLogin"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_UserManagerLogin_OutputMessage">
+        <wsdl:part name="parameters" element="tns:UserManagerLoginResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_UserManagerLoginByInfo_InputMessage">
+        <wsdl:part name="parameters" element="tns:UserManagerLoginByInfo"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_UserManagerLoginByInfo_OutputMessage">
+        <wsdl:part name="parameters" element="tns:UserManagerLoginByInfoResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetImpersonatedUserCredentials_InputMessage">
+        <wsdl:part name="parameters" element="tns:GetImpersonatedUserCredentials"/>
+    </wsdl:message>
+    <wsdl:message name="ewaIWebServer_GetImpersonatedUserCredentials_OutputMessage">
+        <wsdl:part name="parameters" element="tns:GetImpersonatedUserCredentialsResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="ewaIWebServer">
+        <wsdl:operation name="About">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/About"
+                        message="tns:ewaIWebServer_About_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/AboutResponse"
+                         message="tns:ewaIWebServer_About_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="AttachmentExists">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/AttachmentExists"
+                        message="tns:ewaIWebServer_AttachmentExists_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/AttachmentExistsResponse"
+                         message="tns:ewaIWebServer_AttachmentExists_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQuery">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQuery"
+                        message="tns:ewaIWebServer_ExecuteQuery_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryResponse"
+                         message="tns:ewaIWebServer_ExecuteQuery_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryAsTable">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryAsTable"
+                        message="tns:ewaIWebServer_ExecuteQueryAsTable_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryAsTableResponse"
+                         message="tns:ewaIWebServer_ExecuteQueryAsTable_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryCount">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryCount"
+                        message="tns:ewaIWebServer_ExecuteQueryCount_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryCountResponse"
+                         message="tns:ewaIWebServer_ExecuteQueryCount_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObject">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObject"
+                        message="tns:ewaIWebServer_ExecuteQueryObject_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectResponse"
+                         message="tns:ewaIWebServer_ExecuteQueryObject_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectRaw">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectRaw"
+                        message="tns:ewaIWebServer_ExecuteQueryObjectRaw_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectRawResponse"
+                         message="tns:ewaIWebServer_ExecuteQueryObjectRaw_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectAsTable">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectAsTable"
+                        message="tns:ewaIWebServer_ExecuteQueryObjectAsTable_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectAsTableResponse"
+                         message="tns:ewaIWebServer_ExecuteQueryObjectAsTable_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectAsTableRaw">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectAsTableRaw"
+                        message="tns:ewaIWebServer_ExecuteQueryObjectAsTableRaw_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectAsTableRawResponse"
+                         message="tns:ewaIWebServer_ExecuteQueryObjectAsTableRaw_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectCount">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectCount"
+                        message="tns:ewaIWebServer_ExecuteQueryObjectCount_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectCountResponse"
+                         message="tns:ewaIWebServer_ExecuteQueryObjectCount_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectCountRaw">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectCountRaw"
+                        message="tns:ewaIWebServer_ExecuteQueryObjectCountRaw_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectCountRawResponse"
+                         message="tns:ewaIWebServer_ExecuteQueryObjectCountRaw_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="FormatOccurrenceWithTemplate">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/FormatOccurrenceWithTemplate"
+                        message="tns:ewaIWebServer_FormatOccurrenceWithTemplate_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/FormatOccurrenceWithTemplateResponse"
+                         message="tns:ewaIWebServer_FormatOccurrenceWithTemplate_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="FormatOccurrenceWithTemplateByKey">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/FormatOccurrenceWithTemplateByKey"
+                        message="tns:ewaIWebServer_FormatOccurrenceWithTemplateByKey_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/FormatOccurrenceWithTemplateByKeyResponse"
+                         message="tns:ewaIWebServer_FormatOccurrenceWithTemplateByKey_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAllSubRepositories">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetAllSubRepositories"
+                        message="tns:ewaIWebServer_GetAllSubRepositories_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetAllSubRepositoriesResponse"
+                         message="tns:ewaIWebServer_GetAllSubRepositories_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttachment">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttachment"
+                        message="tns:ewaIWebServer_GetAttachment_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttachmentResponse"
+                         message="tns:ewaIWebServer_GetAttachment_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttachmentsDetails">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttachmentsDetails"
+                        message="tns:ewaIWebServer_GetAttachmentsDetails_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttachmentsDetailsResponse"
+                         message="tns:ewaIWebServer_GetAttachmentsDetails_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttachmentsDetailsByKey">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttachmentsDetailsByKey"
+                        message="tns:ewaIWebServer_GetAttachmentsDetailsByKey_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttachmentsDetailsByKeyResponse"
+                         message="tns:ewaIWebServer_GetAttachmentsDetailsByKey_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetExecutedQuery">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetExecutedQuery"
+                        message="tns:ewaIWebServer_GetExecutedQuery_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetExecutedQueryResponse"
+                         message="tns:ewaIWebServer_GetExecutedQuery_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetExecutedQueryObject">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetExecutedQueryObject"
+                        message="tns:ewaIWebServer_GetExecutedQueryObject_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetExecutedQueryObjectResponse"
+                         message="tns:ewaIWebServer_GetExecutedQueryObject_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetLibraries">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetLibraries"
+                        message="tns:ewaIWebServer_GetLibraries_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetLibrariesResponse"
+                         message="tns:ewaIWebServer_GetLibraries_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrence">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrence"
+                        message="tns:ewaIWebServer_GetOccurrence_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceResponse"
+                         message="tns:ewaIWebServer_GetOccurrence_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceByKey">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceByKey"
+                        message="tns:ewaIWebServer_GetOccurrenceByKey_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceByKeyResponse"
+                         message="tns:ewaIWebServer_GetOccurrenceByKey_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceAsPDF">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceAsPDF"
+                        message="tns:ewaIWebServer_GetOccurrenceAsPDF_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceAsPDFResponse"
+                         message="tns:ewaIWebServer_GetOccurrenceAsPDF_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceAsPDFByKey">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceAsPDFByKey"
+                        message="tns:ewaIWebServer_GetOccurrenceAsPDFByKey_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceAsPDFByKeyResponse"
+                         message="tns:ewaIWebServer_GetOccurrenceAsPDFByKey_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceData">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceData"
+                        message="tns:ewaIWebServer_GetOccurrenceData_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceDataResponse"
+                         message="tns:ewaIWebServer_GetOccurrenceData_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceDataByKey">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceDataByKey"
+                        message="tns:ewaIWebServer_GetOccurrenceDataByKey_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrenceDataByKeyResponse"
+                         message="tns:ewaIWebServer_GetOccurrenceDataByKey_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrencePrintingTemplates">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrencePrintingTemplates"
+                        message="tns:ewaIWebServer_GetOccurrencePrintingTemplates_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetOccurrencePrintingTemplatesResponse"
+                         message="tns:ewaIWebServer_GetOccurrencePrintingTemplates_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueries">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueries"
+                        message="tns:ewaIWebServer_GetQueries_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueriesResponse"
+                         message="tns:ewaIWebServer_GetQueries_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueriesByExample">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueriesByExample"
+                        message="tns:ewaIWebServer_GetQueriesByExample_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueriesByExampleResponse"
+                         message="tns:ewaIWebServer_GetQueriesByExample_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetQuery">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetQuery"
+                        message="tns:ewaIWebServer_GetQuery_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryResponse"
+                         message="tns:ewaIWebServer_GetQuery_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryByExampleData">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryByExampleData"
+                        message="tns:ewaIWebServer_GetQueryByExampleData_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryByExampleDataResponse"
+                         message="tns:ewaIWebServer_GetQueryByExampleData_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryByExampleObject">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryByExampleObject"
+                        message="tns:ewaIWebServer_GetQueryByExampleObject_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryByExampleObjectResponse"
+                         message="tns:ewaIWebServer_GetQueryByExampleObject_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryData">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryData"
+                        message="tns:ewaIWebServer_GetQueryData_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryDataResponse"
+                         message="tns:ewaIWebServer_GetQueryData_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryObject">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryObject"
+                        message="tns:ewaIWebServer_GetQueryObject_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryObjectResponse"
+                         message="tns:ewaIWebServer_GetQueryObject_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryResult">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryResult"
+                        message="tns:ewaIWebServer_GetQueryResult_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetQueryResultResponse"
+                         message="tns:ewaIWebServer_GetQueryResult_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetRepositories">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetRepositories"
+                        message="tns:ewaIWebServer_GetRepositories_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetRepositoriesResponse"
+                         message="tns:ewaIWebServer_GetRepositories_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetUserInfo">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetUserInfo"
+                        message="tns:ewaIWebServer_GetUserInfo_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetUserInfoResponse"
+                         message="tns:ewaIWebServer_GetUserInfo_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetViewImage">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetViewImage"
+                        message="tns:ewaIWebServer_GetViewImage_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetViewImageResponse"
+                         message="tns:ewaIWebServer_GetViewImage_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetViews">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetViews"
+                        message="tns:ewaIWebServer_GetViews_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetViewsResponse"
+                         message="tns:ewaIWebServer_GetViews_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetViewsByKey">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetViewsByKey"
+                        message="tns:ewaIWebServer_GetViewsByKey_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetViewsByKeyResponse"
+                         message="tns:ewaIWebServer_GetViewsByKey_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="IsValidQueryResult">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/IsValidQueryResult"
+                        message="tns:ewaIWebServer_IsValidQueryResult_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/IsValidQueryResultResponse"
+                         message="tns:ewaIWebServer_IsValidQueryResult_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="IsValidToken">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/IsValidToken"
+                        message="tns:ewaIWebServer_IsValidToken_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/IsValidTokenResponse"
+                         message="tns:ewaIWebServer_IsValidToken_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="Login">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/Login"
+                        message="tns:ewaIWebServer_Login_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/LoginResponse"
+                         message="tns:ewaIWebServer_Login_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="LoginByInfo">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/LoginByInfo"
+                        message="tns:ewaIWebServer_LoginByInfo_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/LoginByInfoResponse"
+                         message="tns:ewaIWebServer_LoginByInfo_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="Logout">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/Logout"
+                        message="tns:ewaIWebServer_Logout_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/LogoutResponse"
+                         message="tns:ewaIWebServer_Logout_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="RefreshOccurrence">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/RefreshOccurrence"
+                        message="tns:ewaIWebServer_RefreshOccurrence_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/RefreshOccurrenceResponse"
+                         message="tns:ewaIWebServer_RefreshOccurrence_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="RefreshOccurrenceDataByKey">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/RefreshOccurrenceDataByKey"
+                        message="tns:ewaIWebServer_RefreshOccurrenceDataByKey_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/RefreshOccurrenceDataByKeyResponse"
+                         message="tns:ewaIWebServer_RefreshOccurrenceDataByKey_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="ReleaseQueryResult">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/ReleaseQueryResult"
+                        message="tns:ewaIWebServer_ReleaseQueryResult_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/ReleaseQueryResultResponse"
+                         message="tns:ewaIWebServer_ReleaseQueryResult_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="SaveUserInfoRaw">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/SaveUserInfoRaw"
+                        message="tns:ewaIWebServer_SaveUserInfoRaw_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/SaveUserInfoRawResponse"
+                         message="tns:ewaIWebServer_SaveUserInfoRaw_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="SaveUserInfo">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/SaveUserInfo"
+                        message="tns:ewaIWebServer_SaveUserInfo_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/SaveUserInfoResponse"
+                         message="tns:ewaIWebServer_SaveUserInfo_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttribute">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttribute"
+                        message="tns:ewaIWebServer_GetAttribute_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttributeResponse"
+                         message="tns:ewaIWebServer_GetAttribute_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttributes">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttributes"
+                        message="tns:ewaIWebServer_GetAttributes_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttributesResponse"
+                         message="tns:ewaIWebServer_GetAttributes_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetEntity">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetEntity"
+                        message="tns:ewaIWebServer_GetEntity_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetEntityResponse"
+                         message="tns:ewaIWebServer_GetEntity_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetEntities">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetEntities"
+                        message="tns:ewaIWebServer_GetEntities_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetEntitiesResponse"
+                         message="tns:ewaIWebServer_GetEntities_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttributeValue">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttributeValue"
+                        message="tns:ewaIWebServer_GetAttributeValue_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetAttributeValueResponse"
+                         message="tns:ewaIWebServer_GetAttributeValue_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetLexiconText">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetLexiconText"
+                        message="tns:ewaIWebServer_GetLexiconText_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetLexiconTextResponse"
+                         message="tns:ewaIWebServer_GetLexiconText_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetUnits">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetUnits"
+                        message="tns:ewaIWebServer_GetUnits_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetUnitsResponse"
+                         message="tns:ewaIWebServer_GetUnits_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetValuePath">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetValuePath"
+                        message="tns:ewaIWebServer_GetValuePath_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetValuePathResponse"
+                         message="tns:ewaIWebServer_GetValuePath_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetValues">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetValues"
+                        message="tns:ewaIWebServer_GetValues_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetValuesResponse"
+                         message="tns:ewaIWebServer_GetValues_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="SetAttributeUnitID">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/SetAttributeUnitID"
+                        message="tns:ewaIWebServer_SetAttributeUnitID_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/SetAttributeUnitIDResponse"
+                         message="tns:ewaIWebServer_SetAttributeUnitID_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="CreateUser">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/CreateUser"
+                        message="tns:ewaIWebServer_CreateUser_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/CreateUserResponse"
+                         message="tns:ewaIWebServer_CreateUser_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteUser">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/DeleteUser"
+                        message="tns:ewaIWebServer_DeleteUser_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/DeleteUserResponse"
+                         message="tns:ewaIWebServer_DeleteUser_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetUser">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetUser"
+                        message="tns:ewaIWebServer_GetUser_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetUserResponse"
+                         message="tns:ewaIWebServer_GetUser_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetUsers">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetUsers"
+                        message="tns:ewaIWebServer_GetUsers_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetUsersResponse"
+                         message="tns:ewaIWebServer_GetUsers_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="SaveUserRaw">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/SaveUserRaw"
+                        message="tns:ewaIWebServer_SaveUserRaw_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/SaveUserRawResponse"
+                         message="tns:ewaIWebServer_SaveUserRaw_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="SaveUser">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/SaveUser"
+                        message="tns:ewaIWebServer_SaveUser_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/SaveUserResponse"
+                         message="tns:ewaIWebServer_SaveUser_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="UserManagerLogin">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/UserManagerLogin"
+                        message="tns:ewaIWebServer_UserManagerLogin_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/UserManagerLoginResponse"
+                         message="tns:ewaIWebServer_UserManagerLogin_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="UserManagerLoginByInfo">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/UserManagerLoginByInfo"
+                        message="tns:ewaIWebServer_UserManagerLoginByInfo_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/UserManagerLoginByInfoResponse"
+                         message="tns:ewaIWebServer_UserManagerLoginByInfo_OutputMessage"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetImpersonatedUserCredentials">
+            <wsdl:input wsaw:Action="http://tempuri.org/ewaIWebServer/GetImpersonatedUserCredentials"
+                        message="tns:ewaIWebServer_GetImpersonatedUserCredentials_InputMessage"/>
+            <wsdl:output wsaw:Action="http://tempuri.org/ewaIWebServer/GetImpersonatedUserCredentialsResponse"
+                         message="tns:ewaIWebServer_GetImpersonatedUserCredentials_OutputMessage"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="BasicHttpBinding_ewaIWebServer" type="tns:ewaIWebServer">
+        <wsp:PolicyReference URI="#BasicHttpBinding_ewaIWebServer_policy"/>
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="About">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/About" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="AttachmentExists">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/AttachmentExists" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQuery">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ExecuteQuery" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryAsTable">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ExecuteQueryAsTable" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryCount">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ExecuteQueryCount" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObject">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ExecuteQueryObject" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectRaw">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectRaw" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectAsTable">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectAsTable" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectAsTableRaw">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectAsTableRaw"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectCount">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectCount" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ExecuteQueryObjectCountRaw">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ExecuteQueryObjectCountRaw" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="FormatOccurrenceWithTemplate">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/FormatOccurrenceWithTemplate"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="FormatOccurrenceWithTemplateByKey">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/FormatOccurrenceWithTemplateByKey"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAllSubRepositories">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetAllSubRepositories" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttachment">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetAttachment" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttachmentsDetails">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetAttachmentsDetails" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttachmentsDetailsByKey">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetAttachmentsDetailsByKey" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetExecutedQuery">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetExecutedQuery" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetExecutedQueryObject">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetExecutedQueryObject" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetLibraries">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetLibraries" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrence">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetOccurrence" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceByKey">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetOccurrenceByKey" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceAsPDF">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetOccurrenceAsPDF" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceAsPDFByKey">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetOccurrenceAsPDFByKey" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceData">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetOccurrenceData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrenceDataByKey">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetOccurrenceDataByKey" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetOccurrencePrintingTemplates">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetOccurrencePrintingTemplates"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueries">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetQueries" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueriesByExample">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetQueriesByExample" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetQuery">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetQuery" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryByExampleData">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetQueryByExampleData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryByExampleObject">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetQueryByExampleObject" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryData">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetQueryData" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryObject">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetQueryObject" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetQueryResult">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetQueryResult" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetRepositories">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetRepositories" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetUserInfo">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetUserInfo" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetViewImage">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetViewImage" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetViews">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetViews" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetViewsByKey">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetViewsByKey" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="IsValidQueryResult">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/IsValidQueryResult" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="IsValidToken">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/IsValidToken" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Login">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/Login" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="LoginByInfo">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/LoginByInfo" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="Logout">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/Logout" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="RefreshOccurrence">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/RefreshOccurrence" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="RefreshOccurrenceDataByKey">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/RefreshOccurrenceDataByKey" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ReleaseQueryResult">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/ReleaseQueryResult" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SaveUserInfoRaw">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/SaveUserInfoRaw" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SaveUserInfo">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/SaveUserInfo" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttribute">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetAttribute" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttributes">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetAttributes" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetEntity">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetEntity" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetEntities">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetEntities" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAttributeValue">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetAttributeValue" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetLexiconText">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetLexiconText" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetUnits">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetUnits" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetValuePath">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetValuePath" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetValues">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetValues" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SetAttributeUnitID">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/SetAttributeUnitID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="CreateUser">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/CreateUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="DeleteUser">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/DeleteUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetUser">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetUsers">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetUsers" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SaveUserRaw">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/SaveUserRaw" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SaveUser">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/SaveUser" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="UserManagerLogin">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/UserManagerLogin" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="UserManagerLoginByInfo">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/UserManagerLoginByInfo" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetImpersonatedUserCredentials">
+            <soap:operation soapAction="http://tempuri.org/ewaIWebServer/GetImpersonatedUserCredentials"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ewaWebServer">
+        <wsdl:port name="BasicHttpBinding_ewaIWebServer" binding="tns:BasicHttpBinding_ewaIWebServer">
+            <!--<soap:address location="https://147.32.84.204/eccairs5/webAPI.svc/basic-https"/>-->
+            <soap:address location="https://62.84.155.55:8443/eccairs5/webAPI.svc/basic-https"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

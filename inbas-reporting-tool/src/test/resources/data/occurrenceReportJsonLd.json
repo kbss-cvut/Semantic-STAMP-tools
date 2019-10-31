@@ -1,0 +1,38 @@
+{
+  "@type": [
+    "http://onto.fel.cvut.cz/ontologies/documentation/report",
+    "http://onto.fel.cvut.cz/ontologies/aviation-safety/occurrence_report"
+  ],
+  "http://onto.fel.cvut.cz/ontologies/documentation/documents": {
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-1804508700",
+      "http://onto.fel.cvut.cz/ontologies/ufo/Event",
+      "http://onto.fel.cvut.cz/ontologies/ufo/event",
+      "http://onto.fel.cvut.cz/ontologies/aviation-safety/Occurrence"
+    ],
+    "http://onto.fel.cvut.cz/ontologies/aviation-safety/has_end_time": "Sun Feb 25 15:49:01 CET 2018",
+    "http://onto.fel.cvut.cz/ontologies/reporting-tool/has_event_type": {
+      "@id": "http://onto.fel.cvut.cz/ontologies/eccairs-3.4.0.2/vl-a-390/v-1804508700"
+    },
+    "http://onto.fel.cvut.cz/ontologies/aviation-safety/has_start_time": "Sun Feb 25 15:47:21 CET 2018",
+    "http://www.w3.org/2000/01/rdf-schema#label": "6fc2d8c1-d3d9-408b-af3c-3141d4bafc07",
+    "@id": "_:1"
+  },
+  "http://onto.fel.cvut.cz/ontologies/documentation/has_file_number": 1351019003,
+  "http://purl.org/dc/terms/description": "Some random summary 1502129220.",
+  "http://onto.fel.cvut.cz/ontologies/documentation/has_severity_assessment": {
+    "@id": "http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-100"
+  },
+  "http://onto.fel.cvut.cz/ontologies/aviation-safety/has_factor": {
+    "@type": [
+      "http://onto.fel.cvut.cz/ontologies/reporting-tool/model/factor_graph"
+    ],
+    "http://onto.fel.cvut.cz/ontologies/reporting-tool/model/has_nodes": {
+      "@list": [
+        {
+          "@id": "_:1"
+        }
+      ]
+    }
+  }
+}

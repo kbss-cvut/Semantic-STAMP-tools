@@ -1,0 +1,19 @@
+PREFIX sira: <http://onto.fel.cvut.cz/ontologies/arms/sira/model/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+  ?level rdfs:label ?label ;
+         rdfs:comment ?comment ;
+         sira:is-higher-than ?lowerLevel .
+} WHERE {
+  SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/arms> {
+    sira:accident-outcome sira:has-level ?level .
+    ?level rdfs:label ?label
+    OPTIONAL {
+      ?level rdfs:comment ?comment
+    }
+    OPTIONAL {
+      ?level sira:is-higher-than ?lowerLevel
+    }
+  }
+}

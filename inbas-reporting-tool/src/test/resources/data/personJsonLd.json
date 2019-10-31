@@ -1,0 +1,10 @@
+{
+  "@type":[
+    "http://onto.fel.cvut.cz/ontologies/ufo/Person",
+    "http://onto.fel.cvut.cz/ontologies/ufo/Agent"
+  ],
+  "http://xmlns.com/foaf/0.1/firstName":"Catherine",
+  "http://xmlns.com/foaf/0.1/lastName":"Halsey",
+  "http://onto.fel.cvut.cz/ontologies/reporting-tool/password":"john117",
+  "http://xmlns.com/foaf/0.1/accountName":"halsey@unsc.org"
+}

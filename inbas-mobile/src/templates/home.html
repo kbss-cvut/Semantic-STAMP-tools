@@ -1,0 +1,110 @@
+		<section class="section container-fluid">
+			<div class="scrollable ng-scope">
+				<div class="scrollable-content section">
+
+				<div ng-controller="ReportController">
+					<form action="" id="" class="ng-pristine ng-valid">
+						
+							<div class="panel">
+								<div class="panel-heading">
+									<div class="row">
+										<div class="col-xs-3">
+											<h4 >
+												Cislo:
+											</h4>
+											<input type="number" ng-model="report.id" class="form-control" id="inputId">
+										</div>
+
+									</div>
+								</div>
+
+								<div class="panel-heading">
+
+									<h4 >
+										Nalez zavady:
+									</h4>
+
+									<div class="row">
+										<div class="col-xs-6">
+											<label class="control-label" for="inputDate">Date:</label>
+											<input type="date" class="form-control" ng-model="report.date" id="inputDate" placeholder="15/11/2014">
+										</div>
+										<div class="col-xs-6">
+											<label class="control-label" for="inputTime">Time:</label>
+											<input type="time" class="form-control" ng-model="report.time" id="inputTime">
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-xs-9">
+											<br>
+
+											<label for="comment">Popis zavady:</label>
+											<textarea class="form-control" data-role="tagsinput" ng-model="report.description" rows="5" id="comment"></textarea>
+
+											<br>
+											<h4>Tagy:</h4>
+											<input type="text" data-role="tagsinput" class="form-control" ng-model="report.tags" id="inputTime" placeholder="">
+
+											<br>
+
+											<!--data-role="tagsinput" -->
+
+
+										</div>
+										<div >
+											<!-- TODO:move style to css -->
+											<br>
+											<a href="" ng-click="capturePicture()">
+												<img src="images/make_photo_icon1.png" id="make_photo_icon" style="width:10%;height:10%;margin-top:10px;margin-left:10px; min-width:80px">
+											</a>
+											<br>
+										<!--<div style="padding-left: 60px;" >
+											<h5 style="padding: 20px;">Attach photo</h5>
+										</div>-->
+									</div>
+
+									<div class="col-xs-9">
+										<button class="btn btn-primary" ng-click="save(report)">
+											Save
+										</button>
+ 
+									</div>
+								</div>
+
+								
+								
+							</div>
+						</div>
+
+						<pre>saved json: {{saved | json}} </pre>
+																
+					</div>
+
+							<div class="panel-body">
+
+
+
+
+
+								<div class="row">
+
+
+								</div>
+
+
+
+							</div>
+
+
+
+						</form>
+
+							<input type="text" data-role="tagsinput" class="form-control" >
+					
+
+					</div>
+				</div>
+			</section>
+
+		
