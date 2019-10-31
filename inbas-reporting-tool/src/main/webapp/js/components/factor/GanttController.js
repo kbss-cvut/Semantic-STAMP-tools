@@ -164,6 +164,13 @@ const GanttController = {
         gantt.attachEvent('onLinkDblClick', this.onDeleteLink.bind(me));
     },
 
+    createFactor(factor){
+        factor.isNew = true;
+        factor.text = '';
+        factor.durationUnit = gantt.config.duration_unit;
+        factor.statement = Factory.createFactor();
+    },
+
     onCreateFactor: function (factor) {
         factor.isNew = true;
         factor.text = '';
@@ -393,6 +400,11 @@ const GanttController = {
 
     setFactorParent: function (child, parent) {
         gantt.setParent(child, parent);
+    },
+
+    addLinkWithType: function(link, type){
+        link.type = type;
+        gantt.addLink(link);
     },
 
     addLink: function (link) {

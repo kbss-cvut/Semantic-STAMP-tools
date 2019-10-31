@@ -11,6 +11,7 @@ import OptionsStore from "../../../stores/OptionsStore";
 import Select from "../../Select";
 import EventTypeTypeaheadResultList from "../../typeahead/EventTypeTypeaheadResultList";
 import Vocabulary from "../../../constants/Vocabulary";
+import EventTypeTypeahead from "../../typeahead/EventTypeTypeahead";
 
 
 class OccurrenceClassification extends React.Component {
@@ -20,7 +21,8 @@ class OccurrenceClassification extends React.Component {
         this.i18n = props.i18n;
         this.state = {
             occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
-            occurrenceCategories: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY))
+            occurrenceCategories: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY)),
+            lossEventTypes: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.LOSS_EVENT_TYPE))
         };
     }
 
@@ -36,6 +38,12 @@ class OccurrenceClassification extends React.Component {
             const selected = this._resolveSelectedCategory();
             if (selected) {
                 this.occurrenceCategory.selectOption(selected);
+            }
+        } else if (type === Constants.OPTIONS.LOSS_EVENT_TYPE){
+            this.setState({lossEventTypes: JsonLdUtils.processTypeaheadOptions(data)});
+            const selected = this._resolveLossEventTypeValue();
+            if (selected) {
+                this.lossEventRef.selectOption(selected);
             }
         }
     };
@@ -66,6 +74,15 @@ class OccurrenceClassification extends React.Component {
         this.props.onChange({'occurrence': occurrence});
     };
 
+    onLossEventTypeSelect = (lossEventType) => {
+        if(this.props.onLossEventSelection){
+            this.props.onLossEventSelection(lossEventType);
+        }
+        // const occurrence = this.props.report.occurrence;
+        // occurrence.lossEventType = lossEventType.id;
+        // this.props.onChange({'occurrence': occurrence});
+    };
+
     render() {
         const report = this.props.report;
         return <div className='row'>
@@ -84,20 +101,51 @@ class OccurrenceClassification extends React.Component {
                            displayOption='name' options={this.state.occurrenceCategories}
                            customListComponent={EventTypeTypeaheadResultList}/>
             </div>
+            <div className='col-xs-4'>
+                <Typeahead name='lossEventType' label={this.i18n('report.loss.eventtype.label') + '*'}
+                           ref={c => this.lossEventRef = c} formInputOption='id' optionsButton={true}
+                           placeholder={this.i18n('report.loss.eventtype.label')}
+                           onOptionSelected={this.onLossEventTypeSelect} filterOption='name'
+                           value={this._resolveLossEventTypeValue()} size='small'
+                           displayOption='name' options={this.state.lossEventTypes}
+                           customListComponent={EventTypeTypeaheadResultList}/>
+            </div>
             {this._renderCategoryLink()}
         </div>;
     }
 
     _resolveCategoryValue() {
-        const cat = this._resolveSelectedCategory();
-        return cat ? cat.name : '';
+        return this._resolveOptionValue(this.props.report.occurrence.eventType, this.state.occurrenceCategories);
+        // const cat = this._resolveSelectedCategory();
+        // return cat ? cat.name : '';
     }
 
     _resolveSelectedCategory() {
-        const catId = this.props.report.occurrence.eventType,
-            categories = this.state.occurrenceCategories;
-        return categories.find(function (item) {
-            return item.id === catId;
+        return this._resolveSelectedOptionValue(this.props.report.occurrence.eventType, this.state.occurrenceCategories);
+        // const catId = this.props.report.occurrence.eventType,
+        //     categories = this.state.occurrenceCategories;
+        // return categories.find(function (item) {
+        //     return item.id === catId;
+        // });
+    }
+
+    _resolveLossEventTypeValue() {
+        if(this.props.report.occurrence.lossEventType)
+            return this._resolveOptionValue(this.props.report.occurrence.lossEventType.eventType, this.state.lossEventTypes);
+    }
+
+    _resolveSelectedLossEventType() {
+        if(this.props.report.occurrence.lossEventType)
+            return this._resolveSelectedOptionValue(this.props.report.occurrence.lossEventType.eventType, this.state.lossEventTypes);
+    }
+    _resolveOptionValue(optionId, options){
+        const opt = this._resolveSelectedOptionValue(optionId, options);
+        return opt ? opt.name : '';
+    }
+
+    _resolveSelectedOptionValue(optionId, options){
+        return options.find(function (item) {
+            return item.id === optionId;
         });
     }
 

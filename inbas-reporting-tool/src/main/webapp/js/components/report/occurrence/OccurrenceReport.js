@@ -12,6 +12,7 @@ const Actions = require('../../../actions/Actions');
 const Attachments = require('../attachment/Attachments').default;
 const BasicOccurrenceInfo = require('./BasicOccurrenceInfo').default;
 const Constants = require('../../../constants/Constants');
+const Vocabulary = require('../../../constants/Vocabulary');
 const CorrectiveMeasures = require('../../correctivemeasure/CorrectiveMeasures').default;
 const Factors = require('../../factor/Factors');
 const InitialReport = require('../initial/InitialReport').default;
@@ -44,7 +45,8 @@ const OccurrenceReport = React.createClass({
             isWizardOpen: false,
             wizardProperties: null,
             showDeleteDialog: false,
-            showInitialReport: false
+            showInitialReport: false,
+            lossEventType: null
         };
     },
 
@@ -75,6 +77,25 @@ const OccurrenceReport = React.createClass({
     onExportToE5X: function () {
         let localFileAddress = BASE_URL_WITH_SLASH + this.props.report.key + "/export/e5x";
         window.open(localFileAddress);
+    },
+
+    onLossEventTypeSelection: function (lossEventTypeOption){
+
+        this.state.lossEventTypeOption = lossEventTypeOption;
+        // create
+        if(this.factors){
+            var lossEvent = this.props.report.occurrence.lossEvent;
+            if(!lossEvent){
+                lossEvent = {javaClass: Constants.EVENT_JAVA_CLASS, types : [Vocabulary.LOSS_EVENT_TYPE]};
+                this.props.report.occurrence.lossEvent = lossEvent;
+            }
+            lossEvent.eventType = lossEventTypeOption.id;
+
+            // lossEvent.eventType = lossEventType.id;
+            // lossEvent.eventTypeOption = lossEventType;
+            this.factors.lossEventChanged(lossEventTypeOption)
+        }
+        // this.setState({lossEventType : lossEventType});
     },
 
     _reportSummary: function () {
@@ -120,7 +141,7 @@ const OccurrenceReport = React.createClass({
                 </ButtonToolbar>
                 <form>
                     <BasicOccurrenceInfo report={report} revisions={this.props.revisions}
-                                         onChange={this.props.handlers.onChange}/>
+                                         onChange={this.props.handlers.onChange} onLossEventSelection={this.onLossEventTypeSelection}/>
 
                     <div>
                         {this._renderFactors()}

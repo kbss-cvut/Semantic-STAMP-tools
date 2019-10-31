@@ -15,7 +15,10 @@ module.exports = {
     OPTIONS: {
         OCCURRENCE_CLASS: 'occurrenceClass',
         OCCURRENCE_CATEGORY: 'occurrenceCategory',
+        LOSS_EVENT_TYPE: 'lossEventType',
         EVENT_TYPE: 'eventType',
+        EVENT_TYPE_PART_WHOLE_RELATION: 'eventTypePartWholeHierarchy',
+        EVENT_TYPE_FLOW: 'eventTypeFlow',
         REPORTING_PHASE: 'reportingPhase',
         FACTOR_TYPE: 'factorType'
     },

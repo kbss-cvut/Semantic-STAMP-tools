@@ -15,6 +15,7 @@ const Select = require('../Select');
 
 const Actions = require('../../actions/Actions');
 const Constants = require('../../constants/Constants');
+const Vocabulary = require('../../constants/Vocabulary');
 const FactorDetail = require('./FactorDetail').default;
 const FactorRenderer = require('./FactorRenderer');
 const GanttController = require('./GanttController');
@@ -53,7 +54,8 @@ const Factors = React.createClass({
             showFactorDialog: false,
             currentFactor: null,
             factorTypeOptions: JsonLdUtils.processSelectOptions(OptionsStore.getOptions('factorType')),
-            showDeleteLinkDialog: false
+            showDeleteLinkDialog: false,
+            lossEvent: null
         }
     },
 
@@ -89,6 +91,7 @@ const Factors = React.createClass({
         if (OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE).length !== 0) {
             this.renderFactors(OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE));
         }
+        // this.testAddingLossEvent();
     },
 
     _onOptionsLoaded: function (type, data) {
@@ -149,6 +152,116 @@ const Factors = React.createClass({
         this.onCloseFactorDialog();
     },
 
+    // testAddingLossEvent(){
+    //     const lossEvent = {};
+    //     this.lossEventChanged(lossEvent);
+    // },
+    // This function is called from outside to let the factors section add/update the loss event in the factors chain
+    // findLossEvent: function(){
+    //     const graph = this.props.report.
+    // }
+
+    testAddFactor: function (){
+        if(!this.mytmp){
+            this.mytmp = 1;
+        }else{
+            this.mytmp = this.mytmp + 1
+        }
+        return this.addFactorUriName("http://example.com/factor-" + this.mytmp, "factor " + this.mytmp);
+    },
+
+    addFactorUriName: function(url, name){
+        return this.addFactor({id:url, name : name});
+    },
+
+    addFactor: function(eventType, parent = null){
+        const factorGraph = this.getFactorGraph();
+        const le = {};
+        this.ganttController.createFactor(le);
+        le.statement.referenceId = ++this.factorReferenceIdCounter;
+        le.statement.eventType = eventType.id;
+        le.parent = parent;
+        // le.statement.eventType = lossEventType.name;
+        le.text = eventType.name;
+        if (le.isNew) {
+            delete le.isNew;
+        }
+        if (!le.parent) {
+            le.parent = this.ganttController.rootEventId;
+        }
+        if(le.parent){
+            le.statement.index = this.ganttController.getChildCount(le.parent);
+        }
+        le.id = le.statement.referenceId;
+        this.ganttController.addFactor(le, le.parent);
+        return le;
+    },
+
+    addLink: function(source, target, factorType) {
+        const link = {
+            source: source,
+            target: target,
+            factorType: factorType
+        };
+        this.ganttController.addLink(link);
+    },
+
+    addNetwork(){
+        const e1 = this.testAddFactor();
+        const e2 = this.testAddFactor();
+        this.addLink(e1.id, e2.id, Vocabulary.EVENT_FLOW_NEXT);
+    },
+
+    lossEventChanged: function(lossEventTypeOption){
+        const lossEvent = this.props.report.occurrence.lossEvent;
+        if(!lossEvent){
+            if(this.lossEvent) {
+                this.ganttController.deleteFactor(this.lossEvent.id);
+                this.lossEvent = null;
+            }
+        }else {
+            const lossEventType = lossEvent.eventType;
+            if (lossEventType) {
+                if (!this.lossEvent) {
+                    const le = this.addFactor(lossEventTypeOption)
+                    this.lossEvent = le;
+                    Object.assign(le.statement, lossEvent);
+                } else if (lossEventType.name != this.lossEvent.text) {
+                    // Object.assign(le.statement, lossEvent);
+                    this.lossEvent.text = lossEventType.name;
+                    Object.assign(le.statement, lossEvent);
+                    // this.lossEvent.statement.eventType = this.props.lossEventType;
+                    this.ganttController.updateFactor(this.lossEvent);
+                }
+            }
+        }
+        // if (!this.state.lossEvent) {
+        //     factor.statement.referenceId = ++this.factorReferenceIdCounter;
+        //     this.setState({lossEvent: lossEvent});
+        //     //
+        //     // if (lossEvent.parent) {
+        //     //     lossEvent.statement.index = this.ganttController.getChildCount(lossEvent.parent);
+        //     // }
+        //     // lossEvent.id = lossEvent.statement.referenceId;
+        //     this.ganttController.addFactor(lossEvent, lossEvent.parent);
+        // } else {
+        //     this.ganttController.updateFactor(lossEvent);
+        // }
+    },
+
+    // initLossEvent: function(){
+    //     const lossEvent = this.state.report.occurrence.lossEvent;
+    //     if(!lossEvent){
+    //         const lossEvent = {};
+    //         this.ganttController.createFactor(lossEvent);
+    //         lossEvent.statement.referenceId = ++this.factorReferenceIdCounter;
+    //         lossEvent.text = lossEventType.name;
+    //
+    //         this.setState({lossEvent: lossEvent});
+    //         this.ganttController.addFactor(lossEvent, lossEvent.parent);
+    //     }
+    // },
+
     onDeleteFactor: function () {
         const factor = this.state.currentFactor;
         this.ganttController.deleteFactor(factor.id);
@@ -200,7 +313,10 @@ const Factors = React.createClass({
 
 
     render: function () {
+        // this.lossEventChanged();
         return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
+            <Button bsSize='small' onClick={this.testAddFactor}>add factor</Button>
+            <Button bsSize='small' onClick={this.addNetwork}>add network graph</Button>
             {this.renderFactorDetailDialog()}
             {this.renderLinkTypeDialog()}
             {this.renderDeleteLinkDialog()}

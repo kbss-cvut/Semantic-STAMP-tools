@@ -22,6 +22,7 @@ const OccurrenceReportController = React.createClass({
         Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CLASS);
         Actions.loadOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY);
         Actions.loadOptions(Constants.OPTIONS.FACTOR_TYPE);
+        Actions.loadOptions(Constants.OPTIONS.LOSS_EVENT_TYPE);
     },
 
     getInitialState: function () {

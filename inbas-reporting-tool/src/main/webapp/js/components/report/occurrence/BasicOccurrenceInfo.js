@@ -10,7 +10,7 @@ const BasicOccurrenceInfo = (props) => {
 
         <Location occurrence={props.report.occurrence} onChange={props.onChange}/>
 
-        <OccurrenceClassification onChange={props.onChange} report={props.report}/>
+        <OccurrenceClassification onChange={props.onChange} report={props.report} onLossEventSelection={props.onLossEventSelection}/>
     </div>;
 };
 
