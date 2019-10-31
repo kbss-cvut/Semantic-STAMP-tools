@@ -102,6 +102,7 @@ module.exports = {
         'dashboard.recent-table-last-edited': 'Naposledy upraveno',
         'dashboard.recent.no-reports': 'Zatím nebylo vytvořeno žádné hlášení.',
         'dashboard.import-initial-tile': 'Importovat hlášení',
+        'dashboard.import-schema': 'Importovat schema',
 
         'dashboard.unprocessed': 'Máte {count} nezpracovaných hlášení.',
 
@@ -165,6 +166,12 @@ module.exports = {
         'report.initial.view.tooltip': 'Zobrazit prvotní hlášení',
         'report.initial.analysis-results.label': 'Výsledky analýzy hlášení',
 
+        'schema.import.title' : 'Import schematu',
+        'schema.import.run': 'Importovat',
+        'schema.import.text.tooltip': 'Vyberte soubor se schematem',
+        'schema.import.importing-msg': 'Probíhá importování schematu',
+        'schema.text.label': 'Soubor',
+
         'report.summary': 'Shrnutí hlášení',
         'report.created-by-msg': 'Vytvořil(a) {name} {date}.',
         'report.last-edited-msg': 'Naposledy upravil(a) {name} {date}.',
@@ -192,6 +199,7 @@ module.exports = {
         'report.attachments.save.disabled-tooltip': 'Identifikace přílohy je vyžadována',
 
         'report.occurrence.category.label': 'Klasifikace události',
+        'report.loss.eventtype.label': 'Ztratová událost',
         'occurrencereport.title': 'Hlášení o události',
         'occurrencereport.label': 'Událost',
 

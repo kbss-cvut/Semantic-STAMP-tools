@@ -49,7 +49,12 @@ public enum ConfigParam {
     /**
      * Directory into which report attachments should be stored.
      */
-    ATTACHMENT_DIR("attachmentDir");
+    ATTACHMENT_DIR("attachmentDir"),
+
+    /**
+     * Directory into which schemas are stored
+     */
+    SCHEMA_DIR("schemaDir");
 
     private final String name;
 

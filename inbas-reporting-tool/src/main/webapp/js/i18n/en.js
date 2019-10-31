@@ -102,6 +102,7 @@ module.exports = {
         'dashboard.recent.no-reports': 'There are no reports, yet.',
         'dashboard.import.import-e5': 'Import E5X/E5F report',
         'dashboard.import-initial-tile': 'Import Initial Report',
+        'dashboard.import-schema': 'Import Schema',
 
         'dashboard.unprocessed': 'You have {count} unprocessed report(s).',
 
@@ -166,6 +167,12 @@ module.exports = {
         'report.initial.view.tooltip': 'View initial report',
         'report.initial.analysis-results.label': 'Report analysis results',
 
+        'schema.import.title' : 'Schema Import',
+        'schema.import.run': 'Import',
+        'schema.import.text.tooltip': 'Select the schema file',
+        'schema.import.importing-msg': 'Importing schema',
+        'schema.text.label': 'File',
+
         'report.summary': 'Report summary',
         'report.created-by-msg': 'Created {date} by {name}.',
         'report.last-edited-msg': 'Last modified {date} by {name}.',
@@ -193,6 +200,7 @@ module.exports = {
         'report.attachments.save.disabled-tooltip': 'Attachment value is required',
 
         'report.occurrence.category.label': 'Occurrence category',
+        'report.loss.eventtype.label': 'Loss event type',
         'occurrencereport.title': 'Occurrence report',
         'occurrencereport.label': 'Occurrence',
 

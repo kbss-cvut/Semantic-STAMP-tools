@@ -11,6 +11,8 @@ module.exports = Reflux.createActions([
 
     'loadOptions',
 
+    'importSchema',
+
     'setTransitionPayload',
 
     'rememberComponentState', 'resetComponentState',

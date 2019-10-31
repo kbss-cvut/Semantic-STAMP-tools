@@ -5,14 +5,36 @@ const jsonld = require('jsonld');
 
 const Actions = require('../actions/Actions');
 const Constants = require('../constants/Constants');
+const Vocabulary = require('../constants/Vocabulary');
 const Ajax = require('../utils/Ajax');
 const Logger = require('../utils/Logger');
 
 const options = {};
 
+const BASE_URL = Constants.REST_PREFIX + 'schema';
+const BASE_URL_WITH_SLASH = BASE_URL + '/';
+const IMPORT_URL = BASE_URL_WITH_SLASH + 'import';
+
 const OptionsStore = Reflux.createStore({
     init: function () {
         this.listenTo(Actions.loadOptions, this.onLoadOptions);
+        this.listenTo(Actions.importSchema, this.onImportSchema);
+        this.trueOptionTypeMap = new Map();
+        this.trueOptionTypeMap.set(Constants.OPTIONS.EVENT_TYPE, Vocabulary.EVENT_TYPE )
+        this.trueOptionTypeMap.set(Constants.OPTIONS.FACTOR_TYPE, Vocabulary.FACTOR_EVENT_TYPE )
+        this.trueOptionTypeMap.set(Constants.OPTIONS.LOSS_EVENT_TYPE, Vocabulary.LOSS_EVENT_TYPE )
+        this.trueTypeMap = new Map();
+    },
+
+    onImportSchema: function (schemaFile, onSuccess, onError){
+        var i = 1;
+        console.log("importing schema");
+        Ajax.post(IMPORT_URL).attach(schemaFile.file).end(function (data, resp) {
+            if (onSuccess) {
+                onSuccess();
+            }
+            // update option store
+        }.bind(this), onError);
     },
 
     onLoadOptions: function (type) {

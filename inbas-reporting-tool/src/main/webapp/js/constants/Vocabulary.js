@@ -16,5 +16,14 @@ module.exports = {
     ROLE_ADMIN: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/admin',
 
     LOCKED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/locked',
-    DISABLED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/disabled'
+    DISABLED: 'http://onto.fel.cvut.cz/ontologies/reporting-tool/model/disabled',
+
+    HAS_STRUCTURE_PART: 'http://onto.fel.cvut.cz/ontologies/stamp/has-control-structure-element-part',
+
+    LOSS_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/stamp/loss-event-type',
+
+    EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/ufo/event-type',
+
+    FACTOR_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/stamp/unsafe-event',
+    EVENT_FLOW_NEXT: 'http://onto.fel.cvut.cz/ontologies/stamp/next'
 };
