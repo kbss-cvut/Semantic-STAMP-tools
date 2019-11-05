@@ -80,22 +80,9 @@ const OccurrenceReport = React.createClass({
     },
 
     onLossEventTypeSelection: function (lossEventTypeOption){
-
-        this.state.lossEventTypeOption = lossEventTypeOption;
-        // create
         if(this.factors){
-            var lossEvent = this.props.report.occurrence.lossEvent;
-            if(!lossEvent){
-                lossEvent = {javaClass: Constants.EVENT_JAVA_CLASS, types : [Vocabulary.LOSS_EVENT_TYPE]};
-                this.props.report.occurrence.lossEvent = lossEvent;
-            }
-            lossEvent.eventType = lossEventTypeOption.id;
-
-            // lossEvent.eventType = lossEventType.id;
-            // lossEvent.eventTypeOption = lossEventType;
             this.factors.lossEventChanged(lossEventTypeOption)
         }
-        // this.setState({lossEventType : lossEventType});
     },
 
     _reportSummary: function () {

@@ -134,7 +134,11 @@ const GanttController = {
             if (task.readonly) {
                 return 'factor-root-event';
             }
-            let eventType = ObjectTypeResolver.resolveType(task.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE)),
+            let eventType =
+                    ObjectTypeResolver.resolveTypeFromOptionType(task.statement.eventType, [
+                        Constants.OPTIONS.EVENT_TYPE,
+                        Constants.OPTIONS.LOSS_EVENT_TYPE
+                    ]),
                 eventTypeCls = eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '',
                 typeSuggested = task.statement.types && task.statement.types.indexOf(Vocabulary.SUGGESTED) !== -1;
             return classNames(eventTypeCls, {'factor-suggested': typeSuggested});
@@ -418,7 +422,12 @@ const GanttController = {
     },
 
     getFactor: function (factorId) {
-        return gantt.getTask(factorId).statement;
+        const factor = gantt.getTask(factorId)
+        return factor ? factor.statement : null;
+    },
+
+    getAllFactors: function(){
+        return gantt._get_tasks_data();
     },
 
     forEach: function (func) {
