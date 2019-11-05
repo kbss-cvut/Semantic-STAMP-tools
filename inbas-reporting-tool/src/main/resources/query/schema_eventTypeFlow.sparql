@@ -1,0 +1,17 @@
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
+PREFIX bizagi: <http://bizagi.com/package/>
+PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+  ?eventType stamp:next ?nextEventType.
+} WHERE {
+  ?process stamp:has-control-structure-element-part ?flowLink.
+  ?process stamp:has-control-structure-element-part ?eventType.
+  ?process stamp:has-control-structure-element-part ?nextEventType.
+  ?flowLink a stamp:next;
+    stamp:from-structure-component ?eventType;
+    stamp:to-structure-component ?nextEventType.
+  ?eventType a ufo:event-type.
+  ?nextEventType a ufo:event-type.
+}

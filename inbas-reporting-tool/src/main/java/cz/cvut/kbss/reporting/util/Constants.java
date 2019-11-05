@@ -149,7 +149,7 @@ public final class Constants {
     /**
      * Version of this application.
      */
-    public static final String VERSION = "$VERSION$";
+    public static final String VERSION = "0.12.4";
 
     /**
      * Default page specification, corresponding to a find all query without no page specification.
@@ -157,6 +157,8 @@ public final class Constants {
      * I.e., the request asks for the first page (number = 0) and its size is {@link Integer#MAX_VALUE}.
      */
     public static Pageable DEFAULT_PAGE_SPEC = PageRequest.of(0, Integer.MAX_VALUE);
+
+    public static String JSON_LD_MIME_TYPE = "application/ld+json";
 
     /**
      * Default system administrator account.
