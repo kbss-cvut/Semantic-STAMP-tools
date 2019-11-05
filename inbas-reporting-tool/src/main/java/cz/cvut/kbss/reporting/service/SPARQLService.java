@@ -39,6 +39,10 @@ public class SPARQLService {
         return getSPARQLResult(queryFile, bindings, repositoryUrl, MediaType.APPLICATION_JSON_VALUE);
     }
 
+    public RawJson getSPARQLSelectResult(final String queryFile, final Map<String,String> bindings, final String repositoryUrl, final String mediaType ) {
+        return getSPARQLResult(queryFile, bindings, repositoryUrl, mediaType);
+    }
+
     private RawJson getSPARQLResult(final String queryFile, final Map<String,String> bindings, final String repositoryUrl, final String mediaType) {
         if (repositoryUrl.isEmpty()) {
             throw new IllegalStateException("Missing repository URL configuration.");

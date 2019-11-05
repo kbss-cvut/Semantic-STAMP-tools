@@ -1,26 +1,31 @@
 package cz.cvut.kbss.reporting.rest;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.exception.AttachmentException;
 import cz.cvut.kbss.reporting.exception.SchemaException;
+import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
+import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
 import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.ConfigReader;
+import cz.cvut.kbss.reporting.service.SPARQLService;
 import cz.cvut.kbss.reporting.util.ConfigParam;
+import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/schema")
@@ -30,9 +35,12 @@ public class SchemaController extends BaseController {
 
     private final ConfigReader configReader;
 
+    private SPARQLService sparqlService;
+
     @Autowired
-    public SchemaController(ConfigReader configReader) {
+    public SchemaController(ConfigReader configReader,  SPARQLService sparqlService) {
         this.configReader = configReader;
+        this.sparqlService = sparqlService;
     }
 
     @RequestMapping(value = "/import", method = RequestMethod.POST)
@@ -45,6 +53,18 @@ public class SchemaController extends BaseController {
 //        final HttpHeaders location = RestUtils
 //                .createLocationHeaderFromCurrentUri("/{name}", attachment.getOriginalFilename());
 //        return new ResponseEntity<>(location, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(path = "/{queryName}", method = RequestMethod.GET,
+            produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
+    public RawJson getEventTypeFlow(@PathVariable String queryName, @RequestParam Map<String, String> bindings) {
+        if (queryName.isEmpty()) {
+            throw new BadRequestException("Query name is missing.");
+        }
+
+        final String repositoryUrl = configReader.getConfig(ConfigParam.EVENT_TYPE_REPOSITORY_URL);
+        return sparqlService
+                .getSPARQLSelectResult("query/schema_" + queryName + ".sparql", bindings, repositoryUrl, Constants.JSON_LD_MIME_TYPE);
     }
 
     protected void saveFile(String fileName, InputStream content ){
