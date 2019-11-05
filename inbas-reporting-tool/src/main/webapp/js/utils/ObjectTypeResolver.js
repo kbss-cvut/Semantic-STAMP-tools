@@ -1,5 +1,7 @@
 'use strict';
 
+import OptionStore from "../stores/OptionsStore";
+
 module.exports = {
 
     /**
@@ -14,8 +16,17 @@ module.exports = {
         if (!object || !options) {
             return null;
         }
-        var types = typeof object === 'object' ? (Array.isArray(object) ? object : object.types) : [object],
+        var types = this.getTypes(object),
             tLen = types.length, j;
+        return this.findAnyOption(types, options);
+    },
+
+    getTypes: function(object){
+        return typeof object === 'object' ? (Array.isArray(object) ? object : object.types) : [object];
+    },
+
+    findAnyOption: function(types, options){
+        var tLen = types.length, j;
         for (var i = 0, len = options.length; i < len; i++) {
             var option = options[i];
             for (j = 0; j < tLen; j++) {
@@ -25,5 +36,22 @@ module.exports = {
             }
         }
         return null;
+    },
+
+    resolveTypeFromOptionType(object, optionTypes){
+        var types = this.getTypes(object);
+
+        for(var i = 0, len = optionTypes.length; i < len; i ++){
+            var optionType = optionTypes[i];
+            var options = OptionStore.getOptions(optionType);
+            var option = this.findAnyOption(types, options);
+            if(option)
+                return option;
+        }
+        return null;
+    },
+
+    resolveEventType: function (object){
+
     }
 };

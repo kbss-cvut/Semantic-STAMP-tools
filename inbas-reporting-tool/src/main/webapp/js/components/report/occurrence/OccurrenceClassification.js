@@ -41,7 +41,7 @@ class OccurrenceClassification extends React.Component {
             }
         } else if (type === Constants.OPTIONS.LOSS_EVENT_TYPE){
             this.setState({lossEventTypes: JsonLdUtils.processTypeaheadOptions(data)});
-            const selected = this._resolveLossEventTypeValue();
+            const selected = this._resolveSelectedLossEventType();
             if (selected) {
                 this.lossEventRef.selectOption(selected);
             }
@@ -78,9 +78,6 @@ class OccurrenceClassification extends React.Component {
         if(this.props.onLossEventSelection){
             this.props.onLossEventSelection(lossEventType);
         }
-        // const occurrence = this.props.report.occurrence;
-        // occurrence.lossEventType = lossEventType.id;
-        // this.props.onChange({'occurrence': occurrence});
     };
 
     render() {
@@ -116,27 +113,20 @@ class OccurrenceClassification extends React.Component {
 
     _resolveCategoryValue() {
         return this._resolveOptionValue(this.props.report.occurrence.eventType, this.state.occurrenceCategories);
-        // const cat = this._resolveSelectedCategory();
-        // return cat ? cat.name : '';
     }
 
     _resolveSelectedCategory() {
         return this._resolveSelectedOptionValue(this.props.report.occurrence.eventType, this.state.occurrenceCategories);
-        // const catId = this.props.report.occurrence.eventType,
-        //     categories = this.state.occurrenceCategories;
-        // return categories.find(function (item) {
-        //     return item.id === catId;
-        // });
     }
 
     _resolveLossEventTypeValue() {
-        if(this.props.report.occurrence.lossEventType)
-            return this._resolveOptionValue(this.props.report.occurrence.lossEventType.eventType, this.state.lossEventTypes);
+        // if(this.props.report.occurrence.lossEventType)
+            return this._resolveOptionValue(this.props.report.occurrence.lossEventType, this.state.lossEventTypes);
     }
 
     _resolveSelectedLossEventType() {
         if(this.props.report.occurrence.lossEventType)
-            return this._resolveSelectedOptionValue(this.props.report.occurrence.lossEventType.eventType, this.state.lossEventTypes);
+            return this._resolveSelectedOptionValue(this.props.report.occurrence.lossEventType, this.state.lossEventTypes);
     }
     _resolveOptionValue(optionId, options){
         const opt = this._resolveSelectedOptionValue(optionId, options);
