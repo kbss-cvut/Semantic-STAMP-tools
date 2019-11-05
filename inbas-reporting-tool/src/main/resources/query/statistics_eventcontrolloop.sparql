@@ -17,7 +17,7 @@ SELECT ?event_type ?controlled_process ?controller (COUNT(DISTINCT ?et) AS ?coun
 
   ?occurrence ufo:has_part+ ?et .
 
-  ?et a stamp:unwanted-event ;
+  ?et a stamp:unsafe-event ;
     rt:has_event_type ?event_e_t .
   OPTIONAL {
     SERVICE SILENT er:eccairs-aviation-3.4.0.2 {
@@ -35,18 +35,23 @@ SELECT ?event_type ?controlled_process ?controller (COUNT(DISTINCT ?et) AS ?coun
     }
   }
   OPTIONAL {
-    ?cp stamp:has-unwanted-event ?et .
-    ?cp a stamp:controlled-process .
+      SERVICE SILENT er:stamp {
+        ?event_e_t rdfs:label ?event_type.
+      }
+    }
+  OPTIONAL {
+    ?et aso:has_factor+ ?cp .
+    ?cp a stamp:controlled-process-type .
 
     OPTIONAL {
       SERVICE SILENT er:stamp {
-        ?cp rdfs:label ?controlled_process.
+        ?cp rdfs:label ?controlled_process .
       }
     }
 
     OPTIONAL {
-        ?cp stamp:has-controller ?ctrl .
-        ?ctrl a stamp:controller .
+        ?cp ufo:has_participant ?ctrl .
+        ?ctrl a stamp:controller-type .
 
         OPTIONAL {
           SERVICE SILENT er:stamp {

@@ -18,7 +18,7 @@ SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count) {
 
   ?occurrence ufo:has_part+ ?event .
 
-  ?event a stamp:unwanted_event ;
+  ?event a stamp:loss-event-type ;
     rt:has_event_type ?event_type_iri ;
     aso:has_start_time ?start_time .
 
@@ -40,7 +40,6 @@ SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count) {
       ?event_type_iri rdfs:label ?event_type.
     }
   }
-
   OPTIONAL {
     SERVICE SILENT er:stamp {
       ?event_type_iri rdfs:label ?event_type.
