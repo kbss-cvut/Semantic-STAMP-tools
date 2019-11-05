@@ -234,6 +234,7 @@ public class OccurrenceReportDto implements LogicalDocument, FormGenData {
         res.setSummary(summary);
         res.setSeverityAssessment(severityAssessment);
         res.setOccurrenceCategory(occurrence.getEventType());
+        res.setLossEventType(occurrence.getLossEventType());
         return res;
     }
 }

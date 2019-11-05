@@ -10,6 +10,8 @@ import cz.cvut.kbss.reporting.model.StampVocabulary;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.model.location.Location;
 
+import java.net.URI;
+
 @JsonIdentityInfo(property = "referenceId", generator = ObjectIdGenerators.PropertyGenerator.class)
 @OWLClass(iri = Vocabulary.s_c_Occurrence)
 public class OccurrenceDto extends EventDto {
@@ -23,8 +25,8 @@ public class OccurrenceDto extends EventDto {
     @OWLObjectProperty(iri = Vocabulary.s_p_has_location)
     private Location location;
 
-    @OWLObjectProperty(iri = StampVocabulary.s_p_has_loss_event)
-    private EventDto lossEvent;
+    @OWLObjectProperty(iri = StampVocabulary.s_p_contains_loss_event_of_type)
+    private URI lossEventType;
 
     public String getKey() {
         return key;
@@ -50,11 +52,11 @@ public class OccurrenceDto extends EventDto {
         this.location = location;
     }
 
-    public EventDto getLossEvent() {
-        return lossEvent;
+    public URI getLossEventType() {
+        return lossEventType;
     }
 
-    public void setLossEvent(EventDto lossEvent) {
-        this.lossEvent = lossEvent;
+    public void setLossEventType(URI lossEventType) {
+        this.lossEventType = lossEventType;
     }
 }
