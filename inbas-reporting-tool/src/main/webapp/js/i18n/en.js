@@ -321,6 +321,7 @@ module.exports = {
         'statistics.panel.root-events.label' : 'Root Events',
         'statistics.panel.event-factor-chains.label' : 'Event - Factor Chains',
         'statistics.panel.event-control-loop.label' : 'Event - Control Loop',
+        'statistics.panel.loss-events.label' : 'Loss Events',
 
         'statistics.frequencylist.eventtype.label': 'Event Type',
         'statistics.frequencylist.annualcount.label': 'Annual Count',

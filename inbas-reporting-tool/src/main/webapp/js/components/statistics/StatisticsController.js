@@ -3,7 +3,7 @@ import {Panel} from "react-bootstrap";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
 import EventControlLoop from "./widgets/EventControlLoop";
-import EventtypeDashboard from "./widgets/event-type-dashboard/EventtypeDashboard";
+import LossEventDashboard from "./widgets/loss-event-dashboard/LossEventDashboard";
 import OccurrenceSeverityTrends from "./widgets/OccurrenceSeverityTrends";
 import {Responsive, WidthProvider} from 'react-grid-layout';
 
@@ -17,8 +17,8 @@ class StatisticsController extends React.Component {
     render() {
         const sm = [
             {i: 'top', x: 0, y: 0, w: 8, h: 2, isResizable: false, isDraggable: false},
-            {i: 'main', x: 0, y: 4, w: 8, h: 4, isResizable: false, isDraggable: false},
-            {i: 'bottom', x: 0, y: 8, w: 4, h: 2, isResizable: false, isDraggable: false}
+            {i: 'main', x: 0, y: 2, w: 8, h: 4, isResizable: false, isDraggable: false},
+            {i: 'bottom', x: 0, y: 8, w: 8, h: 2, isResizable: false, isDraggable: false}
         ];
 
         const lg = [
@@ -38,7 +38,7 @@ class StatisticsController extends React.Component {
                 cols={cols}
                 rowHeight={200}>
                 <div key="top"><Panel header={this.i18n('statistics.panel.occurrence-severity-trends.label')}><OccurrenceSeverityTrends/></Panel></div>
-                {/*<div key="main"><Panel header={this.i18n('statistics.panel.root-events.label')}><EventtypeDashboard/></Panel></div>*/}
+                <div key="main"><Panel header={this.i18n('statistics.panel.loss-events.label')}><LossEventDashboard/></Panel></div>
                 <div key="bottom"><Panel header={this.i18n('statistics.panel.event-control-loop.label')}><EventControlLoop/></Panel></div>
             </ResponsiveReactGridLayout>
         </div>;

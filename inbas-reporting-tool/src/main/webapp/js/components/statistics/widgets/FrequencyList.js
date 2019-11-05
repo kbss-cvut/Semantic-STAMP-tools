@@ -39,7 +39,7 @@ var FrequencyList = React.createClass({
     },
 
     _onStatisticsLoaded(data) {
-        if (!data || (data.queryName != this.props.query)) {
+        if (!data || (data.queryName !== this.props.query)) {
             return;
         }
 
@@ -50,9 +50,9 @@ var FrequencyList = React.createClass({
         let rows = [];
         for (let i in eventTypesIris) {
             const eventTypeIri = eventTypesIris[i];
-            const vals = rowData.filter((item2) => (item2.event_type_iri == eventTypeIri));
+            const vals = rowData.filter((item2) => (item2.event_type_iri === eventTypeIri));
             let data = Utils.generateMonthTimeAxis(minDate, maxDate).map((item) => {
-                const match = vals.filter((item2) =>  (Number(item2.year) * 100 + Number(item2.month)) == item);
+                const match = vals.filter((item2) =>  (Number(item2.year) * 100 + Number(item2.month)) === item);
                 let count = 0;
                 if (match && match[0]) {
                     count = count + Number(match[0].count)

@@ -319,6 +319,7 @@ module.exports = {
         'statistics.panel.root-events.label' : 'Kořenové události',
         'statistics.panel.event-factor-chains.label' : 'Řetězce faktorů',
         'statistics.panel.event-control-loop.label' : 'Kontrolní smyčka události',
+        'statistics.panel.loss-events.label' : 'Hazard',
 
         'statistics.frequencylist.eventtype.label': 'Typ události',
         'statistics.frequencylist.annualcount.label': 'Roční počet',
