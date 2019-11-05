@@ -8,6 +8,8 @@ public class OccurrenceReportDto extends ReportDto {
 
     private URI occurrenceCategory;
 
+    private URI lossEventType;
+
     private String summary;
 
     public URI getSeverityAssessment() {
@@ -24,6 +26,14 @@ public class OccurrenceReportDto extends ReportDto {
 
     public void setOccurrenceCategory(URI occurrenceCategory) {
         this.occurrenceCategory = occurrenceCategory;
+    }
+
+    public URI getLossEventType() {
+        return lossEventType;
+    }
+
+    public void setLossEventType(URI lossEventType) {
+        this.lossEventType = lossEventType;
     }
 
     public String getSummary() {
