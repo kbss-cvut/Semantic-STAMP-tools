@@ -318,6 +318,7 @@ module.exports = {
         'statistics.panel.occurrence-categories-top.label' : 'Kategorie událostí (5 nejčastějších v posledním roce)',
         'statistics.panel.root-events.label' : 'Kořenové události',
         'statistics.panel.event-factor-chains.label' : 'Řetězce faktorů',
+        'statistics.panel.event-control-loop.label' : 'Kontrolní smyčka události',
 
         'statistics.frequencylist.eventtype.label': 'Typ události',
         'statistics.frequencylist.annualcount.label': 'Roční počet',

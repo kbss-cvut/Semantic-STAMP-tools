@@ -2,7 +2,7 @@ import React from "react";
 import {Panel} from "react-bootstrap";
 import I18nWrapper from "../../i18n/I18nWrapper";
 import injectIntl from "../../utils/injectIntl";
-import EventFactorChains from "./widgets/EventFactorChains";
+import EventControlLoop from "./widgets/EventControlLoop";
 import EventtypeDashboard from "./widgets/event-type-dashboard/EventtypeDashboard";
 import OccurrenceSeverityTrends from "./widgets/OccurrenceSeverityTrends";
 import {Responsive, WidthProvider} from 'react-grid-layout';
@@ -38,8 +38,8 @@ class StatisticsController extends React.Component {
                 cols={cols}
                 rowHeight={200}>
                 <div key="top"><Panel header={this.i18n('statistics.panel.occurrence-severity-trends.label')}><OccurrenceSeverityTrends/></Panel></div>
-                <div key="main"><Panel header={this.i18n('statistics.panel.root-events.label')}><EventtypeDashboard/></Panel></div>
-                <div key="bottom"><Panel header={this.i18n('statistics.panel.event-factor-chains.label')}><EventFactorChains/></Panel></div>
+                {/*<div key="main"><Panel header={this.i18n('statistics.panel.root-events.label')}><EventtypeDashboard/></Panel></div>*/}
+                <div key="bottom"><Panel header={this.i18n('statistics.panel.event-control-loop.label')}><EventControlLoop/></Panel></div>
             </ResponsiveReactGridLayout>
         </div>;
     }

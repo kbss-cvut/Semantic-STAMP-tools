@@ -320,6 +320,7 @@ module.exports = {
         'statistics.panel.occurrence-categories-top.label' : 'Occurrence Categories (Top 5 in Last Year)',
         'statistics.panel.root-events.label' : 'Root Events',
         'statistics.panel.event-factor-chains.label' : 'Event - Factor Chains',
+        'statistics.panel.event-control-loop.label' : 'Event - Control Loop',
 
         'statistics.frequencylist.eventtype.label': 'Event Type',
         'statistics.frequencylist.annualcount.label': 'Annual Count',
