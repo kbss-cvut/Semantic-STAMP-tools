@@ -17,6 +17,7 @@ const Actions = require('../../actions/Actions');
 const Constants = require('../../constants/Constants');
 const Vocabulary = require('../../constants/Vocabulary');
 const FactorDetail = require('./FactorDetail').default;
+const LossEventDetail = require('./LossEventDetail').default;
 const FactorRenderer = require('./FactorRenderer');
 const GanttController = require('./GanttController');
 const FactorJsonSerializer = require('../../utils/FactorJsonSerializer');
@@ -79,16 +80,12 @@ const Factors = React.createClass({
     },
 
     getLossEventReferenceId: function(){
-        const occurrence = this.props.report[this.props.rootAttribute];
-        const lossEventType = occurrence.lossEventType;
-        if(!lossEventType) return;
-
         var nodes = this.ganttController.getAllFactors();
         if(!nodes) return;
         for (let i = 0, len = nodes.length; i < len; i++) {
             var node = nodes[i];
             if(!node) continue;
-            if(node && node.statement && node.statement.eventType === lossEventType){
+            if(node && node.statement && node.statement.types.includes(Vocabulary.LOSS_EVENT)){
                 return node;
             }
         }
@@ -224,7 +221,8 @@ const Factors = React.createClass({
         }else {
             if (!lossEvent) {
                 this.props.report.occurrence.lossEventType = lossEventTypeOption.id;
-                this.addFactor(lossEventTypeOption)
+                lossEvent = this.addFactor(lossEventTypeOption);
+                lossEvent.statement.types = [Vocabulary.LOSS_EVENT];
             } else {
                 // var lossEvent = this.ganttController.getFactor(lossEvent.statement.);
                 if (lossEventTypeOption.id != lossEvent.statement.eventType) {
@@ -329,7 +327,16 @@ const Factors = React.createClass({
             return null;
         }
         const report = this._getReportForDetail();
-        return <FactorDetail show={this.state.showFactorDialog} report={report}
+        const isLossEvent = this.state.currentFactor && this.state.currentFactor.statement && this.state.currentFactor.statement.types &&
+            this.state.currentFactor.statement.types.includes(Vocabulary.LOSS_EVENT)
+        return isLossEvent
+            ?<LossEventDetail show={this.state.showFactorDialog} report={report}
+                           factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
+                           onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}
+                           onInsertFlow={this.insertFlow}
+                           enableDetails={this.props.enableDetails}/>
+
+            :<FactorDetail show={this.state.showFactorDialog} report={report}
                              factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
                              onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}
                              enableDetails={this.props.enableDetails}/>;
