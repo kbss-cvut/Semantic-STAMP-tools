@@ -199,6 +199,7 @@ class TreeSelect extends PureComponent {
 
         return (<div>
                 <div style={this.styles.searchBox}>
+                    <label>{this.props.label}</label>
                     <div className="input-group">
                         <span className="input-group-addon">
                             <i className="fa fa-search"/>

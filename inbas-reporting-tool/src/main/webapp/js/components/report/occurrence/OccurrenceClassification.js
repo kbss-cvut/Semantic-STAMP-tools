@@ -125,7 +125,7 @@ class OccurrenceClassification extends React.Component {
     }
 
     _resolveSelectedLossEventType() {
-        if(this.props.report.occurrence.lossEventType)
+        if(this.props.report.occurrence)
             return this._resolveSelectedOptionValue(this.props.report.occurrence.lossEventType, this.state.lossEventTypes);
     }
     _resolveOptionValue(optionId, options){

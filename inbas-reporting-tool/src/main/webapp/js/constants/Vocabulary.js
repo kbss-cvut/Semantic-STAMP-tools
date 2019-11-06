@@ -21,6 +21,7 @@ module.exports = {
     HAS_STRUCTURE_PART: 'http://onto.fel.cvut.cz/ontologies/stamp/has-control-structure-element-part',
 
     LOSS_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/stamp/loss-event-type',
+    LOSS_EVENT: 'http://onto.fel.cvut.cz/ontologies/stamp/loss-event',
 
     EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/ufo/event-type',
 

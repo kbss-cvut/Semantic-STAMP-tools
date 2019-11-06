@@ -244,6 +244,8 @@ module.exports = {
         'factors.smallscreen.end': 'End',
         'factors.smallscreen.add-tooltip': 'Add event',
         'factors.event-suggested': 'Event suggested by initial report text analysis.',
+        'factors.loss-event.detail.title': 'Loss event assessment',
+        'factors.loss-event.detail.type': 'Loss event type',
 
         'notfound.title': 'Not found',
         'notfound.msg-with-id': '{resource} with id {identifier} not found.',
