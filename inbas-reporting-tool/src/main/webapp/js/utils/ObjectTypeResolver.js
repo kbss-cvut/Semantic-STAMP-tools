@@ -1,6 +1,7 @@
 'use strict';
 
 import OptionStore from "../stores/OptionsStore";
+import Constants from "../constants/Constants";
 
 module.exports = {
 
@@ -16,8 +17,7 @@ module.exports = {
         if (!object || !options) {
             return null;
         }
-        var types = this.getTypes(object),
-            tLen = types.length, j;
+        let types = this.getTypes(object);
         return this.findAnyOption(types, options);
     },
 
@@ -26,9 +26,9 @@ module.exports = {
     },
 
     findAnyOption: function(types, options){
-        var tLen = types.length, j;
-        for (var i = 0, len = options.length; i < len; i++) {
-            var option = options[i];
+        let tLen = types.length, j;
+        for (let i = 0, len = options.length; i < len; i++) {
+            let option = options[i];
             for (j = 0; j < tLen; j++) {
                 if (types.indexOf(option['@id']) !== -1) {
                     return option;
@@ -40,6 +40,10 @@ module.exports = {
 
     resolveTypeFromOptionType(object, optionTypes){
         var types = this.getTypes(object);
+        if(!optionTypes)// hack - default option types to resolve from, fixes tests tests/__tests__/FactorRendererTest.js:77:24
+            optionTypes = [Constants.OPTIONS.EVENT_TYPE, Constants.OPTIONS.LOSS_EVENT_TYPE];
+        if(!optionTypes.length)
+            optionTypes = [optionTypes];
 
         for(var i = 0, len = optionTypes.length; i < len; i ++){
             var optionType = optionTypes[i];
