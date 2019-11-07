@@ -9,7 +9,7 @@ module.exports = Reflux.createActions([
     'phaseTransition',
     'loadRevisions', 'loadReport',
 
-    'loadOptions',
+    'loadOptions', 'loadProcessFlow',
 
     'importSchema',
 
