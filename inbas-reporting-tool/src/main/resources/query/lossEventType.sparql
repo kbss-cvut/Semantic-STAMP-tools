@@ -20,17 +20,12 @@ CONSTRUCT {
   a ?type ;
   rdfs:comment ?comment ;
 } WHERE {
-#      SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/eccairs-aviation-3.4.0.2> {
-#         # all events
-#         <a-390> eccairs-model:has-child+  ?term.
-#         ?term rdfs:label ?label.
-#         ?term eccairs-model:has-explanation ?comment.
-#      }
-
-    ?term a stamp:loss-event-type.
-    OPTIONAL{?term rdfs:label ?label.}
-    OPTIONAL{?term rdfs:comment ?comment.}
-#      BIND(eccairs:event-type as ?type)
+      SERVICE <http://dev.inbas.cz/rdf4j-server/repositories/eccairs-aviation-3.4.0.2> {
+         # all events
+         <a-390> eccairs-model:has-child+  ?term.
+         ?term rdfs:label ?label.
+         ?term eccairs-model:has-explanation ?comment.
+      }
       BIND(stamp:loss-event-type as ?type)
 }
 
