@@ -43,17 +43,6 @@ public class SchemaController extends BaseController {
         this.sparqlService = sparqlService;
     }
 
-    @RequestMapping(value = "/import", method = RequestMethod.POST)
-    public void importSchema(@RequestParam("file") MultipartFile schema){
-        try {
-            saveFile(schema.getOriginalFilename(), schema.getInputStream());
-        } catch (IOException e) {
-            throw new SchemaException("Unable to read file content from request.", e);
-        }
-//        final HttpHeaders location = RestUtils
-//                .createLocationHeaderFromCurrentUri("/{name}", attachment.getOriginalFilename());
-//        return new ResponseEntity<>(location, HttpStatus.CREATED);
-    }
 
     @RequestMapping(path = "/{queryName}", method = RequestMethod.GET,
             produces = {MediaType.APPLICATION_JSON_VALUE, JsonLd.MEDIA_TYPE})
@@ -65,6 +54,18 @@ public class SchemaController extends BaseController {
         final String repositoryUrl = configReader.getConfig(ConfigParam.EVENT_TYPE_REPOSITORY_URL);
         return sparqlService
                 .getSPARQLSelectResult("query/schema_" + queryName + ".sparql", bindings, repositoryUrl, Constants.JSON_LD_MIME_TYPE);
+    }
+
+    @RequestMapping(value = "/import", method = RequestMethod.POST)
+    public void importSchema(@RequestParam("file") MultipartFile schema){
+        try {
+            saveFile(schema.getOriginalFilename(), schema.getInputStream());
+        } catch (IOException e) {
+            throw new SchemaException("Unable to read file content from request.", e);
+        }
+//        final HttpHeaders location = RestUtils
+//                .createLocationHeaderFromCurrentUri("/{name}", attachment.getOriginalFilename());
+//        return new ResponseEntity<>(location, HttpStatus.CREATED);
     }
 
     protected void saveFile(String fileName, InputStream content ){

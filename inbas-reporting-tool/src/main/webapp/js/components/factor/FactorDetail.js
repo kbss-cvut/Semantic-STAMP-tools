@@ -24,6 +24,7 @@ import Vocabulary from "../../constants/Vocabulary";
 import WizardGenerator from "../wizard/generator/WizardGenerator";
 import WizardWindow from "../wizard/WizardWindow";
 import TreeSelect from "../treeselect/TreeSelect";
+import Actions from "../../actions/Actions"
 
 
 function convertDurationToCurrentUnit(factor) {
@@ -106,6 +107,20 @@ class FactorDetail extends React.Component {
         this._updateReportForFormGen(report);
         this._mergeStatementState(event);
         WizardGenerator.generateWizard(report, event, this.props.factor.text, this.openDetailsWizard);
+    };
+
+    onInsertFlow = () => {
+        const factor = this.props.factor;
+        Actions.loadProcessFlow(this.props.factor.statement.eventType);
+        this.unsubscribe = OptionsStore.listen(this.onFlowDataLoaded);
+    };
+
+    onFlowDataLoaded = () => {
+        let processFlow = OptionsStore.getProcessFlow(this.props.factor.statement.eventType);
+        this.unsubscribe();
+        if(processFlow) {
+            this.props.onInsertFlow(processFlow, this.props.factor.statement);
+        }
     };
 
     /**
@@ -205,6 +220,7 @@ class FactorDetail extends React.Component {
                 </Modal.Body>
 
                 <Modal.Footer ref={comp => this._modalFooter = comp}>
+                    {this.renderInsertFlowButton()}
                     <Button bsSize='small' bsStyle='success' onClick={this.onSave}
                             disabled={!this.state.eventType}>{this.i18n('save')}</Button>
                     <Button bsSize='small' onClick={this.props.onClose}>{this.i18n('cancel')}</Button>
@@ -229,7 +245,12 @@ class FactorDetail extends React.Component {
         // https://github.com/react-bootstrap/react-bootstrap/issues/966
         return <div>
             <Tabs activeKey={this.state.activeTab} onSelect={this.handleSelect}>
-                <Tab eventKey={1} title={"Tree select"}><TreeSelect value={eventTypeLabel} onSelect={this.onEventTypeChange}/></Tab>
+                <Tab eventKey={1} title={"Tree select"}>
+                    {eventTypeBadge}
+                    <div className={eventTypeClassNames}>
+                        <TreeSelect value={eventTypeLabel} label={this.i18n('factors.detail.type')} onSelect={this.onEventTypeChange}/>
+                    </div>
+                </Tab>
                 <Tab eventKey={2} title={"Simple select"}>
                     <div className='row'>
                         {eventTypeBadge}
@@ -347,6 +368,10 @@ class FactorDetail extends React.Component {
                 {this.i18n('factors.detail.details')}
             </Button>
         </div>;
+    }
+
+    renderInsertFlowButton(){
+        return <Button bsSize='small' bsStyle='success' onClick={this.onInsertFlow}>{"Inser process Flow"}</Button>;
     }
 }
 

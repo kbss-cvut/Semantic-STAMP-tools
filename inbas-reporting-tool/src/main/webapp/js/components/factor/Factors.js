@@ -1,5 +1,7 @@
 'use strict';
 
+import ObjectTypeResolver from "../../utils/ObjectTypeResolver";
+
 const React = require('react');
 const Reflux = require('reflux');
 const assign = require('object-assign');
@@ -180,7 +182,7 @@ const Factors = React.createClass({
         return this.addFactor({id:url, name : name});
     },
 
-    addFactor: function(eventType, parent = null){
+    addFactor: function(eventType, parent = null, modifier = null){
         const le = {};
         this.ganttController.createFactor(le);
         le.statement.referenceId = ++this.factorReferenceIdCounter;
@@ -197,7 +199,11 @@ const Factors = React.createClass({
             le.statement.index = this.ganttController.getChildCount(le.parent);
         }
         le.id = le.statement.referenceId;
+        if(modifier)
+            modifier(le);
         this.ganttController.addFactor(le, le.parent);
+        le['$no_end'] = false;
+        le['$no_start'] = false;
         return le;
     },
 
@@ -210,6 +216,76 @@ const Factors = React.createClass({
         this.ganttController.addLink(link);
     },
 
+    insertFlow: function(flow, parent){
+
+        const nodeLevels = this.calculateNodeLevels(flow);
+
+        const pst = parent ?
+            parent.startTime :
+            this.ganttController.getFactor(this.rootReferenceId).startTime;
+
+        const map = {};
+        flow.nodes.forEach(function(n) {
+            const et = JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(n, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE)))
+            const e = this.addFactor(et, parent.referenceId, function(le){
+                le.statement.startTime = pst + 1000*(2*nodeLevels[n]);
+                le.statement.endTime = pst + 1000*(2*nodeLevels[n] + 1);
+                le.start_date = new Date(le.statement.startTime);
+                le.end_date = new Date(le.statement.endTime);
+            });
+            map[n] = e.id;
+        }.bind(this));
+
+        flow.edges.forEach(function(e){
+            const from = map[e.from];
+            const to = map[e.to];
+            this.addLink(from, to, Vocabulary.EVENT_FLOW_NEXT);
+        }.bind(this));
+
+        this.onCloseFactorDialog();
+    },
+
+    calculateNodeLevels: function(flow){
+        if(this._calculatingNodeLevels)
+            return;
+        this._calculateNodeLevels = true;
+        const ret = {};
+        // Find roots
+        const fromNodes = new Set(flow.edges.map((n) => n.from));
+        const toNodes = new Set(flow.edges.map((n) => n.to));
+        const rootNodeSet = new Set([...fromNodes].filter(x => !toNodes.has(x)));
+        // const rootNodes = [...rootNodeSet];
+        // calculate levels
+        const mystack = [];
+        [...rootNodeSet].forEach(x => mystack.push({id:x, level:0, index:0}));
+
+        while(mystack.length > 0){
+            let n = mystack[mystack.length-1];
+            if(ret[n.id]) {
+                mystack.pop();
+            }else {
+                if (!n.children) {
+                    n.children = [];
+                    flow.edges.filter(x => x.from === n.id).forEach(x =>
+                        n.children.push({
+                            id: x.to,
+                            level: n.level + 1,
+                            index: 0
+                        })
+                    );
+                }
+                if (n.index < n.children.length){
+                    mystack.push(n.children[n.index]);
+                    n.index = n.index + 1;
+                }else{
+                    ret[n.id] = n.level;
+                    mystack.pop();
+                }
+            }
+        }
+        this._calculateNodeLevels = false;
+        return ret;
+    },
 
     lossEventChanged: function(lossEventTypeOption){
         var lossEvent = this.getLossEventReferenceId();
@@ -287,8 +363,6 @@ const Factors = React.createClass({
 
     render: function () {
         return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
-            <Button bsSize='small' onClick={this.testAddFactor}>add factor</Button>
-            <Button bsSize='small' onClick={this.addNetwork}>add network graph</Button>
             {this.renderFactorDetailDialog()}
             {this.renderLinkTypeDialog()}
             {this.renderDeleteLinkDialog()}
@@ -333,12 +407,12 @@ const Factors = React.createClass({
             ?<LossEventDetail show={this.state.showFactorDialog} report={report}
                            factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
                            onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}
-                           onInsertFlow={this.insertFlow}
                            enableDetails={this.props.enableDetails}/>
 
             :<FactorDetail show={this.state.showFactorDialog} report={report}
                              factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
                              onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}
+                             onInsertFlow={this.insertFlow}
                              enableDetails={this.props.enableDetails}/>;
     },
 

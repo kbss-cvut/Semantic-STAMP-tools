@@ -10,6 +10,7 @@ const Ajax = require('../utils/Ajax');
 const Logger = require('../utils/Logger');
 
 const options = {};
+const processFlows = {};
 
 const BASE_URL = Constants.REST_PREFIX + 'schema';
 const BASE_URL_WITH_SLASH = BASE_URL + '/';
@@ -19,6 +20,7 @@ const OptionsStore = Reflux.createStore({
     init: function () {
         this.listenTo(Actions.loadOptions, this.onLoadOptions);
         this.listenTo(Actions.importSchema, this.onImportSchema);
+        this.listenTo(Actions.loadProcessFlow, this.onLoadProcessFlow);
         this.trueOptionTypeMap = new Map();
         this.trueOptionTypeMap.set(Constants.OPTIONS.EVENT_TYPE, Vocabulary.EVENT_TYPE )
         this.trueOptionTypeMap.set(Constants.OPTIONS.FACTOR_TYPE, Vocabulary.FACTOR_EVENT_TYPE )
@@ -35,6 +37,35 @@ const OptionsStore = Reflux.createStore({
             }
             // update option store
         }.bind(this), onError);
+    },
+
+    onLoadProcessFlow: function(processURL){
+        Ajax.get(BASE_URL_WITH_SLASH + 'eventTypeFlow?process=' + processURL).end(function (data) {
+            if (data.length > 0) {
+                processFlows[processURL] = {
+                    nodes: [],
+                    edges: []
+                };
+                data.forEach((n) => {
+                    processFlows[processURL].nodes.push(n['@id']);
+                    if(n[Vocabulary.EVENT_FLOW_NEXT]) {
+                        n[Vocabulary.EVENT_FLOW_NEXT].forEach((cn) => {
+                            processFlows[processURL].edges.push({
+                                from: n['@id'],
+                                to: cn['@id']
+                            });
+                        });
+                    }
+                });
+                this.trigger(processURL, processFlows[processURL]);
+            } else {
+                Logger.warn('No data received when loading options of type ' + type + '.');
+                this.trigger(processURL, this.getProcessFlow(processURL));
+            }
+
+        }.bind(this), function () {
+            this.trigger(processURL, this.getProcessFlow(processURL));
+        }.bind(this));
     },
 
     onLoadOptions: function (type) {
@@ -68,6 +99,10 @@ const OptionsStore = Reflux.createStore({
 
     getOptions: function (type) {
         return options[type] ? options[type] : [];
+    },
+
+    getProcessFlow: function (processUrl) {
+        return processFlows[processUrl] ? processFlows[processUrl] : [];
     }
 });
 
