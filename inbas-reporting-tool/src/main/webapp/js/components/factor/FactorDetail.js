@@ -247,7 +247,8 @@ class FactorDetail extends React.Component {
                 <Tab eventKey={1} title={"Tree select"}>
                     {eventTypeBadge}
                     <div className={eventTypeClassNames}>
-                        <TreeSelect value={eventTypeLabel} from={this.props.parentEventType} label={this.i18n('factors.detail.type')} onSelect={this.onEventTypeChange}/>
+                        <TreeSelect value={eventTypeLabel} from={this.props.fromEventType}
+                                    label={this.i18n('factors.detail.type')} onSelect={this.onEventTypeChange}/>
                     </div>
                 </Tab>
                 <Tab eventKey={2} title={"Simple select"}>
@@ -370,7 +371,9 @@ class FactorDetail extends React.Component {
     }
 
     renderInsertFlowButton(){
-        return <Button bsSize='small' bsStyle='success' onClick={this.onInsertFlow}>{"Inser process Flow"}</Button>;
+        return <Button bsSize='small' bsStyle='success'
+                       disabled={this.props.factor.isNew}
+                       onClick={this.onInsertFlow}>{"Inser process Flow"}</Button>;
     }
 }
 
