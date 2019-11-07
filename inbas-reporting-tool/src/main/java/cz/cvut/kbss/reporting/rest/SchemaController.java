@@ -1,6 +1,5 @@
 package cz.cvut.kbss.reporting.rest;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import cz.cvut.kbss.jsonld.JsonLd;
 import cz.cvut.kbss.reporting.exception.AttachmentException;
 import cz.cvut.kbss.reporting.exception.SchemaException;
