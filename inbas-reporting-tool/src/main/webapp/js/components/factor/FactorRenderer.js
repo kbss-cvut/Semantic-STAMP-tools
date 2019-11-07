@@ -87,7 +87,7 @@ const FactorRendererImpl = {
         };
     },
 
-    _addNodes: function (nodes, partOfHierarchy, optionTypes) {
+    _addNodes: function (nodes, partOfHierarchy, eventTypes) {
         let node;
         for (let i = 0, len = nodes.length; i < len; i++) {
             node = nodes[i];
@@ -95,7 +95,7 @@ const FactorRendererImpl = {
             if (typeof node.name !== 'undefined' && node.name !== null) {
                 text = node.name;
             } else if (node.eventType) {
-                const eventType = ObjectTypeResolver.resolveTypeFromOptionType(node.eventType, optionTypes);
+                const eventType = ObjectTypeResolver.resolveType(node.eventType, eventTypes);
                 text = eventType ? JsonLdUtils.getJsonAttValue(eventType, Vocabulary.RDFS_LABEL) : node.eventType;
             }
             GanttController.addFactor({
