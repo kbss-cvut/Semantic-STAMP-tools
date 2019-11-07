@@ -140,10 +140,10 @@ const Factors = React.createClass({
         this.factorsRendered = true;
         this.rootReferenceId = this.props.report[this.props.rootAttribute].referenceId;
         FactorRenderer.renderFactors(this.props.report,
-            [
+            {optionTypes : [
                 Constants.OPTIONS.EVENT_TYPE,
                 Constants.OPTIONS.LOSS_EVENT_TYPE
-            ]);
+            ]});
         this.ganttController.expandSubtree(this.ganttController.rootEventId);
         this.factorReferenceIdCounter = FactorRenderer.greatestReferenceId;
     },
@@ -248,7 +248,8 @@ const Factors = React.createClass({
         flow.edges.forEach(function(e){
             const from = map[e.from];
             const to = map[e.to];
-            this.addLink(from, to, Vocabulary.EVENT_FLOW_NEXT);
+            if(from && to)
+                this.addLink(from, to, Vocabulary.EVENT_FLOW_NEXT);
         }.bind(this));
 
         this.onCloseFactorDialog();

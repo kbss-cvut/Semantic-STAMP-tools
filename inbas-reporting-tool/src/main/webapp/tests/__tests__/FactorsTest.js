@@ -12,6 +12,7 @@ describe('Factors component tests', () => {
         Actions = require('../../js/actions/Actions'),
         OptionsStore = require('../../js/stores/OptionsStore'),
         Utils = require('../../js/utils/Utils'),
+        Constants = require('../../js/constants/Constants'),
         report = {
             occurrence: {
                 name: 'TestOccurrence',
@@ -123,7 +124,10 @@ describe('Factors component tests', () => {
             eventTypes = Generator.getJsonLdSample();
         expect(FactorRenderer.renderFactors).not.toHaveBeenCalled();
         OptionsStore.trigger('eventType', eventTypes);
-        expect(FactorRenderer.renderFactors).toHaveBeenCalledWith(report, eventTypes);
+        expect(FactorRenderer.renderFactors).toHaveBeenCalledWith(report, {optionTypes : [
+                Constants.OPTIONS.EVENT_TYPE,
+                Constants.OPTIONS.LOSS_EVENT_TYPE
+            ]});
     });
 
     it('sets event position when new child event is added to a parent', () => {

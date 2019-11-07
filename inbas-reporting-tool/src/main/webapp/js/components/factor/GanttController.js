@@ -135,10 +135,10 @@ const GanttController = {
                 return 'factor-root-event';
             }
             let eventType =
-                    ObjectTypeResolver.resolveTypeFromOptionType(task.statement.eventType, [
+                    ObjectTypeResolver.resolveType(task.statement.eventType, {optionTypes:[
                         Constants.OPTIONS.EVENT_TYPE,
                         Constants.OPTIONS.LOSS_EVENT_TYPE
-                    ]),
+                    ]}),
                 eventTypeCls = eventType ? FactorStyleInfo.getStyleInfo(eventType['@type']).ganttCls : '',
                 typeSuggested = task.statement.types && task.statement.types.indexOf(Vocabulary.SUGGESTED) !== -1;
             return classNames(eventTypeCls, {'factor-suggested': typeSuggested});
