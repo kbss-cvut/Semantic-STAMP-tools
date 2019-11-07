@@ -87,7 +87,10 @@ const Factors = React.createClass({
         for (let i = 0, len = nodes.length; i < len; i++) {
             var node = nodes[i];
             if(!node) continue;
-            if(node && node.statement && node.statement.types.includes(Vocabulary.LOSS_EVENT)){
+            if(node && node.statement &&
+                node.statement.types &&
+                node.statement.types.includes &&
+                node.statement.types.includes(Vocabulary.LOSS_EVENT)){
                 return node;
             }
         }
