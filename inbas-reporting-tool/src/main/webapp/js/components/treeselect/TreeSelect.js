@@ -97,16 +97,23 @@ class TreeSelect extends PureComponent {
         });
 
         // find roots
-        childNodes.forEach(n => {nodeMap.delete(n.id)});
-        var roots = nodeMap.values();
+        let roots = null;
+        if(this.props.from){
+            roots = nodeMap.get(this.props.from).children;
+        }else {
+            childNodes.forEach(n => nodeMap.delete(n.id));
+            roots = nodeMap.values();
+        }
+
+
         var root = {};
-        if(roots.length == 1){
+        if (roots.length == 1) {
             root = roots[0];
-        }else{
+        } else {
             root = {
                 name: '',
                 children: [...roots],
-                toggled : false
+                toggled: false
             }
         }
         this.data = root;
