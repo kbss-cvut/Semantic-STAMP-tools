@@ -373,7 +373,7 @@ class FactorDetail extends React.Component {
     renderInsertFlowButton(){
         return <Button bsSize='small' bsStyle='success'
                        disabled={this.props.factor.isNew}
-                       onClick={this.onInsertFlow}>{"Inser process Flow"}</Button>;
+                       onClick={this.onInsertFlow}>{"Insert flow"}</Button>;
     }
 }
 

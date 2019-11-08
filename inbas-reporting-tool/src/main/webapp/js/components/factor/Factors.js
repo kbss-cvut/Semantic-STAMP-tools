@@ -82,8 +82,12 @@ const Factors = React.createClass({
     },
 
     getFactorEventType: function(){
-        if(this.state.currentFactor && this.state.currentFactor.statement)
-            return this.state.currentFactor.statement.eventType;
+        if(this.state.currentFactor && this.state.currentFactor.statement){
+            const parentFactor = this.ganttController.getFactor(this.state.currentFactor.parent);
+            if(parentFactor.referenceId !== this.rootReferenceId){
+                return parentFactor.eventType;
+            }
+        }
         return null;
     },
 

@@ -99,7 +99,9 @@ class TreeSelect extends PureComponent {
         // find roots
         let roots = null;
         if(this.props.from){
-            roots = nodeMap.get(this.props.from).children;
+            const fromNode = nodeMap.get(this.props.from);
+            if(fromNode)
+                roots = fromNode.children;
         }else {
             childNodes.forEach(n => nodeMap.delete(n.id));
             roots = nodeMap.values();
