@@ -156,6 +156,16 @@ const GanttController = {
             }
             return tooltip;
         };
+
+        gantt.templates.grid_row_class = function(start, end, task){
+            let cls = '';
+            if(task && task.statement && task.statement.types && task.statement.types.includes){
+                if(task.statement.types.includes(Vocabulary.LOSS_EVENT)){
+                    cls += 'gantt_leaf_row';
+                }
+            }
+            return cls;
+        }
     },
 
     configureGanttHandlers: function () {
