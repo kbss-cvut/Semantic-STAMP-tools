@@ -81,7 +81,7 @@ const Factors = React.createClass({
         return this.getLossEventReferenceId();
     },
 
-    getFactorEventType: function(){
+    _getFactorEventType: function(){
         if(this.state.currentFactor && this.state.currentFactor.statement){
             const parentFactor = this.ganttController.getFactor(this.state.currentFactor.parent);
             if(parentFactor.referenceId !== this.rootReferenceId){
@@ -418,7 +418,9 @@ const Factors = React.createClass({
             report = this._getReportForDetail(),
             isLossEvent = this.state.currentFactor && this.state.currentFactor.statement && this.state.currentFactor.statement.types &&
                           this.state.currentFactor.statement.types.includes(Vocabulary.LOSS_EVENT),
-            fromEventType = this.getFactorEventType();
+            fromEventType = this._getFactorEventType(),
+            disabledTypeSelection = this.ganttController.getChildCount(this.state.currentFactor.id) > 0;
+
         return isLossEvent
             ?<LossEventDetail show={this.state.showFactorDialog} report={report}
                            factor={this.state.currentFactor} onClose={this.onCloseFactorDialog}
@@ -430,6 +432,7 @@ const Factors = React.createClass({
                              onClose={this.onCloseFactorDialog}
                              onSave={this.onSaveFactor} onDelete={this.onDeleteFactor} scale={this.state.scale}
                              onInsertFlow={this.insertFlow}
+                             disabledTypeSelection={disabledTypeSelection}
                              enableDetails={this.props.enableDetails}/>;
     },
 

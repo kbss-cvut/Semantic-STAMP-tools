@@ -132,7 +132,8 @@ class TreeSelect extends PureComponent {
             // this.setState(() => ({cursor: {active: false}}), this.myStateChange);
         }
         const toggleTime = new Date().getTime();
-        if(this.lastToggleTime && toggleTime - this.lastToggleTime < 400 && cursor && cursor.id === node.id){
+        if( !this.props.disabled &&
+            this.lastToggleTime && toggleTime - this.lastToggleTime < 400 && cursor && cursor.id === node.id){
             // this.onSelect(node);
             this.onSelect(node);
 
@@ -219,6 +220,7 @@ class TreeSelect extends PureComponent {
                             onKeyUp={this.onFilterMouseUp.bind(this)}
                             placeholder="Search for processes, activities and deviations ..."
                             type="text"
+                            disabled={this.props.disabled}
                             {...searchBoxVal}
                         />
                         {/*{this.state.selected ?*/}

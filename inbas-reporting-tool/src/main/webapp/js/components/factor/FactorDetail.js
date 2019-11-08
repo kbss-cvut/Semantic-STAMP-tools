@@ -248,6 +248,7 @@ class FactorDetail extends React.Component {
                     {eventTypeBadge}
                     <div className={eventTypeClassNames}>
                         <TreeSelect value={eventTypeLabel} from={this.props.fromEventType}
+                                    disabled={this.props.disabledTypeSelection}
                                     label={this.i18n('factors.detail.type')} onSelect={this.onEventTypeChange}/>
                     </div>
                 </Tab>
@@ -258,6 +259,7 @@ class FactorDetail extends React.Component {
                             <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
                                                 value={eventTypeLabel}
                                                 label={this.i18n('factors.detail.type')}
+                                                disabled={this.props.disabledTypeSelection}
                                                 onSelect={this.onEventTypeChange} focus={true}/>
                         </div>
                     </div>
