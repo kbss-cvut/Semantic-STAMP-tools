@@ -49,7 +49,7 @@ class EventTypeTypeahead extends React.Component {
         return <Typeahead ref={c => this.eventTypeSelect = c} label={this.props.label} name='eventType' size='small'
                           formInputOption='id' placeholder={placeholder} onOptionSelected={this.props.onSelect}
                           filterOption='name' value={value} displayOption='name' options={this.state.options}
-                          customListComponent={EventTypeTypeaheadResultList}/>;
+                          customListComponent={EventTypeTypeaheadResultList} disabled={this.props.disabled}/>;
     }
 }
 
