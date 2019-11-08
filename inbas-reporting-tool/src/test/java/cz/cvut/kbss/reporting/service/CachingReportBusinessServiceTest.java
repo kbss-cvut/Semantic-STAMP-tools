@@ -139,11 +139,24 @@ public class CachingReportBusinessServiceTest extends BaseServiceTestRunner {
     private List<LogicalDocument> initReportChains() {
         final List<LogicalDocument> latestRevisions = new ArrayList<>();
         for (int i = 0; i < Generator.randomInt(5, 10); i++) {
+            waitAtLeastOneMilisecond();
             final List<OccurrenceReport> chain = persistOccurrenceReportChain();
             latestRevisions.add(chain.get(chain.size() - 1));
         }
         latestRevisions.sort((a, b) -> b.getDateCreated().compareTo(a.getDateCreated()));
         return latestRevisions;
+    }
+    private void waitAtLeastOneMilisecond(){
+        long lastTime = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
+        while(lastTime == now){
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            now = System.currentTimeMillis();
+        }
     }
 
     @Test
