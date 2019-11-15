@@ -13,7 +13,7 @@ import I18nMixin from "../../../i18n/I18nMixin";
 import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 
 var FrequencyList = React.createClass({
-    mixins: [PagingMixin,I18nMixin],
+    mixins: [PagingMixin, I18nMixin],
 
     propTypes: {
         query: React.PropTypes.string.isRequired,
@@ -52,7 +52,7 @@ var FrequencyList = React.createClass({
             const eventTypeIri = eventTypesIris[i];
             const vals = rowData.filter((item2) => (item2.event_type_iri === eventTypeIri));
             let data = Utils.generateMonthTimeAxis(minDate, maxDate).map((item) => {
-                const match = vals.filter((item2) =>  (Number(item2.year) * 100 + Number(item2.month)) === item);
+                const match = vals.filter((item2) => (Number(item2.year) * 100 + Number(item2.month)) === item);
                 let count = 0;
                 if (match && match[0]) {
                     count = count + Number(match[0].count)
@@ -66,7 +66,7 @@ var FrequencyList = React.createClass({
 
             const sum = data.reduce((memo, val) => memo + Number(val.count), 0);
 
-            if ( this.props.allowZeros || ( sum > 0 ) ) {
+            if (this.props.allowZeros || (sum > 0)) {
                 rows.push({
                     key: i,
                     data: data,
@@ -77,7 +77,7 @@ var FrequencyList = React.createClass({
             }
         }
 
-        rows = rows.sort((a, b) =>  b.totalSum - a.totalSum);
+        rows = rows.sort((a, b) => b.totalSum - a.totalSum);
 
         this.setState(
             {
@@ -88,24 +88,24 @@ var FrequencyList = React.createClass({
     },
 
     render() {
-        const topList = this.state.rows.map(row => <FrequencyListRow key={row.key} row={row} onClick={this.props.onSelect}/> );
+        const topList = this.state.rows.map(row => <FrequencyListRow key={row.key} row={row}
+                                                                     onClick={this.props.onSelect}/>);
 
-        return (
-            <div>
-                <Table striped bordered condensed hover>
-                    <thead>
-                    <tr>
-                        <th className='col-xs-4 content-center'>{this.i18n('statistics.frequencylist.eventtype.label')}</th>
-                        <th className='col-xs-1 content-center'>{this.i18n('statistics.frequencylist.annualcount.label')}</th>
-                        <th className='col-xs-2 content-center'>{this.i18n('statistics.frequencylist.annualtrend.label')}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                     {this.getCurrentPage(topList)}
-                    </tbody>
-                </Table>
-                {this.renderPagination(topList)}
-            </div> );
+        return <div className="autoscroll">
+            <Table striped bordered condensed hover>
+                <thead>
+                <tr>
+                    <th className='col-xs-4 content-center'>{this.i18n('statistics.frequencylist.eventtype.label')}</th>
+                    <th className='col-xs-1 content-center'>{this.i18n('count')}</th>
+                    <th className='col-xs-2 content-center'>{this.i18n('statistics.frequencylist.annualtrend.label')}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {this.getCurrentPage(topList)}
+                </tbody>
+            </Table>
+            {this.renderPagination(topList)}
+        </div>;
     }
 });
 module.exports = injectIntl(I18nWrapper(LoadingWrapper(FrequencyList, {maskClass: 'mask-container'})));

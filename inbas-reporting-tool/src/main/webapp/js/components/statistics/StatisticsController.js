@@ -18,13 +18,13 @@ class StatisticsController extends React.Component {
         const sm = [
             {i: 'top', x: 0, y: 0, w: 8, h: 2, isResizable: false, isDraggable: false},
             {i: 'main', x: 0, y: 2, w: 8, h: 4, isResizable: false, isDraggable: false},
-            {i: 'bottom', x: 0, y: 8, w: 8, h: 2, isResizable: false, isDraggable: false}
+            {i: 'bottom', x: 0, y: 8, w: 8, h: 3, isResizable: false, isDraggable: false}
         ];
 
         const lg = [
             {i: 'top', x: 0, y: 0, w: 8, h: 2, isResizable: false, isDraggable: false},
-            {i: 'main', x: 0, y: 2, w: 8, h: 6, isResizable: false, isDraggable: false},
-            {i: 'bottom', x: 0, y: 8, w: 8, h: 2, isResizable: false, isDraggable: false}
+            {i: 'main', x: 0, y: 2, w: 8, h: 4, isResizable: false, isDraggable: false},
+            {i: 'bottom', x: 0, y: 8, w: 8, h: 3, isResizable: false, isDraggable: false}
         ];
 
         const layouts = {lg: lg, md: lg, sm: sm, xs: sm, xxs: sm};
@@ -37,9 +37,18 @@ class StatisticsController extends React.Component {
                 layouts={layouts}
                 cols={cols}
                 rowHeight={200}>
-                <div key="top"><Panel header={this.i18n('statistics.panel.occurrence-severity-trends.label')}><OccurrenceSeverityTrends/></Panel></div>
-                <div key="main"><Panel header={this.i18n('statistics.panel.loss-events.label')}><LossEventDashboard/></Panel></div>
-                <div key="bottom"><Panel header={this.i18n('statistics.panel.event-control-loop.label')}><EventControlLoop/></Panel></div>
+                <div key="top">
+                    <Panel header={this.i18n('statistics.panel.occurrence-severity-trends.label')}
+                           className="statistics-panel"><OccurrenceSeverityTrends/></Panel>
+                </div>
+                <div key="main">
+                    <Panel header={this.i18n('statistics.panel.loss-events.label')}
+                           className="statistics-panel"><LossEventDashboard/></Panel>
+                </div>
+                <div key="bottom">
+                    <Panel header={this.i18n('statistics.panel.event-control-loop.label')}
+                           className="statistics-panel"><EventControlLoop/></Panel>
+                </div>
             </ResponsiveReactGridLayout>
         </div>;
     }

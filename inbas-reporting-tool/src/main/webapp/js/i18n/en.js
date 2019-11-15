@@ -36,6 +36,7 @@ module.exports = {
         'uploading-mask': 'Uploading',
         'please-wait': 'Please wait...',
         'issue-fix': 'Fix the issue',
+        "count": "Count",
 
         'detail.save-tooltip': 'Save changes',
         'detail.saving': 'Saving...',
@@ -323,7 +324,10 @@ module.exports = {
         'statistics.panel.root-events.label' : 'Root Events',
         'statistics.panel.event-factor-chains.label' : 'Event - Factor Chains',
         'statistics.panel.event-control-loop.label' : 'Event - Control Loop',
-        'statistics.panel.loss-events.label' : 'Loss Events',
+        'statistics.panel.loss-events.label' : 'Loss Event Factors',
+        'statistics.panel.loss-events.events.label' : 'Loss events',
+        "statistics.panel.loss-events.processes.label": "Related processes",
+        "statistics.panel.loss-events.process": "Process",
 
         'statistics.frequencylist.eventtype.label': 'Event Type',
         'statistics.frequencylist.annualcount.label': 'Annual Count',

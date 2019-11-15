@@ -1,6 +1,7 @@
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
+PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
 PREFIX doc: <http://onto.fel.cvut.cz/ontologies/documentation/>
 PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
@@ -8,7 +9,7 @@ PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
 
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 
-SELECT ?event_type ?controlled_process ?controller (COUNT(DISTINCT ?et) AS ?count) WHERE {
+SELECT ?deviation ?controlled_process ?controller (COUNT(DISTINCT ?et) AS ?count) WHERE {
   ?report doc:documents ?occurrence .
 
     FILTER NOT EXISTS {
@@ -17,49 +18,45 @@ SELECT ?event_type ?controlled_process ?controller (COUNT(DISTINCT ?et) AS ?coun
 
   ?occurrence ufo:has_part+ ?et .
 
-  ?et a stamp:unsafe-event ;
-    rt:has_event_type ?event_e_t .
-  OPTIONAL {
-    SERVICE SILENT er:eccairs-aviation-3.4.0.2 {
-      ?event_e_t rdfs:label ?event_type.
-    }
-  }
-  OPTIONAL {
-    SERVICE SILENT er:eccairs-aviation-1.3.0.8 {
-      ?event_e_t rdfs:label ?event_type.
-    }
-  }
-  OPTIONAL {
-    SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 {
-      ?event_e_t rdfs:label ?event_type.
-    }
-  }
-  OPTIONAL {
-      SERVICE SILENT er:stamp {
-        ?event_e_t rdfs:label ?event_type.
-      }
-    }
-  OPTIONAL {
-    ?et aso:has_factor+ ?cp .
-    ?cp a stamp:controlled-process-type .
+  ?et a ufo:Event ;
+    rt:has_event_type ?deviation_type .
+  ?deviation_type a stamp:unsafe-event .
 
     OPTIONAL {
+      ?deviation_type rdfs:label ?deviation .
+    }
+    OPTIONAL {
       SERVICE SILENT er:stamp {
-        ?cp rdfs:label ?controlled_process .
+        ?deviation_type rdfs:label ?deviation .
       }
     }
-
     OPTIONAL {
-        ?cp ufo:has_participant ?ctrl .
-        ?ctrl a stamp:controller-type .
-
-        OPTIONAL {
-          SERVICE SILENT er:stamp {
-            ?cp rdfs:label ?controller.
-          }
+        SERVICE SILENT er:cast-stamp-schema-csat {
+            ?activity_type stamp:has-control-structure-element-part ?deviation_type .
+            ?process_type stamp:has-control-structure-element-part ?activity_type .
+            OPTIONAL {
+              ?process_type rdfs:label ?controlled_process .
+            }
+            OPTIONAL {
+              SERVICE SILENT er:stamp {
+                ?process_type rdfs:label ?controlled_process .
+              }
+            }
         }
     }
-  }
+    OPTIONAL {
+        SERVICE SILENT er:cast-stamp-schema-csat {
+            ?activity_type ufo:has-participant ?controller_type .
+            OPTIONAL {
+              ?controller_type rdfs:label ?controller .
+            }
+            OPTIONAL {
+              SERVICE SILENT er:stamp {
+                ?controller_type rdfs:label ?controller .
+              }
+            }
+        }
+    }
 }
-GROUP BY ?event_type ?controlled_process ?controller
-ORDER BY desc(?count) asc(?event_type)
+GROUP BY ?deviation ?controlled_process ?controller
+ORDER BY desc(?count) asc(?deviation)

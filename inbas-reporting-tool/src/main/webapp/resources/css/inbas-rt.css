@@ -412,10 +412,6 @@ td.actions button {
     display: none !important;
 }
 
-.gantt_leaf_row .gantt_cell .gantt_add {
-    display: none;
-}
-
 /* Overriding bootstrap primary panel border color */
 .panel-primary {
     border-color: #bce8f1;
@@ -894,4 +890,12 @@ div.lang {
 
 a.lang.selected {
     font-weight: bold;
+}
+
+.statistics-panel {
+    min-height: 95%;
+}
+
+.autoscroll {
+    overflow: auto;
 }

@@ -16,11 +16,8 @@ SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count) {
     ?report <http://onto.fel.cvut.cz/ontologies/reporting-tool/model/has_next_revision> ?y .
   }
 
-  ?occurrence ufo:has_part+ ?event .
-
-  ?event a stamp:loss-event-type ;
-    rt:has_event_type ?event_type_iri ;
-    aso:has_start_time ?start_time .
+  ?occurrence stamp:contains-loss-event-of-type ?event_type_iri ;
+              aso:has_start_time ?start_time .
 
   BIND(year(?start_time) AS ?year)
   BIND(month(?start_time) AS ?month)
@@ -47,4 +44,4 @@ SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count) {
   }
 }
 GROUP BY ?year ?month ?event_type ?event_type_iri
-ORDER BY ?year ?month desc(?count) asc(?event_type)
+ORDER BY desc(?count) ?year ?month asc(?event_type)

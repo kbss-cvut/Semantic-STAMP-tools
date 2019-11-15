@@ -39,7 +39,8 @@ class EventControlLoop extends React.Component {
         const dimensions = data.queryResults.head.vars.filter(
             (varName) => !varName.startsWith('count')).map(
             (varName) => {
-                return {value: varName, title: varName.replace('_', ' ')}
+                const vn = varName.charAt(0).toUpperCase() + varName.substring(1);
+                return {value: varName, title: vn.replace('_', ' ')}
             }
         );
         const calculations = [{
@@ -72,7 +73,6 @@ class EventControlLoop extends React.Component {
                 reduce={this.reduce}
                 calculations={this.state.calculations}
                 activeDimensions={this.state.dimensions[0]}
-                sortDir='desc'
                 nPaginateRows={10}
                 compact={true}/>
         </div>;
