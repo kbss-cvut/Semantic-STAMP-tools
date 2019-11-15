@@ -19,7 +19,7 @@ const LossEventProcesses = props => {
     }
     const rowData = Utils.sparql2table(data);
 
-    return <div className="autoscroll">
+    return <div className="autoscroll" style={{maxHeight: "400px"}}>
         <h4>{props.i18n("statistics.panel.loss-events.processes.label")}</h4>
         <Table striped bordered condensed hover>
             <thead>
@@ -31,7 +31,7 @@ const LossEventProcesses = props => {
             <tbody>
             {rowData.map(row => <tr key={row.process_type_iri}>
                 <td>
-                    <Button bsStyle="link"
+                    <Button bsStyle="link" style={{whiteSpace: "normal"}}
                             title={row.process_type_iri} onClick={() => props.onSelect({
                         id: row.process_type_iri,
                         label: row.controlled_process

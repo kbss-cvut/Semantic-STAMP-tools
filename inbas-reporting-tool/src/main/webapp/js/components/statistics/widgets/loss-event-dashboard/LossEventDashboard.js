@@ -35,7 +35,7 @@ class LossEventDashboard extends React.Component {
 
     onProcessSelect = (process) => {
         this.props.loadingOn();
-        Actions.loadStatistics("process_factors", {process_type: process.id});
+        Actions.loadStatistics("process_factors", {central_type: encodeURI(process.id)});
     };
 
     _onStatisticsLoaded = (data) => {
@@ -59,7 +59,7 @@ class LossEventDashboard extends React.Component {
                     <LossEventProcesses data={this.state.lossEventProcesses} onSelect={this.onProcessSelect}/>
                 </td>
                 <td className='col-xs-8 vtop'>
-                    <EventtypeGraph eventTypeGraph={this.state.selectedQueryResults} loadingOn={this.props.loadingOn}
+                    <EventtypeGraph eventTypeGraph={this.state.processFactors} loadingOn={this.props.loadingOn}
                                     loadingOff={this.props.loadingOff}/>
                 </td>
             </tr>
