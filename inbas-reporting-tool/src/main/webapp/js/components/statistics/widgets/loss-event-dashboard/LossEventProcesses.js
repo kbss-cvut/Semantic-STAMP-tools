@@ -19,34 +19,38 @@ const LossEventProcesses = props => {
     }
     const rowData = Utils.sparql2table(data);
 
-    return <div className="autoscroll" style={{maxHeight: "400px"}}>
+    return <div className="event-type-table">
         <h4>{props.i18n("statistics.panel.loss-events.processes.label")}</h4>
-        <Table striped bordered condensed hover>
-            <thead>
-            <tr>
-                <th className='col-xs-4 content-center'>{props.i18n('statistics.panel.loss-events.process')}</th>
-                <th className='col-xs-1 content-center'>{props.i18n('count')}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {rowData.map(row => <tr key={row.process_type_iri}>
-                <td>
-                    <Button bsStyle="link" style={{whiteSpace: "normal"}}
-                            title={row.process_type_iri} onClick={() => props.onSelect({
-                        id: row.process_type_iri,
-                        label: row.controlled_process
-                    })}>{stripProcessPrefix(row.controlled_process)}
-                    </Button>
-                </td>
-                <td className="content-center vertical-middle">{row.count}</td>
-            </tr>)}
-            </tbody>
-        </Table>
+        <div className="autoscroll" style={{maxHeight: "335px"}}>
+            <Table striped bordered condensed hover>
+                <thead>
+                <tr>
+                    <th className='col-xs-4 content-center'>{props.i18n('statistics.panel.loss-events.process')}</th>
+                    <th className='col-xs-1 content-center'>{props.i18n('count')}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {rowData.map(row => <tr key={row.process_type_iri}>
+                    <td>
+                        <Button bsStyle="link" style={{whiteSpace: "normal"}}
+                                className={row.process_type_iri === props.activeItem ? "active-item" : undefined}
+                                title={row.process_type_iri} onClick={() => props.onSelect({
+                            id: row.process_type_iri,
+                            label: row.controlled_process
+                        })}>{stripProcessPrefix(row.controlled_process)}
+                        </Button>
+                    </td>
+                    <td className="content-center vertical-middle">{row.count}</td>
+                </tr>)}
+                </tbody>
+            </Table>
+        </div>
     </div>;
 };
 
 LossEventProcesses.propTypes = {
     data: PropTypes.array,
+    activeItem: PropTypes.string,
     onSelect: PropTypes.func.isRequired
 };
 

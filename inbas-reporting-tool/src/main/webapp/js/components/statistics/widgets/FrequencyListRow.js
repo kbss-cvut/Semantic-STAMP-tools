@@ -1,6 +1,5 @@
-'use strict';
-
 import React from "react";
+import PropTypes from "prop-types";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import {Line, LineChart, Tooltip, XAxis} from "recharts";
@@ -10,8 +9,9 @@ import {Button} from "react-bootstrap";
 class FrequencyListRow extends React.Component {
 
     static propTypes = {
-        // onClick: React.PropTypes.function,
-        row: React.PropTypes.object.isRequired
+        onClick: PropTypes.func,
+        row: PropTypes.object.isRequired,
+        active: PropTypes.bool
     };
 
     constructor(props) {
@@ -26,7 +26,7 @@ class FrequencyListRow extends React.Component {
         return <tr key={this.props.row.key}>
             <td>{!(this.props.onClick) ?
                 <div>{this.props.row.eventType}</div> :
-                <Button bsStyle="link"
+                <Button bsStyle="link" className={this.props.active ? "active-item" : undefined}
                         onClick={this.onMouseClick}
                         title={this.props.row.eventTypeIri}>{this.props.row.eventType}
                 </Button>}

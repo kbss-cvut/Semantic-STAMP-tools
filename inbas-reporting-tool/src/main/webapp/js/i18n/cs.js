@@ -327,6 +327,7 @@ module.exports = {
         'statistics.panel.loss-events.events.label' : 'Události ztrát',
         "statistics.panel.loss-events.processes.label": "Relevantní procesy",
         "statistics.panel.loss-events.process": "Proces",
+        "statistics.panel.loss-events.no-graph": "Graf není k dispozici. Vyberte typ události a dále typ procesu.",
 
         'statistics.frequencylist.eventtype.label': 'Typ události',
         'statistics.frequencylist.annualcount.label': 'Roční počet',

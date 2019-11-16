@@ -1,6 +1,7 @@
-'use strict';
+"use strict";
 
 import React from "react";
+import PropTypes from "prop-types";
 import I18nWrapper from "../../../i18n/I18nWrapper";
 import injectIntl from "../../../utils/injectIntl";
 import StatisticsStore from "../../../stores/StatisticsStore";
@@ -12,13 +13,14 @@ import PagingMixin from "../../mixin/PagingMixin";
 import I18nMixin from "../../../i18n/I18nMixin";
 import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 
-var FrequencyList = React.createClass({
+const FrequencyList = React.createClass({
     mixins: [PagingMixin, I18nMixin],
 
     propTypes: {
-        query: React.PropTypes.string.isRequired,
-        allowZeros: React.PropTypes.bool.isRequired,
-        // onSelect: React.PropTypes.function.isRequired
+        query: PropTypes.string.isRequired,
+        allowZeros: PropTypes.bool.isRequired,
+        onSelect: PropTypes.func.isRequired,
+        activeItem: PropTypes.string
     },
 
     getInitialState() {
@@ -89,9 +91,10 @@ var FrequencyList = React.createClass({
 
     render() {
         const topList = this.state.rows.map(row => <FrequencyListRow key={row.key} row={row}
+                                                                     active={this.props.activeItem === row.eventTypeIri}
                                                                      onClick={this.props.onSelect}/>);
 
-        return <div className="autoscroll">
+        return <div className="event-type-table">
             <Table striped bordered condensed hover>
                 <thead>
                 <tr>

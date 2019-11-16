@@ -328,6 +328,7 @@ module.exports = {
         'statistics.panel.loss-events.events.label' : 'Loss events',
         "statistics.panel.loss-events.processes.label": "Related processes",
         "statistics.panel.loss-events.process": "Process",
+        "statistics.panel.loss-events.no-graph": "No graph available. Select a loss event type and then a process.",
 
         'statistics.frequencylist.eventtype.label': 'Event Type',
         'statistics.frequencylist.annualcount.label': 'Annual Count',

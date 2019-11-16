@@ -38,15 +38,15 @@ class StatisticsController extends React.Component {
                 cols={cols}
                 rowHeight={200}>
                 <div key="top">
-                    <Panel header={this.i18n('statistics.panel.occurrence-severity-trends.label')}
+                    <Panel header={<h3>{this.i18n('statistics.panel.occurrence-severity-trends.label')}</h3>}
                            className="statistics-panel"><OccurrenceSeverityTrends/></Panel>
                 </div>
                 <div key="main">
-                    <Panel header={this.i18n('statistics.panel.loss-events.label')}
+                    <Panel header={<h3>{this.i18n('statistics.panel.loss-events.label')}</h3>}
                            className="statistics-panel"><LossEventDashboard/></Panel>
                 </div>
                 <div key="bottom">
-                    <Panel header={this.i18n('statistics.panel.event-control-loop.label')}
+                    <Panel header={<h3>{this.i18n('statistics.panel.event-control-loop.label')}</h3>}
                            className="statistics-panel"><EventControlLoop/></Panel>
                 </div>
             </ResponsiveReactGridLayout>

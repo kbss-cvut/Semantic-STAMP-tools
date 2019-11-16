@@ -15,6 +15,7 @@ class LossEventDashboard extends React.Component {
         this.state = {
             lossEvent: null,
             lossEventProcesses: null,
+            process: null,
             processFactors: null
         }
     }
@@ -29,12 +30,13 @@ class LossEventDashboard extends React.Component {
 
     onEventSelect(id) {
         this.props.loadingOn();
-        this.setState({lossEvent: id});
-        Actions.loadStatistics("loss_event_processes", {loss_event: id});
+        this.setState({lossEvent: id, lossEventProcess: null, processFactors: null});
+        Actions.loadStatistics("loss_event_processes", {loss_event: encodeURI(id)});
     }
 
     onProcessSelect = (process) => {
         this.props.loadingOn();
+        this.setState({process: process});
         Actions.loadStatistics("process_factors", {central_type: encodeURI(process.id)});
     };
 
@@ -48,19 +50,25 @@ class LossEventDashboard extends React.Component {
     };
 
     render() {
+        const activeProcess = this.state.process;
         return <table style={{width: '100%', height: '700px'}}>
             <tbody>
             <tr>
                 <td className="col-xs-4 vtop">
                     <h4>{this.props.i18n("statistics.panel.loss-events.events.label")}</h4>
-                    <FrequencyList query="loss_events_top" allowZeros={true}
-                                   onSelect={(data) => this.onEventSelect(data)}
-                                   loadingOn={this.props.loadingOn} loadingOff={this.props.loadingOff}/>
-                    <LossEventProcesses data={this.state.lossEventProcesses} onSelect={this.onProcessSelect}/>
+                    <div className="autoscroll" style={{maxHeight: "350px"}}>
+                        <FrequencyList query="loss_events_top" allowZeros={true} activeItem={this.state.lossEvent}
+                                       onSelect={(data) => this.onEventSelect(data)}
+                                       loadingOn={this.props.loadingOn} loadingOff={this.props.loadingOff}/>
+                    </div>
+                    <LossEventProcesses data={this.state.lossEventProcesses}
+                                        activeItem={activeProcess ? activeProcess.id : null}
+                                        onSelect={this.onProcessSelect}/>
                 </td>
                 <td className='col-xs-8 vtop'>
                     <EventtypeGraph eventTypeGraph={this.state.processFactors} loadingOn={this.props.loadingOn}
-                                    loadingOff={this.props.loadingOff}/>
+                                    loadingOff={this.props.loadingOff}
+                                    title={activeProcess ? activeProcess.label : null}/>
                 </td>
             </tr>
             </tbody>

@@ -896,6 +896,10 @@ a.lang.selected {
     min-height: 95%;
 }
 
+.statistics-panel .event-type-table .active-item {
+    font-weight: bold;
+}
+
 .autoscroll {
     overflow: auto;
 }
