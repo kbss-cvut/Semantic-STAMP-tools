@@ -1,5 +1,3 @@
-'use strict';
-
 import React from "react";
 import ReactPivot from "react-pivot";
 import I18nWrapper from "../../../i18n/I18nWrapper";
@@ -9,7 +7,7 @@ import Actions from "../../../actions/Actions";
 import Utils from "../Utils";
 import LoadingWrapper from "../../misc/hoc/LoadingWrapper";
 
-class EventFactorChains extends React.Component {
+class EventControlLoop extends React.Component {
 
     constructor(props) {
         super(props);
@@ -25,7 +23,7 @@ class EventFactorChains extends React.Component {
 
     componentWillMount() {
         this.props.loadingOn();
-        Actions.loadStatistics("eventfactorgraph");
+        Actions.loadStatistics("eventcontrolloop");
         this.unsubscribe = StatisticsStore.listen(this._onStatisticsLoaded);
     };
 
@@ -34,14 +32,15 @@ class EventFactorChains extends React.Component {
     };
 
     _onStatisticsLoaded = (data) => {
-        if (!data || (data.queryName != "eventfactorgraph")) {
+        if (!data || (data.queryName !== "eventcontrolloop")) {
             return;
         }
 
         const dimensions = data.queryResults.head.vars.filter(
-            (varName) =>  !varName.startsWith('count')).map(
+            (varName) => !varName.startsWith('count')).map(
             (varName) => {
-                return {value: varName, title: varName.replace('_', ' ')}
+                const vn = varName.charAt(0).toUpperCase() + varName.substring(1);
+                return {value: varName, title: vn.replace('_', ' ')}
             }
         );
         const calculations = [{
@@ -66,7 +65,7 @@ class EventFactorChains extends React.Component {
     };
 
     render() {
-        return (<div className='centered'>
+        return <div className='centered'>
             <ReactPivot
                 key={this.state.reportKey}
                 rows={this.state.rows}
@@ -74,11 +73,10 @@ class EventFactorChains extends React.Component {
                 reduce={this.reduce}
                 calculations={this.state.calculations}
                 activeDimensions={this.state.dimensions[0]}
-                sortDir='desc'
                 nPaginateRows={10}
                 compact={true}/>
-        </div>);
+        </div>;
     }
 }
 
-export default injectIntl(I18nWrapper(LoadingWrapper(EventFactorChains, {maskClass: 'mask-container'})));
+export default injectIntl(I18nWrapper(LoadingWrapper(EventControlLoop, {maskClass: 'mask-container'})));

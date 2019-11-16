@@ -36,6 +36,7 @@ module.exports = {
         'uploading-mask': 'Nahrávám',
         'please-wait': 'Prosím čekejte...',
         'issue-fix': 'Opravit problém',
+        "count": "Počet",
 
         'detail.save-tooltip': 'Uložit změny',
         'detail.saving': 'Ukládám...',
@@ -321,6 +322,12 @@ module.exports = {
         'statistics.panel.occurrence-categories-top.label' : 'Kategorie událostí (5 nejčastějších v posledním roce)',
         'statistics.panel.root-events.label' : 'Kořenové události',
         'statistics.panel.event-factor-chains.label' : 'Řetězce faktorů',
+        'statistics.panel.event-control-loop.label' : 'Kontrolní smyčka události',
+        'statistics.panel.loss-events.label' : 'Faktory ztrát',
+        'statistics.panel.loss-events.events.label' : 'Události ztrát',
+        "statistics.panel.loss-events.processes.label": "Relevantní procesy",
+        "statistics.panel.loss-events.process": "Proces",
+        "statistics.panel.loss-events.no-graph": "Graf není k dispozici. Vyberte typ události a dále typ procesu.",
 
         'statistics.frequencylist.eventtype.label': 'Typ události',
         'statistics.frequencylist.annualcount.label': 'Roční počet',

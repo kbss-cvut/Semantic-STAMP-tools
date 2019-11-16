@@ -60,10 +60,13 @@ class EventtypeGraph extends React.Component {
     render() {
         const data = this.load();
 
-        if ( data == null) {
-            return <div style={{ textAlign: "center", verticalAlign:"center"}}>No Graph Available. Select an Event Type.</div>;
+        if ( data === null) {
+            return <h4 className="content-center">{this.props.i18n("statistics.panel.loss-events.no-graph")}</h4>;
         } else {
-            return <div>{this.props.title}<br/><Graph graph={data} options={this.state.graphOptions} style={{ width : '100%', height:'500px'}}/></div>;
+            return <div>
+                <h4 className="content-center">{this.props.title}</h4>
+                <Graph graph={data} options={this.state.graphOptions} style={{ width : '100%', height:'625px'}}/>
+            </div>;
         }
     }
 }

@@ -895,3 +895,15 @@ div.lang {
 a.lang.selected {
     font-weight: bold;
 }
+
+.statistics-panel {
+    min-height: 95%;
+}
+
+.statistics-panel .event-type-table .active-item {
+    font-weight: bold;
+}
+
+.autoscroll {
+    overflow: auto;
+}

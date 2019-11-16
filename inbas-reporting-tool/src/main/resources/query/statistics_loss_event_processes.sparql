@@ -1,0 +1,38 @@
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX doc: <http://onto.fel.cvut.cz/ontologies/documentation/>
+PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
+PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
+
+PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
+
+
+# Currently, load all processes and activities
+SELECT ?controlled_process ?process_type_iri (COUNT(*) AS ?count) {
+  ?report doc:documents ?occurrence .
+
+  FILTER NOT EXISTS {
+    ?report <http://onto.fel.cvut.cz/ontologies/reporting-tool/model/has_next_revision> ?y .
+  }
+
+  ?occurrence stamp:contains-loss-event-of-type ?loss_event ;
+              ufo:has_part+ ?et .
+  ?et a ufo:Event ;
+       rt:has_event_type ?process_type_iri .
+
+  OPTIONAL {
+    ?process_type_iri rdfs:label ?local_label .
+  }
+  OPTIONAL {
+    SERVICE SILENT er:stamp {
+        ?process_type_iri rdfs:label ?stamp_label .
+  }
+  }
+  BIND(COALESCE(?local_label, ?stamp_label) as ?controlled_process) .
+  FILTER (bound(?controlled_process))
+}
+GROUP BY ?controlled_process ?process_type_iri
+ORDER BY desc(?count) asc(?controlled_process)

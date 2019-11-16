@@ -1,33 +1,24 @@
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
+PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX doc: <http://onto.fel.cvut.cz/ontologies/documentation/>
 PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
 
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 
-SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count)
-{
-  ?event
-    rt:has_event_type ?event_type_iri ;
-    aso:has_start_time ?start_time
-  .
+SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count) {
+  ?report doc:documents ?occurrence .
 
   FILTER NOT EXISTS {
-     ?event a aso:Occurrence .
+    ?report <http://onto.fel.cvut.cz/ontologies/reporting-tool/model/has_next_revision> ?y .
   }
 
-  {
-    SELECT DISTINCT ?event_type_iri {
-      ?event_2 rt:has_event_type ?event_type_iri .
-      FILTER NOT EXISTS {
-     	  ?event_3 aso:has_factor ?event_2
-      }
-    }
-  }
+  ?occurrence stamp:contains-loss-event-of-type ?event_type_iri ;
+              aso:has_start_time ?start_time .
 
-  BIND(year(now()) AS ?thisYear)
-  BIND(month(now()) AS ?thisMonth)
   BIND(year(?start_time) AS ?year)
   BIND(month(?start_time) AS ?month)
 
@@ -46,7 +37,11 @@ SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count)
       ?event_type_iri rdfs:label ?event_type.
     }
   }
-#   BIND(?event_type_iri AS ?event_type)
+  OPTIONAL {
+    SERVICE SILENT er:stamp {
+      ?event_type_iri rdfs:label ?event_type.
+    }
+  }
 }
 GROUP BY ?year ?month ?event_type ?event_type_iri
-ORDER BY ?year ?month desc(?count) asc(?event_type)
+ORDER BY desc(?count) ?year ?month asc(?event_type)
