@@ -87,9 +87,9 @@ class TreeSelect extends PureComponent {
             nodeMap.set(node.id, node);
         });
 
-        var childNodes = [];
+        let childNodes = [];
         edges.forEach((e) => {
-            var n = nodeMap.get(e['@id']);
+            let n = nodeMap.get(e['@id']);
             if(n && e[Vocabulary.HAS_STRUCTURE_PART] && e[Vocabulary.HAS_STRUCTURE_PART].length > 0) {
                 n.children = e[Vocabulary.HAS_STRUCTURE_PART].map((n) => nodeMap.get(n['@id']));
                 childNodes.push(...n.children);
@@ -98,17 +98,19 @@ class TreeSelect extends PureComponent {
 
         // find roots
         let roots = null;
+        let fromNode = null;
         if(this.props.from){
-            const fromNode = nodeMap.get(this.props.from);
+            fromNode = nodeMap.get(this.props.from);
             if(fromNode)
                 roots = fromNode.children;
-        }else {
+        }
+
+        if(!roots){
             childNodes.forEach(n => nodeMap.delete(n.id));
             roots = nodeMap.values();
         }
 
-
-        var root = {};
+        let root = {};
         if (roots.length == 1) {
             root = roots[0];
         } else {
