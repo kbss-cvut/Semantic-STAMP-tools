@@ -38,7 +38,7 @@ SELECT ?event_type ?event_type_iri ?year ?month (COUNT(*) AS ?count) {
     }
   }
   OPTIONAL {
-    SERVICE SILENT er:stamp {
+    SERVICE SILENT ?eventTypesRepository {
       ?event_type_iri rdfs:label ?event_type.
     }
   }

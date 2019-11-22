@@ -26,32 +26,32 @@ SELECT ?deviation ?controlled_process ?controller (COUNT(DISTINCT ?et) AS ?count
       ?deviation_type rdfs:label ?deviation .
     }
     OPTIONAL {
-      SERVICE SILENT er:stamp {
+      SERVICE SILENT ?eventTypesRepository {
         ?deviation_type rdfs:label ?deviation .
       }
     }
     OPTIONAL {
-        SERVICE SILENT er:cast-stamp-schema-csat {
+        SERVICE SILENT ?eventTypesRepository {
             ?activity_type stamp:has-control-structure-element-part ?deviation_type .
             ?process_type stamp:has-control-structure-element-part ?activity_type .
             OPTIONAL {
               ?process_type rdfs:label ?controlled_process .
             }
             OPTIONAL {
-              SERVICE SILENT er:stamp {
+              SERVICE SILENT ?eventTypesRepository {
                 ?process_type rdfs:label ?controlled_process .
               }
             }
         }
     }
     OPTIONAL {
-        SERVICE SILENT er:cast-stamp-schema-csat {
+        SERVICE SILENT ?eventTypesRepository {
             ?activity_type ufo:has-participant ?controller_type .
             OPTIONAL {
               ?controller_type rdfs:label ?controller .
             }
             OPTIONAL {
-              SERVICE SILENT er:stamp {
+              SERVICE SILENT ?eventTypesRepository {
                 ?controller_type rdfs:label ?controller .
               }
             }

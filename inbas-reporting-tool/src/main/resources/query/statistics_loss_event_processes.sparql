@@ -7,8 +7,6 @@ PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
 PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
 
-PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
-
 
 # Currently, load all processes and activities
 SELECT ?controlled_process ?process_type_iri (COUNT(*) AS ?count) {
@@ -23,16 +21,9 @@ SELECT ?controlled_process ?process_type_iri (COUNT(*) AS ?count) {
   ?et a ufo:Event ;
        rt:has_event_type ?process_type_iri .
 
-  OPTIONAL {
-    ?process_type_iri rdfs:label ?local_label .
+  SERVICE SILENT ?eventTypesRepository {
+    ?process_type_iri rdfs:label ?controlled_process .
   }
-  OPTIONAL {
-    SERVICE SILENT er:stamp {
-        ?process_type_iri rdfs:label ?stamp_label .
-  }
-  }
-  BIND(COALESCE(?local_label, ?stamp_label) as ?controlled_process) .
-  FILTER (bound(?controlled_process))
 }
 GROUP BY ?controlled_process ?process_type_iri
 ORDER BY desc(?count) asc(?controlled_process)

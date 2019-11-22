@@ -2,6 +2,7 @@ package cz.cvut.kbss.reporting.service;
 
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.service.data.DataLoader;
+import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,6 +27,9 @@ public class SPARQLService {
     @Qualifier("localDataLoader")
     private DataLoader localLoader;
 
+    @Autowired
+    private ConfigReader configReader;
+
     /**
      * Executes given named SPARQL query
      *
@@ -49,6 +53,7 @@ public class SPARQLService {
         }
         String query = localLoader.loadData(queryFile, Collections.emptyMap());
 
+        query = replaceParameterVariables(query);
         if (!bindings.isEmpty()) {
             query = query + " VALUES (";
             for (final String key : bindings.keySet()) {
@@ -73,5 +78,11 @@ public class SPARQLService {
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException("Unable to find encoding " + Constants.UTF_8_ENCODING, e);
         }
+    }
+
+    protected String replaceParameterVariables(String query){
+        String var =  "\\?" + ConfigParam.EVENT_TYPE_REPOSITORY_URL.toString();
+        String val = "<" + configReader.getConfig(ConfigParam.EVENT_TYPE_REPOSITORY_URL) + ">";
+        return query.replaceAll(var, val);
     }
 }
