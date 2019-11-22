@@ -51,6 +51,8 @@ class FactorDetail extends React.Component {
         super(props);
         this.i18n = props.i18n;
         const factor = props.factor;
+        Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE_CONTROLLER);
+        this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
         this.state = {
             showDeleteDialog: false,
             eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE))),
@@ -66,6 +68,14 @@ class FactorDetail extends React.Component {
     onDeleteClick = () => {
         this.setState({showDeleteDialog: true});
     };
+
+    _onOptionsLoaded = () => {
+        let controllersOfActions = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE_CONTROLLER);
+        if(controllersOfActions && controllersOfActions.length > 0){
+            this.setState({controllersOfActions : controllersOfActions})
+            this.unsubscribe();
+        }
+    }
 
     onDeleteFactor = () => {
         this.setState({showDeleteDialog: false});
@@ -94,6 +104,37 @@ class FactorDetail extends React.Component {
 
     onEventTypeChange = (option) => {
         this.setState({eventType: option});
+    };
+
+    onControllerChange = (option) => {
+        this.setState({controllerType: option})
+    };
+
+    matcherByController = (controller, node) => {
+        const ePc = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE_CONTROLLER);
+        if(!ePc)
+            return true;
+        let stack = [controller];
+        while(stack.length > 0) {// look for a controller or
+            let c = stack.pop();
+            let controlledEventTypes = ePc.filter((e) => {
+                let ps = e[Vocabulary.HAS_PARTICIPANT];
+                if (e['@id'] === node.id && ps) {
+                    if (ps.length) {
+                        return ps.filter(p => p['@id'] == c.id).length > 0;
+                    } else {
+                        return ps['@id'] == c.id
+                    }
+                }
+
+            })
+            if(controlledEventTypes.length > 0)
+                return true;
+            if(c.children)
+                stack.push(...c.children);
+        }
+        return false;
+        // return controller ? node.id === controller.id : true;
     };
 
     onDateChange = (date) => {
@@ -245,12 +286,23 @@ class FactorDetail extends React.Component {
         return <div>
             <Tabs activeKey={this.state.activeTab} onSelect={this.handleSelect}>
                 <Tab eventKey={1} title={"Tree select"}>
-                    {eventTypeBadge}
+                    <div className={eventTypeClassNames}>
+                        <TreeSelect
+                                    nodeType={Constants.OPTIONS.CONTROLLER_TYPE}
+                                    edgeType={Constants.OPTIONS.CONTROLLER_PART_WHOLE_RELATION}
+                                    // disabled={this.props.disabledTypeSelection}
+                                    label={this.i18n('factors.detail.controller')} onSelect={this.onControllerChange}/>
+                    </div>
                     <div className={eventTypeClassNames}>
                         <TreeSelect value={eventTypeLabel} from={this.props.fromEventType}
+                                    arg={this.state.controllerType}
+                                    matcher={this.matcherByController}
+                                    nodeType={Constants.OPTIONS.EVENT_TYPE}
+                                    edgeType={Constants.OPTIONS.EVENT_TYPE_PART_WHOLE_RELATION}
                                     disabled={this.props.disabledTypeSelection}
                                     label={this.i18n('factors.detail.type')} onSelect={this.onEventTypeChange}/>
                     </div>
+                    {eventTypeBadge}
                 </Tab>
                 <Tab eventKey={2} title={"Simple select"}>
                     <div className='row'>

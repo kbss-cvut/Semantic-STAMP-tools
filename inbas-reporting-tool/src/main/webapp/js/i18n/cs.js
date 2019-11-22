@@ -228,6 +228,7 @@ module.exports = {
         'factors.event.label': 'Událost',
         'factors.detail.title': 'Specifikace faktoru',
         'factors.detail.type': 'Typ faktoru',
+        'factors.detail.controller': 'Filtrovat faktroy podle kotroleru',
         'factors.detail.type-placeholder': 'Typ faktoru',
         'factors.detail.time-period': 'Specifikace času',
         'factors.detail.start': 'Faktor nastal',

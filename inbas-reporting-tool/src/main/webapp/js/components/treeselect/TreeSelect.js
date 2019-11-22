@@ -4,6 +4,7 @@ import React, {Fragment, PureComponent} from 'react';
 // import Reflux from 'reflux';
 // import ReactDOM from 'react-dom';
 import {includes} from 'lodash';
+import JsonLDUtils from '../../utils/JsonLDUtils';
 
 
 import {Treebeard, decorators} from 'react-treebeard';
@@ -39,8 +40,10 @@ class TreeSelect extends PureComponent {
     }
 
     componentDidMount() {
-        Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE);
-        Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE_PART_WHOLE_RELATION);
+        // Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE);
+        // Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE_PART_WHOLE_RELATION);
+        Actions.loadOptions(this.props.nodeType);
+        Actions.loadOptions(this.props.edgeType);
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
     }
 
@@ -50,8 +53,10 @@ class TreeSelect extends PureComponent {
 
 
     _onOptionsLoaded(){
-        var nodes = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE);
-        var edges = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE_PART_WHOLE_RELATION);
+        // var nodes = OptionsStore.getOptions(props.Constants.OPTIONS.EVENT_TYPE);
+        // var edges = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE_PART_WHOLE_RELATION);
+        let nodes = OptionsStore.getOptions(this.props.nodeType);
+        let edges = OptionsStore.getOptions(this.props.edgeType);
         if(!this.state.initialized && nodes && nodes.length > 0 && edges && edges.length > 0){
             this.setState({initialized : true, data : this._constructData(nodes, edges)})
             this.unsubscribe();
@@ -76,38 +81,13 @@ class TreeSelect extends PureComponent {
         //     },
         // transform nodes
 
+        let roots = JsonLDUtils.toTree(nodes, edges, Vocabulary.HAS_STRUCTURE_PART, 'children');
 
-        var nodeMap = new Map();
-        nodes.forEach((n) => {
-            var node = {
-                id: n['@id'],
-                name : n[Vocabulary.RDFS_LABEL],
-                toggled: false,
-            };
-            nodeMap.set(node.id, node);
-        });
-
-        let childNodes = [];
-        edges.forEach((e) => {
-            let n = nodeMap.get(e['@id']);
-            if(n && e[Vocabulary.HAS_STRUCTURE_PART] && e[Vocabulary.HAS_STRUCTURE_PART].length > 0) {
-                n.children = e[Vocabulary.HAS_STRUCTURE_PART].map((n) => nodeMap.get(n['@id']));
-                childNodes.push(...n.children);
-            }
-        });
-
-        // find roots
-        let roots = null;
         let fromNode = null;
         if(this.props.from){
             fromNode = nodeMap.get(this.props.from);
             if(fromNode)
                 roots = fromNode.children;
-        }
-
-        if(!roots){
-            childNodes.forEach(n => nodeMap.delete(n.id));
-            roots = nodeMap.values();
         }
 
         let root = {};
@@ -137,7 +117,10 @@ class TreeSelect extends PureComponent {
         if( !this.props.disabled &&
             this.lastToggleTime && toggleTime - this.lastToggleTime < 400 && cursor && cursor.id === node.id){
             // this.onSelect(node);
-            this.onSelect(node);
+            if(!node.id)
+                this.onSelect(null);
+            else
+                this.onSelect(node);
 
             this.lastToggleTime = null;
         }else{
@@ -158,7 +141,8 @@ class TreeSelect extends PureComponent {
     // }
 
     onSelect(node) {
-        this.setState({selected: node, value: node.name});
+        const name = node ? node.name : '';
+        this.setState({selected: node, value: name});
         if(this.props.onSelect) {
             this.props.onSelect(node);
             // this.searchBox.value = node.name;
@@ -175,6 +159,16 @@ class TreeSelect extends PureComponent {
         // node.selected = true;
         //
         // this.setState(() => ({cursor: node, data: Object.assign({}, data)}));
+    }
+
+    filterOnRender(data){
+        if(this.props.arg && this.props.matcher){
+            // let matcher2 = (notUsedTxt, node) => this.props.matcher(this.props.arg, node);
+            let filtered = filters.filterTree(data, this.props.arg, this.props.matcher);
+            filtered = filters.expandFilteredNodes(filtered, this.props.arg, this.props.matcher);
+            return filtered;
+        }
+        return data;
     }
 
     onFilterMouseUp({target: {value}}) {
@@ -209,6 +203,8 @@ class TreeSelect extends PureComponent {
             searchBoxVal.value = this.state.value;
         }
 
+        const filterData = this.filterOnRender(data);
+
         return (<div>
                 <div style={this.styles.searchBox}>
                     <label>{this.props.label}</label>
@@ -242,7 +238,7 @@ class TreeSelect extends PureComponent {
                 <div style={styles.component}>
                     <Treebeard
                         ref={c => this.treebeard = c}
-                        data={data}
+                        data={filterData}
                         onToggle={this.onToggle}
                         // onSelect={this.onSelect}
                         decorators={{...decorators, Header}}

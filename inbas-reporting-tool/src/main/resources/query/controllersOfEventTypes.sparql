@@ -1,0 +1,11 @@
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
+PREFIX bizagi: <http://bizagi.com/package/>
+PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX adoxml: <http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/>
+
+CONSTRUCT{
+  ?a ufo:has-participant ?p.
+}WHERE{
+  ?a ufo:has-participant ?p.
+}

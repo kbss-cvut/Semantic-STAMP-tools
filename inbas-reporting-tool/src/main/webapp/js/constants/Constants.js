@@ -20,7 +20,10 @@ module.exports = {
         EVENT_TYPE_PART_WHOLE_RELATION: 'eventTypePartWholeHierarchy',
         EVENT_TYPE_FLOW: 'eventTypeFlow',
         REPORTING_PHASE: 'reportingPhase',
-        FACTOR_TYPE: 'factorType'
+        FACTOR_TYPE: 'factorType',
+        CONTROLLER_TYPE: 'controller',
+        CONTROLLER_PART_WHOLE_RELATION: 'controllerHierarchy',
+        EVENT_TYPE_CONTROLLER: 'controllersOfEventTypes'
     },
 
     TIME_SCALES: {

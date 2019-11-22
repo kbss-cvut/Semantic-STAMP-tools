@@ -26,5 +26,7 @@ module.exports = {
     EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/ufo/event-type',
 
     FACTOR_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/stamp/unsafe-event',
-    EVENT_FLOW_NEXT: 'http://onto.fel.cvut.cz/ontologies/stamp/next'
+    EVENT_FLOW_NEXT: 'http://onto.fel.cvut.cz/ontologies/stamp/next',
+
+    HAS_PARTICIPANT: 'http://onto.fel.cvut.cz/ontologies/ufo/has-participant'
 };

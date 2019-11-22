@@ -230,6 +230,7 @@ module.exports = {
         'factors.event.label': 'Event',
         'factors.detail.title': 'Factor assessment',
         'factors.detail.type': 'Type',
+        'factors.detail.controller': 'Filter according to controller',
         'factors.detail.type-placeholder': 'Factor type',
         'factors.detail.time-period': 'Time period',
         'factors.detail.start': 'Start time',

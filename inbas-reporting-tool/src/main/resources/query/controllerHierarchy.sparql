@@ -1,0 +1,22 @@
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
+PREFIX bizagi: <http://bizagi.com/package/>
+PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+CONSTRUCT {
+    ?c stamp:has-control-structure-element-part ?cc.
+}WHERE{
+  {     
+    ?c a stamp:people-group.
+    ?cc a stamp:people-group.
+    ?c stamp:has-group-member ?cc.
+  }UNION{
+    ?c a stamp:people-group.
+    ?cc a stamp:controller-type.
+    ?c stamp:has-group-member ?cc.
+  }UNION{
+    ?c a stamp:controller-type.
+    ?cc a stamp:controller-type.
+    ?c rdfs:subClassOf ?cc.
+  }
+}
