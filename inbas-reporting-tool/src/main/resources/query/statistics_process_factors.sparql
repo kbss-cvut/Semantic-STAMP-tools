@@ -34,25 +34,26 @@ SELECT ?event_type ?factor_type ?relation_type (COUNT(DISTINCT *) AS ?count) {
         ?devOneType a stamp:unsafe-event .
         BIND(?devOne AS ?devTwo)
         BIND(?devOneType AS ?devTwoType)
-    BIND(?central_type as ?event_e_t)
+        BIND(?central_type as ?event_e_t)
     }
 
     OPTIONAL { ?event_e_t rdfs:label ?event_type_label. }
-    OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?event_e_t rdfs:label ?event_type_label. } }
+    OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_e_t rdfs:label ?event_type_label. } }
     OPTIONAL {
         ?devTwo aso:has_factor [
           a ?rt ;
           aso:has_factor ?devThree
         ] .
         ?devThree a ?devThreeType .
-        ?devThreeType a stamp:unsafe-event .
+        SERVICE SILENT ?eventTypesRepository {?devThreeType a stamp:unsafe-event .}
         ?ft ufo:has_part ?devThree ;
             rt:has_event_type ?event_f_t .
 
         FILTER (?rt != aso:factor)
    		OPTIONAL { ?event_f_t rdfs:label ?factor_type_label. }
-   		OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?event_f_t rdfs:label ?factor_type_label. } }
-     	OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }
+   		OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_f_t rdfs:label ?factor_type_label. } }
+   		OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }
+     	OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?rt rdfs:label ?relation_type_label . } }
     }
 
 
