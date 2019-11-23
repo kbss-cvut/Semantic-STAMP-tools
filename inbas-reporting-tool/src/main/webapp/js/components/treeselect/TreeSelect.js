@@ -81,7 +81,8 @@ class TreeSelect extends PureComponent {
         //     },
         // transform nodes
 
-        let roots = JsonLDUtils.toTree(nodes, edges, Vocabulary.HAS_STRUCTURE_PART, 'children');
+        let nodeMap = JsonLDUtils.toTree(nodes, edges, Vocabulary.HAS_STRUCTURE_PART, 'children');
+        let roots = nodeMap.values();
 
         let fromNode = null;
         if(this.props.from){

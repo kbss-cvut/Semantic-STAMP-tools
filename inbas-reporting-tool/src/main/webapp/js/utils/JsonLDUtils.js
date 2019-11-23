@@ -33,7 +33,7 @@ class JsonLDUtils {
 
         // find roots
         childNodes.forEach(n => nodeMap.delete(n.id));
-        return nodeMap.values();
+        return nodeMap;
     }
 }
 
