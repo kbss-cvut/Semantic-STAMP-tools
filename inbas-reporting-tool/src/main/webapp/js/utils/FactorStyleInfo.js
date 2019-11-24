@@ -19,6 +19,13 @@ var FactorStyleInfo = {
                     ganttCls: 'regular-event-type',
                     title: 'Event type'
                 };
+            case Vocabulary.FLOW_CONTROL_EVENT_TYPE:
+                return {
+                    value: 'FC',
+                    bsStyle: 'default',
+                    ganttCls: 'flow-control-event-type',
+                    title: 'Flow Control event type'
+                };
             case Vocabulary.FACTOR_EVENT_TYPE:
                 return {
                     value: 'FE',

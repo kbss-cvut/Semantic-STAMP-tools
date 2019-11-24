@@ -433,8 +433,13 @@ td.actions button {
 }
 
 .regular-event-type {
-    background-color: #777;
+    background-color: #44F;
 
+}
+
+.flow-control-event-type {
+    background-color: #999;
+    border: 1px solid #666;
 }
 
 .factor-event-type {
