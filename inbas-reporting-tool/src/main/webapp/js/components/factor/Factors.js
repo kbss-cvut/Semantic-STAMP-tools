@@ -92,10 +92,10 @@ const Factors = React.createClass({
     },
 
     getLossEventReferenceId: function(){
-        var nodes = this.ganttController.getAllFactors();
+        let nodes = this.ganttController.getAllFactors();
         if(!nodes) return;
         for (let i = 0, len = nodes.length; i < len; i++) {
-            var node = nodes[i];
+            let node = nodes[i];
             if(!node) continue;
             if(node && node.statement &&
                 node.statement.types &&
@@ -302,7 +302,7 @@ const Factors = React.createClass({
     },
 
     lossEventChanged: function(lossEventTypeOption){
-        var lossEvent = this.getLossEventReferenceId();
+        let lossEvent = this.getLossEventReferenceId();
         if(!lossEventTypeOption){
             if(lossEvent) {
                 this.props.report.occurrence.lossEventType = null;
