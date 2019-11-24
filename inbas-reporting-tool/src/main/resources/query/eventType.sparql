@@ -12,6 +12,7 @@ PREFIX eccairs-current: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4
 PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
+PREFIX bpmn: <http://onto.fel.cvut.cz/ontologies/bpmn/>
 
 CONSTRUCT {
   ?term rdfs:label ?label ;
@@ -27,6 +28,10 @@ CONSTRUCT {
                     ?term a stamp:unsafe-event.
                     BIND(stamp:unsafe-event as ?unsafe)
                 }
-                BIND( IF(BOUND(?unsafe), ?unsafe, ufo:event-type) as ?type )
+                OPTIONAL {
+                    ?term a bpmn:flow-control-event-type.
+                    BIND(bpmn:flow-control-event-type as ?flowControl)
+                }
+                BIND( COALESCE(?unsafe, ?flowControl, ufo:event-type) as ?type )
     }
 }

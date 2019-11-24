@@ -137,6 +137,14 @@ class FactorDetail extends React.Component {
         // return controller ? node.id === controller.id : true;
     };
 
+    filterEventTypes = (nodes) => {
+        return nodes.filter(n => {
+                let t = n['@type'];
+                return t != Vocabulary.FLOW_CONTROL_EVENT_TYPE;
+            }
+        );
+    }
+
     onDateChange = (date) => {
         this.setState({startDate: Number(date)});
     };
@@ -299,6 +307,7 @@ class FactorDetail extends React.Component {
                                     matcher={this.matcherByController}
                                     nodeType={Constants.OPTIONS.EVENT_TYPE}
                                     edgeType={Constants.OPTIONS.EVENT_TYPE_PART_WHOLE_RELATION}
+                                    filterNodes={this.filterEventTypes}
                                     disabled={this.props.disabledTypeSelection}
                                     label={this.i18n('factors.detail.type')} onSelect={this.onEventTypeChange}/>
                     </div>
