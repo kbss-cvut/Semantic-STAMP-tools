@@ -26,13 +26,14 @@ class JsonLDUtils {
                 } else if (obj['@id']) {
                     newChildren.push(nodeMap.get(obj['@id']));
                 }
+                newChildren = newChildren.filter(n => n);
                 n[rel].push(...newChildren);
                 childNodes.push(...newChildren);
             }
         });
 
         // find roots
-        childNodes.forEach(n => nodeMap.delete(n.id));
+        childNodes.filter(n => n).forEach(n => nodeMap.delete(n.id));
         return nodeMap;
     }
 }

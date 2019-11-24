@@ -112,7 +112,7 @@ class FactorDetail extends React.Component {
 
     matcherByController = (controller, node) => {
         const ePc = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE_CONTROLLER);
-        if(!ePc)
+        if(!ePc || !node.id)
             return true;
         let stack = [controller];
         while(stack.length > 0) {// look for a controller or
