@@ -40,11 +40,15 @@ class EventControlLoop extends React.Component {
             (varName) => !varName.startsWith('count')).map(
             (varName) => {
                 const vn = varName.charAt(0).toUpperCase() + varName.substring(1);
-                return {value: varName, title: vn.replace('_', ' ')}
+                let title = this.props.i18n('statistics.panel.event-control-loop.dimension.' + varName);
+                if(!title){
+                    title = vn.replace('_', ' ');
+                }
+                return {value: varName, title: title}
             }
         );
         const calculations = [{
-            title: 'count', value: 'count',
+            title: this.props.i18n('statistics.panel.event-control-loop.calculation.count'), value: 'count',
             template: val => val
         }];
 
