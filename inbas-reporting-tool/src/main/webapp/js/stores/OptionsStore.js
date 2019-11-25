@@ -59,7 +59,7 @@ const OptionsStore = Reflux.createStore({
                 });
                 this.trigger(processURL, processFlows[processURL]);
             } else {
-                Logger.warn('No data received when loading options of type ' + type + '.');
+                Logger.warn('No data received when loading process flow <' + processURL + '>.');
                 this.trigger(processURL, this.getProcessFlow(processURL));
             }
 
@@ -102,7 +102,7 @@ const OptionsStore = Reflux.createStore({
     },
 
     getProcessFlow: function (processUrl) {
-        return processFlows[processUrl] ? processFlows[processUrl] : [];
+        return processFlows[processUrl];
     }
 });
 

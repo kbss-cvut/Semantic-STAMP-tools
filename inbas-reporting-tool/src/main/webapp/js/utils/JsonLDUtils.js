@@ -33,8 +33,8 @@ class JsonLDUtils {
         });
 
         // find roots
-        childNodes.filter(n => n).forEach(n => nodeMap.delete(n.id));
-        return nodeMap;
+        let roots = [...nodeMap.values()].filter(n => !childNodes.includes(n));
+        return {roots: roots, nodeMap: nodeMap};
     }
 }
 
