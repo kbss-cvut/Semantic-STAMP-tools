@@ -255,8 +255,6 @@ const Factors = React.createClass({
             if(from && to)
                 this.addLink(from, to, Vocabulary.EVENT_FLOW_NEXT);
         }.bind(this));
-
-        this.onCloseFactorDialog();
     },
 
     calculateNodeLevels: function(flow){

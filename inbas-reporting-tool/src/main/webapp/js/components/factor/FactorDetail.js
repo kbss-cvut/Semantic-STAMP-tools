@@ -4,7 +4,23 @@ import React from "react";
 import assign from "object-assign";
 import {QuestionAnswerProcessor} from "semforms";
 import classNames from "classnames";
-import {Button, ControlLabel, Form, FormControl, FormGroup, Glyphicon, InputGroup, Label, Modal, Tab, Tabs} from "react-bootstrap";
+import {
+    Button,
+    ControlLabel,
+    Form,
+    FormControl,
+    FormGroup,
+    Glyphicon,
+    InputGroup,
+    Label,
+    Modal,
+    Tab,
+    Tabs,
+    Overlay,
+    OverlayTrigger,
+    Tooltip,
+    Alert
+} from "react-bootstrap";
 import DateTimePicker from "react-bootstrap-datetimepicker";
 import {FormattedMessage} from "react-intl";
 import JsonLdUtils from "jsonld-utils";
@@ -61,7 +77,8 @@ class FactorDetail extends React.Component {
             statement: factor.statement,
             isWizardOpen: false,
             wizardProperties: null,
-            showMask: false
+            showMask: false,
+            maskMessage: null
         };
     }
 
@@ -151,6 +168,7 @@ class FactorDetail extends React.Component {
 
     onOpenDetails = () => {
         this.setState({showMask: true});
+        this.setState({maskMessage: 'factors.detail.wizard-loading'});
         const report = this.props.report,
             event = assign({}, this.state.statement);
         this._updateReportForFormGen(report);
@@ -159,6 +177,8 @@ class FactorDetail extends React.Component {
     };
 
     onInsertFlow = () => {
+        this.setState({showMask: true});
+        this.setState({maskMessage: 'factors.detail.inserting-flow'});
         const factor = this.props.factor;
         Actions.loadProcessFlow(this.props.factor.statement.eventType);
         this.unsubscribe = OptionsStore.listen(this.onFlowDataLoaded);
@@ -169,7 +189,12 @@ class FactorDetail extends React.Component {
         this.unsubscribe();
         if(processFlow) {
             this.props.onInsertFlow(processFlow, this.props.factor.statement);
+            this.setState({insertedFlow: processFlow, showMask: false});
         }
+    };
+
+    onInsertFlowMessageClose = () =>{
+        this.setState({insertedFlow : null});
     };
 
     /**
@@ -198,7 +223,7 @@ class FactorDetail extends React.Component {
             });
         }
         this._mergeStatementState(item);
-    }
+    };
 
     openDetailsWizard = (wizardProperties) => {
         wizardProperties.onFinish = this.onUpdateFactorDetails;
@@ -262,6 +287,7 @@ class FactorDetail extends React.Component {
                                     show={this.state.showDeleteDialog}/>
                 <Modal.Body ref={comp => this._modalContent = comp}>
                     {this._renderMask()}
+                    {this._renderAlert()}
                     <div>
                         {this._renderEventTypeChoosers()}
                         {this._renderTemporalAttributes()}
@@ -367,7 +393,15 @@ class FactorDetail extends React.Component {
     }
 
     _renderMask() {
-        return this.state.showMask ? <Mask text={this.i18n('factors.detail.wizard-loading')}/> : null;
+        const message = this.state.maskMessage;
+        return this.state.showMask ? <Mask text={this.i18n(message)}/> : null;
+    }
+
+    _renderAlert(){
+        const f = this.state.insertedFlow;
+        const nodes = f && f.nodes && f.nodes.length ? f.nodes.length : 0,
+            edges = f && f.edges && f.edges.length ? f.edges.length : 0;
+        return f ? <Alert bsStyle='info' onDismiss={this.onInsertFlowMessageClose}> Inserted {nodes} nodes and {edges} edges}</Alert> : null;
     }
 
     renderFactorTypeIcon() {
@@ -436,7 +470,7 @@ class FactorDetail extends React.Component {
     renderInsertFlowButton(){
         return <Button bsSize='small' bsStyle='success'
                        disabled={this.props.factor.isNew}
-                       onClick={this.onInsertFlow}>{"Insert flow"}</Button>;
+                       onClick={this.onInsertFlow}>{this.i18n('factors.detail.insert-flow')}</Button>;
     }
 }
 
