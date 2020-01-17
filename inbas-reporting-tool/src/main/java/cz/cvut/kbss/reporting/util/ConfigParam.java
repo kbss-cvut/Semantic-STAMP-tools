@@ -14,11 +14,6 @@ public enum ConfigParam {
      * Repository from which options are loaded.
      */
     EVENT_TYPE_REPOSITORY_URL("eventTypesRepository"),
-
-    /**
-     * The triple store server which contains schema repos
-     */
-    SCHEMA_SERVER_URL("schemaServerUrl"),
     /**
      * URL of Liferay portal.
      */

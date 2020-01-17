@@ -1,17 +1,10 @@
 package cz.cvut.kbss.reporting.service;
 
-import cz.cvut.kbss.jopa.model.EntityManager;
-import cz.cvut.kbss.jopa.model.EntityManagerFactory;
 import cz.cvut.kbss.reporting.exception.FileFormatNotSupportedException;
 import cz.cvut.kbss.reporting.util.ConfigParam;
-import org.eclipse.rdf4j.common.lang.FileFormat;
-import org.eclipse.rdf4j.common.lang.service.FileFormatServiceRegistry;
 import org.eclipse.rdf4j.query.Update;
-import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.http.HTTPRepository;
-import org.eclipse.rdf4j.repository.manager.RemoteRepositoryManager;
-import org.eclipse.rdf4j.repository.manager.RepositoryManager;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,12 +31,11 @@ public class SchemaService {
     private ConfigReader configReader;
 
     public void replaceSchema(String fileName, InputStream content){
-        String schemaServerUrl = configReader.getConfig(ConfigParam.SCHEMA_SERVER_URL);
         String repositoryUrl = configReader.getConfig(ConfigParam.EVENT_TYPE_REPOSITORY_URL);
-        // TODO - this is a hack
         HTTPRepository r = new HTTPRepository(repositoryUrl);
         r.initialize();
         RepositoryConnection c = r.getConnection();
+
         // clear repo contents
         c.begin();
         if(!c.isEmpty()){
