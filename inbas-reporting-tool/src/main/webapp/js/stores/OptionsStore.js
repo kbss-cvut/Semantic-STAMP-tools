@@ -42,21 +42,27 @@ const OptionsStore = Reflux.createStore({
     onLoadProcessFlow: function(processURL){
         Ajax.get(BASE_URL_WITH_SLASH + 'eventTypeFlow?process=' + processURL).end(function (data) {
             if (data.length > 0) {
-                processFlows[processURL] = {
+                let processFlow = {
                     nodes: [],
                     edges: []
                 };
                 data.forEach((n) => {
-                    processFlows[processURL].nodes.push(n['@id']);
+                    processFlow.nodes.push(n['@id']);
                     if(n[Vocabulary.EVENT_FLOW_NEXT]) {
-                        n[Vocabulary.EVENT_FLOW_NEXT].forEach((cn) => {
-                            processFlows[processURL].edges.push({
+						let following = n[Vocabulary.EVENT_FLOW_NEXT];
+						if(!following.length)
+							following = [following];
+                        following.forEach((cn) => {
+							processFlow.nodes.push(cn['@id']);
+                            processFlow.edges.push({
                                 from: n['@id'],
                                 to: cn['@id']
                             });
                         });
                     }
                 });
+				processFlow.nodes = [... new Set(processFlow.nodes)];
+				processFlows[processURL] = processFlow;
                 this.trigger(processURL, processFlows[processURL]);
             } else {
                 Logger.warn('No data received when loading process flow <' + processURL + '>.');

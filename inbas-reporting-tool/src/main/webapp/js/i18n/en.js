@@ -240,6 +240,7 @@ module.exports = {
         'factors.duration.hour': '{duration, plural, one {hour} other {hours}}',
         'factors.detail.details': 'Details',
         'factors.detail.insert-flow': 'Insert flow',
+        'factors.detail.insert-flow.no-flow': 'The process has no flow',
         'factors.detail.delete.title': 'Delete factor?',
         'factors.detail.delete.text': 'Are you sure you want to remove this factor?',
         'factors.detail.inserting-flow': 'Inserting event flow...',

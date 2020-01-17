@@ -186,11 +186,11 @@ class FactorDetail extends React.Component {
 
     onFlowDataLoaded = () => {
         let processFlow = OptionsStore.getProcessFlow(this.props.factor.statement.eventType);
+        if(!processFlow)
+            processFlow = {message: this.i18n('factors.detail.insert-flow.no-flow'), nodes:[], edges:[]};
         this.unsubscribe();
-        if(processFlow) {
-            this.props.onInsertFlow(processFlow, this.props.factor.statement);
-            this.setState({insertedFlow: processFlow, showMask: false});
-        }
+        this.props.onInsertFlow(processFlow, this.props.factor.statement);
+        this.setState({insertedFlow: processFlow, showMask: false});
     };
 
     onInsertFlowMessageClose = () =>{
@@ -400,8 +400,10 @@ class FactorDetail extends React.Component {
     _renderAlert(){
         const f = this.state.insertedFlow;
         const nodes = f && f.nodes && f.nodes.length ? f.nodes.length : 0,
-            edges = f && f.edges && f.edges.length ? f.edges.length : 0;
-        return f ? <Alert bsStyle='info' onDismiss={this.onInsertFlowMessageClose}> Inserted {nodes} nodes and {edges} edges}</Alert> : null;
+            edges = f && f.edges && f.edges.length ? f.edges.length : 0,
+            message = f && f.message;
+
+        return f ? <Alert bsStyle='info' onDismiss={this.onInsertFlowMessageClose}> {message ? message : 'Inserted' + nodes + 'nodes and' + edges + 'edges'}</Alert> : null;
     }
 
     renderFactorTypeIcon() {
