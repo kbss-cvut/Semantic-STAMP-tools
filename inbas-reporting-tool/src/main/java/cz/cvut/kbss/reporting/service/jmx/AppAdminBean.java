@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.Random;
 
 @Component
-@ManagedResource(objectName = "bean:name=FD-AdminBean", description = "Application administration bean.")
+@ManagedResource(objectName = "bean:name=SBIT-FD-AdminBean", description = "Application administration bean.")
 public class AppAdminBean implements ApplicationEventPublisherAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(AppAdminBean.class);
