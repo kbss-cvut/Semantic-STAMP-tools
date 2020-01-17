@@ -24,23 +24,10 @@ class Dashboard extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            showImport: false,
-            showImportSchema: false
+            showImportSchema: true
         };
     }
 
-    _onImport = (report) => {
-        this._closeImportDialog();
-        this.props.onImportFinish(report);
-    };
-
-    _openImportDialog = () => {
-        this.setState({showImport: true});
-    };
-
-    _closeImportDialog = () => {
-        this.setState({showImport: false});
-    };
 
     _onImportSchema = (file) => {
         this._closeImportSchemaDialog();
@@ -58,8 +45,6 @@ class Dashboard extends React.Component {
 
     render() {
         return <div className='row'>
-            {this.state.showImport &&
-            <InitialReportImport onImportFinish={this._onImport} onCancel={this._closeImportDialog}/>}
             {this.state.showImportSchema &&
             <SchemaImport onImportFinish={this._onImportSchema} onCancel={this._closeImportSchemaDialog} />}
             <div className='dashboard-left'>
@@ -91,9 +76,6 @@ class Dashboard extends React.Component {
             <Row>
                 <Col xs={4} className='dashboard-sector'>
                     <Tile onClick={this.props.createEmptyReport}>{this.i18n('dashboard.create-tile')}</Tile>
-                </Col>
-                <Col xs={4} className='dashboard-sector'>
-                    <Tile onClick={this._openImportDialog}>{this.i18n('dashboard.import-initial-tile')}</Tile>
                 </Col>
                 <Col xs={4} className='dashboard-sector'>
                     <Tile onClick={this._openImportSchemaDialog}>{this.i18n('dashboard.import-schema')}</Tile>
