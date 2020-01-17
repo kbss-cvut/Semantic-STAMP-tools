@@ -5,18 +5,15 @@ import cz.cvut.kbss.reporting.exception.AttachmentException;
 import cz.cvut.kbss.reporting.exception.SchemaException;
 import cz.cvut.kbss.reporting.rest.dto.model.RawJson;
 import cz.cvut.kbss.reporting.rest.exception.BadRequestException;
-import cz.cvut.kbss.reporting.rest.util.RestUtils;
 import cz.cvut.kbss.reporting.service.ConfigReader;
 import cz.cvut.kbss.reporting.service.SPARQLService;
+import cz.cvut.kbss.reporting.service.SchemaService;
 import cz.cvut.kbss.reporting.util.ConfigParam;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,10 +33,13 @@ public class SchemaController extends BaseController {
 
     private SPARQLService sparqlService;
 
+    private SchemaService schemaService;
+
     @Autowired
-    public SchemaController(ConfigReader configReader,  SPARQLService sparqlService) {
+    public SchemaController(ConfigReader configReader,  SPARQLService sparqlService, SchemaService schemaService) {
         this.configReader = configReader;
         this.sparqlService = sparqlService;
+        this.schemaService = schemaService;
     }
 
 
@@ -58,7 +58,7 @@ public class SchemaController extends BaseController {
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     public void importSchema(@RequestParam("file") MultipartFile schema){
         try {
-            saveFile(schema.getOriginalFilename(), schema.getInputStream());
+            schemaService.replaceSchema(schema.getOriginalFilename(), schema.getInputStream());
         } catch (IOException e) {
             throw new SchemaException("Unable to read file content from request.", e);
         }
