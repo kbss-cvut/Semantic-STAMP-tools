@@ -19,6 +19,12 @@ class OccurrenceClassification extends React.Component {
     constructor(props) {
         super(props);
         this.i18n = props.i18n;
+        if(props.report.severityAssessment == null){
+            props.report.severityAssessment = "http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-431/v-500";
+        }
+        if(props.report.occurrence.eventType == null){
+            props.report.occurrence.eventType = "http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-430/v-98";
+        }
         this.state = {
             occurrenceClasses: OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CLASS),
             occurrenceCategories: JsonLdUtils.processTypeaheadOptions(OptionsStore.getOptions(Constants.OPTIONS.OCCURRENCE_CATEGORY)),
@@ -99,7 +105,7 @@ class OccurrenceClassification extends React.Component {
                            customListComponent={EventTypeTypeaheadResultList}/>
             </div>
             <div className='col-xs-4'>
-                <Typeahead name='lossEventType' label={this.i18n('report.loss.eventtype.label') + '*'}
+                <Typeahead name='lossEventType' label={this.i18n('report.loss.eventtype.label')}
                            ref={c => this.lossEventRef = c} formInputOption='id' optionsButton={true}
                            placeholder={this.i18n('report.loss.eventtype.label')}
                            onOptionSelected={this.onLossEventTypeSelect} filterOption='name'

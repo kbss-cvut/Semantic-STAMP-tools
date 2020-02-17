@@ -22,7 +22,7 @@ class ReportSummary extends React.Component {
 
     render() {
         return <div className='form-group'>
-            <RichInput label={this.i18n('narrative') + '*'} title={this.i18n('report.narrative-tooltip')}
+            <RichInput label={this.i18n('narrative')} title={this.i18n('report.narrative-tooltip')}
                        placeholder={this.i18n('narrative')} value={this.props.report.summary}
                        onChange={this._onChange}/>
         </div>;

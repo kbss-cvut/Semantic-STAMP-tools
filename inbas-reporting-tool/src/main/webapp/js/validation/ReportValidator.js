@@ -67,9 +67,9 @@ const OccurrenceReportValidator = {
         if (!report.severityAssessment) {
             return 'detail.invalid-tooltip';
         }
-        if (!report.summary || report.summary.length === 0) {
-            return 'detail.invalid-tooltip';
-        }
+        // if (!report.summary || report.summary.length === 0) {
+        //     return 'detail.invalid-tooltip';
+        // }
         if (!report.occurrence.eventType) {
             return 'detail.invalid-tooltip';
         }
