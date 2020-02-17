@@ -21,9 +21,9 @@ public class SecurityConstants {
     public static final String COOKIE_URI = "/";
 
     /**
-     * Session timeout in seconds. 30 minutes.
+     * Session timeout in seconds. 180 minutes.
      */
-    public static final int SESSION_TIMEOUT = 30 * 60;
+    public static final int SESSION_TIMEOUT = 180 * 60;
 
     /**
      * Extended session timeout.
