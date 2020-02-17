@@ -50,15 +50,15 @@ describe('Report validator', function () {
         expect(ReportValidator.isValid(report)).toBeFalsy();
     });
 
-    it('marks report without narrative as invalid', function () {
-        report.summary = '';
-        expect(ReportValidator.isValid(report)).toBeFalsy();
-    });
-
-    it('returns missing field message when report without narrative is validated', function () {
-        report.summary = '';
-        expect(ReportValidator.getValidationMessage(report)).toEqual('detail.invalid-tooltip');
-    });
+    // it('marks report without narrative as invalid', function () {
+    //     report.summary = '';
+    //     expect(ReportValidator.isValid(report)).toBeFalsy();
+    // });
+    //
+    // it('returns missing field message when report without narrative is validated', function () {
+    //     report.summary = '';
+    //     expect(ReportValidator.getValidationMessage(report)).toEqual('detail.invalid-tooltip');
+    // });
 
     it('marks report with too large occurrence start and end time diff as invalid', function () {
         report.occurrence.startTime = Date.now() - Constants.MAX_OCCURRENCE_START_END_DIFF - 1000;
