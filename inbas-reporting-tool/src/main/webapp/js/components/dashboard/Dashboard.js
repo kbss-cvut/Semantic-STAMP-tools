@@ -24,7 +24,7 @@ class Dashboard extends React.Component {
         super(props);
         this.i18n = props.i18n;
         this.state = {
-            showImportSchema: true
+            showImportSchema: false
         };
     }
 
