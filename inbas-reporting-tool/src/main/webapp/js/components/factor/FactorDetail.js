@@ -403,7 +403,7 @@ class FactorDetail extends React.Component {
             edges = f && f.edges && f.edges.length ? f.edges.length : 0,
             message = f && f.message;
 
-        return f ? <Alert bsStyle='info' onDismiss={this.onInsertFlowMessageClose}> {message ? message : 'Inserted' + nodes + 'nodes and' + edges + 'edges'}</Alert> : null;
+        return f ? <Alert bsStyle='info' onDismiss={this.onInsertFlowMessageClose}> {message ? message : 'Inserted ' + nodes + ' nodes and ' + edges + ' edges'}</Alert> : null;
     }
 
     renderFactorTypeIcon() {
