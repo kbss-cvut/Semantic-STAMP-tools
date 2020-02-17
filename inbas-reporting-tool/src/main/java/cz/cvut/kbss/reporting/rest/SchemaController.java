@@ -55,6 +55,11 @@ public class SchemaController extends BaseController {
                 .getSPARQLSelectResult("query/schema_" + queryName + ".sparql", bindings, repositoryUrl, Constants.JSON_LD_MIME_TYPE);
     }
 
+    @GetMapping(path = "/metadata", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public Map<String, String> getSchemaMetadata(){
+        return schemaService.getSchemaMetadata();
+    }
+
     @RequestMapping(value = "/import", method = RequestMethod.POST)
     public void importSchema(@RequestParam("file") MultipartFile schema){
         try {

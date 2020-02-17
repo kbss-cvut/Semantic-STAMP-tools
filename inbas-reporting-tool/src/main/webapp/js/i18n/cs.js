@@ -94,7 +94,7 @@ module.exports = {
         'main.search.fulltext-tooltip': 'Hledat daný výraz ve všech hlášeních',
         'main.tacr-notice': 'Projekt byl podpořen Technologickou agenturou České republiky.',
 
-        'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '.',
+        'dashboard.welcome': 'Dobrý den, {name}, vítejte v ' + Constants.APP_NAME + '. Momentalně použivate schéma "{schemaName}" vložené {date}.',
         'dashboard.create-tile': 'Vytvořit hlášení',
         'dashboard.search-tile': 'Hledat hlášení',
         'dashboard.search-placeholder': 'Název hlášení',

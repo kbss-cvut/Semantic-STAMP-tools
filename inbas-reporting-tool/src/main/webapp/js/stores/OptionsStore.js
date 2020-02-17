@@ -10,6 +10,7 @@ const Ajax = require('../utils/Ajax');
 const Logger = require('../utils/Logger');
 
 const options = {};
+const schemaMetadata = {name : null, date: null};
 const processFlows = {};
 
 const BASE_URL = Constants.REST_PREFIX + 'schema';
@@ -20,6 +21,7 @@ const OptionsStore = Reflux.createStore({
     init: function () {
         this.listenTo(Actions.loadOptions, this.onLoadOptions);
         this.listenTo(Actions.importSchema, this.onImportSchema);
+        this.listenTo(Actions.fetchSchemaMetadata, this.onFetchSchemaMetadata);
         this.listenTo(Actions.loadProcessFlow, this.onLoadProcessFlow);
         this.trueOptionTypeMap = new Map();
         this.trueOptionTypeMap.set(Constants.OPTIONS.EVENT_TYPE, Vocabulary.EVENT_TYPE )
@@ -37,6 +39,21 @@ const OptionsStore = Reflux.createStore({
             }
             // update option store
         }.bind(this), onError);
+    },
+
+    onFetchSchemaMetadata: function(){
+        Ajax.get(Constants.REST_PREFIX + 'schema/metadata').end(
+            function (data) {
+                schemaMetadata.name = data.name;
+                schemaMetadata.date = data.date;
+                this.trigger("schemaMetadata", data);
+            }.bind(this),
+            function (data) {
+                schemaMetadata.name = null;
+                schemaMetadata.date = null;
+                this.trigger("schemaMetadata", null);
+            }.bind(this),
+        );
     },
 
     onLoadProcessFlow: function(processURL){
@@ -101,6 +118,10 @@ const OptionsStore = Reflux.createStore({
         }.bind(this), function () {
             this.trigger(type, this.getOptions(type));
         }.bind(this));
+    },
+
+    getSchemaMetadata: function(){
+        return schemaMetadata;
     },
 
     getOptions: function (type) {

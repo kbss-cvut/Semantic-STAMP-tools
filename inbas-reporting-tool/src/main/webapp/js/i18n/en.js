@@ -91,7 +91,7 @@ module.exports = {
         'main.search.fulltext.label': 'Full text',
         'main.search.fulltext-tooltip': 'Search for the specified string everywhere',
 
-        'dashboard.welcome': 'Hello {name}, Welcome to ' + Constants.APP_NAME + '.',
+        'dashboard.welcome': 'Hello {name}, Welcome to ' + Constants.APP_NAME + '. You are currently using the "{schemaName}" schema imported on {date}.',
         'dashboard.create-tile': 'Create Report',
         'dashboard.search-tile': 'Search for Report',
         'dashboard.search-placeholder': 'Report headline',

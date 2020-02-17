@@ -9,6 +9,9 @@ import SchemaImport from "../schema/SchemaImport";
 import injectIntl from "../../utils/injectIntl";
 import Tile from "./DashboardTile";
 import RecentlyEdited from "./RecentlyEditedReports";
+import Actions from "../../actions/Actions";
+import Constants from "../../constants/Constants";
+import OptionsStore from "../../stores/OptionsStore";
 
 class Dashboard extends React.Component {
 
@@ -23,11 +26,20 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.i18n = props.i18n;
+        Actions.fetchSchemaMetadata();
+        this.unsubscribe = OptionsStore.listen(this._onSchemaFetched);
         this.state = {
-            showImportSchema: false
+            showImportSchema: false,
+            schema: OptionsStore.getSchemaMetadata()
         };
     }
 
+    _onSchemaFetched = (change, value) => {
+        if(change == "schemaMetadata") {
+            this.setState({schema: OptionsStore.getSchemaMetadata()})
+            this.unsubscribe();
+        }
+    };
 
     _onImportSchema = (file) => {
         this._closeImportSchemaDialog();
@@ -63,7 +75,11 @@ class Dashboard extends React.Component {
 
     renderTitle() {
         return <h3><FormattedMessage id='dashboard.welcome'
-                                     values={{name: <span className='bold'>{this.props.userFirstName}</span>}}/>
+                                     values={{
+                                             name: <span className='bold'>{this.props.userFirstName}</span>,
+                                             schemaName: <span className='bold'>{this.state.schema.name}</span>,
+                                             date: <span className='bold'>{this.state.schema.date}</span>,
+                                         }}/>
         </h3>;
     }
 
