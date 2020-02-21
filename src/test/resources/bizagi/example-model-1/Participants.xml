@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<Participants xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.wfmc.org/2009/XPDL2.2">
+  <Participant Id="c6a8d4b9-6f38-40ed-9a23-94735e196166" Name="Seller">
+    <ParticipantType Type="ROLE" />
+    <Description>The person who sels the product.</Description>
+    <ExtendedAttributes>
+      <ExtendedAttribute Name="Seller" />
+    </ExtendedAttributes>
+  </Participant>
+</Participants>

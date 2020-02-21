@@ -1,0 +1,7 @@
+INSERT { 
+    ?c a <http://onto.fel.cvut.cz/ontologies/stamp/capability>; 
+    <http://onto.fel.cvut.cz/ontologies/ufo/is-manifested-by> ?e. 
+}WHERE{ 
+    ?e a <http://onto.fel.cvut.cz/ontologies/stamp/controlled-process>. 
+    BIND(iri(concat(str(?e),"-capability")) as ?c) 
+}

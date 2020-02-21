@@ -1,0 +1,53 @@
+Object Reference Resolution Documentation 
+
+	Model Classes
+		IdRelationalSchema
+			Contains all the key mappings 
+
+		ClassMetadata
+			
+		RelationField
+		KeyMapping - 
+			
+
+		Key - defines a key based on a set of Fields from one class. The model contains the following fields:
+			// the name of the key. If one class has multiple keys each of them are named. This way if there is a foreign key
+			// pointing to instances of such a class, the foreign key can specify which named-key is to be compared to.
+			protected String keyName;
+			// The class which contains the key fields
+			protected Class cls;
+			// The class which is being referred to by the key. If this key is not a foreign key, the value of this field is the
+			// same as the csl field
+			protected Class refedClass;
+			// if the key is many key - not really used
+			protected boolean isManyFK;
+			// The key defined as a list of fields. The String in the pair is the name of the field (Field.getName). The String
+			// is used to sort the list, required to generate the value of the key
+			protected List<Pair<String, Field>> fields;
+		
+	
+	Annotations
+		FIDAttribute - 
+		ManyFK - 
+		CompositeID - 
+
+		Relation - 
+	
+	
+	Key computation
+		ClassName[field1.Name=field1.Value;fieldN.Name=fieldN.Value]
+		
+	
+	User manual
+		Declaration of key and foreign key:
+			To declare a foreign key one has to annotate one or more fields with the FIDAttribute annotation.
+				Examples:
+					Single value attribute: To declare a single key
+					
+						@FIDAttribute(cls)
+						private String id;
+		Declaration of injection points:
+		
+		
+		
+	
