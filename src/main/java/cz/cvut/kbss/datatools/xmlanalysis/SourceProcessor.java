@@ -47,26 +47,38 @@ public abstract class SourceProcessor {
         return outputDirAnalysis;
     }
 
+    public void setSourceDir(File sourceDir) {
+        this.sourceDir = sourceDir;
+    }
+
+    public void setSources(File[] sources) {
+        this.sources = sources;
+    }
+
+    public void setOutputDir(File outputDir) {
+        this.outputDir = outputDir;
+    }
+
+    public void setOutputDirAnalysis(File outputDirAnalysis) {
+        this.outputDirAnalysis = outputDirAnalysis;
+    }
+
     public void setConfig(Properties config) {
         this.config = config;
         String sourceDirPath = config.getProperty(PropertyConstants.SOURCE_DIR);
         sourceDir = new File(sourceDirPath);
         sources = listSources();
 
-        outputDir = ensureDir(config, PropertyConstants.OUTPUT_DIR);
-        outputDirAnalysis = ensureDir(config, outputDir, PropertyConstants.OUTPUT_DIR_ANALYSIS);
+        outputDir = ensureDir(config.getProperty(PropertyConstants.OUTPUT_DIR));
+        outputDirAnalysis = ensureDir(outputDir, config.getProperty(PropertyConstants.OUTPUT_DIR_ANALYSIS));
 
     }
 
-    protected File ensureDir(Properties config, String prop){
-        return ensureDir(config, null, prop);
+    public File ensureDir(String dirName){
+        return Utils.ensureDir(null, dirName);
     }
-    protected File ensureDir(Properties config, File parentDir, String prop){
-        File dir = new File(parentDir, config.getProperty(prop));
-        if(!dir.exists()){
-            dir.mkdir();
-        }
-        return dir;
+    public File ensureDir(File parentDir, String dirName){
+        return Utils.ensureDir(parentDir, dirName);
     }
 
     public File[] listSources(){

@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class InstanceRef implements BaseEntity{
+public class InstanceRef extends BaseEntity{
     public static final String C = Instance.class.getName();
 
     @FIDAttribute(cls = Instance.class)

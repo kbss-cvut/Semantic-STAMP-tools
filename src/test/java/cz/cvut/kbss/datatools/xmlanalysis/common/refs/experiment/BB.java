@@ -4,22 +4,22 @@ import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.FIDAttribute;
 import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.Relation;
 
 public class BB {
-    protected String id;
+    public String id;
     @FIDAttribute(cls = A.class, fieldRef = "name")
-    protected String name1;
+    public String name1;
     @FIDAttribute(fieldRef = "secondName")
-    protected String lastName1;
+    public String lastName1;
     // Implementation from 20.8.2019 does not support this feature. Possible solution is to use a foreign-key/key-mapping
     // identifier.
     @FIDAttribute(cls = A.class, fieldRef = "name", value = "1")
-    protected String name2;
+    public String name2;
     @FIDAttribute(fieldRef = "secondName", value = "1")
-    protected String lastName2;
+    public String lastName2;
 
     @Relation
-    protected A a1;
+    public A a1;
     @Relation("1")
-    protected A a2;
+    public A a2;
 
     public BB(String id, String name1, String lastName1, String name2, String lastName2) {
         this.id = id;

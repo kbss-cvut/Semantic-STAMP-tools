@@ -3,13 +3,13 @@ package cz.cvut.kbss.datatools.xmlanalysis.common.refs.experiment;
 import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.Relation;
 
 public class B {
-    protected String id;
-    protected Aref ref1;
-    protected Aref ref2;
+    public String id;
+    public Aref ref1;
+    public Aref ref2;
     @Relation(instanceRef = "ref1")
-    protected A a1;
+    public A a1;
     @Relation(instanceRef = "ref2")
-    protected A a2;
+    public A a2;
 
     public B(String id, Aref ref1, Aref ref2) {
         this.id = id;

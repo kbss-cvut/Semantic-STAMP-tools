@@ -1,6 +1,8 @@
 package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.BaseGMLRenderer;
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.GraphMLBuilder;
+import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.IGraphMLRenderer;
 import cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf.graphml.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
@@ -80,7 +82,7 @@ public class ConvertRDFLKPRToGML<T extends GraphMLBuilder> {
     public static void renderLKPRModels(){
 
         // set root folder
-        File rootDir = new File("c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\partners\\lkpr-letiste-praha\\out\\");
+        File rootDir = new File("c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\lkpr-process-models\\example-models-01\\out\\");
 
         // configure renderers to files
         Map<BaseGMLRenderer, List<String>> rendererToModelMap = new HashMap<>();
@@ -127,7 +129,7 @@ public class ConvertRDFLKPRToGML<T extends GraphMLBuilder> {
     }
 
     public static void renderLKPRModels_0_2(){
-        File rootDir = new File("c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\partners\\lkpr-letiste-praha\\model-0.2\\out\\");
+        File rootDir = new File("c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\lkpr-process-models\\example-models-01\\model-0.2\\out\\");
         // configure renderers to files
         Map<BaseGMLRenderer, List<String>> rendererToModelMap = new HashMap<>();
 
@@ -149,10 +151,36 @@ public class ConvertRDFLKPRToGML<T extends GraphMLBuilder> {
         processMap(rendererToModelMap, rootDir);
     }
 
+    public static void renderCSAT(){
+        String in = "csat-process-models\\bizagi-process-models\\verze 25.10 BM Administration-001.rdf";
+        File fin = new File(in);
+        String fileName = fin.getName();
+        File dir = fin.getParentFile();
+        Map<BaseGMLRenderer, List<String>> rendererToModelMap = new HashMap<>();
+        // business process models
+        rendererToModelMap.put(
+                new BusinessProcessModelRenderer(),
+                Arrays.asList(fileName)
+        );
+
+        // working environment models
+        rendererToModelMap.put(
+                new WorkingEnvironmentRenderer(),
+                Arrays.asList(fileName)
+        );
+        processMap(rendererToModelMap, dir);
+    }
+
+    public static void convert(String fileName){
+
+    }
+
     public static void main(String[] args) {
 //        renderLKPRModels();
-        renderLKPRModels_0_2();
 
+
+//        renderLKPRModels_0_2();
+        renderCSAT();
     }
 
 }

@@ -8,15 +8,15 @@ import cz.cvut.kbss.onto.safety.stamp.Vocabulary;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_people_group)
-public class Group extends Identifiable {
-
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_participant)
+public class GroupController extends Controller {
+    // TODO - change property iri collision with property people
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_person_member)
     protected Set<String> controllerTypes;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_control_structure_element_part)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_group_member)
     protected Set<String> subGroups;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_participant)
+    @OWLObjectProperty(iri = Vocabulary.s_p_has_person_member)
     protected Set<String> people;
 
     @OWLDataProperty(iri = Vocabulary.s_p_label)

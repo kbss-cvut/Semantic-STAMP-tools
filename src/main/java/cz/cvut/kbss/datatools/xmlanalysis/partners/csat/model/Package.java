@@ -5,7 +5,7 @@ import java.util.List;
 
 @XmlRootElement(name = "Package")
 @XmlAccessorType(value = XmlAccessType.FIELD)
-public class Package implements BaseEntity{
+public class Package extends BaseEntity{
 
     @XmlID
     @XmlAttribute(name = "Id")
@@ -16,6 +16,10 @@ public class Package implements BaseEntity{
     @XmlElementWrapper(name = "Participants")
     @XmlElement(name = "Participant")
     protected List<Participant> participants;
+
+    @XmlElementWrapper(name = "Pools")
+    @XmlElement(name = "Pool")
+    protected List<Pool> pools;
 
     @XmlElementWrapper(name = "WorkflowProcesses")
     @XmlElement(name = "WorkflowProcess")
@@ -35,6 +39,14 @@ public class Package implements BaseEntity{
 
     public void setProcesses(List<WorkflowProcess> processes) {
         this.processes = processes;
+    }
+
+    public List<Pool> getPools() {
+        return pools;
+    }
+
+    public void setPools(List<Pool> pools) {
+        this.pools = pools;
     }
 
     public String getId() {

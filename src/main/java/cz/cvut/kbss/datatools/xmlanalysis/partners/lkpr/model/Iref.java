@@ -1,5 +1,6 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.model;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.FIDAttribute;
 import org.eclipse.persistence.oxm.annotations.XmlPath;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,18 +8,24 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Iref implements BaseEntity{
+public class Iref extends BaseEntity{
     @XmlAttribute
     protected String name;
-    @XmlPath("iref/@type")
+    @XmlPath("IREF/@type")
     protected String type;
-    @XmlPath("iref/@tmodeltype")
+    @FIDAttribute(fieldRef = "modeltype", cls = Model.class)
+    @XmlPath("IREF/@tmodeltype")
     protected String tmodeltype;
-    @XmlPath("iref/@tmodelname")
+    @FIDAttribute(fieldRef = "name")
+    @XmlPath("IREF/@tmodelname")
     protected String tmodelname;
-    @XmlPath("iref/@tclassname")
+
+    @FIDAttribute(value = "1", fieldRef = "cls", cls = Instance.class)
+    @XmlPath("IREF/@tclassname")
     protected String tclassname;
-    @XmlPath("iref/@tobjname")
+
+    @FIDAttribute(value = "1", fieldRef = "name")
+    @XmlPath("IREF/@tobjname")
     protected String tobjname;
 
 

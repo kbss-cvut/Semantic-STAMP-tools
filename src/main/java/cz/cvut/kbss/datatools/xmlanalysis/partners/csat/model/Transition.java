@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "Transition")
 @XmlAccessorType(value = XmlAccessType.FIELD)
-public class Transition implements BaseEntity {
+public class Transition extends BaseEntity {
     @XmlID
     @XmlAttribute(name = "Id")
     protected String id;

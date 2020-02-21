@@ -39,7 +39,7 @@ public class DumpADOXMLImport extends SourceProcessor {
     @Override
     public void setConfig(Properties config) {
         super.setConfig(config);
-        adoxmlImportDumpDir = ensureDir(config, outputDir, ADOXML_IMPORT_DUMP_DIR);
+        adoxmlImportDumpDir = ensureDir(outputDir, config.getProperty(ADOXML_IMPORT_DUMP_DIR));
     }
 
     @Override

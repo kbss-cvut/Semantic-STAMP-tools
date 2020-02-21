@@ -1,11 +1,12 @@
 package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf.graphml;
 
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.ActivityGMLBuilder;
+import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.BaseGMLRenderer;
 import cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BusinessProcessModelRenderer extends BaseGMLRenderer<ActivityGMLBuilder>{
+public class BusinessProcessModelRenderer extends BaseGMLRenderer<ActivityGMLBuilder> {
 
     private static final Logger LOG = LoggerFactory.getLogger(BusinessProcessModelRenderer.class);
 

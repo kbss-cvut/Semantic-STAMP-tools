@@ -1,18 +1,8 @@
 package cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf;
 
 import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
-import cz.cvut.kbss.datatools.xmlanalysis.common.refs.ReflectionUtils;
 import cz.cvut.kbss.jopa.model.IRI;
 import cz.cvut.kbss.jopa.model.annotations.OWLClass;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.eclipse.persistence.oxm.annotations.XmlKey;
-
-import javax.xml.bind.annotation.XmlID;
-import java.lang.reflect.Field;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public class BasicIRIGenerator implements IRIGenerator {
 
@@ -41,38 +31,10 @@ public class BasicIRIGenerator implements IRIGenerator {
 
     @Override
     public String generateIRI(Object o) {
-        String id = getUniqueTimeId();
-        String extractedId = extractId(o, XmlID.class);
-        if(extractedId == null)
-            extractedId = extractId(o, XmlKey.class);
-        if(extractedId != null)
-            id = extractedId;
+        String id = JAXBUtils.extractIdFromJAXBAnnotations(o);
+        if(id == null)
+            id = getUniqueTimeId();;
         return generateIRI(o, id);
-    }
-
-    protected String extractId(Object o, Class c){
-        List<Field> fields = FieldUtils.getFieldsListWithAnnotation(o.getClass(), c);
-        fields.sort(Comparator.comparing(f -> f.getName())); // sort the fields to construct an id string from possibly composite key
-        String id = null;
-        if(fields != null) {
-            StringBuilder idb = new StringBuilder();
-            for (Field f : fields) {
-                Object ido = Optional.ofNullable(ReflectionUtils.getValue(o, f)).orElse(null);
-                if(ido != null ){
-                    String idc = Objects.toString(ido).trim();
-                    if(!idc.isEmpty())
-                        idb.append(idc).append('-');
-                }
-            }
-            if(idb.length() > 0){
-                idb.deleteCharAt(idb.length() - 1);
-                String idTmp = idb.toString().trim();
-                if(!idTmp.isEmpty()){
-                    id = idTmp;
-                }
-            }
-        }
-        return id;
     }
 
     protected static long last_t = 0;

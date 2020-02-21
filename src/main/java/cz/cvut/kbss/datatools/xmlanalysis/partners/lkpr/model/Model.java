@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlID;
 
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Model implements BaseEntity{
+public class Model extends BaseEntity{
 
     @XmlID
     @XmlAttribute

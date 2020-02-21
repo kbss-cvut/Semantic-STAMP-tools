@@ -7,10 +7,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
+import java.util.List;
 
 //@XmlRootElement(name = "INSTANCE")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Instance implements BaseEntity{
+public class Instance extends BaseEntity{
 //    @InstanceId
     @XmlID
     @XmlAttribute
@@ -24,8 +25,7 @@ public class Instance implements BaseEntity{
     @XmlAttribute
     protected String name;
 
-
-
+    protected List<Connector> hasNotes;
 
     public Instance() {
     }
@@ -34,6 +34,15 @@ public class Instance implements BaseEntity{
         this.id = id;
         this.cls = cls;
         this.name = name;
+    }
+
+
+    public List<Connector> getHasNotes() {
+        return hasNotes;
+    }
+
+    public void setHasNotes(List<Connector> hasNotes) {
+        this.hasNotes = hasNotes;
     }
 
     public String getId() { return id;}

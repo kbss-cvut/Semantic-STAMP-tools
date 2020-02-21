@@ -1,9 +1,10 @@
 package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf.graphml;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.BaseGMLRenderer;
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.RiskPoolGMLBuilder;
 import cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary;
 
-public class RiskPoolModelRenderer extends BaseGMLRenderer<RiskPoolGMLBuilder>{
+public class RiskPoolModelRenderer extends BaseGMLRenderer<RiskPoolGMLBuilder> {
     @Override
     protected RiskPoolGMLBuilder createGMLBuilder() {
         return new RiskPoolGMLBuilder();

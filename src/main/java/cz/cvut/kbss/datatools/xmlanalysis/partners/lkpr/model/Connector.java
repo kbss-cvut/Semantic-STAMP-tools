@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "CONNECTOR")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Connector implements BaseEntity{
+public class Connector extends BaseEntity{
 
     @XmlID
     @XmlAttribute

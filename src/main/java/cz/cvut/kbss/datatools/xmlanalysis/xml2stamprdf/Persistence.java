@@ -3,14 +3,17 @@ package cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf;
 import cz.cvut.kbss.jopa.exceptions.OWLEntityExistsException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.jena.graph.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.impl.ModelCom;
 import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,18 +38,15 @@ public class Persistence implements Closeable {
             em.merge(o);
         }catch (OWLEntityExistsException e){
             LOG.warn("",e);
+        }catch (IllegalArgumentException e) {
+            LOG.warn("", e);
         }
     }
 
-    public void applyRules(){
-        em.createNativeQuery("INSERT {\n" +
-                "?c a <http://onto.fel.cvut.cz/ontologies/stamp/capability>;\n" +
-                "<http://onto.fel.cvut.cz/ontologies/ufo/is-manifested-by> ?e.\n" +
-                "}WHERE{\n" +
-                "?e a <http://onto.fel.cvut.cz/ontologies/stamp/controlled-process>.\n" +
-                "BIND(iri(concat(str(?e),\"-capability\")) as ?c)\n" +
-                "}"
-        ).executeUpdate();
+    public void applyRules(List<String> rulesAsSparql){
+        for(String query : rulesAsSparql){
+            em.createNativeQuery(query).executeUpdate();
+        }
 
 //        System.out.println("-------------------------------------------------------------------------");
 //        System.out.println("-------------------------------------------------------------------------");
@@ -101,6 +101,7 @@ public class Persistence implements Closeable {
 
     public void exportToFile(String file, Map<String, String> prefixMappings){
         em.getTransaction().begin();
+        checkData();
         Graph g = exportData();
         em.getTransaction().commit();
         exportToFileImpl(g, file,  prefixMappings);
@@ -108,9 +109,11 @@ public class Persistence implements Closeable {
 
     public void exportToFileImpl(Graph g, String file, Map<String, String> prefixMappings){
         LOG.info("Graph export size {}",g.size());
+        LOG.info("To file {}", file);
         try(OutputStream os = new FileOutputStream(file)) {
             prefixMappings.entrySet().forEach(e -> g.getPrefixMapping().setNsPrefix(e.getKey(), e.getValue()));
-            RDFDataMgr.write(os, g,  Lang.RDFXML);
+            Model m = new ModelCom(g);
+            m.write(os, Lang.RDFXML.getLabel());
         }catch (FileNotFoundException e){
             LOG.error("", e);
         }catch (IOException e){
@@ -130,6 +133,29 @@ public class Persistence implements Closeable {
         );
         return g;
     }
+
+
+    public void checkData(){
+//        List<String> badElements =
+//                .stream()
+//                .flatMap(r -> Stream.of((Object[])r).map(o -> Objects.toString(o)))
+//                .filter(s -> !StringUtils.containsIgnoreCase("http://", (String)s))
+//                .collect(Collectors.toList());
+        List<String> badElements = new ArrayList<>();
+        for(Object r : getResultList("SELECT * WHERE {?s ?p ?o}")){
+            Object[] b = (Object[])r;
+            List<String> bs = Stream.of(b)
+                    .filter(o -> o instanceof URI)
+                    .map(o -> Objects.toString(o))
+                    .filter(s -> !StringUtils.containsIgnoreCase(s, "http://"))
+                    .collect(Collectors.toList());
+            badElements.addAll(bs);
+        }
+
+        int size = badElements.size();
+        System.out.println(size);
+    }
+
 
 
     protected Triple toTriple(Object[] terms){

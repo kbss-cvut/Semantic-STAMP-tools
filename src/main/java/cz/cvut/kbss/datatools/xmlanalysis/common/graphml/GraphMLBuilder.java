@@ -8,15 +8,15 @@ package cz.cvut.kbss.datatools.xmlanalysis.common.graphml;
 import com.tinkerpop.blueprints.Edge;
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
-import com.tinkerpop.blueprints.impls.tg.TinkerGraph;
 import com.tinkerpop.blueprints.util.io.gml.GMLWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -42,13 +42,13 @@ public class GraphMLBuilder {
 
 
 
-    protected Vertex addWithCustomShape(NodeData nodeData, String shape, String ...props){
+    public Vertex addWithCustomShape(NodeData nodeData, String shape, String ...props){
         Vertex v = add(nodeData);
         v.setProperty("graphics", addToMap(mapOf("customconfiguration", shape), props));
         return v;
     }
 
-    protected Vertex addWithShape(NodeData nodeData, String shape, String ... props){
+    public Vertex addWithShape(NodeData nodeData, String shape, String ... props){
         Vertex v = add(nodeData);
 
         v.setProperty("graphics", addToMap(mapOf("type", shape),props));
@@ -119,6 +119,10 @@ public class GraphMLBuilder {
         return addEdgeSafe(edgeData.getSource().getId(), edgeData.getTarget().getId(), edgeData.getLabel());
     }
 
+    public Edge addPartOfEdgeSafe(EdgeData edgeData) {
+        return addPartOfEdge(edgeData.getSource().getId(), edgeData.getTarget().getId(), edgeData.getLabel());
+    }
+
     public Edge addEdgeSafe(Object p, Object c, String label) {
         return addEdgeSafe(getNextEdgeId(), p, c, label);
     }
@@ -130,6 +134,12 @@ public class GraphMLBuilder {
             return edge;
         }
         return addEdge(id, p, c, label);
+    }
+
+    public Edge addPartOfEdge(Object p, Object c, String lable){
+        Edge e = addEdgeSafe(getNextEdgeId(), p, c, "");
+        e.setProperty("graphics", mapOf("sourceArrow", "diamond"));
+        return e;
     }
 
     public Vertex addToGroup(Object childG, Object parentG){
@@ -167,6 +177,7 @@ public class GraphMLBuilder {
     }
 
     public void write(OutputStream os) throws IOException{
+//        GraphMLWriter w = new GraphMLWriter(g);
         GMLWriter w = new GMLWriter(g);
         w.setUseId(true);
         w.outputGraph(os);
@@ -181,9 +192,13 @@ public class GraphMLBuilder {
         }
 
         public NodeData(String nodeType, String name) {
+            this(nodeType, name, name);// name is used as label
+        }
+
+        public NodeData(String nodeType, String name, String label) {
             this.nodeType = nodeType;
             this.name = name;
-            this.label = name; // default label
+            this.label = label; // default label
         }
 
         public String getNodeType() {

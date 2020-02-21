@@ -16,7 +16,7 @@ import org.apache.jena.shared.impl.PrefixMappingImpl;
  */
 public class Vocabulary {
     public static PrefixMappingImpl prefixMapping = getPrefixMapping();
-    
+
     public final static String ufoNS = "http://onto.fel.cvut.cz/ontologies/ufo/";
     public final static String ufoPrfix = "ufo";
     public final static String lkprNS = "http://onto.fel.cvut.cz/ontologies/aviation/airport/lkpr/pm/";
@@ -27,11 +27,11 @@ public class Vocabulary {
     public final static String bpmnPrefix = "bpmn";
 
 
-    public final static String c_EventType = "http://onto.fel.cvut.cz/ontologies/ufo/event-type"; 
+    public final static String c_EventType = "http://onto.fel.cvut.cz/ontologies/ufo/event-type";
     public final static Resource j_c_EventType = ResourceFactory.createResource(c_EventType);
-    public final static String c_Agent = "http://onto.fel.cvut.cz/ontologies/ufo/Agent"; 
+    public final static String c_Agent = "http://onto.fel.cvut.cz/ontologies/ufo/Agent";
     public final static Resource j_c_Agent = ResourceFactory.createResource(c_Agent);
-    public final static String c_Disposition = "http://onto.fel.cvut.cz/ontologies/ufo/disposition"; 
+    public final static String c_Disposition = "http://onto.fel.cvut.cz/ontologies/ufo/disposition";
     public final static Resource j_c_Disposition = ResourceFactory.createResource(c_Disposition);
     public final static String c_Sensor = "http://onto.fel.cvut.cz/ontologies/aviation/airport/lkpr/pm/Sensor";
     public final static Resource j_c_Sensor = ResourceFactory.createResource(c_Sensor);
@@ -55,6 +55,9 @@ public class Vocabulary {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //// BPMN classes and properties ///////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+    public final static String c_flowControlEventType = "http://onto.fel.cvut.cz/ontologies/bpmn/flow-control-event-type";
+    public final static Resource j_c_flowControlEventType = ResourceFactory.createResource(c_flowControlEventType);
     public final static String c_Swimlane = "http://onto.fel.cvut.cz/ontologies/bpmn/swimlane";
     public final static Resource j_c_Swimlane = ResourceFactory.createResource(c_Swimlane);
     public final static String c_Activity = "http://onto.fel.cvut.cz/ontologies/bpmn/activity";
@@ -124,6 +127,10 @@ public class Vocabulary {
     public final static Resource j_c_unwantedEvent = ResourceFactory.createResource(c_unwantedEvent);
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //// RDF CONCEPTS AND PROPERTIES ///////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public final static String p_sub_class_of = "http://www.w3.org/2000/01/rdf-schema#subClassOf";
 
     /**
      * @param uri
@@ -135,7 +142,7 @@ public class Vocabulary {
     }
 
     /**
-     * 
+     *
      * @param uri
      * @return the local name of the uri
      */

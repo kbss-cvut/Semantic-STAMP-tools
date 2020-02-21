@@ -1,6 +1,7 @@
 package cz.cvut.kbss.datatools.xmlanalysis;
 
 import cz.cvut.kbss.datatools.xmlanalysis.common.XMLCollections;
+import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.JAXBUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -55,6 +56,14 @@ public abstract class XMLProcessor extends SourceProcessor {
         return fileName;
     }
 
+    public void setInputFile(File inputFile) {
+        this.inputFile = inputFile;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     @Override
     public File[] listSources(){
         return sourceDir.listFiles(c -> c.getName().toLowerCase().endsWith(".xml"));
@@ -65,12 +74,14 @@ public abstract class XMLProcessor extends SourceProcessor {
      *      * method is called after the process(Document) has finished.
      * @param inputFile
      */
+    @Override
     public void processSource(File inputFile) {
         // parse the xml file into Document and pass it to the convert(Document) method
         try{
             this.inputFile = inputFile;
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
+            JAXBUtils.setSchema(null, dbf, db);
             Document doc = db.parse(inputFile);
             fileName = inputFile.getName();
             fileName = fileName .substring(0, fileName .lastIndexOf("."));

@@ -1,20 +1,23 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners.csat.model;
 
+import org.eclipse.persistence.oxm.annotations.XmlPath;
+
 import javax.xml.bind.annotation.*;
 import java.util.List;
 
 
 @XmlRootElement(name = "WorkflowProcess")
 @XmlAccessorType(value = XmlAccessType.FIELD)
-public class WorkflowProcess implements BaseEntity {
+public class WorkflowProcess extends BaseEntity {
 
     @XmlID
     @XmlAttribute(name = "Id")
     protected String id;
+
     @XmlAttribute(name = "Name")
     protected String name;
-    @XmlElementWrapper(name = "Activities")
-    @XmlElement(name = "Activity")
+
+    @XmlPath("Activities/Activity")
     protected List<Activity> activities;
 
     @XmlElementWrapper(name = "Transitions")
@@ -58,8 +61,6 @@ public class WorkflowProcess implements BaseEntity {
         return "WorkflowProcess{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", activities=" + activities +
-                ", transitions=" + transitions +
                 '}';
     }
 }

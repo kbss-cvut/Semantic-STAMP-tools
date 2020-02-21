@@ -1,5 +1,7 @@
 package cz.cvut.kbss.datatools.xmlanalysis.common.refs.model;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.RelationTypes;
+
 import java.lang.reflect.Field;
 import java.util.Objects;
 
@@ -17,7 +19,12 @@ public class RelationField {
     /** The key mapping used to find the instance(s) to be injected in the relational field*/
     protected KeyMapping keyMapping;
     /** True if the relational field is a collection.*/
-    protected boolean isManyRelation;
+//    protected boolean isManyToOneRelation;
+//
+//    protected boolean isOneToManyRelation;
+
+    protected boolean manyRelationField;
+    protected RelationTypes relationType;
 
     public Field getRelationField() {
         return relationField;
@@ -43,27 +50,56 @@ public class RelationField {
         this.keyMapping = keyMapping;
     }
 
-    public boolean isManyRelation() {
-        return isManyRelation;
+    public RelationTypes getRelationType() {
+        return relationType;
     }
 
-    public void setManyRelation(boolean manyRelation) {
-        isManyRelation = manyRelation;
+    public void setRelationType(RelationTypes relationType) {
+        this.relationType = relationType;
     }
+
+    public boolean isManyRelationField() {
+        return manyRelationField;
+    }
+
+    public void setManyRelationField(boolean manyRelationField) {
+        this.manyRelationField = manyRelationField;
+    }
+
+    //    public boolean isManyToOneRelation() {
+//        return isManyToOneRelation;
+//    }
+//
+//    public void setManyToOneRelation(boolean manyToOneRelation) {
+//        isManyToOneRelation = manyToOneRelation;
+//    }
+//
+//    public boolean isOneToManyRelation() {
+//        return isOneToManyRelation;
+//    }
+//
+//    public void setOneToManyRelation(boolean oneToManyRelation) {
+//        isOneToManyRelation = oneToManyRelation;
+//    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RelationField that = (RelationField) o;
-        return isManyRelation == that.isManyRelation &&
-                Objects.equals(relationField, that.relationField) &&
-                Objects.equals(containerField, that.containerField) &&
+        return
+                relationType == that.relationType &&
+//                isManyToOneRelation == that.isManyToOneRelation &&
+//                isOneToManyRelation == that.isOneToManyRelation &&
+                Objects.equals(Objects.toString(relationField), Objects.toString(that.relationField)) &&
+                Objects.equals(Objects.toString(containerField), Objects.toString(that.containerField)) &&
                 Objects.equals(keyMapping, that.keyMapping);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(relationField, containerField, keyMapping, isManyRelation);
+//        return Objects.hash(relationField, containerField, keyMapping, isManyToOneRelation, isOneToManyRelation);
+
+        return Objects.hash(Objects.toString(relationField), Objects.toString(containerField), keyMapping, relationType);
     }
 }

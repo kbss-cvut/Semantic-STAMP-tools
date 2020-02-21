@@ -2,7 +2,8 @@ package cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.model;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class InstanceAdapter extends XmlAdapter<InstanceRef, Instance> implements BaseEntity{
+@Deprecated
+public class InstanceAdapter extends XmlAdapter<InstanceRef, Instance> {
 
 //    protected
 

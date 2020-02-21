@@ -1,8 +1,6 @@
 package cz.cvut.kbss.datatools.xmlanalysis.common.refs.experiment;
 
-import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.FIDAttribute;
-import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.ManyFK;
-import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.Relation;
+import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.*;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
@@ -11,23 +9,23 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class C {
-    protected String id;
+    public String id;
 
-    @ManyFK
+    @RelationType(relationType = RelationTypes.manyToOne)
     @FIDAttribute(cls = A.class, fieldRef = "id")
-    protected List<String> refs; // ids to A instances
+    public List<String> refs; // ids to A instances
 
-    @ManyFK
-    protected List<Aref> refs2;
+    @RelationType(relationType = RelationTypes.manyToOne)
+    public List<Aref> refs2;
 
     @Relation
-    protected List<A> as1;
+    public List<A> as1;
 
 
     @Relation(instanceRef = "refs2", value = "1")
-    protected List<A> as2;
+    public List<A> as2;
 
-    protected ArrayList<A> a;
+    public ArrayList<A> a;
 
     public C(String id, List<String> refs, List<Aref> refs2) {
         this.id = id;
@@ -62,7 +60,7 @@ public class C {
                 '}';
     }
 
-    protected static Collection collectionInstance(Field f){
+    public static Collection collectionInstance(Field f){
         try {
             f.getType();
             Class elementType = Class.forName(((ParameterizedType) f.getGenericType()).getActualTypeArguments()[0].getTypeName());
@@ -73,7 +71,7 @@ public class C {
         return null;
     }
 
-    protected static <T> Collection<T> collectionInstance(Class collectionType, Class<T> elementType){
+    public static <T> Collection<T> collectionInstance(Class collectionType, Class<T> elementType){
         try {
             return (Collection<T>)collectionType.newInstance();
         } catch (IllegalAccessException e) {

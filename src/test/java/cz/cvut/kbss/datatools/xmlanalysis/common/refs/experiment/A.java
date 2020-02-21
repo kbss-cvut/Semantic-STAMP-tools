@@ -2,9 +2,9 @@ package cz.cvut.kbss.datatools.xmlanalysis.common.refs.experiment;
 
 public class A {
 
-    protected String id;
-    protected String name;
-    protected String secondName;
+    public String id;
+    public String name;
+    public String secondName;
 
     public A(String id, String name, String secondName) {
         this.id = id;

@@ -44,7 +44,7 @@ public class LoadModelJAXB {
 
 
     public static void main(String[] args) {
-        File file = new File("c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\partners\\lkpr-letiste-praha\\Aerobridge.xml");
+        File file = new File("c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\lkpr-process-models\\example-models-01\\Aerobridge.xml");
         LoadModelJAXB processor = new LoadModelJAXB();
         processor.process(file);
     }

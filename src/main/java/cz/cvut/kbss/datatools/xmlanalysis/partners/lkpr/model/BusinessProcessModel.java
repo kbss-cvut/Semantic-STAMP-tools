@@ -15,7 +15,10 @@ public class BusinessProcessModel extends Model{
 //            "Merging, Parallelity, Subprocess, Trigger', " +
 //            "@class)]")
     @XmlPath("INSTANCE")
-    protected List<Instance> activities;
+    protected List<Instance> otherActivities;
+
+    @XmlPath("INSTANCE[@class='Activity']")
+    protected List<Activity> activities;
 
     @XmlPath("CONNECTOR[@class='Subsequent']")
     protected List<Connector> subsequentConnectors;
@@ -25,12 +28,22 @@ public class BusinessProcessModel extends Model{
 
 
     // Getters and Setters
-    public List<Instance> getActivities() {
-        return activities;
+
+
+    public List<Instance> getOtherActivities() {
+        return otherActivities;
     }
 
-    public void setActivities(List<Instance> activities) {
+    public void setOtherActivities(List<Instance> otherActivities) {
+        this.otherActivities = otherActivities;
+    }
+
+    public void setActivities(List<Activity> activities) {
         this.activities = activities;
+    }
+
+    public List<Activity> getActivities() {
+        return activities;
     }
 
     public List<Connector> getSubsequentConnectors() {

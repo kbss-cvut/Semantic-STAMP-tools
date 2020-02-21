@@ -1,30 +1,33 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.mapping;
 
-import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.*;
+import cz.cvut.kbss.datatools.xmlanalysis.mapstructext.DefaultMapper;
 import cz.cvut.kbss.datatools.xmlanalysis.mapstructext.annotations.*;
-import cz.cvut.kbss.datatools.xmlanalysis.partners.IRIMapper;
 import cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.model.*;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.model.Process;
+import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.jaxbmodel.IBaseXMLEntity;
+import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.*;
+import cz.cvut.kbss.onto.safety.stamp.Vocabulary;
+import org.apache.commons.lang.StringUtils;
+import org.mapstruct.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Mapper
-public interface AdonisExportADOXML {
+@SetIRI(prefix = "http://onto.fel.cvut.cz/partners/lkpr/", sourceField = "id")
+@SetLabel(sourceField = "name")
+public interface AdonisExportADOXML extends DefaultMapper<BaseEntity> {
 
     static final Logger LOG = LoggerFactory.getLogger(AdonisExportADOXML.class);
 
-    String ADOXML = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/adoxml";
+    static final String ADOXML = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/adoxml";
     String BUSINESS_PROCESS_MODEL = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/business-process-model";
+    String COMPANY_MAP_MODEL = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/company-map-model";
+    String WORKING_ENVIRONMENT_MODEL = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/working-environment-model";
     String ACTIVITY = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/activity";
+    String SWIMLANE = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/swimlane";
     String SWIMLANE_VERTICAL = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/swimlane-vertical";
     String SWIMLANE_HORIZONTAL = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/swimlane-horizontal";
     String PROCESS_START = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/process-start";
@@ -70,100 +73,196 @@ public interface AdonisExportADOXML {
 
 
     String ADOXML_NS = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/";
-    String IRI_EXP = "java(toIRI(in))";
 
 
-    Map<String, Identifiable> registry = new HashMap<>();
     List<Connector> unresolvedConnectors = new ArrayList<>();
 
     // ADOXML mapping
     @RootMapping
-    @Mapping(expression = IRI_EXP, target = "iri")
-    @Mapping(source = "organizationalModels", target = "participants")
-    @Mapping(expression = "java(toIRIs(in.getBusinessProcessModels(), in.getRiskPoolModels()))", target = "childProcessTypes")
-    ProcessType xmlToProcessType(ADOXML in);
+    @AddTypes(types = {ADOXML})
+    @Mapping(source = "workingEnvironmentModels", target = "participants")
+    @Mapping(expression = "java(iris(in.getBusinessProcessModels(), in.getRiskPoolModels(), in.getCompanyMapModels()))", target = "components")
+    @Mapping(expression = "java(\"LKPR Operations\")", target = "label")
+    EventType xmlToProcessType(ADOXML in);
+
+    @RootMapping
+    @SetIRI(beforeId = "controller")
+    @AddTypes(types = {ADOXML})
+    @Mapping(source = "workingEnvironmentModels", target = "subGroups")
+    @Mapping(expression = "java(\"LKPR Organization\")", target = "label")
+    GroupController xmlToGroup(ADOXML in);
 
     // BusinessProcessModel mapping
     @RootMapping
 //    @AttributeValueQualifier(field = "modeltype", acceptedValues = {"Business process model", "Company map"})
-    @Mapping(expression = IRI_EXP, target = "iri")
     @AddTypes(types = {BUSINESS_PROCESS_MODEL})
-    @Mapping(source = "name", target = "label")
-    @Mapping(source = "activities", target = "childProcessTypes")
-    @Mapping(source = "subsequentConnectors", target = "childConnections")
-    ProcessType xmlToProcessType(BusinessProcessModel in);
+    @Mapping(expression = "java(iris(in.getActivities(), in.getOtherActivities()))", target = "components")
+    @Mapping(source = "subsequentConnectors", target = "connections")
+    EventType xmlToProcessType(BusinessProcessModel in);
 
     @AfterMapping
-    default void xmlToProcessType(BusinessProcessModel in, @MappingTarget ProcessType out) {
+    default void xmlToProcessType(BusinessProcessModel in, @MappingTarget EventType out) {
         addUnregisteredPartOfConnectors(in.getEventPartOfConnectors());
     }
+
+    @RootMapping
+    @AddTypes(types = COMPANY_MAP_MODEL)
+//    @Mapping(source = "processes", target = "components")
+//    @Mapping(expression = "java(iris(in.getProcesses(), in.getSwimlanesH(), in.getSwimlanesV(), in.getAggregations()))", target = "components")
+    @Mapping(expression = "java(iris(in.getActors(), in.getExternalPartners()))", target = "participants")
+    EventType xmlToProcessType(CompanyMapModel in);
+
+    @AfterMapping
+    default void xmlToProcessType(CompanyMapModel in, @MappingTarget EventType out) {
+        addUnregisteredPartOfConnectors(in.getHasChildProcess());
+        addUnregisteredPartOfConnectors(in.getIsInside());
+
+        Set<String> eventParts = getAndInit(out::getComponents, out::setComponents);
+        for(Instance inst : in.getProcesses()){
+            if(inst instanceof Process){
+                Process refProcess = (Process)inst;
+                BusinessProcessModel process = refProcess.getReferencedProcess();
+                String partIri = null;
+                if(process != null){
+                    partIri = iri(process);
+
+                }else{
+                    partIri = iri(inst);
+                }
+                if(partIri != null) {
+                    eventParts.add(partIri);
+                }
+            }
+        }
+    }
+
+
+
+
 
     // OrganizationalModel mapping
     @RootMapping
 //    @AttributeValueQualifier(field = "modeltype", acceptedValues = {"Business process model", "Company map"})
-    @Mapping(expression = IRI_EXP, target = "iri")
     @AddTypes(types = {ORGANIZATIONAL_UNIT_MODEL})
-    @Mapping(source = "name", target = "label")
-    @Mapping(source = "performers", target = "people")
-    @Mapping(expression = "java(toIRIs(in.getRoles(), in.getAggregations()))", target = "controllerTypes")
+//    @Mapping(source = "performers", target = "people")
+    @Mapping(expression = "java(iris(in.getPerformers(), in.getRoles(), in.getAggregations()))", target = "controllerTypes")
     @Mapping(source = "organizationalUnits", target = "subGroups")
-    Group xmlToGroup(OrganizationalModel in);
+    GroupController xmlToGroup(WorkingEnvironmentModel in);
 
     @AfterMapping
-    default void xmlToGroup(OrganizationalModel in, @MappingTarget Group out) {
+    default void xmlToGroup(WorkingEnvironmentModel in, @MappingTarget GroupController out) {
         addUnregisteredPartOfConnectors(
                 in.getOrganizationalUnitIsSubordinateConnectors(),
                 in.getPerformerBelongsToConnectors(),
                 in.getPerformerIsManagerConnectors(),
-                in.getRoleIsInsideConnectors()
+                in.getRoleIsInsideConnectors(),
+                in.getPerformerHasRoleConnectors()
         );
     }
 
     // RiskPool mapping
-    @RootMapping
-    @Mapping(expression = IRI_EXP, target = "iri")
-    @AddTypes(types = {RISK_POOL_MODEL})
-    @Mapping(source = "name", target = "label")
-    @Mapping(source = "risks", target = "childProcessTypes")
-    ProcessType xmlToProcessType(RiskPool in);
+//    @RootMapping
+//    @AddTypes(types = {RISK_POOL_MODEL, Vocabulary.s_c_unsafe_event})
+//    @Mapping(source = "risks", target = "components")
+//    EventType xmlToProcessType(RiskPool in);
 
 
     // Box elements
     @RootMapping
     @AttributeValueQualifier(field = "cls", acceptedValues = {
-            "Activity", "Swimlane (vertical)", "Swimlane (horizontal)", "Process Start",
-            "End", "Decision", "Merging", "Parallelity", "Subprocess", "Trigger", "Risk"})
-    @Mapping(expression = IRI_EXP, target = "iri")
+            "Swimlane (vertical)", "Swimlane (horizontal)", "Process start",
+            "End", "Decision", "Merging", "Parallelity", "Subprocess", "Trigger"})
     @AddTypesFromVal(field = "cls", namespace = ADOXML_NS)
-    @Mapping(source = "name", target = "label")
-    ProcessType xmlToEventType(Instance in);
+    EventType xmlToEventType(Instance in);
+
+
+    @AfterMapping
+    default EventType xmlToEventType(Instance in, @MappingTarget EventType eventType){
+        // set swimlane label
+        if(StringUtils.startsWith(in.getCls(), "Swimlane")){
+            String l = eventType.getLabel();
+            if(l != null){
+                l = l.replaceAll("\\s*\\(Role\\)\\s*", " ");
+                l = l.replaceAll("\\s*\\(Working environment model\\)\\s*", " ");
+                l  = l.trim();
+            }
+            IBaseXMLEntity p = in.getParent();
+            if(p != null){
+                if(p instanceof Model){
+                    Model m = (Model)p;
+                    l = "'" + l + "' in '" + m.getName() + "'";
+                }
+            }
+            eventType.setLabel(l);
+        }
+
+        // add control flow event type
+        Set<String> classes = new HashSet<>(Arrays.asList("Process start",
+                "End", "Decision", "Merging", "Parallelity", "Subprocess", "Trigger"));
+        if(classes.contains(in.getCls())){
+            eventType.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_flowControlEventType);
+        }
+
+        // handle Processes which have a structure references
+        if(in instanceof Process){
+            Process refProcess = (Process)in;
+            BusinessProcessModel referencedProcess = refProcess.getReferencedProcess();
+            if(referencedProcess != null){
+                String referencedProcessIri = iri(referencedProcess);
+                if(referencedProcessIri != null){
+                    eventType.setSameStructureAs(referencedProcessIri);
+                }
+            }
+        }
+
+        return eventType;
+    }
 
     @RootMapping
-    @AttributeValueQualifier(field = "cls", acceptedValues = {"Aggregation", "Role"})
-    @Mapping(expression = IRI_EXP, target = "iri")
+    @AttributeValueQualifier(field = "cls", acceptedValues = {"Activity"})
+    // TODO add the risks from the input Activity as unsafe event parts for the output
     @AddTypesFromVal(field = "cls", namespace = ADOXML_NS)
-    @Mapping(source = "name", target = "label")
+    @Mapping(source = "risks", target = "components")
+    @Mapping(expression = "java(iris(in.getResponsibleRole()))", target = "participants")
+    EventType xmlToEventType(Activity in);
+
+
+    @RootMapping
+    @AddTypes(types = {Vocabulary.s_c_unsafe_event})
+    @AttributeValueQualifier(field = "cls", acceptedValues = {"Risk"})
+    @AddTypesFromVal(field = "cls", namespace = ADOXML_NS)
+    EventType xmlToUnsafeEvent(Instance in);
+
+
+    @RootMapping
+    @AttributeValueQualifier(field = "cls", acceptedValues = {"Aggregation", "Role", "Performer"})
+    @AddTypesFromVal(field = "cls", namespace = ADOXML_NS)
     ControllerType xmlToRole(Instance in);
 
-    @RootMapping
-    @AttributeValueQualifier(field = "cls", acceptedValues = {"Performer"})
-    @Mapping(expression = IRI_EXP, target = "iri")
-    @AddTypesFromVal(field = "cls", namespace = ADOXML_NS)
-    @Mapping(source = "name", target = "label")
-    Person xmlToPerson(Instance in);
+//    @RootMapping
+//    @AttributeValueQualifier(field = "cls", acceptedValues = {"Performer"})
+//    @SetIRI(beforeId = "controller-", sourceField = "id")
+//    @AddTypesFromVal(field = "cls", namespace = ADOXML_NS)
+//    PersonController xmlToPerson(Instance in);
 
     @RootMapping
     @AttributeValueQualifier(field = "cls", acceptedValues = {"Organizational unit"})
+//    @SetIRI(beforeId = "group-controller", sourceField="id")
     @AddTypesFromVal(field = "cls", namespace = ADOXML_NS)
-    @Mapping(source = "name", target = "label")
-    @Mapping(expression = IRI_EXP, target = "iri")
-    Group xmlToGroup(Instance in);
+    GroupController xmlToGroup(Instance in);
 
-    @AfterMapping
-    default void register(BaseEntity in, @MappingTarget Identifiable out){
-        if(out != null)
-            registry.put(out.getIri(), out);
-    }
+    @RootMapping
+    @AttributeValueQualifier(field = "cls", acceptedValues = "Subsequent")
+    @Mapping(source = "from", target = "from")
+    @Mapping(source = "to", target = "to")
+    NextConnection xmlToNextConnection(Connector connector);
+
+//    @RootMapping
+//    @AttributeValueQualifier(field = "cls", acceptedValues = "Is subordinated")
+//    @Mapping(source = "from", target = "from")
+//    @Mapping(source = "to", target = "to")
+//    NextConnection xmlToNextConnection(Connector connector);
+
 
     default void addUnregisteredPartOfConnectors(Collection<? extends Connector> ... collections){
         Stream.of(collections)
@@ -192,33 +291,23 @@ public interface AdonisExportADOXML {
 
     // Part of relations
 
-
-
-
-    Set<String> toIRI(Collection<? extends BaseEntity> xmlObjects);
-
-    default String toIRI(BaseEntity xmlObject){
-        return IRIMapper.generateIRI(xmlObject);
-    }
-
-    default Set<String> toIRIs(Collection<? extends BaseEntity> ... collections){
-        return Stream.of(collections)
-                .filter(c -> c != null)
-                .flatMap(c -> c.stream())
-                .map(this::toIRI)
-                .collect(Collectors.toCollection(HashSet::new));
-    }
-
-
     // after all the mapping is done
 
     @AfterAllMappings
     default void resolvePartOfConnectors(){
         List<Connector> resolvedConnectors = new ArrayList<>();
         for(Connector c : unresolvedConnectors){
-            String fromIRI = toIRI(c.getFrom());
-            Identifiable to = registry.get(toIRI(c.getTo()));
-            boolean processed = addValueToCollection(fromIRI, to, c.getCls());
+            String part = null;
+            Identifiable whole = null;
+            boolean processed = false;
+            if(StringUtils.equalsIgnoreCase(c.getCls(), "Has role")){
+                part = iri(c.getTo());
+                whole = getRegistry().get(iri(c.getFrom()));
+            }else {
+                part = iri(c.getFrom());
+                whole = getRegistry().get(iri(c.getTo()));
+            }
+            processed = addValueToCollection(part, whole, c.getCls());
 
             if(processed)
                 resolvedConnectors.add(c);
@@ -235,21 +324,14 @@ public interface AdonisExportADOXML {
         unresolvedConnectors.removeAll(resolvedConnectors);
     }
 
-    default <T> T get(BaseEntity in, Class<T> cls){
-        Identifiable identifiable = registry.get(toIRI(in));
-        if(identifiable != null && cls.isAssignableFrom(identifiable.getClass())){
-            return (T)identifiable;
-        }
-        return null;
-    }
 
     default boolean addValueToCollection(String partIri, Identifiable whole, String connectorType){
         if(whole == null || partIri == null)
             return false;
         Set<String> s = null;
-        if(ProcessType.class.isAssignableFrom(whole.getClass())) {
-            ProcessType p = ((ProcessType) whole);
-            s = getAndInit(p::getChildProcessTypes, p::setChildProcessTypes);
+        if(EventType.class.isAssignableFrom(whole.getClass())) {
+            EventType p = ((EventType) whole);
+            s = getAndInit(p::getComponents, p::setComponents);
 
             switch (connectorType){
                 case "Is inside":
@@ -258,16 +340,19 @@ public interface AdonisExportADOXML {
                     break;
                 default: LOG.warn("Unknown part of relation '{}' between part '{}' and whole '{}' of type {}", connectorType, partIri, whole.getIri(), whole.getClass().getCanonicalName());
             }
-        }else if(Group.class.isAssignableFrom(whole.getClass())){
-            Group g = ((Group)whole);
+        }else if(GroupController.class.isAssignableFrom(whole.getClass())){
+            GroupController g = ((GroupController)whole);
             switch (connectorType){
                 case "Is subordinated": s = getAndInit(g::getSubGroups, g::setSubGroups); break;
-                case "Belongs to": s = getAndInit(g::getPeople, g::setPeople); break;
-                case "Is manager": s = getAndInit(g::getPeople, g::setPeople); break;
+                case "Belongs to": s = getAndInit(g::getControllerTypes, g::setControllerTypes); break;
+                case "Is manager": s = getAndInit(g::getControllerTypes, g::setControllerTypes); break;
                 case "Is inside": s = getAndInit(g::getControllerTypes, g::setControllerTypes); break;
+
                 default: LOG.warn("Unknown part of relation '{}' between part '{}' and whole '{}' of type {}", connectorType, partIri, whole.getIri(), whole.getClass().getCanonicalName());
             }
-        }else if(ControllerType.class.isAssignableFrom(whole.getClass()) && "Is inside".equals(connectorType)){
+        }else if(ControllerType.class.isAssignableFrom(whole.getClass()) && (
+                "Is inside".equals(connectorType) ||
+                "Has role".equals(connectorType))){
             ControllerType ct = ((ControllerType)whole);
             s = getAndInit(ct::getSubControllerTypes, ct::setSubControllerTypes);
         }else{
@@ -281,14 +366,6 @@ public interface AdonisExportADOXML {
         return false;
     }
 
-    default Set<String> getAndInit(Supplier<Set<String>> get, Consumer<Set<String>> set){
-        Set<String> s = get.get();
-        if(s == null){
-            s = new HashSet<>();
-            set.accept(s);
-        }
-        return s;
-    }
 
 
 

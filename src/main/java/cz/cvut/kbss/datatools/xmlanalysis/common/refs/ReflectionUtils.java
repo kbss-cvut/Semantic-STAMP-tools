@@ -1,15 +1,25 @@
 package cz.cvut.kbss.datatools.xmlanalysis.common.refs;
 
+import com.github.jsonldjava.utils.Obj;
+import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.jaxbmodel.BaseXMLEntity;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.poi.ss.formula.functions.T;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.ref.Reference;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ReflectionUtils {
     private static final Logger LOG = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -38,6 +48,10 @@ public class ReflectionUtils {
 //            LOG.error("More than one parameter in Collection");
 //        }
         return null;
+    }
+
+    public static boolean isCollection(Field f){
+        return Collection.class.isAssignableFrom(f.getType());
     }
 
     /**
@@ -99,4 +113,97 @@ public class ReflectionUtils {
             throw new RuntimeException(e);
         }
     }
+
+
+    public static Set<Class> getClassClosure(Collection<Class> classes,
+                                             BiFunction<Field, Collection<Class>, Collection<Class>> acceptableClasses){
+        Set<Class> closure = new HashSet<>();
+        Stack<Class> stack = new Stack<>();
+        stack.addAll(classes);
+        while(!stack.isEmpty()){
+            Class cls = stack.pop();
+            if(closure.contains(cls)) // class is already processed
+                continue;
+
+            closure.add(cls);
+
+            // Search for other classes in the fields of "cls"
+            for (Field f : FieldUtils.getAllFieldsList(cls)) {
+                Collection<Class> fieldParams = new ArrayList<>();
+                if (Iterable.class.isAssignableFrom(f.getType())) {
+                    fieldParams.addAll(
+                        Optional
+                                .ofNullable(ReflectionUtils.getGenericParameterClasses(f))
+                                .orElse(Collections.EMPTY_LIST)
+                    );
+                } else if (!f.getType().isPrimitive()) {
+                    fieldParams.add(f.getType());
+                }
+
+                if( acceptableClasses != null) { // the class is not part of the extension
+                    fieldParams = acceptableClasses.apply(f, fieldParams);
+                }
+                if(fieldParams != null)
+                    stack.addAll(fieldParams);
+            }
+        }
+        return closure;
+    }
+
+    public static void traverseGraph(Collection<Object> objects, BiConsumer<Object, Object> visitEdge){
+        Set<Object> visited = new HashSet<>();
+        Stack<Object> stack = new Stack<>();
+        stack.addAll(objects);
+        while(!stack.isEmpty()){
+            Object obj = stack.pop();
+            Class cls = obj.getClass();
+            for (Field f : FieldUtils.getAllFieldsList(cls)) {
+                if(f.getName().equals("parent") && f.getDeclaringClass().isAssignableFrom(BaseXMLEntity.class)){
+                    continue; // ignore the parent field
+                }
+                Object val = ReflectionUtils.getValue(obj, f);
+                if(val == null)
+                    continue;
+
+                if (Iterable.class.isAssignableFrom(val.getClass())) {
+                    ((Iterable)val).forEach(v -> visitEdge.accept(obj, v));
+                } else {
+                    visitEdge.accept(obj, val);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Stack<Integer> s = new Stack();
+        s.addAll(Arrays.asList(1,2,3));
+        System.out.println("pop = " + s.pop());
+        s.addAll(Arrays.asList(4,5,6));
+        System.out.println("pop = " + s.pop());
+        s.add(7);
+        System.out.println("pop = " + s.pop());
+        System.out.println("remaining elements in the stack : " +
+                s.stream().map(i -> i + "").collect(Collectors.joining(", "))
+        );
+    }
+//
+//    public List<Method> getCurrentFilteredStack(Class<T> cls){
+//        return getFilteredStack(Thread.currentThread(), cls);
+//    }
+//
+//    public List<Method> getFilteredStack(Thread t, Class<T> cls){
+//        List<Method> ret = new ArrayList<>();
+//        for(StackTraceElement e : t.getStackTrace()){
+//            e.
+//            try {
+//                Class c = Class.forName(e.getClassName());
+//                if(cls.isAssignableFrom(c) || c.isAssignableFrom(cls)){
+//                    Method m = MethodUtils.get
+//                }
+//            }catch (ClassNotFoundException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+//    }
+
 }

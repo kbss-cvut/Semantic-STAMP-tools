@@ -1,4 +1,6 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.model;
 
-public interface BaseEntity {
+import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.jaxbmodel.BaseXMLEntity;
+
+public abstract class BaseEntity extends BaseXMLEntity {
 }

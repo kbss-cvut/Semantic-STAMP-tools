@@ -21,6 +21,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Comparator.comparing;
+
 public class XMLAnalyzer extends XMLProcessor{
 
     private static final Logger LOG = LoggerFactory.getLogger(XMLAnalyzer.class);
@@ -44,6 +46,11 @@ public class XMLAnalyzer extends XMLProcessor{
     }
 
 
+    public void resetDataStructures(){
+        nodesByParentPath = Multimaps.newSetMultimap(new HashMap<>(), () -> {return new HashSet<>();} );
+    }
+
+
     public void elementAttributeSummary(Document doc){
         sectionTitle("Element Attribute Summary");
         Element el = doc.getDocumentElement();
@@ -63,14 +70,15 @@ public class XMLAnalyzer extends XMLProcessor{
     ///////////////////////////////////////////////////////////////////////////////////////
     public void childParentSummaryTree(Document doc){
         sectionTitle("Child Parent Summary Tree");
-        Element el = doc.getDocumentElement();
+        root = doc.getDocumentElement();
         String rootPath = ".";
-        nodesByParentPath.put(rootPath, el);
-        childParentSummaryTree(el, rootPath);
+        nodesByParentPath.put(rootPath, root);
+        childParentSummaryTree(root, rootPath);
         Map<String,Collection<Node>> nodesPerPath = nodesByParentPath.asMap();
         nodesPerPath.entrySet().stream()
-                .sorted((e1, e2) -> e1.getKey().compareTo(e2.getKey()))
-                .forEach(e -> out.println(toStringWithAdjustedSize(e)) );
+                .sorted(comparing(Map.Entry::getKey))
+                .map(this::toStringWithAdjustedSize)
+                .forEach(out::println);
         out.println();
     }
 
@@ -91,7 +99,8 @@ public class XMLAnalyzer extends XMLProcessor{
         String newCurrentPath = String.format("%s/%s", currentPath, n.getNodeName());
 
         List<Node> childNodes = XMLCollections.asStream(n.getChildNodes())
-                .filter(node -> (node instanceof Element)).collect(Collectors.toList());
+//                .filter(node -> (node instanceof Element))
+                .collect(Collectors.toList());
         if(childNodes.isEmpty()){
             nodesByParentPath.put(newCurrentPath, null);
         }else{
@@ -115,7 +124,7 @@ public class XMLAnalyzer extends XMLProcessor{
         paths.stream().map(this::toPathString)
                 .collect(Collectors.groupingBy(s -> s, Collectors.counting()))
                 .entrySet().stream()
-                .sorted(Comparator.comparing(e -> e.getKey()))
+                .sorted(comparing(e -> e.getKey()))
                 .forEach(e -> out.println(toString(e)));
 
         out.println();
@@ -153,7 +162,7 @@ public class XMLAnalyzer extends XMLProcessor{
         return path;
     }
 
-    protected List<List<Node>> listPathsFrom(Element r){
+    protected List<List<Node>> listPathsFrom(Node r){
         Stack<Pair<Node, Integer>> stack = new Stack<>();
         stack.push(Pair.of(r, -1));
         List<List<Node>> paths = new ArrayList<>();
@@ -298,21 +307,20 @@ public class XMLAnalyzer extends XMLProcessor{
      */
     @Override
     public void process(Document doc) {
+        resetDataStructures();
         File gmlOuputFile = new File(outputDirAnalysis, fileName + ".gml");
         File xmlAnalysisReportFile = new File(outputDirAnalysis, fileName + "-xml-analysis.txt");
-        try {
-            out = new PrintStream(xmlAnalysisReportFile);
+        try (PrintStream ps = new PrintStream(xmlAnalysisReportFile)){
+            out = ps;
             // xml analysis
             analysisXMLDocument(doc, xmlAnalysisReportFile);
             // generate
             generateGraphML(doc, gmlOuputFile);
             out.flush();
-            out.close();
-            out = null;
-
         } catch (IOException ex) {
             LOG.error("",ex);
         }
+        out = null;
     }
 
     @Override

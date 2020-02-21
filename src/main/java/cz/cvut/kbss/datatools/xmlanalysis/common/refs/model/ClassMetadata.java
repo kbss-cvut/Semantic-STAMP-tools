@@ -10,9 +10,11 @@ import java.util.stream.Collectors;
  * -
  */
 public class ClassMetadata {
-    protected Set<Key> keys;
+    protected Set<Key> toOneKeys = new HashSet<>();
+    protected Set<Key> oneToManyKeys = new HashSet<>();;
     protected Set<KeyMapping> keyMappings;
     protected Set<RelationField> relations;
+    protected Set<RelationField> farRelations = new HashSet<>();
 
 
     public KeyMapping getKeyMapping(String keyName){
@@ -26,12 +28,20 @@ public class ClassMetadata {
          }
     }
 
-    public Set<Key> getKeys() {
-        return keys;
+    public Set<Key> getToOneKeys() {
+        return toOneKeys;
     }
 
-    public void setKeys(Set<Key> keys) {
-        this.keys = keys;
+    public void setToOneKeys(Set<Key> toOneKeys) {
+        this.toOneKeys = toOneKeys;
+    }
+
+    public Set<Key> getOneToManyKeys() {
+        return oneToManyKeys;
+    }
+
+    public void setOneToManyKeys(Set<Key> oneToManyKeys) {
+        this.oneToManyKeys = oneToManyKeys;
     }
 
     public Set<KeyMapping> getKeyMappings() {
@@ -50,20 +60,43 @@ public class ClassMetadata {
         this.relations = relations;
     }
 
+    public Set<RelationField> getFarRelations() {
+        return farRelations;
+    }
+
+    public void setFarRelations(Set<RelationField> farRelations) {
+        this.farRelations = farRelations;
+    }
+
+    /**
+     * Builds and populates internal data structures used for object injection when used in the IDRuntime
+     */
+    public void addKey(Key key, KeyMapping keyMapping){
+        switch(keyMapping.getRelationType()){
+            case manyToMany:
+            case oneToMany:
+                break;
+
+        }
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ClassMetadata that = (ClassMetadata) o;
-        return CompareUtils.equalsAsSets(keys, that.keys) &&
+        return CompareUtils.equalsAsSets(toOneKeys, that.toOneKeys) &&
+                CompareUtils.equalsAsSets(oneToManyKeys, that.oneToManyKeys) &&
                 CompareUtils.equalsAsSets(keyMappings, that.keyMappings) &&
-                CompareUtils.equalsAsSets(relations, that.relations);
+                CompareUtils.equalsAsSets(relations, that.relations) && // TODO the last two sets not compare correctly
+                CompareUtils.equalsAsSets(farRelations, that.farRelations);
     }
 
     @Override
     public int hashCode() {
         ArrayList a;
         HashSet s;
-        return Objects.hash(keys, keyMappings, relations);
+        return Objects.hash(toOneKeys, oneToManyKeys, keyMappings, relations, farRelations);
     }
 }

@@ -26,6 +26,7 @@ public class AdonisXmlAnalysis extends XMLAnalyzer{
     @Override
     public void analysisXMLDocument(Document doc, File xmlAnalysisReportFile) throws FileNotFoundException {
         super.analysisXMLDocument(doc, xmlAnalysisReportFile);
+        elementsWithAttributeNameSummary(doc, "modeltype");
         elementsWithAttributeNameSummary(doc, "name");
         analyzeIREFElement(doc);
     }

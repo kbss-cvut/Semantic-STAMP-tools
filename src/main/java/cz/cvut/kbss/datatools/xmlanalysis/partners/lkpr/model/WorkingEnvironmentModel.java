@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-public class OrganizationalModel extends Model{
+public class WorkingEnvironmentModel extends Model{
 
     // Fields and mappings
     @XmlPath("INSTANCE[@class='Performer']")

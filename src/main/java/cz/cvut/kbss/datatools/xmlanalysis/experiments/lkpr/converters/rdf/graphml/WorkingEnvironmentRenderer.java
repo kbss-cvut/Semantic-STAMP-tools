@@ -1,9 +1,10 @@
 package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf.graphml;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.BaseGMLRenderer;
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.WorkingEnvironmentBuilder;
 import cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary;
 
-public class WorkingEnvironmentRenderer extends BaseGMLRenderer<WorkingEnvironmentBuilder>{
+public class WorkingEnvironmentRenderer extends BaseGMLRenderer<WorkingEnvironmentBuilder> {
 
     @Override
     protected WorkingEnvironmentBuilder createGMLBuilder() {

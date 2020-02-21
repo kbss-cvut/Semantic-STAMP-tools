@@ -9,13 +9,13 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RiskPool extends Model {
     @XmlPath("INSTANCE[contains('Risk', @class)]")
-    protected List<Instance> risks;
+    protected List<Risk> risks;
 
-    public List<Instance> getRisks() {
+    public List<Risk> getRisks() {
         return risks;
     }
 
-    public void setRisks(List<Instance> risks) {
+    public void setRisks(List<Risk> risks) {
         this.risks = risks;
     }
 }

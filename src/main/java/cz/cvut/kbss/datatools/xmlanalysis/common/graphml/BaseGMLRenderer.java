@@ -1,20 +1,14 @@
-package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf.graphml;
+package cz.cvut.kbss.datatools.xmlanalysis.common.graphml;
 
-import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.GraphMLBuilder;
-import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.UMLGMLBuilder;
-import cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
+import cz.cvut.kbss.onto.safety.stamp.Vocabulary;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGraphMLRenderer<T> {
@@ -22,14 +16,22 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
     private static final Logger LOG = LoggerFactory.getLogger(BaseGMLRenderer.class);
 
     protected T gmlBuilder;
+    protected List<String> nodeMappingOrder;
+    protected List<String> edgeMappingOrder;
     protected Map<String, NodeRenderer> nodeRendererMap;
     protected Map<String, EdgeRenderer> edgeRendererMap;
     protected EdgeRenderer defaultEdgeRenderer;
     protected PartOfGroupRenderer partOfGroupRenderer;
+    protected LabelRenderer labelRenderer = new LabelRenderer();
+
+    protected Property from = ResourceFactory.createProperty(Vocabulary.s_p_from_structure_component);
+    protected Property to = ResourceFactory.createProperty(Vocabulary.s_p_to_structure_component);
 
     public void init(){
         nodeRendererMap = new HashMap<>();
         edgeRendererMap = new HashMap<>();
+        nodeMappingOrder = new ArrayList<>();
+        edgeMappingOrder = new ArrayList<>();
         gmlBuilder = createGMLBuilder();
         // edge renderers should be initialized after the gml builder;
         defaultEdgeRenderer = new EdgeRenderer();
@@ -42,15 +44,30 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
 
     protected abstract void buildRendererMaps();
 
+    protected void bindTypeToRenderer(String typeURI, Consumer<GraphMLBuilder.NodeData> renderer){
+        bindTypeToRenderer(ResourceFactory.createResource(typeURI), renderer);
+    }
+
     protected void bindTypeToRenderer(Resource typeURI, Consumer<GraphMLBuilder.NodeData> renderer){
+        nodeMappingOrder.add(typeURI.toString());
         nodeRendererMap.put(typeURI.toString(), new NodeRenderer(renderer, typeURI));
+    }
+
+    protected void bindPropertyToRenderer(String typeURI, Consumer<GraphMLBuilder.EdgeData> renderer){
+        bindPropertyToRenderer(typeURI, new EdgeRenderer(renderer));
     }
 
     protected void bindPropertyToRenderer(Resource propertyURI, Consumer<UMLGMLBuilder.EdgeData> renderer){
         bindPropertyToRenderer(propertyURI, new EdgeRenderer(renderer));
     }
+
     protected void bindPropertyToRenderer(Resource propertyURI, EdgeRenderer renderer){
-        edgeRendererMap.put(propertyURI.toString(), renderer);
+        bindPropertyToRenderer(propertyURI.toString(), renderer);
+    }
+
+    protected void bindPropertyToRenderer(String propertyURI, EdgeRenderer renderer){
+        edgeMappingOrder.add(propertyURI);
+        edgeRendererMap.put(propertyURI, renderer);
     }
 
     public T render(Model m){
@@ -78,34 +95,80 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
     }
 
     protected void renderNode(Resource res){
-        res.listProperties(RDF.type)
-                .mapWith(s -> s.getObject())
-                .filterKeep(n -> n.isURIResource())
-                .mapWith(n -> nodeRendererMap.get(n.toString()))
-                .filterDrop(r -> r == null)
-                .nextOptional()
+//        res.listProperties(RDF.type)
+//                .mapWith(s -> s.getObject())
+//                .filterKeep(n -> n.isURIResource())
+//                .mapWith(n -> nodeRendererMap.get(n.toString()))
+//                .filterDrop(r -> r == null)
+//                .nextOptional()
+//                .ifPresent(r -> r.render(res));
+        String type = getTypeWithMaxPriorityRenderer(res);
+        Optional.ofNullable(type)
+                .map(t -> nodeRendererMap.get(t))
                 .ifPresent(r -> r.render(res));
     }
 
     public void renderEdges(Model m){
+        Set<String> renderedEdges = new HashSet<>();
         List<Resource> edges = getNodesToRender(m);
+        // render reified edges
         for(Resource e : edges){
-            renderEdge(e);
+            Pair<RDFNode, RDFNode> s = getSourceAndTarget(e);
+            if(s == null) continue;
+            Resource propType = renderEdge(e, s.getLeft(), s.getRight());
+            if(propType != null)
+                renderedEdges.add(toId(s.getLeft(), propType, s.getRight()));
+        }
+        // render regular edges if they were not rendered as reified
+        StmtIterator iter = m.listStatements();
+        while(iter.hasNext()){
+            Statement s = iter.nextStatement();
+            if(renderedEdges.contains(toId(s))) continue; // skip edges which were rendered as reified
+            renderEdge(s);
         }
     }
 
-    protected void renderEdge(Resource res){
-        res.listProperties(RDF.type)
+    public Pair<RDFNode, RDFNode> getSourceAndTarget(Resource r) {
+        RDFNode fromN = Optional.ofNullable(r.getProperty(BaseGMLRenderer.this.from)).map(s -> s.getObject()).orElse(null);
+        RDFNode toN = Optional.ofNullable(r.getProperty(BaseGMLRenderer.this.to)).map(s -> s.getObject()).orElse(null);
+        if(fromN != null && toN != null) {
+            return Pair.of(fromN, toN);
+        }
+        return null;
+    }
+
+    protected String toId(RDFNode s, RDFNode p, RDFNode o){
+        return s + "-" + p + "-" + s;
+    }
+    protected String toId(Statement s){
+        return toId(s.getSubject(), s.getPredicate(), s.getObject());
+    }
+
+    public void renderEdge(Statement s){
+        EdgeRenderer renderer = edgeRendererMap.get(s.getPredicate().toString());
+        if(renderer != null) {
+            renderer.render(s.getPredicate(), null, s.getSubject(), s.getObject());
+        }
+    }
+
+    protected Resource renderEdge(Resource prop, RDFNode from, RDFNode to){
+        Resource propType =
+                prop.listProperties(RDF.type)
                 .mapWith(s -> s.getObject())
                 .filterKeep(n -> n.isURIResource())
-                .mapWith(n -> edgeRendererMap.get(n.toString()))
-                .filterDrop(r -> r == null)
-                .nextOptional()
-                .ifPresent(r ->
-                {
-                    LOG.info("rendering edge <{}>", res);
-                    r.render(res);
-                });
+                .mapWith(n -> n.asResource())
+                .filterKeep(r -> edgeRendererMap.containsKey(r.toString()))
+                .nextOptional().orElse(null);
+        if(propType == null)
+            return null;
+        EdgeRenderer renderer = edgeRendererMap.get(propType.toString());
+        if(renderer != null){
+            LOG.info("rendering edge <{}>", propType);
+            if(renderer.render(propType, prop, from, to)){
+                return propType;
+            }
+        }
+        return null;
     }
 
     protected String getLabel(Resource res){
@@ -120,6 +183,24 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
                 .map(l -> l.toString())
                 .map(l -> l.trim())
                 .orElse(null);
+    }
+
+
+    protected String getTypeWithMaxPriorityRenderer(Resource res){
+        List<String> types = res.listProperties(RDF.type)
+                .mapWith(s -> s.getObject())
+                .filterKeep(n -> n.isURIResource())
+                .mapWith(n -> n.toString())
+                .toList();
+        return getMaxPriorityMapping(types, nodeMappingOrder);
+    }
+
+    protected String getMaxPriorityMapping(Collection<String> applicable, List<String> order){
+        for(String t : order){
+            if(applicable.contains(t))
+                return t;
+        }
+        return null;
     }
 
     class NodeRenderer{
@@ -163,7 +244,7 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
 
         protected String calculateType(){
             return Optional.ofNullable(nodeType)
-                    .map(r -> Vocabulary.localName(r.toString()))
+                    .map(r -> labelRenderer.localName(r.toString()))
                     .orElse(null);
         }
 
@@ -187,14 +268,19 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
         }
 
         public GraphMLBuilder.NodeData createNodeData(Resource r){
+            String name = r.toString();
             String label = getLabel(r);
             if(label == null || label.isEmpty()) {
                 LOG.warn("the resource <{}> does not have label.", r);
-                return null;
+                label = "";
+//                return null;
             }
+
+            label = label.replaceAll("&", "&amp;");// #&26;
+
             LOG.debug("rendering node <{}>  with label \"{}\"", r.toString(), label);
 
-            return new GraphMLBuilder.NodeData(getType(), label);
+            return new GraphMLBuilder.NodeData(getType(), name, label);
         }
 
     }
@@ -228,32 +314,22 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
             this.edgeLabel = edgeLabel;
         }
 
-        public void render(Resource r) {
-//            Pair<String, String> pair = Pair.of(
-//                    r.getProperty(Vocabulary.j_p_from).getObject().toString(),
-//                    r.getProperty(Vocabulary.j_p_to).getObject().toString()
-//            );
-
-            GraphMLBuilder.NodeData from = toNodeData(r.getProperty(Vocabulary.j_p_from).getObject());
-            GraphMLBuilder.NodeData to = toNodeData(r.getProperty(Vocabulary.j_p_to).getObject());
-
-            if(from == null || to == null){
-                LOG.warn("reified edge (from-to reification style) is missing a source or a target. Edge uri = <{}>", r.toString());
-                return;
-            }
-            render(from, to);
-        }
-
         protected GraphMLBuilder.NodeData toNodeData(RDFNode edgeEnd){
+            if(edgeEnd == null)
+                 return null;
+
             if(edgeEnd.isResource()){
                 // find the type of the edge end
                 Resource r = edgeEnd.asResource();
-                Resource type = r.listProperties(RDF.type)
-                        .mapWith(s -> s.getObject())
-                        .filterKeep(o -> o.isURIResource())
-                        .mapWith(o -> o.asResource())
-                        .filterKeep(t -> nodeRendererMap.containsKey(t.toString()))
-                        .nextOptional().orElse(null);
+                Resource type = Optional.ofNullable(getTypeWithMaxPriorityRenderer(r))
+                        .map(ResourceFactory::createResource)
+                        .orElse(null);
+//                        r.listProperties(RDF.type)
+//                        .mapWith(s -> s.getObject())
+//                        .filterKeep(o -> o.isURIResource())
+//                        .mapWith(o -> o.asResource())
+//                        .filterKeep(t -> nodeRendererMap.containsKey(t.toString()))
+//                        .nextOptional().orElse(null);
 
                 // Hack - reusing NodeData setup code from NodeRenderer
                 NodeRenderer nr = new NodeRenderer();
@@ -264,12 +340,30 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
             }
         }
 
-        public void render(GraphMLBuilder.NodeData source, GraphMLBuilder.NodeData target) {
+
+        public boolean render(Resource edgeType, Resource edgeInstance, RDFNode fromN, RDFNode toN){
+            GraphMLBuilder.NodeData from = toNodeData(fromN);
+            GraphMLBuilder.NodeData to = toNodeData(toN);
+
+            if(from == null || to == null){
+                LOG.warn("reified edge (from-to reification style) is missing a source or a target. \ns={}\np={} - <{}>\no={}",
+                        fromN,
+                        edgeInstance, edgeType,
+                        toN
+                        );
+                return false;
+            }
+            return render(from, to);
+        }
+
+        public boolean render(GraphMLBuilder.NodeData source, GraphMLBuilder.NodeData target) {
             try {
                 renderImpl(source, target, edgeLabel);
+                return true;
             }catch(NullPointerException e){
                 LOG.warn("One of the end nodes of the edge is not found in the graphs nodes.", e);
             }
+            return false;
         }
 
         protected void renderImpl(GraphMLBuilder.NodeData source, GraphMLBuilder.NodeData target, String edgeLabel){
@@ -278,9 +372,16 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
     }
 
     class PartOfGroupRenderer extends EdgeRenderer{
-        @Override
-        public void renderImpl(GraphMLBuilder.NodeData source, GraphMLBuilder.NodeData target, String edgeLabel){
-            gmlBuilder.addToGroup(source.getId(), target.getId());
+
+        public PartOfGroupRenderer() {
+            this.edgeLabel = "";
+            this.renderer = gmlBuilder::addPartOfEdgeSafe;
         }
+
+//        @Override
+//        public void renderImpl(GraphMLBuilder.NodeData source, GraphMLBuilder.NodeData target, String edgeLabel){
+////            gmlBuilder.addToGroup(source.getId(), target.getId());
+//            gmlBuilder.addPartOfEdge(source.getId(), target.getId());
+//        }
     }
 }

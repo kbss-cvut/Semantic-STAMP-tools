@@ -1,9 +1,9 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr;
 
-import cz.cvut.kbss.commons.io.NamedStream;
-import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.BPMProcessor;
-import cz.cvut.kbss.datatools.xmlanalysis.partners.IRIMapper;
+import cz.cvut.kbss.datatools.xmlanalysis.partners.AbstractProcessModelExporter;
 import cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.mapping.AdonisExportADOXML;
+import cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.model.ADOXML;
+import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.InputXmlStream;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,18 +12,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
-public class  ProcessAdonisExportFile {
+public class  ProcessAdonisExportFile extends AbstractProcessModelExporter<AdonisExportADOXML> {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProcessAdonisExportFile.class);
-
-    protected BPMProcessor bpmProcessor = new BPMProcessor();
-    protected Class<AdonisExportADOXML> mapperClass = AdonisExportADOXML.class;
-    protected String pkg = "cz.cvut.kbss.datatools.xmlanalysis.bpmn.model";
-    protected String rootIRI = "http://onto.fel.cvut.cz/partners/lkpr/";
-//    protected String outputFile = "c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\tmp-export.rdf";
 
     protected File rootDir;
     protected File sourceDir;
@@ -32,7 +29,7 @@ public class  ProcessAdonisExportFile {
     protected String inputFileExtension = ".xml";
 
     public void processDir(String dirPath){
-        init(dirPath);
+        config(dirPath);
         LOG.debug("Processing ADONIS exports in dir '{}'.", dirPath);
         for(File f : listSourceFilesInDir(sourceDir)){
             process(f);
@@ -41,16 +38,16 @@ public class  ProcessAdonisExportFile {
 
     public void processFile(String fileString){
         File file = new File( fileString);
-        init(file.getParent());
+        config(file.getParent());
         LOG.debug("Processing ADONIS export file '{}'.", fileString);
         process(file);
     }
 
-    public void init(String dirPath){
-        bpmProcessor.setPrefixMapping(constructPrefixMapping());
-        IRIMapper.initIriMapper(rootIRI);
+    public void config(String dirPath){
+        mapperClass = AdonisExportADOXML.class;
+        pkg = "cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model";
         initFolders(dirPath);
-
+        initBMPMProcessor();
     }
 
     public void process(File file){
@@ -59,15 +56,17 @@ public class  ProcessAdonisExportFile {
             LOG.warn("The input file path points to a file with a unrecognized extension.");
         try(InputStream is = new FileInputStream(file)){
             File outputFile = getOutputFile(file);
-            bpmProcessor.process(Stream.of(new NamedStream(file.getCanonicalPath(), is)), mapperClass, pkg, outputFile.getAbsolutePath());
+
+            bpmProcessor.processFiles(Stream.of(new InputXmlStream(file.getCanonicalPath(), is, ADOXML.class)), mapperClass, pkg, outputFile.getAbsolutePath());
         }catch(IOException e){
             LOG.error("", e);
         }
     }
-
+    @Override
     public Map<String, String> constructPrefixMapping(){
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = super.constructPrefixMapping();
         map.put("lkpr.stamp", "http://onto.fel.cvut.cz/partners/lkpr/");
+        map.put("adoxml", AdonisExportADOXML.ADOXML_NS);
         return map;
     }
 

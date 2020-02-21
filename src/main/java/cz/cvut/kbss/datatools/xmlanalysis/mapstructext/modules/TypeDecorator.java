@@ -16,12 +16,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class TypeDecorator implements ITypeDecorator {
+public class TypeDecorator implements Decorator {
 
     private static final Logger LOG = LoggerFactory.getLogger(TypeDecorator.class);
 
     protected Field field;
     protected List<Function<Object, List<String>>> typeGenerators = new ArrayList<>();
+
+    public TypeDecorator() {
+    }
 
     public TypeDecorator(Field field) {
         this.field = field;
@@ -46,26 +49,33 @@ public class TypeDecorator implements ITypeDecorator {
     @Override
     public void decorate(Object in, Object out){
         Collection c = ReflectionUtils.getCollectionInstanceAndSetField(out, field);
-        typeGenerators.forEach(f -> c.addAll(f.apply(in)));
+        c.addAll(calculateValue(in, out));
     }
 
-    public static TypeDecorator construct(Method transformDeclaration) {
+    @Override
+    public List<String> calculateValue(Object in, Object out) {
+        return typeGenerators.stream()
+                .map(f -> f.apply(in))
+                .filter(l -> l != null)
+                .flatMap(l -> l.stream())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void configure(Method transformDeclaration) {
         AddTypes addTypes = transformDeclaration.getAnnotation(AddTypes.class);
         AddTypesFromVal addTypesFromVal = transformDeclaration.getAnnotation(AddTypesFromVal.class);
-        Field field = FieldUtils.getFieldsListWithAnnotation(transformDeclaration.getReturnType(), Types.class)
+        field = FieldUtils.getFieldsListWithAnnotation(transformDeclaration.getReturnType(), Types.class)
                 .stream().findFirst().orElse(null);
 
-        TypeDecorator td = null;
         if((addTypes != null || addTypesFromVal != null) && field != null) {
-            td = new TypeDecorator(field);
             if(addTypes != null){
-                td.getTypeGenerators().add(in -> getTypes(in, addTypes));
+                getTypeGenerators().add(in -> getTypes(in, addTypes));
             }
             if(addTypesFromVal != null){
-                td.getTypeGenerators().add(in -> getTypes(in, transformDeclaration, addTypesFromVal));
+                getTypeGenerators().add(in -> getTypes(in, transformDeclaration, addTypesFromVal));
             }
         }
-        return td;
     }
 
     public static List<String> getTypes(Object in, AddTypes addTypes){

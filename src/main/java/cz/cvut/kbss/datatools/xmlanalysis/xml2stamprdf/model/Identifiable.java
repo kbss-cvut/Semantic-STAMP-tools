@@ -2,7 +2,9 @@ package cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model;
 
 import cz.cvut.kbss.jopa.model.annotations.Id;
 import cz.cvut.kbss.jopa.model.annotations.MappedSuperclass;
+import cz.cvut.kbss.jopa.model.annotations.OWLDataProperty;
 import cz.cvut.kbss.jopa.model.annotations.Types;
+import cz.cvut.kbss.onto.safety.stamp.Vocabulary;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +16,9 @@ public class Identifiable {
 
     @Types
     protected Set<String> types = new HashSet<>();
+
+    @OWLDataProperty(iri = Vocabulary.s_p_label)
+    protected String label;
 
     public String getIri() {
         return iri;
@@ -29,5 +34,13 @@ public class Identifiable {
 
     public void setTypes(Set<String> types) {
         this.types = types;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

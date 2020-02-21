@@ -8,12 +8,12 @@ import cz.cvut.kbss.onto.safety.stamp.Vocabulary;
 import java.util.Set;
 
 @OWLClass(iri = Vocabulary.s_c_controller_type)
-public class ControllerType extends Identifiable{
+public class ControllerType extends StampObject{
 
     @OWLDataProperty(iri = Vocabulary.s_p_label)
     protected String label;
 
-    @OWLObjectProperty(iri = Vocabulary.s_p_has_control_structure_element_part)
+    @OWLObjectProperty(iri = cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.p_sub_class_of)
     protected Set<String> subControllerTypes;
 
     public String getLabel() {

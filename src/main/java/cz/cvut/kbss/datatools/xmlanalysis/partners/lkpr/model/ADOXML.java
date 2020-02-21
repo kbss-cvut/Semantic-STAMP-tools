@@ -9,7 +9,7 @@ import java.util.List;
 
 @XmlRootElement(name = "ADOXML")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ADOXML implements BaseEntity{
+public class ADOXML extends BaseEntity{
     // Mappings and fields
     @XmlKey
     @XmlAttribute
@@ -30,7 +30,10 @@ public class ADOXML implements BaseEntity{
     protected List<RiskPool> riskPoolModels;
 
     @XmlPath("MODELS/MODEL[@modeltype='Working environment model']")
-    protected List<OrganizationalModel> organizationalModels;
+    protected List<WorkingEnvironmentModel> workingEnvironmentModels;
+
+    @XmlPath("MODELS/MODEL[@modeltype='Company map']")
+    protected List<CompanyMapModel> companyMapModels;
 
     // Getters and Setters
     public List<RiskPool> getRiskPoolModels() {
@@ -49,12 +52,20 @@ public class ADOXML implements BaseEntity{
         this.businessProcessModels = businessProcessModels;
     }
 
-    public List<OrganizationalModel> getOrganizationalModels() {
-        return organizationalModels;
+    public List<WorkingEnvironmentModel> getWorkingEnvironmentModels() {
+        return workingEnvironmentModels;
     }
 
-    public void setOrganizationalModels(List<OrganizationalModel> organizationalModels) {
-        this.organizationalModels = organizationalModels;
+    public void setWorkingEnvironmentModels(List<WorkingEnvironmentModel> workingEnvironmentModels) {
+        this.workingEnvironmentModels = workingEnvironmentModels;
+    }
+
+    public List<CompanyMapModel> getCompanyMapModels() {
+        return companyMapModels;
+    }
+
+    public void setCompanyMapModels(List<CompanyMapModel> companyMapModels) {
+        this.companyMapModels = companyMapModels;
     }
 
     public String getDate() {

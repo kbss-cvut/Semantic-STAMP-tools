@@ -26,8 +26,8 @@ public class JaxbExtractor {
         try
         {
 
-            String path = "c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\partners\\lkpr-letiste-praha\\model-001.xml";
-//            String path = "c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\partners\\lkpr-letiste-praha\\adonis-connector-example.xml";
+            String path = "c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\lkpr-process-models\\example-models-01\\model-001.xml";
+//            String path = "c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\lkpr-process-models\\example-models-01\\adonis-connector-example.xml";
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
