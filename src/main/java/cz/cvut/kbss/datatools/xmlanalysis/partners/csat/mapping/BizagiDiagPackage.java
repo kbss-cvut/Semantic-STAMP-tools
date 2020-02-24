@@ -23,8 +23,8 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
 
     Logger LOG = LoggerFactory.getLogger(BizagiDiagPackage.class);
 
-    public static final String DEVIATIONS = "deviations";
-//    public static final String DEVIATIONS = "List of Deviations";
+//    public static final String DEVIATIONS = "deviations";
+    public static final String DEVIATIONS = "list of deviations";
 
     String baseIri = "http://onto.fel.cvut.cz/partners/csat/";
     String baseIriPrefix = "csat.stamp";
@@ -266,7 +266,7 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
                 .filter(av -> Optional.ofNullable(av)
                         .map(v -> v.getExtendedAttribute())
                         .map(a -> a.getName())
-                        .map(n -> DEVIATIONS.equals(n))
+                        .map(n -> StringUtils.equalsIgnoreCase(DEVIATIONS, n))
                         .orElse(false)
                 )
                 .collect(Collectors.toList());
