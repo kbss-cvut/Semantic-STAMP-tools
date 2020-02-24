@@ -218,11 +218,18 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
         public Stream<List<InputXmlStream>> streamSourceFiles() {
             ZipSource<ZipFile> zip = ZipSource.wrap(zipFile);
             return Stream.of(zip.streamEntries()
-                    .filter(e -> {
-                        System.out.println(e.getName());
-                        return e.getName().endsWith(".diag");
-                    })
-                    .flatMap(e -> listDiagFileContentsSafe(e).stream()).collect(Collectors.toList()));
+//                    .filter(e -> {
+//                        System.out.println(e.getName());
+//                        return e.getName().endsWith(".diag");
+//                    })
+                    .flatMap(e -> {
+                        if(e.getName().endsWith(".diag")) {
+                            return listDiagFileContentsSafe(e).stream();
+                        }else if(e.getName().startsWith("Documentation") && e.getName().endsWith(".xml")){
+                            return Stream.of(asNamedStream(e.getName(), e, ExtendedAttribute.class));
+                        }
+                        return Stream.of();
+                    }).collect(Collectors.toList()));
         }
 
         protected List<InputXmlStream> listDiagFileContentsSafe(ZipSourceEntry e) {

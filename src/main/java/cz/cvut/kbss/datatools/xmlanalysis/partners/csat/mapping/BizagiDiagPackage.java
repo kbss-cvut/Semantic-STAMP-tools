@@ -23,6 +23,9 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
 
     Logger LOG = LoggerFactory.getLogger(BizagiDiagPackage.class);
 
+    public static final String DEVIATIONS = "deviations";
+//    public static final String DEVIATIONS = "List of Deviations";
+
     String baseIri = "http://onto.fel.cvut.cz/partners/csat/";
     String baseIriPrefix = "csat.stamp";
 
@@ -239,7 +242,7 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
         handleEventTypeParts(in, out);
         WorkflowProcess tmp = null;
         if(in.getSubProcess() != null){
-            tmp = in.getSubProcess();
+             tmp = in.getSubProcess();
             if(tmp == null && in.getImplementationSubFlow() != null) {
                 tmp = new WorkflowProcess();
                 tmp.setId(in.getImplementationSubFlow().getReferencedProcessId());
@@ -259,52 +262,30 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
         ElementAttributeValues attrs = in.getElementAttributeValues();
         if(attrs == null)
             return;
-        if(attrs.getDeviations() != null && attrs.getDeviations().getAttributeValue() != null && !attrs.getDeviations().getAttributeValue().isEmpty()){
-            Set<String> deviations = xmlDeviationToEventTypeIris(attrs.getDeviations());
-
-            if(deviations != null && deviations != null)
-                components.addAll(deviations);
+        List<AttributeValue> attributeValues = attrs.getAttributeValueList().stream()
+                .filter(av -> Optional.ofNullable(av)
+                        .map(v -> v.getExtendedAttribute())
+                        .map(a -> a.getName())
+                        .map(n -> DEVIATIONS.equals(n))
+                        .orElse(false)
+                )
+                .collect(Collectors.toList());
+        for(AttributeValue devAttributeValue : attributeValues){
+            List<EventType> deviations = xmlDeviationsStringToEventTypes(devAttributeValue);
+            deviations.forEach(d -> getRegistry().put(d.getIri(), d));
+            components.addAll(deviations.stream().map(e -> e.getIri()).collect(Collectors.toSet()));
         }
-//        if(attrs.getControlLoop() != null){
-//            AttributeValue cl = attrs.getControlLoop();
-//            ControlStructure cs = null;//xmlControlLoopToControlStructure(cl);
-////            if(cs != null) {
-////                if(!out.getParticipants().isEmpty()) {
-////                    // TODO out does not have its iri setup!!!
-////                    String cIri = out.getParticipants().iterator().next();
-////                    String pIri = out.getIri();
-////                    String processCapabilityIri = iri(in, new String[]{CAPABILITY}, emptyStringArray);
-////
-////                    cs.setComponents(new HashSet<>(out.getParticipants()));
-////                    cs.getComponents().add(pIri);
-////                    getAndInit(cs::getCapabilities, cs::setCapabilities).add(processCapabilityIri);
-////
-////                    String urlEncodedCSLabel = Utils.urlEncode(cs.getLabel());
-////                    ActionControlConnection acc = as(
-////                            cl.getAttributeId() + urlEncodedCSLabel + "-acc",
-////                            cs.getLabel() + " Action connection",
-////                            ActionControlConnection.class);
-////                    acc.setFrom(cIri);
-////                    acc.setTo(pIri);
-////
-////                    FeedbackControlConnection fcc = as(
-////                            cl.getAttributeId() + urlEncodedCSLabel + "-fcc",
-////                            cs.getLabel() + " Feedback connection",
-////                            FeedbackControlConnection.class);
-////                    fcc.setFrom(pIri);
-////                    fcc.setTo(cIri);
-////                    cs.setConnections(new HashSet<String>(Arrays.asList(acc.getIri(),fcc.getIri())));
-////                    if(attrs.getActuators() != null)
-////                        constructAndComposeActuatorStructure(acc, attrs.getActuators());
-////
-////                    if(attrs.getSensors() != null)
-////                        constructAndComposeSensorStructure(fcc, attrs.getActuators());
-////
-////                    if(attrs.getDeviations() != null)
-////                        constructAndComposeDeviations(in, out, cs);
-////                }
-////            }
-//        }
+    }
+
+    default List<EventType> xmlDeviationsStringToEventTypes(AttributeValue av){
+        List<String> vals = ValueProcessing.decodeStringList(av.getAttributeValue());
+        return new ArrayList<>(vals.stream().map(v -> asDeviationEventType(av.getAttributeId(), v)).collect(Collectors.toList()));
+    }
+
+    default EventType asDeviationEventType(String id, String label){
+        id = concat("-",id, Utils.urlEncode(label));
+        label = composeLabel(HAZARD, label);
+        return as(id, label, EventType.class, Vocabulary.s_c_unsafe_event);
     }
 
     default void handleEventTypeParts(Activity in, EventType out){
@@ -384,58 +365,39 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
         });
     }
 
-    default void constructAndComposeDeviations(Activity inActivity, EventType outActivity, ControlStructure cs){
-        AttributeValue devAttr = inActivity.getElementAttributeValues().getDeviations();
-        if(devAttr == null)
-            return;
+//    default void constructAndComposeDeviations(Activity inActivity, EventType outActivity, ControlStructure cs){
+//        AttributeValue devAttr = inActivity.getElementAttributeValues().getDeviations();
+//        if(devAttr == null)
+//            return;
+//
+//        String devStrings = devAttr.getAttributeValue();
+//        if(devStrings == null || devStrings.trim().isEmpty())
+//            return;
+//        String id = devAttr.getAttributeId();
+//        Set<String>  activityComponents = getAndInit(outActivity::getComponents, outActivity::setComponents);
+//        Set<String>  csCapabilities = getAndInit(cs::getCapabilities, cs::setCapabilities);
+//
+//        for(String label : ValueProcessing.decodeStringList(devAttr.getAttributeValue())){
+//            EventType deviation = asDeviationEventType(id, label);
+//            Capability deviationCapability = asDeviationCapability(id, label);
+//            deviationCapability.setManifestation(deviation.getIri());
+//            activityComponents.add(deviation.getIri());
+//            csCapabilities.add(deviationCapability.getIri());
+//        }
+//    }
 
-        String devStrings = devAttr.getAttributeValue();
-        if(devStrings == null || devStrings.trim().isEmpty())
-            return;
-        String id = devAttr.getAttributeId();
-        Set<String>  activityComponents = getAndInit(outActivity::getComponents, outActivity::setComponents);
-        Set<String>  csCapabilities = getAndInit(cs::getCapabilities, cs::setCapabilities);
-
-        for(String label : ValueProcessing.decodeStringList(devAttr.getAttributeValue())){
-            EventType deviation = asDeviationEventType(id, label);
-            Capability deviationCapability = asDeviationCapability(id, label);
-            deviationCapability.setManifestation(deviation.getIri());
-            activityComponents.add(deviation.getIri());
-            csCapabilities.add(deviationCapability.getIri());
-        }
-    }
-
-    default Set<String> xmlDeviationToEventTypeIris(AttributeValue av){
-        return new HashSet<>(xmlDeviationToEventType(av).stream().map(e -> e.getIri()).collect(Collectors.toSet()));
-    }
-
-    @RootMapping
-    @AttributeValueQualifier(field = "attributeId", acceptedValues = "5ad36dfb-ed0b-4519-b1cc-dce6cbcee08e")
-    default List<EventType> xmlDeviationToEventType(AttributeValue av){
-//        if(av.get)
-        List<String> vals = ValueProcessing.decodeStringList(av.getAttributeValue());
-        return new ArrayList<>(vals.stream().map(v -> asDeviationEventType(av.getAttributeId(), v)).collect(Collectors.toList()));
-    }
-
-    @RootMapping
-    @AttributeValueQualifier(field = "attributeId", acceptedValues = "5ad36dfb-ed0b-4519-b1cc-dce6cbcee08e")
-    default List<Capability> xmlDeviationToCapability(AttributeValue av){
-        List<String> vals = ValueProcessing.decodeStringList(av.getAttributeValue());
-        return new ArrayList<>(vals.stream().map(v -> asDeviationCapability(av.getAttributeId(), v)).collect(Collectors.toList()));
-    }
+//    @RootMapping
+//    @AttributeValueQualifier(field = "attributeId", acceptedValues = "5ad36dfb-ed0b-4519-b1cc-dce6cbcee08e")
+//    default List<Capability> xmlDeviationToCapability(AttributeValue av){
+//        List<String> vals = ValueProcessing.decodeStringList(av.getAttributeValue());
+//        return new ArrayList<>(vals.stream().map(v -> asDeviationCapability(av.getAttributeId(), v)).collect(Collectors.toList()));
+//    }
 
     default Capability asDeviationCapability(String id, String label){
         id = concat("-", CAPABILITY, id, Utils.urlEncode(label));
         label = composeLabel(CAPABILITY, label);
         return as(id, label, Capability.class, Vocabulary.s_c_unsafe_control_capability);
     }
-
-    default EventType asDeviationEventType(String id, String label){
-        id = concat("-",id, Utils.urlEncode(label));
-        label = composeLabel(HAZARD, label);
-        return as(id, label, EventType.class, Vocabulary.s_c_unsafe_event);
-    }
-
 
 //    @RootMapping
 //    @AttributeValueQualifier(field = "attributeId", acceptedValues = "469c5dc2-d945-4f85-ba98-d0c42869d886") // Control loop mapping
