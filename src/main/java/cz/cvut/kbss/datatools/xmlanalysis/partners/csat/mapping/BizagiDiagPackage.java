@@ -53,17 +53,26 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
 
     // do not transform Package to eventtype if it is an OrgChart package
     @RootMapping
-    default StampObject xmlToEventTypeRoot(Package in){
+    default GroupController xmlToGroupControllerRoot(Package in){
+        GroupController out = transform("xmlToGroupController", in, GroupController.class);
         if(in.getName().contains("OrgChart")){
-            return transform("xmlToGroupController", in, GroupController.class);
+            out.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_Organizational_Unit);
         }
-        return transform("xmlToEventType", in, EventType.class);
+        return out;
     }
 
     @SetIRI(beforeId = GROUP)
     @AddTypes(types = {PACKAGE_IRI})
     @Mapping(source = "pools ", target = "subGroups")
     GroupController xmlToGroupController(Package in);
+
+    @RootMapping
+    default EventType xmlToEventTypeRoot(Package in){
+        if(!in.getName().contains("OrgChart")){
+            return transform("xmlToEventType", in, EventType.class);
+        }
+        return null;
+    }
 
     // TODO: toIRIs must include "group" in the iri. How to access the IRIDecorator created for the SetIRI annotation from
     //  this mapper
@@ -82,11 +91,12 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
 
     @RootMapping
     default GroupController xmlToGroupControllerRoot(Pool in) {
+        GroupController out = transform("xmlToGroupController", in, GroupController.class);
         Package p = in.getFirstAncestor(Package.class);
         if (p.getName().startsWith("OrgChart")) {
-            return xmlToGroupController(in);
+            out.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_Organizational_Unit);
         }
-        return null;
+        return out;
     }
 
     GroupController xmlToGroupController(Pool in);
@@ -159,13 +169,15 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
         Set<String> participants = getAndInit(out::getParticipants, out::setParticipants);
         Package pck = in.getFirstAncestor(Package.class);
         // fix label if it starts with team and it is the only process
-        if(out.getLabel().startsWith("Team") ) {
-            if(pck.getProcesses().size() < 2) {
+//        if(out.getLabel().startsWith("Team") ) {
+        if(!out.getLabel().equals("Main Process")) {
+            if (pck.getProcesses().size() < 2) {
                 out.setLabel(pck.getName());
-            }else{
+            } else {
                 out.setLabel(out.getLabel() + " - " + pck.getName());
             }
         }
+//        }
         // add the pool as a participant to to the process
         Pool pool = pck.getPools().stream().filter(p -> p.getProcessId().equals(in.getId())).findFirst().orElse(null);
         if(pool != null)
