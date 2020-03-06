@@ -30,6 +30,8 @@ class TreeSelect extends PureComponent {
             initialized : false,
             value: props.value
         };
+        this.nodesFeched = false;
+        this.edgesFeched = false;
         this.styles=styles;
         this.data = {};
         this.finterInProgress = false;
@@ -52,14 +54,24 @@ class TreeSelect extends PureComponent {
     // }
 
 
-    _onOptionsLoaded(){
+    _onOptionsLoaded(type) {
         // var nodes = OptionsStore.getOptions(props.Constants.OPTIONS.EVENT_TYPE);
         // var edges = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE_PART_WHOLE_RELATION);
-        let nodes = OptionsStore.getOptions(this.props.nodeType);
-        let edges = OptionsStore.getOptions(this.props.edgeType);
-        if(!this.state.initialized && nodes && nodes.length > 0 && edges && edges.length > 0){
-            this.setState({initialized : true, data : this._constructData(nodes, edges)})
-            this.unsubscribe();
+        if (type === this.props.nodeType) {
+            this.nodesFeched = true;
+        }
+
+        if (type === this.props.edgeType) {
+            this.edgesFeched = true;
+        }
+
+        if (this.nodesFeched && this.edgesFeched) {
+            let nodes = OptionsStore.getOptions(this.props.nodeType);
+            let edges = OptionsStore.getOptions(this.props.edgeType);
+            if (!this.state.initialized && nodes && nodes.length > 0 && edges) {
+                this.setState({initialized: true, data: this._constructData(nodes, edges)})
+                this.unsubscribe();
+            }
         }
     }
 
