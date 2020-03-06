@@ -32,6 +32,14 @@ CONSTRUCT {
                     ?term a bpmn:flow-control-event-type.
                     BIND(bpmn:flow-control-event-type as ?flowControl)
                 }
+                OPTIONAL {
+                    ?term a bpmn:process-start.
+                    BIND(bpmn:process-start as ?flowControl)
+                }
+                OPTIONAL {
+                    ?term a bpmn:process-end.
+                    BIND(bpmn:process-end as ?flowControl)
+                }
                 BIND( COALESCE(?unsafe, ?flowControl, ufo:event-type) as ?type )
     }
 }

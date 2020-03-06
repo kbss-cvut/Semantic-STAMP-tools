@@ -425,6 +425,18 @@ td.actions button {
     float: right;
 }
 
+.gantt_task_content{
+    color: #1a1a1a;
+}
+
+.factor-root-event .gantt_task_content{
+    color: #fff;
+}
+
+.loss-event-type .gantt_task_content{
+    color: #fff;
+}
+
 .factor-root-event {
     font-size: 110%;
     font-weight: bold;
@@ -433,13 +445,23 @@ td.actions button {
 }
 
 .regular-event-type {
-    background-color: #44F;
-
+    background-color: #ecefff;
+    border: 1px solid #03689a;
 }
 
 .flow-control-event-type {
-    background-color: #999;
-    border: 1px solid #666;
+    background-color: #ffffcc;
+    border: 1px solid #a6a61d;
+}
+
+.start-event-type {
+    background-color: #e6ff97;
+    border: 1px solid #62a716;
+}
+
+.end-event-type {
+    background-color: #eeaaaa;
+    border: 1px solid #990000;
 }
 
 .factor-event-type {

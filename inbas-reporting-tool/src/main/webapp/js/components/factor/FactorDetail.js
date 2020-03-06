@@ -157,10 +157,12 @@ class FactorDetail extends React.Component {
     filterEventTypes = (nodes) => {
         return nodes.filter(n => {
                 let t = n['@type'];
-                return t != Vocabulary.FLOW_CONTROL_EVENT_TYPE;
+                return t != Vocabulary.FLOW_CONTROL_EVENT_TYPE &&
+                    t != Vocabulary.START_EVENT_TYPE &&
+                    t != Vocabulary.END_EVENT_TYPE;
             }
         );
-    }
+    };
 
     onDateChange = (date) => {
         this.setState({startDate: Number(date)});
@@ -249,7 +251,7 @@ class FactorDetail extends React.Component {
     onSave = () => {
         const factor = this.props.factor;
         factor.statement = this.state.statement ? this.state.statement : {};
-        factor.text = this.state.eventType.name;
+        factor.text = this.state.eventType.name.replace(/\[.\] - /i,"");
         this._mergeStatementState(factor.statement);
         this._removeSuggestedType(factor.statement);
         factor.start_date = new Date(factor.statement.startTime);

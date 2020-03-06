@@ -30,5 +30,7 @@ module.exports = {
 
     HAS_PARTICIPANT: 'http://onto.fel.cvut.cz/ontologies/ufo/has-participant',
 
-    FLOW_CONTROL_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/bpmn/flow-control-event-type'
+    FLOW_CONTROL_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/bpmn/flow-control-event-type',
+    START_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/bpmn/process-start',
+    END_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/bpmn/process-end'
 };

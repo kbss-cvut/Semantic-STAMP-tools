@@ -201,7 +201,7 @@ const Factors = React.createClass({
         le.statement.referenceId = ++this.factorReferenceIdCounter;
         le.statement.eventType = eventType.id;
         le.parent = parent;
-        le.text = eventType.name;
+        le.text = eventType.name.replace(/\[.\] - /i,"");
         if (le.isNew) {
             delete le.isNew;
         }
