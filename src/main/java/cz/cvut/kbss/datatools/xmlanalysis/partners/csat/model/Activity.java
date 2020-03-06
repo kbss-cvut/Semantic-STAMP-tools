@@ -34,8 +34,8 @@ public class Activity extends BaseEntity{
     @XmlPath("Event/EndEvent")
     protected Event endEvent;
 
-    @XmlPath("Route/@GatewayDirection")
-    protected String route;
+    @XmlPath("Route")
+    protected Route route;
 
     @XmlPath("NodeGraphicsInfos/NodeGraphicsInfo/Coordinates/@XCoordinate")
     protected double x;
@@ -252,11 +252,11 @@ public class Activity extends BaseEntity{
         this.events = events;
     }
 
-    public String getRoute() {
+    public Route getRoute() {
         return route;
     }
 
-    public void setRoute(String route) {
+    public void setRoute(Route route) {
         this.route = route;
     }
 

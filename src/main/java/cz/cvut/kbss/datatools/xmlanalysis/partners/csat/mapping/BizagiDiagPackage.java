@@ -43,13 +43,14 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
     String GROUP = "G";
     String PARTICIPANT = "Participant";
     String CAPABILITY = "C";
-    String PROCESS = "Process";
-    String ACTIVITY = "Activity";
+    String PROCESS = "[P]";
+    String ACTIVITY = "[A]";
+    String DECISION = "[D]";
     String HAZARD = "[H]";
     String CONTROL_STRUCTURE = "Control structure";
 
     Map<String, Identifiable> registry = new HashMap<>();
-    List<Activity> unresolvedSubProcess = new ArrayList<Activity>();
+    List<Activity> unresolvedSubProcess = new ArrayList<>();
 
     // do not transform Package to eventtype if it is an OrgChart package
     @RootMapping
@@ -110,9 +111,9 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
             l = "NO LABEL";
             out.setLabel(l);
         }
-        if(!StringUtils.containsIgnoreCase(l, "team")){
-            out.setLabel("Team - " + l);
-        }
+//        if(!StringUtils.containsIgnoreCase(l, "team")){
+//            out.setLabel("Team - " + l);
+//        }
 
         // add controller parts from activities of the process associated with the pool
         WorkflowProcess workflowProcess = in.getProcess();
@@ -170,11 +171,11 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
         Package pck = in.getFirstAncestor(Package.class);
         // fix label if it starts with team and it is the only process
 //        if(out.getLabel().startsWith("Team") ) {
-        if(!out.getLabel().equals("Main Process")) {
-            if (pck.getProcesses().size() < 2) {
-                out.setLabel(pck.getName());
+        if(!in.getName().equals("Main Process")) {// TODO inject pool in process, use pool in the condition
+            if (pck.getProcesses().size() < 3) {
+                out.setLabel(composeLabel(PROCESS, pck.getName()));
             } else {
-                out.setLabel(out.getLabel() + " - " + pck.getName());
+                out.setLabel(composeLabel(PROCESS, out.getLabel() + " - " + pck.getName()));
             }
         }
 //        }
@@ -303,24 +304,28 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
     default void handleEventTypeParts(Activity in, EventType out){
         if(in.getStartEvent() != null){
             out.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_ProcessStart);
-            out.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_flowControlEventType);
+            out.setLabel("start");
         }else if(in.getEndEvent() != null){
             out.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_ProcessEnd);
+            out.setLabel("end");
+        }else if(in.getRoute() != null){
             out.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_flowControlEventType);
-        }else if(in.getIntermediateEvent() != null || in.getRoute() != null){
-            if(in.getImplementationTask() == null) {
-                out.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_flowControlEventType);
-            }else{
+        }else if(in.getIntermediateEvent() != null){
+            out.setLabel(composeLabel(ACTIVITY, out.getLabel()));
+            if(in.getImplementationTask() != null) {
                 Set<String> components = getAndInit(out::getComponents, out::setComponents);
                 String eventPart = iri(in.getIntermediateEvent());
                 components.add(eventPart);
             }
         }else if(in.getImplementationSubFlow() != null){
+            out.setLabel(composeLabel(ACTIVITY, out.getLabel()));
             if(in.getSubProcess() != null){
                 Set<String> superClasses = getAndInit(out::getSuperClasses, out::setSuperClasses);
                 String superClass = iri(in.getSubProcess());
                 superClasses.add(superClass);
             }
+        }else{
+            out.setLabel(composeLabel(ACTIVITY, out.getLabel()));
         }
     }
 

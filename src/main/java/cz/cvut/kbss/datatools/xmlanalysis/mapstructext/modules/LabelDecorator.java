@@ -25,7 +25,7 @@ public class LabelDecorator implements Decorator{
     protected Field sourceField;
     protected Field targetField;
 
-    protected String lablePrefix = "";
+    protected String labelPrefix = "";
 
     public Method getTransformDeclaration() {
         return transformDeclaration;
@@ -75,12 +75,12 @@ public class LabelDecorator implements Decorator{
         this.targetField = targetField;
     }
 
-    public String getLablePrefix() {
-        return lablePrefix;
+    public String getLabelPrefix() {
+        return labelPrefix;
     }
 
-    public void setLablePrefix(String lablePrefix) {
-        this.lablePrefix = lablePrefix;
+    public void setLabelPrefix(String labelPrefix) {
+        this.labelPrefix = labelPrefix;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class LabelDecorator implements Decorator{
         setLabel = transformDeclaration.getDeclaredAnnotation(SetLabel.class);
         Class cls = transformDeclaration.getDeclaringClass();
         setLabelOnClass = (SetLabel)cls.getDeclaredAnnotation(SetLabel.class);
-        lablePrefix = constructPrefix(setLabel, setLabelOnClass);
+        labelPrefix = constructPrefix(setLabel, setLabelOnClass);
         propertyIRI = extractPropertyIRI(setLabel, setLabelOnClass);
     }
 
@@ -108,9 +108,9 @@ public class LabelDecorator implements Decorator{
         String sep = getValue(SetLabel::sep, s -> !s.isEmpty(), "");
 
         String[] beforeLabel = getValue(SetLabel::beforeLabel, a -> a.length > 0, emptyStringArray);
-        lablePrefix = String.join(sep, beforeLabel) + (beforeLabel.length == 0 ? "" : sep);
+        labelPrefix = String.join(sep, beforeLabel) + (beforeLabel.length == 0 ? "" : sep);
 
-        return lablePrefix;
+        return labelPrefix;
     }
 
 
@@ -158,7 +158,7 @@ public class LabelDecorator implements Decorator{
                 val = Objects.toString(FieldUtils.readField(sourceField, in));
                 if(val != null)
                     val = val.trim();
-                return String.format("%s%s", lablePrefix, val);
+                return String.format("%s%s", labelPrefix, val);
             }
         } catch (IllegalAccessException e) {
             LOG.error("", e);

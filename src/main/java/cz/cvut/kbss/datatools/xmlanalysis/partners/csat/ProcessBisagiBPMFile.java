@@ -15,6 +15,7 @@ import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.JAXBUtils;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.EventType;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.GroupController;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.Identifiable;
+import cz.cvut.kbss.onto.safety.stamp.Vocabulary;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +88,10 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
         // Remove Hazards with no parents
         removeHazardsWithNoParents(ret);
 
+        // replace parents with single child
+        replaceParentsWithSingleChild(ret, BizagiDiagPackage.ACTIVITY_IRI);
+        replaceParentsWithSingleChild(ret, BizagiDiagPackage.PACKAGE_IRI);
+
         // TODO
 //        String s = mapstructProcessor.
         return new ArrayList<>(ret);
@@ -148,6 +153,49 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
                 .collect(Collectors.toList());
 
         toFilter.removeAll(toRemove);
+    }
+
+    public void replaceParentsWithSingleChild(Collection<Identifiable> toFilter, String parentType){
+        // replace event types based on a Package and having single child with that child
+        // 1. find the event types to be replaced
+        Map<String, EventType> eventTypesToReplace = toFilter.stream()
+                .filter(i ->
+                        i instanceof EventType &&
+                        i.getTypes().contains(parentType))
+                .map(i -> ((EventType)i))
+                .filter(e ->
+                        e != null &&
+                        e.getComponents() != null &&
+                        e.getComponents().size() == 1
+                ).collect(Collectors.toMap(e -> e.getIri(), e -> e));
+
+        // 2. Remove the selected event types from toFilter
+        toFilter.removeAll(eventTypesToReplace.values());
+
+        // 3. replace references of selected event types
+        for(Identifiable i : toFilter) {
+            if(i instanceof EventType){
+                EventType e = (EventType)i;
+                if(e != null && e.getComponents() != null){
+                    List<EventType> etsToReplace = e.getComponents().stream()
+                            .map(iri -> eventTypesToReplace.get(iri))
+                            .filter(et -> et != null).collect(Collectors.toList());
+
+                    etsToReplace.forEach( et -> {
+                        e.getComponents().remove(et.getIri());
+                        e.getComponents().add(et.getComponents().stream().findFirst().get());
+                    });
+
+//                    for(String compIri : e.getComponents()){
+//                        EventType etToReplace = eventTypesToReplace.get(compIri);
+//                        if (etToReplace != null) {
+//                            e.getComponents().remove(etToReplace.getIri());
+//                            e.getComponents().add();
+//                        }
+//                    }
+                }
+            }
+        }
     }
 
     protected void resolveReferencesAcrossDiagrams(){
