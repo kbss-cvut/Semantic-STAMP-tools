@@ -18,7 +18,7 @@ module.exports = {
                 name: '',
                 // Round the time to whole seconds
                 startTime: roundToMinutes(Date.now()),
-                endTime: roundToMinutes(Date.now())
+                endTime: roundToMinutes(Date.now() + 60 * 1000)
             },
             isNew: true,
             javaClass: Constants.OCCURRENCE_REPORT_JAVA_CLASS

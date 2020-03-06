@@ -241,8 +241,8 @@ const Factors = React.createClass({
         flow.nodes.forEach(function(n) {
             const et = JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(n, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE)))
             const e = this.addFactor(et, parent.referenceId, function(le){
-                le.statement.startTime = pst + 1000*(2*nodeLevels[n]);
-                le.statement.endTime = pst + 1000*(2*nodeLevels[n] + 1);
+                le.statement.startTime = pst + 60*1000*(2*nodeLevels[n]);
+                le.statement.endTime = pst + 60*1000*(2*nodeLevels[n] + 1);
                 le.start_date = new Date(le.statement.startTime);
                 le.end_date = new Date(le.statement.endTime);
             });

@@ -32,7 +32,7 @@ module.exports = {
         HOUR: 'hour',
         RELATIVE: 'relative'
     },
-    TIME_SCALE_THRESHOLD: 100,
+    TIME_SCALE_THRESHOLD: 50,
 
     /**
      * Types of message published by the MessageStore
