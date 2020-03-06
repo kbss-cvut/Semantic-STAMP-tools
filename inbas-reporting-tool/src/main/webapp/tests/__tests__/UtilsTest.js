@@ -175,7 +175,7 @@ describe('Utility functions tests', function () {
             const startTime = Date.now(),
                 root = {
                     startTime: startTime,
-                    endTime: startTime + 50 * 1000
+                    endTime: startTime + 40 * 1000
                 };
             expect(Utils.determineTimeScale(root)).toEqual(Constants.TIME_SCALES.SECOND);
             root.endTime = startTime;
