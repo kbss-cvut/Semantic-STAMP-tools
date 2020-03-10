@@ -68,6 +68,8 @@ public class Vocabulary {
     public final static Resource j_c_ProcessStart = ResourceFactory.createResource(c_ProcessStart);
     public final static String c_ProcessEnd = "http://onto.fel.cvut.cz/ontologies/bpmn/process-end";
     public final static Resource j_c_ProcessEnd = ResourceFactory.createResource(c_ProcessEnd);
+    public final static String c_intermediateEvent = "http://onto.fel.cvut.cz/ontologies/bpmn/intermediate-event";
+    public final static Resource j_c_intermediateEvent = ResourceFactory.createResource(c_intermediateEvent);
     public final static String c_Decision = "http://onto.fel.cvut.cz/ontologies/bpmn/decision";
     public final static Resource j_c_Decision = ResourceFactory.createResource(c_Decision);
     public final static String c_Parallelity = "http://onto.fel.cvut.cz/ontologies/bpmn/decision";

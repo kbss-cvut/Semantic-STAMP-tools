@@ -311,7 +311,8 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
         }else if(in.getRoute() != null){
             out.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_flowControlEventType);
         }else if(in.getIntermediateEvent() != null){
-            out.setLabel(composeLabel(ACTIVITY, out.getLabel()));
+//            out.setLabel(composeLabel(ACTIVITY, out.getLabel()));
+            out.getTypes().add(cz.cvut.kbss.datatools.xmlanalysis.voc.Vocabulary.c_intermediateEvent);
             if(in.getImplementationTask() != null) {
                 Set<String> components = getAndInit(out::getComponents, out::setComponents);
                 String eventPart = iri(in.getIntermediateEvent());
