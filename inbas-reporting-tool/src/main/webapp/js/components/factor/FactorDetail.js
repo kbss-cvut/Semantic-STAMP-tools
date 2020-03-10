@@ -154,14 +154,12 @@ class FactorDetail extends React.Component {
         // return controller ? node.id === controller.id : true;
     };
 
-    filterEventTypes = (nodes) => {
-        return nodes.filter(n => {
-                let t = n['@type'];
-                return t != Vocabulary.FLOW_CONTROL_EVENT_TYPE &&
-                    t != Vocabulary.START_EVENT_TYPE &&
-                    t != Vocabulary.END_EVENT_TYPE;
-            }
-        );
+    filterEventTypes = (n) => {
+        let t = n['@type'];
+        return t != Vocabulary.FLOW_CONTROL_EVENT_TYPE &&
+            t != Vocabulary.START_EVENT_TYPE &&
+            t != Vocabulary.END_EVENT_TYPE &&
+            t != Vocabulary.INTERMEDIATE_EVENT;
     };
 
     onDateChange = (date) => {

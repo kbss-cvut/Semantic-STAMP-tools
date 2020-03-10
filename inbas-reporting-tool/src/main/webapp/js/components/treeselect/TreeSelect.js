@@ -94,7 +94,7 @@ class TreeSelect extends PureComponent {
         // transform nodes
         let usedNodes = nodes;
         if(this.props.filterNodes) {
-            usedNodes = this.props.filterNodes(nodes);
+            usedNodes = nodes.filter(n => this.props.filterNodes(n));
         }
         let tree = JsonLDUtils.toTree(usedNodes, edges, Vocabulary.HAS_STRUCTURE_PART, 'children');
         let nodeMap = tree.nodeMap;
@@ -103,8 +103,13 @@ class TreeSelect extends PureComponent {
         let fromNode = null;
         if(this.props.from){
             fromNode = nodeMap.get(this.props.from);
-            if(fromNode)
+            if(fromNode){
                 roots = fromNode.children ? fromNode.children : [];
+            }else {
+                if(nodes.filter(n => n["@id"] == this.props.from).length > 0) {// the node is filtered
+                    roots = [];
+                }
+            }
         }
 
         let root = {};
