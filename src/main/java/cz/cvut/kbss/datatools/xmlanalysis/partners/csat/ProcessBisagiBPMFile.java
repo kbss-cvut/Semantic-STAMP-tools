@@ -12,11 +12,10 @@ import cz.cvut.kbss.datatools.xmlanalysis.partners.csat.model.Package;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.BPMProcessor;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.InputXmlStream;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.JAXBUtils;
-import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.EventType;
-import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.GroupController;
-import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.Identifiable;
+import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.*;
 import cz.cvut.kbss.onto.safety.stamp.Vocabulary;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.rdf4j.query.algebra.Str;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,8 +88,8 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
         removeHazardsWithNoParents(ret);
 
         // replace parents with single child
-        replaceParentsWithSingleChild(ret, BizagiDiagPackage.ACTIVITY_IRI);
-        replaceParentsWithSingleChild(ret, BizagiDiagPackage.PACKAGE_IRI);
+        replaceParentsWithSingleChild(ret, BizagiDiagPackage.ACTIVITY_IRI, BizagiDiagPackage.PACKAGE_IRI);
+        replaceParentsWithSingleChild(ret, BizagiDiagPackage.PACKAGE_IRI, null);
 
         // TODO
 //        String s = mapstructProcessor.
@@ -155,8 +154,14 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
         toFilter.removeAll(toRemove);
     }
 
-    public void replaceParentsWithSingleChild(Collection<Identifiable> toFilter, String parentType){
+    public void replaceParentsWithSingleChild(Collection<Identifiable> toFilter, String parentType, String childType){
         // replace event types based on a Package and having single child with that child
+
+        Map<String, EventType> eventMap = toFilter.stream()
+                .filter(i -> i instanceof EventType)
+                .map(i -> ((EventType)i))
+                .collect(Collectors.toMap(e -> e.getIri(), e -> e));
+
         // 1. find the event types to be replaced
         Map<String, EventType> eventTypesToReplace = toFilter.stream()
                 .filter(i ->
@@ -166,7 +171,11 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
                 .filter(e ->
                         e != null &&
                         e.getComponents() != null &&
-                        e.getComponents().size() == 1
+                        e.getComponents().size() == 1 &&
+                                // check child has childType
+                        Optional.ofNullable(eventMap.get(e.getComponents().stream().findFirst().get()))
+                            .map(c -> childType == null || c.getTypes().contains(childType)).orElse(false)
+
                 ).collect(Collectors.toMap(e -> e.getIri(), e -> e));
 
         // 2. Remove the selected event types from toFilter
@@ -185,14 +194,21 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
                         e.getComponents().remove(et.getIri());
                         e.getComponents().add(et.getComponents().stream().findFirst().get());
                     });
+                }
+            }
 
-//                    for(String compIri : e.getComponents()){
-//                        EventType etToReplace = eventTypesToReplace.get(compIri);
-//                        if (etToReplace != null) {
-//                            e.getComponents().remove(etToReplace.getIri());
-//                            e.getComponents().add();
-//                        }
-//                    }
+            // Replace references of removed event types in connections
+            if(i instanceof StructureConnection){
+                StructureConnection c = (StructureConnection)i;
+                if(c != null ){
+                    EventType et = eventTypesToReplace.get(c.getFrom());
+                    if(et != null && !et.getComponents().isEmpty()){
+                        c.setFrom(et.getComponents().iterator().next());
+                    }
+                    et = eventTypesToReplace.get(c.getTo());
+                    if(et != null && !et.getComponents().isEmpty()){
+                        c.setTo(et.getComponents().iterator().next());
+                    }
                 }
             }
         }
