@@ -269,30 +269,18 @@ const Factors = React.createClass({
         // const rootNodes = [...rootNodeSet];
         // calculate levels
         const mystack = [];
-        [...rootNodeSet].forEach(x => mystack.push({id:x, level:0, index:0}));
+        [...rootNodeSet].forEach(x => mystack.push({id:x, level:0}));
 
         while(mystack.length > 0){
-            let n = mystack[mystack.length-1];
-            if(ret[n.id]) {
-                mystack.pop();
-            }else {
-                if (!n.children) {
-                    n.children = [];
-                    flow.edges.filter(x => x.from === n.id).forEach(x =>
-                        n.children.push({
-                            id: x.to,
-                            level: n.level + 1,
-                            index: 0
-                        })
-                    );
-                }
-                if (n.index < n.children.length){
-                    mystack.push(n.children[n.index]);
-                    n.index = n.index + 1;
-                }else{
-                    ret[n.id] = n.level;
-                    mystack.pop();
-                }
+            let n = mystack.pop();
+            if(!(n.id in ret)) {
+                flow.edges.filter(x => x.from === n.id ).forEach(x =>
+                    mystack.push({
+                        id: x.to,
+                        level: n.level + 1,
+                    })
+                );
+                ret[n.id] = n.level;
             }
         }
         this._calculateNodeLevels = false;
