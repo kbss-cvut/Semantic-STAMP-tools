@@ -37,6 +37,10 @@ CONSTRUCT {
                     BIND(bpmn:process-start as ?flowControl)
                 }
                 OPTIONAL {
+                    ?term a bpmn:intermediate-event.
+                    BIND(bpmn:intermediate-event as ?flowControl)
+                }
+                OPTIONAL {
                     ?term a bpmn:process-end.
                     BIND(bpmn:process-end as ?flowControl)
                 }

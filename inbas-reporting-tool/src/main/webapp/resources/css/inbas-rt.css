@@ -464,6 +464,11 @@ td.actions button {
     border: 1px solid #990000;
 }
 
+.intermediate-event-type {
+    background-color: #fefaef;
+    border: 1px solid #969149;
+}
+
 .factor-event-type {
     background-color: #C5C;
     border: 1px solid #666;

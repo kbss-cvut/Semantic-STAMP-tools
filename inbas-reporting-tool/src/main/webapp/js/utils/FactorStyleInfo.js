@@ -40,6 +40,13 @@ var FactorStyleInfo = {
                     ganttCls: 'end-event-type',
                     title: 'End event type'
                 };
+            case Vocabulary.INTERMEDIATE_EVENT:
+                return {
+                    value: 'IE',
+                    bsStyle: 'default',
+                    ganttCls: 'intermediate-event-type',
+                    title: 'Intermediate event type'
+                };
             case Vocabulary.FACTOR_EVENT_TYPE:
                 return {
                     value: 'FE',
