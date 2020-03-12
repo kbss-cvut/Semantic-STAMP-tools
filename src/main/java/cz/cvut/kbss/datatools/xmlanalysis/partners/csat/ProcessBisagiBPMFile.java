@@ -15,12 +15,17 @@ import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.JAXBUtils;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.*;
 import cz.cvut.kbss.onto.safety.stamp.Vocabulary;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.poi.ss.formula.functions.Function;
+import org.apache.poi.ss.formula.functions.T;
+import org.eclipse.rdf4j.query.algebra.Group;
 import org.eclipse.rdf4j.query.algebra.Str;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
@@ -87,9 +92,12 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
         // Remove Hazards with no parents
         removeHazardsWithNoParents(ret);
 
-        // replace parents with single child
+        // replace parents with single child in event type hierarchy
         replaceParentsWithSingleChild(ret, BizagiDiagPackage.ACTIVITY_IRI, BizagiDiagPackage.PACKAGE_IRI);
         replaceParentsWithSingleChild(ret, BizagiDiagPackage.PACKAGE_IRI, null);
+
+        // replace parents with single child in controller type hierarchy
+        replaceParentsWithSingleChildInControlerHierarchy(ret, BizagiDiagPackage.PACKAGE_IRI);
 
         // TODO
 //        String s = mapstructProcessor.
@@ -212,6 +220,34 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
                 }
             }
         }
+    }
+
+    protected void replaceParentsWithSingleChildInControlerHierarchy(Collection<Identifiable> toFilter, String parentType){
+        Map<String, GroupController> elementMap = toFilter.stream()
+                .filter(i -> i instanceof  GroupController)
+                .map(i -> ((GroupController)i))
+                .collect(Collectors.toMap(e -> e.getIri(), e -> e));
+
+
+        // 1. extract two layers of the controller hierarchy, where the second one is to be removed
+        Map<GroupController, GroupController> towLayers = toFilter.stream()
+                .filter(i -> i instanceof GroupController &&
+                                i.getTypes().contains(parentType) &&
+                        (i.getLabel() == null || !i.getLabel().startsWith("OrgChart")))
+                .map(i -> ((GroupController)i))
+                .filter(p -> p.getSubGroups() != null && p.getSubGroups().size() == 1)
+                .collect(Collectors.toMap(p -> p, p -> elementMap.get(p.getSubGroups().stream().findFirst().get())));
+
+//        Map<String, GroupController> controllersToReplace = toFilter.stream()
+
+        // 2. Remove the controllers from the middle layer
+        toFilter.removeAll(towLayers.values());
+
+        // 3. replace references of removed controllers types
+        towLayers.entrySet().stream().forEach(e -> {
+            e.getKey().getSubGroups().remove(e.getValue().getIri()); // remove reference
+            e.getKey().getSubGroups().addAll(e.getValue().getSubGroups()); // remove reference
+        });
     }
 
     protected void resolveReferencesAcrossDiagrams(){

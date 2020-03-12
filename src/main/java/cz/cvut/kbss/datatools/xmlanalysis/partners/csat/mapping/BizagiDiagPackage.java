@@ -34,6 +34,7 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
 
     String PACKAGE_IRI = "http://bizagi.com/package/Package";
     String PARTICIPANT_IRI = "http://bizagi.com/package/Participant";
+    String POOL_IRI = "http://bizagi.com/package/Pool";
     String WORKFLOWPROCESS_IRI = "http://bizagi.com/package/WorkflowProcess";
     String ACTIVITY_IRI = "http://bizagi.com/package/Activity";
     String TRANSITION_IRI = "http://bizagi.com/package/Transition";
@@ -100,6 +101,7 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
         return out;
     }
 
+    @AddTypes(types = POOL_IRI)
     GroupController xmlToGroupController(Pool in);
 
     @AfterMapping
