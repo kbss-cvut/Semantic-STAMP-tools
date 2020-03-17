@@ -18,7 +18,8 @@ describe('Factors component tests', () => {
                 name: 'TestOccurrence',
                 startTime: Date.now() - 10000,
                 endTime: Date.now(),
-                referenceId: Generator.getRandomInt()
+                referenceId: Generator.getRandomInt(),
+                javaClass: Constants.OCCURRENCE_JAVA_CLASS
             }
         };
 

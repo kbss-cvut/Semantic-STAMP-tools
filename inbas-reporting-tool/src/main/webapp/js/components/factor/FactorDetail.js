@@ -318,7 +318,7 @@ class FactorDetail extends React.Component {
         // Modal body is given ref so that it is accessible in tests. See
         // https://github.com/react-bootstrap/react-bootstrap/issues/966
         return <div>
-            <Tabs activeKey={this.state.activeTab} onSelect={this.handleSelect}>
+            <Tabs activeKey={this.state.activeTab} onSelect={this.handleSelect} id="tabs1">
                 <Tab eventKey={1} title={"Tree select"}>
                     <div className={eventTypeClassNames}>
                         <TreeSelect

@@ -38,7 +38,8 @@ describe('FactorRenderer', function () {
             eventTypes: [Generator.randomCategory().id],
             startTime: 1447144734937,
             endTime: 1447144800937,
-            referenceId: 1
+            referenceId: 1,
+            javaClass: Constants.OCCURRENCE_JAVA_CLASS
         };
     }
 

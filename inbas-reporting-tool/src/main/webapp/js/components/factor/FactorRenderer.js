@@ -98,10 +98,10 @@ const FactorRendererImpl = {
         const childrenOf = {};
         Object.entries(partOfHierarchy).forEach(function ([k,v]){if(!childrenOf[v]){childrenOf[v] = []}; childrenOf[v].push(k)})
 
-        const nodesToProcess = [];
-        // const parents = Object.values(partOfHierarchy);
-        let currentLayer = [root.referenceId];//Object.keys(partOfHierarchy).filter(function(n){ return parents.includes(parseInt(n));});
-        // currentLayer.push(root);
+        let nodesToProcess = [];
+
+        let currentLayer = [root.referenceId];
+
         while(currentLayer.length > 0){
             let newLayer = [];
             for(let i = 0; i < currentLayer.length; i++){
@@ -111,6 +111,12 @@ const FactorRendererImpl = {
                     newLayer = newLayer.concat(children);
             }
             currentLayer = newLayer;
+        }
+
+        currentLayer = nodes.filter(function(n){return !nodesToProcess.includes(n);});
+
+        if(currentLayer.length > 0){
+            nodesToProcess = nodesToProcess.concat(currentLayer);
         }
 
         for (let i = 0, len = nodesToProcess.length; i < len; i++) {
