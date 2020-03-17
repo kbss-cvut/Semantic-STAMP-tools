@@ -4,6 +4,7 @@ const JsonLdUtils = require('jsonld-utils').default;
 const GanttController = require('./GanttController');
 const Vocabulary = require('../../constants/Vocabulary');
 const ObjectTypeResolver = require('../../utils/ObjectTypeResolver');
+const Constants = require('../../constants/Constants');
 
 const FactorRenderer = {
 
@@ -89,8 +90,31 @@ const FactorRendererImpl = {
 
     _addNodes: function (nodes, partOfHierarchy, eventTypes) {
         let node;
-        for (let i = 0, len = nodes.length; i < len; i++) {
-            node = nodes[i];
+        const root = nodes.filter(function(n){return n.javaClass == Constants.OCCURRENCE_JAVA_CLASS})[0];
+
+        const map = {};
+        nodes.forEach(function(n){map[n.referenceId] = n;});
+
+        const childrenOf = {};
+        Object.entries(partOfHierarchy).forEach(function ([k,v]){if(!childrenOf[v]){childrenOf[v] = []}; childrenOf[v].push(k)})
+
+        const nodesToProcess = [];
+        // const parents = Object.values(partOfHierarchy);
+        let currentLayer = [root.referenceId];//Object.keys(partOfHierarchy).filter(function(n){ return parents.includes(parseInt(n));});
+        // currentLayer.push(root);
+        while(currentLayer.length > 0){
+            let newLayer = [];
+            for(let i = 0; i < currentLayer.length; i++){
+                nodesToProcess.push(map[currentLayer[i]]);
+                let children = childrenOf[currentLayer[i]];
+                if(children && children.length > 0)
+                    newLayer = newLayer.concat(children);
+            }
+            currentLayer = newLayer;
+        }
+
+        for (let i = 0, len = nodesToProcess.length; i < len; i++) {
+            node = nodesToProcess[i];
             let text = '';
             if (typeof node.name !== 'undefined' && node.name !== null) {
                 text = node.name;
