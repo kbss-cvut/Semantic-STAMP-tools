@@ -44,8 +44,13 @@ const OptionsStore = Reflux.createStore({
     onFetchSchemaMetadata: function(){
         Ajax.get(Constants.REST_PREFIX + 'schema/metadata').end(
             function (data) {
-                schemaMetadata.name = data.name;
-                schemaMetadata.date = data.date;
+                if(data){
+                    schemaMetadata.name = data.name;
+                    schemaMetadata.date = data.date;
+                }else{
+                    schemaMetadata.name = null;
+                    schemaMetadata.date = null;
+                }
                 this.trigger("schemaMetadata", data);
             }.bind(this),
             function (data) {
