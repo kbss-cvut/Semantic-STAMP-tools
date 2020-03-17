@@ -20,43 +20,21 @@ SELECT ?deviation ?controlled_process ?controller (COUNT(DISTINCT ?et) AS ?count
 
   ?et a ufo:Event ;
     rt:has_event_type ?deviation_type .
-  ?deviation_type a stamp:unsafe-event .
-
-    OPTIONAL {
+  SERVICE SILENT ?eventTypesRepository {
+    ?deviation_type a stamp:unsafe-event .
+    ?activity_type stamp:has-control-structure-element-part ?deviation_type .
+    ?process_type stamp:has-control-structure-element-part ?activity_type .
+    ?activity_type ufo:has-participant ?controller_type .
+	OPTIONAL {
       ?deviation_type rdfs:label ?deviation .
     }
     OPTIONAL {
-      SERVICE SILENT ?eventTypesRepository {
-        ?deviation_type rdfs:label ?deviation .
-      }
+      ?process_type rdfs:label ?controlled_process .
     }
     OPTIONAL {
-        SERVICE SILENT ?eventTypesRepository {
-            ?activity_type stamp:has-control-structure-element-part ?deviation_type .
-            ?process_type stamp:has-control-structure-element-part ?activity_type .
-            OPTIONAL {
-              ?process_type rdfs:label ?controlled_process .
-            }
-            OPTIONAL {
-              SERVICE SILENT ?eventTypesRepository {
-                ?process_type rdfs:label ?controlled_process .
-              }
-            }
-        }
+      ?controller_type rdfs:label ?controller .
     }
-    OPTIONAL {
-        SERVICE SILENT ?eventTypesRepository {
-            ?activity_type ufo:has-participant ?controller_type .
-            OPTIONAL {
-              ?controller_type rdfs:label ?controller .
-            }
-            OPTIONAL {
-              SERVICE SILENT ?eventTypesRepository {
-                ?controller_type rdfs:label ?controller .
-              }
-            }
-        }
-    }
+  }
 }
 GROUP BY ?deviation ?controlled_process ?controller
 ORDER BY desc(?count) asc(?deviation)

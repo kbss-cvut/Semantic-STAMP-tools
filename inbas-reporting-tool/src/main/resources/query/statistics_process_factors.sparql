@@ -8,59 +8,68 @@ PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
 PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
 
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
+PREFIX : <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
 
-SELECT ?event_type ?factor_type ?relation_type (COUNT(DISTINCT *) AS ?count) {
-    ?report doc:documents ?occurrence .
-
-    FILTER NOT EXISTS {
-      ?report <http://onto.fel.cvut.cz/ontologies/reporting-tool/model/has_next_revision> ?y .
-    }
-
-    ?occurrence ufo:has_part+ ?ct .
+SELECT ?event_type ?factor_type ?relation_type (COUNT(DISTINCT *) AS ?count){
+  {SELECT ?event_e_t ?event_f_t ?event_instance ?factor_instance ?rt
     {
+      {
+        ?report doc:documents ?occurrence .
+        FILTER NOT EXISTS {
+          ?report <http://onto.fel.cvut.cz/ontologies/reporting-tool/model/has_next_revision> ?y .
+        }
+        ?occurrence ufo:has_part+ ?ct .
         ?ct rt:has_event_type ?central_type .
-        ?ct ufo:has_part ?devOne .
-        ?devOne a ?devOneType .
-        ?devOneType a stamp:unsafe-event .
-        ?devOne aso:has_factor+ ?devTwo .
-        ?devTwo a ?devTwoType .
-        ?devTwoType a stamp:unsafe-event .
-        ?et ufo:has_part ?devTwo ;
-        rt:has_event_type ?event_e_t .
-    } UNION {
-        ?ct rt:has_event_type ?central_type .
-        ?ct ufo:has_part ?devOne .
-        ?devOne a ?devOneType .
-        ?devOneType a stamp:unsafe-event .
-        BIND(?devOne AS ?devTwo)
-        BIND(?devOneType AS ?devTwoType)
-        BIND(?central_type as ?event_e_t)
-    }
+        ?ct ufo:has_part+ ?devOne .
+        ?devOne rt:has_event_type ?devOneType .
 
-    OPTIONAL { ?event_e_t rdfs:label ?event_type_label. }
-    OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_e_t rdfs:label ?event_type_label. } }
-    OPTIONAL {
-        ?devTwo aso:has_factor [
-          a ?rt ;
-          aso:has_factor ?devThree
-        ] .
-        ?devThree a ?devThreeType .
-        SERVICE SILENT ?eventTypesRepository {?devThreeType a stamp:unsafe-event .}
-        ?ft ufo:has_part ?devThree ;
-            rt:has_event_type ?event_f_t .
+        ?devOneParent ufo:has_part ?devOne;
+          rt:has_event_type ?devOneParentType.
+        FILTER (?devOneParentType != ?central_type)
+        SERVICE SILENT ?eventTypesRepository {?devOneType a stamp:unsafe-event . }
+        #    SERVICE SILENT ?eventTypesRepository {?devOneParentType a ufo:event-type . }
+        BIND(?central_type as ?event_e_t)
+        BIND(?ct as ?event_instance)
+        BIND(?devOneParentType as ?event_f_t)
+        BIND(?devOneParent as ?factor_instance)
+        BIND(aso:contributes_to as ?rt)
+      }UNION{
+        ?report doc:documents ?occurrence .
+        FILTER NOT EXISTS {
+          ?report <http://onto.fel.cvut.cz/ontologies/reporting-tool/model/has_next_revision> ?y .
+        }
+        ?occurrence ufo:has_part+ ?ct .
+        ?ct rt:has_event_type ?central_type .
+        ?ct ufo:has_part+ ?devOne .
+        ?devOne rt:has_event_type ?devOneType .
+
+        ?devOneParent ufo:has_part ?devOne;
+          rt:has_event_type ?event_e_t.
+        #    BIND(?devOneParentType as ?event_e_t)
+        ?devOne aso:has_factor [
+            a ?rt ;
+            aso:has_factor ?devTwo
+          ] .
+      	FILTER(?rt != stamp:next )
+        ?devTwo a ?devTwoType .
+
+        ?ft ufo:has_part ?devTwo ;
+          rt:has_event_type ?event_f_t .
 
         FILTER (?rt != aso:factor)
-   		OPTIONAL { ?event_f_t rdfs:label ?factor_type_label. }
-   		OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_f_t rdfs:label ?factor_type_label. } }
-   		OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }
-     	OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?rt rdfs:label ?relation_type_label . } }
+        BIND(?devOneParent as ?event_instance)
+        BIND(?ft as ?factor_instance)
+      }
     }
+  }
 
+  OPTIONAL{SERVICE SILENT ?eventTypesRepository {?event_e_t rdfs:label ?event_type_label.}}
+  OPTIONAL{SERVICE SILENT ?eventTypesRepository {?event_f_t rdfs:label ?factor_type_label.}}
+  OPTIONAL {SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }
 
-
-    BIND(COALESCE(COALESCE(?event_type_label,?event_e_t),"NONE") AS ?event_type)
-    BIND(COALESCE(COALESCE(?factor_type_label,?event_f_t),"NONE") AS ?factor_type)
-    BIND(COALESCE(COALESCE(?relation_type_label,?rt),"NONE") AS ?relation_type)
+  BIND(COALESCE(COALESCE(?event_type_label,?event_e_t),"NONE") AS ?event_type)
+  BIND(COALESCE(COALESCE(?factor_type_label,?event_f_t),"NONE") AS ?factor_type)
+  BIND(COALESCE(COALESCE(?relation_type_label,?rt),"NONE") AS ?relation_type)
 }
 GROUP BY ?event_type ?factor_type ?relation_type
 ORDER BY desc(?count) asc(?event_type)
