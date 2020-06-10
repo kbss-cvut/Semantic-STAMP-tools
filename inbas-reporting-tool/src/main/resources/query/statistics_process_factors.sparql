@@ -26,7 +26,7 @@ SELECT * {
         ?devTwo aso:has_factor* ?devOne .
         ?devTwo a ?devTwoType .
         BIND(iri(replace(str(?devOneType), " ", "+")) as ?fixedDevOneType)
-                BIND(iri(replace(str(?devTwoType), " ", "+")) as ?fixedDevTwoType)
+        BIND(iri(replace(str(?devTwoType), " ", "+")) as ?fixedDevTwoType)
         SERVICE ?eventTypesRepository {
       		?fixedDevOneType a stamp:unsafe-event.
       		?fixedDevTwoType a stamp:unsafe-event.

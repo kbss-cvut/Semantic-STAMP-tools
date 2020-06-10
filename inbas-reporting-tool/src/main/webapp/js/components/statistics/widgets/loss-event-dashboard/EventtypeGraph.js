@@ -56,7 +56,6 @@ class EventtypeGraph extends React.Component {
             let maxNodeHolder = {value:1}
 
             let fromToCount={};
-
             rows.forEach((item) => {
                 let ft,et;
                 if (GraphUtils.validEventType(item.factor_type)) {
@@ -64,9 +63,8 @@ class EventtypeGraph extends React.Component {
                     nodes[ft - 1].color = nodeColorMap[item.process_factor_label];
                 }
 
-                // assumes that the query will return NONE from root factor(the factor that does not have factors)
-                if (GraphUtils.validEventType(item.event_type) && GraphUtils.validEventType(item.factor_type)) {
-                    et = GraphUtils.addNode(item.event_type, nodes, maxNodeHolder)
+                if (GraphUtils.validEventType(item.event_type)) {
+                    et = GraphUtils.addNode(item.event_type, nodes, maxNodeHolder);
                     nodes[et - 1].color = nodeColorMap[item.process_event_label];
                 }
 
