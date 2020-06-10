@@ -21,6 +21,11 @@ SELECT ?controlled_process ?process_type_iri (COUNT(*) AS ?count) {
   ?et a ufo:Event ;
        rt:has_event_type ?process_type_iri .
 
+  SERVICE ?eventTypesRepository{
+    ?process_type_iri a stamp:controlled-process-type.
+  }
+  BIND(stamp:controlled-process-type as ?etType1)
+
   SERVICE SILENT ?eventTypesRepository {
     ?process_type_iri rdfs:label ?controlled_process .
   }
