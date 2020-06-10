@@ -25,9 +25,11 @@ SELECT * {
 
         ?devTwo aso:has_factor* ?devOne .
         ?devTwo a ?devTwoType .
+        BIND(iri(replace(str(?devOneType), " ", "+")) as ?fixedDevOneType)
+                BIND(iri(replace(str(?devTwoType), " ", "+")) as ?fixedDevTwoType)
         SERVICE ?eventTypesRepository {
-      		?devOneType a stamp:unsafe-event.
-      		?devTwoType a stamp:unsafe-event.
+      		?fixedDevOneType a stamp:unsafe-event.
+      		?fixedDevTwoType a stamp:unsafe-event.
     	}
         ?ft ufo:has_part ?devTwo ;
             rt:has_event_type ?event_f_t .
@@ -37,15 +39,18 @@ SELECT * {
                 rt:has_event_type ?process_f_t.
         }
 
-        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_f_t rdfs:label ?factor_type_label. } }
-        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?process_f_t rdfs:label ?process_factor_label. } }
+        BIND(iri(replace(str(?event_f_t), " ", "+")) as ?fixedEvent_f_t)
+        BIND(iri(replace(str(?process_f_t), " ", "+")) as ?fixedProcess_f_t)
+        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedEvent_f_t rdfs:label ?factor_type_label. } }
+        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedProcess_f_t rdfs:label ?process_factor_label. } }
         ?devThree aso:has_factor [
             a ?rt ;
             aso:has_factor ?devTwo
           ] .
 
         ?devThree a ?devThreeType .
-        SERVICE ?eventTypesRepository {?devThreeType a stamp:unsafe-event .}
+        BIND(iri(replace(str(?devThreeType), " ", "+")) as ?fixedDevThreeType)
+        SERVICE ?eventTypesRepository {?fixedDevThreeType a stamp:unsafe-event .}
 
         ?evt ufo:has_part ?devThree ;
           rt:has_event_type ?event_e_t .
@@ -55,8 +60,10 @@ SELECT * {
         }
         FILTER (?rt != aso:factor)
 
-        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_e_t rdfs:label ?event_type_label. } }
-        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?process_e_t rdfs:label ?process_event_label. } }
+        BIND(iri(replace(str(?event_e_t), " ", "+")) as ?fixedEvent_e_t)
+        BIND(iri(replace(str(?process_e_t), " ", "+")) as ?fixedProcess_e_t)
+        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedEvent_e_t rdfs:label ?event_type_label. } }
+        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedProcess_e_t rdfs:label ?process_event_label. } }
         OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }
     }
     UNION
@@ -70,10 +77,12 @@ SELECT * {
         ?ct rt:has_event_type ?central_type .
         ?ct ufo:has_part+ ?devOne .
         ?devOne a ?devOneType .
-        SERVICE ?eventTypesRepository {?devOneType a stamp:unsafe-event. }
+        BIND(iri(replace(str(?devOneType), " ", "+")) as ?fixedDevOneType)
+        SERVICE ?eventTypesRepository {?fixedDevOneType a stamp:unsafe-event. }
         ?devOne aso:has_factor* ?devTwo .
         ?devTwo a ?devTwoType .
-        SERVICE ?eventTypesRepository {?devTwoType a stamp:unsafe-event.}
+        BIND(iri(replace(str(?devTwoType), " ", "+")) as ?fixedDevTwoType)
+        SERVICE ?eventTypesRepository {?fixedDevTwoType a stamp:unsafe-event.}
         ?et ufo:has_part ?devTwo ;
             rt:has_event_type ?event_e_t .
         # process of factor
@@ -81,9 +90,10 @@ SELECT * {
             ?pet ufo:has_part ?et;
                 rt:has_event_type ?process_e_t.
         }
-
-        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_e_t rdfs:label ?event_type_label. } }
-        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?process_e_t rdfs:label ?process_event_label. } }
+        BIND(iri(replace(str(?event_e_t), " ", "+")) as ?fixedEvent_e_t)
+        BIND(iri(replace(str(?process_e_t), " ", "+")) as ?fixedProcess_e_t)
+        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedEvent_e_t rdfs:label ?event_type_label. } }
+        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedProcess_e_t rdfs:label ?process_event_label. } }
         OPTIONAL {
             ?devTwo aso:has_factor [
                             a ?rt ;
@@ -91,7 +101,8 @@ SELECT * {
                         ] .
 
             ?devThree a ?devThreeType .
-      		SERVICE ?eventTypesRepository {?devThreeType a stamp:unsafe-event .}
+            BIND(iri(replace(str(?devThreeType), " ", "+")) as ?fixedDevThreeType)
+      		SERVICE ?eventTypesRepository {?fixedDevThreeType a stamp:unsafe-event .}
             ?evt ufo:has_part ?devThree ;
                 rt:has_event_type ?event_f_t .
             OPTIONAL{
@@ -100,8 +111,10 @@ SELECT * {
             }
 
             FILTER (?rt != aso:factor)
-            OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_f_t rdfs:label ?factor_type_label. } }
-            OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?process_f_t rdfs:label ?process_factor_label. } }
+            BIND(iri(replace(str(?event_f_t), " ", "+")) as ?fixedEvent_f_t)
+            BIND(iri(replace(str(?process_f_t), " ", "+")) as ?fixedProcess_f_t)
+            OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedEvent_f_t rdfs:label ?factor_type_label. } }
+            OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedProcess_f_t rdfs:label ?process_factor_label. } }
             OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }
         }
     }
