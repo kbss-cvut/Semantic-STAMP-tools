@@ -68,16 +68,16 @@ public class SPARQLService {
             query = query + ") }";
         }
 
-        try {
-            query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
+//        try {
+//            query = URLEncoder.encode(query, Constants.UTF_8_ENCODING);
             final Map<String, String> params = new HashMap<>();
-            params.put("query", query);
             params.put(HttpHeaders.ACCEPT, mediaType);
-            final String data = remoteLoader.loadData(repositoryUrl, params);
+            params.put(HttpHeaders.CONTENT_TYPE, "application/sparql-query");
+            final String data = remoteLoader.loadData(repositoryUrl, query, params);
             return new RawJson(data);
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException("Unable to find encoding " + Constants.UTF_8_ENCODING, e);
-        }
+//        } catch (UnsupportedEncodingException e) {
+//            throw new IllegalStateException("Unable to find encoding " + Constants.UTF_8_ENCODING, e);
+//        }
     }
 
     protected String replaceParameterVariables(String query){

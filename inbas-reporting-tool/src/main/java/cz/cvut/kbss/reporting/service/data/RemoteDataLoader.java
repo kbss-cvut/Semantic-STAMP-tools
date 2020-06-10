@@ -65,6 +65,43 @@ public class RemoteDataLoader implements DataLoader {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * The parameters are processed in the following way:
+     * <p>
+     * <pre>
+     * <ul>
+     *     <li>Known and supported HTTP headers are extracted and,</li>
+     *     <li>The rest of the parameters are used as query params in the request.</li>
+     * </ul>
+     * </pre>
+     *
+     * @param remoteUrl Remote data source (URL)
+     * @param query the SPARQL query
+     * @param params Query parameters
+     * @return Loaded data
+     */
+    public String loadData(String remoteUrl, String query, Map<String, String> params) {
+        final HttpHeaders headers = processHeaders(params);
+//        final URI urlWithQuery = prepareUri(remoteUrl, params);
+        final HttpEntity<Object> entity = new HttpEntity<>(query, headers);
+
+        LOG.trace("Getting remote data from {} using {} ", remoteUrl, query);
+        try {
+            final ResponseEntity<String> result = restTemplate.exchange(remoteUrl, HttpMethod.POST, entity,
+                    String.class);
+            return result.getBody();
+        } catch (HttpServerErrorException e) {
+            LOG.error("Error when requesting remote data, url: {}. Response Status: {}\n, Body:",
+                    remoteUrl.toString(), e.getStatusCode(), e.getResponseBodyAsString());
+            throw new WebServiceIntegrationException("Unable to fetch remote data.", e);
+        } catch (Exception e) {
+            LOG.error("Error when requesting remote data, url: {}.", remoteUrl.toString(), e);
+            throw new WebServiceIntegrationException("Unable to fetch remote data.", e);
+        }
+    }
+
     private HttpHeaders processHeaders(Map<String, String> params) {
         final HttpHeaders headers = new HttpHeaders();
         // Set default accept type to JSON-LD
