@@ -22,25 +22,38 @@ SELECT * {
         ?ct ufo:has_part+ ?devOne .
 
         ?devOne a ?devOneType .
+        # fixed IRIs with spaces to call SERVICE
+        BIND(iri(replace(str(?devOneType), " ", "+")) as ?fixedDevOneType)
+        ?devOne a ?fixedDevOneType .
+        FILTER(?devOneType = ?fixedDevOneType)
 
         ?devTwo aso:has_factor* ?devOne .
         ?devTwo a ?devTwoType .
-        BIND(iri(replace(str(?devOneType), " ", "+")) as ?fixedDevOneType)
+        # fixed IRIs with spaces to call SERVICE
         BIND(iri(replace(str(?devTwoType), " ", "+")) as ?fixedDevTwoType)
+        ?devTwo a ?fixedDevTwoType .
+        FILTER(?devTwoType = ?fixedDevTwoType)
+
         SERVICE ?eventTypesRepository {
       		?fixedDevOneType a stamp:unsafe-event.
       		?fixedDevTwoType a stamp:unsafe-event.
     	}
         ?ft ufo:has_part ?devTwo ;
             rt:has_event_type ?event_f_t .
+        # fixed IRIs with spaces to call SERVICE
+        BIND(iri(replace(str(?event_f_t), " ", "+")) as ?fixedEvent_f_t)
+        ?ft rt:has_event_type ?fixedEvent_f_t .
+        FILTER(?event_f_t = ?fixedEvent_f_t)
+
         # process of factor
         OPTIONAL{
             ?pft ufo:has_part ?ft;
                 rt:has_event_type ?process_f_t.
+            BIND(iri(replace(str(?process_f_t), " ", "+")) as ?fixedProcess_f_t)
+            ?pft rt:has_event_type ?fixedProcess_f_t.
+            FILTER(?process_f_t = ?fixedProcess_f_t)
         }
 
-        BIND(iri(replace(str(?event_f_t), " ", "+")) as ?fixedEvent_f_t)
-        BIND(iri(replace(str(?process_f_t), " ", "+")) as ?fixedProcess_f_t)
         OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedEvent_f_t rdfs:label ?factor_type_label. } }
         OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedProcess_f_t rdfs:label ?process_factor_label. } }
         ?devThree aso:has_factor [
@@ -49,19 +62,32 @@ SELECT * {
           ] .
 
         ?devThree a ?devThreeType .
+        # fixed IRIs with spaces to call SERVICE
         BIND(iri(replace(str(?devThreeType), " ", "+")) as ?fixedDevThreeType)
+        ?devThree a ?fixedDevThreeType .
+        FILTER(?devThreeType = ?fixedDevThreeType)
+
         SERVICE ?eventTypesRepository {?fixedDevThreeType a stamp:unsafe-event .}
 
         ?evt ufo:has_part ?devThree ;
           rt:has_event_type ?event_e_t .
+        # fixed IRIs with spaces to call SERVICE
+        BIND(iri(replace(str(?event_e_t), " ", "+")) as ?fixedEvent_e_t)
+        ?evt rt:has_event_type ?fixedEvent_e_t .
+        FILTER(?event_e_t = ?fixedEvent_e_t)
+
         OPTIONAL{
-          ?pevt ufo:has_part ?evt;
-            rt:has_event_type ?process_e_t.
+            ?pevt ufo:has_part ?evt;
+                rt:has_event_type ?process_e_t.
+            # fixed IRIs with spaces to call SERVICE
+            BIND(iri(replace(str(?process_e_t), " ", "+")) as ?fixedProcess_e_t)
+            ?pevt rt:has_event_type ?fixedProcess_e_t.
+            FILTER(?process_e_t = ?fixedProcess_e_t)
         }
         FILTER (?rt != aso:factor)
 
-        BIND(iri(replace(str(?event_e_t), " ", "+")) as ?fixedEvent_e_t)
-        BIND(iri(replace(str(?process_e_t), " ", "+")) as ?fixedProcess_e_t)
+
+
         OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedEvent_e_t rdfs:label ?event_type_label. } }
         OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedProcess_e_t rdfs:label ?process_event_label. } }
         OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }
@@ -77,21 +103,36 @@ SELECT * {
         ?ct rt:has_event_type ?central_type .
         ?ct ufo:has_part+ ?devOne .
         ?devOne a ?devOneType .
+        # fixed IRIs with spaces to call SERVICE
         BIND(iri(replace(str(?devOneType), " ", "+")) as ?fixedDevOneType)
+        ?devOne a ?fixedDevOneType .
+        FILTER(?devOneType = ?fixedDevOneType)
+
         SERVICE ?eventTypesRepository {?fixedDevOneType a stamp:unsafe-event. }
         ?devOne aso:has_factor* ?devTwo .
         ?devTwo a ?devTwoType .
+        # fixed IRIs with spaces to call SERVICE
         BIND(iri(replace(str(?devTwoType), " ", "+")) as ?fixedDevTwoType)
+        ?devTwo a ?fixedDevTwoType .
+        FILTER(?devTwoType = ?fixedDevTwoType)
+
         SERVICE ?eventTypesRepository {?fixedDevTwoType a stamp:unsafe-event.}
         ?et ufo:has_part ?devTwo ;
             rt:has_event_type ?event_e_t .
+        # fixed IRIs with spaces to call SERVICE
+        BIND(iri(replace(str(?event_e_t), " ", "+")) as ?fixedEvent_e_t)
+        ?et rt:has_event_type ?fixedEvent_e_t .
+        FILTER(?event_e_t = ?fixedEvent_e_t)
+
         # process of factor
         OPTIONAL{
             ?pet ufo:has_part ?et;
                 rt:has_event_type ?process_e_t.
+            # fixed IRIs with spaces to call SERVICE
+            BIND(iri(replace(str(?process_e_t), " ", "+")) as ?fixedProcess_e_t)
+            ?pet rt:has_event_type ?fixedProcess_e_t.
+            FILTER(?process_e_t = ?fixedProcess_e_t)
         }
-        BIND(iri(replace(str(?event_e_t), " ", "+")) as ?fixedEvent_e_t)
-        BIND(iri(replace(str(?process_e_t), " ", "+")) as ?fixedProcess_e_t)
         OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedEvent_e_t rdfs:label ?event_type_label. } }
         OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedProcess_e_t rdfs:label ?process_event_label. } }
         OPTIONAL {
@@ -101,18 +142,29 @@ SELECT * {
                         ] .
 
             ?devThree a ?devThreeType .
+            # fixed IRIs with spaces to call SERVICE
             BIND(iri(replace(str(?devThreeType), " ", "+")) as ?fixedDevThreeType)
+            ?devThree a ?devThreeType .
+            FILTER(?devThreeType = ?fixedDevThreeType)
+
       		SERVICE ?eventTypesRepository {?fixedDevThreeType a stamp:unsafe-event .}
             ?evt ufo:has_part ?devThree ;
                 rt:has_event_type ?event_f_t .
+            # fixed IRIs with spaces to call SERVICE
+            BIND(iri(replace(str(?event_f_t), " ", "+")) as ?fixedEvent_f_t)
+            ?evt rt:has_event_type ?fixedEvent_f_t .
+            FILTER(?event_f_t = ?fixedEvent_f_t)
+
             OPTIONAL{
                 ?pevt ufo:has_part ?evt;
                     rt:has_event_type ?process_f_t.
+                # fixed IRIs with spaces to call SERVICE
+                BIND(iri(replace(str(?process_f_t), " ", "+")) as ?fixedProcess_f_t)
+                ?pevt rt:has_event_type ?fixedProcess_f_t.
+                FILTER(?process_f_t = ?fixedProcess_f_t )
             }
 
             FILTER (?rt != aso:factor)
-            BIND(iri(replace(str(?event_f_t), " ", "+")) as ?fixedEvent_f_t)
-            BIND(iri(replace(str(?process_f_t), " ", "+")) as ?fixedProcess_f_t)
             OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedEvent_f_t rdfs:label ?factor_type_label. } }
             OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?fixedProcess_f_t rdfs:label ?process_factor_label. } }
             OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }

@@ -70,9 +70,11 @@ class EventtypeGraph extends React.Component {
 
                 if (et && ft) {
                     ft = GraphUtils.addNode(item.factor_type, nodes,maxNodeHolder);
-                    nodes[ft - 1].title = nodes[ft - 1].title + " in " + item.process_factor_label;
+                    if(item.process_factor_label)
+                        nodes[ft - 1].title = nodes[ft - 1].title + " in " + item.process_factor_label;
                     et = GraphUtils.addNode(item.event_type, nodes);
-                    nodes[et - 1].title = nodes[et - 1].title + " in " + item.process_event_label;
+                    if(item.process_event_label)
+                        nodes[et - 1].title = nodes[et - 1].title + " in " + item.process_event_label;
                     GraphUtils.addEdge(ft, et, item.relation_type, item.count, fromToCount, edges,maxNodeHolder);
                 }
             });
