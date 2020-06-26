@@ -20,15 +20,10 @@ SELECT ?controlled_process ?process_type_iri (COUNT(*) AS ?count) {
               ufo:has_part+ ?et .
   ?et a ufo:Event ;
        rt:has_event_type ?process_type_iri .
-  # Fix problems with IRIs with space used in SERVICE
-  BIND(IRI(replace(str(?process_type_iri), " ","+")) as ?fixed_process_type_iri)
-  ?et rt:has_event_type ?fixed_process_type_iri .
-  FILTER(?fixed_process_type_iri = ?process_type_iri )
-  SERVICE ?eventTypesRepository{
-    ?fixed_process_type_iri a stamp:controlled-process-type.
-    OPTIONAL{
-        ?fixed_process_type_iri rdfs:label ?controlled_process .
-    }
+
+  SERVICE SILENT ?eventTypesRepository{
+    ?process_type_iri a stamp:controlled-process-type.
+    OPTIONAL{?process_type_iri rdfs:label ?controlled_process .}
   }
 }
 GROUP BY ?controlled_process ?process_type_iri
