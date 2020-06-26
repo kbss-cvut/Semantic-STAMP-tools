@@ -58,7 +58,8 @@ const Factors = React.createClass({
             currentFactor: null,
             factorTypeOptions: JsonLdUtils.processSelectOptions(OptionsStore.getOptions('factorType')),
             showDeleteLinkDialog: false,
-            lossEvent: null
+            lossEvent: null,
+            factorGraphFullScreen: false
         }
     },
 
@@ -134,11 +135,17 @@ const Factors = React.createClass({
             this.renderFactors(data);
         } else if (type === Constants.OPTIONS.FACTOR_TYPE) {
             this.setState({factorTypeOptions: JsonLdUtils.processSelectOptions(data)});
+        } else if(type === Constants.OPTIONS.LOSS_EVENT_TYPE) {
+            let loss_event = this.getLossEventReferenceId();
+            if(loss_event.statement.eventType === loss_event.text){
+                this.renderFactors(data, true);
+                this.forceUpdate();
+            }
         }
     },
 
-    renderFactors: function (eventTypes) {
-        if (this.factorsRendered) {
+    renderFactors: function (eventTypes, forceRender) {
+        if (this.factorsRendered && !forceRender) {
             return;
         }
         this.factorsRendered = true;
@@ -360,9 +367,15 @@ const Factors = React.createClass({
         return FactorJsonSerializer.getFactorGraph(this.props.report);
     },
 
+    resizeFactorsGraph: function(){
+        console.log('Resizing factors graph');
+        this.setState({factorGraphFullScreen: !state.factorGraphFullScreen })
+    },
+
 
     render: function () {
-        return <Panel header={<h5>{this.i18n('factors.panel-title')}</h5>} bsStyle='info'>
+        // this.ganttController.toggleFullScreen(this.state.factorGraphFullScreen);
+        return <Panel header={this._renderPanelHeader()} bsStyle='info'>
             {this.renderFactorDetailDialog()}
             {this.renderLinkTypeDialog()}
             {this.renderDeleteLinkDialog()}
@@ -380,6 +393,10 @@ const Factors = React.createClass({
                 </div>
             </div>
         </Panel>;
+    },
+
+    _renderPanelHeader : function(){
+        return <h5>{this.i18n('factors.panel-title')} <Button onClick={this.resizeFactorsGraph}>resize</Button></h5>
     },
 
     _renderScaleOptions: function () {
