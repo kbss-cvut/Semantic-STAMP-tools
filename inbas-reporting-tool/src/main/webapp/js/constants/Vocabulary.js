@@ -33,5 +33,8 @@ module.exports = {
     FLOW_CONTROL_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/bpmn/flow-control-event-type',
     START_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/bpmn/process-start',
     END_EVENT_TYPE: 'http://onto.fel.cvut.cz/ontologies/bpmn/process-end',
-    INTERMEDIATE_EVENT: 'http://onto.fel.cvut.cz/ontologies/bpmn/intermediate-event'
+    INTERMEDIATE_EVENT: 'http://onto.fel.cvut.cz/ontologies/bpmn/intermediate-event',
+    CONTROLLER_TYPE: 'http://onto.fel.cvut.cz/ontologies/stamp/controller',
+    CONTROLLER_PERSON: 'http://onto.fel.cvut.cz/ontologies/stamp/controller-type',
+    CONTROLLER_GROUP: 'http://onto.fel.cvut.cz/ontologies/stamp/people-group'
 };

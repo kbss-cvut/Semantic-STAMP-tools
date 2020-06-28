@@ -19,7 +19,7 @@ import {
     Overlay,
     OverlayTrigger,
     Tooltip,
-    Alert
+    Alert, Row, Col
 } from "react-bootstrap";
 import DateTimePicker from "react-bootstrap-datetimepicker";
 import {FormattedMessage} from "react-intl";
@@ -69,9 +69,12 @@ class FactorDetail extends React.Component {
         const factor = props.factor;
         Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE_CONTROLLER);
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
+        let eventType = JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE)));
         this.state = {
             showDeleteDialog: false,
-            eventType: JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(factor.statement.eventType, OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE))),
+            eventType: eventType,
+            controllerType: null,
+            controllerOfEvent: null,
             startDate: factor.start_date.getTime(),
             duration: convertDurationToCurrentUnit(factor),
             statement: factor.statement,
@@ -80,6 +83,7 @@ class FactorDetail extends React.Component {
             showMask: false,
             maskMessage: null
         };
+
     }
 
     onDeleteClick = () => {
@@ -88,11 +92,14 @@ class FactorDetail extends React.Component {
 
     _onOptionsLoaded = () => {
         let controllersOfActions = OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE_CONTROLLER);
+        let newState = {controllersOfActions : controllersOfActions};
         if(controllersOfActions && controllersOfActions.length > 0){
-            this.setState({controllersOfActions : controllersOfActions})
+            let controllerOfEvent = this.getControllerOfEvent(this.state.eventType, controllersOfActions);
+            newState.controllerOfEvent = controllerOfEvent;
+            this.setState(newState)
             this.unsubscribe();
         }
-    }
+    };
 
     onDeleteFactor = () => {
         this.setState({showDeleteDialog: false});
@@ -120,7 +127,10 @@ class FactorDetail extends React.Component {
     };
 
     onEventTypeChange = (option) => {
-        this.setState({eventType: option});
+        let newState = {eventType: option};
+        let controllerOfEvent = this.getControllerOfEvent(option);
+        newState.controllerOfEvent = controllerOfEvent;
+        this.setState(newState);
     };
 
     onControllerChange = (option) => {
@@ -152,6 +162,34 @@ class FactorDetail extends React.Component {
         }
         return false;
         // return controller ? node.id === controller.id : true;
+    };
+
+    getControllerOfEvent = (event, controllersOfActions) => {
+        let ca = controllersOfActions ? controllersOfActions : this.state.controllersOfActions;
+        if(!ca || !event)
+            return;
+
+        let found = ca.filter((e) => e['@id'] === event.id );
+        if(found.length > 0 && found[0][Vocabulary.HAS_PARTICIPANT]){
+            let controller = found[0][Vocabulary.HAS_PARTICIPANT]['@id'];
+            controller = JsonLdUtils.jsonLdToTypeaheadOption(ObjectTypeResolver.resolveType(controller, OptionsStore.getOptions(Constants.OPTIONS.CONTROLLER_TYPE)));
+            if(controller) {
+                let types = controller.type;
+                if(types){
+                    controller.type = Vocabulary.CONTROLLER_TYPE;
+                    if(types.length && types.length > 1){
+                        controller.types = types.filter(t => t !== Vocabulary.CONTROLLER_TYPE)
+                    }
+                }
+            }else{
+                controller = {
+                    id: found[0][Vocabulary.HAS_PARTICIPANT]['@id'],
+                    type: Vocabulary.CONTROLLER_TYPE,
+                    name: 'Unnamed Controller'
+                };
+            }
+            return controller;
+        }
     };
 
     filterEventTypes = (n) => {
@@ -309,38 +347,56 @@ class FactorDetail extends React.Component {
     _renderEventTypeChoosers() {
         const eventTypeLabel = this.props.factor.text,
             eventTypeBadge = this.renderFactorTypeIcon(),
+            controllerBlankBadge = this.renderEmptyControllerIcon(),
+            controllerBadge = this.renderControllerIcon(),
             eventTypeClassNames = classNames({
                 'col-xs-12': !this.state.eventType,
                 'col-xs-11': this.state.eventType,
                 'col-xs-10': this.state.eventType && eventTypeBadge
-            });
+            }),
+            controllerOfEventIri = this.state.controllerOfEvent ? this.state.controllerOfEvent.id : null,
+            controllerOfEventLabel = this.state.controllerOfEvent ? this.state.controllerOfEvent.name : '';
 
         // Modal body is given ref so that it is accessible in tests. See
         // https://github.com/react-bootstrap/react-bootstrap/issues/966
         return <div>
             <Tabs activeKey={this.state.activeTab} onSelect={this.handleSelect} id="tabs1">
                 <Tab eventKey={1} title={"Tree select"}>
-                    <div className={eventTypeClassNames}>
-                        <TreeSelect
-                                    nodeType={Constants.OPTIONS.CONTROLLER_TYPE}
-                                    edgeType={Constants.OPTIONS.CONTROLLER_PART_WHOLE_RELATION}
-                                    // disabled={this.props.disabledTypeSelection}
-                                    label={this.i18n('factors.detail.controller')} onSelect={this.onControllerChange}/>
-                    </div>
-                    <div className={eventTypeClassNames}>
-                        <TreeSelect value={eventTypeLabel} from={this.props.fromEventType}
-                                    arg={this.state.controllerType}
-                                    matcher={this.matcherByController}
-                                    nodeType={Constants.OPTIONS.EVENT_TYPE}
-                                    edgeType={Constants.OPTIONS.EVENT_TYPE_PART_WHOLE_RELATION}
-                                    filterNodes={this.filterEventTypes}
-                                    disabled={this.props.disabledTypeSelection}
-                                    label={this.i18n('factors.detail.type')} onSelect={this.onEventTypeChange}/>
-                    </div>
-                    {eventTypeBadge}
+                    <Row>
+                        {controllerBlankBadge}
+                        <div className={eventTypeClassNames}>
+                            <TreeSelect
+                                        nodeType={Constants.OPTIONS.CONTROLLER_TYPE}
+                                        edgeType={Constants.OPTIONS.CONTROLLER_PART_WHOLE_RELATION}
+                                        // disabled={this.props.disabledTypeSelection}
+                                        label={this.i18n('factors.detail.controller')} onSelect={this.onControllerChange}/>
+                        </div>
+                    </Row>
+                    <Row>
+                        {controllerBadge ? controllerBadge : controllerBlankBadge}
+                        <div className='col-xs-11 col-xs-10' style={{marginTop : '27px', background: '#eee'}}>
+                            <ControlLabel>{controllerOfEventLabel ? 'Controller of event :' : 'Controller not assigned' }</ControlLabel> {controllerOfEventLabel}
+                        </div>
+                        {this._renderControllerOfEventLink()}
+                    </Row>
+                    <Row >
+                        {eventTypeBadge}
+                        <div className={eventTypeClassNames}>
+                            <TreeSelect value={eventTypeLabel} from={this.props.fromEventType}
+                                        arg={this.state.controllerType}
+                                        matcher={this.matcherByController}
+                                        nodeType={Constants.OPTIONS.EVENT_TYPE}
+                                        edgeType={Constants.OPTIONS.EVENT_TYPE_PART_WHOLE_RELATION}
+                                        filterNodes={this.filterEventTypes}
+                                        disabled={this.props.disabledTypeSelection}
+                                        label={this.i18n('factors.detail.type')} onSelect={this.onEventTypeChange}/>
+
+                        </div>
+                        {this._renderEventTypeLink()}
+                    </Row>
                 </Tab>
                 <Tab eventKey={2} title={"Simple select"}>
-                    <div className='row'>
+                    <Row>
                         {eventTypeBadge}
                         <div className={eventTypeClassNames}>
                             <EventTypeTypeahead placeholder={this.i18n('factors.detail.type-placeholder')}
@@ -349,10 +405,11 @@ class FactorDetail extends React.Component {
                                                 disabled={this.props.disabledTypeSelection}
                                                 onSelect={this.onEventTypeChange} focus={true}/>
                         </div>
-                    </div>
+                        {this._renderEventTypeLink()}
+                    </Row>
                 </Tab>
             </Tabs>
-            {this._renderEventTypeLink()}
+
         </div>;
     }
 
@@ -418,8 +475,37 @@ class FactorDetail extends React.Component {
             </div> : null;
     }
 
+    renderEmptyControllerIcon(){
+        const type = this.state.eventType;
+        if (!type) {
+            return null;
+        }
+        let styleInfo = FactorStyleInfo.getStyleInfo(type.type);
+        return styleInfo.value ? <div className='col-xs-1'/>: null;
+    }
+
+    renderControllerIcon(){
+        const type = this.state.controllerOfEvent;
+        if (!type) {
+            return null;
+        }
+        let styleInfo = FactorStyleInfo.getStyleInfo(type.type);
+        return styleInfo.value ? <div className='col-xs-1'>
+            <Label bsStyle={styleInfo.bsStyle} title={styleInfo.title}
+                   className='event-type-label'>{styleInfo.value}</Label>
+        </div>: null;
+    }
+
     _renderEventTypeLink() {
         const et = this.state.eventType;
+        return et ?
+            <div className='external-link-container'>
+                <ExternalLink url={et.id} title={et.name + '\n' + et.id} className='external-link'/>
+            </div> : null;
+    }
+
+    _renderControllerOfEventLink(){
+        const et = this.state.controllerOfEvent;
         return et ?
             <div className='external-link-container'>
                 <ExternalLink url={et.id} title={et.name + '\n' + et.id} className='external-link'/>

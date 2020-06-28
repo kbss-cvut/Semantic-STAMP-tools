@@ -68,6 +68,13 @@ var FactorStyleInfo = {
                     ganttCls: 'loss-event-type',
                     title: 'Loss event type'
                 };
+            case Vocabulary.CONTROLLER_TYPE:
+                return {
+                    value: 'CT',
+                    bsStyle: 'default',
+                    ganttCls: 'loss-event-type',
+                    title: 'Controller type'
+                };
             default:
                 return {
                     ganttCls: 'factor-event-type'

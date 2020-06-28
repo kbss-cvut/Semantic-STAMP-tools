@@ -7,6 +7,7 @@ class JsonLDUtils {
         nodes.forEach((n) => {
             let node = {
                 id: n['@id'],
+                type: n['@type'],
                 name: n[Vocabulary.RDFS_LABEL],
                 toggled: false,
             };

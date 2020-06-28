@@ -12,7 +12,7 @@ export default {
         }
     },
     searchBox: {
-        padding: '20px 20px 0 20px'
+        padding: '0px 0px 0 0px'
     },
     viewer: {
         base: {
