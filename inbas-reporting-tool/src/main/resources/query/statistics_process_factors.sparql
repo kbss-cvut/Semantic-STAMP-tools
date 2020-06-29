@@ -9,7 +9,6 @@ PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
 
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 
-#SELECT ?event_type ?factor_type ?relation_type ?process_event_label ?process_factor_label {
 SELECT * {
     {   # This branch takes care of event of which the central_type is a factor
         ?report doc:documents ?occurrence .
@@ -35,10 +34,8 @@ SELECT * {
         OPTIONAL{
             ?pft ufo:has_part ?ft;
                 rt:has_event_type ?process_f_t.
-                OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?process_f_t rdfs:label ?process_factor_label. }}
         }
 
-        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_f_t rdfs:label ?factor_type_label. }}
         ?devThree aso:has_factor [
             a aso:factor;
             a ?rt ;
@@ -51,18 +48,12 @@ SELECT * {
 
         ?evt ufo:has_part ?devThree ;
           rt:has_event_type ?event_e_t .
-        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_e_t rdfs:label ?event_type_label.}}
 
         OPTIONAL{
             ?pevt ufo:has_part ?evt;
                 rt:has_event_type ?process_e_t.
-            OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?process_e_t rdfs:label ?process_event_label. }}
         }
         FILTER (?rt != aso:factor)
-
-#        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_e_t rdfs:label ?event_type_label. }}
-#        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?process_e_t rdfs:label ?process_event_label. }}
-#        OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }
     }
     UNION
     {   # This branch takes care of factors of the central_type
@@ -85,13 +76,11 @@ SELECT * {
 
         ?et ufo:has_part ?devTwo ;
             rt:has_event_type ?event_e_t .
-        OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?event_e_t rdfs:label ?event_type_label.}}
 
         # process of factor
         OPTIONAL{
             ?pet ufo:has_part ?et;
                 rt:has_event_type ?process_e_t.
-            OPTIONAL { SERVICE SILENT ?eventTypesRepository {?process_e_t rdfs:label ?process_event_label. }}
         }
 
 
@@ -107,23 +96,19 @@ SELECT * {
       		SERVICE ?eventTypesRepository {?devThreeType a stamp:unsafe-event .}
             ?evt ufo:has_part ?devThree ;
                 rt:has_event_type ?event_f_t .
-            OPTIONAL { SERVICE SILENT ?eventTypesRepository {  ?event_f_t rdfs:label ?factor_type_label. }}
             OPTIONAL{
                 ?pevt ufo:has_part ?evt;
                     rt:has_event_type ?process_f_t.
-                OPTIONAL { SERVICE SILENT ?eventTypesRepository { ?process_f_t rdfs:label ?process_factor_label. }}
             }
 
             FILTER (?rt != aso:factor)
-
-
-#            OPTIONAL { SERVICE SILENT er:inbas-model-2016-01-21:22-46-17 { ?rt rdfs:label ?relation_type_label . } }
         }
     }
 
-    BIND(replace(str(COALESCE(?rt, 'NONE')), "^.+/([^/]+)$", '$1') as ?relation_type_label)
 
-    BIND(COALESCE(?event_type_label,?event_e_t,"NONE") AS ?event_type)
-    BIND(COALESCE(?factor_type_label,?event_f_t,"NONE") AS ?factor_type)
-    BIND(COALESCE(?relation_type_label,?rt,"NONE") AS ?relation_type)
+    BIND(COALESCE(?event_e_t,"NONE") AS ?event_type)
+    BIND(COALESCE(?event_f_t,"NONE") AS ?factor_type)
+    BIND(COALESCE(?process_e_t,"NONE") AS ?process_event_type)
+    BIND(COALESCE(?process_f_t,"NONE") AS ?process_factor_type)
+    BIND(COALESCE(?rt,"NONE") AS ?relation_type)
 }
