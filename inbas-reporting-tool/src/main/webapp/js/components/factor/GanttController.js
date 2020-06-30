@@ -178,6 +178,10 @@ const GanttController = {
         gantt.attachEvent('onLinkDblClick', this.onDeleteLink.bind(me));
     },
 
+    _reinit: function(){
+        gantt.init('factors_gantt');
+    },
+
     createFactor(factor){
         factor.isNew = true;
         factor.text = '';

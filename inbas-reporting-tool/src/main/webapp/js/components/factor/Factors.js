@@ -40,6 +40,7 @@ const Factors = React.createClass({
 
     ganttController: null,
     factorReferenceIdCounter: 0,
+    changeingSize: false,
 
     getDefaultProps: function () {
         return {
@@ -71,6 +72,10 @@ const Factors = React.createClass({
                 this.renderFactors(OptionsStore.getOptions(Constants.OPTIONS.EVENT_TYPE));
             } else
                 this.ganttController.updateRootEvent(this.props.report[this.props.rootAttribute]);
+        }
+        if(this.changeingSize){
+            this.changeingSize = false;
+            this.ganttController._reinit();
         }
     },
 
@@ -368,18 +373,21 @@ const Factors = React.createClass({
     },
 
     resizeFactorsGraph: function(){
-        console.log('Resizing factors graph');
-        this.setState({factorGraphFullScreen: !state.factorGraphFullScreen })
+        this.setState({factorGraphFullScreen: !this.state.factorGraphFullScreen});
+        this.changeingSize = true;
     },
 
 
     render: function () {
-        // this.ganttController.toggleFullScreen(this.state.factorGraphFullScreen);
+        const factors_gantt_style ={
+            height: this.state.factorGraphFullScreen ? '1000px' : '350px',
+            width: '100%'
+        };
         return <Panel header={this._renderPanelHeader()} bsStyle='info'>
             {this.renderFactorDetailDialog()}
             {this.renderLinkTypeDialog()}
             {this.renderDeleteLinkDialog()}
-            <div id='factors_gantt' className='factors-gantt'/>
+            <div id='factors_gantt' className='factors-gantt' style={factors_gantt_style}/>
             <div className='gantt-zoom'>
                 <div className='col-xs-5'>
                     <div className='col-xs-2 gantt-zoom-label bold'>{this.i18n('factors.scale')}:</div>
@@ -396,7 +404,9 @@ const Factors = React.createClass({
     },
 
     _renderPanelHeader : function(){
-        return <h5>{this.i18n('factors.panel-title')} <Button onClick={this.resizeFactorsGraph}>resize</Button></h5>
+        return <h5>{this.i18n('factors.panel-title')}
+            <Button onClick={this.resizeFactorsGraph} style={{float: 'right', padding:'2px', marginTop: '-3px'}}>resize</Button>
+        </h5>
     },
 
     _renderScaleOptions: function () {
