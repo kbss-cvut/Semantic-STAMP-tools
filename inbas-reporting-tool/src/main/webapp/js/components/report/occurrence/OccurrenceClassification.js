@@ -104,7 +104,7 @@ class OccurrenceClassification extends React.Component {
                            displayOption='name' options={this.state.occurrenceCategories}
                            customListComponent={EventTypeTypeaheadResultList}/>
             </div>
-            <div className='col-xs-4'>
+            <div className='col-xs-4' style={{width:'30%'}}>
                 <Typeahead name='lossEventType' label={this.i18n('report.loss.eventtype.label')}
                            ref={c => this.lossEventRef = c} formInputOption='id' optionsButton={true}
                            placeholder={this.i18n('report.loss.eventtype.label')}
@@ -148,7 +148,7 @@ class OccurrenceClassification extends React.Component {
     _renderCategoryLink() {
         const cat = this.props.report.occurrence.eventType;
         return cat ?
-            <div className='col-xs-1'><ExternalLink url={cat} title={this._resolveCategoryValue() + '\n' + cat}/>
+            <div className='col-xs-1' style={{width:'1%'}}><ExternalLink url={cat} title={this._resolveCategoryValue() + '\n' + cat}/>
             </div> : null;
     }
 }
