@@ -21,10 +21,12 @@ class EventtypeGraph extends React.Component {
         this.unsubscribe = OptionsStore.listen(this._onOptionsLoaded);
         Actions.loadOptions(Constants.OPTIONS.EVENT_TYPE);
         Actions.loadOptions(Constants.OPTIONS.FACTOR_TYPE);
+        Actions.loadOptions(Constants.OPTIONS.LOSS_EVENT_TYPE);
         this.state = {
             data: {},
             eventTypes: null,
             factorTypes: null,
+            lossEventTypes: null,
             labelMap: null,
             nodeColorMap: null,
             graphOptions: GraphOptions
@@ -32,19 +34,19 @@ class EventtypeGraph extends React.Component {
     }
 
     _onOptionsLoaded = (type, options) => {
-        let unsub = false;
         if(type === Constants.OPTIONS.EVENT_TYPE && options){
-            unsub = this.state.factorTypes;
             this.setState({eventTypes: options});
         }else if(type === Constants.OPTIONS.FACTOR_TYPE){
-            unsub = this.state.eventTypes;
             this.setState({factorTypes: options});
+        }else if(type === Constants.OPTIONS.LOSS_EVENT_TYPE){
+            this.setState({lossEventTypes: options});
         }
-        if(unsub)
+        if(this.state.eventTypes && this.state.factorTypes && this.state.lossEventTypes)
             this.unsubscribe();
     }
 
      load() {
+        const NO_PARENT_PROCESS =  "no parent process";
         if (this.props.eventTypeGraph) {
             const rowsAll = Utils.sparql2table(this.props.eventTypeGraph);
             // perform group by
@@ -74,8 +76,10 @@ class EventtypeGraph extends React.Component {
                     // .filter(x => x))
             ].forEach((val, i, arr) => nodeColorMap[val] = 'hsl(' + i*(360./arr.length) + ', 50%, 50%)');//"#ff0000"
 
+            // resolve labels of event types
             let labelMap = new Map();
-            [this.state.eventTypes, this.state.factorTypes].forEach(voc => voc.forEach(
+            [this.state.eventTypes, this.state.factorTypes, this.state.lossEventTypes]
+                .filter(f => f).forEach(voc => voc.forEach(
                 e =>
                     labelMap.set(
                         e['@id'],
@@ -95,26 +99,35 @@ class EventtypeGraph extends React.Component {
             rows.forEach((item) => {
                 let ft,et;
                 if (GraphUtils.validEventType(item.factor_type)) {
-                    ft = GraphUtils.addNode(labelMap.get(item.factor_type), nodes, maxNodeHolder)
+                    let l = labelMap.get(item.factor_type);
+                    ft = GraphUtils.addNode(l ? l : item.factor_type, nodes, maxNodeHolder)
                     nodes[ft - 1].process = item.process_factor_type;
                 }
 
                 if (GraphUtils.validEventType(item.event_type)) {
-                    et = GraphUtils.addNode(labelMap.get(item.event_type), nodes, maxNodeHolder);
+                    let l = labelMap.get(item.event_type);
+                    et = GraphUtils.addNode(l ? l : item.event_type, nodes, maxNodeHolder);
                     nodes[et - 1].process = item.process_event_type;
                 }
 
                 if (et && ft) {
-                    GraphUtils.addEdge(ft, et, labelMap.get(item.relation_type), item.count, fromToCount, edges,maxNodeHolder);
+                    let l = labelMap.get(item.relation_type);
+                    GraphUtils.addEdge(ft, et, l ? l : item.relation_type, item.count, fromToCount, edges,maxNodeHolder);
                 }
             });
             nodes.forEach(n => {
                 n.color = nodeColorMap[n.process];
-                let l = labelMap.get(n.process);
-                l = l ? l : n.process;
-                if(l)
-                    n.title = n.title + " in " + l;
-                legend[l] = n.color;
+                if(n.process === "NONE"){
+                    n.process = NO_PARENT_PROCESS;
+                    legend[NO_PARENT_PROCESS] = n.color;
+                }else {
+                    let l = labelMap.get(n.process);
+                    l = l ? l : n.process;
+                    if (l) {
+                        n.title = n.title + " in " + l;
+                        legend[l] = n.color;
+                    }
+                }
             });
 
 

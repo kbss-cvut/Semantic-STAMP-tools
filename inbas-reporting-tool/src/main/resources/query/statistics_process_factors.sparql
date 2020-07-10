@@ -6,6 +6,7 @@ PREFIX doc: <http://onto.fel.cvut.cz/ontologies/documentation/>
 PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
 PREFIX rt: <http://onto.fel.cvut.cz/ontologies/reporting-tool/>
 PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
+PREFIX ecc430: <http://onto.fel.cvut.cz/ontologies/eccairs/aviation-3.4.0.2/vl-a-430/>
 
 PREFIX er: <http://dev.inbas.cz/rdf4j-server/repositories/>
 
@@ -34,6 +35,7 @@ SELECT * {
         OPTIONAL{
             ?pft ufo:has_part ?ft;
                 rt:has_event_type ?process_f_t.
+                FILTER(?process_f_t != ecc430:v-24)
         }
 
         ?devThree aso:has_factor [
@@ -42,16 +44,19 @@ SELECT * {
             aso:has_factor ?devTwo
           ] .
 
-        ?devThree a ?devThreeType .
+        {
+            ?devThree a stamp:loss-event;
+                rt:has_event_type ?event_e_t.
+        }UNION{
+            FILTER NOT EXISTS {?devThree a stamp:loss-event.}
+            ?evt ufo:has_part ?devThree ;
+              rt:has_event_type ?event_e_t .
 
-        SERVICE ?eventTypesRepository {?devThreeType a stamp:unsafe-event .}
-
-        ?evt ufo:has_part ?devThree ;
-          rt:has_event_type ?event_e_t .
-
-        OPTIONAL{
-            ?pevt ufo:has_part ?evt;
-                rt:has_event_type ?process_e_t.
+            OPTIONAL{
+                ?pevt ufo:has_part ?evt;
+                    rt:has_event_type ?process_e_t.
+                    FILTER(?process_e_t != ecc430:v-24)
+            }
         }
         FILTER (?rt != aso:factor)
     }
@@ -81,6 +86,7 @@ SELECT * {
         OPTIONAL{
             ?pet ufo:has_part ?et;
                 rt:has_event_type ?process_e_t.
+                FILTER(?process_e_t != ecc430:v-24)
         }
 
 
@@ -91,14 +97,17 @@ SELECT * {
                             aso:has_factor ?devThree
                         ] .
 
-            ?devThree a ?devThreeType .
-
-      		SERVICE ?eventTypesRepository {?devThreeType a stamp:unsafe-event .}
-            ?evt ufo:has_part ?devThree ;
-                rt:has_event_type ?event_f_t .
-            OPTIONAL{
-                ?pevt ufo:has_part ?evt;
-                    rt:has_event_type ?process_f_t.
+            {
+                ?devThree a stamp:loss-event;
+                    rt:has_event_type ?event_f_t.
+            }UNION{
+                ?evt ufo:has_part ?devThree ;
+                    rt:has_event_type ?event_f_t .
+                OPTIONAL{
+                    ?pevt ufo:has_part ?evt;
+                        rt:has_event_type ?process_f_t.
+                        FILTER(?process_f_t != ecc430:v-24)
+                }
             }
 
             FILTER (?rt != aso:factor)
