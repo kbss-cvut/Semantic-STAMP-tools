@@ -95,7 +95,7 @@ class OccurrenceClassification extends React.Component {
                         value={report.severityAssessment} options={this._transformOccurrenceClasses()}
                         onChange={this.onChange}/>
             </div>
-            <div className='col-xs-4'>
+            <div className='col-xs-4' style={{width:'30%'}}>
                 <Typeahead name='occurrenceCategory' label={this.i18n('report.occurrence.category.label') + '*'}
                            ref={c => this.occurrenceCategory = c} formInputOption='id' optionsButton={true}
                            placeholder={this.i18n('report.occurrence.category.label')}
@@ -104,7 +104,8 @@ class OccurrenceClassification extends React.Component {
                            displayOption='name' options={this.state.occurrenceCategories}
                            customListComponent={EventTypeTypeaheadResultList}/>
             </div>
-            <div className='col-xs-4' style={{width:'30%'}}>
+            {this._renderCategoryLink()}
+            <div className='col-xs-4'>
                 <Typeahead name='lossEventType' label={this.i18n('report.loss.eventtype.label')}
                            ref={c => this.lossEventRef = c} formInputOption='id' optionsButton={true}
                            placeholder={this.i18n('report.loss.eventtype.label')}
@@ -113,7 +114,7 @@ class OccurrenceClassification extends React.Component {
                            displayOption='name' options={this.state.lossEventTypes}
                            customListComponent={EventTypeTypeaheadResultList}/>
             </div>
-            {this._renderCategoryLink()}
+
         </div>;
     }
 
