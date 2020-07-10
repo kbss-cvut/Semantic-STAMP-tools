@@ -6,3 +6,6 @@ pom.xml.next
 release.properties
 nbproject/
 lkpr-process-models/output/
+.idea/
+*.iml
+bin
