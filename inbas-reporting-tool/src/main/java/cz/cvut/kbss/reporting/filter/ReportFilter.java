@@ -15,6 +15,16 @@ import java.util.function.Function;
  */
 public abstract class ReportFilter {
 
+    protected boolean isGraphPatternFilter = false;
+
+    /**
+     * If true, the filter is rendered as graph pattern instead as a condition in a filter clause.
+     * @return
+     */
+    public boolean isGraphPatternFilter() {
+        return isGraphPatternFilter;
+    }
+
     /**
      * Translates this filter condition into a String insertable into a SPARQL query.
      *
@@ -44,6 +54,10 @@ public abstract class ReportFilter {
                 return Optional.of(new ReportKeyFilter(values));
             case PersonFilter.KEY:
                 return PersonFilter.create(values).map(Function.identity());
+            case LossEventTypeFilter.KEY:
+                return Optional.of(new LossEventTypeFilter(values));
+            case ContainsEventWithTypeFilter.KEY:
+                return Optional.of(new ContainsEventWithTypeFilter(values));
             default:
                 return Optional.empty();
         }

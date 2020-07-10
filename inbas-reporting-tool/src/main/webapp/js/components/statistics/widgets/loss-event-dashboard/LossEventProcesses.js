@@ -4,6 +4,7 @@ import {injectIntl} from "react-intl";
 import {Button, Table} from "react-bootstrap";
 import I18nWrapper from "../../../../i18n/I18nWrapper";
 import Utils from "../../Utils";
+import {Link} from "react-router";
 
 function stripProcessPrefix(label) {
     if (label.startsWith("process-")) {
@@ -40,7 +41,13 @@ const LossEventProcesses = props => {
                         })}>{stripProcessPrefix(row.controlled_process)}
                         </Button>
                     </td>
-                    <td className="content-center vertical-middle">{row.count}</td>
+                    <td className="content-center vertical-middle">
+                        <Link className={props.active ? "active-item" : undefined}
+                              to={"reports?eventType=" + row.process_type_iri}
+                              title={row.count}>
+                            {row.count}
+                        </Link>
+                    </td>
                 </tr>)}
                 </tbody>
             </Table>

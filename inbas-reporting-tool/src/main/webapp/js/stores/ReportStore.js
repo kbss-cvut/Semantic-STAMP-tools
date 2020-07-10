@@ -70,11 +70,17 @@ const ReportStore = Reflux.createStore({
         for (let i = 0, len = keys.length; i < len; i++) {
             url += (i === 0 ? '?' : '&') + 'key=' + keys[i];
         }
+        let i = window.location.hash.indexOf("?");
+        const otherParams = i > -1 ? '&' + window.location.hash.substring(i + 1) : '';
+        url = url + otherParams;
         return url;
     },
 
     _loadReportsPage: function (pageNo = 0) {
-        const url = BASE_URL + '?page=' + pageNo + '&size=' + Constants.LOADING_PAGE_SIZE;
+        let i = window.location.hash.indexOf("?");
+        const otherParams = i > -1 ? '&' + window.location.hash.substring(i + 1) : '';
+        const url = BASE_URL + '?page=' + pageNo + '&size=' + Constants.LOADING_PAGE_SIZE + otherParams;
+
         Ajax.get(url).end((data, resp) => {
             if (pageNo === 0) {
                 this._reports = data;

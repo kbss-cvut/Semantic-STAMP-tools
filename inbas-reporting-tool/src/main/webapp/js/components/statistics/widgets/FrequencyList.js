@@ -92,7 +92,8 @@ const FrequencyList = React.createClass({
     render() {
         const topList = this.state.rows.map(row => <FrequencyListRow key={row.key} row={row}
                                                                      active={this.props.activeItem === row.eventTypeIri}
-                                                                     onClick={this.props.onSelect}/>);
+                                                                     onClick={this.props.onSelect}
+                                                                     onClickCount={this.props.onClickCount}/>);
 
         return <div className="event-type-table">
             <Table striped bordered condensed hover>

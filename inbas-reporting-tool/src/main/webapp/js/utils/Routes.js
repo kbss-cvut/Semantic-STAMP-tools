@@ -6,6 +6,8 @@ module.exports = {
     register: {name: 'register', path: 'register'},
     dashboard: {name: 'dashboard', path: 'dashboard'},
     reports: {name: 'reports', path: 'reports'},
+    reportsWithLossEventType: {name: 'reportsWithLossEventType', path: 'reports?lossEventType=:lossEventType'},
+    reportsWithEventType: {name: 'reportsWithEventType', path: 'reports?eventType=:eventType'},
     statistics: {name: 'statistics', path: 'statistics'},
     createReport: {name: 'createReport', path: 'reports/create'},
     editReport: {name: 'editReport', path: 'reports/:reportKey'},

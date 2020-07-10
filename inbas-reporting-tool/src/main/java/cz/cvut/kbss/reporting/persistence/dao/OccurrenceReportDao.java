@@ -5,6 +5,7 @@ import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.reporting.filter.ReportFilter;
 import cz.cvut.kbss.reporting.model.Occurrence;
 import cz.cvut.kbss.reporting.model.OccurrenceReport;
+import cz.cvut.kbss.reporting.model.StampVocabulary;
 import cz.cvut.kbss.reporting.model.Vocabulary;
 import cz.cvut.kbss.reporting.persistence.util.OrphanRemover;
 import cz.cvut.kbss.reporting.service.event.InvalidateCacheEvent;
@@ -36,7 +37,8 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
             "OPTIONAL { ?x ?hasSeverity ?severity . }" +
             "OPTIONAL { ?x ?hasLastEditor ?lastEditor . }" +
             "OPTIONAL { ?x ?hasLastEditedDate ?lastModified . }" +
-            "?occurrence ?hasEventType ?occurrenceCategory ." +
+            "OPTIONAL { ?occurrence ?hasEventType ?occurrenceCategory }." +
+            "OPTIONAL { ?occurrence ?hasLossEventType ?lossEventType }." +
             "FILTER NOT EXISTS { " +
             "?y a ?type . " +
             "?x ?hasNext ?y . }" +
@@ -86,6 +88,7 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
                 .setParameter("hasNext", URI.create(Vocabulary.s_p_has_next_revision))
                 .setParameter("hasCreatedDate", URI.create(Vocabulary.s_p_created))
                 .setParameter("hasLastEditedDate", URI.create(Vocabulary.s_p_modified))
+                .setParameter("hasLossEventType", URI.create(StampVocabulary.s_p_contains_loss_event_of_type))
                 .setUntypedParameter("limit", pageSpec.getPageSize())
                 .setUntypedParameter("offset", pageSpec.getPageSize() * pageSpec.getPageNumber())
                 .getResultList();
@@ -96,11 +99,18 @@ public class OccurrenceReportDao extends BaseReportDao<OccurrenceReport>
 
     private String buildQuery(Collection<ReportFilter> filters) {
         final StringBuilder sb = new StringBuilder(SELECT);
+        List<ReportFilter> graphPatternFilters = filters.stream().filter(f -> f.isGraphPatternFilter()).collect(Collectors.toList());
+        List<ReportFilter> filterConditions = filters.stream().filter(f -> !f.isGraphPatternFilter()).collect(Collectors.toList());
+
         sb.append(WHERE_CONDITION);
-        if (!filters.isEmpty()) {
+        if (!graphPatternFilters.isEmpty()) {
+            sb.append(String.join("\n",
+                    graphPatternFilters.stream().map(ReportFilter::toQueryString).collect(Collectors.toList())));
+        }
+        if(!filterConditions.isEmpty()){
             sb.append(" FILTER (");
             sb.append(String.join(" && ",
-                    filters.stream().map(ReportFilter::toQueryString).collect(Collectors.toList())));
+                    filterConditions.stream().map(ReportFilter::toQueryString).collect(Collectors.toList())));
             sb.append(')');
         }
         sb.append(QUERY_TAIL);

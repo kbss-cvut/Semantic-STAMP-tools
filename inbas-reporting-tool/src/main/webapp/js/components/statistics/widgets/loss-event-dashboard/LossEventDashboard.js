@@ -33,6 +33,9 @@ class LossEventDashboard extends React.Component {
         this.setState({lossEvent: id, lossEventProcess: null, processFactors: null});
         Actions.loadStatistics("loss_event_processes", {loss_event: encodeURI(id)});
     }
+    onClickCount(lossEventTypeIri){
+        return "reports?lossEventType=" + lossEventTypeIri;
+    }
 
     onProcessSelect = (process) => {
         this.props.loadingOn();
@@ -59,6 +62,7 @@ class LossEventDashboard extends React.Component {
                     <div className="autoscroll" style={{maxHeight: "350px"}}>
                         <FrequencyList query="loss_events_top" allowZeros={true} activeItem={this.state.lossEvent}
                                        onSelect={(data) => this.onEventSelect(data)}
+                                       onClickCount={(data) => this.onClickCount(data)}
                                        loadingOn={this.props.loadingOn} loadingOff={this.props.loadingOff}/>
                     </div>
                     <LossEventProcesses data={this.state.lossEventProcesses}

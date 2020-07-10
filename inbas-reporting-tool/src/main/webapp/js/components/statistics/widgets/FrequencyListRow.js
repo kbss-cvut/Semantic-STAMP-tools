@@ -5,6 +5,7 @@ import injectIntl from "../../../utils/injectIntl";
 import {Line, LineChart, Tooltip, XAxis} from "recharts";
 import Utils from "../Utils";
 import {Button} from "react-bootstrap";
+import {Link} from "react-router";
 
 class FrequencyListRow extends React.Component {
 
@@ -22,6 +23,10 @@ class FrequencyListRow extends React.Component {
         this.props.onClick(this.props.row.eventTypeIri);
     };
 
+    onMouseClickCount = () => {
+        return this.props.onClickCount(this.props.row.eventTypeIri);
+    };
+
     render() {
         return <tr key={this.props.row.key}>
             <td>{!(this.props.onClick) ?
@@ -31,7 +36,14 @@ class FrequencyListRow extends React.Component {
                         title={this.props.row.eventTypeIri}>{this.props.row.eventType}
                 </Button>}
             </td>
-            <td className="content-center vertical-middle">{this.props.row.totalSum}</td>
+            <td className="content-center vertical-middle">
+                {!(this.props.onClickCount) ?
+                this.props.row.totalSum :
+                <Link className={this.props.active ? "active-item" : undefined}
+                        to={this.onMouseClickCount()}
+                        title={this.props.row.totalSum}>{this.props.row.totalSum}
+                </Link>}
+            </td>
             <td className="content-center vertical-middle"><LineChart width={100} height={30} data={this.props.row.data}>
                 <XAxis dataKey='date' hide={true} tickFormatter={Utils.getDateString}/>
                 <Line type='basis' dataKey='count' stroke='#8884d8' strokeWidth={2} dot={false}/>
