@@ -119,7 +119,7 @@ public class Utils {
         // find as resource
         f = getResourceAsFile(path);
 
-        return f.exists() ? f : null;
+        return f != null && f.exists() ? f : null;
     }
 
     public static File ensureDir(String dirName){
