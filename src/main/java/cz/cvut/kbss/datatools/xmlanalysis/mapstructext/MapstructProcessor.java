@@ -157,19 +157,22 @@ public class MapstructProcessor {
 
     /**
      * This method executes a transformer and makes sure to maintain the stack of transformer executions.
-     * This method is called trough the {@link DefaultMapper#transform} method and it should not be called directly.
+     *      * This method is called trough the {@link DefaultMapper#transform} method and it should not be called directly.
      * @param methodName
      * @param e
      * @param outClass
      * @param <T>
      * @return
      */
-    public <T extends Identifiable> T transform(String methodName, Object e, Class<T> outClass){
+    public <T extends Identifiable> List<T> transform(String methodName, Object e, Class<T> outClass){
         Method declarationMethod = MethodUtils.getMatchingMethod(mapperDeclarationClass, methodName, e.getClass()); // Vulnerable : Will it work if e is proxied for some reason?
         if(declarationMethod == null)
             return null;
         Transformer t = getTransformer(declarationMethod);
-        return (T)transform(e, Arrays.asList(t));
+        return (List<T>) Optional.ofNullable(transform(e, Arrays.asList(t))).orElse(Collections.EMPTY_LIST)
+                .stream()
+                .map(o -> (T)o)
+                .collect(Collectors.toList());
 //        if(t == null){
 //            return null;
 //        }

@@ -93,6 +93,19 @@ public interface DefaultMapper<T> {
      * @return
      */
     default <T extends Identifiable> T transform(String methodName, BaseXMLEntity e, Class<T> outClass){
+        List<T> transformed = getProcessorContext().getMapstructProcessor().transform(methodName, e, outClass);
+        if(transformed.isEmpty()){
+            return null;
+        }
+        if(transformed.size() > 1){
+            throw new RuntimeException(String.format("expected transformation \"%s.%s\"to produce 1 object, instead it produced %d",
+                    this.getClass().getCanonicalName(), methodName, transformed.size()));
+        }
+        return transformed.get(0);
+    }
+
+
+    default <T extends Identifiable> List<T> transformToList(String methodName, BaseXMLEntity e, Class<T> outClass){
         return getProcessorContext().getMapstructProcessor().transform(methodName, e, outClass);
     }
 
