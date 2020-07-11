@@ -29,23 +29,23 @@ public abstract class AbstractProcessModelExporter<T> {
     }
 
 
-    public void processFile(String filePath, String outputDir){
+    public void processFile(String filePath, String outputFile){
         config();
         File f = new File(filePath);
-        if(outputDir != null){
-            File tmp = new File(outputDir);
-            if(tmp.exists() && tmp.isDirectory())
-                this.outputDir = tmp;
-            else
-                outputFile = tmp;
-        }else{
-            this.outputDir = new File(".");
+        if(outputFile != null) {
+            this.outputFile = new File(outputFile);
         }
-        if(outputFile == null)
-            outputFile = Utils.getOutputFileSmart(f, this.outputDir);
+
+        if(this.outputFile == null)
+            this.outputFile = Utils.getOutputFileSmart(f, new File("."));
+
+        this.outputDir = this.outputFile.getParentFile();
+        if(this.outputDir != null && !this.outputDir.exists()){
+            this.outputDir.mkdirs();
+        }
 
         initBMPMProcessor();
-        LOG.info("cconverter [{}] - converting bpmn to rdf, from \"{}\" out \"{}\"", getProcessorName(), filePath, outputFile);
+        LOG.info("cconverter [{}] - converting bpmn to rdf, from \"{}\" out \"{}\"", getProcessorName(), filePath, this.outputFile);
         bpmProcessor.resetRegistry();
         File file = new File(filePath);
         process(file);
