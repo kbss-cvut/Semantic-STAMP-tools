@@ -120,7 +120,7 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
         // add controller parts from activities of the process associated with the pool
         WorkflowProcess workflowProcess = in.getProcess();
         Set<String> subControllers = getAndInit(out::getSubGroups, out::setSubGroups);
-        if(workflowProcess != null) {
+        if(workflowProcess != null && workflowProcess.getActivities() != null) {
 //        Package p = in.getFirstAncestor(Package.class);
 //        List<WorkflowProcess> processes = p.getProcesses();
 //        Set<String> subControllers = getAndInit(out::getSubGroups, out::setSubGroups);
@@ -275,7 +275,7 @@ public interface BizagiDiagPackage extends DefaultMapper<BaseEntity> {
         }
 
         ElementAttributeValues attrs = in.getElementAttributeValues();
-        if(attrs == null)
+        if(attrs == null || attrs.getAttributeValueList() == null)
             return;
         List<AttributeValue> attributeValues = attrs.getAttributeValueList().stream()
                 .filter(av -> Optional.ofNullable(av)
