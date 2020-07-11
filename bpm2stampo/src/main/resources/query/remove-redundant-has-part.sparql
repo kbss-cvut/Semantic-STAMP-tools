@@ -1,0 +1,14 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
+PREFIX bpmn: <http://onto.fel.cvut.cz/ontologies/bpmn/>
+
+DELETE{
+  ?e stamp:has-control-structure-element-part ?ce.
+} WHERE {
+  ?e a ufo:event-type.
+  ?e stamp:has-control-structure-element-part ?ce.
+  ?e stamp:has-control-structure-element-part/stamp:has-control-structure-element-part+ ?ce.
+  ?ce a ufo:event-type.
+}

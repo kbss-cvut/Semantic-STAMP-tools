@@ -1,0 +1,19 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX ufo: <http://onto.fel.cvut.cz/ontologies/ufo/>
+PREFIX stamp: <http://onto.fel.cvut.cz/ontologies/stamp/>
+PREFIX bpmn: <http://onto.fel.cvut.cz/ontologies/bpmn/>
+
+DELETE{
+  ?p stamp:has-control-structure-element-part ?n;
+}INSERT{
+  ?p2 stamp:has-control-structure-element-part ?n;
+} WHERE {
+  ?p stamp:has-control-structure-element-part ?n.
+  ?p stamp:has-control-structure-element-part+ ?p2.
+  ?n a stamp:next;
+    stamp:from-structure-component ?from;
+    stamp:to-structure-component ?to.
+  ?p2 stamp:has-control-structure-element-part ?from.
+  ?p2 stamp:has-control-structure-element-part ?to.
+}
