@@ -353,6 +353,9 @@ public abstract class BaseGMLRenderer<T extends GraphMLBuilder> implements IGrap
                         );
                 return false;
             }
+            if(from.getNodeType() == null || to.getNodeType() == null)
+                return false;
+
             return render(from, to);
         }
 
