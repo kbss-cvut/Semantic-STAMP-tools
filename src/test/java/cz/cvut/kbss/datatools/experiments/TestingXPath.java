@@ -1,8 +1,8 @@
 package cz.cvut.kbss.datatools.experiments;
 
-import cz.cvut.kbss.datatools.xmlanalysis.XMLProcessor;
-import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
-import cz.cvut.kbss.datatools.xmlanalysis.common.XMLCollections;
+import cz.cvut.kbss.datatools.bpm2stampo.XMLProcessor;
+import cz.cvut.kbss.datatools.bpm2stampo.common.Utils;
+import cz.cvut.kbss.datatools.bpm2stampo.common.XMLCollections;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Function;
 
-import static cz.cvut.kbss.datatools.xmlanalysis.common.XPathUtils.ExtractStr;
+import static cz.cvut.kbss.datatools.bpm2stampo.common.XPathUtils.ExtractStr;
 
 public class TestingXPath {
 

@@ -1,7 +1,7 @@
 package cz.cvut.kbss.datatools.csat.bizagi;
 
 
-import cz.cvut.kbss.datatools.xmlanalysis.XMLAnalyzer;
+import cz.cvut.kbss.datatools.bpm2stampo.XMLAnalyzer;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
