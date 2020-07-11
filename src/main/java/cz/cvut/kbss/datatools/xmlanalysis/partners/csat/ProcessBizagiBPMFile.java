@@ -291,6 +291,9 @@ public class ProcessBizagiBPMFile extends AbstractProcessModelExporter<BizagiDia
             this.zipFile = zipFile;
         }
 
+        public BizagiBPMPackageXMLStreamer(File file) throws IOException {
+            zipFile = new ZipFile(file);
+        }
         public BizagiBPMPackageXMLStreamer(String fileName) throws IOException {
             zipFile = new ZipFile(fileName);
         }

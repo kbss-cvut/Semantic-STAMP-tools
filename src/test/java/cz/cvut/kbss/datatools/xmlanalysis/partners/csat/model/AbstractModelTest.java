@@ -1,5 +1,6 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners.csat.model;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
 import cz.cvut.kbss.datatools.xmlanalysis.partners.csat.ProcessBizagiBPMFile;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.BPMProcessor;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.InputXmlStream;
@@ -29,7 +30,7 @@ public class AbstractModelTest {
 
     public static List<JAXBUtils.UnmarshledResult> unmarshalXMLFiles(BPMProcessor bpmProcessor) throws IOException{
         List<InputXmlStream> inputXmls = new ProcessBizagiBPMFile
-                .BizagiBPMPackageXMLStreamer("csat-process-models/bizagi-process-models/example-model-1.bpm")
+                .BizagiBPMPackageXMLStreamer(Utils.getResourceAsFile("/bizagi/example-model-1.bpm"))
                 .streamSourceFiles().findFirst().get();
 
 

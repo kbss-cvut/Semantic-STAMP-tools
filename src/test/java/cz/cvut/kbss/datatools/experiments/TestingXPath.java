@@ -3,6 +3,7 @@ package cz.cvut.kbss.datatools.experiments;
 import cz.cvut.kbss.datatools.xmlanalysis.XMLProcessor;
 import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
 import cz.cvut.kbss.datatools.xmlanalysis.common.XMLCollections;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.w3c.dom.NodeList;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -23,7 +25,7 @@ import static cz.cvut.kbss.datatools.xmlanalysis.common.XPathUtils.ExtractStr;
 public class TestingXPath {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestingXPath.class);
-
+    @Ignore
     @Test
     public void experiment2(){
         IntToIntFunc f = i -> i + 1;
@@ -37,7 +39,7 @@ public class TestingXPath {
     }
 
     public static interface IntToIntFunc extends Function<Integer, Integer>{};
-
+    @Ignore
     @Test
     public void experiment1(){
         Properties props = Utils.loadProperties("/lkpr-adonis-input.properties");
@@ -45,7 +47,7 @@ public class TestingXPath {
         p.setConfig(props);
         p.processSources();
     }
-
+    @Ignore
     @Test
     public void experiment3(){
         Properties props = Utils.loadProperties("/lkpr-adonis-input.properties");
@@ -129,7 +131,7 @@ public class TestingXPath {
 
             String cls = "Employee";
 //            String xp = String.format(, cls);
-            List<Node> nodes = null;
+            List<Node> nodes = Collections.EMPTY_LIST;
 
             String attrXpath = "@id";
             for (Node n : nodes ){
