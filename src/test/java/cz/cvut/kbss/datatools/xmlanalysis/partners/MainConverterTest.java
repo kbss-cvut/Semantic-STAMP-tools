@@ -19,6 +19,6 @@ public class MainConverterTest extends TestCase {
     @Test
     public void testMainBizagiBPM() throws URISyntaxException {
         File f = Utils.getResourceAsFile("/bizagi/example-model-1.bpm");
-        MainConverter.main(new String[]{f.getAbsolutePath(), "./target"});
+        MainConverter.main(new String[]{f.getAbsolutePath(), "./target/test-output/MainConverterTest/example-model-1.rdf"});
     }
 }
