@@ -94,8 +94,21 @@ public class Utils {
         return "/query/" + queryName + ".sparql";
     }
 
-
-
+    /**
+     * This method is intended to be used in tests where the
+     * classes and resources are not yet packaged in a jar.
+     * @param resourcePath path of the resource
+     * @return the file pointing to the resource file pointed by the resourcePath
+     */
+    public static File getResourceAsFile(String resourcePath){
+        URL url = Utils.class.getResource(resourcePath);
+        if(url == null){
+            return null;
+        }
+        String p = url.getPath();
+        LOG.debug("opening resource with uri \"{}\"", p);
+        return new File(p);
+    }
 
     public static File getFile(String path){
         // find as file path
@@ -104,19 +117,7 @@ public class Utils {
             return f;
 
         // find as resource
-        URL url = Utils.class.getResource(path);
-        if(url == null){
-            return null;
-        }
-        String p = url.getPath();
-//        try {
-        LOG.debug("opening resource with uri \"{}\"", p);
-        f = new File(p);
-//        } catch (URISyntaxException e) {
-//            LOG.error("Could not load path as resource, path \"{}\"", path, e);
-//        } catch (IllegalArgumentException e){
-//            LOG.error("Could not load path as resource, path \"{}\"", path, e);
-//        }
+        f = getResourceAsFile(path);
 
         return f.exists() ? f : null;
     }
