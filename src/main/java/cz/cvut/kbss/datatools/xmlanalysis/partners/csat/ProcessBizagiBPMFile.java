@@ -11,30 +11,28 @@ import cz.cvut.kbss.datatools.xmlanalysis.partners.csat.model.*;
 import cz.cvut.kbss.datatools.xmlanalysis.partners.csat.model.Package;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.BPMProcessor;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.InputXmlStream;
-import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.JAXBUtils;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model.*;
-import cz.cvut.kbss.onto.safety.stamp.Vocabulary;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.poi.ss.formula.functions.Function;
-import org.apache.poi.ss.formula.functions.T;
-import org.eclipse.rdf4j.query.algebra.Group;
-import org.eclipse.rdf4j.query.algebra.Str;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDiagPackage> {
+public class ProcessBizagiBPMFile extends AbstractProcessModelExporter<BizagiDiagPackage> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProcessBisagiBPMFile.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessBizagiBPMFile.class);
 
+    @Override
+    public String getProcessorName() {
+        return "Bizagi bpm";
+    }
+
+    @Override
     public void config(){
         mapperClass = BizagiDiagPackage.class;
         pkg = "cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model";
@@ -254,20 +252,6 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
 
     }
 
-    public void processFile(String filePath, String outputDir){
-        config();
-        File f = new File(filePath);
-        if(outputDir != null){
-            this.outputDir = new File(outputDir);
-        }
-        outputFile = Utils.getOutputFileSmart(f, this.outputDir);
-        initBMPMProcessor();
-        LOG.info("converting bpmn to rdf, from \"{}\" out \"{}\"", filePath, outputFile);
-        bpmProcessor.resetRegistry();
-        File file = new File(filePath);
-        process(file);
-    }
-
     public void processDir(String dirPath){
         config();
         initBMPMProcessor();
@@ -290,6 +274,7 @@ public class ProcessBisagiBPMFile extends AbstractProcessModelExporter<BizagiDia
         return map;
     }
 
+    @Override
     public void process(File file){
         LOG.info("Processing file '{}'", file.getAbsolutePath());
         try(BizagiBPMPackageXMLStreamer sfs = new BizagiBPMPackageXMLStreamer(file.getAbsolutePath())) {

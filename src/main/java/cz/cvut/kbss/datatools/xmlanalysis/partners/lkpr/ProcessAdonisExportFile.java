@@ -28,6 +28,11 @@ public class  ProcessAdonisExportFile extends AbstractProcessModelExporter<Adoni
 
     protected String inputFileExtension = ".xml";
 
+    @Override
+    public String getProcessorName() {
+        return "ADONIS xml";
+    }
+
     public void processDir(String dirPath){
         config(dirPath);
         LOG.debug("Processing ADONIS exports in dir '{}'.", dirPath);
@@ -41,6 +46,13 @@ public class  ProcessAdonisExportFile extends AbstractProcessModelExporter<Adoni
         config(file.getParent());
         LOG.debug("Processing ADONIS export file '{}'.", fileString);
         process(file);
+    }
+
+    @Override
+    public void config(){
+        mapperClass = AdonisExportADOXML.class;
+        pkg = "cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.model";
+        outputDir = null;
     }
 
     public void config(String dirPath){

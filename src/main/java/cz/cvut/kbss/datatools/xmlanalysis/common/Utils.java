@@ -1,16 +1,15 @@
 package cz.cvut.kbss.datatools.xmlanalysis.common;
 
-import cz.cvut.kbss.datatools.xmlanalysis.common.refs.Constants;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.omg.CORBA.portable.OutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
@@ -105,9 +104,13 @@ public class Utils {
             return f;
 
         // find as resource
-        String p = Utils.class.getResource(path).getPath();
+        URL url = Utils.class.getResource(path);
+        if(url == null){
+            return null;
+        }
+        String p = url.getPath();
 //        try {
-        LOG.info("opening resource with uri \"{}\"", p);
+        LOG.debug("opening resource with uri \"{}\"", p);
         f = new File(p);
 //        } catch (URISyntaxException e) {
 //            LOG.error("Could not load path as resource, path \"{}\"", path, e);
@@ -144,7 +147,7 @@ public class Utils {
 
     public static File getOutputFileSmart(File inputFile, File outputDir){
         if(outputDir == null)
-            outputDir = inputFile.getParentFile();
+            outputDir = new File(".");
         return getOutputFile(inputFile, outputDir);
     }
     public static File getOutputFile(File inputFile, File outputDir){

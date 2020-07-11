@@ -1,8 +1,8 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners;
 
-import cz.cvut.kbss.datatools.xmlanalysis.partners.csat.ProcessBisagiBPMFile;
+import cz.cvut.kbss.datatools.xmlanalysis.partners.csat.ProcessBizagiBPMFile;
 import cz.cvut.kbss.datatools.xmlanalysis.partners.graphml.BPM2GraphmlRenderer;
-import org.apache.jena.system.JenaSystem;
+import cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.ProcessAdonisExportFile;
 
 public class MainConverter {
     public static void main(String[] args) {
@@ -22,7 +22,7 @@ public class MainConverter {
         if(args.length > 1){
             to = args[1];
         }
-        ProcessBisagiBPMFile p = new ProcessBisagiBPMFile();
+        AbstractProcessModelExporter p = BPMNConverterRegistry.get(from);
         p.processFile(from, to);
 
 

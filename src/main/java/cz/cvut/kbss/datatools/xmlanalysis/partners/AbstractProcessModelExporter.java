@@ -1,14 +1,19 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.BPMProcessor;
 import cz.cvut.kbss.jopa.vocabulary.RDF;
 import cz.cvut.kbss.jopa.vocabulary.RDFS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AbstractProcessModelExporter<T> {
+public abstract class AbstractProcessModelExporter<T> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractProcessModelExporter.class);
 
     protected BPMProcessor bpmProcessor;
     protected Class<T> mapperClass;
@@ -21,6 +26,36 @@ public class AbstractProcessModelExporter<T> {
         bpmProcessor.setPrefixMapping(constructPrefixMapping());
 //        bpmProcessor. // TODO
         bpmProcessor.resetRegistry();
+    }
+
+
+    public void processFile(String filePath, String outputDir){
+        config();
+        File f = new File(filePath);
+        if(outputDir != null){
+            File tmp = new File(outputDir);
+            if(tmp.exists() && tmp.isDirectory())
+                this.outputDir = tmp;
+            else
+                outputFile = tmp;
+        }else{
+            this.outputDir = new File(".");
+        }
+        if(outputFile == null)
+            outputFile = Utils.getOutputFileSmart(f, this.outputDir);
+
+        initBMPMProcessor();
+        LOG.info("cconverter [{}] - converting bpmn to rdf, from \"{}\" out \"{}\"", getProcessorName(), filePath, outputFile);
+        bpmProcessor.resetRegistry();
+        File file = new File(filePath);
+        process(file);
+    }
+
+    public abstract void config();
+    public abstract void process(File file);
+
+    public String getProcessorName(){
+        return "unnamed";
     }
 
     public Map<String, String> constructPrefixMapping(){

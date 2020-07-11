@@ -66,7 +66,7 @@ public abstract class SourceProcessor {
     public void setConfig(Properties config) {
         this.config = config;
         String sourceDirPath = config.getProperty(PropertyConstants.SOURCE_DIR);
-        sourceDir = new File(sourceDirPath);
+        sourceDir = Utils.getFile(sourceDirPath);
         sources = listSources();
 
         outputDir = ensureDir(config.getProperty(PropertyConstants.OUTPUT_DIR));
