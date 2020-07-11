@@ -1,5 +1,6 @@
 package cz.cvut.kbss.datatools.xmlanalysis.experiments.jaxb;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
 import cz.cvut.kbss.datatools.xmlanalysis.common.refs.IDRuntime;
 import cz.cvut.kbss.datatools.xmlanalysis.partners.lkpr.model.ADOXML;
 import org.w3c.dom.Document;
@@ -26,12 +27,12 @@ public class JaxbExtractor {
         try
         {
 
-            String path = "c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\lkpr-process-models\\example-models-01\\model-001.xml";
-//            String path = "c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\lkpr-process-models\\example-models-01\\adonis-connector-example.xml";
+            String path = ".\\lkpr-process-models\\example-models-01\\model-001.xml";
+//            String path = ".\\lkpr-process-models\\example-models-01\\adonis-connector-example.xml";
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = db.parse(new File(path));
+            Document doc = db.parse(Utils.getFile(path));
 
             jaxbContext = JAXBContext.newInstance(ADOXML.class);
 

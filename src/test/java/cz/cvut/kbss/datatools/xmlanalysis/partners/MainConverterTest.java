@@ -1,5 +1,6 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
 import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,7 +18,7 @@ public class MainConverterTest extends TestCase {
 
     @Test
     public void testMainBizagiBPM() throws URISyntaxException {
-        File f = new File(MainConverterTest.class.getResource("/bizagi/example-model-1.bpm").toURI());
+        File f = Utils.getResourceAsFile("/bizagi/example-model-1.bpm");
         MainConverter.main(new String[]{f.getAbsolutePath(), "./target"});
     }
 }

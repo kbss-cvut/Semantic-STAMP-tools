@@ -1,5 +1,6 @@
 package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.xslt;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
 import org.apache.jena.n3.N3TurtleJenaWriter;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.impl.ModelCom;
@@ -35,7 +36,7 @@ public class XSLTBasedConverterTest {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         converter.convert(
-                new File("c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\partners\\lkpr-letiste-praha\\Aerobridge.xml"),
+                Utils.getFile("/adonis/Safety TEST onion structure.xml"),
                 new StreamResult(bos)
 //                new StreamResult(System.out)
         );

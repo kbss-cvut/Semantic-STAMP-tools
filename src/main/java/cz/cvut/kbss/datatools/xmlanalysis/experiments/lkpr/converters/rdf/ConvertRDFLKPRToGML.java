@@ -1,5 +1,6 @@
 package cz.cvut.kbss.datatools.xmlanalysis.experiments.lkpr.converters.rdf;
 
+import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.BaseGMLRenderer;
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.GraphMLBuilder;
 import cz.cvut.kbss.datatools.xmlanalysis.common.graphml.IGraphMLRenderer;
@@ -80,9 +81,8 @@ public class ConvertRDFLKPRToGML<T extends GraphMLBuilder> {
 
 
     public static void renderLKPRModels(){
-
-        // set root folder
-        File rootDir = new File("c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\lkpr-process-models\\example-models-01\\out\\");
+//        // set root folder
+        File rootDir = Utils.getFile("lkpr-process-models/example-models-01/out");
 
         // configure renderers to files
         Map<BaseGMLRenderer, List<String>> rendererToModelMap = new HashMap<>();
@@ -129,7 +129,8 @@ public class ConvertRDFLKPRToGML<T extends GraphMLBuilder> {
     }
 
     public static void renderLKPRModels_0_2(){
-        File rootDir = new File("c:\\Users\\user\\Documents\\skola\\projects\\10-2017-ZETA\\code\\lkpr-process-model-extraction\\lkpr-process-models\\example-models-01\\model-0.2\\out\\");
+        File rootDir = Utils.getFile("./lkpr-process-models/example-models-01/model-0.2/out");
+
         // configure renderers to files
         Map<BaseGMLRenderer, List<String>> rendererToModelMap = new HashMap<>();
 
