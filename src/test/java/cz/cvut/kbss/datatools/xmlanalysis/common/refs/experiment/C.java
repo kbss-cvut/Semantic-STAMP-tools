@@ -22,7 +22,7 @@ public class C {
     public List<A> as1;
 
 
-    @Relation(instanceRef = "refs2", value = "1")
+    @Relation(instanceRef = "refs2")//, value = "1")
     public List<A> as2;
 
     public ArrayList<A> a;

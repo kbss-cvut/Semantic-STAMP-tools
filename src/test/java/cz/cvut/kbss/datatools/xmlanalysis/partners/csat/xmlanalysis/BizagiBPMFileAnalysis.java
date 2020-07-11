@@ -1,7 +1,7 @@
 package cz.cvut.kbss.datatools.xmlanalysis.partners.csat.xmlanalysis;
 
 import cz.cvut.kbss.datatools.xmlanalysis.common.Utils;
-import cz.cvut.kbss.datatools.xmlanalysis.partners.csat.ProcessBisagiBPMFile;
+import cz.cvut.kbss.datatools.xmlanalysis.partners.csat.ProcessBizagiBPMFile;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.InputXmlStream;
 import cz.cvut.kbss.datatools.xmlanalysis.xml2stamprdf.JAXBUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +20,7 @@ public class BizagiBPMFileAnalysis {
         BizagiXmlAnalysis analizer = new BizagiXmlAnalysis("/csat-bizagi-input.properties");
 //        String fileName = "csat-process-models/bizagi-process-models/verze 12.09 BM Administration .bpm";
         String fileName = "csat-process-models/bizagi-process-models/example-model-1.bpm";
-        try(ProcessBisagiBPMFile.BizagiBPMPackageXMLStreamer xmlStreamer = new ProcessBisagiBPMFile.BizagiBPMPackageXMLStreamer(fileName); ){
+        try(ProcessBizagiBPMFile.BizagiBPMPackageXMLStreamer xmlStreamer = new ProcessBizagiBPMFile.BizagiBPMPackageXMLStreamer(fileName); ){
             xmlStreamer.streamSourceFiles()
                     .flatMap(l -> l.stream())
                     .filter(i -> StringUtils.startsWithIgnoreCase(i.getName(), "Diagram"))

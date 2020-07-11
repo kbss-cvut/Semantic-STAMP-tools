@@ -1,11 +1,13 @@
 package cz.cvut.kbss.datatools.experiments;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ExperimentOverriddenStaticField {
 
-    @Test
+    @Ignore
+//    @Test
     public void experiment1(){
         B.setVal("b");
 //        Assert.assertNull(A.getVal());

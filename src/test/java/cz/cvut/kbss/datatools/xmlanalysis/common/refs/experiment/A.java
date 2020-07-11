@@ -1,5 +1,7 @@
 package cz.cvut.kbss.datatools.xmlanalysis.common.refs.experiment;
 
+import java.util.Objects;
+
 public class A {
 
     public String id;
@@ -19,5 +21,20 @@ public class A {
                 "\n\tname='" + name + '\'' + "," +
                 "\n\tsecondName='" + secondName + '\'' + "\n" +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        A a = (A) o;
+        return Objects.equals(id, a.id) &&
+                Objects.equals(name, a.name) &&
+                Objects.equals(secondName, a.secondName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, secondName);
     }
 }

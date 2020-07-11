@@ -3,6 +3,8 @@ package cz.cvut.kbss.datatools.xmlanalysis.common.refs.experiment;
 import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.FIDAttribute;
 import cz.cvut.kbss.datatools.xmlanalysis.common.refs.annotations.Relation;
 
+import java.util.Objects;
+
 public class BB {
     public String id;
     @FIDAttribute(cls = A.class, fieldRef = "name")
@@ -40,5 +42,22 @@ public class BB {
                 "\n\ta1='" + a1 + '\'' + "\n" +
                 "\n\ta2='" + a2 + '\'' + "\n" +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BB bb = (BB) o;
+        return Objects.equals(id, bb.id) &&
+                Objects.equals(name1, bb.name1) &&
+                Objects.equals(lastName1, bb.lastName1) &&
+                Objects.equals(name2, bb.name2) &&
+                Objects.equals(lastName2, bb.lastName2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name1, lastName1, name2, lastName2);
     }
 }

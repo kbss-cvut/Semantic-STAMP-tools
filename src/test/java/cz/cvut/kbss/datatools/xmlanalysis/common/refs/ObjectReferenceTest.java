@@ -49,17 +49,20 @@ public class ObjectReferenceTest {
         IDRuntime runtime = new IDRuntime();
         initObjects();
 //        objects.stream().forEach(System.out::println);
-        assertNull(c1.refs);
-        assertNull(c1.refs2);
+        // This seams like a wrong assertion, the references must be set in order to inject them
+//        assertNull(c1.refs);
+//        assertNull(c1.refs2);
+        assertNull(c1.as1);
+        assertNull(c1.as2);
         runtime.injectReferences(objects2);
-        assertNotNull(c1.refs);
-        assertNotNull(c1.refs2);
-        assertEquals(2, c1.refs.size());
-        assertEquals(2, c1.refs2.size());
-        assertTrue(c1.refs2.contains("3"));
-        assertTrue(c1.refs2.contains("4"));
-        assertTrue(c1.refs2.contains(a1ref));
-        assertTrue(c1.refs2.contains(a2ref));
+        assertNotNull(c1.as1);
+        assertNotNull(c1.as2);
+        assertEquals(2, c1.as1.size());
+        assertEquals(2, c1.as2.size());
+        assertTrue(c1.as1.contains(a3));
+        assertTrue(c1.as1.contains(a4));
+        assertTrue(c1.as2.contains(a1));
+        assertTrue(c1.as2.contains(a2));
 //        objects.stream().forEach(System.out::println);
     }
 
