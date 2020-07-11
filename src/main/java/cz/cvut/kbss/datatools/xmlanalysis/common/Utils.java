@@ -128,7 +128,7 @@ public class Utils {
     public static File ensureDir(File parentDir, String dirName){
         File dir = new File(parentDir, dirName);
         if(!dir.exists()){
-            dir.mkdir();
+            dir.mkdirs();
         }
         return dir;
     }
