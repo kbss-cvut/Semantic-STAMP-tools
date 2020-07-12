@@ -152,7 +152,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>cz.cvut.kbss.datatools.bpm2stampo.partners.MainConverter</mainClass>
+                                    <mainClass>cz.cvut.kbss.datatools.bpm2stampo.converters.MainConverter</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
