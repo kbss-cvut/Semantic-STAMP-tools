@@ -18,11 +18,11 @@
     
     <dependencies>
         <!-- STAMP Ontology java port -->
-        <dependency>
-            <groupId>cz.cvut.kbss.onto.safety</groupId>
-            <artifactId>stamp</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cz.cvut.kbss.onto.safety</groupId>-->
+<!--            <artifactId>stamp</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
 
         <!-- rdf framework - jena -->
         <dependency>
