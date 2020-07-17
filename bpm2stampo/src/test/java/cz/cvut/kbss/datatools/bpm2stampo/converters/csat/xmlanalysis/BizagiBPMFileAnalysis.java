@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.List;
 
 public class BizagiBPMFileAnalysis {
 
@@ -19,12 +20,12 @@ public class BizagiBPMFileAnalysis {
     public void analyzeBPMFile(){
         BizagiXmlAnalysis analizer = new BizagiXmlAnalysis("/csat-bizagi-input.properties");
 //        String fileName = "csat-process-models/bizagi-process-models/verze 12.09 BM Administration .bpm";
-        String fileName = "csat-process-models/bizagi-process-models/example-model-1.bpm";
-        try(ProcessBizagiBPMFile.BizagiBPMPackageXMLStreamer xmlStreamer = new ProcessBizagiBPMFile.BizagiBPMPackageXMLStreamer(fileName); ){
+        String fileName = "/bizagi/example-model-1.bpm";
+        try(ProcessBizagiBPMFile.BizagiBPMPackageXMLStreamer xmlStreamer = ProcessBizagiBPMFile.createXMLStreamer(Utils.getResourceAsFile(fileName))){
             xmlStreamer.streamSourceFiles()
-                    .flatMap(l -> l.stream())
-                    .filter(i -> StringUtils.startsWithIgnoreCase(i.getName(), "Diagram"))
-                    .forEach(i -> process(fileName, i, analizer));
+                    .flatMap(l  -> ((List<InputXmlStream>)l).stream())
+                    .filter(i -> StringUtils.startsWithIgnoreCase(((InputXmlStream)i).getName(), "Diagram"))
+                    .forEach(i -> process(fileName, (InputXmlStream)i, analizer));
         }catch (IOException e){
             e.printStackTrace();
         }

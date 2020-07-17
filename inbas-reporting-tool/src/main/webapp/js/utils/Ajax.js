@@ -47,6 +47,14 @@ var Ajax = {
         return this;
     },
 
+    patch: function (url, data) {
+        this.req = request.patch(url).type('json');
+        if (data) {
+            this.req = this.req.send(data);
+        }
+        return this;
+    },
+
     type: function (type) {
         this.req = this.req.type(type);
         return this;

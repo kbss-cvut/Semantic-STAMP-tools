@@ -182,7 +182,7 @@ public class IDRuntime {
                     if (kv != null) {
                         Object old = toOneRegistry.put(kv, o);
                         if (old != null && old != o) {
-                            LOG.error("object with duplicate ID!!! {}", kv);
+                            LOG.debug("error - object with duplicate ID!!! {}", kv);
                         }
                     }
                 }

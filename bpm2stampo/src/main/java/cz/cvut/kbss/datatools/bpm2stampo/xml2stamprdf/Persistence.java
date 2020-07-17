@@ -3,6 +3,7 @@ package cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf;
 import cz.cvut.kbss.jopa.exceptions.OWLEntityExistsException;
 import cz.cvut.kbss.jopa.model.EntityManager;
 import cz.cvut.kbss.jopa.model.EntityManagerFactory;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jena.graph.*;
 import org.apache.jena.rdf.model.Model;
@@ -97,8 +98,6 @@ public class Persistence implements Closeable {
         em.getTransaction().commit();
     }
 
-
-
     public void exportToFile(String file, Map<String, String> prefixMappings){
         em.getTransaction().begin();
         checkData();
@@ -107,13 +106,28 @@ public class Persistence implements Closeable {
         exportToFileImpl(g, file,  prefixMappings);
     }
 
+    public InputStream exportToInputStream(Map<String, String> prefixMappings){
+        em.getTransaction().begin();
+        checkData();
+        Graph g = exportData();
+        em.getTransaction().commit();
+        return exportToInputStreamImpl(g, prefixMappings);
+    }
+
+    public InputStream exportToInputStreamImpl(Graph g, Map<String, String> prefixMappings){
+        LOG.info("Exporting graph with size {}",g.size());
+        ByteArrayOutputStream os = new ByteArrayOutputStream(150 * g.size());
+        prefixMappings.entrySet().forEach(e -> g.getPrefixMapping().setNsPrefix(e.getKey(), e.getValue()));
+        Model m = new ModelCom(g);
+        m.write(os, Lang.RDFXML.getLabel());
+        return new ByteArrayInputStream(os.toByteArray());
+    }
+
     public void exportToFileImpl(Graph g, String file, Map<String, String> prefixMappings){
-        LOG.info("Graph export size {}",g.size());
+        InputStream is = exportToInputStreamImpl(g, prefixMappings);
         LOG.info("To file {}", file);
         try(OutputStream os = new FileOutputStream(file)) {
-            prefixMappings.entrySet().forEach(e -> g.getPrefixMapping().setNsPrefix(e.getKey(), e.getValue()));
-            Model m = new ModelCom(g);
-            m.write(os, Lang.RDFXML.getLabel());
+            IOUtils.copy(is, os);
         }catch (FileNotFoundException e){
             LOG.error("", e);
         }catch (IOException e){

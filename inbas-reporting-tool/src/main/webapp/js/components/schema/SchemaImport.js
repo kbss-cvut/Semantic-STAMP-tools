@@ -33,10 +33,16 @@ class SchemaImport extends React.Component {
             this.setState({content: e.target.files[0]});
     };
 
-    _onImport = () => {
+    _onReplace = () => {
         // This will be replaced by a call to backend, which will execute analysis of the text content
         this.props.loadingOn(this.i18n('schema.import.importing-msg'));
-        Actions.importSchema({file: this.state.content}, this._onImportSuccess, this._onImportError);
+        Actions.replaceSchema({file: this.state.content}, this._onImportSuccess, this._onImportError);
+    };
+
+    _onMerge = () => {
+        // This will be replaced by a call to backend, which will execute analysis of the text content
+        this.props.loadingOn(this.i18n('schema.import.importing-msg'));
+        Actions.mergeSchema({file: this.state.content}, this._onImportSuccess, this._onImportError);
     };
 
     _onImportSuccess = (report) => {
@@ -59,9 +65,14 @@ class SchemaImport extends React.Component {
                 <input type="file" name="file" onChange={this._onChange}/>
             </Modal.Body>
             <Modal.Footer ref={c => this.modalFooter = c}>
-                <Button onClick={this._onImport} bsStyle='primary' bsSize='small'
+                <Button onClick={this._onReplace} bsStyle='primary' bsSize='small'
                         disabled={!this.state.content}>
-                    {this.i18n('schema.import.run')}
+                    {/*{this.i18n('schema.import.run')}*/}
+                    {this.i18n('schema.import.replace')}
+                </Button>
+                <Button onClick={this._onMerge} bsStyle='primary' bsSize='small'
+                        disabled={!this.state.content}>
+                    {this.i18n('schema.import.merge')}
                 </Button>
                 <Button onClick={this.props.onCancel} bsSize='small'>{this.i18n('cancel')}</Button>
             </Modal.Footer>

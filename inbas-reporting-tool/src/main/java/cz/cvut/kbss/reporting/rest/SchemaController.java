@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,16 +61,25 @@ public class SchemaController extends BaseController {
         return schemaService.getSchemaMetadata();
     }
 
-    @RequestMapping(value = "/import", method = RequestMethod.POST)
-    public void importSchema(@RequestParam("file") MultipartFile schema){
+    @RequestMapping(method = RequestMethod.PUT)
+    public void replaceSchema(@RequestParam("file") MultipartFile schema){
         try {
-            schemaService.replaceSchema(schema.getOriginalFilename(), schema.getInputStream());
+            schemaService.saveSchema(schema.getOriginalFilename(), schema.getInputStream(), true);
         } catch (IOException e) {
             throw new SchemaException("Unable to read file content from request.", e);
         }
 //        final HttpHeaders location = RestUtils
 //                .createLocationHeaderFromCurrentUri("/{name}", attachment.getOriginalFilename());
 //        return new ResponseEntity<>(location, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH)
+    public void mergeSchema(@RequestParam("file") MultipartFile schema){
+        try {
+            schemaService.saveSchema(schema.getOriginalFilename(), schema.getInputStream(), false);
+        } catch (IOException e) {
+            throw new SchemaException("Unable to read file content from request.", e);
+        }
     }
 
     protected void saveFile(String fileName, InputStream content ){

@@ -79,6 +79,7 @@ public interface AdonisExportADOXML extends DefaultMapper<BaseEntity> {
 
     // ADOXML mapping
     @RootMapping
+    @SetIRI(prefix = "http://onto.fel.cvut.cz/partners/lkpr/")
     @AddTypes(types = {ADOXML})
     @Mapping(source = "workingEnvironmentModels", target = "participants")
     @Mapping(expression = "java(iris(in.getBusinessProcessModels(), in.getRiskPoolModels(), in.getCompanyMapModels()))", target = "components")

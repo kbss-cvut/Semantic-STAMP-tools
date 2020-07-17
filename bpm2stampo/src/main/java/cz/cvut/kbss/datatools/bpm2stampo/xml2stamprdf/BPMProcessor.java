@@ -10,6 +10,7 @@ import cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf.model.Identifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -95,6 +96,23 @@ public class BPMProcessor{
             applyRules();
 
             persistence.exportToFile(outputFile, prefixMapping);
+        }
+    }
+
+    public InputStream convert(Stream<? extends Collection<InputXmlStream>> sources, Class mapperClass, String pkgOfModel) {
+        resetMapstructProcessor(mapperClass);
+        List<? extends Collection<InputXmlStream>> l = sources.collect(Collectors.toList());
+        try (Persistence p = new Persistence(pkgOfModel)){
+            l.stream().forEach(ns -> processXMLFile(ns));
+
+            persistence = p;
+            persistence.begin();
+            persist(registry.values());
+            persistence.commit();
+
+            applyRules();
+
+            return persistence.exportToInputStream(prefixMapping);
         }
     }
 

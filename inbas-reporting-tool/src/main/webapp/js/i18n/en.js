@@ -169,7 +169,8 @@ module.exports = {
         'report.initial.analysis-results.label': 'Report analysis results',
 
         'schema.import.title' : 'Schema Import',
-        'schema.import.run': 'Import',
+        'schema.import.replace': 'Replace',
+        'schema.import.merge': 'Merge',
         'schema.import.text.tooltip': 'Select the schema file',
         'schema.import.importing-msg': 'Importing schema',
         'schema.text.label': 'File',

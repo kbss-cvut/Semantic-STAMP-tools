@@ -7,7 +7,7 @@ import cz.cvut.kbss.jopa.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,8 +30,17 @@ public abstract class AbstractProcessModelExporter<T> {
 
 
     public void processFile(String filePath, String outputFile){
-        config();
-        File f = new File(filePath);
+        try(InputStream is = new FileInputStream(Utils.getFile(filePath))){
+            processFile(filePath, is, outputFile);
+        } catch (FileNotFoundException e) {
+            LOG.warn("Could find file with at \"{}\"", filePath,e);
+        } catch (IOException e) {
+            LOG.warn("Error reading file \"{}\"", filePath, e);
+        }
+    }
+
+    public void processFile(String inputName, InputStream is, String outputFile){
+        File f = new File(inputName);
         if(outputFile != null) {
             this.outputFile = new File(outputFile);
         }
@@ -44,15 +53,31 @@ public abstract class AbstractProcessModelExporter<T> {
             this.outputDir.mkdirs();
         }
 
+        config();
         initBMPMProcessor();
-        LOG.info("cconverter [{}] - converting bpmn to rdf, from \"{}\" out \"{}\"", getProcessorName(), filePath, this.outputFile);
+        LOG.info("converter [{}] - converting bpmn to rdf, from \"{}\" out \"{}\"", getProcessorName(), inputName, this.outputFile);
         bpmProcessor.resetRegistry();
-        File file = new File(filePath);
-        process(file);
+
+        process(inputName, is);
+    }
+
+    public InputStream convertToStream(String inputName, InputStream is){
+        config();
+        initBMPMProcessor();
+        LOG.info("converter [{}] - converting bpmn to rdf, from \"{}\"", getProcessorName(), inputName);
+        bpmProcessor.resetRegistry();
+
+        return convert(inputName, is);
+    }
+
+    public OutputStream processStream(String inputName, InputStream is){
+        return null;
     }
 
     public abstract void config();
-    public abstract void process(File file);
+    public abstract void process(String fileName, InputStream stream);
+    public abstract InputStream convert(String fileName, InputStream stream);
+
 
     public String getProcessorName(){
         return "unnamed";

@@ -82,7 +82,7 @@ public class MapstructProcessor {
             if(out != null){
 //                objects.addAll((Collection)out);
             }else{
-                LOG.warn("Failed to transform object of class '{}'. toString = '{}'", in.getClass(), out);
+                LOG.debug("Failed to transform object of class '{}'. toString = '{}'", in.getClass(), out);
             }
         }
         afterAllMappingExecution();
@@ -147,7 +147,7 @@ public class MapstructProcessor {
             }
             return ret;
         }else{
-            LOG.warn("Could not find transform method in class '{}' for class '{}'",
+            LOG.debug("Could not find transform method in class '{}' for class '{}'",
                     mapper.getClass().getCanonicalName(),
                     in.getClass().getCanonicalName()
             );

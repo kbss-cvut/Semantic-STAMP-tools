@@ -20,7 +20,8 @@ const IMPORT_URL = BASE_URL_WITH_SLASH + 'import';
 const OptionsStore = Reflux.createStore({
     init: function () {
         this.listenTo(Actions.loadOptions, this.onLoadOptions);
-        this.listenTo(Actions.importSchema, this.onImportSchema);
+        this.listenTo(Actions.replaceSchema, this.onReplaceSchema);
+        this.listenTo(Actions.mergeSchema, this.onMergeSchema);
         this.listenTo(Actions.fetchSchemaMetadata, this.onFetchSchemaMetadata);
         this.listenTo(Actions.loadProcessFlow, this.onLoadProcessFlow);
         this.trueOptionTypeMap = new Map();
@@ -30,10 +31,21 @@ const OptionsStore = Reflux.createStore({
         this.trueTypeMap = new Map();
     },
 
-    onImportSchema: function (schemaFile, onSuccess, onError){
+    onReplaceSchema: function (schemaFile, onSuccess, onError){
         var i = 1;
         console.log("importing schema");
-        Ajax.post(IMPORT_URL).attach(schemaFile.file).end(function (data, resp) {
+        Ajax.put(BASE_URL).attach(schemaFile.file).end(function (data, resp) {
+            if (onSuccess) {
+                onSuccess();
+            }
+            // update option store
+        }.bind(this), onError);
+    },
+
+    onMergeSchema: function (schemaFile, onSuccess, onError){
+        var i = 1;
+        console.log("importing schema");
+        Ajax.patch(BASE_URL).attach(schemaFile.file).end(function (data, resp) {
             if (onSuccess) {
                 onSuccess();
             }

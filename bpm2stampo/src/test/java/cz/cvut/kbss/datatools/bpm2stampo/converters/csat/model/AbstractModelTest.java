@@ -29,8 +29,8 @@ public class AbstractModelTest {
 
 
     public static List<JAXBUtils.UnmarshledResult> unmarshalXMLFiles(BPMProcessor bpmProcessor) throws IOException{
-        List<InputXmlStream> inputXmls = new ProcessBizagiBPMFile
-                .BizagiBPMPackageXMLStreamer(Utils.getResourceAsFile("/bizagi/example-model-1.bpm"))
+        List<InputXmlStream> inputXmls = ProcessBizagiBPMFile
+                .createXMLStreamer(Utils.getResourceAsFile("/bizagi/example-model-1.bpm"))
                 .streamSourceFiles().findFirst().get();
 
 

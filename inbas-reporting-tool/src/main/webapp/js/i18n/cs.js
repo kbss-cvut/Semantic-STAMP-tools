@@ -168,8 +168,8 @@ module.exports = {
         'report.initial.analysis-results.label': 'Výsledky analýzy hlášení',
 
         'schema.import.title' : 'Import schematu',
-        'schema.import.run': 'Importovat',
-        'schema.import.text.tooltip': 'Vyberte soubor se schematem',
+        'schema.import.replace': 'Přepsat',
+        'schema.import.merge': 'Přidat',
         'schema.import.importing-msg': 'Probíhá importování schematu',
         'schema.text.label': 'Soubor',
 

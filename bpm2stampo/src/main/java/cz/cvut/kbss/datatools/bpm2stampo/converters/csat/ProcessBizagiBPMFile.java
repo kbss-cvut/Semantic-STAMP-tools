@@ -4,14 +4,17 @@ import cz.cvut.kbss.commons.io.zip.ZipSource;
 import cz.cvut.kbss.commons.io.zip.ZipSourceEntry;
 import cz.cvut.kbss.datatools.bpm2stampo.common.IOUtils;
 import cz.cvut.kbss.datatools.bpm2stampo.common.Utils;
-import cz.cvut.kbss.datatools.bpm2stampo.mapstructext.MapstructProcessor;
 import cz.cvut.kbss.datatools.bpm2stampo.converters.AbstractProcessModelExporter;
 import cz.cvut.kbss.datatools.bpm2stampo.converters.csat.mapping.BizagiDiagPackage;
-import cz.cvut.kbss.datatools.bpm2stampo.converters.csat.model.*;
 import cz.cvut.kbss.datatools.bpm2stampo.converters.csat.model.Package;
+import cz.cvut.kbss.datatools.bpm2stampo.converters.csat.model.*;
+import cz.cvut.kbss.datatools.bpm2stampo.mapstructext.MapstructProcessor;
 import cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf.BPMProcessor;
 import cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf.InputXmlStream;
-import cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf.model.*;
+import cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf.model.EventType;
+import cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf.model.GroupController;
+import cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf.model.Identifiable;
+import cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf.model.StructureConnection;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +39,6 @@ public class ProcessBizagiBPMFile extends AbstractProcessModelExporter<BizagiDia
     public void config(){
         mapperClass = BizagiDiagPackage.class;
         pkg = "cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf.model";
-        outputDir = null;
     }
 
     @Override
@@ -274,38 +276,79 @@ public class ProcessBizagiBPMFile extends AbstractProcessModelExporter<BizagiDia
         return map;
     }
 
-    @Override
     public void process(File file){
         LOG.info("Processing file '{}'", file.getAbsolutePath());
-        try(BizagiBPMPackageXMLStreamer sfs = new BizagiBPMPackageXMLStreamer(file.getAbsolutePath())) {
+        try(BizagiBPMPackageXMLStreamer sfs = createXMLStreamer(file)) {
             bpmProcessor.process(sfs.streamSourceFiles(), mapperClass, pkg, outputFile.getAbsolutePath());
         } catch (IOException e) {
             LOG.error("", e);
         }
     }
 
-    public static class BizagiBPMPackageXMLStreamer implements Closeable {
-        protected ZipFile zipFile;
-
-        public BizagiBPMPackageXMLStreamer(ZipFile zipFile) {
-            this.zipFile = zipFile;
+    @Override
+    public void process(String fileName, InputStream stream) {
+        LOG.info("Processing file '{}'", fileName);
+        try(BizagiBPMPackageXMLStreamer sfs = createXMLStreamer(stream)) {
+            bpmProcessor.process(sfs.streamSourceFiles(), mapperClass, pkg, outputFile.getAbsolutePath());
+        } catch (IOException e) {
+            LOG.error("", e);
         }
+    }
 
-        public BizagiBPMPackageXMLStreamer(File file) throws IOException {
-            zipFile = new ZipFile(file);
+    @Override
+    public InputStream convert(String fileName, InputStream stream) {
+        LOG.info("Processing file '{}'", fileName);
+        try(BizagiBPMPackageXMLStreamer sfs = createXMLStreamer(stream)) {
+            return bpmProcessor.convert(sfs.streamSourceFiles(), mapperClass, pkg);
+        } catch (IOException e) {
+            LOG.error("", e);
         }
-        public BizagiBPMPackageXMLStreamer(String fileName) throws IOException {
-            zipFile = new ZipFile(fileName);
+        return null;
+    }
+
+    public static BizagiBPMPackageXMLStreamer<ZipInputStream> createXMLStreamer(InputStream is) throws IOException{
+        return new BizagiBPMPackageXMLStreamerFromStream(ZipSource.wrap(is));
+    }
+
+    public static BizagiBPMPackageXMLStreamer<ZipFile> createXMLStreamer(String file) throws IOException{
+        return createXMLStreamer(new File(file));
+    }
+
+    public static BizagiBPMPackageXMLStreamer<ZipFile> createXMLStreamer(File file) throws IOException{
+        return new BizagiBPMPackageXMLStreamerFromFile(ZipSource.wrap(new ZipFile(file)));
+    }
+
+    public static class BizagiBPMPackageXMLStreamerFromFile extends BizagiBPMPackageXMLStreamer<ZipFile> {
+        public BizagiBPMPackageXMLStreamerFromFile(ZipSource<ZipFile> zipSource) throws IOException {
+            super(zipSource);
         }
 
         @Override
         public void close() throws IOException {
-            zipFile.close();
+            ((ZipFile)zipSource.getWrapedZipObject()).close();
+        }
+    }
+
+    public static class BizagiBPMPackageXMLStreamerFromStream extends BizagiBPMPackageXMLStreamer<ZipInputStream> {
+        public BizagiBPMPackageXMLStreamerFromStream(ZipSource<ZipInputStream> zipSource) throws IOException {
+            super(zipSource);
+        }
+
+        @Override
+        public void close() throws IOException {
+            ((ZipInputStream)zipSource.getWrapedZipObject()).close();
+        }
+    }
+
+    public static abstract class BizagiBPMPackageXMLStreamer<T> implements Closeable {
+        protected ZipSource<T> zipSource;
+
+        public BizagiBPMPackageXMLStreamer(ZipSource<T> zipSource) throws IOException {
+            this.zipSource = zipSource;
         }
 
         public Stream<List<InputXmlStream>> streamSourceFiles() {
-            ZipSource<ZipFile> zip = ZipSource.wrap(zipFile);
-            return Stream.of(zip.streamEntries()
+            return Stream.of(zipSource.streamEntries()
 //                    .filter(e -> {
 //                        System.out.println(e.getName());
 //                        return e.getName().endsWith(".diag");
@@ -331,7 +374,7 @@ public class ProcessBizagiBPMFile extends AbstractProcessModelExporter<BizagiDia
 
         protected InputXmlStream asNamedStream(String dirName, ZipSourceEntry e, Class rootClass) {
             try {
-                return new InputXmlStream(e.getName(), dirName, e.getInputStream(), rootClass);
+                return new InputXmlStream(e.getName(), dirName, IOUtils.toByteInputStream(e.getInputStream()), rootClass);
             } catch (IOException ex) {
                 LOG.error("", ex);
             }

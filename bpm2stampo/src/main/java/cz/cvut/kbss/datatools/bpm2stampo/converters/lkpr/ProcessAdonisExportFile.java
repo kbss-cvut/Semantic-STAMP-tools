@@ -63,17 +63,33 @@ public class  ProcessAdonisExportFile extends AbstractProcessModelExporter<Adoni
     }
 
     public void process(File file){
-        LOG.debug("Processing ADONIS export file  '{}'.", file.getAbsolutePath());
-        if(!StringUtils.endsWithIgnoreCase(file.getName(),inputFileExtension))
-            LOG.warn("The input file path points to a file with a unrecognized extension.");
         try(InputStream is = new FileInputStream(file)){
-            File outputFile = getOutputFile(file);
-
-            bpmProcessor.processFiles(Stream.of(new InputXmlStream(file.getCanonicalPath(), is, ADOXML.class)), mapperClass, pkg, outputFile.getAbsolutePath());
+            process(file.getCanonicalPath(), is);
         }catch(IOException e){
             LOG.error("", e);
         }
     }
+
+    @Override
+    public InputStream convert(String fileName, InputStream stream) {
+        LOG.debug("Processing ADONIS export file  '{}'.", fileName);
+        if(!StringUtils.endsWithIgnoreCase(fileName,inputFileExtension))
+            LOG.warn("The input file path points to a file with a unrecognized extension.");
+        File outputFile = getOutputFile(fileName);
+
+        return bpmProcessor.convert(Stream.of(Arrays.asList(new InputXmlStream(fileName, stream, ADOXML.class))), mapperClass, pkg);
+    }
+
+    @Override
+    public void process(String fileName, InputStream is) {
+        LOG.debug("Processing ADONIS export file  '{}'.", fileName);
+        if(!StringUtils.endsWithIgnoreCase(fileName,inputFileExtension))
+            LOG.warn("The input file path points to a file with a unrecognized extension.");
+        File outputFile = getOutputFile(fileName);
+
+        bpmProcessor.processFiles(Stream.of(new InputXmlStream(fileName, is, ADOXML.class)), mapperClass, pkg, outputFile.getAbsolutePath());
+    }
+
     @Override
     public Map<String, String> constructPrefixMapping(){
         Map<String, String> map = super.constructPrefixMapping();
@@ -98,8 +114,11 @@ public class  ProcessAdonisExportFile extends AbstractProcessModelExporter<Adoni
         }
     }
 
-    protected File getOutputFile(File inputFile){
-        String name = inputFile.getName().replaceFirst("\\.[^\\.]+$", ".rdf");
+    protected File getOutputFile(File file){
+        return getOutputFile(file.getName());
+    }
+    protected File getOutputFile(String fileName){
+        String name = fileName.replaceFirst("\\.[^\\.]+$", ".rdf");
         return new File(outputDir, name);
     }
 

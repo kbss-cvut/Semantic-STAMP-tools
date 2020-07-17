@@ -1,12 +1,14 @@
 package cz.cvut.kbss.reporting.service;
 
-import cz.cvut.kbss.reporting.exception.FileFormatNotSupportedException;
+import cz.cvut.kbss.datatools.bpm2stampo.converters.AbstractProcessModelExporter;
+import cz.cvut.kbss.datatools.bpm2stampo.converters.BPMNConverterRegistry;
 import cz.cvut.kbss.reporting.util.ConfigParam;
-import org.apache.http.client.cache.ResourceFactory;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.eclipse.rdf4j.model.vocabulary.*;
+import org.eclipse.rdf4j.model.vocabulary.DC;
+import org.eclipse.rdf4j.model.vocabulary.OWL;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
+import org.eclipse.rdf4j.model.vocabulary.RDFS;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -37,29 +40,76 @@ public class SchemaService {
     @Autowired
     private ConfigReader configReader;
 
-    public void replaceSchema(String fileName, InputStream content){
+    @Autowired
+    protected ServletContext servletContext;
+
+    public void saveSchema(String fileName, InputStream content, boolean replaceExisting) {
+
+        // check file extension
+        String ext = fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length());
+        if (! (ext.equals("xml") || ext.equals("bpm")) ) {
+            // transform the input
+            saveSchemaRDF(fileName, content, replaceExisting);
+        }else{
+            saveSchemaBPM(fileName, content, replaceExisting);
+        }
+    }
+
+
+
+    public void saveSchemaBPM(String fileName, InputStream inputStream, boolean replaceExisting){
+//        ByteArrayInputStream content = null;
+//        try {
+//            content = new ByteArrayInputStream(IOUtils.toByteArray(inputStream));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        if(content == null){
+//            return;
+//        }
+//        Object val = servletContext.getAttribute("javax.servlet.context.tempdir");
+//        InputStream is = content;
+//        if(val != null) {
+//            File file = new File(new File(val.toString(), Constants.UPLOADED_FILE_LOCATION), fileName);
+//            try(FileOutputStream fos = new FileOutputStream(file)) {
+//                IOUtils.copy(content, fos);
+//                is = new FileInputStream(file);
+//            } catch (FileNotFoundException e) {
+//                LOG.warn("",e);
+//            } catch (IOException e) {
+//                LOG.warn("",e);
+//            }
+//        }
+        AbstractProcessModelExporter processor = BPMNConverterRegistry.get(fileName);
+        InputStream rdfInputStream = processor.convertToStream(fileName, inputStream);
+        saveSchemaRDF(fileName, rdfInputStream, replaceExisting);
+    }
+
+
+    public void saveSchemaRDF(String fileName, InputStream content, boolean replace){
         String repositoryUrl = configReader.getConfig(ConfigParam.EVENT_TYPE_REPOSITORY_URL);
         HTTPRepository r = new HTTPRepository(repositoryUrl);
         r.initialize();
         RepositoryConnection c = r.getConnection();
+        if(replace) {
+            // clear repo contents
+            clearSchemaRepo(c);
+        }
 
-        // clear repo contents
+        // load new schema into repo
+        loadNewSchemaIntoRepo(c, fileName, content, RDFFormat.RDFXML, repositoryUrl);
+    }
+
+    protected void clearSchemaRepo(RepositoryConnection c){
         c.begin();
         if(!c.isEmpty()){
             Update u1 = c.prepareUpdate("DELETE{?s ?p ?o}WHERE{?s ?p ?o}");
             u1.execute();
         }
         c.commit();
+    }
 
-        // guess file format from file name
-        RDFFormat ff = RDFFormat.matchFileName(fileName, formats).orElse(null);
-        if(ff == null){
-            throw new FileFormatNotSupportedException(
-                    String.format("The uploaded file's format is not supported. File name \"%s\"", fileName)
-            );
-        }
-
-        // load new schema into repo
+    protected void loadNewSchemaIntoRepo(RepositoryConnection c, String fileName, InputStream content, RDFFormat ff, String repositoryUrl){
         SimpleValueFactory vf = SimpleValueFactory.getInstance();
         c.begin();
         try {
@@ -73,6 +123,7 @@ public class SchemaService {
         }
         c.commit();
     }
+
 
     public Map<String, String> getSchemaMetadata() {
         String repositoryUrl = configReader.getConfig(ConfigParam.EVENT_TYPE_REPOSITORY_URL);

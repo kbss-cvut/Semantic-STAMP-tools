@@ -5,11 +5,13 @@ import cz.cvut.kbss.reporting.servlet.DiagnosticsContextFilter;
 import cz.cvut.kbss.reporting.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.*;
+import java.io.File;
 import java.util.EnumSet;
 
 public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
@@ -40,6 +42,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
         initSecurityFilter(servletContext);
         initMdcFilter(servletContext);
+        initFilePaths(servletContext);
         servletContext.addListener(new RequestContextListener());
         servletContext.getSessionCookieConfig().setName(SecurityConstants.SESSION_COOKIE_NAME);
     }
@@ -67,8 +70,21 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
      * Configures multipart processing (for uploaded files).
      */
     private MultipartConfigElement getMultipartConfigElement() {
-        return new MultipartConfigElement(Constants.UPLOADED_FILE_LOCATION, Constants.MAX_UPLOADED_FILE_SIZE,
+        MultipartConfigElement mp = new MultipartConfigElement(Constants.UPLOADED_FILE_LOCATION, Constants.MAX_UPLOADED_FILE_SIZE,
                 Constants.MAX_UPLOAD_REQUEST_SIZE, Constants.UPLOADED_FILE_SIZE_THRESHOLD);
+        return mp;
+    }
+
+    private void initFilePaths(ServletContext servletContext){
+        Object val = servletContext.getAttribute("javax.servlet.context.tempdir");
+        if(val == null)
+            return;
+
+        File file = new File(val.toString(), Constants.UPLOADED_FILE_LOCATION);
+
+        if(!file.exists()){
+            file.mkdirs();
+        }
     }
 
 

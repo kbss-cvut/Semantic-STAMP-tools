@@ -11,7 +11,7 @@ module.exports = Reflux.createActions([
 
     'loadOptions', 'loadProcessFlow',
 
-    'importSchema', 'fetchSchemaMetadata',
+    'replaceSchema', 'mergeSchema', 'fetchSchemaMetadata',
 
     'setTransitionPayload',
 
