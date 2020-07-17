@@ -40,9 +40,6 @@ public class SchemaService {
     @Autowired
     private ConfigReader configReader;
 
-    @Autowired
-    protected ServletContext servletContext;
-
     public void saveSchema(String fileName, InputStream content, boolean replaceExisting) {
 
         // check file extension
@@ -58,28 +55,6 @@ public class SchemaService {
 
 
     public void saveSchemaBPM(String fileName, InputStream inputStream, boolean replaceExisting){
-//        ByteArrayInputStream content = null;
-//        try {
-//            content = new ByteArrayInputStream(IOUtils.toByteArray(inputStream));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        if(content == null){
-//            return;
-//        }
-//        Object val = servletContext.getAttribute("javax.servlet.context.tempdir");
-//        InputStream is = content;
-//        if(val != null) {
-//            File file = new File(new File(val.toString(), Constants.UPLOADED_FILE_LOCATION), fileName);
-//            try(FileOutputStream fos = new FileOutputStream(file)) {
-//                IOUtils.copy(content, fos);
-//                is = new FileInputStream(file);
-//            } catch (FileNotFoundException e) {
-//                LOG.warn("",e);
-//            } catch (IOException e) {
-//                LOG.warn("",e);
-//            }
-//        }
         AbstractProcessModelExporter processor = BPMNConverterRegistry.get(fileName);
         InputStream rdfInputStream = processor.convertToStream(fileName, inputStream);
         saveSchemaRDF(fileName, rdfInputStream, replaceExisting);
