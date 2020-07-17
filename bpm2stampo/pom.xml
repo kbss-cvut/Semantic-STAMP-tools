@@ -24,6 +24,13 @@
 <!--            <version>1.0-SNAPSHOT</version>-->
 <!--        </dependency>-->
 
+        <!-- STAMP Model -->
+<!--        <dependency>-->
+<!--            <groupId>cz.cvut.kbss.onto.safety</groupId>-->
+<!--            <artifactId>stamp</artifactId>-->
+<!--            <version>1.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+
         <!-- rdf framework - jena -->
         <dependency>
             <groupId>org.apache.jena</groupId>
@@ -114,12 +121,8 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- STAMP Model -->
-        <dependency>
-            <groupId>cz.cvut.kbss.onto.safety</groupId>
-            <artifactId>stamp</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+
+
 
         <dependency>
             <groupId>org.mapstruct</groupId>
