@@ -3,7 +3,7 @@ package cz.cvut.kbss.datatools.bpm2stampo.common.refs;
 
 
 import cz.cvut.kbss.datatools.bpm2stampo.common.refs.annotations.JoinID;
-import cz.cvut.kbss.datatools.bpm2stampo.converters.lkpr.model.InstanceRef;
+import cz.cvut.kbss.datatools.bpm2stampo.converters.adonis.model.InstanceRef;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

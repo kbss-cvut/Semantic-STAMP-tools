@@ -1,8 +1,8 @@
 package cz.cvut.kbss.datatools.bpm2stampo.xml2stamprdf;
 
-import cz.cvut.kbss.datatools.bpm2stampo.converters.csat.model.Activity;
-import cz.cvut.kbss.datatools.bpm2stampo.converters.csat.model.Event;
-import cz.cvut.kbss.datatools.bpm2stampo.converters.csat.model.Package;
+import cz.cvut.kbss.datatools.bpm2stampo.converters.bizagi.model.Activity;
+import cz.cvut.kbss.datatools.bpm2stampo.converters.bizagi.model.Event;
+import cz.cvut.kbss.datatools.bpm2stampo.converters.bizagi.model.Package;
 import org.junit.Assert;
 import org.junit.Test;
 

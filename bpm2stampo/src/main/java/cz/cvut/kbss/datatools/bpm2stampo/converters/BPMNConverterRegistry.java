@@ -1,7 +1,7 @@
 package cz.cvut.kbss.datatools.bpm2stampo.converters;
 
-import cz.cvut.kbss.datatools.bpm2stampo.converters.csat.ProcessBizagiBPMFile;
-import cz.cvut.kbss.datatools.bpm2stampo.converters.lkpr.ProcessAdonisExportFile;
+import cz.cvut.kbss.datatools.bpm2stampo.converters.bizagi.ProcessBizagiBPMFile;
+import cz.cvut.kbss.datatools.bpm2stampo.converters.adonis.ProcessAdonisExportFile;
 
 import java.util.HashMap;
 import java.util.Map;
