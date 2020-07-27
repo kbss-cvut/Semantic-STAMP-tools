@@ -45,6 +45,15 @@ public interface AdonisExportADOXML extends DefaultMapper<BaseEntity> {
     String ROLE = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/role";
     String AGGREGATION = "http://onto.fel.cvut.cz/ontolgies/adoxml-bpmn/aggregation";
 
+    String GROUP = "G";
+    String PARTICIPANT = "Participant";
+    String CAPABILITY = "C";
+    String PROCESS = "[P]";
+    String ACTIVITY_ = "[A]";
+    String DECISION_ = "[D]";
+    String HAZARD = "[H]";
+    String CONTROL_STRUCTURE = "Control structure";
+
 //    public static final String[] EVENT_TYPES = {
 //            "Business process model", "Company map", // processes
 //            "Activity", "Swimlane (vertical)", "Swimlane (horizontal)", "Process Start", // sub process events types
@@ -80,10 +89,10 @@ public interface AdonisExportADOXML extends DefaultMapper<BaseEntity> {
     // ADOXML mapping
     @RootMapping
     @SetIRI(prefix = "http://onto.fel.cvut.cz/partners/lkpr/")
-    @AddTypes(types = {ADOXML})
+    @AddTypes(types = {ADOXML, Vocabulary.s_c_controlled_process})
     @Mapping(source = "workingEnvironmentModels", target = "participants")
     @Mapping(expression = "java(iris(in.getBusinessProcessModels(), in.getRiskPoolModels(), in.getCompanyMapModels()))", target = "components")
-    @Mapping(expression = "java(\"LKPR Operations\")", target = "label")
+    @Mapping(expression = "java(\"[P] - LKPR Operations\")", target = "label")
     EventType xmlToProcessType(ADOXML in);
 
     @RootMapping
@@ -96,7 +105,8 @@ public interface AdonisExportADOXML extends DefaultMapper<BaseEntity> {
     // BusinessProcessModel mapping
     @RootMapping
 //    @AttributeValueQualifier(field = "modeltype", acceptedValues = {"Business process model", "Company map"})
-    @AddTypes(types = {BUSINESS_PROCESS_MODEL})
+    @AddTypes(types = {BUSINESS_PROCESS_MODEL, Vocabulary.s_c_controlled_process_type})
+    @SetLabel(beforeLabel = PROCESS)
     @Mapping(expression = "java(iris(in.getActivities(), in.getOtherActivities()))", target = "components")
     @Mapping(source = "subsequentConnectors", target = "connections")
     EventType xmlToProcessType(BusinessProcessModel in);
@@ -107,7 +117,8 @@ public interface AdonisExportADOXML extends DefaultMapper<BaseEntity> {
     }
 
     @RootMapping
-    @AddTypes(types = COMPANY_MAP_MODEL)
+    @AddTypes(types = {COMPANY_MAP_MODEL})
+    @SetLabel(beforeLabel = PROCESS)
 //    @Mapping(source = "processes", target = "components")
 //    @Mapping(expression = "java(iris(in.getProcesses(), in.getSwimlanesH(), in.getSwimlanesV(), in.getAggregations()))", target = "components")
     @Mapping(expression = "java(iris(in.getActors(), in.getExternalPartners()))", target = "participants")
@@ -144,7 +155,7 @@ public interface AdonisExportADOXML extends DefaultMapper<BaseEntity> {
     // OrganizationalModel mapping
     @RootMapping
 //    @AttributeValueQualifier(field = "modeltype", acceptedValues = {"Business process model", "Company map"})
-    @AddTypes(types = {ORGANIZATIONAL_UNIT_MODEL})
+    @AddTypes(types = {ORGANIZATIONAL_UNIT_MODEL, cz.cvut.kbss.datatools.bpm2stampo.voc.Vocabulary.c_Organizational_Unit})
 //    @Mapping(source = "performers", target = "people")
     @Mapping(expression = "java(iris(in.getPerformers(), in.getRoles(), in.getAggregations()))", target = "controllerTypes")
     @Mapping(source = "organizationalUnits", target = "subGroups")
@@ -223,12 +234,14 @@ public interface AdonisExportADOXML extends DefaultMapper<BaseEntity> {
     @AttributeValueQualifier(field = "cls", acceptedValues = {"Activity"})
     // TODO add the risks from the input Activity as unsafe event parts for the output
     @AddTypesFromVal(field = "cls", namespace = ADOXML_NS)
+    @SetLabel(beforeLabel = ACTIVITY_)
     @Mapping(source = "risks", target = "components")
     @Mapping(expression = "java(iris(in.getResponsibleRole()))", target = "participants")
     EventType xmlToEventType(Activity in);
 
 
     @RootMapping
+    @SetLabel(beforeLabel = HAZARD)
     @AddTypes(types = {Vocabulary.s_c_unsafe_event})
     @AttributeValueQualifier(field = "cls", acceptedValues = {"Risk"})
     @AddTypesFromVal(field = "cls", namespace = ADOXML_NS)
