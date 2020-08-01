@@ -56,7 +56,7 @@ class EventtypeGraph extends React.Component {
                 let p = {};
                 groupCols.forEach((k) => key = key + row[k]);
                 groupCols.forEach((k) => p[k] = row[k]);
-                grouped.set(key, grouped[key] || {proj: p, group: []});
+                grouped.set(key, grouped.get(key) || {proj: p, group: []});
                 grouped.get(key).group.push(row);
                 return grouped;
             }, new Map());
