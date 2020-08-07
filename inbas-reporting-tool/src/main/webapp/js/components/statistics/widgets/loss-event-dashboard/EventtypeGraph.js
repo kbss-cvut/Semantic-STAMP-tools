@@ -74,7 +74,9 @@ class EventtypeGraph extends React.Component {
                 rows.map(x => x.process_event_type)
                     .concat(rows.map(x => x.process_factor_type)))
                     // .filter(x => x))
-            ].forEach((val, i, arr) => nodeColorMap[val] = 'hsl(' + i*(360./arr.length) + ', 50%, 50%)');//"#ff0000"
+            ].forEach((val, i, arr) => nodeColorMap[val] = 'hsl(' + (i+1)*(360./(arr.length+1)) + ', 50%, 50%)');//"#ff0000"
+            nodeColorMap["LOSS EVENT"] = 'hsl(0,50%,50%)';
+
 
             // resolve labels of event types
             let labelMap = new Map();
@@ -89,6 +91,7 @@ class EventtypeGraph extends React.Component {
                     )
                 )
             );
+            let lossEventTypeIrs = this.state.lossEventTypes.map(i => i["@id"]);
 
             let nodes = []
             let edges = []
@@ -101,13 +104,18 @@ class EventtypeGraph extends React.Component {
                 if (GraphUtils.validEventType(item.factor_type)) {
                     let l = labelMap.get(item.factor_type);
                     ft = GraphUtils.addNode(l ? l : item.factor_type, nodes, maxNodeHolder)
-                    nodes[ft - 1].process = item.process_factor_type;
+
+                    nodes[ft - 1].process = lossEventTypeIrs.indexOf(item.factor_type) >= 0 ?
+                        "LOSS EVENT" :
+                        item.process_factor_type;
                 }
 
                 if (GraphUtils.validEventType(item.event_type)) {
                     let l = labelMap.get(item.event_type);
                     et = GraphUtils.addNode(l ? l : item.event_type, nodes, maxNodeHolder);
-                    nodes[et - 1].process = item.process_event_type;
+                    nodes[et - 1].process = lossEventTypeIrs.indexOf(item.event_type) >= 0 ?
+                        "LOSS EVENT" :
+                        item.process_event_type;
                 }
 
                 if (et && ft) {
