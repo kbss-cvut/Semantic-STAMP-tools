@@ -91,6 +91,16 @@ class EventtypeGraph extends React.Component {
                     )
                 )
             );
+
+            let nodeCounts = new Map();
+            ['event_type', 'factor_type'].forEach(function (el){
+                rowsAll.forEach(function(row){
+                    let key = labelMap.get(row[el]);
+                    nodeCounts.set(key, (nodeCounts.get(key)  || 0) + 1 );
+                });
+            });
+
+
             let lossEventTypeIrs = this.state.lossEventTypes.map(i => i["@id"]);
 
             let nodes = []
@@ -124,6 +134,12 @@ class EventtypeGraph extends React.Component {
                 }
             });
             nodes.forEach(n => {
+                // fix sizes in and count in node title
+                let nodeCount = nodeCounts.get(n.label);
+                n.size = nodeCount + 5;
+                n.mass = nodeCount + 5;
+                n.title = n.label + "(" + nodeCount + ")";
+
                 n.color = nodeColorMap[n.process];
                 if(n.process === "NONE"){
                     n.process = NO_PARENT_PROCESS;
@@ -132,7 +148,8 @@ class EventtypeGraph extends React.Component {
                     let l = labelMap.get(n.process);
                     l = l ? l : n.process;
                     if (l) {
-                        n.title = n.title + " in " + l;
+                        if(l !== "LOSS EVENT")
+                            n.title = n.title + " in " + l;
                         legend[l] = n.color;
                     }
                 }
