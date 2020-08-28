@@ -1,4 +1,3 @@
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 PREFIX aso: <http://onto.fel.cvut.cz/ontologies/aviation-safety/>
@@ -20,21 +19,21 @@ SELECT ?deviation ?controlled_process ?controller (COUNT(DISTINCT ?et) AS ?count
 
   ?et a ufo:Event ;
     rt:has_event_type ?deviation_type .
-  SERVICE SILENT ?eventTypesRepository {
+
+  ?at ufo:has_part ?et .
+  ?pt ufo:has_part ?at .
+  ?at rt:has_event_type ?activity_type.
+  ?pt rt:has_event_type ?process_type.
+
+  SERVICE SILENT <http://localhost:8080/rdf4j-server/repositories/sbit-fd-schema> {
     ?deviation_type a stamp:unsafe-event .
-    ?activity_type stamp:has-control-structure-element-part ?deviation_type .
-    ?process_type stamp:has-control-structure-element-part ?activity_type .
-    ?activity_type ufo:has-participant ?controller_type .
-	OPTIONAL {
-      ?deviation_type rdfs:label ?deviation .
-    }
-    OPTIONAL {
-      ?process_type rdfs:label ?controlled_process .
-    }
-    OPTIONAL {
-      ?controller_type rdfs:label ?controller .
-    }
+    ?process_type stamp:has-control-structure-element-part ?activity_type.
+    ?activity_type ufo:has-participant ?controller_type.
+    ?deviation_type rdfs:label ?deviation .
+    ?controller_type rdfs:label ?controller .
+    ?process_type rdfs:label ?controlled_process .
   }
+
 }
 GROUP BY ?deviation ?controlled_process ?controller
 ORDER BY desc(?count) asc(?deviation)
