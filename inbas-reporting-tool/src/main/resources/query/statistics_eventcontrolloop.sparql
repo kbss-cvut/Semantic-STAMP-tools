@@ -25,7 +25,7 @@ SELECT ?deviation ?controlled_process ?controller (COUNT(DISTINCT ?et) AS ?count
   ?at rt:has_event_type ?activity_type.
   ?pt rt:has_event_type ?process_type.
 
-  SERVICE SILENT <http://localhost:8080/rdf4j-server/repositories/sbit-fd-schema> {
+  SERVICE SILENT ?eventTypesRepository {
     ?deviation_type a stamp:unsafe-event .
     ?process_type stamp:has-control-structure-element-part ?activity_type.
     ?activity_type ufo:has-participant ?controller_type.
