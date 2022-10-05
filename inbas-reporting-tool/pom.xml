@@ -25,7 +25,7 @@
         <org.springframework.version>4.3.5.RELEASE</org.springframework.version>
         <org.springframework.data.version>2.0.1.RELEASE</org.springframework.data.version>
         <org.springframework.security.version>4.2.1.RELEASE</org.springframework.security.version>
-        <com.fasterxml.jackson.version>2.8.1</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.version>2.12.6.1</com.fasterxml.jackson.version>
         <cz.cvut.kbss.jsonld.version>0.3.4</cz.cvut.kbss.jsonld.version>
         <org.mapstruct.version>1.3.0.Final</org.mapstruct.version>
 
